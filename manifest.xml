@@ -1,0 +1,19 @@
+<package>
+  <description brief="sr_example">
+
+     sr_example is an example of a real package interfaced with our robot. Please refer to the tutorial Creating a package to interact with our robots.
+
+  </description>
+  <author>Ugo Cupcic</author>
+  <license>GPL</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/sr_example</url>
+  <depend package="roscpp"/>
+  <depend package="rospy"/>
+  <depend package="sr_robot_msgs"/>
+  <depend package="sensor_msgs"/>
+  <depend package="std_msgs"/>
+
+</package>
+
+
