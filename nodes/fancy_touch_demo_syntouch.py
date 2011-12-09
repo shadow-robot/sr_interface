@@ -25,8 +25,8 @@ from sr_robot_msgs.msg import sendupdate, joint, Biotac, BiotacAll
 from sensor_msgs.msg import *
 from std_msgs.msg import Float64
 
-#the threshold for pac0 above which the tactile is considered "pressed"
-PAC0_THRESHOLD = 2000
+#the threshold for pdc above which the tactile is considered "pressed"
+PDC_THRESHOLD = 2000
 
 class FancyDemo(object):
     # starting position for the hand
@@ -136,7 +136,7 @@ class FancyDemo(object):
 
     def callback_biotacs(self, msg):
         """
-        The callback function for the biotacs. Checks if one of the finger
+        The callback function for the biotacs. Checks if one of the fingers
         was pressed (filter the noise). If it is the case, call the
         corresponding function.
 
@@ -144,14 +144,14 @@ class FancyDemo(object):
         """
         #loop through the five tactiles
         for index,tactile in enumerate(msg.tactiles):
-            #here we're just checking pac0 (the pressure)
+            #here we're just checking pdc (the pressure)
             # to see if a finger has been pressed, but you have
             # access to the whole data from the sensor
             # (look at sr_robot_msgs/msg/Biotac.msg)
-            if tactile.pac0 >= PAC0_THRESHOLD:
+            if tactile.pdc >= PDC_THRESHOLD:
                 # the tactile has been pressed, call the
                 # corresponding function
-                self.fingers_pressed_functions[index](tactile.pac0)
+                self.fingers_pressed_functions[index](tactile.pdc)
 
     def ff_pressed(self,data):
         """
@@ -160,7 +160,7 @@ class FancyDemo(object):
         If no action is currently running, we set the ShoulderJRotate
         to a negative value proportional to the pressure received.
 
-        @param data: the pressure value (pac0)
+        @param data: the pressure value (pdc)
         """
         #if we're already performing an action, don't do anything
         if not self.action_running.testandset():
@@ -199,10 +199,10 @@ class FancyDemo(object):
         """
         The middle finger was pressed.
 
-        If no action is currently running, we set the ShoulderJRotate
+        If no action is currently running, we move the arm angles
         to a positive value proportional to the pressure received.
 
-        @param data: the pressure value (pac0)
+        @param data: the pressure value (pdc)
         """
         #if we're already performing an action, don't do anything
         if not self.action_running.testandset():
@@ -245,7 +245,7 @@ class FancyDemo(object):
         If no action is currently running, we make a beep
         but don't do anything else.
 
-        @param data: the pressure value (pac0)
+        @param data: the pressure value (pdc)
         """
         #if we're already performing an action, don't do anything
         if not self.action_running.testandset():
@@ -267,7 +267,7 @@ class FancyDemo(object):
         If no action is currently running, we reset the arm and
         hand to their starting position
 
-        @param data: the pressure value (pac0)
+        @param data: the pressure value (pdc)
         """
         #if we're already performing an action, don't do anything
         if not self.action_running.testandset():
@@ -297,7 +297,7 @@ class FancyDemo(object):
         If no action is currently running, we send the thumb_up
         targets to the hand.
 
-        @param data: the pressure value (pac0)
+        @param data: the pressure value (pdc)
         """
         #if we're already performing an action, don't do anything
         if not self.action_running.testandset():
