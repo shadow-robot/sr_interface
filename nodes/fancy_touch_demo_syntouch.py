@@ -19,12 +19,14 @@
 import roslib; roslib.load_manifest('sr_hand')
 import rospy
 
-import time, mutex, subprocess
+import time, mutex, subprocess, math
 
-from sr_robot_msgs.msg import sendupdate, joint, joints_data
+from sr_robot_msgs.msg import sendupdate, joint, Biotac, BiotacAll
 from sensor_msgs.msg import *
 from std_msgs.msg import Float64
 
+#the threshold for pac0 above which the tactile is considered "pressed"
+PAC0_THRESHOLD = 2000
 
 class FancyDemo(object):
     # starting position for the hand
@@ -76,9 +78,15 @@ class FancyDemo(object):
                           joint(joint_name = "WRJ1", joint_target = 0),
                           joint(joint_name = "WRJ2", joint_target = 10) ]
 
-    #The hand publisher:
-    # publish the message to the /srh/sendupdate topic.
-    hand_publisher = rospy.Publisher('/srh/sendupdate', sendupdate)
+    #A vector containing the different callbacks, in the same order
+    # as the tactiles.
+    fingers_pressed_functions = [self.ff_pressed, self.mf_pressed, self.rf_pressed,
+                                 self.lf_pressed, self.th_pressed]
+
+    #The hand publishers:
+    # we use a dictionnary of publishers, because on the etherCAT hand
+    # you have one publisher per controller.
+    hand_publishers = self.create_hand_publishers()
 
     #The arm publisher:
     # publish the message to the /sr_arm/sendupdate topic.
@@ -90,54 +98,86 @@ class FancyDemo(object):
 
     def __init__(self):
         #send the start position to the hand
-        self.hand_publisher.publish(sendupdate(len(self.start_pos_hand), self.start_pos_hand))
+        self.hand_publish(self.start_pos_hand)
         #send the start position to the arm
-        self.arm_publisher.publish(sendupdate(len(self.start_pos_arm), self.start_pos_arm))
+        self.arm_publisher.publish( sendupdate(len(self.start_pos_arm), self.start_pos_arm) )
 
         #wait for the node to be initialized and then go to the starting position
         time.sleep(1)
         rospy.loginfo("OK, ready for the demo")
 
-        # We have one subscriber per tactile sensor
-        # This way we can easily have a different action mapped to
-        # each tactile sensor
-        # NB: The tactile sensor on the ring finger is not mapped in this example
-        self.sub_ff = rospy.Subscriber("/sr_tactile/touch/ff", Float64, self.callback_ff, queue_size=1)
-        self.sub_mf = rospy.Subscriber("/sr_tactile/touch/mf", Float64, self.callback_mf, queue_size=1)
-        self.sub_lf = rospy.Subscriber("/sr_tactile/touch/lf", Float64, self.callback_lf, queue_size=1)
-        self.sub_th = rospy.Subscriber("/sr_tactile/touch/th", Float64, self.callback_th, queue_size=1)
+        # We subscribe to the data being published by the biotac sensors.
+        self.sub_ff = rospy.Subscriber("/tactiles", BiotacAll, self.callback_biotacs, queue_size=1)
 
-
-    def callback_ff(self,data):
+    def create_hand_publishers(self):
         """
-        The callback function for the first finger:
-        called each time the tactile sensor publishes a message.
+        Creates a dictionnary of publishers to send the targets to the controllers
+        on /sh_??j?_mixed_position_velocity_controller/command
+        """
+        hand_pub = {}
+
+        for joint in ["FFJ0", "FFJ3", "FFJ4",
+                      "MFJ0", "MFJ3", "MFJ4",
+                      "RFJ0", "RFJ3", "RFJ4",
+                      "LFJ0", "LFJ3", "LFJ4", "LFJ5",
+                      "THJ1", "THJ2", "THJ3", "THJ4", "THJ5",
+                      "WRJ1", "WRJ2" ]:
+            hand_pub[joint] = rospy.Publisher('/sh_'+joint.lower()+'_mixed_position_velocity_controller/command', Float64)
+
+        return hand_pub
+
+    def hand_publish(self, pose):
+        """
+        Publishes the given pose to the correct controllers for the hand.
+        The targets are converted in radians.
+        """
+        for joint in pose:
+            self.hand_publishers[joint.joint_name].publish( math.radians(joint.joint_target) )
+
+    def callback_biotacs(self, msg):
+        """
+        The callback function for the biotacs. Checks if one of the finger
+        was pressed (filter the noise). If it is the case, call the
+        corresponding function.
+
+        @msg is the message containing the biotac data
+        """
+        #loop through the five tactiles
+        for index,tactile in enumerate(msg.tactiles):
+            #here we're just checking pac0 (the pressure)
+            # to see if a finger has been pressed, but you have
+            # access to the whole data from the sensor
+            # (look at sr_robot_msgs/msg/Biotac.msg)
+            if tactile.pac0 >= PAC0_THRESHOLD:
+                # the tactile has been pressed, call the
+                # corresponding function
+                self.fingers_pressed_functions[index](tactile.pac0)
+
+    def ff_pressed(self,data):
+        """
+        The first finger was pressed.
 
         If no action is currently running, we set the ShoulderJRotate
         to a negative value proportional to the pressure received.
 
-        @param data: the pressure value
+        @param data: the pressure value (pac0)
         """
         #if we're already performing an action, don't do anything
         if not self.action_running.testandset():
-            return
-
-        #filters the noise: check when the finger is being pressed
-        if data.data < .1:
-            self.action_running.unlock()
             return
 
         #ok the finger sensor was pressed
         p = subprocess.Popen('beep')
 
         #rotate the trunk to (data_received * min_pos)
-        data.data /= 2.
-        if data.data > 1.:
-            data.data = 1.
-        target_sh_rot    = 0.  + data.data * (-45.0)
-        target_sh_swing  = 20. + data.data * (-10.0)
-        target_elb_swing = 90. + data.data * (-10.0)
-        target_elb_rot   = 0.  + data.data * (-45.0)
+        # convert data to be in [0., 1.]
+        data /= 4000.
+        if data > 1.:
+            data = 1.
+        target_sh_rot    = 0.  + data * (-45.0)
+        target_sh_swing  = 20. + data * (-10.0)
+        target_elb_swing = 90. + data * (-10.0)
+        target_elb_rot   = 0.  + data * (-45.0)
 
         rospy.loginfo("FF touched, going to new target ")
 
@@ -155,36 +195,31 @@ class FancyDemo(object):
         time.sleep(.2)
         self.action_running.unlock()
 
-    def callback_mf(self, data):
+    def mf_pressed(self, data):
         """
-        The callback function for the middle finger:
-        called each time the tactile sensor publishes a message.
+        The middle finger was pressed.
 
         If no action is currently running, we set the ShoulderJRotate
         to a positive value proportional to the pressure received.
 
-        @param data: the pressure value
+        @param data: the pressure value (pac0)
         """
         #if we're already performing an action, don't do anything
         if not self.action_running.testandset():
             return
 
-        #filters the noise: check when the finger is being pressed
-        if data.data < .1:
-            self.action_running.unlock()
-            return
-
         #ok finger was pressed
         p = subprocess.Popen('beep')
- 
+
         #rotate the trunk to (data_received * min_pos)
-        data.data /= 2.
-        if data.data > 1.:
-            data.data = 1.
-        target_sh_rot    = 0.  + data.data * (45.0)
-        target_sh_swing  = 20. + data.data * (20.0)
-        target_elb_swing = 90. + data.data * (20.0)
-        target_elb_rot   = 0.  + data.data * (45.0)
+        # convert data to be in [0., 1.]
+        data /= 4000.
+        if data > 1.:
+            data = 1.
+        target_sh_rot    = 0.  + data * (45.0)
+        target_sh_swing  = 20. + data * (20.0)
+        target_elb_swing = 90. + data * (20.0)
+        target_elb_rot   = 0.  + data * (45.0)
 
         rospy.loginfo("MF touched, going to new target ")
 
@@ -202,23 +237,70 @@ class FancyDemo(object):
         time.sleep(.2)
         self.action_running.unlock()
 
-    def callback_th(self, data):
+
+    def rf_pressed(self, data):
         """
-        The callback function for the thumb:
-        called each time the tactile sensor publishes a message.
-        
-        If no action is currently running, we send the thumb_up
-        targets to the hand.
-        
-        @param data: the pressure value
+        The ring finger was pressed.
+
+        If no action is currently running, we make a beep
+        but don't do anything else.
+
+        @param data: the pressure value (pac0)
         """
         #if we're already performing an action, don't do anything
         if not self.action_running.testandset():
             return
 
-        #filters the noise: check when the finger is being pressed
-        if data.data < .1:
-            self.action_running.unlock()
+        #ok finger was pressed
+        p = subprocess.Popen('beep')
+
+        rospy.loginfo("RF touched, not doing anything.")
+
+        #wait before next possible action
+        time.sleep(.2)
+        self.action_running.unlock()
+
+    def lf_pressed(self, data):
+        """
+        The little finger was pressed.
+
+        If no action is currently running, we reset the arm and
+        hand to their starting position
+
+        @param data: the pressure value (pac0)
+        """
+        #if we're already performing an action, don't do anything
+        if not self.action_running.testandset():
+            return
+
+        #ok finger pressed
+        p = subprocess.Popen('beep')
+
+        rospy.loginfo("LF touched, going to start position.")
+
+        #wait 1s for the user to release the sensor
+        time.sleep(.2)
+
+        #send the start position to the hand
+        self.hand_publish( self.start_pos_hand )
+        #send the start position to the arm
+        self.arm_publisher.publish(sendupdate(len(self.start_pos_arm), self.start_pos_arm))
+
+        #wait before next possible action
+        time.sleep(.2)
+        self.action_running.unlock()
+
+    def th_pressed(self, data):
+        """
+        The thumb was pressed.
+
+        If no action is currently running, we send the thumb_up
+        targets to the hand.
+
+        @param data: the pressure value (pac0)
+        """
+        #if we're already performing an action, don't do anything
+        if not self.action_running.testandset():
             return
 
         #ok the finger was pressed
@@ -230,42 +312,7 @@ class FancyDemo(object):
         time.sleep(.2)
 
         #send the thumb_up_position to the hand
-        self.hand_publisher.publish(sendupdate(len(self.thumb_up_pos_hand), self.thumb_up_pos_hand))
-
-        #wait before next possible action
-        time.sleep(.2)
-        self.action_running.unlock()
-
-    def callback_lf(self, data):
-        """
-        The callback function for the little finger:
-        called each time the tactile sensor publishes a message.
-        
-        If no action is currently running, we reset the arm and
-        hand to their starting position
-        
-        @param data: the pressure value
-        """
-        #if we're already performing an action, don't do anything
-        if not self.action_running.testandset():
-            return
-
-        #filters the noise: check when the finger is being pressed
-        if data.data < .1:
-            self.action_running.unlock()
-            return
-        #ok finger pressed
-        p = subprocess.Popen('beep')
-
-        rospy.loginfo("LF touched, going to start position.")
-
-        #wait 1s for the user to release the sensor
-        time.sleep(.2)
-
-        #send the start position to the hand
-        self.hand_publisher.publish(sendupdate(len(self.start_pos_hand), self.start_pos_hand))
-        #send the start position to the arm
-        self.arm_publisher.publish(sendupdate(len(self.start_pos_arm), self.start_pos_arm))
+        self.hand_publish( self.thumb_up_pos_hand )
 
         #wait before next possible action
         time.sleep(.2)
@@ -277,7 +324,7 @@ def main():
     """
     # init the ros node
     rospy.init_node('fancy_touch_demo', anonymous=True)
-    
+
     fancy_demo = FancyDemo()
 
     # subscribe until interrupted
