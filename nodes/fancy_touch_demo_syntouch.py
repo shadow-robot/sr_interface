@@ -31,11 +31,11 @@ PDC_THRESHOLD = 2000
 PST_THRESHOLD = 400
 
 class FancyDemo(object):
-    # starting position for the hand
+    # starting position for the hand (DON't use until reviewed. Should be executed in two movement sequences)
     start_pos_hand = [ joint(joint_name = "THJ1", joint_target = 21),
-                       joint(joint_name = "THJ2", joint_target = 30),
+                       joint(joint_name = "THJ2", joint_target = 25),
                        joint(joint_name = "THJ3", joint_target = 0),
-                       joint(joint_name = "THJ4", joint_target = 30),
+                       joint(joint_name = "THJ4", joint_target = 50),
                        joint(joint_name = "THJ5", joint_target = 9),
                        joint(joint_name = "FFJ0", joint_target = 180),
                        joint(joint_name = "FFJ3", joint_target = 90),
@@ -48,6 +48,27 @@ class FancyDemo(object):
                        joint(joint_name = "RFJ4", joint_target = 0),
                        joint(joint_name = "LFJ0", joint_target = 180),
                        joint(joint_name = "LFJ3", joint_target = 90),
+                       joint(joint_name = "LFJ4", joint_target = 0),
+                       joint(joint_name = "LFJ5", joint_target = 0),
+                       joint(joint_name = "WRJ1", joint_target = 0),
+                       joint(joint_name = "WRJ2", joint_target = 0) ]
+    # starting position for the hand
+    extended_pos_hand = [ joint(joint_name = "THJ1", joint_target = 21),
+                       joint(joint_name = "THJ2", joint_target = 25),
+                       joint(joint_name = "THJ3", joint_target = 0),
+                       joint(joint_name = "THJ4", joint_target = 50),
+                       joint(joint_name = "THJ5", joint_target = 9),
+                       joint(joint_name = "FFJ0", joint_target = 0),
+                       joint(joint_name = "FFJ3", joint_target = 0),
+                       joint(joint_name = "FFJ4", joint_target = 0),
+                       joint(joint_name = "MFJ0", joint_target = 0),
+                       joint(joint_name = "MFJ3", joint_target = 0),
+                       joint(joint_name = "MFJ4", joint_target = 0),
+                       joint(joint_name = "RFJ0", joint_target = 0),
+                       joint(joint_name = "RFJ3", joint_target = 0),
+                       joint(joint_name = "RFJ4", joint_target = 0),
+                       joint(joint_name = "LFJ0", joint_target = 0),
+                       joint(joint_name = "LFJ3", joint_target = 0),
                        joint(joint_name = "LFJ4", joint_target = 0),
                        joint(joint_name = "LFJ5", joint_target = 0),
                        joint(joint_name = "WRJ1", joint_target = 0),
@@ -80,15 +101,7 @@ class FancyDemo(object):
                           joint(joint_name = "WRJ1", joint_target = 0),
                           joint(joint_name = "WRJ2", joint_target = 10) ]
 
-    #A vector containing the different callbacks, in the same order
-    # as the tactiles.
-    fingers_pressed_functions = [self.ff_pressed, self.mf_pressed, self.rf_pressed,
-                                 self.lf_pressed, self.th_pressed]
 
-    #The hand publishers:
-    # we use a dictionnary of publishers, because on the etherCAT hand
-    # you have one publisher per controller.
-    hand_publishers = self.create_hand_publishers()
 
     #The arm publisher:
     # publish the message to the /sr_arm/sendupdate topic.
@@ -99,6 +112,16 @@ class FancyDemo(object):
     action_running = mutex.mutex()
 
     def __init__(self):
+        #A vector containing the different callbacks, in the same order
+        # as the tactiles.
+        self.fingers_pressed_functions = [self.ff_pressed, self.mf_pressed, self.rf_pressed,
+                                          self.lf_pressed, self.th_pressed]
+
+        #The hand publishers:
+        # we use a dictionnary of publishers, because on the etherCAT hand
+        # you have one publisher per controller.
+        self.hand_publishers = self.create_hand_publishers()
+
         #send the start position to the hand
         self.hand_publish(self.start_pos_hand)
         #send the start position to the arm
@@ -125,7 +148,7 @@ class FancyDemo(object):
                       "LFJ0", "LFJ3", "LFJ4", "LFJ5",
                       "THJ1", "THJ2", "THJ3", "THJ4", "THJ5",
                       "WRJ1", "WRJ2" ]:
-            hand_pub[joint] = rospy.Publisher('/sh_'+joint.lower()+'_mixed_position_velocity_controller/command', Float64)
+            hand_pub[joint] = rospy.Publisher('/sh_'+joint.lower()+'_position_controller/command', Float64)
 
         return hand_pub
 
@@ -169,7 +192,7 @@ class FancyDemo(object):
             #here we're just checking the pressure
             # to see if a finger has been pressed
             # 18456 is the value the PST takes when the sensor is not plugged in
-            if tactile >= PST_THRESHOLD and TACTILE != 18456:
+            if tactile >= PST_THRESHOLD and tactile != 18456:
                 # the tactile has been pressed, call the
                 # corresponding function
                 self.fingers_pressed_functions[index](tactile)
@@ -213,7 +236,7 @@ class FancyDemo(object):
         self.arm_publisher.publish(sendupdate(len(message), message))
 
         #send the start position to the hand
-        self.hand_publish( self.start_pos_hand )
+        self.hand_publish( self.extended_pos_hand )
 
         #wait before next possible action
         time.sleep(.2)
