@@ -168,7 +168,8 @@ class FancyDemo(object):
         for index,tactile in enumerate(msg.pressure):
             #here we're just checking the pressure
             # to see if a finger has been pressed
-            if tactile >= PST_THRESHOLD:
+            # 18456 is the value the PST takes when the sensor is not plugged in
+            if tactile >= PST_THRESHOLD and TACTILE != 18456:
                 # the tactile has been pressed, call the
                 # corresponding function
                 self.fingers_pressed_functions[index](tactile)
