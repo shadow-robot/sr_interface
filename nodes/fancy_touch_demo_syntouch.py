@@ -21,12 +21,14 @@ import rospy
 
 import time, mutex, subprocess, math
 
-from sr_robot_msgs.msg import sendupdate, joint, Biotac, BiotacAll
+from sr_robot_msgs.msg import sendupdate, joint, Biotac, BiotacAll, ShadowPST
 from sensor_msgs.msg import *
 from std_msgs.msg import Float64
 
 #the threshold for pdc above which the tactile is considered "pressed"
 PDC_THRESHOLD = 2000
+#the threshold for the PSTs above which the tactile is considered "pressed"
+PST_THRESHOLD = 400
 
 class FancyDemo(object):
     # starting position for the hand
@@ -107,7 +109,8 @@ class FancyDemo(object):
         rospy.loginfo("OK, ready for the demo")
 
         # We subscribe to the data being published by the biotac sensors.
-        self.sub_ff = rospy.Subscriber("/tactiles", BiotacAll, self.callback_biotacs, queue_size=1)
+        self.sub_biotacs = rospy.Subscriber("/tactiles", BiotacAll, self.callback_biotacs, queue_size=1)
+        self.sub_psts    = rospy.Subscriber("/tactile", ShadowPST, self.callback_psts, queue_size=1)
 
     def create_hand_publishers(self):
         """
@@ -153,6 +156,23 @@ class FancyDemo(object):
                 # corresponding function
                 self.fingers_pressed_functions[index](tactile.pdc)
 
+    def callback_psts(self, msg):
+        """
+        The callback function for the PSTs. Checks if one of the fingers
+        was pressed (filter the noise). If it is the case, call the
+        corresponding function.
+
+        @msg is the message containing the biotac data
+        """
+        #loop through the five tactiles
+        for index,tactile in enumerate(msg.pressure):
+            #here we're just checking the pressure
+            # to see if a finger has been pressed
+            if tactile >= PST_THRESHOLD:
+                # the tactile has been pressed, call the
+                # corresponding function
+                self.fingers_pressed_functions[index](tactile)
+
     def ff_pressed(self,data):
         """
         The first finger was pressed.
@@ -190,6 +210,9 @@ class FancyDemo(object):
                    ]
 
         self.arm_publisher.publish(sendupdate(len(message), message))
+
+        #send the start position to the hand
+        self.hand_publish( self.start_pos_hand )
 
         #wait before next possible action
         time.sleep(.2)
