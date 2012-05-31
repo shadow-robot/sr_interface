@@ -1,7 +1,7 @@
 <package>
   <description brief="sr_example">
 
-     sr_example is an example of a real package interfaced with our robot. Please refer to the tutorial Creating a package to interact with our robots.
+    sr_example is an example of a real package interfaced with our robot. Please refer to the tutorial Creating a package to interact with our robots.
 
   </description>
   <author>Ugo Cupcic</author>

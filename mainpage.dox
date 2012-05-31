@@ -2,12 +2,7 @@
 \mainpage
 \htmlinclude manifest.html
 
-\b sr_example is ... 
-
-<!-- 
-Provide an overview of your package.
--->
-
+\b sr_example is an example of a real package interfaced with our robot. Please refer to the tutorial Creating a package to interact with our robots.
 
 \section codeapi Code API
 
