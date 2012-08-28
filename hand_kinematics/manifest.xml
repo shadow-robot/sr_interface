@@ -1,0 +1,29 @@
+<package>
+  <description brief="hand_kinematics">
+
+    Computation of forward and inverse kinematics for the fingers of the Shadow Hand, including coupling.
+
+  </description>
+  <author>Juan Antonio Corrales Ramon (UPMC)</author>
+  <license>GPL</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/hand_kinematics</url>
+  <depend package="roscpp"/>
+  <depend package="tf"/>
+  <depend package="urdf"/>
+  <depend package="kdl_parser"/>
+  <depend package="kdl_coupling"/>
+  <depend package="orocos_kdl" />
+  <depend package="sensor_msgs"/>
+  <depend package="tf_conversions"/>
+  <depend package="kinematics_msgs"/>
+  <depend package="geometry_msgs"/>
+  <depend package="pr2_mechanism_msgs"/>
+  <!-- uncomment the following if you want the plugin interface -->
+  <!--  <depend package="pluginlib"/>
+  <depend package="kinematics_base"/>
+  <export>
+	  <kinematics_base plugin="${prefix}/hand_kinematics_plugins.xml" />
+  </export>
+     -->
+</package>
