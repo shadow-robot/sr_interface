@@ -29,6 +29,7 @@ rosbuild_add_executable(hand_kinematics_coupling src/hand_kinematics_coupling.cp
 
 rosbuild_add_executable(circle_ik test/circle_ik.cpp)
 rosbuild_add_executable(square_ik_th test/square_ik_th.cpp)
+rosbuild_add_executable(upmc_fkik_test test/upmc_fkik_test.cpp)
 
 target_link_libraries(circle_ik hand_kinematics_coupling_lib)
 target_link_libraries(square_ik_th hand_kinematics_coupling_lib)

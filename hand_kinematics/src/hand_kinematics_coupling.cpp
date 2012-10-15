@@ -10,7 +10,8 @@
 // -IK is solved at the fingertip frame, which should be defined in the URDF/Xacro file of the
 //  Shadow Hand.
 
-#include <cstring>
+//#include <cstdlib>
+#include <cmath>
 #include <ros/ros.h>
 #include <tf/transform_listener.h>
 #include <tf_conversions/tf_kdl.h>
@@ -151,7 +152,12 @@ class Kinematics {
         bool getFKSolverInfo(kinematics_msgs::GetKinematicSolverInfo::Request &request,
                              kinematics_msgs::GetKinematicSolverInfo::Response &response);
 
-        /**
+	/**
+	 * @brief This method generates a random joint array vector between the joint limits so that local minima in IK can be avoided.
+	 * @param Joint vector to be initialized with random values.
+	 */
+       void generateRandomJntSeed(KDL::JntArray &jnt_pos_in);
+	/**
          * @brief This is the basic forward kinematics service that will return information about the kinematics node.
          * @param A request message. See service definition for GetPositionFK for more information on this message.
          * @param The response message. See service definition for GetPositionFK for more information on this message.
@@ -382,6 +388,16 @@ int Kinematics::getKDLSegmentIndex(const std::string &name) {
     return -1;
 }
 
+void Kinematics::generateRandomJntSeed(KDL::JntArray &jnt_pos_in)
+{
+	for(unsigned int i=0; i < num_joints; i++)
+	{
+		double min= info.limits[i].min_position;
+		double max= info.limits[i].max_position;
+		double r= min + ((double)rand()) / RAND_MAX *(max-min);
+		jnt_pos_in(i)= r;
+	}
+}
 bool Kinematics::getPositionIK(kinematics_msgs::GetPositionIK::Request &request,
                                kinematics_msgs::GetPositionIK::Response &response) {
 
@@ -419,9 +435,14 @@ bool Kinematics::getPositionIK(kinematics_msgs::GetPositionIK::Request &request,
 	}
 	KDL::Frame F_dest;
 	tf::TransformTFToKDL(transform_root, F_dest);
-
-	int ik_valid = ik_solver_pos->CartToJnt(jnt_pos_in, F_dest, jnt_pos_out);
-
+	int ik_valid= -1;
+	for(int i=0; i < 10 && ik_valid < 0; i++)
+	{
+		ROS_DEBUG("IK Seed: %f, %f, %f, %f, %f",jnt_pos_in(0),jnt_pos_in(1),jnt_pos_in(2),jnt_pos_in(3),jnt_pos_in(4));
+		ik_valid = ik_solver_pos->CartToJnt(jnt_pos_in, F_dest, jnt_pos_out);
+		generateRandomJntSeed(jnt_pos_in);
+		ROS_DEBUG("IK Recalculation step: %d",i);	
+	}
 	if (ik_valid >= 0) {
 	 response.solution.joint_state.name = info.joint_names;
 	 response.solution.joint_state.position.resize(num_joints);
