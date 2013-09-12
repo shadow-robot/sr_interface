@@ -15,34 +15,27 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-import roslib; roslib.load_manifest('sr_hand')
+import roslib; roslib.load_manifest('sr_example')
 import rospy
-from sr_robot_msgs.msg import sendupdate, joint, joints_data
-from sensor_msgs.msg import *
+from sr_robot_msgs.msg import JointControllerState
+from std_msgs.msg import Float64
 
-parent_name = "FFJ3"
-child_name = "MFJ3"
+parent_name = "ffj3"
+child_name = "mfj3"
+controller_type = "_mixed_position_velocity_controller"
 
+pub = rospy.Publisher('/sh_' + child_name + controller_type + '/command', Float64)
 
 def callback(data):
     """
     The callback function: called each time a message is received on the 
-    topic /srh/shadowhand_data
+    topic parent joint controller state topic
 
     @param data: the message
     """
-    message=[]
-    if data.joints_list_length == 0:
-        return
-    # loop on the joints in the message
-    for joint_data in data.joints_list:
-        # if its the parent joint, read the target and send it to the child
-        if joint_data.joint_name == parent_name:
-            message.append(joint(joint_name=child_name, joint_target=joint_data.joint_target))
-    
-    # publish the message to the /srh/sendupdate topic.
-    pub = rospy.Publisher('srh/sendupdate', sendupdate) 
-    pub.publish(sendupdate(len(message), message))
+    # publish the message to the child joint controller command topic.
+    # here we insert the joint name into the topic name
+    pub.publish(data.set_point)
     
 
 def listener():
@@ -52,15 +45,14 @@ def listener():
     # init the ros node
     rospy.init_node('joints_link_test', anonymous=True)
 
-    # init the subscriber: subscribe to the topic 
-    # /srh/shadowhand_data, using the callback function
+    # init the subscriber: subscribe to the
+    # child joint controller topic, using the callback function
     # callback()
-    rospy.Subscriber("srh/shadowhand_data", joints_data, callback)
-
+    rospy.Subscriber('/sh_'+parent_name + controller_type + '/state', JointControllerState, callback)
     # subscribe until interrupted
     rospy.spin()
 
 
 if __name__ == '__main__':
-    listener()    
+    listener() 
 

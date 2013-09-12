@@ -16,7 +16,7 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import roslib; roslib.load_manifest('sr_hand')
+import roslib; roslib.load_manifest('sr_example')
 import rospy
 
 import time, mutex, subprocess, math
