@@ -24,7 +24,7 @@ parent_name = "ffj3"
 child_name = "mfj3"
 controller_type = "_mixed_position_velocity_controller"
 
-pub = rospy.Publisher('/sh_' + child_name + controller_type + '/command', Float64)
+pub = rospy.Publisher('sh_' + child_name + controller_type + '/command', Float64)
 
 def callback(data):
     """
@@ -46,9 +46,9 @@ def listener():
     rospy.init_node('joints_link_test', anonymous=True)
 
     # init the subscriber: subscribe to the
-    # child joint controller topic, using the callback function
+    # parent joint controller topic, using the callback function
     # callback()
-    rospy.Subscriber('/sh_'+parent_name + controller_type + '/state', JointControllerState, callback)
+    rospy.Subscriber('sh_'+parent_name + controller_type + '/state', JointControllerState, callback)
     # subscribe until interrupted
     rospy.spin()
 
