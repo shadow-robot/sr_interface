@@ -23,31 +23,23 @@
 # ros publisher to make sure a data is received even if we don't stream
 # the data.
 
-import roslib; roslib.load_manifest('sr_hand')
+import roslib; roslib.load_manifest('sr_example')
 import rospy
-from sr_robot_msgs.msg import sendupdate, joint
+
 import time
-
-class Pose(object):
-    def __init__(self, joints_dict):
-        joints_table = []
-        for name in joints_dict.keys():
-            joints_table.append(joint(joint_name = name,
-                                      joint_target = joints_dict[name]))
-
-        self.msg = sendupdate(len(joints_table), joints_table)
-
-
+import math
+from std_msgs.msg import Float64
 
 class SexyExampleLatching(object):
+    
+    # type of controller that is running 
+    controller_type = "_mixed_position_velocity_controller"
+    
     def __init__(self):
-        # Here we initialize the publisher with the latch set to True.
-        # this will ensure that the hand gets the message, even though we're
-        # using the messages more as a service (we don't stream the data, we
-        # just ask the hand to take a given position)
-        self.publisher = rospy.Publisher('/srh/sendupdate', sendupdate, latch=True)
 
-        self.sleep_time = 2.0
+        self.hand_publishers = self.create_hand_publishers()
+
+        self.sleep_time = 4.0
 
     def run(self):
         """
@@ -78,24 +70,25 @@ class SexyExampleLatching(object):
         wave_2 = {"WRJ2":10}
 
 
-        self.publish_pose(Pose(start))
+        self.publish_pose(start)
         time.sleep(self.sleep_time)
-        self.publish_pose(Pose(fist))
-        time.sleep(self.sleep_time)
-
-        self.publish_pose(Pose(start))
+        
+        self.publish_pose(fist)
         time.sleep(self.sleep_time)
 
-        self.publish_pose(Pose(victory))
+        self.publish_pose(start)
         time.sleep(self.sleep_time)
 
-        self.publish_pose(Pose(start))
+        self.publish_pose(victory)
+        time.sleep(self.sleep_time)
+
+        self.publish_pose(start)
         time.sleep(self.sleep_time)
 
         for i in range(0,4):
-            self.publish_pose(Pose(wave_1))
+            self.publish_pose(wave_1)
             time.sleep(self.sleep_time)
-            self.publish_pose(Pose(wave_2))
+            self.publish_pose(wave_2)
             time.sleep(self.sleep_time)
 
 
@@ -103,7 +96,29 @@ class SexyExampleLatching(object):
         """
         Publish a given pose.
         """
-        self.publisher.publish(pose.msg)
+        for joint, pos in pose.iteritems():
+            self.hand_publishers[joint].publish(math.radians(pos))
+    
+    def create_hand_publishers(self):
+        """
+        Creates a dictionary of publishers to send the targets to the controllers
+        on /sh_??j?_mixed_position_velocity_controller/command
+        """
+        hand_pub = {}
+
+        for joint in ["FFJ0", "FFJ3", "FFJ4",
+                      "MFJ0", "MFJ3", "MFJ4",
+                      "RFJ0", "RFJ3", "RFJ4",
+                      "LFJ0", "LFJ3", "LFJ4", "LFJ5",
+                      "THJ1", "THJ2", "THJ3", "THJ4", "THJ5",
+                      "WRJ1", "WRJ2" ]:
+            # Here we initialize the publisher with the latch set to True.
+            # this will ensure that the hand gets the message, even though we're
+            # using the messages more as a service (we don't stream the data, we
+            # just ask the hand to take a given position)
+            hand_pub[joint] = rospy.Publisher('sh_'+joint.lower() + self.controller_type + '/command', Float64, latch=True)
+
+        return hand_pub
 
 def main():
     rospy.init_node('sexy_example_latching', anonymous = True)

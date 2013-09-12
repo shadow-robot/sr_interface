@@ -61,9 +61,9 @@
 #include <sr_robot_msgs/JointControllerState.h>
 
 /// the name of the parent joint
-std::string parent_name = "FFJ3";
+std::string parent_name = "ffj3";
 /// the name of the child joint to link to the parent
-std::string child_name  = "MFJ3";
+std::string child_name  = "mfj3";
 /// the type of controller that will be running
 std::string controller_type = "_mixed_position_velocity_controller";
 
@@ -81,7 +81,9 @@ ros::Publisher pub;
 void callback(const sr_robot_msgs::JointControllerStateConstPtr& msg)
 {
   //publish the message
-  pub.publish(msg->set_point);
+  std_msgs::Float64 command;
+  command.data = msg->set_point;
+  pub.publish(command);
 
   return;
 }

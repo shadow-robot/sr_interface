@@ -138,7 +138,7 @@ class FancyDemo(object):
     def create_hand_publishers(self):
         """
         Creates a dictionnary of publishers to send the targets to the controllers
-        on /sh_??j?_mixed_position_velocity_controller/command
+        on /sh_??j?_position_controller/command
         """
         hand_pub = {}
 
