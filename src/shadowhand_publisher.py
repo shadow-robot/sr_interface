@@ -21,7 +21,7 @@ This is an example showing how to publish command messages to the hand.
 """
 
 
-import roslib; roslib.load_manifest('sr_hand')
+import roslib; roslib.load_manifest('sr_example')
 import rospy
 import time
 import math

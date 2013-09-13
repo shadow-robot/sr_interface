@@ -27,7 +27,7 @@ for the real hand
 
 """
 
-import roslib; roslib.load_manifest('sr_hand')
+import roslib; roslib.load_manifest('sr_example')
 import rospy
 import math
 from sensor_msgs.msg import JointState
