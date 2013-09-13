@@ -24,46 +24,43 @@ This is an example showing how to publish command messages to the hand.
 import roslib; roslib.load_manifest('sr_hand')
 import rospy
 import time
+import math
 
-from sr_robot_msgs.msg import joint, sendupdate, contrlr
+from std_msgs.msg import Float64
 
+# Use the mixed controllers by default with the simulated hand (in gazebo)
+controller_type = "_mixed_position_velocity_controller"
+# Generally use the position controller with the real hand
+#controller_type = "_position_controller"
+    
 def talker():
     """
-    The Publisher publishes to the different topics on which the sr_subscriber subscribes. It sends commands to
-    the hand.
-
-    Please set the message you want to test.
-    """
-    test_what = "sendupdate" # choose sendupdate or contrlr
+    The Publisher publishes two commands to move joint FFJ0 and RFJ0
 
     """
-    Test the sendupdate command
-    """
-    if test_what == "sendupdate":
-        pub1 = rospy.Publisher('srh/sendupdate', sendupdate)
-        rospy.init_node('shadowhand_command_publisher_python')
+    joint1 = 'ffj0'
+    joint2 = 'rfj0'
+    
+    #Initalize the ROS node
+    rospy.init_node('shadowhand_command_publisher_python')
 
-        new_target = 0
+    pub1 = rospy.Publisher('sh_'+ joint1 + controller_type + '/command', Float64, latch=True)
+    pub2 = rospy.Publisher('sh_'+ joint2 + controller_type + '/command', Float64, latch=True)
+    
 
-        time.sleep(1)
-        print "publishing"
-        data_to_send = [ joint(joint_name="FFJ0", joint_target=new_target),
-                         joint(joint_name="FFJ3", joint_target=new_target) ]
+    # define a new target value for the joint position.
+    # The position controllers expect their commands in radians
+    new_target_1 = math.radians(0.0)
+    new_target_2 = math.radians(0.0)
 
-        pub1.publish(sendupdate(len(data_to_send), data_to_send))
-
-    """
-    Tests the contrlr command
-    """
-    if test_what == "contrlr":
-        pub2 = rospy.Publisher('contrlr', contrlr)
-
-        data_to_send = ["p:0","i:0"]
-
-        pub2.publish( contrlr( contrlr_name="smart_motor_ff2" ,
-                               list_of_parameters = data_to_send,
-                               length_of_list = len(data_to_send) ) )
-
+    time.sleep(1)
+    print "publishing"
+    
+    #This will move the joint ffj0 to the defined target (0 degrees)
+    pub1.publish(new_target_1)
+    
+    #This will move the joint rfj0 to the defined target (0 degrees)
+    pub2.publish(new_target_2)
 
 
 if __name__ == '__main__':

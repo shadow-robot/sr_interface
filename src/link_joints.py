@@ -35,6 +35,7 @@ from std_msgs.msg import Float64
 
 parent_name = "ffj3"
 child_name = "mfj3"
+# Use the mixed controllers by default with the simulated hand (in gazebo)
 controller_type = "_mixed_position_velocity_controller"
 
 pub = rospy.Publisher('sh_' + child_name + controller_type + '/command', Float64)

@@ -67,7 +67,7 @@
 std::string parent_name = "ffj3";
 /// the name of the child joint to link to the parent
 std::string child_name  = "mfj3";
-/// the type of controller that will be running
+/// the type of controller that will be running (use the mixed controllers by default with the simulated hand (in gazebo))
 std::string controller_type = "_mixed_position_velocity_controller";
 
 //a ros subscriber (will be instantiated later on)
