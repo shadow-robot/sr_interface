@@ -17,30 +17,41 @@
 #
 
 """
-This is a simple subscriber example, subscribing to the srh/shadowhand_data topic
+This is a simple subscriber example, subscribing to the joint_states topic and printing out the data in a per-joint basis
+To see how the joint_states topic looks like you can type the following in a terminal:
+for the simulated hand
+> rostopic echo /gazebo/joint_states
+
+for the real hand
+> rostopic echo /joint_states
+
 """
 
 import roslib; roslib.load_manifest('sr_hand')
 import rospy
-from sr_robot_msgs.msg import joints_data, joint
+import math
+from sensor_msgs.msg import JointState
 
-def callback(joint_data):
+def callback(joint_state):
     """
-    The callback function for the topic srh/shadowhand_Data. It just displays the received information on the console.
+    The callback function for the topic gazebo/joint_states (or joint_states if the real shadow hand is being used).
+    It just displays the received information on the console.
     
-    @param joint_data: the message containing the joint data.
+    @param joint_state: the message containing the joints data.
     """
-    for joint in joint_data.joints_list:
-        rospy.loginfo(rospy.get_name()+"[%s] : Pos = %f | Target = %f | Temp = %f | Current = %f",
-                      joint.joint_name, joint.joint_position, joint.joint_target, joint.joint_temperature, 
-                      joint.joint_current)
+    for joint_name, position, velocity, effort in zip(joint_state.name, joint_state.position, joint_state.velocity, joint_state.effort):
+        rospy.loginfo("[%s] : Pos = %f | Pos_deg = %f | Vel = %f | Effort = %f",
+                      joint_name, position, math.degrees(position), velocity, effort)
 
 def listener():
     """
     Initialize the ROS node and the topic to which it subscribes.
     """
-    rospy.init_node('shadowhand_subscriber_python', anonymous=True)
-    rospy.Subscriber("srh/shadowhand_data", joints_data, callback)
+    rospy.init_node('shadowhand_joint_states_subscriber_python', anonymous=True)
+    #For the simulated hand (running on the gazebo simulator)
+    rospy.Subscriber("gazebo/joint_states", JointState, callback)
+    #For the real shadow hand
+    #rospy.Subscriber("joint_states", JointState, callback)
     rospy.spin()
 
 if __name__ == '__main__':
