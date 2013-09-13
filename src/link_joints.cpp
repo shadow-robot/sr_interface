@@ -39,14 +39,17 @@
  * read the position for a specific joint and send this as the target to
  * another joint.
  *
- * To test this program, just start the hand, rviz visualizer, the control GUI
- * and this example (in 4 different consoles):
- * \verbatim
- roslaunch sr_hand srh_motor.launch
- roslaunch sr_hand rviz_motor.launch
- rosrun sr_control_gui __init__.py
- rosrun sr_hand link_joints
+ * This example can be tested with the simulated hand (or simulated hand and arm)
+ * by using the following commands in separate terminals
+ * * \verbatim
+ * roslaunch sr_hand  gazebo_arm_and_hand.launch
+ * or
+ * roslaunch sr_hand  gazebo_hand.launch
+ * and then
+ * rosrun sr_example link_joints
+ * rosrun rqt_gui rqt_gui
  \endverbatim
+ * in the rqt_gui go to plugins->ShadowRobot->joint slider and select EtherCAT hand
  * If you move the joint slider for FFJ3, then MFJ3 will move as well.
  *
  *

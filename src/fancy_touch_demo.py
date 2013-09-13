@@ -16,6 +16,15 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+# This demo is a simple script that reads data from the tactile sensors in the finger tips and does some actions in response.
+# This version can work with PST tactiles and (with a modification in the subscriber topic name) with Biotac sensors
+# When a finger tip is pressed and the value of the pressure exceeds a predefined threshold an action is triggered
+# There is a different action defined for each finger. Actions involve one of the following things:
+# - send a predefined pose command to the hand
+# - send a predefined pose command to the arm (if there is not an arm the arm commands will be ignored)
+# - the PC beeps
+
+
 import roslib; roslib.load_manifest('sr_example')
 import rospy
 
@@ -25,82 +34,87 @@ from sr_robot_msgs.msg import sendupdate, joint, Biotac, BiotacAll, ShadowPST
 from sensor_msgs.msg import *
 from std_msgs.msg import Float64
 
-#the threshold for pdc above which the tactile is considered "pressed"
+#the threshold for pdc above which the Biotac tactile is considered "pressed"
 PDC_THRESHOLD = 2000
 #the threshold for the PSTs above which the tactile is considered "pressed"
 PST_THRESHOLD = 400
 
 class FancyDemo(object):
+    # type of controller that is running 
+    #controller_type = "_mixed_position_velocity_controller"
+    controller_type = "_position_controller"
+    
     # starting position for the hand (DON't use until reviewed. Should be executed in two movement sequences)
-    start_pos_hand = [ joint(joint_name = "THJ1", joint_target = 21),
-                       joint(joint_name = "THJ2", joint_target = 25),
-                       joint(joint_name = "THJ3", joint_target = 0),
-                       joint(joint_name = "THJ4", joint_target = 50),
-                       joint(joint_name = "THJ5", joint_target = 9),
-                       joint(joint_name = "FFJ0", joint_target = 180),
-                       joint(joint_name = "FFJ3", joint_target = 90),
-                       joint(joint_name = "FFJ4", joint_target = 0),
-                       joint(joint_name = "MFJ0", joint_target = 180),
-                       joint(joint_name = "MFJ3", joint_target = 90),
-                       joint(joint_name = "MFJ4", joint_target = 0),
-                       joint(joint_name = "RFJ0", joint_target = 180),
-                       joint(joint_name = "RFJ3", joint_target = 90),
-                       joint(joint_name = "RFJ4", joint_target = 0),
-                       joint(joint_name = "LFJ0", joint_target = 180),
-                       joint(joint_name = "LFJ3", joint_target = 90),
-                       joint(joint_name = "LFJ4", joint_target = 0),
-                       joint(joint_name = "LFJ5", joint_target = 0),
-                       joint(joint_name = "WRJ1", joint_target = 0),
-                       joint(joint_name = "WRJ2", joint_target = 0) ]
+    start_pos_hand = { "THJ1":21,
+                       "THJ2":25,
+                       "THJ3":0,
+                       "THJ4":50,
+                       "THJ5":9,
+                       "FFJ0":180,
+                       "FFJ3":90,
+                       "FFJ4":0,
+                       "MFJ0":180,
+                       "MFJ3":90,
+                       "MFJ4":0,
+                       "RFJ0":180,
+                       "RFJ3":90,
+                       "RFJ4":0,
+                       "LFJ0":180,
+                       "LFJ3":90,
+                       "LFJ4":0,
+                       "LFJ5":0,
+                       "WRJ1":0,
+                       "WRJ2":0 }
     # starting position for the hand
-    extended_pos_hand = [ joint(joint_name = "THJ1", joint_target = 21),
-                       joint(joint_name = "THJ2", joint_target = 25),
-                       joint(joint_name = "THJ3", joint_target = 0),
-                       joint(joint_name = "THJ4", joint_target = 50),
-                       joint(joint_name = "THJ5", joint_target = 9),
-                       joint(joint_name = "FFJ0", joint_target = 0),
-                       joint(joint_name = "FFJ3", joint_target = 0),
-                       joint(joint_name = "FFJ4", joint_target = 0),
-                       joint(joint_name = "MFJ0", joint_target = 0),
-                       joint(joint_name = "MFJ3", joint_target = 0),
-                       joint(joint_name = "MFJ4", joint_target = 0),
-                       joint(joint_name = "RFJ0", joint_target = 0),
-                       joint(joint_name = "RFJ3", joint_target = 0),
-                       joint(joint_name = "RFJ4", joint_target = 0),
-                       joint(joint_name = "LFJ0", joint_target = 0),
-                       joint(joint_name = "LFJ3", joint_target = 0),
-                       joint(joint_name = "LFJ4", joint_target = 0),
-                       joint(joint_name = "LFJ5", joint_target = 0),
-                       joint(joint_name = "WRJ1", joint_target = 0),
-                       joint(joint_name = "WRJ2", joint_target = 0) ]
+    extended_pos_hand = {  "THJ1":21,
+                           "THJ2":25,
+                           "THJ3":0,
+                           "THJ4":50,
+                           "THJ5":9,
+                           "FFJ0":0,
+                           "FFJ3":0,
+                           "FFJ4":0,
+                           "MFJ0":0,
+                           "MFJ3":0,
+                           "MFJ4":0,
+                           "RFJ0":0,
+                           "RFJ3":0,
+                           "RFJ4":0,
+                           "LFJ0":0,
+                           "LFJ3":0,
+                           "LFJ4":0,
+                           "LFJ5":0,
+                           "WRJ1":0,
+                           "WRJ2":0 }
+
+    #thumb up position for the hand
+    thumb_up_pos_hand = {  "THJ1":0,
+                           "THJ2":0,
+                           "THJ3":0,
+                           "THJ4":0,
+                           "THJ5":0,
+                           "FFJ0":180,
+                           "FFJ3":90,
+                           "FFJ4":0,
+                           "MFJ0":180,
+                           "MFJ3":90,
+                           "MFJ4":0,
+                           "RFJ0":180,
+                           "RFJ3":90,
+                           "RFJ4":0,
+                           "LFJ0":180,
+                           "LFJ3":90,
+                           "LFJ4":0,
+                           "LFJ5":0,
+                           "WRJ1":0,
+                           "WRJ2":10 }
+
     #starting position for the arm
     start_pos_arm = [ joint(joint_name = "ElbowJRotate", joint_target = 0),
                       joint(joint_name = "ElbowJSwing", joint_target = 59),
                       joint(joint_name = "ShoulderJRotate", joint_target = 0),
                       joint(joint_name = "ShoulderJSwing", joint_target = 33)
                       ]
-    #thumb up position for the hand
-    thumb_up_pos_hand = [ joint(joint_name = "THJ1", joint_target = 0),
-                          joint(joint_name = "THJ2", joint_target = 0),
-                          joint(joint_name = "THJ3", joint_target = 0),
-                          joint(joint_name = "THJ4", joint_target = 0),
-                          joint(joint_name = "THJ5", joint_target = 0),
-                          joint(joint_name = "FFJ0", joint_target = 180),
-                          joint(joint_name = "FFJ3", joint_target = 90),
-                          joint(joint_name = "FFJ4", joint_target = 0),
-                          joint(joint_name = "MFJ0", joint_target = 180),
-                          joint(joint_name = "MFJ3", joint_target = 90),
-                          joint(joint_name = "MFJ4", joint_target = 0),
-                          joint(joint_name = "RFJ0", joint_target = 180),
-                          joint(joint_name = "RFJ3", joint_target = 90),
-                          joint(joint_name = "RFJ4", joint_target = 0),
-                          joint(joint_name = "LFJ0", joint_target = 180),
-                          joint(joint_name = "LFJ3", joint_target = 90),
-                          joint(joint_name = "LFJ4", joint_target = 0),
-                          joint(joint_name = "LFJ5", joint_target = 0),
-                          joint(joint_name = "WRJ1", joint_target = 0),
-                          joint(joint_name = "WRJ2", joint_target = 10) ]
-
 
 
     #The arm publisher:
@@ -132,8 +146,8 @@ class FancyDemo(object):
         rospy.loginfo("OK, ready for the demo")
 
         # We subscribe to the data being published by the biotac sensors.
-        self.sub_biotacs = rospy.Subscriber("/tactiles", BiotacAll, self.callback_biotacs, queue_size=1)
-        self.sub_psts    = rospy.Subscriber("/tactile", ShadowPST, self.callback_psts, queue_size=1)
+        self.sub_biotacs = rospy.Subscriber("tactiles", BiotacAll, self.callback_biotacs, queue_size=1)
+        self.sub_psts    = rospy.Subscriber("tactile", ShadowPST, self.callback_psts, queue_size=1)
 
     def create_hand_publishers(self):
         """
@@ -148,7 +162,7 @@ class FancyDemo(object):
                       "LFJ0", "LFJ3", "LFJ4", "LFJ5",
                       "THJ1", "THJ2", "THJ3", "THJ4", "THJ5",
                       "WRJ1", "WRJ2" ]:
-            hand_pub[joint] = rospy.Publisher('/sh_'+joint.lower()+'_position_controller/command', Float64)
+            hand_pub[joint] = rospy.Publisher('sh_'+joint.lower() + self.controller_type + '/command', Float64, latch=True)
 
         return hand_pub
 
@@ -157,8 +171,8 @@ class FancyDemo(object):
         Publishes the given pose to the correct controllers for the hand.
         The targets are converted in radians.
         """
-        for joint in pose:
-            self.hand_publishers[joint.joint_name].publish( math.radians(joint.joint_target) )
+        for joint, pos in pose.iteritems():
+            self.hand_publishers[joint].publish( math.radians(pos) )
 
     def callback_biotacs(self, msg):
         """

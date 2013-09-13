@@ -15,6 +15,19 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
+# This example can be tested with the simulated hand (or simulated hand and arm) 
+# by using the following command in a separate terminal
+# roslaunch sr_hand  gazebo_arm_and_hand.launch
+# or
+# roslaunch sr_hand  gazebo_hand.launch
+# and then
+# rosrun sr_example link_joints.py
+# rosrun rqt_gui rqt_gui
+
+# in the rqt_gui go to plugins->ShadowRobot->joint slider and select EtherCAT hand
+# If you move the joint slider for FFJ3, then MFJ3 will move as well.
+
 import roslib; roslib.load_manifest('sr_example')
 import rospy
 from sr_robot_msgs.msg import JointControllerState
