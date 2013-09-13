@@ -22,7 +22,7 @@
 # There is a different action defined for each finger. Actions involve one of the following things:
 # - send a predefined pose command to the hand
 # - send a predefined pose command to the arm (if there is not an arm the arm commands will be ignored)
-# - the PC beeps
+# - the PC beeps (you should install the beep (sudo apt-get install beep)
 
 
 import roslib; roslib.load_manifest('sr_example')
@@ -49,7 +49,7 @@ class FancyDemo(object):
                        "THJ2":25,
                        "THJ3":0,
                        "THJ4":50,
-                       "THJ5":9,
+                       "THJ5":-6,
                        "FFJ0":180,
                        "FFJ3":90,
                        "FFJ4":0,
@@ -66,11 +66,11 @@ class FancyDemo(object):
                        "WRJ1":0,
                        "WRJ2":0 }
     # starting position for the hand
-    extended_pos_hand = {  "THJ1":21,
-                           "THJ2":25,
+    extended_pos_hand = {  "THJ1":0,
+                           "THJ2":0,
                            "THJ3":0,
-                           "THJ4":50,
-                           "THJ5":9,
+                           "THJ4":0,
+                           "THJ5":-6,
                            "FFJ0":0,
                            "FFJ3":0,
                            "FFJ4":0,

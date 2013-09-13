@@ -39,7 +39,7 @@ class SexyExampleLatching(object):
 
         self.hand_publishers = self.create_hand_publishers()
 
-        self.sleep_time = 4.0
+        self.sleep_time = 3.0
 
     def run(self):
         """
