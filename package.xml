@@ -1,0 +1,38 @@
+<package>
+  <name>sr_example</name>
+  <version>1.2.0</version>
+  <description>sr_example is an example of a real package interfaced with our robot. Please refer to the tutorial Creating a package to interact with our robots.</description>
+  <maintainer email="">Ugo Cupcic</maintainer>
+
+  <license>GPL</license>
+
+  <url type="website">http://ros.org/wiki/sr_example</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Ugo Cupcic</author>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>sr_robot_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>roscpp</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>sr_robot_msgs</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>std_msgs</run_depend>
+
+  <!-- Dependencies needed only for running tests. -->
+  <!-- <test_depend>roscpp</test_depend> -->
+  <!-- <test_depend>rospy</test_depend> -->
+  <!-- <test_depend>sr_robot_msgs</test_depend> -->
+  <!-- <test_depend>sensor_msgs</test_depend> -->
+  <!-- <test_depend>std_msgs</test_depend> -->
+
+</package>
