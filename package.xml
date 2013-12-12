@@ -2,12 +2,11 @@
   <name>sr_example</name>
   <version>1.2.0</version>
   <description>sr_example is an example of a real package interfaced with our robot. Please refer to the tutorial Creating a package to interact with our robots.</description>
-  <maintainer email="">Ugo Cupcic</maintainer>
+  <maintainer email="software@shadowrobot.com">Ugo Cupcic</maintainer>
 
   <license>GPL</license>
 
   <url type="website">http://ros.org/wiki/sr_example</url>
-  <!-- <url type="bugtracker"></url> -->
 
   <author>Ugo Cupcic</author>
 
@@ -27,12 +26,5 @@
   <run_depend>sr_robot_msgs</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>std_msgs</run_depend>
-
-  <!-- Dependencies needed only for running tests. -->
-  <!-- <test_depend>roscpp</test_depend> -->
-  <!-- <test_depend>rospy</test_depend> -->
-  <!-- <test_depend>sr_robot_msgs</test_depend> -->
-  <!-- <test_depend>sensor_msgs</test_depend> -->
-  <!-- <test_depend>std_msgs</test_depend> -->
 
 </package>
