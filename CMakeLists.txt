@@ -11,7 +11,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 include_directories(${Boost_INCLUDE_DIRS})
 add_executable(link_joints src/link_joints.cpp)
-add_dependencies(link_joints sr_robot_msgs_gencpp)
+target_link_libraries(link_joints ${Boost_LIBRARIES} ${catkin_LIBRARIES})
 
 catkin_package(
     DEPENDS
