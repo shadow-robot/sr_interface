@@ -3,11 +3,6 @@ project(sr_example)
 find_package(catkin REQUIRED COMPONENTS roscpp rospy sr_robot_msgs sensor_msgs std_msgs)
 include_directories(${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 
-#set the default path for built executables to the "bin" directory
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-#set the default path for built libraries to the "lib" directory
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
-
 include_directories(${Boost_INCLUDE_DIRS})
 add_executable(link_joints src/link_joints.cpp)
 target_link_libraries(link_joints ${Boost_LIBRARIES} ${catkin_LIBRARIES})
@@ -17,4 +12,14 @@ catkin_package(
     CATKIN_DEPENDS roscpp rospy sr_robot_msgs sensor_msgs std_msgs
     INCLUDE_DIRS
     LIBRARIES
+)
+
+install(TARGETS link_joints
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(DIRECTORY scripts/
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  USE_SOURCE_PERMISSIONS
+  PATTERN ".svn" EXCLUDE
 )
