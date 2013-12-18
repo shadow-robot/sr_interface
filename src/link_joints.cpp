@@ -62,13 +62,17 @@
 //messages
 #include <std_msgs/Float64.h>
 #include <sr_robot_msgs/JointControllerState.h>
+#include <pr2_controllers_msgs/JointControllerState.h>
 
 /// the name of the parent joint
 std::string parent_name = "ffj3";
 /// the name of the child joint to link to the parent
 std::string child_name  = "mfj3";
-/// the type of controller that will be running (use the mixed controllers by default with the simulated hand (in gazebo))
+/// the type of controller that will be running
+// If you use the simulated hand (in gazebo) use the mixed controllers
 std::string controller_type = "_mixed_position_velocity_controller";
+// If you use the real hand, generally use the position controller (comment the previous line and uncomment the following)
+//std::string controller_type = "_position_controller";
 
 //a ros subscriber (will be instantiated later on)
 ros::Subscriber sub;
@@ -81,7 +85,10 @@ ros::Publisher pub;
  *
  * @param msg message of type sr_hand::joints_data
  */
+// If you use the simulated hand (in gazebo) use the mixed controllers
 void callback(const sr_robot_msgs::JointControllerStateConstPtr& msg)
+// If you use the real hand, generally use the position controller (comment the previous line and uncomment the following)
+//void callback(const pr2_controllers_msgs::JointControllerStateConstPtr& msg)
 {
   //publish the message
   std_msgs::Float64 command;

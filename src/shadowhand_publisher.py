@@ -28,9 +28,10 @@ import math
 
 from std_msgs.msg import Float64
 
-# Use the mixed controllers by default with the simulated hand (in gazebo)
+# type of controller that is running 
+# If you use the simulated hand (in gazebo) use the mixed controllers
 controller_type = "_mixed_position_velocity_controller"
-# Generally use the position controller with the real hand
+# If you use the real hand, generally use the position controller (comment the previous line and uncomment the following)
 #controller_type = "_position_controller"
     
 def talker():

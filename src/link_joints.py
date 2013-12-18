@@ -30,13 +30,19 @@
 
 import roslib; roslib.load_manifest('sr_example')
 import rospy
-from sr_robot_msgs.msg import JointControllerState
 from std_msgs.msg import Float64
+# If you use the simulated hand (in gazebo) use the mixed controllers
+from sr_robot_msgs.msg import JointControllerState
+# If you use the real hand, generally use the position controller (comment the previous line and uncomment the following)
+#from pr2_controllers_msgs.msg import JointControllerState
 
 parent_name = "ffj3"
 child_name = "mfj3"
-# Use the mixed controllers by default with the simulated hand (in gazebo)
+
+# If you use the simulated hand (in gazebo) use the mixed controllers
 controller_type = "_mixed_position_velocity_controller"
+# If you use the real hand, generally use the position controller (comment the previous line and uncomment the following)
+#controller_type = "_position_controller"
 
 pub = rospy.Publisher('sh_' + child_name + controller_type + '/command', Float64)
 

@@ -33,7 +33,10 @@ from std_msgs.msg import Float64
 class SexyExampleLatching(object):
     
     # type of controller that is running 
+    # If you use the simulated hand (in gazebo) use the mixed controllers
     controller_type = "_mixed_position_velocity_controller"
+    # If you use the real hand, generally use the position controller (comment the previous line and uncomment the following)
+    #controller_type = "_position_controller"
     
     def __init__(self):
 
@@ -103,6 +106,7 @@ class SexyExampleLatching(object):
         """
         Creates a dictionary of publishers to send the targets to the controllers
         on /sh_??j?_mixed_position_velocity_controller/command
+        or /sh_??j?_position_controller/command
         """
         hand_pub = {}
 
