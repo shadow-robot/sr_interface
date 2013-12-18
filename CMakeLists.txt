@@ -13,11 +13,8 @@ catkin_package(
     LIBRARIES
 )
 
+catkin_python_setup()
+
 install(TARGETS link_joints
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-install(DIRECTORY scripts/
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-  USE_SOURCE_PERMISSIONS
 )
