@@ -33,7 +33,10 @@ from std_msgs.msg import Float64
 class SexyExampleLatching(object):
     
     # type of controller that is running 
+    # If you use the simulated hand (in gazebo) use the mixed controllers
     controller_type = "_mixed_position_velocity_controller"
+    # If you use the real hand, generally use the position controller (comment the previous line and uncomment the following)
+    #controller_type = "_position_controller"
     
     def __init__(self):
 
@@ -56,18 +59,18 @@ class SexyExampleLatching(object):
                 "MFJ0":180, "MFJ3":90, "MFJ4":0,
                 "RFJ0":180, "RFJ3":90, "RFJ4":0,
                 "LFJ0":180, "LFJ3":90, "LFJ4":0, "LFJ5":0,
-                "THJ1":40, "THJ2":20, "THJ3":0, "THJ4":50, "THJ5":35,
+                "THJ1":0, "THJ2":0, "THJ3":0, "THJ4":50, "THJ5":-50,
                 "WRJ1":0, "WRJ2":0 }
 
-        victory = {"FFJ0":0, "FFJ3":0, "FFJ4":-25,
-                   "MFJ0":0, "MFJ3":0, "MFJ4":25,
-                   "RFJ0":180, "RFJ3":90, "RFJ4":-25,
-                   "LFJ0":180, "LFJ3":90, "LFJ4":-25, "LFJ5":0,
+        victory = {"FFJ0":0, "FFJ3":0, "FFJ4":-20,
+                   "MFJ0":0, "MFJ3":0, "MFJ4":20,
+                   "RFJ0":180, "RFJ3":90, "RFJ4":-10,
+                   "LFJ0":180, "LFJ3":90, "LFJ4":-10, "LFJ5":0,
                    "THJ1":40, "THJ2":20, "THJ3":0, "THJ4":50, "THJ5":35,
                    "WRJ1":0, "WRJ2":0 }
 
-        wave_1 = {"WRJ2":-30}
-        wave_2 = {"WRJ2":10}
+        wave_1 = {"WRJ2":-20}
+        wave_2 = {"WRJ2":5}
 
 
         self.publish_pose(start)
@@ -103,6 +106,7 @@ class SexyExampleLatching(object):
         """
         Creates a dictionary of publishers to send the targets to the controllers
         on /sh_??j?_mixed_position_velocity_controller/command
+        or /sh_??j?_position_controller/command
         """
         hand_pub = {}
 
