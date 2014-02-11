@@ -2,11 +2,13 @@
   <name>sr_example</name>
   <version>1.2.0</version>
   <description>sr_example is an example of a real package interfaced with our robot. Please refer to the tutorial Creating a package to interact with our robots.</description>
-  <maintainer email="software@shadowrobot.com">Ugo Cupcic</maintainer>
+  <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
 
   <license>GPL</license>
 
   <url type="website">http://ros.org/wiki/sr_example</url>
+  <url type="repository">https://github.com/shadow-robot/sr-ros-interface</url>
+  <url type="bugtracker">https://github.com/shadow-robot/sr-ros-interface/issues</url>
 
   <author>Ugo Cupcic</author>
 
