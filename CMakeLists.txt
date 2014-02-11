@@ -18,3 +18,11 @@ catkin_python_setup()
 install(TARGETS link_joints
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+
+
+# These are executable python files that will be found via rosrun. So they are installed in the BIN_DESTINATION
+file(GLOB PYTHON_SCRIPTS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+   "${CMAKE_CURRENT_SOURCE_DIR}/scripts/${PROJECT_NAME}/*")
+install(PROGRAMS ${PYTHON_SCRIPTS}
+   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
