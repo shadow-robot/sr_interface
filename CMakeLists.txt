@@ -2,9 +2,8 @@ cmake_minimum_required(VERSION 2.8.3)
 project(sr_example)
 find_package(catkin REQUIRED COMPONENTS roscpp rospy sr_robot_msgs sensor_msgs std_msgs pr2_controllers_msgs)
 include_directories(${Boost_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS})
-add_executable(link_joints src/link_joints.cpp)
-add_dependencies(link_joints ${catkin_EXPORTED_TARGETS})
-target_link_libraries(link_joints ${Boost_LIBRARIES} ${catkin_LIBRARIES})
+
+catkin_python_setup()
 
 catkin_package(
     DEPENDS
@@ -13,7 +12,10 @@ catkin_package(
     LIBRARIES
 )
 
-catkin_python_setup()
+add_executable(link_joints src/link_joints.cpp)
+add_dependencies(link_joints ${catkin_EXPORTED_TARGETS})
+target_link_libraries(link_joints ${Boost_LIBRARIES} ${catkin_LIBRARIES})
+
 
 install(TARGETS link_joints
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
