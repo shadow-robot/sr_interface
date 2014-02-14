@@ -32,7 +32,7 @@ import roslib; roslib.load_manifest('sr_example')
 import rospy
 from std_msgs.msg import Float64
 # If you use the simulated hand (in gazebo) use the mixed controllers
-from sr_robot_msgs.msg import JointControllerState
+from pr2_controllers_msgs.msg import JointControllerState
 # If you use the real hand, generally use the position controller (comment the previous line and uncomment the following)
 #from pr2_controllers_msgs.msg import JointControllerState
 
