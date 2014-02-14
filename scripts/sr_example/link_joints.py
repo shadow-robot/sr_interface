@@ -16,7 +16,7 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# This example can be tested with the simulated hand (or simulated hand and arm) 
+# This example can be tested with the simulated hand (or simulated hand and arm)
 # by using the following command in a separate terminal
 # roslaunch sr_hand  gazebo_arm_and_hand.launch
 # or
@@ -39,16 +39,14 @@ from sr_robot_msgs.msg import JointControllerState
 parent_name = "ffj3"
 child_name = "mfj3"
 
-# If you use the simulated hand (in gazebo) use the mixed controllers
-controller_type = "_mixed_position_velocity_controller"
-# If you use the real hand, generally use the position controller (comment the previous line and uncomment the following)
-#controller_type = "_position_controller"
+# type of controller that is running
+controller_type = "_position_controller"
 
 pub = rospy.Publisher('sh_' + child_name + controller_type + '/command', Float64)
 
 def callback(data):
     """
-    The callback function: called each time a message is received on the 
+    The callback function: called each time a message is received on the
     topic parent joint controller state topic
 
     @param data: the message
@@ -56,7 +54,7 @@ def callback(data):
     # publish the message to the child joint controller command topic.
     # here we insert the joint name into the topic name
     pub.publish(data.set_point)
-    
+
 
 def listener():
     """
@@ -74,5 +72,4 @@ def listener():
 
 
 if __name__ == '__main__':
-    listener() 
-
+    listener()

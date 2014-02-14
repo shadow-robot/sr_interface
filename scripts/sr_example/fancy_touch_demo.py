@@ -40,11 +40,9 @@ PDC_THRESHOLD = 2000
 PST_THRESHOLD = 400
 
 class FancyDemo(object):
-    # If you use the simulated hand (in gazebo) use the mixed controllers
-    #controller_type = "_mixed_position_velocity_controller"
-    # If you use the real hand, generally use the position controller (comment the previous line and uncomment the following)
+    # type of controller that is running
     controller_type = "_position_controller"
-    
+
     # starting position for the hand (DON't use until reviewed. Should be executed in two movement sequences)
     start_pos_hand = { "THJ1":21,
                        "THJ2":25,
@@ -395,4 +393,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

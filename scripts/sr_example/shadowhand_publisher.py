@@ -28,12 +28,9 @@ import math
 
 from std_msgs.msg import Float64
 
-# type of controller that is running 
-# If you use the simulated hand (in gazebo) use the mixed controllers
-controller_type = "_mixed_position_velocity_controller"
-# If you use the real hand, generally use the position controller (comment the previous line and uncomment the following)
-#controller_type = "_position_controller"
-    
+# type of controller that is running
+controller_type = "_position_controller"
+
 def talker():
     """
     The Publisher publishes two commands to move joint FFJ0 and RFJ0
@@ -41,13 +38,13 @@ def talker():
     """
     joint1 = 'ffj0'
     joint2 = 'rfj0'
-    
+
     #Initalize the ROS node
     rospy.init_node('shadowhand_command_publisher_python')
 
     pub1 = rospy.Publisher('sh_'+ joint1 + controller_type + '/command', Float64, latch=True)
     pub2 = rospy.Publisher('sh_'+ joint2 + controller_type + '/command', Float64, latch=True)
-    
+
 
     # define a new target value for the joint position.
     # The position controllers expect their commands in radians
@@ -56,10 +53,10 @@ def talker():
 
     time.sleep(1)
     print "publishing"
-    
+
     #This will move the joint ffj0 to the defined target (0 degrees)
     pub1.publish(new_target_1)
-    
+
     #This will move the joint rfj0 to the defined target (0 degrees)
     pub2.publish(new_target_2)
 

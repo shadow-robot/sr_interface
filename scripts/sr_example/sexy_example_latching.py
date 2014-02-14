@@ -31,13 +31,10 @@ import math
 from std_msgs.msg import Float64
 
 class SexyExampleLatching(object):
-    
-    # type of controller that is running 
-    # If you use the simulated hand (in gazebo) use the mixed controllers
-    controller_type = "_mixed_position_velocity_controller"
-    # If you use the real hand, generally use the position controller (comment the previous line and uncomment the following)
-    #controller_type = "_position_controller"
-    
+
+    # type of controller that is running
+    controller_type = "_position_controller"
+
     def __init__(self):
 
         self.hand_publishers = self.create_hand_publishers()
@@ -75,7 +72,7 @@ class SexyExampleLatching(object):
 
         self.publish_pose(start)
         time.sleep(self.sleep_time)
-        
+
         self.publish_pose(fist)
         time.sleep(self.sleep_time)
 
@@ -101,7 +98,7 @@ class SexyExampleLatching(object):
         """
         for joint, pos in pose.iteritems():
             self.hand_publishers[joint].publish(math.radians(pos))
-    
+
     def create_hand_publishers(self):
         """
         Creates a dictionary of publishers to send the targets to the controllers

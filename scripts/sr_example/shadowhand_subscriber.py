@@ -36,7 +36,7 @@ def callback(joint_state):
     """
     The callback function for the topic gazebo/joint_states (or joint_states if the real shadow hand is being used).
     It just displays the received information on the console.
-    
+
     @param joint_state: the message containing the joints data.
     """
     for joint_name, position, velocity, effort in zip(joint_state.name, joint_state.position, joint_state.velocity, joint_state.effort):
@@ -49,7 +49,7 @@ def listener():
     """
     rospy.init_node('shadowhand_joint_states_subscriber_python', anonymous=True)
     #For the simulated hand (running on the gazebo simulator)
-    rospy.Subscriber("gazebo/joint_states", JointState, callback)
+    rospy.Subscriber("/joint_states", JointState, callback)
     #For the real shadow hand
     #rospy.Subscriber("joint_states", JointState, callback)
     rospy.spin()
