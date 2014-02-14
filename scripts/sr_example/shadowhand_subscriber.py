@@ -19,10 +19,6 @@
 """
 This is a simple subscriber example, subscribing to the joint_states topic and printing out the data in a per-joint basis
 To see how the joint_states topic looks like you can type the following in a terminal:
-for the simulated hand
-> rostopic echo /gazebo/joint_states
-
-for the real hand
 > rostopic echo /joint_states
 
 """
@@ -34,7 +30,8 @@ from sensor_msgs.msg import JointState
 
 def callback(joint_state):
     """
-    The callback function for the topic gazebo/joint_states (or joint_states if the real shadow hand is being used).
+    The callback function for the topic /joint_states
+
     It just displays the received information on the console.
 
     @param joint_state: the message containing the joints data.
@@ -48,10 +45,9 @@ def listener():
     Initialize the ROS node and the topic to which it subscribes.
     """
     rospy.init_node('shadowhand_joint_states_subscriber_python', anonymous=True)
-    #For the simulated hand (running on the gazebo simulator)
-    rospy.Subscriber("/joint_states", JointState, callback)
-    #For the real shadow hand
-    #rospy.Subscriber("joint_states", JointState, callback)
+
+    rospy.Subscriber("joint_states", JointState, callback)
+
     rospy.spin()
 
 if __name__ == '__main__':
