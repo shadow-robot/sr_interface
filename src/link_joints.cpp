@@ -70,7 +70,7 @@ std::string parent_name = "ffj3";
 std::string child_name  = "mfj3";
 /// the type of controller that will be running
 // If you use the simulated hand (in gazebo) use the mixed controllers
-std::string controller_type = "_mixed_position_velocity_controller";
+std::string controller_type = "_position_controller";
 // If you use the real hand, generally use the position controller (comment the previous line and uncomment the following)
 //std::string controller_type = "_position_controller";
 
