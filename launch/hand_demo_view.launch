@@ -1,0 +1,6 @@
+<launch>
+  <include file="$(find sr_hand)/launch/gazebo/gazebo_hand.launch">
+    <arg name="gui" value="false"/>
+  </include>
+  <node name="rviz_hand_demo_view" pkg="rviz" type="rviz" args="-d $(find sr_example)/config/hand_demo_view.rviz" />
+</launch>
