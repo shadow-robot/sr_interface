@@ -32,9 +32,9 @@ c = Commander()
 # sending another while the hand is still moving will cause the new move to
 # take over). So you will need to add sleeps to control the motion.
 #
-# If you use the time parameter in move_hand, it determines how long will it take
-# for the hand to reach the commanded position from the current one (this is achieved
-# by sending interpolated targets to the hand
+# If you use the interpolation_time parameter in move_hand, it determines how long will 
+# it take for the hand to reach the commanded position from the current one (this is
+# achieved by sending interpolated targets to the hand).
 
 # Use a dictionary to store a named hand position
 hand_start = {
