@@ -47,7 +47,7 @@ hand_start = {
 
 c.move_hand(hand_start)
 rospy.loginfo("Move to hand_start position")
-rospy.sleep(1.0)
+rospy.sleep(2.0)
 
 # Grasp with the hand
 c.move_hand({
@@ -63,10 +63,22 @@ rospy.sleep(4.5)
 
 # Back to home
 tmp = hand_start.copy()
-tmp.update({'interpolation_time': 1.0})
+tmp.update({'interpolation_time': 8.0})
 c.move_hand(tmp)
 rospy.loginfo("Move back to hand_start position")
 rospy.sleep(2.0)
+
+# An example of how a new move_hand command can override an ongoing movement
+# for a certain set of joints
+c.move_hand({
+    "FFJ4": 0.0, "FFJ3": 90.0, "FFJ0": 180.0,
+    "interpolation_time": 2.0
+})
+c.move_hand({
+    "LFJ0": 180.0,
+    "interpolation_time": 1.0
+})
+rospy.sleep(6.5)
 
 # Move one finger
 c.move_hand({
@@ -74,7 +86,7 @@ c.move_hand({
     "interpolation_time": 5.0
 })
 rospy.loginfo("Move middle finger")
-rospy.sleep(9.0)
+rospy.sleep(6.0)
 
 c.move_hand(hand_start)
 rospy.loginfo("Move back to hand_start position")
@@ -84,7 +96,7 @@ rospy.sleep(2.0)
 hand_pos = c.get_hand_position()
 rospy.loginfo("Current position:")
 print hand_pos
-#Move FFJ0 150 degrees
+# Move FFJ0 150 degrees from it's current position
 hand_pos['FFJ0'] = hand_pos['FFJ0'] + 150
 c.move_hand(hand_pos)
 
