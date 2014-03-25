@@ -111,4 +111,17 @@ hand_effort = c.get_hand_effort()
 rospy.loginfo("Current effort:")
 print hand_effort
 
+# The simulated hand does not provide the tactile state
+# We can also read the tactile sensor type
+tactile_type = c.get_tactile_type()
+if tactile_type != None:
+    rospy.loginfo("tactile type:")
+    print tactile_type
+
+# We can also read the current tactile sensor values
+tactile_state = c.get_tactile_state()
+if tactile_state != None:
+    rospy.loginfo("tactile state:")
+    print tactile_state
+
 rospy.sleep(2.0)
