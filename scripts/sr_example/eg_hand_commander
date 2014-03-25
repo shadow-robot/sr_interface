@@ -99,4 +99,16 @@ print hand_pos
 hand_pos['FFJ0'] = hand_pos['FFJ0'] + 150
 c.move_hand(hand_pos)
 
+rospy.sleep(0.1)
+
+# We can also read the current hand joint velocities
+hand_vel = c.get_hand_velocity()
+rospy.loginfo("Current velocity:")
+print hand_vel
+
+# We can also read the current joint efforts
+hand_effort = c.get_hand_effort()
+rospy.loginfo("Current effort:")
+print hand_effort
+
 rospy.sleep(2.0)
