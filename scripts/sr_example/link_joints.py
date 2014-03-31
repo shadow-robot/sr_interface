@@ -28,10 +28,10 @@
 # in the rqt_gui go to plugins->ShadowRobot->joint slider and select EtherCAT hand
 # If you move the joint slider for FFJ3, then MFJ3 will move as well.
 
-import roslib; roslib.load_manifest('sr_example')
-import rospy
+from control_msgs.msg import JointControllerState
+from rospy import Publisher, Subscriber, init_node, spin
 from std_msgs.msg import Float64
-from pr2_controllers_msgs.msg import JointControllerState
+
 
 parent_name = "ffj3"
 child_name = "mfj3"
@@ -39,7 +39,7 @@ child_name = "mfj3"
 # type of controller that is running
 controller_type = "_position_controller"
 
-pub = rospy.Publisher('sh_' + child_name + controller_type + '/command', Float64)
+pub = Publisher('sh_' + child_name + controller_type + '/command', Float64)
 
 def callback(data):
     """
@@ -58,14 +58,14 @@ def listener():
     The main function
     """
     # init the ros node
-    rospy.init_node('joints_link_test', anonymous=True)
+    init_node('joints_link_test', anonymous=True)
 
     # init the subscriber: subscribe to the
     # parent joint controller topic, using the callback function
     # callback()
-    rospy.Subscriber('sh_'+parent_name + controller_type + '/state', JointControllerState, callback)
+    Subscriber('sh_' + parent_name + controller_type + '/state', JointControllerState, callback)
     # subscribe until interrupted
-    rospy.spin()
+    spin()
 
 
 if __name__ == '__main__':

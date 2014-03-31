@@ -61,7 +61,7 @@
 
 //messages
 #include <std_msgs/Float64.h>
-#include <pr2_controllers_msgs/JointControllerState.h>
+#include <control_msgs/JointControllerState.h>
 
 /// the name of the parent joint
 std::string parent_name = "ffj3";
@@ -81,7 +81,7 @@ ros::Publisher pub;
  *
  * @param msg message of type sr_hand::joints_data
  */
-void callback(const pr2_controllers_msgs::JointControllerStateConstPtr& msg)
+void callback(const control_msgs::JointControllerStateConstPtr& msg)
 {
   //publish the message
   std_msgs::Float64 command;
