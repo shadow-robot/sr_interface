@@ -67,12 +67,13 @@ c.move_hand(tmp)
 rospy.loginfo("Move back to hand_start position")
 rospy.sleep(2.0)
 
-# An example of how a new move_hand command can override an ongoing movement
-# for a certain set of joints
+# An example of how a new move_hand command can override an ongoing movement for a certain set of joints
+# (the previous command c.move_hand(tmp) is still ongoing)
 c.move_hand({
     "FFJ4": 0.0, "FFJ3": 90.0, "FFJ0": 180.0,
     "interpolation_time": 2.0
 })
+# Here we send yet another command that also overrides the previous c.move_hand(tmp) 
 c.move_hand({
     "LFJ0": 180.0,
     "interpolation_time": 1.0
@@ -91,7 +92,7 @@ c.move_hand(hand_start)
 rospy.loginfo("Move back to hand_start position")
 rospy.sleep(2.0)
 
-# We can also read the current hand position
+# We can also read the current hand position (position of every joint in degrees)
 hand_pos = c.get_hand_position()
 rospy.loginfo("Current position:")
 print hand_pos
@@ -101,7 +102,7 @@ c.move_hand(hand_pos)
 
 rospy.sleep(0.1)
 
-# We can also read the current hand joint velocities
+# We can also read the current hand joint velocities (in degrees/s)
 hand_vel = c.get_hand_velocity()
 rospy.loginfo("Current velocity:")
 print hand_vel
