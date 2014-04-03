@@ -21,6 +21,8 @@ from sr_hand.shadowhand_commander import Commander
 rospy.init_node('receiver_example')
 c = Commander()
 
+# Add a 1 s delay before sending any command, to allow the undelying command publisher to be initialized.
+rospy.sleep(1.0)
 
 #
 # The hand is moved by setting the angles (degrees) for the joints that we want to move.
