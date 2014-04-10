@@ -224,8 +224,7 @@ class FancyDemo(object):
             return
 
         #ok the finger sensor was pressed
-        p = subprocess.Popen('beep')
-
+        
         #rotate the trunk to (data_received * min_pos)
         # convert data to be in [0., 1.]
         data /= 4000.
@@ -269,7 +268,6 @@ class FancyDemo(object):
             return
 
         #ok finger was pressed
-        p = subprocess.Popen('beep')
 
         #rotate the trunk to (data_received * min_pos)
         # convert data to be in [0., 1.]
@@ -312,8 +310,6 @@ class FancyDemo(object):
             return
 
         #ok finger was pressed
-        p = subprocess.Popen('beep')
-
         rospy.loginfo("RF touched, not doing anything.")
 
         #wait before next possible action
@@ -334,8 +330,6 @@ class FancyDemo(object):
             return
 
         #ok finger pressed
-        p = subprocess.Popen('beep')
-
         rospy.loginfo("LF touched, going to start position.")
 
         #wait 1s for the user to release the sensor
@@ -364,8 +358,6 @@ class FancyDemo(object):
             return
 
         #ok the finger was pressed
-        p = subprocess.Popen('beep')
-
         rospy.loginfo("TH touched, going to thumb up position.")
 
         #wait 1s for the user to release the sensor
