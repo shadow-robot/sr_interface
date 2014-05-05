@@ -15,9 +15,9 @@
 
 #include <ros/ros.h>
 #include <tf/transform_datatypes.h>
-#include <kinematics_msgs/GetKinematicSolverInfo.h>
-#include <kinematics_msgs/GetPositionFK.h>
-#include <kinematics_msgs/GetPositionIK.h>
+#include <moveit_msgs/GetKinematicSolverInfo.h>
+#include <moveit_msgs/GetPositionFK.h>
+#include <moveit_msgs/GetPositionIK.h>
 // #include <std_msgs/Float64.h>
 // #include <pr2_mechanism_msgs/ListControllers.h>
 
@@ -48,7 +48,7 @@ pose_stamped:{
         w: 0.1}
 }
          },
-ik_seed_state: {
+robot_state: {
 joint_state: {
 header: { seq: 57313,  stamp: {secs: 1311162659,nsecs: 346940994},  frame_id: ''}, name: ['FFJ1', 'FFJ2', 'FFJ3', 'FFJ4'],
 position: [0.78,0.78,0.78,0.0] } } },
@@ -87,7 +87,7 @@ void random_test_finger_fkik( ros::NodeHandle nh, std::string PREFIX, std::strin
   // the joints in a different order
   // 
   std::map<std::string,int> jointIndexMap; 
-  for( int j=0; j < jointNames.size(); j++ ) {
+  for( unsigned int j=0; j < jointNames.size(); j++ ) {
     jointIndexMap[jointNames[j]] = j;
   }
 
@@ -102,10 +102,10 @@ void random_test_finger_fkik( ros::NodeHandle nh, std::string PREFIX, std::strin
   // create the service clients; note that we reuse them throughout
   // the whole test for a given finger
   //
-  ros::ServiceClient fk = nh.serviceClient<kinematics_msgs::GetPositionFK>(prefix+"_kinematics/get_fk", true);
-  ros::ServiceClient ik = nh.serviceClient<kinematics_msgs::GetPositionIK>(prefix+"_kinematics/get_ik", true);
+  ros::ServiceClient fk = nh.serviceClient<moveit_msgs::GetPositionFK>(prefix+"_kinematics/get_fk", true);
+  ros::ServiceClient ik = nh.serviceClient<moveit_msgs::GetPositionIK>(prefix+"_kinematics/get_ik", true);
 
-  kinematics_msgs::GetPositionFK  fkdata;
+  moveit_msgs::GetPositionFK  fkdata;
 
   // generate n_tests random positions, check that pos(fk) == ik(joints)
   // hardcoded joint limits: J1=J2=J3: 0..90 degrees, J4 -25..25 degrees
@@ -175,8 +175,8 @@ void random_test_finger_fkik( ros::NodeHandle nh, std::string PREFIX, std::strin
 
     // now try IK to reconstruct FK angles
     // 
-    kinematics_msgs::GetPositionIK::Request  ikreq;
-    kinematics_msgs::GetPositionIK::Response ikres;
+    moveit_msgs::GetPositionIK::Request  ikreq;
+    moveit_msgs::GetPositionIK::Response ikres;
 
     ikreq.ik_request.ik_link_name = tipName;
     ikreq.ik_request.pose_stamped.header.frame_id = "palm";
@@ -190,10 +190,10 @@ void random_test_finger_fkik( ros::NodeHandle nh, std::string PREFIX, std::strin
     ikreq.ik_request.pose_stamped.pose.orientation.z = 0.0;
     ikreq.ik_request.pose_stamped.pose.orientation.w = 1.0;
 
-    ikreq.ik_request.ik_seed_state.joint_state.position.resize( jointNames.size() );
-    ikreq.ik_request.ik_seed_state.joint_state.name.resize( jointNames.size() );
-    for( int j=0; j < jointNames.size(); j++ ) {
-      ikreq.ik_request.ik_seed_state.joint_state.name[j] = jointNames[j];
+    ikreq.ik_request.robot_state.joint_state.position.resize( jointNames.size() );
+    ikreq.ik_request.robot_state.joint_state.name.resize( jointNames.size() );
+    for( unsigned int j=0; j < jointNames.size(); j++ ) {
+      ikreq.ik_request.robot_state.joint_state.name[j] = jointNames[j];
     }
 
     ik.call( ikreq, ikres );

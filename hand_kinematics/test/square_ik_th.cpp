@@ -1,7 +1,7 @@
 #include <ros/ros.h>
 #include <tf/transform_datatypes.h>
-#include <kinematics_msgs/GetKinematicSolverInfo.h>
-#include <kinematics_msgs/GetPositionIK.h>
+#include <moveit_msgs/GetKinematicSolverInfo.h>
+#include <moveit_msgs/GetPositionIK.h>
 
 #include <map>
 
@@ -14,11 +14,11 @@ std::map<std::string,std::string> jointControllerMap;
 std::map<std::string,unsigned int> jointPubIdxMap;
 ros::Publisher pub[5];
 ros::ServiceClient ik_client;
-kinematics_msgs::GetPositionIK::Request  gpik_req;
-kinematics_msgs::GetPositionIK::Response gpik_res;
+moveit_msgs::GetPositionIK::Request  gpik_req;
+moveit_msgs::GetPositionIK::Response gpik_res;
 
-kinematics_msgs::GetKinematicSolverInfo::Request request;
-kinematics_msgs::GetKinematicSolverInfo::Response response;
+moveit_msgs::GetKinematicSolverInfo::Request request;
+moveit_msgs::GetKinematicSolverInfo::Response response;
 
 // linear interpolation
 // q must be included in [0.0 , 1.0]
@@ -108,8 +108,8 @@ int main(int argc, char **argv)
     ros::service::waitForService("th_kinematics/get_ik_solver_info");
     ros::service::waitForService("th_kinematics/get_ik");
 
-    ros::ServiceClient query_client = rh.serviceClient<kinematics_msgs::GetKinematicSolverInfo>("th_kinematics/get_ik_solver_info");
-    ik_client = rh.serviceClient<kinematics_msgs::GetPositionIK>("th_kinematics/get_ik");
+    ros::ServiceClient query_client = rh.serviceClient<moveit_msgs::GetKinematicSolverInfo>("th_kinematics/get_ik_solver_info");
+    ik_client = rh.serviceClient<moveit_msgs::GetPositionIK>("th_kinematics/get_ik");
 
     ros::service::waitForService("pr2_controller_manager/list_controllers");
     ros::ServiceClient controller_list_client = rh.serviceClient<pr2_mechanism_msgs::ListControllers>("pr2_controller_manager/list_controllers");
@@ -151,7 +151,7 @@ int main(int argc, char **argv)
     }
 
     // define the service messages
-    gpik_req.timeout = ros::Duration(5.0);
+    gpik_req.ik_request.timeout = ros::Duration(5.0);
     gpik_req.ik_request.ik_link_name = "thtip";
     gpik_req.ik_request.pose_stamped.header.frame_id = "palm";
     gpik_req.ik_request.pose_stamped.pose.position.x = 0;
@@ -163,8 +163,8 @@ int main(int argc, char **argv)
     gpik_req.ik_request.pose_stamped.pose.orientation.y = 0.0;
     gpik_req.ik_request.pose_stamped.pose.orientation.z = 0.0;
     gpik_req.ik_request.pose_stamped.pose.orientation.w = 1.0;
-    gpik_req.ik_request.ik_seed_state.joint_state.position.resize(response.kinematic_solver_info.joint_names.size());
-    gpik_req.ik_request.ik_seed_state.joint_state.name = response.kinematic_solver_info.joint_names;
+    gpik_req.ik_request.robot_state.joint_state.position.resize(response.kinematic_solver_info.joint_names.size());
+    gpik_req.ik_request.robot_state.joint_state.name = response.kinematic_solver_info.joint_names;
 
 
     // prepare the publishers

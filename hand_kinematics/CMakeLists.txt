@@ -19,7 +19,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #  Uncomment this if you want the plugin interface to be compiled (requires arm_navigation stack)
 #rosbuild_add_library(hand_kinematics
 #	 src/hand_kinematics_coupling_plugin.cpp
-#	    src/hand_kinematics_utils.cpp
+#    src/hand_kinematics_utils.cpp
 #  )
 
 rosbuild_add_library(hand_kinematics_coupling_lib

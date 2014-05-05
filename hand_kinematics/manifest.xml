@@ -16,14 +16,14 @@
   <depend package="orocos_kdl" />
   <depend package="sensor_msgs"/>
   <depend package="tf_conversions"/>
-  <depend package="kinematics_msgs"/>
+  <depend package="moveit_msgs"/>
   <depend package="geometry_msgs"/>
   <depend package="pr2_mechanism_msgs"/>
   <!-- uncomment the following if you want the plugin interface -->
-  <!--  <depend package="pluginlib"/>
+  <!-- <depend package="pluginlib"/>
   <depend package="kinematics_base"/>
   <export>
 	  <kinematics_base plugin="${prefix}/hand_kinematics_plugins.xml" />
   </export>
-     -->
+  -->   
 </package>
