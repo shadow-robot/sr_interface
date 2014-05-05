@@ -55,17 +55,14 @@
 #include <kdl/chainfksolverpos_recursive.hpp>
 #include <kdl_coupling/chainiksolverpos_nr_jl_coupling.hpp>
 #include <kdl_coupling/chainiksolvervel_wdls_coupling.hpp>
-#include <kinematics_msgs/GetPositionFK.h>
-#include <kinematics_msgs/GetPositionIK.h>
-#include <kinematics_msgs/GetKinematicSolverInfo.h>
-#include <kinematics_msgs/KinematicSolverInfo.h>
+#include <moveit_msgs/KinematicSolverInfo.h>
 #include <urdf/model.h>
 #include <string>
 #include <vector>
 #include <tf_conversions/tf_kdl.h>
-#include <arm_navigation_msgs/ArmNavigationErrorCodes.h>
+#include <moveit_msgs/MoveItErrorCodes.h>
 #include <boost/shared_ptr.hpp>
-#include <kinematics_base/kinematics_base.h>
+#include <moveit/kinematics_base/kinematics_base.h>
 
 namespace hand_kinematics
 {
@@ -86,61 +83,84 @@ class HandKinematicsPlugin : public kinematics::KinematicsBase
 
     /**
      * @brief Given a desired pose of the end-effector, compute the joint angles to reach it
-     * @param ik_link_name - the name of the link for which IK is being computed
-     * @param ik_pose the desired pose of the link
-     * @param ik_seed_state an initial guess solution for the inverse kinematics
      * @return True if a valid solution was found, false otherwise
      */
-    bool getPositionIK(const geometry_msgs::Pose &ik_pose,
-                       const std::vector<double> &ik_seed_state,
-                       std::vector<double> &solution,
-		       int &error_code);      
+		virtual bool getPositionIK(const geometry_msgs::Pose &ik_pose,
+                             const std::vector<double> &ik_seed_state,
+                             std::vector<double> &solution,
+                             moveit_msgs::MoveItErrorCodes &error_code,
+                             const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
+
+		virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
+                                const std::vector<double> &ik_seed_state,
+                                double timeout,
+                                std::vector<double> &solution,
+                                moveit_msgs::MoveItErrorCodes &error_code,
+                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
+
+                               
     
+		virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
+                                const std::vector<double> &ik_seed_state,
+                                double timeout,
+                                const std::vector<double> &consistency_limits,
+                                std::vector<double> &solution,
+                                moveit_msgs::MoveItErrorCodes &error_code,
+                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
+
+
     /**
      * @brief Given a desired pose of the end-effector, search for the joint angles required to reach it.
      * This particular method is intended for "searching" for a solutions by stepping through the redundancy
      * (or other numerical routines).
-     * @param ik_pose the desired pose of the link
-     * @param ik_seed_state an initial guess solution for the inverse kinematics
-     * @return True if a valid solution was found, false otherwise
      */
-    bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
-                          const std::vector<double> &ik_seed_state,
-                          const double &timeout,
-                          std::vector<double> &solution,
-			  int &error_code);      
+		virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
+                                const std::vector<double> &ik_seed_state,
+                                double timeout,
+                                std::vector<double> &solution,
+                                const IKCallbackFn &solution_callback,
+                                moveit_msgs::MoveItErrorCodes &error_code,
+                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
+
     /**
      * @brief Given a desired pose of the end-effector, search for the joint angles required to reach it.
      * This particular method is intended for "searching" for a solutions by stepping through the redundancy
      * (or other numerical routines).
-     * @param ik_pose the desired pose of the link
-     * @param ik_seed_state an initial guess solution for the inverse kinematics
-     * @return True if a valid solution was found, false otherwise
      */
-    bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
-                          const std::vector<double> &ik_seed_state,
-                          const double &timeout,
-                          std::vector<double> &solution,
-                          const boost::function<void(const geometry_msgs::Pose &ik_pose,const std::vector<double> &ik_solution,int &error_code)> &desired_pose_callback,
-                          const boost::function<void(const geometry_msgs::Pose &ik_pose,const std::vector<double> &ik_solution,int &error_code)> &solution_callback,
-			  int &error_code);      
+    virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
+                                const std::vector<double> &ik_seed_state,
+                                double timeout,
+                                const std::vector<double> &consistency_limits,
+                                std::vector<double> &solution,
+                                const IKCallbackFn &solution_callback,
+                                moveit_msgs::MoveItErrorCodes &error_code,
+                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
+
+
     
     /**
      * @brief Given a set of joint angles and a set of links, compute their pose
-     * @param request  - the request contains the joint angles, set of links for which poses are to be computed and a timeout
-     * @param response - the response contains stamped pose information for all the requested links
+     * @param link_names - set of links for which poses are to be computed
+     * @param joint_angles - the contains the joint angles 
+     * @param poses - the response contains pose information for all the requested links
      * @return True if a valid solution was found, false otherwise
      */
-    bool getPositionFK(const std::vector<std::string> &link_names,
-                       const std::vector<double> &joint_angles, 
-                       std::vector<geometry_msgs::Pose> &poses);
+		virtual bool getPositionFK(const std::vector<std::string> &link_names,
+														const std::vector<double> &joint_angles,
+														std::vector<geometry_msgs::Pose> &poses) const;
+
+
     
     /**
      * @brief  Initialization function for the kinematics
      * @return True if initialization was successful, false otherwise
      */
-    bool initialize(std::string name);
-    
+		virtual bool initialize(const std::string& robot_description,
+                          const std::string& group_name,
+                          const std::string& base_frame,
+                          const std::string& tip_frame,
+                          double search_discretization);
+
     /**
      * @brief  Return the frame in which the kinematics is operating
      * @return the string name of the frame in which the kinematics is operating
@@ -152,20 +172,19 @@ class HandKinematicsPlugin : public kinematics::KinematicsBase
      */
     std::string getToolFrame();
     
-    /**
-     * @brief  Return all the joint names in the order they are used internally
-     */
-    std::vector<std::string> getJointNames();
-    
-    /**
-     * @brief  Return all the link names in the order they are represented internally
-     */
-    std::vector<std::string> getLinkNames();
-    
-    protected:
+		/**
+		 * @brief Return all the joint names in the order they are used internally
+		 */
+			const std::vector<std::string>& getJointNames() const;
+
+		/**
+		 * @brief Return all the link names in the order they are represented internally
+		 */
+			const std::vector<std::string>& getLinkNames() const;
+			
+  protected:
 
     bool active_;
-    int free_angle_;
     urdf::Model robot_model_;
     double search_discretization_;
     ros::NodeHandle node_handle_, root_handle_;
@@ -174,26 +193,17 @@ class HandKinematicsPlugin : public kinematics::KinematicsBase
     KDL::ChainFkSolverPos_recursive* fk_solver;
 	  KDL::ChainIkSolverPos_NR_JL_coupling *ik_solver_pos;
     KDL::ChainIkSolverVel_wdls_coupling *ik_solver_vel;
-    kinematics_msgs::KinematicSolverInfo solver_info_;
+    moveit_msgs::KinematicSolverInfo solver_info_;
 
-    //ros::ServiceServer ik_service_,fk_service_,ik_solver_info_service_,fk_solver_info_service_;
-    //tf::TransformListener tf_;
-    std::string root_name_,finger_base_name, tip_name;
+    std::string finger_base_name;
     int dimension_;
     boost::shared_ptr<KDL::ChainFkSolverPos_recursive> jnt_to_pose_solver_;
     
-    //KDL::Chain kdl_chain_;
     KDL::Chain_coupling kdl_chain_;
     
     KDL::JntArray joint_min_, joint_max_;
-    //TODO CHECK IF NEEDED  tf::TransformListener tf_listener;
-    //TODO CHECK IF NEEDED  bool readJoints(urdf::Model &robot_model);
-    
-    
-    kinematics_msgs::KinematicSolverInfo ik_solver_info_, fk_solver_info_;
-
-
-
+   
+    moveit_msgs::KinematicSolverInfo ik_solver_info_, fk_solver_info_;
 
   };
 }

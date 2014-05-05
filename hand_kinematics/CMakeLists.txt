@@ -17,19 +17,23 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 #  Uncomment this if you want the plugin interface to be compiled (requires arm_navigation stack)
-#rosbuild_add_library(hand_kinematics
-#	 src/hand_kinematics_coupling_plugin.cpp
-#    src/hand_kinematics_utils.cpp
-#  )
+rosbuild_add_library(hand_kinematics
+	 src/hand_kinematics_coupling_plugin.cpp
+    src/hand_kinematics_utils.cpp
+  )
 
 rosbuild_add_library(hand_kinematics_coupling_lib
 	         src/hand_kinematics_coupling.cpp )
 
 rosbuild_add_executable(hand_kinematics_coupling src/hand_kinematics_coupling.cpp)
 
-rosbuild_add_executable(circle_ik test/circle_ik.cpp)
-rosbuild_add_executable(square_ik_th test/square_ik_th.cpp)
-rosbuild_add_executable(upmc_fkik_test test/upmc_fkik_test.cpp)
+#rosbuild_add_executable(circle_ik test/circle_ik.cpp)
+#rosbuild_add_executable(square_ik_th test/square_ik_th.cpp)
+#rosbuild_add_executable(upmc_fkik_test test/upmc_fkik_test.cpp)
 
-target_link_libraries(circle_ik hand_kinematics_coupling_lib)
-target_link_libraries(square_ik_th hand_kinematics_coupling_lib)
+#target_link_libraries(circle_ik hand_kinematics_coupling_lib)
+#target_link_libraries(square_ik_th hand_kinematics_coupling_lib)
+
+rosbuild_add_gtest(test/hand_kinematics_test test/hand_kinematics_test.cpp)
+target_link_libraries(test/hand_kinematics_test hand_kinematics_coupling_lib)
+
