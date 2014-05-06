@@ -4,7 +4,7 @@
     Computation of forward and inverse kinematics for the fingers of the Shadow Hand, including coupling.
 
   </description>
-  <author>Juan Antonio Corrales Ramon (UPMC)</author>
+  <author>Juan Antonio Corrales Ramon (UPMC), Guillaume Walck (CITEC)</author>
   <license>GPL</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/hand_kinematics</url>
@@ -18,12 +18,12 @@
   <depend package="tf_conversions"/>
   <depend package="moveit_msgs"/>
   <depend package="geometry_msgs"/>
-  <depend package="pr2_mechanism_msgs"/>
   <!-- uncomment the following if you want the plugin interface -->
-  <!-- <depend package="pluginlib"/>
-  <depend package="kinematics_base"/>
+  <depend package="pluginlib"/>
+  <depend package="moveit_ros_planning"/>
+  <depend package="moveit_core"/>
   <export>
-	  <kinematics_base plugin="${prefix}/hand_kinematics_plugins.xml" />
+	  <moveit_core plugin="${prefix}/hand_kinematics_plugins.xml" />
   </export>
-  -->   
+    
 </package>

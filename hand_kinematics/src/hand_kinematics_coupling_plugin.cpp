@@ -128,9 +128,24 @@ PLUGINLIB_DECLARE_CLASS(hand_kinematics,HandKinematicsPlugin, hand_kinematics::H
 		int maxIterations;
 		double epsilon, lambda;
 
-		private_handle.param("maxIterations", maxIterations, 1000);
-		private_handle.param("epsilon", epsilon, 1e-2);
-		private_handle.param("lambda", lambda, 0.01);
+		if (!private_handle.getParam("maxIterations", maxIterations))
+    {
+			maxIterations= 1000;
+      ROS_WARN("No maxIterations on param server, using %d as default",maxIterations);
+    }
+    
+		if (!private_handle.getParam("epsilon", epsilon))
+    {
+			epsilon= 1e-2;
+      ROS_WARN("No epsilon on param server, using %f as default",epsilon);
+    }
+    
+    if (!private_handle.getParam("lambda", lambda))
+    {
+			lambda= 0.01;
+      ROS_WARN("No lambda on param server, using %f as default",lambda);
+    }
+		
 		ROS_DEBUG("IK Solver, maxIterations: %d, epsilon: %f, lambda: %f",maxIterations, epsilon, lambda);
 		
 		init_ik(robot_model,base_frame_,tip_frame_, joint_min_,joint_max_,ik_solver_info_);
@@ -356,24 +371,6 @@ PLUGINLIB_DECLARE_CLASS(hand_kinematics,HandKinematicsPlugin, hand_kinematics::H
       }
     }
     return valid;
-  }
-
-  std::string HandKinematicsPlugin::getBaseFrame()
-  {
-    if(!active_)
-    {
-      ROS_ERROR("kinematics not active");
-    }
-    return base_frame_;
-  }
-
-  std::string HandKinematicsPlugin::getToolFrame()
-  {
-    if(!active_ || ik_solver_info_.link_names.empty())
-    {
-      ROS_ERROR("kinematics not active");
-    }
-    return ik_solver_info_.link_names[0];
   }
 
   const std::vector<std::string> &HandKinematicsPlugin::getJointNames() const

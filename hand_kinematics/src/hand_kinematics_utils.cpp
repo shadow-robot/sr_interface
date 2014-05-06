@@ -65,22 +65,11 @@ namespace hand_kinematics
     }
     robot_model.initXml(root);
     
-    // specific for HAND IK
-    if (!node_handle.getParam("root_name", root_name)){
-      ROS_FATAL("HANDIK: No root name found on parameter server");
-      return false;
-    }
-    
    	if(root_name!="palm") {
 			ROS_FATAL("HANDIK: Current solver can only resolve to root frame = palm");
 			return false;
 		}
 	
-    if (!node_handle.getParam("tip_name", tip_name)){
-      ROS_FATAL("HANDIK: No tip name found on parameter server");
-      return false;
-    }
-    
     if(tip_name.find("tip")==std::string::npos) {
 			ROS_FATAL("Current solver can only resolve to one of the tip frames");
 			return false;

@@ -161,17 +161,7 @@ class HandKinematicsPlugin : public kinematics::KinematicsBase
                           const std::string& tip_frame,
                           double search_discretization);
 
-    /**
-     * @brief  Return the frame in which the kinematics is operating
-     * @return the string name of the frame in which the kinematics is operating
-     */
-     std::string getBaseFrame();
-    
-    /**
-     * @brief  Return the links for which kinematics can be computed
-     */
-    std::string getToolFrame();
-    
+       
 		/**
 		 * @brief Return all the joint names in the order they are used internally
 		 */
