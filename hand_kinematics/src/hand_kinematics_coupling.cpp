@@ -450,7 +450,7 @@ bool Kinematics::getPositionIK(moveit_msgs::GetPositionIK::Request &request,
     return false;
   }
   KDL::Frame F_dest;
-  tf::TransformTFToKDL(transform_root, F_dest);
+  tf::transformTFToKDL(transform_root, F_dest);
   int ik_valid= -1;
   for(int i=0; i < 10 && ik_valid < 0; i++)
   {
@@ -527,7 +527,7 @@ bool Kinematics::getPositionFK(moveit_msgs::GetPositionFK::Request &request,
     if (fk_valid >=0) {
       tf_pose.frame_id_ = root_name;
       tf_pose.stamp_ = ros::Time();
-      tf::PoseKDLToTF(p_out,tf_pose);
+      tf::poseKDLToTF(p_out,tf_pose);
       try {
         tf_listener.transformPose(request.header.frame_id,tf_pose,tf_pose);
       } catch (...) {
@@ -545,7 +545,7 @@ bool Kinematics::getPositionFK(moveit_msgs::GetPositionFK::Request &request,
       valid = false;
     }
   }
-  return true;
+  return valid;
 }
 
 int main(int argc, char **argv) {

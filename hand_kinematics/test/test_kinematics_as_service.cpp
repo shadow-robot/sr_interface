@@ -31,6 +31,7 @@
 #define IK_NEAR 0.001
 
 ros::NodeHandle *nh;
+bool verbose;
 
 double rand_range(double min_n, double max_n) {
   return (double)rand() / RAND_MAX * (max_n - min_n) + min_n;
@@ -257,27 +258,27 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
 // Declare a test
 TEST(FKIK, first_finger)
 {
-	random_test_finger_fkik( "FF", "ff", 1000 ,false);
+	random_test_finger_fkik( "FF", "ff", 1000 ,verbose);
 }
 
 TEST(FKIK, middle_finger)
 {
-	random_test_finger_fkik( "MF", "mf", 1000 ,false);
+	random_test_finger_fkik( "MF", "mf", 1000 ,verbose);
 }
 
 TEST(FKIK, ring_finger)
 {
-	random_test_finger_fkik( "RF", "rf", 1000 ,false);
+	random_test_finger_fkik( "RF", "rf", 1000 ,verbose);
 }
 
 TEST(FKIK, little_finger)
 {
-	random_test_finger_fkik( "LF", "lf", 1000 ,false);
+	random_test_finger_fkik( "LF", "lf", 1000 ,verbose);
 }
 
 TEST(FKIK, thumb)
 {
-	random_test_finger_fkik( "TH", "th", 1000 ,false);
+	random_test_finger_fkik( "TH", "th", 1000 ,verbose);
 }
 	
 /**
@@ -298,7 +299,7 @@ int main(int argc, char **argv){
 	
 	ros::init (argc, argv, "upmc_fkik_test" );
   nh = new ros::NodeHandle();
-  bool verbose;
+
   if( argc >1)
   {
     char argument =  (char)(argv[1][0]);
