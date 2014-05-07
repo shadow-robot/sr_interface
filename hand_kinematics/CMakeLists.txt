@@ -27,7 +27,6 @@ rosbuild_add_library(hand_kinematics_coupling_lib
 target_link_libraries(hand_kinematics_coupling_lib moveit_kinematics_base)
 
 rosbuild_add_executable(hand_kinematics_coupling src/hand_kinematics_coupling.cpp)
-target_link_libraries(hand_kinematics_coupling moveit_kinematics_base)
 
 #rosbuild_add_executable(circle_ik test/circle_ik.cpp)
 #rosbuild_add_executable(square_ik_th test/square_ik_th.cpp)
@@ -41,4 +40,5 @@ rosbuild_add_gtest(test/test_kinematics_as_plugin test/test_kinematics_as_plugin
 target_link_libraries(test/test_kinematics_as_plugin moveit_kinematics_base)
 target_link_libraries(test/test_kinematics_as_plugin hand_kinematics_coupling_lib)
 
+rosbuild_add_gtest(test/test_kinematics_as_service test/test_kinematics_as_service.cpp)
 

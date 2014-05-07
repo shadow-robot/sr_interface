@@ -263,9 +263,24 @@ bool Kinematics::init() {
   int maxIterations;
   double epsilon, lambda;
 
-  nh_private.param("maxIterations", maxIterations, 1000);
-  nh_private.param("epsilon", epsilon, 1e-2);
-  nh_private.param("lambda", lambda, 0.01);
+	if (!nh_private.getParam("maxIterations", maxIterations))
+	{
+		maxIterations= 1000;
+		ROS_WARN("No maxIterations on param server, using %d as default",maxIterations);
+	}
+
+	if (!nh_private.getParam("epsilon", epsilon))
+	{
+		epsilon= 1e-2;
+		ROS_WARN("No epsilon on param server, using %f as default",epsilon);
+	}
+
+	if (!nh_private.getParam("lambda", lambda))
+	{
+		lambda= 0.01;
+		ROS_WARN("No lambda on param server, using %f as default",lambda);
+	}
+
   ROS_DEBUG("IK Solver, maxIterations: %d, epsilon: %f, lambda: %f",maxIterations, epsilon, lambda);
 
   // Build Solvers
@@ -402,8 +417,8 @@ void Kinematics::generateRandomJntSeed(KDL::JntArray &jnt_pos_in)
 bool Kinematics::getPositionIK(moveit_msgs::GetPositionIK::Request &request,
                                moveit_msgs::GetPositionIK::Response &response) {
 
-  if((request.ik_request.ik_link_name!= "fftip") && (request.ik_request.ik_link_name!= "mftip")
-     && (request.ik_request.ik_link_name!= "rftip") && (request.ik_request.ik_link_name!= "lftip") && (request.ik_request.ik_link_name!= "thtip"))
+  if((request.ik_request.ik_link_name.find("fftip")==std::string::npos) && (request.ik_request.ik_link_name.find("mftip")==std::string::npos)
+     && (request.ik_request.ik_link_name.find("rftip")==std::string::npos) && (request.ik_request.ik_link_name.find("lftip")==std::string::npos) && (request.ik_request.ik_link_name.find("thtip")==std::string::npos))
   {
     ROS_ERROR("Only IK at fingertip frame can be computed\n");
     return false;
@@ -439,10 +454,21 @@ bool Kinematics::getPositionIK(moveit_msgs::GetPositionIK::Request &request,
   int ik_valid= -1;
   for(int i=0; i < 10 && ik_valid < 0; i++)
   {
-    ROS_DEBUG("IK Seed: %f, %f, %f, %f, %f",jnt_pos_in(0),jnt_pos_in(1),jnt_pos_in(2),jnt_pos_in(3),jnt_pos_in(4));
+		if(request.ik_request.ik_link_name.find("thtip")!=std::string::npos || request.ik_request.ik_link_name.find("lftip")!=std::string::npos)
+			ROS_DEBUG("IK Seed: %f, %f, %f, %f, %f",jnt_pos_in(0),jnt_pos_in(1),jnt_pos_in(2),jnt_pos_in(3),jnt_pos_in(4));
+		else
+			ROS_DEBUG("IK Seed: %f, %f, %f, %f",jnt_pos_in(0),jnt_pos_in(1),jnt_pos_in(2),jnt_pos_in(3));
     ik_valid = ik_solver_pos->CartToJnt(jnt_pos_in, F_dest, jnt_pos_out);
     generateRandomJntSeed(jnt_pos_in);
-    ROS_DEBUG("IK Recalculation step: %d",i);
+    // maintain 1:1 coupling
+    if(request.ik_request.ik_link_name.find("thtip")==std::string::npos && request.ik_request.ik_link_name.find("lftip")==std::string::npos)
+    {
+			jnt_pos_in(3)=jnt_pos_in(2);
+		}
+		else if(request.ik_request.ik_link_name.find("lftip")!=std::string::npos )
+			jnt_pos_in(4)=jnt_pos_in(3);
+		if(i>0)
+			ROS_DEBUG("IK Recalculation step: %d",i);
   }
   if (ik_valid >= 0) {
     response.solution.joint_state.name = info.joint_names;
