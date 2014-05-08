@@ -18,7 +18,7 @@
   <depend package="tf_conversions"/>
   <depend package="moveit_msgs"/>
   <depend package="geometry_msgs"/>
-  <!-- uncomment the following if you want the plugin interface -->
+  <!-- comment all he following if you don't want the plugin interface -->
   <depend package="pluginlib"/>
   <depend package="moveit_ros_planning"/>
   <depend package="moveit_core"/>

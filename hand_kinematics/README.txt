@@ -1,4 +1,5 @@
 Copyright UPMC 2012
+Updated by Guillaume WALCK CITEC University Bielefeld 2014
 
 DESCRIPTION
 -----------
@@ -6,15 +7,14 @@ Hand_kinematics provides inverse kinematics for the Shadow Hand fingers and thum
 The IK services requires a 3D pose to be requested and not a 6D pose since 6D requests are most of the time unfeasible (only 3 to 5 DOF)
 However, the request pose message must be 6D, only 3D translation part will be considered.
 
-This code is based on some modified functions taken out of kdl and augmented with coupling possibilities. These functions are in package kdl_coupling, under the same KDL:: namespace and can work together with standard KDL functionnalities. Indeed all the functions created have different names.
+This code is based on some modified functions taken out of kdl and augmented with coupling possibilities. These functions are in package kdl_coupling, 
+under the same KDL:: namespace and can work together with standard KDL functionnalities. Indeed all the functions created have different names.
 
 
 PRE-REQUEST
 -----------
-This package provides several interfaces, one of them is a plugin for constraint aware kinematics that depends on arm_navigation stack. It is deactivated by default
-The other interfaces have less complex dependencies.
-
-If you need the plugin interface, you need to uncomment pluginlib and kinematic_base package in the manifest and uncomment the library in CMakelists.txt
+This package provides several interfaces, one of them is a plugin for constraint aware kinematics that depends on moveit_core package whereas the service interface only requires moveit_msgs. 
+The plugin is now activated by default, comment out the dependencies in manifest and CMakelists.txt if you don't want it.
 
 INSTALL
 -------
@@ -23,13 +23,18 @@ rosmake hand_kinematics --rosdep-install
 
 USAGE
 -----
-Launch files are provided to start the 5 kinematics services (one for each finger), either in standalone version (requires sr_hand to find URDF file) or in standard version supposing you have already LOADED the robot_description on the parameter server. This robot description MUST contain tip frames (only in newer versions of URDF files)
+Launch files are provided to start the 5 kinematics services (one for each finger), either in standalone version (requires sr_hand to find URDF file)
+or in standard version supposing you have already LOADED the robot_description on the parameter server. This robot description MUST contain tip frames (only in newer versions of URDF files)
 
 
 TEST
 ----
 To test the FK/IK several possibilities are offered : 
-1) Use provided tests 
+1) Automatic test
+  * start a roscore
+	* rostest hand_kinematics hand_kinematics_services_test.test
+	* rostest hand_kinematics hand_kinematics_plugin_test.test
+2) Manual provided tests 
        * start a simulation of the hand :
 	roslaunch sr_hand gazebo_arm_and_hand_motor.launch
 	roslaunch sr_hand sr_arm_motor.launch
@@ -50,7 +55,7 @@ To test the FK/IK several possibilities are offered :
 
 	look at the provided snapshots in test folder to verify what you should see.
 	
-2) Use provided command line requests (test/command_line_tests.txt) and paste them into the shell (works for first finger)
-3) Use standard IK tutorials from ROS and adapt the service topics you request from
+3) Use provided command line requests (test/command_line_tests.txt) and paste them into the shell (works for first finger)
+4) Use standard IK tutorials from ROS and adapt the service topics you request from
 
 
