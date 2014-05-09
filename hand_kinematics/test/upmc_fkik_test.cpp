@@ -285,7 +285,7 @@ int main(int argc, char **argv)
 {
   ros::init (argc, argv, "upmc_fkik_test" );
   ros::NodeHandle nh;
-  bool verbose;
+  bool verbose=false;
   if( argc >1)
   {
     char argument =  (char)(argv[1][0]);

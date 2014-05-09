@@ -137,10 +137,7 @@ class MyTest
       error_code.val = error_code.PLANNING_FAILED;
   };
 
-  //kinematics::KinematicsBasePtr kinematics_solver_;
-  //boost::shared_ptr<hand_kinematics::HandKinematicsPlugin> kinematics_solver_;
-  //boost::shared_ptr<pluginlib::ClassLoader<hand_kinematics::HandKinematicsPlugin> > kinematics_loader_;
-   kinematics::KinematicsBasePtr kinematics_solver_;
+  kinematics::KinematicsBasePtr kinematics_solver_;
   boost::shared_ptr<pluginlib::ClassLoader<kinematics::KinematicsBase> > kinematics_loader_;
 };
 
@@ -158,46 +155,46 @@ TEST(HandIKPlugin, initialize)
   
   if(tool_name.find("fftip")!=std::string::npos)
   {
-		EXPECT_EQ((int)joint_names.size(),4);
-		EXPECT_TRUE(joint_names[0].find("FFJ4")!=std::string::npos);
-		EXPECT_TRUE(joint_names[1].find("FFJ3")!=std::string::npos);
-		EXPECT_TRUE(joint_names[2].find("FFJ2")!=std::string::npos);
-		EXPECT_TRUE(joint_names[3].find("FFJ1")!=std::string::npos);
-	}
-	if(tool_name.find("mftip")!=std::string::npos)
+    EXPECT_EQ((int)joint_names.size(),4);
+    EXPECT_TRUE(joint_names[0].find("FFJ4")!=std::string::npos);
+    EXPECT_TRUE(joint_names[1].find("FFJ3")!=std::string::npos);
+    EXPECT_TRUE(joint_names[2].find("FFJ2")!=std::string::npos);
+    EXPECT_TRUE(joint_names[3].find("FFJ1")!=std::string::npos);
+  }
+  if(tool_name.find("mftip")!=std::string::npos)
   {
-		EXPECT_EQ((int)joint_names.size(),4);
-		EXPECT_TRUE(joint_names[0].find("MFJ4")!=std::string::npos);
-		EXPECT_TRUE(joint_names[1].find("MFJ3")!=std::string::npos);
-		EXPECT_TRUE(joint_names[2].find("MFJ2")!=std::string::npos);
-		EXPECT_TRUE(joint_names[3].find("MFJ1")!=std::string::npos);
-	}
-	if(tool_name.find("rftip")!=std::string::npos)
+    EXPECT_EQ((int)joint_names.size(),4);
+    EXPECT_TRUE(joint_names[0].find("MFJ4")!=std::string::npos);
+    EXPECT_TRUE(joint_names[1].find("MFJ3")!=std::string::npos);
+    EXPECT_TRUE(joint_names[2].find("MFJ2")!=std::string::npos);
+    EXPECT_TRUE(joint_names[3].find("MFJ1")!=std::string::npos);
+  }
+  if(tool_name.find("rftip")!=std::string::npos)
   {
-		EXPECT_EQ((int)joint_names.size(),4);
-		EXPECT_TRUE(joint_names[0].find("RFJ4")!=std::string::npos);
-		EXPECT_TRUE(joint_names[1].find("RFJ3")!=std::string::npos);
-		EXPECT_TRUE(joint_names[2].find("RFJ2")!=std::string::npos);
-		EXPECT_TRUE(joint_names[3].find("RFJ1")!=std::string::npos);
-	}
-	if(tool_name.find("lftip")!=std::string::npos)
+    EXPECT_EQ((int)joint_names.size(),4);
+    EXPECT_TRUE(joint_names[0].find("RFJ4")!=std::string::npos);
+    EXPECT_TRUE(joint_names[1].find("RFJ3")!=std::string::npos);
+    EXPECT_TRUE(joint_names[2].find("RFJ2")!=std::string::npos);
+    EXPECT_TRUE(joint_names[3].find("RFJ1")!=std::string::npos);
+  }
+  if(tool_name.find("lftip")!=std::string::npos)
   {
-		EXPECT_EQ((int)joint_names.size(),5);
-		EXPECT_TRUE(joint_names[0].find("LFJ5")!=std::string::npos);
-		EXPECT_TRUE(joint_names[1].find("LFJ4")!=std::string::npos);
-		EXPECT_TRUE(joint_names[2].find("LFJ3")!=std::string::npos);
-		EXPECT_TRUE(joint_names[3].find("LFJ2")!=std::string::npos);
-		EXPECT_TRUE(joint_names[4].find("LFJ1")!=std::string::npos);
-	}	
-		if(tool_name.find("thtip")!=std::string::npos)
+    EXPECT_EQ((int)joint_names.size(),5);
+    EXPECT_TRUE(joint_names[0].find("LFJ5")!=std::string::npos);
+    EXPECT_TRUE(joint_names[1].find("LFJ4")!=std::string::npos);
+    EXPECT_TRUE(joint_names[2].find("LFJ3")!=std::string::npos);
+    EXPECT_TRUE(joint_names[3].find("LFJ2")!=std::string::npos);
+    EXPECT_TRUE(joint_names[4].find("LFJ1")!=std::string::npos);
+  } 
+    if(tool_name.find("thtip")!=std::string::npos)
   {
-		EXPECT_EQ((int)joint_names.size(),5);
-		EXPECT_TRUE(joint_names[0].find("THJ5")!=std::string::npos);
-		EXPECT_TRUE(joint_names[1].find("THJ4")!=std::string::npos);
-		EXPECT_TRUE(joint_names[2].find("THJ3")!=std::string::npos);
-		EXPECT_TRUE(joint_names[3].find("THJ2")!=std::string::npos);
-		EXPECT_TRUE(joint_names[4].find("THJ1")!=std::string::npos);
-	}	
+    EXPECT_EQ((int)joint_names.size(),5);
+    EXPECT_TRUE(joint_names[0].find("THJ5")!=std::string::npos);
+    EXPECT_TRUE(joint_names[1].find("THJ4")!=std::string::npos);
+    EXPECT_TRUE(joint_names[2].find("THJ3")!=std::string::npos);
+    EXPECT_TRUE(joint_names[3].find("THJ2")!=std::string::npos);
+    EXPECT_TRUE(joint_names[4].find("THJ1")!=std::string::npos);
+  } 
 }
 
 TEST(HandIKPlugin, getFK)
@@ -207,7 +204,6 @@ TEST(HandIKPlugin, getFK)
   const boost::shared_ptr<srdf::Model> &srdf = rdf_loader_.getSRDF();
   const boost::shared_ptr<urdf::ModelInterface>& urdf_model = rdf_loader_.getURDF();
   kinematic_model.reset(new robot_model::RobotModel(urdf_model, srdf));
-  //robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(my_test.kinematics_solver_->getGroupName());
 
   std::vector<double> seed, fk_values, solution;
   moveit_msgs::MoveItErrorCodes error_code;
@@ -217,7 +213,7 @@ TEST(HandIKPlugin, getFK)
   fk_names.push_back(my_test.kinematics_solver_->getTipFrame());
 
   robot_state::RobotState kinematic_state(kinematic_model);
-	robot_state::JointStateGroup* joint_state_group = kinematic_state.getJointStateGroup(my_test.kinematics_solver_->getGroupName());
+  robot_state::JointStateGroup* joint_state_group = kinematic_state.getJointStateGroup(my_test.kinematics_solver_->getGroupName());
 
   ros::NodeHandle nh("~");
   int number_fk_tests;
@@ -228,7 +224,7 @@ TEST(HandIKPlugin, getFK)
     seed.resize(my_test.kinematics_solver_->getJointNames().size(), 0.0);
     fk_values.resize(my_test.kinematics_solver_->getJointNames().size(), 0.0);
 
-		joint_state_group->setToRandomValues();
+    joint_state_group->setToRandomValues();
     joint_state_group->getVariableValues(fk_values);
     
     std::vector<geometry_msgs::Pose> poses;
@@ -245,7 +241,6 @@ TEST(HandIKPlugin, searchIK)
   const boost::shared_ptr<srdf::Model> &srdf_model = rdf_loader_.getSRDF();
   const boost::shared_ptr<urdf::ModelInterface>& urdf_model = rdf_loader_.getURDF();
   kinematic_model.reset(new robot_model::RobotModel(urdf_model, srdf_model));
-  //robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(my_test.kinematics_solver_->getGroupName());
 
   //Test inverse kinematics
   std::vector<double> seed, fk_values, solution;
@@ -258,7 +253,7 @@ TEST(HandIKPlugin, searchIK)
 
   robot_state::RobotState kinematic_state(kinematic_model);
   robot_state::JointStateGroup* joint_state_group = kinematic_state.getJointStateGroup(my_test.kinematics_solver_->getGroupName());
-
+  
   ros::NodeHandle nh("~");
   int number_ik_tests;
   nh.param("number_ik_tests", number_ik_tests, 10);
@@ -269,21 +264,27 @@ TEST(HandIKPlugin, searchIK)
   {
     seed.resize(my_test.kinematics_solver_->getJointNames().size(), 0.0);
     fk_values.resize(my_test.kinematics_solver_->getJointNames().size(), 0.0);
-
-		joint_state_group->setToRandomValues();
-    joint_state_group->getVariableValues(fk_values);
-    // make the coupling 1:1 in random values
+    joint_state_group->setToRandomValues();
+    std::map<std::string, double> read_b;
+    // When usin getVariableValues with vector, it reads the whole group joints (since using all_fingers group) and so number zero is always FFJ4 
+    //using mapping to find the correct values
+    joint_state_group->getVariableValues(read_b);   
     std::vector<std::string> joint_names = my_test.kinematics_solver_->getJointNames();
-    if(joint_names[0].find("TH")==std::string::npos && joint_names[0].find("LF")==std::string::npos)
-		{
-			fk_values[3]=fk_values[2];
-		}
-		else if(joint_names[0].find("LF")!=std::string::npos)
-			{
-				fk_values[4]=fk_values[3];
-			}
+    for(unsigned int j=0; j < (unsigned int) joint_names.size(); ++j)
+    {
+       fk_values[j]=read_b[ joint_names[j]];
+    }
   
-
+    // make the coupling 1:1 in random values
+    if(joint_names[0].find("TH")==std::string::npos && joint_names[0].find("LF")==std::string::npos)
+    {
+      fk_values[3]=fk_values[2];
+    }
+    else if(joint_names[0].find("LF")!=std::string::npos)
+      {
+        fk_values[4]=fk_values[3];
+      }
+      
     std::vector<geometry_msgs::Pose> poses;
     poses.resize(1);
     bool result_fk = my_test.kinematics_solver_->getPositionFK(fk_names, fk_values, poses);
@@ -297,6 +298,11 @@ TEST(HandIKPlugin, searchIK)
       success++;
       result = my_test.kinematics_solver_->getPositionIK(poses[0], solution, solution, error_code);
       EXPECT_TRUE(result);
+    }
+    else
+    {
+      if(joint_names[0].find("TH")!=std::string::npos)
+        ROS_DEBUG("fk values: %f %f %f %f %f",fk_values[0], fk_values[1],fk_values[2],fk_values[3],fk_values[4]);
     }
 
     std::vector<geometry_msgs::Pose> new_poses;
@@ -320,7 +326,6 @@ TEST(HandIKPlugin, searchIKWithCallbacks)
   const boost::shared_ptr<srdf::Model> &srdf = rdf_loader_.getSRDF();
   const boost::shared_ptr<urdf::ModelInterface>& urdf_model = rdf_loader_.getURDF();
   kinematic_model.reset(new robot_model::RobotModel(urdf_model, srdf));
-  //robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(my_test.kinematics_solver_->getGroupName());
 
   //Test inverse kinematics
   std::vector<double> seed,fk_values,solution;
@@ -346,17 +351,25 @@ TEST(HandIKPlugin, searchIKWithCallbacks)
     fk_values.resize(my_test.kinematics_solver_->getJointNames().size(), 0.0);
 
     joint_state_group->setToRandomValues();
-    joint_state_group->getVariableValues(fk_values);
-     // make the coupling 1:1 in random values
+    std::map<std::string, double> read_b;
+    // When usin getVariableValues with vector, it reads the whole group joints (since using all_fingers group) and so number zero is always FFJ4 
+    //using mapping to find the correct values
+    joint_state_group->getVariableValues(read_b);   
     std::vector<std::string> joint_names = my_test.kinematics_solver_->getJointNames();
+    for(unsigned int j=0; j < (unsigned int) joint_names.size(); ++j)
+    {
+       fk_values[j]=read_b[ joint_names[j]];
+    }
+    // make the coupling 1:1 in random values
+    
     if(joint_names[0].find("TH")==std::string::npos && joint_names[0].find("LF")==std::string::npos)
-		{
-			fk_values[3]=fk_values[2];
-		}
-		else if(joint_names[0].find("LF")!=std::string::npos)
-			{
-				fk_values[4]=fk_values[3];
-			}
+    {
+      fk_values[3]=fk_values[2];
+    }
+    else if(joint_names[0].find("LF")!=std::string::npos)
+      {
+        fk_values[4]=fk_values[3];
+      }
 
     std::vector<geometry_msgs::Pose> poses;
     poses.resize(1);
