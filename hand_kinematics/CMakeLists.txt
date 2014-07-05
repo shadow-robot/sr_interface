@@ -1,43 +1,46 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+cmake_minimum_required(VERSION 2.8.3)
+project(hand_kinematics)
+find_package(catkin REQUIRED COMPONENTS roscpp tf urdf kdl_parser kdl_coupling sensor_msgs tf_conversions moveit_core geometry_msgs pluginlib moveit_msgs moveit_ros_planning)
+find_package(orocos_kdl REQUIRED)
+include_directories(include ${catkin_INCLUDE_DIRS} ${orocos_kdl_INCLUDE_DIRS})
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE RelWithDebInfo)
+catkin_package(
+    DEPENDS orocos_kdl
+    CATKIN_DEPENDS roscpp tf urdf kdl_parser kdl_coupling sensor_msgs tf_conversions moveit_core geometry_msgs pluginlib moveit_msgs moveit_ros_planning
+    INCLUDE_DIRS include
+    LIBRARIES hand_kinematics hand_kinematics_coupling_lib
+)
 
-rosbuild_init()
+add_library(hand_kinematics src/hand_kinematics_coupling_plugin.cpp
+    src/hand_kinematics_utils.cpp)
+add_dependencies(hand_kinematics ${catkin_EXPORTED_TARGETS})
+target_link_libraries(hand_kinematics ${catkin_LIBRARIES} ${orocos_kdl_LIBRARIES})
 
-#set the default path for built executables to the "bin" directory
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-#set the default path for built libraries to the "lib" directory
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+add_library(hand_kinematics_coupling_lib src/hand_kinematics_coupling.cpp
+    src/hand_kinematics_utils.cpp)
+add_dependencies(hand_kinematics_coupling_lib ${catkin_EXPORTED_TARGETS})
+target_link_libraries(hand_kinematics_coupling_lib ${moveit_core_LIBRARIES} ${catkin_LIBRARIES} ${orocos_kdl_LIBRARIES})
 
-# Comment out all the library build if you don't want the plugin interface to be compiled
-rosbuild_add_library(hand_kinematics
-	 src/hand_kinematics_coupling_plugin.cpp
-    src/hand_kinematics_utils.cpp
-  )
+add_executable(hand_kinematics_coupling src/hand_kinematics_coupling.cpp)
+target_link_libraries(hand_kinematics_coupling ${catkin_LIBRARIES} ${orocos_kdl_LIBRARIES})
 
-rosbuild_add_library(hand_kinematics_coupling_lib
-	         src/hand_kinematics_coupling.cpp )
-target_link_libraries(hand_kinematics_coupling_lib moveit_kinematics_base)
+catkin_add_gtest(test_kinematics_as_plugin test/test_kinematics_as_plugin.cpp)
+target_link_libraries(test_kinematics_as_plugin moveit_kinematics_base hand_kinematics_coupling_lib ${catkin_LIBRARIES})
+add_dependencies(test_kinematics_as_plugin hand_kinematics_gencpp ${catkin_EXPORTED_TARGETS})
 
-rosbuild_add_executable(hand_kinematics_coupling src/hand_kinematics_coupling.cpp)
+catkin_add_gtest(test_kinematics_as_service test/test_kinematics_as_service.cpp)
+target_link_libraries(test_kinematics_as_service ${catkin_LIBRARIES})
+add_dependencies(test_kinematics_as_service hand_kinematics_gencpp ${catkin_EXPORTED_TARGETS})
 
-rosbuild_add_executable(test/circle_ik test/circle_ik.cpp)
-rosbuild_add_executable(test/square_ik_th test/square_ik_th.cpp)
-rosbuild_add_executable(test/upmc_fkik_test test/upmc_fkik_test.cpp)
-target_link_libraries(test/circle_ik hand_kinematics_coupling_lib)
-target_link_libraries(test/square_ik_th hand_kinematics_coupling_lib)
+install(TARGETS hand_kinematics hand_kinematics_coupling_lib
+    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+install(TARGETS hand_kinematics_coupling 
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
-# Comment out the plugin test if you did not build the plugin library
-rosbuild_add_gtest(test/test_kinematics_as_plugin test/test_kinematics_as_plugin.cpp)
-target_link_libraries(test/test_kinematics_as_plugin moveit_kinematics_base)
-target_link_libraries(test/test_kinematics_as_plugin hand_kinematics_coupling_lib)
-
-rosbuild_add_gtest(test/test_kinematics_as_service test/test_kinematics_as_service.cpp)
-
+install(
+ FILES
+   hand_kinematics_plugins.xml
+ DESTINATION
+   ${CATKIN_PACKAGE_SHARE_DESTINATION})

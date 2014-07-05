@@ -1,33 +1,26 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+cmake_minimum_required(VERSION 2.8.3)
+project(kdl_coupling)
+find_package(catkin REQUIRED COMPONENTS roscpp)
+find_package(orocos_kdl REQUIRED)
+include_directories(include ${catkin_INCLUDE_DIRS} ${orocos_kdl_INCLUDE_DIRS})
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE RelWithDebInfo)
-
-rosbuild_init()
-
-#set the default path for built executables to the "bin" directory
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-#set the default path for built libraries to the "lib" directory
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
-
-#uncomment if you have defined messages
-#rosbuild_genmsg()
-#uncomment if you have defined services
-#rosbuild_gensrv()
-
-#common commands for building c++ executables and libraries
-#rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
-#target_link_libraries(${PROJECT_NAME} another_library)
-#rosbuild_add_boost_directories()
-#rosbuild_link_boost(${PROJECT_NAME} thread)
-#rosbuild_add_executable(example examples/example.cpp)
-#target_link_libraries(example ${PROJECT_NAME})
+catkin_package(
+    DEPENDS orocos_kdl
+    CATKIN_DEPENDS roscpp
+    INCLUDE_DIRS include
+    LIBRARIES kdl_coupling
+)
 
 add_definitions(-DEIGEN2_SUPPORT)
-rosbuild_add_library(kdl_coupling src/chain_coupling.cpp src/chainjnttojacsolver_coupling.cpp src/chainiksolvervel_wdls_coupling.cpp src/chainiksolverpos_nr_jl_coupling.cpp)
+add_library(kdl_coupling src/chain_coupling.cpp src/chainjnttojacsolver_coupling.cpp src/chainiksolvervel_wdls_coupling.cpp src/chainiksolverpos_nr_jl_coupling.cpp)
+add_dependencies(kdl_coupling ${catkin_EXPORTED_TARGETS})
+target_link_libraries(kdl_coupling ${catkin_LIBRARIES} ${orocos_kdl_LIBRARIES})
+
+install(DIRECTORY include/${PROJECT_NAME}/
+   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+   FILES_MATCHING PATTERN "*.hpp"
+)
+
+install(TARGETS kdl_coupling
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
