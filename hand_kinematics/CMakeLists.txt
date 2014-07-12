@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(hand_kinematics)
-find_package(catkin REQUIRED COMPONENTS roscpp tf urdf kdl_parser kdl_coupling sensor_msgs tf_conversions moveit_core geometry_msgs pluginlib moveit_msgs moveit_ros_planning)
+find_package(catkin REQUIRED COMPONENTS roscpp rostest tf urdf kdl_parser kdl_coupling sensor_msgs tf_conversions moveit_core geometry_msgs pluginlib moveit_msgs moveit_ros_planning)
 find_package(orocos_kdl REQUIRED)
 include_directories(include ${catkin_INCLUDE_DIRS} ${orocos_kdl_INCLUDE_DIRS})
 
@@ -24,11 +24,11 @@ target_link_libraries(hand_kinematics_coupling_lib ${moveit_core_LIBRARIES} ${ca
 add_executable(hand_kinematics_coupling src/hand_kinematics_coupling.cpp)
 target_link_libraries(hand_kinematics_coupling ${catkin_LIBRARIES} ${orocos_kdl_LIBRARIES})
 
-catkin_add_gtest(test_kinematics_as_plugin test/test_kinematics_as_plugin.cpp)
-target_link_libraries(test_kinematics_as_plugin moveit_kinematics_base hand_kinematics_coupling_lib ${catkin_LIBRARIES})
+add_rostest_gtest(test_kinematics_as_plugin test/hand_kinematics_plugin_test.test test/test_kinematics_as_plugin.cpp)
+target_link_libraries(test_kinematics_as_plugin ${moveit_core_LIBRARIES} hand_kinematics ${catkin_LIBRARIES})
 add_dependencies(test_kinematics_as_plugin hand_kinematics_gencpp ${catkin_EXPORTED_TARGETS})
 
-catkin_add_gtest(test_kinematics_as_service test/test_kinematics_as_service.cpp)
+add_rostest_gtest(test_kinematics_as_service test/hand_kinematics_services_test.test test/test_kinematics_as_service.cpp)
 target_link_libraries(test_kinematics_as_service ${catkin_LIBRARIES})
 add_dependencies(test_kinematics_as_service hand_kinematics_gencpp ${catkin_EXPORTED_TARGETS})
 

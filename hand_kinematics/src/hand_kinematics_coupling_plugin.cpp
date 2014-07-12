@@ -38,7 +38,7 @@ static const std::string FK_INFO_SERVICE = "get_fk_solver_info";
 namespace hand_kinematics {
 static const double IK_DEFAULT_TIMEOUT = 10.0;
 //register the plugin
-PLUGINLIB_DECLARE_CLASS(hand_kinematics,HandKinematicsPlugin, hand_kinematics::HandKinematicsPlugin, kinematics::KinematicsBase)
+PLUGINLIB_EXPORT_CLASS( hand_kinematics::HandKinematicsPlugin, kinematics::KinematicsBase)
 
   HandKinematicsPlugin::HandKinematicsPlugin():active_(false){}
 
