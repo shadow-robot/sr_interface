@@ -510,6 +510,7 @@
     <disable_collisions link1="palm" link2="rfknuckle" reason="Adjacent" />
     <disable_collisions link1="palm" link2="rfmiddle" reason="Never" />
     <disable_collisions link1="palm" link2="rfproximal" reason="Never" />
+    <disable_collisions link1="palm" link2="thproximal" reason="Adjacent" />
     <disable_collisions link1="palm" link2="thbase" reason="Adjacent" />
     <disable_collisions link1="palm" link2="thdistal" reason="Never" />
     <disable_collisions link1="palm" link2="thhub" reason="Never" />
