@@ -64,21 +64,21 @@ namespace hand_kinematics
       exit(1);
     }
     robot_model.initXml(root);
-    
-   	if(root_name!="palm") {
+
+   	if(root_name.find("palm")==std::string::npos) {
 			ROS_FATAL("HANDIK: Current solver can only resolve to root frame = palm");
 			return false;
 		}
-	
+
     if(tip_name.find("tip")==std::string::npos) {
 			ROS_FATAL("Current solver can only resolve to one of the tip frames");
 			return false;
 		}
 		if(tip_name.find("fftip")==std::string::npos && tip_name.find("mftip")==std::string::npos && tip_name.find("rftip")==std::string::npos && tip_name.find("lftip")==std::string::npos && tip_name.find("thtip")==std::string::npos){
 			ROS_FATAL("Name of distal frame does not match any finger");
-			return false;	
+			return false;
 		}
-        
+
     return true;
   }
 
@@ -110,8 +110,8 @@ namespace hand_kinematics
     return true;
   }
 
-	
-	
+
+
 
 	void getKDLChainInfo(const KDL::Chain &chain,
                        moveit_msgs::KinematicSolverInfo &chain_info)
@@ -138,8 +138,8 @@ namespace hand_kinematics
     }
     return -1;
   }
-  
-  
+
+
 	bool checkJointNames(const std::vector<std::string> &joint_names,
 											 const moveit_msgs::KinematicSolverInfo &chain_info)
 	{
@@ -379,7 +379,7 @@ namespace hand_kinematics
 
     urdf::Vector3 length;
 
-    while (link && link->name != root_name) 
+    while (link && link->name != root_name)
     {
       joint = robot_model.getJoint(link->parent_joint->name);
       if (!joint) {

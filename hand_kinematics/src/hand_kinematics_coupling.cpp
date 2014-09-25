@@ -189,7 +189,7 @@ bool Kinematics::init() {
     ROS_FATAL("GenericIK: No root name found on parameter server");
     return false;
   }
-  if(root_name!="palm") {
+  if(root_name.find("palm")==string::npos) {
     ROS_FATAL("Current solver can only resolve to root frame = palm");
     return false;
   }
