@@ -24,7 +24,7 @@ NAME = 'test_grasp_object'
 import os, unittest;
 import rospy, rostest
 from actionlib import SimpleActionClient, GoalStatus
-from sr_grasp_msgs.msg import GraspAction, GraspGoal
+from sr_robot_msgs.msg import GraspAction, GraspGoal
 from moveit_msgs.msg import Grasp
 from trajectory_msgs.msg import JointTrajectoryPoint
 
