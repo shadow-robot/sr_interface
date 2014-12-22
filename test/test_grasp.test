@@ -1,0 +1,8 @@
+<launch>
+    <!-- Start the simulated hand -->
+    <include file="$(find sr_hand)/launch/gazebo/gazebo_hand.launch" />
+    <!-- The node to test -->
+    <node name="grasp" pkg="sr_grasp" type="grasp" output="screen" />
+    <!-- The test -->
+    <test test-name="test_grasp" pkg="sr_grasp" type="test_grasp.py" />
+</launch>

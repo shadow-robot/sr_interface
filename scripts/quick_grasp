@@ -1,0 +1,72 @@
+#!/usr/bin/env python
+
+# ##########################################################################
+# Copyright (c) 2014 Shadow Robot Company Ltd.
+#
+# This program is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation, either version 2 of the License, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+# ###########################################################################
+
+import os, unittest;
+import rospy, rostest
+from actionlib import SimpleActionClient, GoalStatus
+from sr_robot_msgs.msg import GraspAction, GraspGoal
+from sr_hand.shadowhand_ros import ShadowHand_ROS
+from sr_grasp.utils import mk_grasp
+
+class QuickGraspNode(object):
+    def __init__(self):
+        self.grasp = mk_grasp({
+            'LFJ3': 1.4, 'RFJ3': 1.4, 'MFJ3': 1.4, 'FFJ3': 1.4,
+            'LFJ0': 2.0, 'RFJ0': 2.0, 'MFJ0': 2.0, 'FFJ0': 2.0,
+            'THJ1': 0.4, 'THJ2': 0.36, 'THJ3': 0.2, 'THJ4': 1.23, 'THJ5': 0.06, 
+            }, fix_j0=True)
+        rospy.loginfo("Looking for hand...")
+        self.hand = ShadowHand_ROS()
+        rospy.loginfo("Found")
+
+    def zero_hand(self):
+        for j in self.hand.allJoints:
+            self.hand.sendupdate(j.name, 0.0)
+        rospy.sleep(2)
+
+    def run_grasp(self, pre=False):
+        goal = GraspGoal()
+        goal.grasp = self.grasp
+        goal.pre_grasp = pre
+        client = SimpleActionClient('grasp', GraspAction)
+        client.wait_for_server()
+        client.send_goal(goal)
+        client.wait_for_result(rospy.Duration.from_sec(20.0))
+        if client.get_state() == GoalStatus.SUCCEEDED:
+            rospy.loginfo("Success!")
+        else:
+            rospy.logerr("Fail!")
+
+if __name__ == '__main__':
+    rospy.init_node("quick_grasp")
+    node = QuickGraspNode()
+    while True:
+        act = raw_input("Enter z for zero hand, g for grasp, p for pre-grasp, q quit: ")
+        if act == "z":
+            node.zero_hand()
+        elif act == "p":
+            node.run_grasp(pre=True)
+        elif act == "g":
+            node.run_grasp()
+        elif act == "q":
+            break
+        else:
+            print "Unknown action %s"%act
+

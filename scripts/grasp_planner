@@ -1,0 +1,123 @@
+#!/usr/bin/env python
+
+# ##########################################################################
+# Copyright (c) 2014 Shadow Robot Company Ltd.
+#
+# This program is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation, either version 2 of the License, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+# ###########################################################################
+
+import rospy;
+
+from sr_grasp.utils import mk_grasp
+
+from dynamic_reconfigure.server import Server
+from sr_grasp.cfg import GraspPlannerConfig
+
+from actionlib import SimpleActionServer
+from sr_robot_msgs.msg import PlanGraspAction, PlanGraspResult
+from moveit_msgs.msg import Grasp
+
+class GraspPlanner(object):
+    """
+    A ros node to quickly generate moveit_msgs/Grasp grasps for the ShadowHand.
+    See README.md for details.
+    """
+
+    def __init__(self, ):
+        """
+        @brief Construct a new GraspPlanner, setting up it's publishers,
+        subscribers, etc.
+        """
+        self.config = None
+        self.goal = None
+
+        self._config_server = Server(GraspPlannerConfig, self._config_cb)
+
+        self._action_server = SimpleActionServer( '~plan_grasp', PlanGraspAction,
+                execute_cb=self._execute_cb, auto_start=False)
+        self._action_server.start()
+
+    def _config_cb(self, config, level):
+        """Incoming dynamic reconfigure requests, stash config on self."""
+        self.config = config
+        return config
+
+    def _execute_cb(self, goal):
+        """
+        Return a hardcoded list of grasps for now.
+        """
+        self.goal = goal
+        res = PlanGraspResult()
+        res.grasps = self.get_grasps()
+        self._action_server.set_succeeded(result=res)
+
+    def get_grasps(self):
+        grasps = []
+
+        #power grasp for vertical objects
+        power_grasp = mk_grasp(
+            joints = {
+                'FFJ1': 1.0, 'FFJ2':1.0, 'FFJ3': 1.4, 'FFJ4': 0.0,
+                'MFJ1': 1.0, 'MFJ2':1.0, 'MFJ3': 1.4, 'MFJ4': 0.0,    
+                'RFJ1': 1.0, 'RFJ2':1.0, 'RFJ3': 1.4, 'RFJ4': 0.0,
+                'LFJ1': 1.0, 'LFJ2':1.0, 'LFJ3': 1.4, 'LFJ4': 0.0, 'LFJ5': 0.0,
+                'THJ1': 1.0365, 'THJ2': 0.6772, 'THJ3': 0.1849, 'THJ4': 1.2196, 'THJ5': 0.0579,
+            },
+            pre_joints = {'THJ4': 1.2296, 'THJ5': -0.4779},
+        )
+        power_grasp.grasp_pose.pose.position.x = 0.02
+        power_grasp.grasp_pose.pose.position.y = -0.085
+        power_grasp.grasp_pose.pose.position.z = 0.333
+        # This will make the object vertical if it's a mesh from db. The meshes from the clusterer would need a different orientation, but we opt fro the db mesh to look good
+        # as it's quite more obvious when it's wrong
+        power_grasp.grasp_pose.pose.orientation.x = 0.0
+        power_grasp.grasp_pose.pose.orientation.y = 0.707106781
+        power_grasp.grasp_pose.pose.orientation.z = 0.0
+        power_grasp.grasp_pose.pose.orientation.w = 0.707106781
+
+        grasps.append(power_grasp)
+
+        #pinch grasp when horizontal
+        pinch_grasp = mk_grasp(
+            joints = {
+                'FFJ1': 0.02558, 'FFJ2': 0.35155, 'FFJ3': 1.50130, 'FFJ4': -0.01443, 
+                'MFJ1': 0.01234, 'MFJ2': 0.43822, 'MFJ3': 1.54195, 'MFJ4': 0.27695,
+                'RFJ1': -0.00147, 'RFJ2': -0.00384, 'RFJ3': -0.01043, 'RFJ4': 0.01223,
+                'LFJ1': -0.01030, 'LFJ2': 0.03253, 'LFJ3': -0.00054, 'LFJ4': -0.00175, 'LFJ5': 0.01373,
+                'THJ1': -0.00082, 'THJ2': 0.0347, 'THJ3': 0.12548, 'THJ4': 1.13063, 'THJ5': 0.48021
+            },
+            pre_joints = { 'THJ1': 0.01, 'THJ2': 0.008, 'THJ3': 0.125, 'THJ4': 1.22, 'THJ5': -0.2,
+                           'FFJ3': 0.8, 'MFJ3': 0.8 }
+            )
+        pinch_grasp.grasp_pose.pose.position.x = 0.02
+        pinch_grasp.grasp_pose.pose.position.y = -0.085
+        pinch_grasp.grasp_pose.pose.position.z = 0.333
+        pinch_grasp.grasp_pose.pose.orientation.x = -0.5
+        pinch_grasp.grasp_pose.pose.orientation.y = 0.5
+        pinch_grasp.grasp_pose.pose.orientation.z = -0.5
+        pinch_grasp.grasp_pose.pose.orientation.w = 0.5
+
+        grasps.append(pinch_grasp)
+
+        return grasps
+
+
+if __name__ == "__main__":
+    try:
+        rospy.init_node("grasp_planner")
+        node = GraspPlanner()
+        rospy.spin();
+    except rospy.ROSInterruptException:
+        pass
