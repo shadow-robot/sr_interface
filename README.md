@@ -32,13 +32,13 @@ Enter z for zero hand, g for grasp, p for pre-grasp, q quit:
 
 ### Actionlib
 
-The main interface to the node is via actionlib, it exposes the sr_grasp_msgs/Grasp action on the grasp/ topic. See the
+The main interface to the node is via actionlib, it exposes the sr_robot_msgs/Grasp action on the grasp/ topic. See the
 quick_grasp script for a python example of using this interface.
 
 
 ## grasp_planner
 
-Node impliementing the sr_grasp_msgs/PlanGrasp action to generate grasps. Currently returns a single, hardcoded grasp.
+Node impliementing the sr_robot_msgs/PlanGrasp action to generate grasps. Currently returns a single, hardcoded grasp.
 
 ## sr_grasp.utils
 
