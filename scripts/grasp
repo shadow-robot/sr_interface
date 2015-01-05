@@ -97,18 +97,10 @@ class GraspNode(object):
         self.grasp_server.start()
 
         rospy.loginfo("Looking for tactile sensors")
-        # KCL style tactile sensor
-        self.sub_tactile_kcl = {}
+        # Shadow style tactile sensor
+        self.sub_tactile_shadow = {}
         found_fancy = 0
         finger_map = {
-            # @TODO Going to need to make changes in KCL when this gets merged
-            # as topics have changed to something more sensible. Should just be config in the
-            # tactile package.
-            #'rf': 'finger1/ContactState',
-            #'th': 'finger2/ContactState',
-            #'ff': 'finger3/ContactState',
-            #'mf': 'finger4/ContactState',
-            #'lf': 'finger5/ContactState',
             'rf': 'rfdistal/ContactState',
             'th': 'thdistal/ContactState',
             'ff': 'ffdistal/ContactState',
@@ -117,10 +109,10 @@ class GraspNode(object):
         }
         for finger, topic in finger_map.items():
             try:
-                rospy.wait_for_message(topic, KCL_ContactStateStamped, timeout = 0.2)
+                rospy.wait_for_message(topic, ShadowContactStateStamped, timeout = 0.2)
                 rospy.loginfo("Found fancy tactile on %s finger"%finger)
                 found_fancy += 1
-                self.sub_tactile_kcl[finger] = rospy.Subscriber(topic, KCL_ContactStateStamped, self.kcl_tactile_cb, finger)
+                self.sub_tactile_shadow[finger] = rospy.Subscriber(topic, ShadowContactStateStamped, self.shadow_tactile_cb, finger)
             except Exception as e:
                 rospy.logwarn(e)
 
@@ -161,7 +153,7 @@ class GraspNode(object):
         f = msg.states[0].total_wrench.force
         self.tactiles[finger] = sqrt(f.x**2 + f.y**2 + f.z**2)
 
-    def kcl_tactile_cb(self, msg, finger):
+    def shadow_tactile_cb(self, msg, finger):
         """Fills self.tactiles with force value."""
         # Force is negative as it is into the finger, so normalise to positive
         self.tactiles[finger] = (-1.0*msg.Fnormal)
