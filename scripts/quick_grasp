@@ -69,7 +69,7 @@ if __name__ == '__main__':
         for i, g in enumerate(node.stash.get_all()):
             print str(i) + " - " + g.id
         print "Current grasp: %s"%node.grasp.id
-        print "Number select grasp, z zero hand, g grasp, p pre-grasp, q quit"
+        print "Number select grasp, z zero hand, g grasp, p pre-grasp, n new grasp, q quit"
         act = raw_input(": ")
         num = None
         try:
@@ -84,6 +84,11 @@ if __name__ == '__main__':
             node.run_grasp(pre=True)
         elif act == "g":
             node.run_grasp()
+        elif act == "n":
+            node.grasp = Grasp()
+            name = raw_input("Enter name: ")
+            node.grasp.id = name
+            node.stash.put_grasp(node.grasp)
         elif act == "q":
             break
         else:
