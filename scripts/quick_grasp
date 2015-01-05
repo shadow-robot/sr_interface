@@ -29,9 +29,11 @@ from sr_grasp import Grasp, GraspStash
 class QuickGraspNode(object):
     def __init__(self):
         self.stash = GraspStash()
-        self.stash.load_yaml_file("grasps.yaml")
+        #self.stash.load_yaml_file("grasps.yaml")
+        self.stash.load_all()
         if self.stash.size() == 0:
-            logerr("No grasps found!")
+            rospy.logerr("No grasps found!")
+            raise Exception("No Grasps")
         else:
             self.grasp = self.stash.get_all()[0]
         #print self.grasp
@@ -61,7 +63,8 @@ class QuickGraspNode(object):
 if __name__ == '__main__':
     rospy.init_node("quick_grasp")
     node = QuickGraspNode()
-    while True:
+    while node:
+        print ""
         print "Grasps:"
         for i, g in enumerate(node.stash.get_all()):
             print str(i) + " - " + g.id

@@ -1,8 +1,8 @@
 
 from copy import deepcopy
-import yaml
+import os, yaml
 from rospy import logerr, loginfo
-import genpy
+import rospkg, genpy
 import moveit_msgs.msg
 from sr_grasp.utils import mk_grasp
 
@@ -86,6 +86,14 @@ class GraspStash(object):
         #if isinstance(grasp, moveit_msgs.msg.Grasp):
         #    grasp = Grasp.from_msg(grasp)
         _store[grasp.id] = grasp
+
+    def load_all(self):
+        """
+        Load all configured sources of grasps into the stash.
+        """
+        rp = rospkg.RosPack()
+        grasp_file = os.path.join(rp.get_path('sr_grasp'), 'resource', 'grasps.yaml')
+        self.load_yaml_file(grasp_file)
 
     def load_yaml_file(self, fname):
         """

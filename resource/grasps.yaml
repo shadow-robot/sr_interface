@@ -1,0 +1,250 @@
+- id: Basic full grab
+  pre_grasp_posture: 
+    header: 
+      seq: 0
+      stamp: 
+        secs: 0
+        nsecs: 0
+      frame_id: ''
+    joint_names: ['LFJ0', 'LFJ3', 'LFJ4', 'LFJ5', 'RFJ0', 'RFJ3', 'RFJ4', 'MFJ0', 'MFJ3', 'MFJ4', 'FFJ0', 'FFJ3', 'FFJ4', 'THJ1', 'THJ2', 'THJ3', 'THJ4', 'THJ5', 'WRJ1', 'WRJ2']
+    points: 
+      - 
+        positions: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        velocities: []
+        accelerations: []
+        effort: []
+        time_from_start: 
+          secs: 0
+          nsecs: 0
+  grasp_posture: 
+    header: 
+      seq: 0
+      stamp: 
+        secs: 0
+        nsecs: 0
+      frame_id: ''
+    joint_names: ['LFJ0', 'LFJ3', 'LFJ4', 'LFJ5', 'RFJ0', 'RFJ3', 'RFJ4', 'MFJ0', 'MFJ3', 'MFJ4', 'FFJ0', 'FFJ3', 'FFJ4', 'THJ1', 'THJ2', 'THJ3', 'THJ4', 'THJ5', 'WRJ1', 'WRJ2']
+    points: 
+      - 
+        positions: [2.0, 1.4, 0.0, 0.0, 2.0, 1.4, 0.0, 2.0, 1.4, 0.0, 2.0, 1.4, 0.0, 0.4, 0.36, 0.2, 1.23, 0.06, 0.0, 0.0]
+        velocities: []
+        accelerations: []
+        effort: []
+        time_from_start: 
+          secs: 0
+          nsecs: 0
+  grasp_pose: 
+    header: 
+      seq: 0
+      stamp: 
+        secs: 0
+        nsecs: 0
+      frame_id: forearm
+    pose: 
+      position: 
+        x: 0.01
+        y: -0.045
+        z: 0.321
+      orientation: 
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 0.0
+  grasp_quality: 0.001
+
+- id: 'Power Grasp Vertical'
+  pre_grasp_posture: 
+    header: 
+      seq: 0
+      stamp: 
+        secs: 790
+        nsecs: 926000000
+      frame_id: ''
+    joint_names: ['FFJ1', 'FFJ2', 'FFJ3', 'FFJ4', 'LFJ1', 'LFJ2', 'LFJ3', 'LFJ4', 'LFJ5', 'MFJ1', 'MFJ2', 'MFJ3', 'MFJ4', 'RFJ1', 'RFJ2', 'RFJ3', 'RFJ4', 'THJ1', 'THJ2', 'THJ3', 'THJ4', 'THJ5', 'WRJ1', 'WRJ2']
+    points: 
+      - 
+        positions: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.2296, -0.4779, 0.0, 0.0]
+        velocities: []
+        accelerations: []
+        effort: []
+        time_from_start: 
+          secs: 0
+          nsecs: 0
+  grasp_posture: 
+    header: 
+      seq: 0
+      stamp: 
+        secs: 790
+        nsecs: 926000000
+      frame_id: ''
+    joint_names: ['FFJ1', 'FFJ2', 'FFJ3', 'FFJ4', 'LFJ1', 'LFJ2', 'LFJ3', 'LFJ4', 'LFJ5', 'MFJ1', 'MFJ2', 'MFJ3', 'MFJ4', 'RFJ1', 'RFJ2', 'RFJ3', 'RFJ4', 'THJ1', 'THJ2', 'THJ3', 'THJ4', 'THJ5', 'WRJ1', 'WRJ2']
+    points: 
+      - 
+        positions: [1.0, 1.0, 1.4, 0.0, 1.0, 1.0, 1.4, 0.0, 0.0, 1.0, 1.0, 1.4, 0.0, 1.0, 1.0, 1.4, 0.0, 1.0365, 0.6772, 0.1849, 1.2196, 0.0579, 0.0, 0.0]
+        velocities: []
+        accelerations: []
+        effort: []
+        time_from_start: 
+          secs: 0
+          nsecs: 0
+  grasp_pose: 
+    header: 
+      seq: 0
+      stamp: 
+        secs: 790
+        nsecs: 926000000
+      frame_id: forearm
+    pose: 
+      position: 
+        x: 0.02
+        y: -0.085
+        z: 0.333
+      orientation: 
+        x: 0.0
+        y: 0.707106781
+        z: 0.0
+        w: 0.707106781
+  grasp_quality: 0.001
+  pre_grasp_approach: 
+    direction: 
+      header: 
+        seq: 0
+        stamp: 
+          secs: 0
+          nsecs: 0
+        frame_id: ''
+      vector: 
+        x: 0.0
+        y: 0.0
+        z: 0.0
+    desired_distance: 0.0
+    min_distance: 0.0
+  post_grasp_retreat: 
+    direction: 
+      header: 
+        seq: 0
+        stamp: 
+          secs: 0
+          nsecs: 0
+        frame_id: ''
+      vector: 
+        x: 0.0
+        y: 0.0
+        z: 0.0
+    desired_distance: 0.0
+    min_distance: 0.0
+  post_place_retreat: 
+    direction: 
+      header: 
+        seq: 0
+        stamp: 
+          secs: 0
+          nsecs: 0
+        frame_id: ''
+      vector: 
+        x: 0.0
+        y: 0.0
+        z: 0.0
+    desired_distance: 0.0
+    min_distance: 0.0
+  max_contact_force: 0.0
+  allowed_touch_objects: []
+
+- id: 'Pinch Horizontal'
+  pre_grasp_posture: 
+    header: 
+      seq: 0
+      stamp: 
+        secs: 790
+        nsecs: 926000000
+      frame_id: ''
+    joint_names: ['FFJ1', 'FFJ2', 'FFJ3', 'FFJ4', 'LFJ1', 'LFJ2', 'LFJ3', 'LFJ4', 'LFJ5', 'MFJ1', 'MFJ2', 'MFJ3', 'MFJ4', 'RFJ1', 'RFJ2', 'RFJ3', 'RFJ4', 'THJ1', 'THJ2', 'THJ3', 'THJ4', 'THJ5', 'WRJ1', 'WRJ2']
+    points: 
+      - 
+        positions: [0.0, 0.0, 0.8, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.008, 0.125, 1.22, -0.2, 0.0, 0.0]
+        velocities: []
+        accelerations: []
+        effort: []
+        time_from_start: 
+          secs: 0
+          nsecs: 0
+  grasp_posture: 
+    header: 
+      seq: 0
+      stamp: 
+        secs: 790
+        nsecs: 926000000
+      frame_id: ''
+    joint_names: ['FFJ1', 'FFJ2', 'FFJ3', 'FFJ4', 'LFJ1', 'LFJ2', 'LFJ3', 'LFJ4', 'LFJ5', 'MFJ1', 'MFJ2', 'MFJ3', 'MFJ4', 'RFJ1', 'RFJ2', 'RFJ3', 'RFJ4', 'THJ1', 'THJ2', 'THJ3', 'THJ4', 'THJ5', 'WRJ1', 'WRJ2']
+    points: 
+      - 
+        positions: [0.02558, 0.35155, 1.5013, -0.01443, -0.0103, 0.03253, -0.00054, -0.00175, 0.01373, 0.01234, 0.43822, 1.54195, 0.27695, -0.00147, -0.00384, -0.01043, 0.01223, -0.00082, 0.0347, 0.12548, 1.13063, 0.48021, 0.0, 0.0]
+        velocities: []
+        accelerations: []
+        effort: []
+        time_from_start: 
+          secs: 0
+          nsecs: 0
+  grasp_pose: 
+    header: 
+      seq: 0
+      stamp: 
+        secs: 790
+        nsecs: 926000000
+      frame_id: forearm
+    pose: 
+      position: 
+        x: 0.02
+        y: -0.085
+        z: 0.333
+      orientation: 
+        x: -0.5
+        y: 0.5
+        z: -0.5
+        w: 0.5
+  grasp_quality: 0.001
+  pre_grasp_approach: 
+    direction: 
+      header: 
+        seq: 0
+        stamp: 
+          secs: 0
+          nsecs: 0
+        frame_id: ''
+      vector: 
+        x: 0.0
+        y: 0.0
+        z: 0.0
+    desired_distance: 0.0
+    min_distance: 0.0
+  post_grasp_retreat: 
+    direction: 
+      header: 
+        seq: 0
+        stamp: 
+          secs: 0
+          nsecs: 0
+        frame_id: ''
+      vector: 
+        x: 0.0
+        y: 0.0
+        z: 0.0
+    desired_distance: 0.0
+    min_distance: 0.0
+  post_place_retreat: 
+    direction: 
+      header: 
+        seq: 0
+        stamp: 
+          secs: 0
+          nsecs: 0
+        frame_id: ''
+      vector: 
+        x: 0.0
+        y: 0.0
+        z: 0.0
+    desired_distance: 0.0
+    min_distance: 0.0
+  max_contact_force: 0.0
+  allowed_touch_objects: []
+
