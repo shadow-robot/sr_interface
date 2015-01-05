@@ -24,10 +24,19 @@ rosrun sr_grasp grasp
 ```
 Now start the quick grasp tool, which provides a quick command line way to run a full hand grasp:
 ```sh
-rosrun sr_grasp quick_grasp 
-[INFO] [WallTime: 1405623038.743846] [0.000000] Looking for hand...
-[INFO] [WallTime: 1405623040.068238] [624.276000] Found
-Enter z for zero hand, g for grasp, p for pre-grasp, q quit:
+rosrun sr_grasp quick_grasp
+[INFO] [WallTime: 1420469735.467177] [2088.184000] Loaded grasps from file: /home/hand/indigo_ws/src/shadow_robot/sr_grasp/resource/grasps.yaml
+[INFO] [WallTime: 1420469735.467525] [2088.184000] Looking for hand...
+[WARN] [WallTime: 1420469738.040228] [2089.002000] No tactile topic found. This is normal for a simulated hand
+[INFO] [WallTime: 1420469738.040807] [2089.002000] Found
+
+Grasps:
+0 - Power Grasp Vertical
+1 - Pinch Horizontal
+2 - Basic full grab
+Current grasp: Power Grasp Vertical
+Number select grasp, z zero hand, g grasp, p pre-grasp, q quit
+: 
 ```
 
 ### Actionlib
