@@ -57,7 +57,7 @@ class Grasp(moveit_msgs.msg.Grasp):
         genpy.message.fill_message_args(grasp, y)
         return grasp
 
-    def set_pre_grasp_point(self, positions, point=0):
+    def set_pre_grasp_point_old(self, positions, point=0):
         """Set the pre grasp joints using a dict of joint positions."""
         # XXX: Why have we been doing this?
         #self.pre_grasp_posture.header.stamp = now
@@ -73,6 +73,30 @@ class Grasp(moveit_msgs.msg.Grasp):
         for name, pos in positions.iteritems():
             jtp.positions.append(pos)
         self.pre_grasp_posture.points[point] = jtp
+
+    def _set_posture_point(self, posture, positions, point=0):
+        """Set the posture positions using a dict of joint positions."""
+        # XXX: Why have we been doing this?
+        #posture.header.stamp = now
+        posture.joint_names = positions.keys()
+
+        # Extend the array to be big enough.
+        if len(posture.points) < point+1:
+            for i in range(point+1):
+                posture.points.append(JointTrajectoryPoint())
+
+        # Update the point in place
+        jtp = JointTrajectoryPoint()
+        for name, pos in positions.iteritems():
+            jtp.positions.append(pos)
+        posture.points[point] = jtp
+
+    def set_pre_grasp_point(self, *args, **kwargs):
+        self._set_posture_point(self.pre_grasp_posture, *args, **kwargs)
+
+    def set_grasp_point(self, *args, **kwargs):
+        self._set_posture_point(self.grasp_posture, *args, **kwargs)
+
 
 
 # Store of loaded grasps. Global var as we want multiple instances of the class
