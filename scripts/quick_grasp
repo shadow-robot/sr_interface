@@ -59,6 +59,12 @@ class QuickGraspNode(object):
         else:
             rospy.logerr("Fail!")
 
+    def new_grasp(self, name):
+        grasp = Grasp()
+        grasp.id = name
+        grasp.set_grasp_point(positions = self.hand.read_all_current_positions())
+        self.stash.put_grasp(grasp)
+        node.grasp = grasp
 
 if __name__ == '__main__':
     rospy.init_node("quick_grasp")
@@ -85,10 +91,8 @@ if __name__ == '__main__':
         elif act == "g":
             node.run_grasp()
         elif act == "n":
-            node.grasp = Grasp()
             name = raw_input("Enter name: ")
-            node.grasp.id = name
-            node.stash.put_grasp(node.grasp)
+            node.new_grasp(name=name)
         elif act == "q":
             break
         else:
