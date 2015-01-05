@@ -8,16 +8,14 @@ from sr_grasp.utils import mk_grasp
 
 class Grasp(moveit_msgs.msg.Grasp):
     """
-    Represents a single grasp, basically a warpper around moveit_msgs/Grasp.
+    Represents a single grasp, basically a wrapper around moveit_msgs/Grasp.
     """
     def __init__(self):
         super(Grasp, self).__init__()
 
     @classmethod
     def from_msg(cls, msg):
-        """
-        Construct a shadow grasp object from moveit grasp object.
-        """
+        """Construct a shadow grasp object from moveit grasp object."""
         grasp = Grasp()
         grasp.id = msg.id
         grasp.pre_grasp_posture  = deepcopy(msg.pre_grasp_posture)
@@ -32,18 +30,24 @@ class Grasp(moveit_msgs.msg.Grasp):
         return grasp
 
     def to_msg(self):
-        """
-        Return plain moveit_msgs/Grasp version of self.
-        """
+        """Return plain moveit_msgs/Grasp version of self."""
         raise Exception("TODO - to_msg")
 
     @classmethod
     def from_yaml(self, y):
+        """
+        Construct a shadow grasp object from YAML object. For example YAML
+        grabbed from rostopic to a file.
+        """
         grasp = Grasp()
         genpy.message.fill_message_args(grasp, y)
         return grasp
 
-# Dummy inline store for now, will become - params, file, db etc...
+
+# Store of loaded grasps. Global var as we want multiple instances of the class
+# within a process to share the same data. IE that act like clients. This will
+# make more sense when the grasp shash becomes a proper node with databases and
+# the like.
 _store = {}
 
 class GraspStash(object):
@@ -56,15 +60,11 @@ class GraspStash(object):
         pass
 
     def get_all(self):
-        """
-        Return list of all grasps.
-        """
+        """Return list of all grasps."""
         return _store.values();
 
     def get_grasp(self, id):
-        """
-        Return a single grasp from the stash from it's id field.
-        """
+        """Return a single grasp from the stash from it's id field."""
         Grasp()
         return Grasp;
 
@@ -77,9 +77,7 @@ class GraspStash(object):
         return len(_store)
 
     def put_grasp(self, grasp):
-        """
-        Stash the given grasp, using it's id field, which must be set.
-        """
+        """Stash the given grasp, using it's id field, which must be set."""
         if grasp.id is None or grasp.id == "":
             raise Exception("Grasp has no id")
         # Up convert a plain grasp msg to our wrapper
@@ -88,17 +86,13 @@ class GraspStash(object):
         _store[grasp.id] = grasp
 
     def load_all(self):
-        """
-        Load all configured sources of grasps into the stash.
-        """
+        """Load all configured sources of grasps into the stash."""
         rp = rospkg.RosPack()
         grasp_file = os.path.join(rp.get_path('sr_grasp'), 'resource', 'grasps.yaml')
         self.load_yaml_file(grasp_file)
 
     def load_yaml_file(self, fname):
-        """
-        Load a set of grasps from a YAML file.
-        """
+        """Load a set of grasps from a YAML file."""
         try:
             data = yaml.load(file(fname))
             self.load_yaml(data)
@@ -110,9 +104,7 @@ class GraspStash(object):
             return True
 
     def load_yaml(self, data):
-        """
-        Load a set of grasps from a YAML object. Throws exceptions on errors.
-        """
+        """Load a set of grasps from a YAML object. Throws exceptions on errors."""
         for g in data:
             grasp = Grasp.from_yaml(g)
             self.put_grasp(grasp)
