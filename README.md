@@ -62,3 +62,15 @@ grasp = mk_grasp({
 })
 
 ```
+
+## Converting sr_hand XML grasps
+
+sr_hand has some grasps classes, inetrolater and gui that work with an XML file found in
+sr_hand/scripts/sr_hand/grasps.xml. You can convert them to new style moveit messages in YAML using:
+```
+rosrun sr_grasp convert_xml.py sr_hand/scripts/sr_hand/grasps.xml > converted.yaml
+```
+Then load them up to play with:
+```
+rosrun sr_grasp quick_grasp _grasps_file:=converted.yaml
+```
