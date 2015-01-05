@@ -1,11 +1,18 @@
 
 from copy import deepcopy
-import os, yaml
+import os, yaml, string
 from rospy import logerr, loginfo
 import rospkg, genpy
 import moveit_msgs.msg
 from trajectory_msgs.msg import JointTrajectoryPoint
 from sr_grasp.utils import mk_grasp
+
+#http://code.activestate.com/recipes/66055-changing-the-indentation-of-a-multi-line-string/
+def reindent(s, numSpaces):
+    s = string.split(s, '\n')
+    s = [(numSpaces * ' ') + line for line in s]
+    s = string.join(s, '\n')
+    return s
 
 class Grasp(moveit_msgs.msg.Grasp):
     """
@@ -104,7 +111,13 @@ class GraspStash(object):
     storage.
     """
     def __init__(self):
-        pass
+        # Store of all loaded grasps, indexed on grasp.id.
+        self._store = {}
+        rp = rospkg.RosPack()
+        self.grasps_file = os.path.join(
+                rp.get_path('sr_grasp'), 'resource', 'grasps.yaml')
+        self.save_grasps_file = os.path.join(
+                rp.get_path('sr_grasp'), 'resource', 'grasps.yaml')
 
     def get_all(self):
         """Return list of all grasps."""
@@ -134,9 +147,7 @@ class GraspStash(object):
 
     def load_all(self):
         """Load all configured sources of grasps into the stash."""
-        rp = rospkg.RosPack()
-        grasp_file = os.path.join(rp.get_path('sr_grasp'), 'resource', 'grasps.yaml')
-        self.load_yaml_file(grasp_file)
+        self.load_yaml_file(self.grasps_file)
 
     def load_yaml_file(self, fname):
         """Load a set of grasps from a YAML file."""
@@ -155,4 +166,15 @@ class GraspStash(object):
         for g in data:
             grasp = Grasp.from_yaml(g)
             self.put_grasp(grasp)
+
+    def save_yaml_file(self, fname=""):
+        if fname == "":
+            fname = self.save_grasps_file
+        with open(fname, "w") as txtfile:
+            for grasp in self.get_all():
+                txt = reindent(str(grasp), 2)
+                s = list(txt)
+                s[0] = '-'
+                txt = "".join(s) + "\n"
+                txtfile.write(txt)
 
