@@ -29,14 +29,12 @@ from sr_grasp import Grasp, GraspStash
 class QuickGraspNode(object):
     def __init__(self):
         self.stash = GraspStash()
-        g = mk_grasp({
-            'LFJ3': 1.4, 'RFJ3': 1.4, 'MFJ3': 1.4, 'FFJ3': 1.4,
-            'LFJ0': 2.0, 'RFJ0': 2.0, 'MFJ0': 2.0, 'FFJ0': 2.0,
-            'THJ1': 0.4, 'THJ2': 0.36, 'THJ3': 0.2, 'THJ4': 1.23, 'THJ5': 0.06, 
-            }, fix_j0=True)
-        g.id = "Full grab"
-        self.stash.put_grasp( g )
-        self.grasp = self.stash.get_all()[0]
+        self.stash.load_yaml_file("grasps.yaml")
+        if self.stash.size() == 0:
+            logerr("No grasps found!")
+        else:
+            self.grasp = self.stash.get_all()[0]
+        #print self.grasp
         rospy.loginfo("Looking for hand...")
         self.hand = ShadowHand_ROS()
         rospy.loginfo("Found")
