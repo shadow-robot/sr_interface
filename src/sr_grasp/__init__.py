@@ -1,7 +1,7 @@
 
 from copy import deepcopy
 import os, yaml, string
-from rospy import logerr, loginfo
+from rospy import logerr, loginfo, get_param
 import rospkg, genpy
 import moveit_msgs.msg
 from trajectory_msgs.msg import JointTrajectoryPoint
@@ -114,8 +114,9 @@ class GraspStash(object):
         # Store of all loaded grasps, indexed on grasp.id.
         self._store = {}
         rp = rospkg.RosPack()
-        self.grasps_file = os.path.join(
-                rp.get_path('sr_grasp'), 'resource', 'grasps.yaml')
+        self.grasps_file = get_param('~grasps_file',
+                default = os.path.join(
+                rp.get_path('sr_grasp'), 'resource', 'grasps.yaml') )
         self.save_grasps_file = os.path.join(
                 rp.get_path('sr_grasp'), 'resource', 'grasps.yaml')
 
