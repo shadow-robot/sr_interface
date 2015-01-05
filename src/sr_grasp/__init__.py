@@ -4,14 +4,28 @@ import os, yaml
 from rospy import logerr, loginfo
 import rospkg, genpy
 import moveit_msgs.msg
+from trajectory_msgs.msg import JointTrajectoryPoint
 from sr_grasp.utils import mk_grasp
 
 class Grasp(moveit_msgs.msg.Grasp):
     """
-    Represents a single grasp, basically a wrapper around moveit_msgs/Grasp.
+    Represents a single grasp, basically a wrapper around moveit_msgs/Grasp
+    with added functions and Shadow Hand specific knowledge.
     """
     def __init__(self):
         super(Grasp, self).__init__()
+        self.grasp_quality = 0.001
+        self.joint_names = [
+            'FFJ1', 'FFJ2', 'FFJ3', 'FFJ4',
+            'LFJ1', 'LFJ2', 'LFJ3', 'LFJ4', 'LFJ5',
+            'MFJ1', 'MFJ2', 'MFJ3', 'MFJ4',
+            'RFJ1', 'RFJ2', 'RFJ3', 'RFJ4',
+            'THJ1', 'THJ2', 'THJ3', 'THJ4', 'THJ5',
+            'WRJ1', 'WRJ2']
+
+        # Default the pre grasp to all 0.0
+        zero_joints = dict.fromkeys(self.joint_names, 0.0)
+        self.set_pre_grasp_point(zero_joints)
 
     @classmethod
     def from_msg(cls, msg):
@@ -42,6 +56,23 @@ class Grasp(moveit_msgs.msg.Grasp):
         grasp = Grasp()
         genpy.message.fill_message_args(grasp, y)
         return grasp
+
+    def set_pre_grasp_point(self, positions, point=0):
+        """Set the pre grasp joints using a dict of joint positions."""
+        # XXX: Why have we been doing this?
+        #self.pre_grasp_posture.header.stamp = now
+        self.pre_grasp_posture.joint_names = positions.keys()
+
+        # Extend the array to be big enough.
+        if len(self.pre_grasp_posture.points) < point+1:
+            for i in range(point+1):
+                self.pre_grasp_posture.points.append(JointTrajectoryPoint())
+
+        # Update the point in place
+        jtp = JointTrajectoryPoint()
+        for name, pos in positions.iteritems():
+            jtp.positions.append(pos)
+        self.pre_grasp_posture.points[point] = jtp
 
 
 # Store of loaded grasps. Global var as we want multiple instances of the class
