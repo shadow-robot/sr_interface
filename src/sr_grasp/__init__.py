@@ -68,6 +68,10 @@ class GraspStash(object):
         Grasp()
         return Grasp;
 
+    def get_grasp_at(self, idx):
+        """Return the Grasp at the given index."""
+        return self.get_all()[idx]
+
     def size(self):
         """Return the number of grasps."""
         return len(_store)

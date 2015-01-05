@@ -62,10 +62,19 @@ if __name__ == '__main__':
     rospy.init_node("quick_grasp")
     node = QuickGraspNode()
     while True:
-        act = raw_input("Enter l list grasps, z zero hand, g grasp, p pre-grasp, q quit: ")
-        if act == "l":
-            for i, g in enumerate(node.stash.get_all()):
-                print str(i) + " - " + g.id
+        print "Grasps:"
+        for i, g in enumerate(node.stash.get_all()):
+            print str(i) + " - " + g.id
+        print "Current grasp: %s"%node.grasp.id
+        print "Number select grasp, z zero hand, g grasp, p pre-grasp, q quit"
+        act = raw_input(": ")
+        num = None
+        try:
+            num = int(act)
+        except ValueError:
+            pass
+        if num is not None:
+            node.grasp = node.stash.get_grasp_at(num)
         elif act == "z":
             node.zero_hand()
         elif act == "p":
