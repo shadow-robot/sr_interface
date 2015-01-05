@@ -75,7 +75,7 @@ if __name__ == '__main__':
         for i, g in enumerate(node.stash.get_all()):
             print str(i) + " - " + g.id
         print "Current grasp: %s"%node.grasp.id
-        print "Number select grasp, z zero hand, g grasp, p pre-grasp, n new grasp, q quit"
+        print "Number select grasp, z zero hand, g grasp, p pre-grasp, n new grasp, s save grasps, q quit"
         act = raw_input(": ")
         num = None
         try:
