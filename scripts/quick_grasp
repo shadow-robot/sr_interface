@@ -88,7 +88,9 @@ if __name__ == '__main__':
             pass
         if num is not None:
             node.grasp = node.stash.get_grasp_at(num)
-        elif act == "z":
+            act = 'p' # auto go to pre grasp on grasp select
+
+        if act == "z":
             node.zero_hand()
         elif act == "p":
             node.run_grasp(pre=True)
