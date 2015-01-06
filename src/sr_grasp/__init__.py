@@ -99,12 +99,6 @@ class Grasp(moveit_msgs.msg.Grasp):
 
 
 
-# Store of loaded grasps. Global var as we want multiple instances of the class
-# within a process to share the same data. IE that act like clients. This will
-# make more sense when the grasp shash becomes a proper node with databases and
-# the like.
-_store = {}
-
 class GraspStash(object):
     """
     Interface to the list of grasps stored in the system. Clients should all
@@ -121,7 +115,7 @@ class GraspStash(object):
 
     def get_all(self):
         """Return list of all grasps."""
-        return _store.values();
+        return self._store.values();
 
     def get_grasp_array(self):
         arr = GraspArray()
@@ -139,7 +133,7 @@ class GraspStash(object):
 
     def size(self):
         """Return the number of grasps."""
-        return len(_store)
+        return len(self._store)
 
     def put_grasp(self, grasp):
         """Stash the given grasp, using it's id field, which must be set."""
@@ -148,7 +142,7 @@ class GraspStash(object):
         # Up convert a plain grasp msg to our wrapper
         #if isinstance(grasp, moveit_msgs.msg.Grasp):
         #    grasp = Grasp.from_msg(grasp)
-        _store[grasp.id] = grasp
+        self._store[grasp.id] = grasp
 
     def load_all(self):
         """Load all configured sources of grasps into the stash."""
