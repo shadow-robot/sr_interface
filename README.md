@@ -39,6 +39,20 @@ Number select grasp, z zero hand, g grasp, p pre-grasp, q quit
 : 
 ```
 
+### Working with grasp files.
+
+Sets of grasps can be stored in YAML files containing a top level array of moveit_msgs/Grasp objects serialised to YAML
+the same way rostopic does. Although most of the fields are optional you must have an id and will need at least one
+pre-grasp posture and grasp posture. sr_grasp contains some example files in the resource directory.
+
+quick grasp reads it's ~grasps_file param to get the file name of grasps to use, defaulting to grasps.yaml in the
+sr_grasp package. So to use another file:
+```
+rosrun sr_grasp quick_grasp _grasps_file:=foo.yaml
+```
+You can use the n command to create a new grasp using the current hands pose as the grasp pose. The s command will
+re-write the file with the current list of grasps.
+
 ### Actionlib
 
 The main interface to the node is via actionlib, it exposes the sr_robot_msgs/Grasp action on the grasp/ topic. See the
