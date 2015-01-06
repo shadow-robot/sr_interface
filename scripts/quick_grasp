@@ -20,6 +20,7 @@
 
 import os, unittest;
 import rospy, rostest
+from math import radians
 from actionlib import SimpleActionClient, GoalStatus
 from sr_robot_msgs.msg import GraspAction, GraspGoal
 from sr_hand.shadowhand_ros import ShadowHand_ROS
@@ -62,7 +63,12 @@ class QuickGraspNode(object):
     def new_grasp(self, name):
         grasp = Grasp()
         grasp.id = name
-        grasp.set_grasp_point(positions = self.hand.read_all_current_positions())
+        positions = self.hand.read_all_current_positions()
+        print positions
+        for k, v in positions.iteritems():
+            positions[k] = radians(v)
+        print positions
+        grasp.set_grasp_point(positions = positions)
         self.stash.put_grasp(grasp)
         node.grasp = grasp
 
