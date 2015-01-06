@@ -64,10 +64,8 @@ class QuickGraspNode(object):
         grasp = Grasp()
         grasp.id = name
         positions = self.hand.read_all_current_positions()
-        print positions
         for k, v in positions.iteritems():
             positions[k] = radians(v)
-        print positions
         grasp.set_grasp_point(positions = positions)
         self.stash.put_grasp(grasp)
         node.grasp = grasp
