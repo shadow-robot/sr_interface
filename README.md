@@ -61,7 +61,7 @@ quick_grasp script for a python example of using this interface.
 
 ## grasp_planner
 
-Node impliementing the sr_robot_msgs/PlanGrasp action to generate grasps. Currently returns a single, hardcoded grasp.
+Node implementing the sr_robot_msgs/PlanGrasp action to generate grasps. Currently returns a single, hardcoded grasp.
 
 ## sr_grasp.utils
 
@@ -79,7 +79,7 @@ grasp = mk_grasp({
 
 ## Converting sr_hand XML grasps
 
-sr_hand has some grasps classes, inetrolater and gui that work with an XML file found in
+sr_hand has some grasps classes, interpolater and gui that work with an XML file found in
 sr_hand/scripts/sr_hand/grasps.xml. You can convert them to new style moveit messages in YAML using:
 ```
 rosrun sr_grasp convert_xml.py sr_hand/scripts/sr_hand/grasps.xml > converted.yaml
