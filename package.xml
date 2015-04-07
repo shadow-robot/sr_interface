@@ -1,7 +1,7 @@
 <package>
   <name>sr_multi_description</name>
   <version>0.0.1</version>
-  <description>sr_multi_description contains the description for Shadow Robot's Hand and the UR10 Arm </description>
+  <description>sr_multi_description contains the description of multi robot systems </description>
   <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
 
   <license>GPL</license>
