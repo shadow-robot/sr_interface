@@ -1,0 +1,25 @@
+<package>
+  <name>sr_multi_description</name>
+  <version>0.0.1</version>
+  <description>sr_multi_description contains the description for Shadow Robot's Hand and the UR10 Arm </description>
+  <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
+
+  <license>GPL</license>
+
+  <url type="website">http://www.shadowrobot.com</url>
+  <url type="repository">https://github.com/shadow-robot/sr-ros-interface</url>
+  <url type="bugtracker">https://github.com/shadow-robot/sr-ros-interface/issues</url>
+
+  <author>Kirsty Ellis</author>
+
+    <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+
+  <!-- Dependencies needed after this package is compiled. -->
++
+  <!-- Dependencies needed only for running tests. -->
+
+</package>
+
