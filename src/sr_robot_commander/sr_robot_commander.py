@@ -31,20 +31,24 @@ class SrRobotCommander(object):
         """
         self._move_group_commander = MoveGroupCommander(name)
 
-    def _set_joint_value_target(self, joint_states):
+    def _set_joint_value_target(self, joint_states, wait_result=True):
         """
-        Set target of the robot's links
+        Set target of the robot's links and moves to it
         @param joint_states - dictionary with joint name and value
+        @param wait_result - should method wait for movement end or not
         """
         self._move_group_commander.set_joint_value_target(joint_states)
+        self._move_group_commander.go(wait=wait_result)
 
-    def _set_position_target(self, xyz, end_effector_link=""):
+    def _set_position_target(self, xyz, end_effector_link="", wait_result=True):
         """
-        Specify a target position for the end-effector.
+        Specify a target position for the end-effector and moves to it
         @param xyz - new position of end-effector
         @param end_effector_link - name of the end effector link
+        @param wait_result - should method wait for movement end or not
         """
         self._move_group_commander.set_position_target(xyz, end_effector_link)
+        self._move_group_commander.go(wait=wait_result)
 
     def _get_joints_position(self):
         """

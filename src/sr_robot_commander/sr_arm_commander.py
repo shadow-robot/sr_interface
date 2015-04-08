@@ -33,14 +33,14 @@ class SrArmCommander(SrRobotCommander):
 
     def set_joint_value_target(self, joint_states):
         """
-        Set target of the robot's links
+        Set target of the robot's links and moves to it. This call is blocking.
         @param joint_states - dictionary with joint name and value
         """
         self._set_joint_value_target(joint_states)
 
     def set_position_target(self, xyz, end_effector_link=""):
         """
-        Specify a target position for the end-effector.
+        Specify a target position for the end-effector and moves to it. This call is blocking.
         @param xyz - new position of end-effector
         @param end_effector_link - name of the end effector link
         """
