@@ -1,0 +1,24 @@
+<package>
+  <name>sr_robot_launch</name>
+  <version>0.0.1</version>
+  <description>sr_robot_launch contains the launch file for the UR10 arm and SR hand </description>
+  <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
+
+  <license>GPL</license>
+
+  <url type="website">http://www.shadowrobot.com</url>
+  <url type="repository">https://github.com/shadow-robot/sr-ros-interface</url>
+  <url type="bugtracker">https://github.com/shadow-robot/sr-ros-interface/issues</url>
+
+  <author>Kirsty Ellis</author>
+
+    <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+    <build_depend>roscpp</build_depend>
++
++  <run_depend>roscpp</run_depend>
++
++ <test_depend>gtest</test_depend>
+
+</package>
