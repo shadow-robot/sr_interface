@@ -16,49 +16,46 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from moveit_commander import MoveGroupCommander
+from sr_robot_commander.sr_robot_commander import SrRobotCommander
 
 
-class SrRobotCommander(object):
+class SrArmCommander(SrRobotCommander):
     """
-    Base class for hand and arm commanders
+    Commander class for arm
     """
 
     def __init__(self, name):
         """
-        Initialize MoveGroupCommander object
+        Initialize object
         @param name - name of the MoveIt group
         """
-        self._move_group_commander = MoveGroupCommander(name)
+        super(SrArmCommander, self).__init__(name)
 
-    def _set_joint_value_target(self, joint_states):
+    def set_joint_value_target(self, joint_states):
         """
         Set target of the robot's links
         @param joint_states - dictionary with joint name and value
         """
-        self._move_group_commander.set_joint_value_target(joint_states)
+        self._set_joint_value_target(joint_states)
 
-    def _set_position_target(self, xyz, end_effector_link=""):
+    def set_position_target(self, xyz, end_effector_link=""):
         """
         Specify a target position for the end-effector.
         @param xyz - new position of end-effector
         @param end_effector_link - name of the end effector link
         """
-        self._move_group_commander.set_position_target(xyz, end_effector_link)
+        self._set_position_target(xyz, end_effector_link)
 
-    def _get_joints_position(self):
+    def get_joints_position(self):
         """
         Returns joints position
         @return - dictionary with joints positions
         """
-        joints_names = self._move_group_commander.get_joints()
-        joints_values = self._move_group_commander.get_current_joint_values()
-        return dict(zip(joints_names, joints_values))
+        return self._get_joints_position()
 
-    def _get_joints_velocity(self):
+    def get_joints_velocity(self):
         """
         Returns joints velocities
         @return - dictionary with joints velocities
         """
-        # TODO Implement
-        pass
+        return self._get_joints_velocity()
