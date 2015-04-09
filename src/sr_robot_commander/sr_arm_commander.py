@@ -77,7 +77,7 @@ class SrArmCommander(SrRobotCommander):
     def _joint_states_callback(self, joint_state):
         """
         The callback function for the topic joint_states.
-        It will store the received joint velocity and effort information in two dictionaries
+        It will store the received joint position and velocity information in two dictionaries
         @param joint_state - the message containing the joints data.
         """
         with self._joint_states_lock:
