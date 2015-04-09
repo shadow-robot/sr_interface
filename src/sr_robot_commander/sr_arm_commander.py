@@ -44,7 +44,7 @@ class SrArmCommander(SrRobotCommander):
         """
         Moves robot thought all joint states with specified timeouts
         @param joint_states_list - list of dictionaries of joint states or tuples with joints state dictionary and
-        timeout in millisecond  to stay in this state
-        e,g [ {"joint1": 10, "joint2": 45}, ({"joint1": 20, "joint2": 10], 2000), {"joint1": 10, "joint2": 45}]
+        duration in millisecond  for transition between previous state and current (by default duration is 1 second)
+        e.g. [{"joint1": 10, "joint2": 45}, ({"joint1": 20, "joint2": 10], 2000), {"joint1": 10, "joint2": 45}]
         """
         return self._move_thought_joint_states(joint_states_list)
