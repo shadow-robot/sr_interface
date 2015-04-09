@@ -40,22 +40,6 @@ class SrRobotCommander(object):
         self._move_group_commander.set_joint_value_target(joint_states)
         self._move_group_commander.go(wait=wait_result)
 
-    def get_joints_position(self):
-        """
-        Returns joints position
-        @return - dictionary with joints positions
-        """
-        joints_names = self._move_group_commander.get_joints()
-        joints_values = self._move_group_commander.get_current_joint_values()
-        return dict(zip(joints_names, joints_values))
-
-    def get_joints_velocity(self):
-        """
-        Returns joints velocities
-        @return - dictionary with joints velocities
-        """
-        raise Exception("Not implemented yet")
-
     def _move_thought_joint_states(self, joint_states_list):
         """
         Moves robot thought all joint states with specified timeouts

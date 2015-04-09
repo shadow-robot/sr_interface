@@ -17,6 +17,7 @@
 
 
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
+from sr_hand.shadowhand_ros import ShadowHand_ROS
 
 
 class SrHandCommander(SrRobotCommander):
@@ -30,13 +31,28 @@ class SrHandCommander(SrRobotCommander):
         @param name - name of the MoveIt group
         """
         super(SrHandCommander, self).__init__(name)
+        self._hand = ShadowHand_ROS()
 
-    def get_joint_effort(self):
+    def get_joints_position(self):
+        """
+        Returns joints position
+        @return - dictionary with joints positions
+        """
+        return dict(self._hand.read_all_current_positions())
+
+    def get_joints_velocity(self):
+        """
+        Returns joints velocities
+        @return - dictionary with joints velocities
+        """
+        return dict(self._hand.read_all_current_velocities())
+
+    def get_joints_effort(self):
         """
         Returns a dictionary with the effort of each joint. Currently in ADC units, as no calibration is performed on
         the strain gauges.
         """
-        raise Exception("Not implemented yet")
+        return dict(self._hand.read_all_current_efforts())
 
     def set_max_force(self, value):
         """
