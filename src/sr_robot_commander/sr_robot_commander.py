@@ -17,6 +17,7 @@
 
 
 from moveit_commander import MoveGroupCommander
+from moveit_msgs.msg import RobotTrajectory
 
 
 class SrRobotCommander(object):
@@ -40,14 +41,15 @@ class SrRobotCommander(object):
         self._move_group_commander.set_joint_value_target(joint_states)
         self._move_group_commander.go(wait=wait_result)
 
-    def _move_thought_joint_states(self, joint_states_list):
+    def _run_joint_trajectory(self, joint_trajectory):
         """
-        Moves robot thought all joint states with specified timeouts
-        @param joint_states_list - list of dictionaries of joint states or tuples with joints state dictionary and
-        duration in millisecond  for transition between previous state and current (by default duration is 1 second)
-        e.g. [{"joint1": 10, "joint2": 45}, ({"joint1": 20, "joint2": 10], 2000), {"joint1": 10, "joint2": 45}]
+        Moves robot through all joint states with specified timeouts
+        @param joint_trajectory - JointTrajectory class object. Represents trajectory of the joints which would be
+        executed.
         """
-        raise Exception("Not implemented yet")
+        plan = RobotTrajectory()
+        plan.joint_trajectory = joint_trajectory
+        self._move_group_commander.execute(plan)
 
     def _move_to_position_target(self, xyz, end_effector_link="", wait_result=True):
         """

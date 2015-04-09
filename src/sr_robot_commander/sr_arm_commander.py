@@ -49,14 +49,13 @@ class SrArmCommander(SrRobotCommander):
         """
         self._move_to_position_target(xyz, end_effector_link, wait_result=wait)
 
-    def move_thought_joint_states(self, joint_states_list):
+    def run_joint_trajectory(self, joint_trajectory):
         """
-        Moves robot thought all joint states with specified timeouts
-        @param joint_states_list - list of dictionaries of joint states or tuples with joints state dictionary and
-        duration in millisecond  for transition between previous state and current (by default duration is 1 second)
-        e.g. [{"joint1": 10, "joint2": 45}, ({"joint1": 20, "joint2": 10], 2000), {"joint1": 10, "joint2": 45}]
+        Moves robot through all joint states with specified timeouts
+        @param joint_trajectory - JointTrajectory class object. Represents trajectory of the joints which would be
+        executed.
         """
-        return self._move_thought_joint_states(joint_states_list)
+        return self._run_joint_trajectory(joint_trajectory)
 
     def get_joints_position(self):
         """
