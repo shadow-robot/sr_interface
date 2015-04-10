@@ -11,7 +11,9 @@
 
   <!-- hands -->
   <group if="$(arg hands)">
-    <include file="$(find sr_hand)/launch/gazebo/loaders/hand_controllers.launch"/>
+    <include file="$(find sr_hand)/launch/gazebo/loaders/hand_controllers.launch">
+      <arg name="hand_controller_gazebo" value="$(find sr_description)/hand/config/right_hand_controller_gazebo.yaml"/>
+    </include>
   </group>
 
 </launch>
