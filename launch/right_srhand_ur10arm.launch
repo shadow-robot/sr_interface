@@ -1,0 +1,69 @@
+<launch>
+  <!-- This launch file is for a right UR10 arm and shadow hand -->
+
+  <!-- Set to true for debugging -->
+  <arg name="debug" default="false"/>
+
+  <!--Left or right hand/arm  -->
+  <arg name="left_right" value="r"/>
+
+  <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
+  <arg name="hand_trajectory" value="false"/>
+  <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
+  <arg name="arm_trajectory" default="true"/>
+  <!-- Set to true to spawn the position controllers for both hands-->
+  <arg name="hand_ctrl" value="false"/>
+
+  <!--&lt;!&ndash; launch for right hand &ndash;&gt;-->
+  <!--<include file="$(find sr_edc_launch)/sr_edc.launch" >-->
+    <!--<arg name="rh_serial" value="1050" />-->
+    <!--<arg name="eth_port" value="eth2_eth3" />-->
+    <!--<arg name="robot_description" value="$(find sr_multi_description)/urdf/srhand_ur10arm.urdf.xacro" />-->
+    <!--<arg name="debug" value="$(arg debug)" />-->
+    <!--<arg name="pwm_control" value="true" />-->
+  <!--</include>-->
+
+   <!-- Loads the robot description -->
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find sr_multi_description)/urdf/srhand_ur10arm.urdf.xacro' prefix:=$(arg left_right)"/>
+
+  <!-- controllers for arm -->
+  <rosparam command="load" file="$(find sr_ur_controller)/config/right_ur_arm_controller.yaml"/>
+
+  <!-- trajectory controller -->
+  <!--<rosparam command="load" file="$(find sr_robot_launch)/config/rh_trajectory_controller.yaml"/>-->
+  <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml"/>
+
+  <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 ra_sr_ur_controller"/>
+
+  <!--group if="$(arg arm_trajectory)">
+    <node name="arm_checker" pkg="moley_launch" type="check_arms_ready" output="screen"/>
+    <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="wait-for=/arms_ready shutdown-timeout=1.0 ra_trajectory_controller"/>
+  </group-->
+
+
+    <!-- real time control loop -->
+  <group if="$(arg debug)">
+    <node name="realtime_loop" pkg="ros_ethercat_loop" type="ros_ethercat_loop" args="-i _ -r robot_description" output="screen"
+      launch-prefix="gdb -ex run -args"/>
+  </group>
+  <group unless="$(arg debug)">
+    <node name="realtime_loop" pkg="ros_ethercat_loop" type="ros_ethercat_loop" args="-i _ -r robot_description" output="screen"
+      launch-prefix="ethercat_grant"/>
+  </group>
+
+
+  <param name="ra_sr_ur_controller/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
+
+  <!-- Should only be used when testing arm alone, as hand launch includes joint state publisher -->
+  <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"/>
+
+  <group if="$(arg hand_trajectory)">
+    <node name="hand_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 rh_trajectory_controller"/>
+  </group>
+
+  <group if="$(arg hand_ctrl)">
+    <node name="rh_controllers_spawner" pkg="controller_manager" type="spawner" output="screen"
+      args="--wait-for=/calibrated --shutdown-timeout=1.0 sh_rh_ffj0_position_controller sh_rh_ffj3_position_controller sh_rh_ffj4_position_controller sh_rh_mfj0_position_controller sh_rh_mfj3_position_controller sh_rh_mfj4_position_controller sh_rh_rfj0_position_controller sh_rh_rfj3_position_controller sh_rh_rfj4_position_controller sh_rh_lfj0_position_controller sh_rh_lfj3_position_controller sh_rh_lfj4_position_controller sh_rh_lfj5_position_controller sh_rh_thj1_position_controller sh_rh_thj2_position_controller sh_rh_thj3_position_controller sh_rh_thj4_position_controller sh_rh_thj5_position_controller sh_rh_wrj1_position_controller sh_rh_wrj2_position_controller" />
+  </group>
+
+</launch>

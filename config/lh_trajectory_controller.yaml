@@ -1,0 +1,27 @@
+lh_trajectory_controller:
+  type: "position_controllers/JointTrajectoryController"
+  joints:
+    - lh_FFJ1
+    - lh_FFJ2
+    - lh_FFJ3
+    - lh_FFJ4
+    - lh_LFJ1
+    - lh_LFJ2
+    - lh_LFJ3
+    - lh_LFJ4
+    - lh_LFJ5
+    - lh_MFJ1
+    - lh_MFJ2
+    - lh_MFJ3
+    - lh_MFJ4
+    - lh_RFJ1
+    - lh_RFJ2
+    - lh_RFJ3
+    - lh_RFJ4
+    - lh_THJ1
+    - lh_THJ2
+    - lh_THJ3
+    - lh_THJ4
+    - lh_THJ5
+    - lh_WRJ1
+    - lh_WRJ2
