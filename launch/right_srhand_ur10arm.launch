@@ -14,7 +14,7 @@
   <!-- Set to true to spawn the position controllers for both hands-->
   <arg name="hand_ctrl" value="false"/>
 
-  <!--&lt;!&ndash; launch for right hand &ndash;&gt;-->
+  <!-- launch for right hand -->
   <!--<include file="$(find sr_edc_launch)/sr_edc.launch" >-->
     <!--<arg name="rh_serial" value="1050" />-->
     <!--<arg name="eth_port" value="eth2_eth3" />-->
