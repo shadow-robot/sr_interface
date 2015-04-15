@@ -77,8 +77,8 @@ find_package(catkin REQUIRED)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES autopic_launch
-#  CATKIN_DEPENDS autopic_description joint_state_publisher robot_state_publisher
+#  LIBRARIES sr_robot_launch
+#  CATKIN_DEPENDS sr_multi_description joint_state_publisher robot_state_publisher
 #  DEPENDS system_lib
 )
 
@@ -94,19 +94,19 @@ include_directories(
 )
 
 ## Declare a cpp library
-# add_library(autopic_launch
-#   src/${PROJECT_NAME}/autopic_launch.cpp
+# add_library(sr_robot_launch
+#   src/${PROJECT_NAME}/sr_robot_launch.cpp
 # )
 
 ## Declare a cpp executable
-# add_executable(autopic_launch_node src/autopic_launch_node.cpp)
+# add_executable(sr_robot_launch_node src/sr_robot_launch_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(autopic_launch_node autopic_launch_generate_messages_cpp)
+# add_dependencies(sr_robot_launch_node sr_robot_launch_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(autopic_launch_node
+# target_link_libraries(sr_robot_launch_node
 #   ${catkin_LIBRARIES}
 # )
 
@@ -125,7 +125,7 @@ include_directories(
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS autopic_launch autopic_launch_node
+# install(TARGETS sr_robot_launch sr_robot_launch_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -150,7 +150,7 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_autopic_launch.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_sr_robot_launch.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
