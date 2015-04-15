@@ -7,8 +7,8 @@ joint_limits:
     max_velocity: 3.15
     has_acceleration_limits: false
     max_acceleration: 0
-    min_position: -2.5
-    max_position: 0.0
+    min_position: 0.0
+    max_position: 2.5
   ra_shoulder_lift_joint:
     has_velocity_limits: true
     max_velocity: 2.16
@@ -28,7 +28,7 @@ joint_limits:
     max_velocity: 3.2
     has_acceleration_limits: false
     max_acceleration: 0
-    min_position: -2.74
+    min_position: -3.05
     max_position: 0.47 #0.35
   ra_wrist_2_joint:
     has_velocity_limits: true
@@ -42,8 +42,8 @@ joint_limits:
     max_velocity: 3.2
     has_acceleration_limits: false
     max_acceleration: 0
-    min_position: -6.2
-    max_position: 0.72
+    min_position: -0.72
+    max_position: 3.0
   rh_FFJ1:
     has_velocity_limits: true
     max_velocity: 1
