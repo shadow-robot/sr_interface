@@ -1,8 +1,7 @@
 #!/usr/bin/python
 import rospy
-# from sr_robot_commander import SrHandCommander
-# from sr_robot_commander.sr_arm_commander import SrArmCommander
-from sr_robot_commander.src.sr_robot_commander.sr_arm_commander import SrArmCommander
+# from sr_robot_commander.sr_hand_commander import SrHandCommander
+from sr_robot_commander.sr_arm_commander import SrArmCommander
 
 rospy.init_node("basic_example", anonymous=True)
 
@@ -21,7 +20,7 @@ rospy.init_node("basic_example", anonymous=True)
 # print("Hand joints positions \n " + str(hand_joint_states) + "\n")
 
 arm = SrArmCommander()
-arm.move_to_position_target(0.1, 0.1, 1.0)
+arm.move_to_position_target([0.5, 0.5, 1.0])
 
 rospy.sleep(rospy.Duration(3))
 
