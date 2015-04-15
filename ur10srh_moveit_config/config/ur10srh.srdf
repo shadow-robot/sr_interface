@@ -17,7 +17,7 @@
         <joint name="ra_wrist_2_joint" />
         <joint name="ra_wrist_3_joint" />
         <joint name="ra_ee_fixed_joint" />
-        <joint name="right_arm_to_right_hand" />
+        <joint name="arm_to_hand" />
     </group>
     <group name="right_hand">
         <joint name="rh_WRJ2" />
