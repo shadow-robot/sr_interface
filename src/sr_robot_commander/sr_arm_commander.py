@@ -16,10 +16,54 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from moveit_commander import MoveGroupCommander
+from moveit_msgs.msg import RobotTrajectory
+
 import threading
 import rospy
-from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from sensor_msgs.msg import JointState
+
+
+class SrRobotCommander(object):
+    """
+    Base class for hand and arm commanders
+    """
+
+    def __init__(self, name):
+        """
+        Initialize MoveGroupCommander object
+        @param name - name of the MoveIt group
+        """
+        self._move_group_commander = MoveGroupCommander(name)
+
+    def move_to_joint_value_target(self, joint_states, wait_result=True):
+        """
+        Set target of the robot's links and moves to it
+        @param joint_states - dictionary with joint name and value
+        @param wait_result - should method wait for movement end or not
+        """
+        self._move_group_commander.set_joint_value_target(joint_states)
+        self._move_group_commander.go(wait=wait_result)
+
+    def _run_joint_trajectory(self, joint_trajectory):
+        """
+        Moves robot through all joint states with specified timeouts
+        @param joint_trajectory - JointTrajectory class object. Represents trajectory of the joints which would be
+        executed.
+        """
+        plan = RobotTrajectory()
+        plan.joint_trajectory = joint_trajectory
+        self._move_group_commander.execute(plan)
+
+    def _move_to_position_target(self, xyz, end_effector_link="", wait_result=True):
+        """
+        Specify a target position for the end-effector and moves to it
+        @param xyz - new position of end-effector
+        @param end_effector_link - name of the end effector link
+        @param wait_result - should method wait for movement end or not
+        """
+        self._move_group_commander.set_position_target(xyz, end_effector_link)
+        self._move_group_commander.go(wait=wait_result)
 
 
 class SrArmCommander(SrRobotCommander):
@@ -82,3 +126,14 @@ class SrArmCommander(SrRobotCommander):
         with self._joint_states_lock:
             self._joints_position = {n:p for n,p in zip(joint_state.name, joint_state.position)}
             self._joints_velocity = {n:v for n,v in zip(joint_state.name, joint_state.velocity)}
+
+
+if __name__ == "__main__":
+    rospy.init_node("basic_example", anonymous=True)
+
+    arm = SrArmCommander()
+    arm.move_to_position_target(0.5, 0.5, 1.0)
+
+    rospy.sleep(rospy.Duration(3))
+
+    print("Arm joints position\n" + str(arm.get_joints_position()) + "\n")
