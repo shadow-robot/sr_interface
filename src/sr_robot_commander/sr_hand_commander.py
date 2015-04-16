@@ -65,10 +65,10 @@ class SrHandCommander(SrRobotCommander):
         """
         Returns a string indicating the type of tactile sensors present. Possible values are: PST, biotac, UBI0 .
         """
-        raise Exception("Not implemented yet")
+        return self._hand.get_tactile_type()
 
     def get_tactile_state(self):
         """
         Returns an object containing tactile data. The structure of the data is different for every tactile_type .
         """
-        raise Exception("Not implemented yet")
+        return self._hand.get_tactile_state()
