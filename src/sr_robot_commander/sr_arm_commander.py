@@ -79,5 +79,5 @@ class SrArmCommander(SrRobotCommander):
         @param joint_state - the message containing the joints data.
         """
         with self._joint_states_lock:
-            self._joints_position = {n:p for n,p in zip(joint_state.name, joint_state.position)}
-            self._joints_velocity = {n:v for n,v in zip(joint_state.name, joint_state.velocity)}
+            self._joints_position = {n: p for n, p in zip(joint_state.name, joint_state.position)}
+            self._joints_velocity = {n: v for n, v in zip(joint_state.name, joint_state.velocity)}
