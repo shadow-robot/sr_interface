@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 import rospy
 # from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_arm_commander import SrArmCommander
@@ -25,6 +25,3 @@ arm.move_to_position_target([0.5, 0.5, 1.0])
 rospy.sleep(rospy.Duration(3))
 
 print("Arm joints position\n" + str(arm.get_joints_position()) + "\n")
-
-
-

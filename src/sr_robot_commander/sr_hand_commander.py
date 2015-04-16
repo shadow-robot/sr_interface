@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 # Copyright 2015 Shadow Robot Company Ltd.
 #
@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import rospy
 
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from sr_hand.shadowhand_ros import ShadowHand_ROS
