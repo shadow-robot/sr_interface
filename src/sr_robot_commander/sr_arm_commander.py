@@ -133,10 +133,38 @@ if __name__ == "__main__":
 
     arm = SrArmCommander()
 
-    arm.move_to_position_target([-0.028412, 0.17665, 0.85672])
+    rospy.sleep(rospy.Duration(2))
+
+    position_1 = [-0.028412, 0.17665, 0.85672]
+    print("Moving arm to position\n" + str(position_1) + "\n")
+    arm.move_to_position_target(position_1)
+
     rospy.sleep(rospy.Duration(3))
 
-    arm.move_to_position_target([0.25527, 0.86682, 0.5426])
+    position_2 = [0.25527, 0.86682, 0.5426]
+    print("Moving arm to position\n" + str(position_2) + "\n")
+    arm.move_to_position_target(position_2)
+
+    rospy.sleep(rospy.Duration(3))
+
+    print("Arm joints position\n" + str(arm.get_joints_position()) + "\n")
+
+    joints_states_1 = {'ra_shoulder_pan_joint': 0.5157461682721474, 'ra_elbow_joint': 0.6876824920327893,
+                       'ra_wrist_1_joint': -0.7695210732233582, 'ra_wrist_2_joint': 0.2298871642157314,
+                       'ra_shoulder_lift_joint': -0.9569080092786892, 'ra_wrist_3_joint': -0.25991215955733704}
+    print("Moving arm to joints state\n" + str(joints_states_1) + "\n")
+
+    arm.move_to_joint_value_target(joints_states_1)
+
+    rospy.sleep(rospy.Duration(3))
+
+    joints_states_2 = {'ra_shoulder_pan_joint': 1.9499124556292102, 'ra_elbow_joint': 1.7086485350908838,
+                       'ra_wrist_1_joint': -2.4521844853284804, 'ra_wrist_2_joint': -1.7170695649952803,
+                       'ra_shoulder_lift_joint': -2.7962420990357364, 'ra_wrist_3_joint': 0.2431812178998669}
+
+    print("Moving arm to joints state\n" + str(joints_states_2) + "\n")
+    arm.move_to_joint_value_target(joints_states_2)
+
     rospy.sleep(rospy.Duration(3))
 
     print("Arm joints position\n" + str(arm.get_joints_position()) + "\n")
