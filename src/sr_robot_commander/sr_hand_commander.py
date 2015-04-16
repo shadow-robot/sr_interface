@@ -15,8 +15,6 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import rospy
-
 from sr_robot_commander import SrRobotCommander
 from sr_hand.shadowhand_ros import ShadowHand_ROS
 
@@ -33,13 +31,14 @@ class SrHandCommander(SrRobotCommander):
         """
         super(SrHandCommander, self).__init__(name)
         self._hand = ShadowHand_ROS()
+        self._initialize_joint_prefix(name)
 
     def get_joints_position(self):
         """
         Returns joints position
         @return - dictionary with joints positions
         """
-        return dict(self._hand.read_all_current_positions())
+        return self._fix_joints_names(self._hand.read_all_current_positions())
 
     def get_joints_velocity(self):
         """
@@ -60,16 +59,37 @@ class SrHandCommander(SrRobotCommander):
         Set maximum force for hand
         @param value - maximum force value
         """
-        raise Exception("Not implemented yet")
+        raise NotImplementedError()
 
     def get_tactile_type(self):
         """
         Returns a string indicating the type of tactile sensors present. Possible values are: PST, biotac, UBI0 .
         """
-        raise Exception("Not implemented yet")
+        raise NotImplementedError()
 
     def get_tactile_state(self):
         """
         Returns an object containing tactile data. The structure of the data is different for every tactile_type .
         """
-        raise Exception("Not implemented yet")
+        raise NotImplementedError()
+
+    def _initialize_joint_prefix(self, name):
+        """
+        Prefix which would be added to every joint name returned from ShadowHand_ROS() object.
+        This functionality need to be removed in the future releases
+        @param name - hand name
+        """
+        self._joint_prefix = ""
+        if name is not None:
+            for word in name.split("_"):
+                self._joint_prefix += word[0]
+            self._joint_prefix += "_"
+
+    def _fix_joints_names(self, joints_dictionary):
+        """
+        Correction of the joint names returned by ShadowHand_ROS() object.
+        This functionality need to be removed in the future releases
+        @param joints_dictionary - input dictionary
+        @return dictionary with fixed key names
+        """
+        return dict((self._joint_prefix + key, value) for (key, value) in joints_dictionary.items())
