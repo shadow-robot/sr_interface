@@ -17,7 +17,7 @@
 
 import rospy
 
-from sr_robot_commander.sr_robot_commander import SrRobotCommander
+from sr_robot_commander import SrRobotCommander
 from sr_hand.shadowhand_ros import ShadowHand_ROS
 from sr_robot_msgs.srv import ForceController
 
@@ -68,12 +68,28 @@ class SrHandCommander(SrRobotCommander):
             service_name =  "realtime_loop/change_force_PID_"+joint_name.upper()
             self.__set_force_srv[joint_name] = rospy.ServiceProxy(service_name, ForceController)
 
-        motor_setting = ForceController()
-        motor_setting.imax = value
-        motor_setting.i = value
+        #get the current settings for the motor
+        motor_settings = None
+        try:
+            motor_settings = rospy.get_param(joint_name.lower() +"/pid" )
+        except KeyError, e:
+            rospy.logerr("Couldn't get the motor parameters for joint "+joint_name+ " -> "+e)
+
+        #imax is used for max force for now.
+        motor_settings["imax"] = value
 
         try:
-            self.__set_force_srv[joint_name](motor_setting)
+            #reordering the parameters in the expected order since names don't match:
+            self.__set_force_srv[joint_name](motor_settings["max_pwm"],
+                                             motor_settings["sg_left"],
+                                             motor_settings["sg_right"],
+                                             motor_settings["f"],
+                                             motor_settings["p"],
+                                             motor_settings["i"],
+                                             motor_settings["d"],
+                                             motor_settings["imax"],
+                                             motor_settings["deadband"],
+                                             motor_settings["sign"])
         except rospy.ServiceException, e:
             rospy.logerr("Couldn't set the max force for joint "+joint_name + ": "+e)
 
