@@ -18,6 +18,10 @@ position_1 = {'rh_FFJ1': 0.3490658767850654, 'rh_FFJ2': 0.1747066021773609, 'rh_
 hand_commander.move_to_joint_value_target(position_1)
 rospy.sleep(rospy.Duration(5))
 
-hand_joint_states = hand_commander.get_joints_position()
+hand_joints_state = hand_commander.get_joints_position()
+hand_joints_velocity = hand_commander.get_joints_velocity()
+hand_joints_effort = hand_commander.get_joints_velocity()
 
-print("Hand joints positions \n " + str(hand_joint_states) + "\n")
+print("Hand joints position \n " + str(hand_joints_state) + "\n")
+print("Hand joints velocity \n " + str(hand_joints_velocity) + "\n")
+print("Hand joints effort \n " + str(hand_joints_effort) + "\n")
