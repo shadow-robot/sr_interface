@@ -132,8 +132,11 @@ if __name__ == "__main__":
     rospy.init_node("basic_example", anonymous=True)
 
     arm = SrArmCommander()
-    arm.move_to_position_target([0.5, 0.5, 1.0])
 
+    arm.move_to_position_target([-0.028412, 0.17665, 0.85672])
+    rospy.sleep(rospy.Duration(3))
+
+    arm.move_to_position_target([0.25527, 0.86682, 0.5426])
     rospy.sleep(rospy.Duration(3))
 
     print("Arm joints position\n" + str(arm.get_joints_position()) + "\n")
