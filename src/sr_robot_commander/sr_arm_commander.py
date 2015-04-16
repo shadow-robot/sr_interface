@@ -16,10 +16,10 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import rospy
-
 import threading
 from sr_robot_commander import SrRobotCommander
 from sensor_msgs.msg import JointState
+
 
 class SrArmCommander(SrRobotCommander):
     """
@@ -79,16 +79,5 @@ class SrArmCommander(SrRobotCommander):
         @param joint_state - the message containing the joints data.
         """
         with self._joint_states_lock:
-            self._joints_position = {n:p for n,p in zip(joint_state.name, joint_state.position)}
-            self._joints_velocity = {n:v for n,v in zip(joint_state.name, joint_state.velocity)}
-
-
-if __name__ == "__main__":
-    rospy.init_node("basic_example", anonymous=True)
-
-    arm = SrArmCommander()
-    arm.move_to_position_target([0.5, 0.5, 1.0])
-
-    rospy.sleep(rospy.Duration(3))
-
-    print("Arm joints position\n" + str(arm.get_joints_position()) + "\n")
+            self._joints_position = {n: p for n, p in zip(joint_state.name, joint_state.position)}
+            self._joints_velocity = {n: v for n, v in zip(joint_state.name, joint_state.velocity)}
