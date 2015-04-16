@@ -19,12 +19,14 @@ import rospy
 
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from sr_hand.shadowhand_ros import ShadowHand_ROS
-
+from sr_robot_msgs.srv import ForceController
 
 class SrHandCommander(SrRobotCommander):
     """
     Commander class for hand
     """
+
+    __set_force_srv = {}
 
     def __init__(self, name="right_hand"):
         """
@@ -55,12 +57,25 @@ class SrHandCommander(SrRobotCommander):
         """
         return dict(self._hand.read_all_current_efforts())
 
-    def set_max_force(self, value):
+    def set_max_force(self, joint_name, value):
         """
         Set maximum force for hand
         @param value - maximum force value
         """
-        raise Exception("Not implemented yet")
+        #This is for a beta version of our firmware.
+        # It uses the motor I and Imax to set a max effort.
+        if not self.__set_force_srv.get(joint_name):
+            service_name =  "realtime_loop/change_force_PID_"+joint_name.upper()
+            self.__set_force_srv[joint_name] = rospy.ServiceProxy(service_name, ForceController)
+
+        motor_setting = ForceController()
+        motor_setting.imax = value
+        motor_setting.i = value
+
+        try:
+            self.__set_force_srv[joint_name](motor_setting)
+        except rospy.ServiceException, e:
+            rospy.logerr("Couldn't set the max force for joint "+joint_name + ": "+e)
 
     def get_tactile_type(self):
         """
