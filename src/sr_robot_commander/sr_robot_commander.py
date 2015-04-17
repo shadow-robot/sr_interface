@@ -1,25 +1,24 @@
-# #!/usr/bin/env python
+#!/usr/bin/env python
+
+# Copyright 2015 Shadow Robot Company Ltd.
 #
-# # Copyright 2015 Shadow Robot Company Ltd.
-# #
-# # This program is free software: you can redistribute it and/or modify it
-# # under the terms of the GNU General Public License as published by the Free
-# # Software Foundation, either version 2 of the License, or (at your option)
-# # any later version.
-# #
-# # This program is distributed in the hope that it will be useful, but WITHOUT
-# # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-# # more details.
-# #
-# # You should have received a copy of the GNU General Public License along
-# # with this program.  If not, see <http://www.gnu.org/licenses/>.
+# This program is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation, either version 2 of the License, or (at your option)
+# any later version.
 #
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+# more details.
 #
-import rospy
+# You should have received a copy of the GNU General Public License along
+# with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 from moveit_commander import MoveGroupCommander
 from moveit_msgs.msg import RobotTrajectory
+
 
 class SrRobotCommander(object):
     """
@@ -40,6 +39,15 @@ class SrRobotCommander(object):
         @param wait_result - should method wait for movement end or not
         """
         self._move_group_commander.set_joint_value_target(joint_states)
+        self._move_group_commander.go(wait=wait_result)
+
+    def move_to_named_target(self, name, wait_result=True):
+        """
+        Set target of the robot's links and moves to it
+        @param name - name of the target pose defined in SRDF
+        @param wait_result - should method wait for movement end or not
+        """
+        self._move_group_commander.set_named_target(name)
         self._move_group_commander.go(wait=wait_result)
 
     def _run_joint_trajectory(self, joint_trajectory):
