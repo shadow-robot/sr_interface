@@ -99,6 +99,14 @@
         <joint name="rh_WRJ1" value="0" />
         <joint name="rh_WRJ2" value="0" />
     </group_state>
+    <group_state name="gamma" group="right_arm">
+        <joint name="ra_elbow_joint" value="1.4119" />
+        <joint name="ra_shoulder_lift_joint" value="-1.6943" />
+        <joint name="ra_shoulder_pan_joint" value="0.2118" />
+        <joint name="ra_wrist_1_joint" value="0" />
+        <joint name="ra_wrist_2_joint" value="0" />
+        <joint name="ra_wrist_3_joint" value="0" />
+    </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="right_hand" parent_link="rh_forearm" group="right_hand" />
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
