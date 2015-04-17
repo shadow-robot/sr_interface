@@ -75,6 +75,12 @@ for joints_states in [joints_states_1, joints_states_2, joints_states_3]:
 
 arm_commander.run_joint_trajectory(joint_trajectory)
 
+rospy.sleep(rospy.Duration(15))
+
+named_target = "gamma"
+print("Moving arm to named target " + named_target)
+arm_commander.move_to_named_target(named_target)
+
 rospy.sleep(rospy.Duration(3))
 
 print("Arm joints position\n" + str(arm_commander.get_joints_position()) + "\n")
