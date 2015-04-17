@@ -24,6 +24,8 @@
     <arg name="world_name" value="$(find sr_description)/other/worlds/shadowhand.world"/>
     <arg name="paused" value="false"/>
 
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(arg robot_description)' prefix:=$(arg xacro_prefix)"/>
+
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
       <arg name="world_name" default="$(arg world_name)"/>
       <arg name="gui" default="true"/>
