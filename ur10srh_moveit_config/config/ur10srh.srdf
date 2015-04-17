@@ -229,6 +229,7 @@
     <disable_collisions link1="rh_ffadapter" link2="rh_lfmetacarpal" reason="Never" />
     <disable_collisions link1="rh_ffadapter" link2="rh_lfproximal" reason="Never" />
     <disable_collisions link1="rh_ffadapter" link2="rh_lftip" reason="Never" />
+    <disable_collisions link1="rh_ffadapter" link2="rh_mfbiotac" reason="User" />
     <disable_collisions link1="rh_ffadapter" link2="rh_mfknuckle" reason="Never" />
     <disable_collisions link1="rh_ffadapter" link2="rh_palm" reason="Never" />
     <disable_collisions link1="rh_ffadapter" link2="rh_rfknuckle" reason="Never" />
@@ -243,6 +244,7 @@
     <disable_collisions link1="rh_ffbiotac" link2="rh_lfknuckle" reason="Never" />
     <disable_collisions link1="rh_ffbiotac" link2="rh_lfmetacarpal" reason="Never" />
     <disable_collisions link1="rh_ffbiotac" link2="rh_lfproximal" reason="Never" />
+    <disable_collisions link1="rh_ffbiotac" link2="rh_mfbiotac" reason="User" />
     <disable_collisions link1="rh_ffbiotac" link2="rh_mfknuckle" reason="Never" />
     <disable_collisions link1="rh_ffbiotac" link2="rh_palm" reason="Never" />
     <disable_collisions link1="rh_ffbiotac" link2="rh_rfknuckle" reason="Never" />
@@ -283,6 +285,7 @@
     <disable_collisions link1="rh_ffproximal" link2="rh_lfmetacarpal" reason="Never" />
     <disable_collisions link1="rh_ffproximal" link2="rh_lfproximal" reason="Never" />
     <disable_collisions link1="rh_ffproximal" link2="rh_lftip" reason="Never" />
+    <disable_collisions link1="rh_ffproximal" link2="rh_mfbiotac" reason="User" />
     <disable_collisions link1="rh_ffproximal" link2="rh_mftip" reason="Never" />
     <disable_collisions link1="rh_ffproximal" link2="rh_palm" reason="User" />
     <disable_collisions link1="rh_ffproximal" link2="rh_rfbiotac" reason="Never" />
@@ -298,6 +301,7 @@
     <disable_collisions link1="rh_fftip" link2="rh_lfknuckle" reason="Never" />
     <disable_collisions link1="rh_fftip" link2="rh_lfmetacarpal" reason="Never" />
     <disable_collisions link1="rh_fftip" link2="rh_lfproximal" reason="Never" />
+    <disable_collisions link1="rh_fftip" link2="rh_mfbiotac" reason="User" />
     <disable_collisions link1="rh_fftip" link2="rh_mfknuckle" reason="Never" />
     <disable_collisions link1="rh_fftip" link2="rh_mfproximal" reason="Never" />
     <disable_collisions link1="rh_fftip" link2="rh_palm" reason="Never" />
@@ -335,6 +339,7 @@
     <disable_collisions link1="rh_lfadapter" link2="rh_lfmetacarpal" reason="Never" />
     <disable_collisions link1="rh_lfadapter" link2="rh_lfproximal" reason="Adjacent" />
     <disable_collisions link1="rh_lfadapter" link2="rh_lftip" reason="Adjacent" />
+    <disable_collisions link1="rh_lfadapter" link2="rh_mfbiotac" reason="User" />
     <disable_collisions link1="rh_lfadapter" link2="rh_mfknuckle" reason="Never" />
     <disable_collisions link1="rh_lfadapter" link2="rh_palm" reason="Never" />
     <disable_collisions link1="rh_lfadapter" link2="rh_rfknuckle" reason="Never" />
@@ -346,6 +351,7 @@
     <disable_collisions link1="rh_lfbiotac" link2="rh_lfknuckle" reason="Never" />
     <disable_collisions link1="rh_lfbiotac" link2="rh_lfmetacarpal" reason="Never" />
     <disable_collisions link1="rh_lfbiotac" link2="rh_lftip" reason="Default" />
+    <disable_collisions link1="rh_lfbiotac" link2="rh_mfbiotac" reason="User" />
     <disable_collisions link1="rh_lfbiotac" link2="rh_mfknuckle" reason="Never" />
     <disable_collisions link1="rh_lfbiotac" link2="rh_palm" reason="User" />
     <disable_collisions link1="rh_lfbiotac" link2="rh_rfknuckle" reason="Never" />
@@ -395,6 +401,7 @@
     <disable_collisions link1="rh_lfmetacarpal" link2="rh_thtip" reason="Never" />
     <disable_collisions link1="rh_lfmetacarpal" link2="rh_wrist" reason="Never" />
     <disable_collisions link1="rh_lfproximal" link2="rh_lftip" reason="Never" />
+    <disable_collisions link1="rh_lfproximal" link2="rh_mfbiotac" reason="User" />
     <disable_collisions link1="rh_lfproximal" link2="rh_mfknuckle" reason="Never" />
     <disable_collisions link1="rh_lfproximal" link2="rh_palm" reason="Never" />
     <disable_collisions link1="rh_lfproximal" link2="rh_thbase" reason="Never" />
@@ -402,6 +409,7 @@
     <disable_collisions link1="rh_lfproximal" link2="rh_thmiddle" reason="Never" />
     <disable_collisions link1="rh_lfproximal" link2="rh_thproximal" reason="Never" />
     <disable_collisions link1="rh_lfproximal" link2="rh_wrist" reason="Never" />
+    <disable_collisions link1="rh_lftip" link2="rh_mfbiotac" reason="User" />
     <disable_collisions link1="rh_lftip" link2="rh_mfknuckle" reason="Never" />
     <disable_collisions link1="rh_lftip" link2="rh_mfproximal" reason="Never" />
     <disable_collisions link1="rh_lftip" link2="rh_palm" reason="User" />
@@ -424,11 +432,20 @@
     <disable_collisions link1="rh_mfadapter" link2="rh_thproximal" reason="Never" />
     <disable_collisions link1="rh_mfadapter" link2="rh_wrist" reason="Never" />
     <disable_collisions link1="rh_mfbiotac" link2="rh_mfknuckle" reason="Never" />
+    <disable_collisions link1="rh_mfbiotac" link2="rh_mfproximal" reason="User" />
     <disable_collisions link1="rh_mfbiotac" link2="rh_mftip" reason="Default" />
     <disable_collisions link1="rh_mfbiotac" link2="rh_palm" reason="Never" />
+    <disable_collisions link1="rh_mfbiotac" link2="rh_rfadapter" reason="User" />
+    <disable_collisions link1="rh_mfbiotac" link2="rh_rfbiotac" reason="User" />
     <disable_collisions link1="rh_mfbiotac" link2="rh_rfknuckle" reason="Never" />
+    <disable_collisions link1="rh_mfbiotac" link2="rh_rfproximal" reason="User" />
+    <disable_collisions link1="rh_mfbiotac" link2="rh_rftip" reason="User" />
     <disable_collisions link1="rh_mfbiotac" link2="rh_thbase" reason="Never" />
+    <disable_collisions link1="rh_mfbiotac" link2="rh_thbiotac" reason="User" />
+    <disable_collisions link1="rh_mfbiotac" link2="rh_thhub" reason="User" />
+    <disable_collisions link1="rh_mfbiotac" link2="rh_thmiddle" reason="User" />
     <disable_collisions link1="rh_mfbiotac" link2="rh_thproximal" reason="Never" />
+    <disable_collisions link1="rh_mfbiotac" link2="rh_thtip" reason="User" />
     <disable_collisions link1="rh_mfbiotac" link2="rh_wrist" reason="Never" />
     <disable_collisions link1="rh_mfknuckle" link2="rh_mfproximal" reason="Adjacent" />
     <disable_collisions link1="rh_mfknuckle" link2="rh_mftip" reason="Never" />
