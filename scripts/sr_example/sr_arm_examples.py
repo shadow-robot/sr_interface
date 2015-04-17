@@ -16,7 +16,7 @@ arm_commander.move_to_position_target(position_1)
 
 rospy.sleep(rospy.Duration(5))
 
-position_2 = [0.25527, 0.86682, 0.5426]
+position_2 = [0.25527, 0.36682, 0.5426]
 print("Moving arm to position\n" + str(position_2) + "\n")
 arm_commander.move_to_position_target(position_2)
 
