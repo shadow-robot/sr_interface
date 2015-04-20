@@ -110,8 +110,30 @@ This commander provide commands specific to arm which allows to move execute all
 Also it allows to move to certain position in Cartesian space, to joints states values and to move using certain trajectory.
  
 
-### Main methods
+### move_to_position_target
 
+#### Description
+
+This method allows to move end effector of the arm to certain point in the space represented by (x, y, z) coordinates.
+The orientation of the end effector can be any.
+
+Parameters:
+ 
+  * *xyz* new position of end-effector
+  * *end_effector_link* name of the end effector link (default value is empty string)
+   * *wait* indicates if method should wait for movement end or not (default value is True)
+
+#### Example of usage
+
+```python
+
+rospy.init_node("robot_commander_examples", anonymous=True)
+
+arm_commander = SrArmCommander()
+
+new_position = [0.25527, 0.36682, 0.5426]
+arm_commander.move_to_position_target(new_position)
+```
 
 ## Hand Commander
  
