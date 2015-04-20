@@ -15,14 +15,18 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import rospy
+
 from sr_robot_commander import SrRobotCommander
 from sr_hand.shadowhand_ros import ShadowHand_ROS
-
+from sr_robot_msgs.srv import ForceController
 
 class SrHandCommander(SrRobotCommander):
     """
     Commander class for hand
     """
+
+    __set_force_srv = {}
 
     def __init__(self, name="right_hand"):
         """
@@ -54,24 +58,53 @@ class SrHandCommander(SrRobotCommander):
         """
         return dict(self._hand.read_all_current_efforts())
 
-    def set_max_force(self, value):
+    def set_max_force(self, joint_name, value):
         """
         Set maximum force for hand
         @param value - maximum force value
         """
-        raise NotImplementedError()
+        #This is for a beta version of our firmware.
+        # It uses the motor I and Imax to set a max effort.
+        if not self.__set_force_srv.get(joint_name):
+            service_name =  "realtime_loop/change_force_PID_"+joint_name.upper()
+            self.__set_force_srv[joint_name] = rospy.ServiceProxy(service_name, ForceController)
+
+        #get the current settings for the motor
+        motor_settings = None
+        try:
+            motor_settings = rospy.get_param(joint_name.lower() +"/pid" )
+        except KeyError, e:
+            rospy.logerr("Couldn't get the motor parameters for joint "+joint_name+ " -> "+e)
+
+        #imax is used for max force for now.
+        motor_settings["imax"] = value
+
+        try:
+            #reordering the parameters in the expected order since names don't match:
+            self.__set_force_srv[joint_name](motor_settings["max_pwm"],
+                                             motor_settings["sg_left"],
+                                             motor_settings["sg_right"],
+                                             motor_settings["f"],
+                                             motor_settings["p"],
+                                             motor_settings["i"],
+                                             motor_settings["d"],
+                                             motor_settings["imax"],
+                                             motor_settings["deadband"],
+                                             motor_settings["sign"])
+        except rospy.ServiceException, e:
+            rospy.logerr("Couldn't set the max force for joint "+joint_name + ": "+e)
 
     def get_tactile_type(self):
         """
         Returns a string indicating the type of tactile sensors present. Possible values are: PST, biotac, UBI0 .
         """
-        raise NotImplementedError()
+        return self._hand.get_tactile_type()
 
     def get_tactile_state(self):
         """
         Returns an object containing tactile data. The structure of the data is different for every tactile_type .
         """
-        raise NotImplementedError()
+        return self._hand.get_tactile_state()
 
     def _initialize_joint_prefix(self, name):
         """
