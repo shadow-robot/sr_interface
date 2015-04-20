@@ -247,3 +247,25 @@ tactile_state = hand_commander.get_tactile_state()
 print("Hand tactile type\n" + tactile_type + "\n")
 print("Hand tactile state\n" + str(tactile_state) + "\n")
 ```
+
+### set_max_force
+
+#### Description
+
+  This method sets maximum force for hand
+ 
+Parameters:
+ 
+  * *joint_name* name of the joint.
+  * *value* maximum force value
+
+#### Example
+
+```python
+
+rospy.init_node("robot_commander_examples", anonymous=True)
+
+hand_commander = SrHandCommander()
+
+hand_commander.set_max_force("rh_FFJ3", 1)
+```
