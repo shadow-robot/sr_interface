@@ -18,8 +18,8 @@
 import rospy
 
 from sr_robot_commander import SrRobotCommander
-from sr_hand.shadowhand_ros import ShadowHand_ROS
 from sr_robot_msgs.srv import ForceController
+from sr_hand.tactile_receiver import TactileReceiver
 
 
 class SrHandCommander(SrRobotCommander):
@@ -29,13 +29,14 @@ class SrHandCommander(SrRobotCommander):
 
     __set_force_srv = {}
 
-    def __init__(self, name="right_hand"):
+    def __init__(self, name="right_hand", prefix="rh"):
         """
         Initialize object
         @param name - name of the MoveIt group
+        @param prefix - prefix used for the tactiles
         """
         super(SrHandCommander, self).__init__(name)
-        self._hand = ShadowHand_ROS()
+        self._tactiles = TactileReceiver(prefix)
 
     def get_joints_effort(self):
         """
@@ -84,10 +85,10 @@ class SrHandCommander(SrRobotCommander):
         """
         Returns a string indicating the type of tactile sensors present. Possible values are: PST, biotac, UBI0 .
         """
-        return self._hand.get_tactile_type()
+        return self._tactiles.get_tactile_type()
 
     def get_tactile_state(self):
         """
         Returns an object containing tactile data. The structure of the data is different for every tactile_type .
         """
-        return self._hand.get_tactile_state()
+        return self._tactiles.get_tactile_state()
