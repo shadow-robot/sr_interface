@@ -226,28 +226,6 @@ hand_joints_effort = hand_commander.get_joints_effort()
 print("Hand joints effort \n " + str(hand_joints_effort) + "\n")
 ```
 
-### get_tactile_type and get_tactile_state
-
-### Description
-
-*get_tactile_type* returns a string indicating the type of tactile sensors present (e.g. PST, biotac, UBI0). 
-*get_tactile_state* returns an object containing tactile data. The structure of the data is different for every tactile_type .
-
-#### Example
-
-```python
-
-rospy.init_node("robot_commander_examples", anonymous=True)
-
-hand_commander = SrHandCommander()
-
-tactile_type = hand_commander.get_tactile_type()
-tactile_state = hand_commander.get_tactile_state()
-
-print("Hand tactile type\n" + tactile_type + "\n")
-print("Hand tactile state\n" + str(tactile_state) + "\n")
-```
-
 ### set_max_force
 
 #### Description
@@ -268,4 +246,26 @@ rospy.init_node("robot_commander_examples", anonymous=True)
 hand_commander = SrHandCommander()
 
 hand_commander.set_max_force("rh_FFJ3", 1)
+```
+
+### get_tactile_type and get_tactile_state
+
+### Description
+
+*get_tactile_type* returns a string indicating the type of tactile sensors present (e.g. PST, biotac, UBI0). 
+*get_tactile_state* returns an object containing tactile data. The structure of the data is different for every tactile_type .
+
+#### Example
+
+```python
+
+rospy.init_node("robot_commander_examples", anonymous=True)
+
+hand_commander = SrHandCommander()
+
+tactile_type = hand_commander.get_tactile_type()
+tactile_state = hand_commander.get_tactile_state()
+
+print("Hand tactile type\n" + tactile_type + "\n")
+print("Hand tactile state\n" + str(tactile_state) + "\n")
 ```
