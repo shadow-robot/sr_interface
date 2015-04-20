@@ -99,7 +99,7 @@ joints_position = arm_commander.get_joints_position()
 joints_velocity = arm_commander.get_joints_velocity()
 
 print("Arm joints position\n" + str(joints_position) + "\n")
-print("Arm joints velocities\n" + str(joints_velocity) + "\n")
+print("Arm joints velocity\n" + str(joints_velocity) + "\n")
 ```
 
 ## Arm Commander
