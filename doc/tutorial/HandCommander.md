@@ -2,7 +2,7 @@
  
 ## Description
 
-This commander provide commands specific to hand which allows to move execute all actions of the robot commander.
+This commander provide commands specific to hand which allows to move execute all actions of the [robot commander](RobotCommander.md).
 Also it allows to get state of tactile sensors, set max force and get joints effort.
 
 ## get_joints_effort

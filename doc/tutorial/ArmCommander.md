@@ -2,7 +2,7 @@
 
 ## Description
 
-This commander provide commands specific to arm which allows to move execute all actions of the robot commander.
+This commander provide commands specific to arm which allows to move execute all actions of the [robot commander](RobotCommander.md).
 Also it allows to move to certain position in Cartesian space, to joints states values and to move using certain trajectory.
  
 
