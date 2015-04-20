@@ -49,27 +49,25 @@ Parameters:
    * *name* is the unique identifier of the target pose defined in SRDF
    * *wait_result* indicates if method should wait for movement end or not (default value is True)
 
-In order to created new named pose you can do following 
+In order to created new named pose you can do following: 
 
-
-1. Run shell command 
+* Run shell command 
 ```bash
 roslaunch ur10srh_moveit_config setup_assistant.launch
 ```
-
-2. In UI wizard press "Load Files" button
-3. Wait until files load successfully 
-4. Go to section "Robot Poses" of the wizard (select from list on the left)
-5. Press "Add Pose"
-6. On the screen which will appear you can add you pose for at least two "Planing Group"
+* In UI wizard press "Load Files" button
+* Wait until files load successfully 
+* Go to section "Robot Poses" of the wizard (select from list on the left)
+* Press "Add Pose"
+* On the screen which will appear you can add you pose for at least two "Planing Group"
   * right_hand
   * right_arm
-7. You should provide unique name of the pose (which will be referred in move_to_named_target method) and select joints position for this pose using slider and simulated image of robot
-8. Press save button
-9. Go to "Configurations File" section of the wizard
-10. Tick checkbox with text "config/ur10srh.srdf" in the checkbox list
-11. Press "Generate Package" and wait until progress is 100%
-12. Exit wizard  
+* You should provide unique name of the pose (which will be referred in move_to_named_target method) and select joints position for this pose using slider and simulated image of robot
+* Press save button
+* Go to "Configurations File" section of the wizard
+* Tick checkbox with text "config/ur10srh.srdf" in the checkbox list
+* Press "Generate Package" and wait until progress is 100%
+* Exit wizard  
 
 #### Example of usage 
 
@@ -79,6 +77,7 @@ rospy.init_node("robot_commander_examples", anonymous=True)
 
 hand_commander = SrHandCommander()
 
+# pack is predefined pose from SRDF file
 hand_commander.move_to_named_target("pack")
 ```
 
