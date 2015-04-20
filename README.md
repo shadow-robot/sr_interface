@@ -11,14 +11,24 @@ It provides methods which can be used on both arm and hand.
 
 Examples of usage can be found in the package **sr_example** in files **sr_hand_examples.py** and **sr_arm_examples.py**
 
-### Main methods
- 
-**move_to_joint_value_target** set target of the robot's links and moves to it. 
-The parameter *joint_states* is a dictionary with joint name and value and *wait_result* indicates if method should wait for movement end or not (default value is True)
+### move_to_joint_value_target 
 
-Example of usage 
+#### Description
+
+This method sets target of the robot's links and moves to it. 
+
+Parameters:
+ 
+   * *joint_states* is a dictionary with joint name and value
+   * *wait_result* indicates if method should wait for movement end or not (default value is True)
+
+#### Example of usage 
 
 ```python
+
+rospy.init_node("robot_commander_examples", anonymous=True)
+
+arm_commander = SrArmCommander()
 joints_states_1 = {'ra_shoulder_pan_joint': 0.5157461682721474, 
                    'ra_elbow_joint': 0.6876824920327893,
                    'ra_wrist_1_joint': -0.7695210732233582,
@@ -28,7 +38,50 @@ joints_states_1 = {'ra_shoulder_pan_joint': 0.5157461682721474,
 arm_commander.move_to_joint_value_target(joints_states_1)
 ```
 
-move_to_named_target
+### move_to_named_target
+
+#### Description
+
+Using this method will allow to move hand or arm to predefined pose. This pose can be define using MoveIt assistant.
+
+Parameters:
+ 
+   * *name* is the unique identifier of the target pose defined in SRDF
+   * *wait_result* indicates if method should wait for movement end or not (default value is True)
+
+In order to created new named pose you can do following 
+
+
+1. Run shell command 
+```bash
+roslaunch ur10srh_moveit_config setup_assistant.launch
+```
+
+2. In UI wizard press "Load Files" button
+3. Wait until files load successfully 
+4. Go to section "Robot Poses" of the wizard (select from list on the left)
+5. Press "Add Pose"
+6. On the screen which will appear you can add you pose for at least two "Planing Group"
+  * right_hand
+  * right_arm
+7. You should provide unique name of the pose (which will be referred in move_to_named_target method) and select joints position for this pose using slider and simulated image of robot
+8. Press save button
+9. Go to "Configurations File" section of the wizard
+10. Tick checkbox with text "config/ur10srh.srdf" in the checkbox list
+11. Press "Generate Package" and wait until progress is 100%
+12. Exit wizard  
+
+#### Example of usage 
+
+```python
+
+rospy.init_node("robot_commander_examples", anonymous=True)
+
+hand_commander = SrHandCommander()
+
+hand_commander.move_to_named_target("pack")
+```
+
 
 ## Arm Commander
 
