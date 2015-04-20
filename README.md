@@ -22,7 +22,7 @@ Parameters:
    * *joint_states* is a dictionary with joint name and value
    * *wait_result* indicates if method should wait for movement end or not (default value is True)
 
-#### Example of usage 
+#### Example 
 
 ```python
 
@@ -69,7 +69,7 @@ roslaunch ur10srh_moveit_config setup_assistant.launch
 * Press "Generate Package" and wait until progress is 100%
 * Exit wizard  
 
-#### Example of usage 
+#### Example 
 
 ```python
 
@@ -87,7 +87,7 @@ hand_commander.move_to_named_target("pack")
 
 These methods do not take any parameters and return dictionary with position and velocity of the robot joints
 
-#### Example of usage
+#### Example
 
 ```python
 
@@ -121,9 +121,9 @@ Parameters:
  
   * *xyz* new position of end-effector
   * *end_effector_link* name of the end effector link (default value is empty string)
-   * *wait* indicates if method should wait for movement end or not (default value is True)
+  * *wait* indicates if method should wait for movement end or not (default value is True)
 
-#### Example of usage
+#### Example
 
 ```python
 
