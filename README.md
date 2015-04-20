@@ -199,12 +199,32 @@ for joints_states in [joints_states_1, joints_states_2, joints_states_3]:
 
 arm_commander.run_joint_trajectory(joint_trajectory)
 ```
- 
 
 ## Hand Commander
  
 ### General
 
-### Main Methods
- 
+This commander provide commands specific to hand which allows to move execute all actions of the robot commander.
+Also it allows to get state of tactile sensors, set max force and get joints effort.
+
+### get_joints_effort
+
+#### Description 
+
+This method do not take any parameters and return dictionary with efforts of the robot joints
+
+#### Example
+
+```python
+
+rospy.init_node("robot_commander_examples", anonymous=True)
+
+hand_commander = SrHandCommander()
+
+hand_joints_effort = hand_commander.get_joints_effort()
+
+print("Hand joints effort \n " + str(hand_joints_effort) + "\n")
+```
+
+
  
