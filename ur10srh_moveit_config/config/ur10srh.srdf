@@ -115,7 +115,6 @@
     <disable_collisions link1="ra_base_link" link2="ra_forearm_link" reason="Never" />
     <disable_collisions link1="ra_base_link" link2="ra_shoulder_link" reason="Adjacent" />
     <disable_collisions link1="ra_base_link" link2="ra_upper_arm_link" reason="Never" />
-    <disable_collisions link1="ra_base_link" link2="rh_rfbiotac" reason="User" />
     <disable_collisions link1="ra_forearm_link" link2="ra_shoulder_link" reason="Never" />
     <disable_collisions link1="ra_forearm_link" link2="ra_upper_arm_link" reason="Adjacent" />
     <disable_collisions link1="ra_forearm_link" link2="ra_wrist_1_link" reason="Adjacent" />
@@ -128,7 +127,6 @@
     <disable_collisions link1="ra_forearm_link" link2="rh_lfproximal" reason="Never" />
     <disable_collisions link1="ra_forearm_link" link2="rh_mfknuckle" reason="Never" />
     <disable_collisions link1="ra_forearm_link" link2="rh_palm" reason="Never" />
-    <disable_collisions link1="ra_forearm_link" link2="rh_rfbiotac" reason="User" />
     <disable_collisions link1="ra_forearm_link" link2="rh_rfknuckle" reason="Never" />
     <disable_collisions link1="ra_forearm_link" link2="rh_thbase" reason="Never" />
     <disable_collisions link1="ra_forearm_link" link2="rh_thhub" reason="Never" />
@@ -136,9 +134,7 @@
     <disable_collisions link1="ra_forearm_link" link2="rh_thproximal" reason="Never" />
     <disable_collisions link1="ra_forearm_link" link2="rh_wrist" reason="Never" />
     <disable_collisions link1="ra_shoulder_link" link2="ra_upper_arm_link" reason="Adjacent" />
-    <disable_collisions link1="ra_shoulder_link" link2="rh_rfbiotac" reason="User" />
     <disable_collisions link1="ra_upper_arm_link" link2="ra_wrist_1_link" reason="Never" />
-    <disable_collisions link1="ra_upper_arm_link" link2="rh_rfbiotac" reason="User" />
     <disable_collisions link1="ra_wrist_1_link" link2="ra_wrist_2_link" reason="Adjacent" />
     <disable_collisions link1="ra_wrist_1_link" link2="ra_wrist_3_link" reason="Never" />
     <disable_collisions link1="ra_wrist_1_link" link2="rh_ffadapter" reason="Never" />
