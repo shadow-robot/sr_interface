@@ -19,9 +19,12 @@ The parameter *joint_states* is a dictionary with joint name and value and *wait
 Example of usage 
 
 ```python
-joints_states_1 = {'ra_shoulder_pan_joint': 0.5157461682721474, 'ra_elbow_joint': 0.6876824920327893,
-                   'ra_wrist_1_joint': -0.7695210732233582, 'ra_wrist_2_joint': 0.2298871642157314,
-                   'ra_shoulder_lift_joint': -0.9569080092786892, 'ra_wrist_3_joint': -0.25991215955733704}
+joints_states_1 = {'ra_shoulder_pan_joint': 0.5157461682721474, 
+                   'ra_elbow_joint': 0.6876824920327893,
+                   'ra_wrist_1_joint': -0.7695210732233582,
+                   'ra_wrist_2_joint': 0.2298871642157314,
+                   'ra_shoulder_lift_joint': -0.9569080092786892,
+                   'ra_wrist_3_joint': -0.25991215955733704}
 arm_commander.move_to_joint_value_target(joints_states_1)
 ```
 
