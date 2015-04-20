@@ -2,8 +2,8 @@
 
 ## Description
 
-Main purpose of the commander is to provide simplified access to hand or arm.
-It provides methods which can be used on both arm and hand.
+Main purpose of the commander is to provide simplified access to [hand](HandCommander.md) or [arm](ArmCommander.md).
+It provides methods which can be used on both [hand](HandCommander.md) and [arm](ArmCommander.md).
 
 Examples of usage can be found in the package **sr_example** in files **sr_hand_examples.py** and **sr_arm_examples.py**
 
