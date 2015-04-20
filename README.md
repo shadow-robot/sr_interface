@@ -25,6 +25,8 @@ joints_states_1 = {'ra_shoulder_pan_joint': 0.5157461682721474, 'ra_elbow_joint'
 arm_commander.move_to_joint_value_target(joints_states_1)
 '''
 
+move_to_named_target
+
 ## Arm Commander
 
 ### General
