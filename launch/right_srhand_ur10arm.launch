@@ -52,7 +52,7 @@
     <rosparam command="load" file="$(find sr_ur_controller)/config/right_ur_arm_controller.yaml"/>
 
     <!-- trajectory controller -->
-    <!--<rosparam command="load" file="$(find sr_robot_launch)/config/rh_trajectory_controller.yaml"/>-->
+    <rosparam command="load" file="$(find sr_robot_launch)/config/rh_trajectory_controller.yaml"/>
     <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml"/>
 
 
