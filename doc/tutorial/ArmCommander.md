@@ -2,7 +2,7 @@
 
 ## Description
 
-This commander provide commands specific to arm which allows to move execute all actions of the [robot commander](RobotCommander.md).
+This commander provide commands specific to arm which allows to execute all actions of the [robot commander](RobotCommander.md).
 Also it allows to move to certain position in Cartesian space, to joints states values and to move using certain trajectory.
  
 
@@ -10,7 +10,7 @@ Also it allows to move to certain position in Cartesian space, to joints states 
 
 ### Description
 
-This method allows to move end effector of the arm to certain point in the space represented by (x, y, z) coordinates.
+This method allows to move the end effector of the arm to certain point in the space represented by (x, y, z) coordinates.
 The orientation of the end effector can be any.
 
 Parameters:
@@ -35,7 +35,7 @@ arm_commander.move_to_position_target(new_position)
 
 ### Description
 
-In case if robot need to have complex movement through several joint states you can use this method.
+In case the robot needs to have complex movement through several joint states you can use this method.
  
 Parameters:
  

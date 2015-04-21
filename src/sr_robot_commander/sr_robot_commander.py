@@ -42,8 +42,9 @@ class SrRobotCommander(object):
 
     def move_to_joint_value_target(self, joint_states, wait_result=True):
         """
-        Set target of the robot's links and moves to it
-        @param joint_states - dictionary with joint name and value
+        Set target of the robot's links and moves to it.
+        @param joint_states - dictionary with joint name and value. It can contain only joints values of which need to
+        be changed.
         @param wait_result - should method wait for movement end or not
         """
         self._move_group_commander.set_joint_value_target(joint_states)

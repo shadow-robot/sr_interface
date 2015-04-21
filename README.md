@@ -1,5 +1,5 @@
 # sr_robot_commander
-This package contains functionality to send commands to robotic arm and hand
+This package contains libraries to easily control the different robots supported by Shadow Robot. They offer access to the basic functionalities of those robots.
 
 Following classes can be found in this package
 
