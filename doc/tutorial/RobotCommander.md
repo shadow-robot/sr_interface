@@ -54,9 +54,6 @@ roslaunch ur10srh_moveit_config setup_assistant.launch
 * In UI wizard press "Load Files" button
 * Wait until files load successfully 
 * Go to section "Robot Poses" of the wizard (select from list on the left)
-
-![MoveIt Setup Assistant Robot Poses](images/moveit_setup_assistant_robot_poses.png)
-
 * Press "Add Pose"
 * On the screen which will appear you can add your pose for at least two "Planing Group"
   * right_hand
@@ -65,11 +62,11 @@ roslaunch ur10srh_moveit_config setup_assistant.launch
 * Press save button
 * Go to "Configurations File" section of the wizard
 * Tick checkbox with text "config/ur10srh.srdf" in the checkbox list
-
-![MoveIt Setup Assistant Configuration Files](images/moveit_setup_assistant_configuration_files.png)
-
 * Press "Generate Package" and wait until progress is 100%
-* Exit wizard  
+* Exit wizard
+
+![MoveIt Setup Assistant](images/moveit_setup_assistant.gif)
+  
 
 ### Example 
 
