@@ -33,7 +33,7 @@ rospy.sleep(rospy.Duration(5))
 
 hand_joints_state = hand_commander.get_joints_position()
 hand_joints_velocity = hand_commander.get_joints_velocity()
-hand_joints_effort = hand_commander.get_joints_velocity()
+hand_joints_effort = hand_commander.get_joints_effort()
 
 print("Hand joints position \n " + str(hand_joints_state) + "\n")
 print("Hand joints velocity \n " + str(hand_joints_velocity) + "\n")
