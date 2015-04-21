@@ -43,7 +43,7 @@ rospy.init_node("robot_commander_examples", anonymous=True)
 
 hand_commander = SrHandCommander()
 
-# for current implementation of firmware limits are from 200 to 1000 (measured in custom units) 
+# The limits in the current implementation of the firmware are from 200 to 1000 (measured in custom units) 
 hand_commander.set_max_force("rh_FFJ3", 600)
 ```
 
