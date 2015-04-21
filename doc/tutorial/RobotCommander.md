@@ -7,25 +7,25 @@ It provides methods which can be used on both [hand](HandCommander.md) and [arm]
 
 Examples of usage can be found in the package **sr_example** in files **sr_hand_examples.py** and **sr_arm_examples.py**
 
-## move_to_joint_value_target 
+## move_to_joint_value_target
 
 ### Description
 
-This method sets target of the robot's links and moves to it. 
+This method sets target of the robot's links and moves to it.
 
 Parameters:
- 
+
    * *joint_states* is a dictionary with joint name and value. It can contain joints values of which need to be changed.
    * *wait_result* indicates if method should wait for movement end or not (default value is True)
 
-### Example 
+### Example
 
 ```python
 
 rospy.init_node("robot_commander_examples", anonymous=True)
 
 arm_commander = SrArmCommander()
-joints_states = {'ra_shoulder_pan_joint': 0.5157461682721474, 
+joints_states = {'ra_shoulder_pan_joint': 0.5157461682721474,
                  'ra_elbow_joint': 0.6876824920327893,
                  'ra_wrist_1_joint': -0.7695210732233582,
                  'ra_wrist_2_joint': 0.2298871642157314,
@@ -41,18 +41,18 @@ arm_commander.move_to_joint_value_target(joints_states)
 Using this method will allow to move hand or arm to predefined pose. This pose can be define using MoveIt assistant.
 
 Parameters:
- 
+
    * *name* is the unique identifier of the target pose defined in SRDF
    * *wait_result* indicates if method should wait for movement end or not (default value is True)
 
-In order to created a new named pose you can do following: 
+In order to created a new named pose you can do following:
 
-* Run shell command 
+* Run shell command
 ```bash
 roslaunch ur10srh_moveit_config setup_assistant.launch
 ```
 * In UI wizard press "Load Files" button
-* Wait until files load successfully 
+* Wait until files load successfully
 * Go to section "Robot Poses" of the wizard (select from list on the left)
 * Press "Add Pose"
 * On the screen which will appear you can add your pose for at least two "Planing Group"
@@ -65,10 +65,10 @@ roslaunch ur10srh_moveit_config setup_assistant.launch
 * Press "Generate Package" and wait until progress is 100%
 * Exit wizard
 
-![MoveIt Setup Assistant](images/moveit_setup_assistant.gif)
-  
+![MoveIt Setup Assistant](https://github.com/shadow-robot/sr-ros-interface/raw/indigo-devel/sr_robot_commander/doc/tutorial/images/moveit_setup_assistant.gif)
 
-### Example 
+
+### Example
 
 ```python
 
@@ -82,7 +82,7 @@ hand_commander.move_to_named_target("pack")
 
 ## get_joints_position and get_joints_velocity
 
-### Description 
+### Description
 
 These methods do not take any parameters and return dictionary with position and velocity of the robot joints
 
@@ -100,4 +100,3 @@ joints_velocity = arm_commander.get_joints_velocity()
 print("Arm joints position\n" + str(joints_position) + "\n")
 print("Arm joints velocity\n" + str(joints_velocity) + "\n")
 ```
-
