@@ -42,8 +42,14 @@
     </include>
 
     <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/ra_trajectory_controller.yaml" command="load"/>
-    <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" args="--shutdown-timeout=1.0 ra_trajectory_controller" />
-
+    <group if="$(arg arm_trajectory)">      
+      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 ra_trajectory_controller"/>
+    </group>    
+    
+    <rosparam command="load" file="$(find sr_robot_launch)/config/rh_trajectory_controller.yaml"/>    
+    <group if="$(arg hand_trajectory)">
+      <node name="hand_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 rh_trajectory_controller"/>
+    </group>
   </group>
 
   <!-- REAL ROBOTS -->
