@@ -39,10 +39,3 @@ class SrArmCommander(SrRobotCommander):
         """
         self._move_to_position_target(xyz, end_effector_link, wait_result=wait)
 
-    def run_joint_trajectory(self, joint_trajectory):
-        """
-        Moves robot through all joint states with specified timeouts
-        @param joint_trajectory - JointTrajectory class object. Represents trajectory of the joints which would be
-        executed.
-        """
-        return self._run_joint_trajectory(joint_trajectory)
