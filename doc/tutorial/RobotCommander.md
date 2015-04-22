@@ -67,7 +67,7 @@ roslaunch ur10srh_moveit_config setup_assistant.launch
 * Press "Generate Package" and wait until progress is 100%
 * Exit wizard
 
-![MoveIt Setup Assistant](sr_robot_commander/doc/tutorial/images/moveit_setup_assistant.gif)
+![MoveIt Setup Assistant](/sr_robot_commander/doc/tutorial/images/moveit_setup_assistant.gif)
 
 
 ### Example
