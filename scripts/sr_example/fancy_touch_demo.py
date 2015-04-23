@@ -495,8 +495,8 @@ def secuence_mf():
             print 'HAND TOUCHED!'
             rospy.sleep(2.0)
 
-            if ( tactile_values['TH'] > force_zero['TH'] ):
-                break
+        if ( tactile_values['TH'] > force_zero['TH'] ):
+            break
 
         # If the tactile sensors have not been triggered and the Hand
         # is not in the middle of a movement, generate a random position
