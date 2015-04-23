@@ -74,24 +74,24 @@
         <joint name="rh_WRJ2" value="0" />
     </group_state>
     <group_state name="pack" group="right_hand">
-        <joint name="rh_FFJ1" value="0" />
+        <joint name="rh_FFJ1" value="0.35" />
         <joint name="rh_FFJ2" value="1.5707" />
         <joint name="rh_FFJ3" value="1.5707" />
         <joint name="rh_FFJ4" value="0" />
-        <joint name="rh_LFJ1" value="0" />
+        <joint name="rh_LFJ1" value="0.35" />
         <joint name="rh_LFJ2" value="1.5707" />
         <joint name="rh_LFJ3" value="1.5707" />
         <joint name="rh_LFJ4" value="0" />
         <joint name="rh_LFJ5" value="0" />
-        <joint name="rh_MFJ1" value="0" />
+        <joint name="rh_MFJ1" value="0.35" />
         <joint name="rh_MFJ2" value="1.5707" />
         <joint name="rh_MFJ3" value="1.5707" />
         <joint name="rh_MFJ4" value="0" />
-        <joint name="rh_RFJ1" value="0" />
+        <joint name="rh_RFJ1" value="0.35" />
         <joint name="rh_RFJ2" value="1.5707" />
         <joint name="rh_RFJ3" value="1.5707" />
         <joint name="rh_RFJ4" value="0" />
-        <joint name="rh_THJ1" value="0" />
+        <joint name="rh_THJ1" value="0.35" />
         <joint name="rh_THJ2" value="0.6981" />
         <joint name="rh_THJ3" value="0" />
         <joint name="rh_THJ4" value="0.8048" />
