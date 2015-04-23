@@ -66,6 +66,16 @@ class SrRobotCommander(object):
         self._move_group_commander.set_joint_value_target(joint_states)
         self._move_group_commander.go(wait=wait_result)
 
+    def plan_to_joint_value_target(self, joint_states):
+        """
+        Set target of the robot's links and plans.
+        @param joint_states - dictionary with joint name and value. It can contain only joints values of which need to
+        be changed.
+        This is a blocking method.
+        """
+        self._move_group_commander.set_joint_value_target(joint_states)
+        self._move_group_commander.plan()
+
     def move_to_named_target(self, name, wait_result=True):
         """
         Set target of the robot's links and moves to it
@@ -74,6 +84,15 @@ class SrRobotCommander(object):
         """
         self._move_group_commander.set_named_target(name)
         self._move_group_commander.go(wait=wait_result)
+
+    def plan_to_named_target(self, name):
+        """
+        Set target of the robot's links and plans
+        This is a blocking method.
+        @param name - name of the target pose defined in SRDF
+        """
+        self._move_group_commander.set_named_target(name)
+        self._move_group_commander.plan()
 
     def get_joints_position(self):
         """
@@ -120,7 +139,13 @@ class SrRobotCommander(object):
         self._move_group_commander.set_position_target(xyz, end_effector_link)
         self._move_group_commander.go(wait=wait_result)
 
-    def _plan_to_position_target(self, xyz, end_effector_link="", wait_result=True):
+    def _plan_to_position_target(self, xyz, end_effector_link=""):
+        """
+        Specify a target position for the end-effector and plans.
+        This is a blocking method.
+        @param xyz - new position of end-effector
+        @param end_effector_link - name of the end effector link
+        """
         self._move_group_commander.set_position_target(xyz, end_effector_link)
         self._move_group_commander.plan()
 
