@@ -120,6 +120,10 @@ class SrRobotCommander(object):
         self._move_group_commander.set_position_target(xyz, end_effector_link)
         self._move_group_commander.go(wait=wait_result)
 
+    def _plan_to_position_target(self, xyz, end_effector_link="", wait_result=True):
+        self._move_group_commander.set_position_target(xyz, end_effector_link)
+        self._move_group_commander.plan()
+
     def _joint_states_callback(self, joint_state):
         """
         The callback function for the topic joint_states.
@@ -219,4 +223,3 @@ class SrRobotCommander(object):
         
         if not self._client.wait_for_result():
             rospy.loginfo("Trajectory not completed")
-        
