@@ -132,7 +132,7 @@ class SrRobotCommander(object):
         with self._joint_states_lock:
             return self._joints_effort
 
-    def run_joint_trajectory(self, joint_trajectory, wait_result=True):
+    def run_joint_trajectory(self, joint_trajectory):
         """
         Moves robot through all joint states with specified timeouts
         @param joint_trajectory - JointTrajectory class object. Represents trajectory of the joints which would be
@@ -141,7 +141,7 @@ class SrRobotCommander(object):
         """
         plan = RobotTrajectory()
         plan.joint_trajectory = joint_trajectory
-        self._move_group_commander.execute(plan, wait_result)
+        self._move_group_commander.execute(plan)
 
     def _move_to_position_target(self, xyz, end_effector_link="", wait_result=True):
         """
@@ -158,6 +158,26 @@ class SrRobotCommander(object):
         Specify a target position for the end-effector and plans.
         This is a blocking method.
         @param xyz - new position of end-effector
+        @param end_effector_link - name of the end effector link
+        """
+        self._move_group_commander.set_position_target(xyz, end_effector_link)
+        self.__plan = self._move_group_commander.plan()
+        
+    def _move_to_pose_target(self, pose, end_effector_link="", wait_result=True):
+        """
+        Specify a target pose for the end-effector and moves to it
+        @param pose - new pose of end-effector: a Pose message, a PoseStamped message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z] or a list of 7 floats [x, y, z, qx, qy, qz, qw]
+        @param end_effector_link - name of the end effector link
+        @param wait_result - should method wait for movement end or not
+        """
+        self._move_group_commander.set_pose_target(pose, end_effector_link)
+        self._move_group_commander.go(wait=wait_result)
+
+    def _plan_to_pose_target(self, pose, end_effector_link=""):
+        """
+        Specify a target pose for the end-effector and plans.
+        This is a blocking method.
+        @param pose - new pose of end-effector: a Pose message, a PoseStamped message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z] or a list of 7 floats [x, y, z, qx, qy, qz, qw]
         @param end_effector_link - name of the end effector link
         """
         self._move_group_commander.set_position_target(xyz, end_effector_link)
