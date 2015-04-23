@@ -45,15 +45,15 @@ class SrRobotCommander(object):
         self._joints_position = {}
         self._joints_velocity = {}
         self._joints_effort = {}
-        
+
         # prefix of the trajectory controller
         self._prefix = self.__group_prefixes[name]
         # a trajectory goal that will contain a single trajectory point (for the move unsafe command)
         self._trajectory_goal = FollowJointTrajectoryGoal()
         self._trajectory_goal.trajectory = JointTrajectory()
-        self._set_default_trajectory()        
+        self._set_default_trajectory()
         self._set_up_action_client()
-        
+
         threading.Thread(None, rospy.spin)
 
     def move_to_joint_value_target(self, joint_states, wait_result=True):
@@ -143,7 +143,7 @@ class SrRobotCommander(object):
         if self._client.wait_for_server(timeout=rospy.Duration(4)) is False:
             rospy.logfatal("Failed to connect to action server in 4 sec")
             raise
-    
+
     def _set_default_trajectory(self):
         """
         Builds a default trajectory for this group, With the correct joint names and containing one point
@@ -157,7 +157,7 @@ class SrRobotCommander(object):
         point.velocities = [0.0] * len(self._trajectory_goal.trajectory.joint_names)
         self._trajectory_goal.trajectory.points = []
         self._trajectory_goal.trajectory.points.append(point)
-        
+
     def _update_default_trajectory(self):
         """
         Fill a trajectory point with the current position of the robot. It will serve as a base to move only the
@@ -169,9 +169,9 @@ class SrRobotCommander(object):
                 self._trajectory_goal.trajectory.points[0].positions[i] = current_joints_position[joint_name]
         else:
             rospy.logerr("Joints position length mismatch {} vs traj {}".format(len(current_joints_position), len(self._trajectory_goal.trajectory.joint_names)))
-        
+
         print self._trajectory_goal.trajectory.points[0].positions
-        
+
     def _set_targets_to_default_trajectory(self, joint_states):
         """
         Set the target values in joint_states to the default trajectory goal (leaving the others with their original value).
@@ -181,28 +181,28 @@ class SrRobotCommander(object):
         for name, pos in joint_states.items():
             i = self._trajectory_goal.trajectory.joint_names.index(name)
             self._trajectory_goal.trajectory.points[0].positions[i] = pos
-        
+
     def move_to_joint_value_target_unsafe(self, joint_states, time = 0.002, wait_result=True):
         """
         Set target of the robot's links and moves to it.
         @param joint_states - dictionary with joint name and value. It can contain only joints values of which need to
         be changed.
         @param wait_result - should method wait for movement end or not
-        @param time - time in s (counting from now) for the robot to reach the target (it needs to be greater than 0.0 for 
+        @param time - time in s (counting from now) for the robot to reach the target (it needs to be greater than 0.0 for
         it not to be rejected by the trajectory controller)
         """
-        
+
         self._update_default_trajectory()
         self._set_targets_to_default_trajectory(joint_states)
         self._trajectory_goal.trajectory.points[0].time_from_start = rospy.Duration.from_sec(time)
         self._client.send_goal(self._trajectory_goal)
-        
+
         if not wait_result:
             return
-        
+
         if not self._client.wait_for_result():
             rospy.loginfo("Trajectory not completed")
-    
+
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait_result=True):
         """
         Moves robot through all joint states with specified timeouts
@@ -213,10 +213,9 @@ class SrRobotCommander(object):
         goal = FollowJointTrajectoryGoal()
         goal.trajectory = joint_trajectory
         self._client.send_goal(goal)
-        
+
         if not wait_result:
             return
-        
+
         if not self._client.wait_for_result():
             rospy.loginfo("Trajectory not completed")
-        
