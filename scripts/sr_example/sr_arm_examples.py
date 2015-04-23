@@ -24,15 +24,6 @@ arm_commander.execute()
 
 rospy.sleep(rospy.Duration(5))
 
-position_3 = [0.25527, 0.36682, -0.5426]
-print("Planning the move to the second position\n" + str(position_3) + "\n")
-arm_commander.plan_to_position_target(position_3)
-print("Finished planning, moving the arm now.")
-arm_commander.execute()
-
-
-exit(0)
-
 print("Arm joints position\n" + str(arm_commander.get_joints_position()) + "\n")
 
 joints_states_1 = {'ra_shoulder_pan_joint': 0.43221632746577665, 'ra_elbow_joint': 2.118891128999479,
@@ -96,4 +87,3 @@ rospy.sleep(rospy.Duration(3))
 
 print("Arm joints position\n" + str(arm_commander.get_joints_position()) + "\n")
 print("Arm joints velocities\n" + str(arm_commander.get_joints_velocity()) + "\n")
-
