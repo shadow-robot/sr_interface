@@ -23,12 +23,15 @@ class SrArmCommander(SrRobotCommander):
     Commander class for arm
     """
 
-    def __init__(self, name="right_arm"):
+    def __init__(self, name="right_arm", set_ground=True):
         """
         Initialize object
         @param name - name of the MoveIt group
+        @param sets the ground plane in moveit for planning
         """
         super(SrArmCommander, self).__init__(name)
+        if set_ground:
+            self._move_group_commander.ground()
 
     def move_to_position_target(self, xyz, end_effector_link="", wait=True):
         """
