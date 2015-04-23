@@ -1,5 +1,3 @@
-Title: Robot Commander
-
 # Robot Commander
 
 ## Description

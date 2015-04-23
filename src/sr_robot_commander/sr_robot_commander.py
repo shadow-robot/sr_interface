@@ -17,15 +17,22 @@
 
 import rospy
 import threading
-from moveit_commander import MoveGroupCommander
+from actionlib import SimpleActionClient
+from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal
+from moveit_commander import MoveGroupCommander, RobotCommander, PlanningSceneInterface
 from moveit_msgs.msg import RobotTrajectory
 from sensor_msgs.msg import JointState
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 
 class SrRobotCommander(object):
     """
     Base class for hand and arm commanders
     """
+    __group_prefixes= {"right_arm": "ra_",
+                       "left_arm": "la_",
+                       "right_hand": "rh_",
+                       "left_hand": "lh_"}
 
     def __init__(self, name):
         """
@@ -33,12 +40,35 @@ class SrRobotCommander(object):
         @param name - name of the MoveIt group
         """
         self._move_group_commander = MoveGroupCommander(name)
+        self._robot_commander = RobotCommander()
+        self._planning_scene = PlanningSceneInterface()
+
         self._joint_states_lock = threading.Lock()
         self._joint_states_listener = rospy.Subscriber("joint_states", JointState, self._joint_states_callback)
         self._joints_position = {}
         self._joints_velocity = {}
         self._joints_effort = {}
+        self.__plan = None
+
+        # prefix of the trajectory controller
+        self._prefix = self.__group_prefixes[name]
+        # a trajectory goal that will contain a single trajectory point (for the move unsafe command)
+        self._trajectory_goal = FollowJointTrajectoryGoal()
+        self._trajectory_goal.trajectory = JointTrajectory()
+        self._set_default_trajectory()
+        self._set_up_action_client()
+
         threading.Thread(None, rospy.spin)
+
+    def execute(self):
+        """
+        Executes the last plan made.
+        """
+        if self.__plan is not None:
+            self._move_group_commander.execute(self.__plan)
+            self.__plan = None
+        else:
+            rospy.logwarn("No plans where made, not executing anything.")
 
     def move_to_joint_value_target(self, joint_states, wait_result=True):
         """
@@ -50,6 +80,16 @@ class SrRobotCommander(object):
         self._move_group_commander.set_joint_value_target(joint_states)
         self._move_group_commander.go(wait=wait_result)
 
+    def plan_to_joint_value_target(self, joint_states):
+        """
+        Set target of the robot's links and plans.
+        @param joint_states - dictionary with joint name and value. It can contain only joints values of which need to
+        be changed.
+        This is a blocking method.
+        """
+        self._move_group_commander.set_joint_value_target(joint_states)
+        self.__plan = self._move_group_commander.plan()
+
     def move_to_named_target(self, name, wait_result=True):
         """
         Set target of the robot's links and moves to it
@@ -58,6 +98,15 @@ class SrRobotCommander(object):
         """
         self._move_group_commander.set_named_target(name)
         self._move_group_commander.go(wait=wait_result)
+
+    def plan_to_named_target(self, name):
+        """
+        Set target of the robot's links and plans
+        This is a blocking method.
+        @param name - name of the target pose defined in SRDF
+        """
+        self._move_group_commander.set_named_target(name)
+        self.__plan = self._move_group_commander.plan()
 
     def get_joints_position(self):
         """
@@ -83,15 +132,16 @@ class SrRobotCommander(object):
         with self._joint_states_lock:
             return self._joints_effort
 
-    def _run_joint_trajectory(self, joint_trajectory):
+    def run_joint_trajectory(self, joint_trajectory, wait_result=True):
         """
         Moves robot through all joint states with specified timeouts
         @param joint_trajectory - JointTrajectory class object. Represents trajectory of the joints which would be
         executed.
+        @param wait_result - should method wait for movement end or not
         """
         plan = RobotTrajectory()
         plan.joint_trajectory = joint_trajectory
-        self._move_group_commander.execute(plan)
+        self._move_group_commander.execute(plan, wait_result)
 
     def _move_to_position_target(self, xyz, end_effector_link="", wait_result=True):
         """
@@ -103,6 +153,16 @@ class SrRobotCommander(object):
         self._move_group_commander.set_position_target(xyz, end_effector_link)
         self._move_group_commander.go(wait=wait_result)
 
+    def _plan_to_position_target(self, xyz, end_effector_link=""):
+        """
+        Specify a target position for the end-effector and plans.
+        This is a blocking method.
+        @param xyz - new position of end-effector
+        @param end_effector_link - name of the end effector link
+        """
+        self._move_group_commander.set_position_target(xyz, end_effector_link)
+        self.__plan = self._move_group_commander.plan()
+
     def _joint_states_callback(self, joint_state):
         """
         The callback function for the topic joint_states.
@@ -113,3 +173,92 @@ class SrRobotCommander(object):
             self._joints_position = {n: p for n, p in zip(joint_state.name, joint_state.position)}
             self._joints_velocity = {n: v for n, v in zip(joint_state.name, joint_state.velocity)}
             self._joints_effort = {n: v for n, v in zip(joint_state.name, joint_state.effort)}
+
+    def _set_up_action_client(self):
+        """
+        Sets up an action client to communicate with the trajectory controller
+        """
+        self._client = SimpleActionClient(
+            self._prefix + "trajectory_controller/follow_joint_trajectory",
+            FollowJointTrajectoryAction
+        )
+
+        if self._client.wait_for_server(timeout=rospy.Duration(4)) is False:
+            rospy.logfatal("Failed to connect to action server in 4 sec")
+            raise
+
+    def _set_default_trajectory(self):
+        """
+        Builds a default trajectory for this group, With the correct joint names and containing one point
+        with the positions set to 0
+        """
+        active_joints = self._move_group_commander.get_active_joints()
+        print active_joints
+        self._trajectory_goal.trajectory.joint_names = active_joints
+        point = JointTrajectoryPoint()
+        point.positions = [0.0] * len(self._trajectory_goal.trajectory.joint_names)
+        point.velocities = [0.0] * len(self._trajectory_goal.trajectory.joint_names)
+        self._trajectory_goal.trajectory.points = []
+        self._trajectory_goal.trajectory.points.append(point)
+
+    def _update_default_trajectory(self):
+        """
+        Fill a trajectory point with the current position of the robot. It will serve as a base to move only the
+        joints the user specifies in the move_to_joint_value_target_unsafe
+        """
+        current_joints_position = self.get_joints_position()
+        if len(current_joints_position) >= len(self._trajectory_goal.trajectory.joint_names):
+            for i, joint_name in enumerate(self._trajectory_goal.trajectory.joint_names):
+                self._trajectory_goal.trajectory.points[0].positions[i] = current_joints_position[joint_name]
+        else:
+            rospy.logerr("Joints position length mismatch {} vs traj {}".format(len(current_joints_position), len(self._trajectory_goal.trajectory.joint_names)))
+
+        print self._trajectory_goal.trajectory.points[0].positions
+
+    def _set_targets_to_default_trajectory(self, joint_states):
+        """
+        Set the target values in joint_states to the default trajectory goal (leaving the others with their original value).
+        @param joint_states - dictionary with joint name and value. It can contain only joints values of which need to
+        be changed.
+        """
+        for name, pos in joint_states.items():
+            i = self._trajectory_goal.trajectory.joint_names.index(name)
+            self._trajectory_goal.trajectory.points[0].positions[i] = pos
+
+    def move_to_joint_value_target_unsafe(self, joint_states, time = 0.002, wait_result=True):
+        """
+        Set target of the robot's links and moves to it.
+        @param joint_states - dictionary with joint name and value. It can contain only joints values of which need to
+        be changed.
+        @param wait_result - should method wait for movement end or not
+        @param time - time in s (counting from now) for the robot to reach the target (it needs to be greater than 0.0 for
+        it not to be rejected by the trajectory controller)
+        """
+
+        self._update_default_trajectory()
+        self._set_targets_to_default_trajectory(joint_states)
+        self._trajectory_goal.trajectory.points[0].time_from_start = rospy.Duration.from_sec(time)
+        self._client.send_goal(self._trajectory_goal)
+
+        if not wait_result:
+            return
+
+        if not self._client.wait_for_result():
+            rospy.loginfo("Trajectory not completed")
+
+    def run_joint_trajectory_unsafe(self, joint_trajectory, wait_result=True):
+        """
+        Moves robot through all joint states with specified timeouts
+        @param joint_trajectory - JointTrajectory class object. Represents trajectory of the joints which would be
+        executed.
+        @param wait_result - should method wait for movement end or not
+        """
+        goal = FollowJointTrajectoryGoal()
+        goal.trajectory = joint_trajectory
+        self._client.send_goal(goal)
+
+        if not wait_result:
+            return
+
+        if not self._client.wait_for_result():
+            rospy.loginfo("Trajectory not completed")
