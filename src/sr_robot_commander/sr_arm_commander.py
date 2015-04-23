@@ -23,15 +23,12 @@ class SrArmCommander(SrRobotCommander):
     Commander class for arm
     """
 
-    def __init__(self, name="right_arm", set_ground=True):
+    def __init__(self, name="right_arm"):
         """
         Initialize object
         @param name - name of the MoveIt group
-        @param sets the ground plane in moveit for planning
         """
         super(SrArmCommander, self).__init__(name)
-        if set_ground:
-            self._move_group_commander.ground()
 
     def move_to_position_target(self, xyz, end_effector_link="", wait=True):
         """
@@ -42,3 +39,12 @@ class SrArmCommander(SrRobotCommander):
         """
         self._move_to_position_target(xyz, end_effector_link, wait_result=wait)
 
+
+    def plan_to_position_target(self, xyz, end_effector_link=""):
+        """
+        Specify a target position for the end-effector and plans.
+        This is a blocking method.
+        @param xyz - new position of end-effector
+        @param end_effector_link - name of the end effector link
+        """
+        self._plan_to_position_target(xyz, end_effector_link)

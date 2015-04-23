@@ -45,6 +45,7 @@ class SrRobotCommander(object):
         self._joints_position = {}
         self._joints_velocity = {}
         self._joints_effort = {}
+        self.__plan = None
 
         # prefix of the trajectory controller
         self._prefix = self.__group_prefixes[name]
@@ -55,6 +56,16 @@ class SrRobotCommander(object):
         self._set_up_action_client()
 
         threading.Thread(None, rospy.spin)
+
+    def execute(self):
+        """
+        Executes the last plan made.
+        """
+        if self.__plan is not None:
+            self._move_group_commander.execute(self.__plan)
+            self.__plan = None
+        else:
+            rospy.logwarn("No plans where made, not executing anything.")
 
     def move_to_joint_value_target(self, joint_states, wait_result=True):
         """
@@ -74,7 +85,7 @@ class SrRobotCommander(object):
         This is a blocking method.
         """
         self._move_group_commander.set_joint_value_target(joint_states)
-        self._move_group_commander.plan()
+        self.__plan = self._move_group_commander.plan()
 
     def move_to_named_target(self, name, wait_result=True):
         """
@@ -92,7 +103,7 @@ class SrRobotCommander(object):
         @param name - name of the target pose defined in SRDF
         """
         self._move_group_commander.set_named_target(name)
-        self._move_group_commander.plan()
+        self.__plan = self._move_group_commander.plan()
 
     def get_joints_position(self):
         """
@@ -147,7 +158,7 @@ class SrRobotCommander(object):
         @param end_effector_link - name of the end effector link
         """
         self._move_group_commander.set_position_target(xyz, end_effector_link)
-        self._move_group_commander.plan()
+        self.__plan = self._move_group_commander.plan()
 
     def _joint_states_callback(self, joint_state):
         """
