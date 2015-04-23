@@ -4,17 +4,19 @@
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
   <arg name="sim" default="true"/>
   <!-- Use xacro prefix for hand or not -->
-  <arg name="use_xacro_prefix" value="true"/>
+  <arg name="use_xacro_prefix" default="true"/>
   <!--Left or right hand/arm  -->
-  <arg name="xacro_prefix" value="r"/>
+  <arg name="xacro_prefix" default="r"/>
   <!-- Set to true for debugging -->
   <arg name="debug" default="false"/>
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
-  <arg name="hand_trajectory" value="true"/>
+  <arg name="hand_trajectory" default="true"/>
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the hands-->
-  <arg name="hand_ctrl" value="true"/>
+  <arg name="hand_ctrl" default="true"/>
+  <!-- Serial number of the hand to be used-->
+  <arg name="hand_serial" default="1082" />
 
   <!-- Loads the robot description -->
   <arg name="robot_description" value="$(find sr_multi_description)/urdf/srhand_ur10arm.urdf.xacro"/>
@@ -64,7 +66,7 @@
 
     <!-- launch for right hand -->
     <include file="$(find sr_edc_launch)/sr_edc.launch" >
-      <arg name="hand_serial" value="1082" />
+      <arg name="hand_serial" value="$(arg hand_serial)" />
       <arg name="eth_port" value="eth1" />
       <arg name="robot_description" value="$(arg robot_description)" />
       <arg name="debug" value="$(arg debug)" />
