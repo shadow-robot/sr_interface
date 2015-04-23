@@ -49,11 +49,14 @@ def _fix_j0(joints):
             del joints[finger+'1']
             del joints[finger+'2']
 
-def mk_grasp(joints, pre_joints={}, fix_j0=False):
+def mk_grasp(joints, pre_joints=None, fix_j0=False):
     """
     Generate a moveit_msgs/Grasp from a set of joint angles given as a dict
     of joint_name -> position.
     """
+    if pre_joints is None:
+        pre_joints = {}
+
     sr_joint_names = _sr_joint_names
     if fix_j0:
         _fix_j0(joints)
