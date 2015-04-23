@@ -19,7 +19,7 @@ import rospy
 import threading
 from actionlib import SimpleActionClient
 from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal
-from moveit_commander import MoveGroupCommander
+from moveit_commander import MoveGroupCommander, RobotCommander, PlanningSceneInterface
 from moveit_msgs.msg import RobotTrajectory
 from sensor_msgs.msg import JointState
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
@@ -40,6 +40,9 @@ class SrRobotCommander(object):
         @param name - name of the MoveIt group
         """
         self._move_group_commander = MoveGroupCommander(name)
+        self._robot_commander = RobotCommander()
+        self._planning_scene = PlanningSceneInterface()
+
         self._joint_states_lock = threading.Lock()
         self._joint_states_listener = rospy.Subscriber("joint_states", JointState, self._joint_states_callback)
         self._joints_position = {}
