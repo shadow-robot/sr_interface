@@ -8,7 +8,7 @@
 
 import sys
 import genpy
-from sr_hand.grasps_parser import GraspParser 
+from sr_hand.grasps_parser import GraspParser
 import sr_grasp
 from sr_robot_msgs.msg import GraspArray
 
