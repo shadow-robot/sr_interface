@@ -23,7 +23,7 @@ hand_joint_states_2 = {'rh_FFJ1': 0.35, 'rh_FFJ2': 1.5707, 'rh_FFJ3': 1.5707, 'r
                        'rh_THJ1': 0.35, 'rh_THJ2': 0.0, 'rh_THJ3': 0.0, 'rh_THJ4': 0.0, 'rh_THJ5': 0.0,
                        'rh_WRJ1': 0.0, 'rh_WRJ2': 0.0}
 hand_joint_states_3 = {'rh_MFJ1': 0.35, 'rh_MFJ2': 0.0, 'rh_MFJ3': 0.0}
- 
+
 
 joint_states_1 = {'ra_shoulder_pan_joint': 0.43221632746577665, 'ra_elbow_joint': 2.118891128999479,
                    'ra_wrist_1_joint': -1.711370650686752, 'ra_wrist_2_joint': 1.4834244535003318,
@@ -49,19 +49,19 @@ arm_commander.move_to_joint_value_target_unsafe(joint_states, 3.0, True)
 joint_states = hand_joint_states_2
 rospy.loginfo("Moving hand to joint states\n" + str(joint_states) + "\n")
 hand_commander.move_to_joint_value_target_unsafe(joint_states, 3.0, True)
- 
+
 
 # Move hand
 joint_states = hand_joint_states_3
 rospy.loginfo("Moving hand to joint states\n" + str(joint_states) + "\n")
 hand_commander.move_to_joint_value_target_unsafe(joint_states, 3.0, False)
- 
+
 # Move arm
 joint_states = joint_states_2
 rospy.loginfo("Moving arm to joint states\n" + str(joint_states) + "\n")
 arm_commander.move_to_joint_value_target_unsafe(joint_states, 3.0, wait_result = True)
- 
- 
+
+
 #rospy.sleep(5.0)
 
 

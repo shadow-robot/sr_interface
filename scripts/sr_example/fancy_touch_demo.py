@@ -52,7 +52,7 @@ max_range = {"THJ2": 20, "THJ3": 12, "THJ4": 70, "THJ5": 0,
 # POSE DEFINITIONS #
 ####################
 
-# starting position for the hand 
+# starting position for the hand
 start_pos = {"THJ1": 0, "THJ2": 0, "THJ3": 0, "THJ4": 0, "THJ5": 0,
 		  "FFJ0": 0, "FFJ3": 0, "FFJ4": 0,
 		  "MFJ0": 0, "MFJ3": 0, "MFJ4": 0,
@@ -242,7 +242,7 @@ store_3 = {"THJ1": 0, "THJ2": 0, "THJ3": 0, "THJ4": 65, "THJ5": 0 }
 # FUNCTION DEFINITIONS #
 ########################
 
-def secuence_ff():   
+def secuence_ff():
    # Start secuence 1
    rospy.sleep(1)
    c.move_hand(store_3)
@@ -270,7 +270,7 @@ def secuence_ff():
    tmp = flex_th_2.copy()
    tmp.update({'interpolation_time': 2.0})
    c.move_hand(tmp)
-   
+
    while True:
       # Check  the state of the tactile senors
       read_tactile_values()
@@ -310,13 +310,13 @@ def secuence_ff():
    c.move_hand(l_spock)
    rospy.sleep(0.5)
    c.move_hand(l_zero_all)
-   rospy.sleep(0.5)	
+   rospy.sleep(0.5)
    c.move_hand(pre_ff_ok)
    rospy.sleep(1)
    tmp = ff_ok.copy()
    tmp.update({'interpolation_time': 2.0})
    c.move_hand(tmp)
-   
+
    while True:
       # Check  the state of the tactile senors
       read_tactile_values()
@@ -343,7 +343,7 @@ def secuence_ff():
       # If the tacticle sensor is triggered stop movement
       if ( tactile_values['TH'] > force_zero['TH'] or tactile_values['MF'] > force_zero['MF'] ):
          c.move_hand(hand_pos)
-         print 'Middle finger contact'   
+         print 'Middle finger contact'
          break
 
    rospy.sleep(1)
@@ -363,14 +363,14 @@ def secuence_ff():
          c.move_hand(hand_pos)
          print 'Ring finger contact'
          break
-   
+
    rospy.sleep(1)
    c.move_hand(rf2lf_ok)
    rospy.sleep(0.8)
    tmp = lf_ok.copy()
    tmp.update({'interpolation_time': 2.0})
    c.move_hand(tmp)
-   
+
    while True:
       # Check  the state of the tactile senors
       read_tactile_values()
@@ -438,7 +438,7 @@ def secuence_ff():
    tmp = ff_ok.copy()
    tmp.update({'interpolation_time': 3.0})
    c.move_hand(tmp)
-   
+
    while True:
       # Check  the state of the tactile senors
       read_tactile_values()
@@ -470,12 +470,12 @@ def secuence_ff():
    c.move_hand(zero_wr)
    rospy.sleep(0.4)
    c.move_hand(start_pos)
-   rospy.sleep(1.5)    
+   rospy.sleep(1.5)
    return
 
 def secuence_mf():
    # Start the secuence 2
-   rospy.sleep(2.0)    
+   rospy.sleep(2.0)
    # Initialize wake time
    wake_time = time.time()
 
@@ -495,7 +495,7 @@ def secuence_mf():
 
          if ( tactile_values['TH'] > force_zero['TH'] ):
             break
- 
+
       # If the tactile sensors have not been triggered and the Hand
       # is not in the middle of a movement, generate a random position
       # and interpolation time
@@ -530,7 +530,7 @@ def secuence_rf():
    c.move_hand(shake_grasp_1)
    rospy.sleep(1.5)
    c.move_hand(start_pos)
-   rospy.sleep(1.5)   
+   rospy.sleep(1.5)
    return
 
 def secuence_lf():
@@ -668,7 +668,7 @@ def zero_tactile_sensors():
    print 'Force Zero', force_zero
 
    rospy.loginfo("\n\nOK, ready for the demo")
-   
+
    print "\nPRESS ONE OF THE TACTILES TO START A DEMO"
    print "   FF: Standard Demo"
    print "   MF: Shy Hand Demo"
@@ -717,7 +717,7 @@ zero_tactile_sensors()
 while not rospy.is_shutdown():
    # Check the state of the tactile senors
    read_tactile_values()
-   
+
    # If the tactile is touched, trigger the corresponding function
    if (tactile_values['FF'] > force_zero['FF']):
       print 'First finger contact'
