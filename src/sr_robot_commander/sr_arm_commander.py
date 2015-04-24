@@ -19,6 +19,7 @@ from sr_robot_commander import SrRobotCommander
 from geometry_msgs.msg import PoseStamped
 from rospy import get_rostime
 
+
 class SrArmCommander(SrRobotCommander):
     """
     Commander class for arm
@@ -32,7 +33,7 @@ class SrArmCommander(SrRobotCommander):
         """
         super(SrArmCommander, self).__init__(name)
 
-        if(set_ground):
+        if set_ground:
             self._set_ground()
 
     def move_to_position_target(self, xyz, end_effector_link="", wait=True):
@@ -44,7 +45,6 @@ class SrArmCommander(SrRobotCommander):
         """
         self._move_to_position_target(xyz, end_effector_link, wait_result=wait)
 
-
     def plan_to_position_target(self, xyz, end_effector_link=""):
         """
         Specify a target position for the end-effector and plans.
@@ -54,20 +54,22 @@ class SrArmCommander(SrRobotCommander):
         """
         self._plan_to_position_target(xyz, end_effector_link)
         
-    def move_to_pose_target(self, pose, end_effector_link="", wait=True):
+    def move_to_pose_target(self, pose, end_effector_link="", wait_result=True):
         """
         Specify a target pose for the end-effector and moves to it
-        @param pose - new pose of end-effector: a Pose message, a PoseStamped message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z] or a list of 7 floats [x, y, z, qx, qy, qz, qw]
+        @param pose - new pose of end-effector: a Pose message, a PoseStamped message or a list of 6 floats:
+                        [x, y, z, rot_x, rot_y, rot_z] or a list of 7 floats [x, y, z, qx, qy, qz, qw]
         @param end_effector_link - name of the end effector link
         @param wait_result - should method wait for movement end or not
         """
-        self._move_to_pose_target(pose, end_effector_link, wait_result=wait)
+        self._move_to_pose_target(pose, end_effector_link, wait_result=wait_result)
 
     def plan_to_pose_target(self, pose, end_effector_link=""):
         """
         Specify a target pose for the end-effector and plans.
         This is a blocking method.
-        @param pose - new pose of end-effector: a Pose message, a PoseStamped message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z] or a list of 7 floats [x, y, z, qx, qy, qz, qw]
+        @param pose - new pose of end-effector: a Pose message, a PoseStamped message or a list of 6 floats:
+                        [x, y, z, rot_x, rot_y, rot_z] or a list of 7 floats [x, y, z, qx, qy, qz, qw]
         @param end_effector_link - name of the end effector link
         """
         self._plan_to_pose_target(pose, end_effector_link)

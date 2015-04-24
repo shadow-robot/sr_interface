@@ -166,7 +166,8 @@ class SrRobotCommander(object):
     def _move_to_pose_target(self, pose, end_effector_link="", wait_result=True):
         """
         Specify a target pose for the end-effector and moves to it
-        @param pose - new pose of end-effector: a Pose message, a PoseStamped message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z] or a list of 7 floats [x, y, z, qx, qy, qz, qw]
+        @param pose - new pose of end-effector: a Pose message, a PoseStamped message or a list of 6 floats:
+                        [x, y, z, rot_x, rot_y, rot_z] or a list of 7 floats [x, y, z, qx, qy, qz, qw]
         @param end_effector_link - name of the end effector link
         @param wait_result - should method wait for movement end or not
         """
@@ -177,10 +178,11 @@ class SrRobotCommander(object):
         """
         Specify a target pose for the end-effector and plans.
         This is a blocking method.
-        @param pose - new pose of end-effector: a Pose message, a PoseStamped message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z] or a list of 7 floats [x, y, z, qx, qy, qz, qw]
+        @param pose - new pose of end-effector: a Pose message, a PoseStamped message or a list of 6 floats:
+                        [x, y, z, rot_x, rot_y, rot_z] or a list of 7 floats [x, y, z, qx, qy, qz, qw]
         @param end_effector_link - name of the end effector link
         """
-        self._move_group_commander.set_position_target(xyz, end_effector_link)
+        self._move_group_commander.set_position_target(pose, end_effector_link)
         self.__plan = self._move_group_commander.plan()
 
     def _joint_states_callback(self, joint_state):
@@ -237,9 +239,10 @@ class SrRobotCommander(object):
 
     def _set_targets_to_default_trajectory(self, joint_states):
         """
-        Set the target values in joint_states to the default trajectory goal (leaving the others with their original value).
+        Set the target values in joint_states to the default trajectory goal (leaving the others with their original
+         value).
         @param joint_states - dictionary with joint name and value. It can contain only joints values of which need to
-        be changed.
+                               be changed.
         """
         for name, pos in joint_states.items():
             i = self._trajectory_goal.trajectory.joint_names.index(name)
@@ -249,10 +252,10 @@ class SrRobotCommander(object):
         """
         Set target of the robot's links and moves to it.
         @param joint_states - dictionary with joint name and value. It can contain only joints values of which need to
-        be changed.
+                               be changed.
         @param wait_result - should method wait for movement end or not
-        @param time - time in s (counting from now) for the robot to reach the target (it needs to be greater than 0.0 for
-        it not to be rejected by the trajectory controller)
+        @param time - time in s (counting from now) for the robot to reach the target (it needs to be greater than 0.0
+                        for it not to be rejected by the trajectory controller)
         """
 
         self._update_default_trajectory()
@@ -270,7 +273,7 @@ class SrRobotCommander(object):
         """
         Moves robot through all joint states with specified timeouts
         @param joint_trajectory - JointTrajectory class object. Represents trajectory of the joints which would be
-        executed.
+                                   executed.
         @param wait_result - should method wait for movement end or not
         """
         goal = FollowJointTrajectoryGoal()
