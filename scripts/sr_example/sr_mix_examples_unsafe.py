@@ -59,7 +59,7 @@ hand_commander.move_to_joint_value_target_unsafe(joint_states, 3.0, False)
 # Move arm
 joint_states = joint_states_2
 rospy.loginfo("Moving arm to joint states\n" + str(joint_states) + "\n")
-arm_commander.move_to_joint_value_target_unsafe(joint_states, 3.0, wait_result = True)
+arm_commander.move_to_joint_value_target_unsafe(joint_states, 3.0, wait= True)
 
 
 #rospy.sleep(5.0)
