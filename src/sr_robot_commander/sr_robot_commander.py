@@ -43,6 +43,8 @@ class SrRobotCommander(object):
         self._robot_commander = RobotCommander()
         self._planning_scene = PlanningSceneInterface()
 
+        self._move_group_commander.set_planner_id("ESTkConfigDefault")
+
         self._joint_states_lock = threading.Lock()
         self._joint_states_listener = rospy.Subscriber("joint_states", JointState, self._joint_states_callback)
         self._joints_position = {}
@@ -77,6 +79,7 @@ class SrRobotCommander(object):
         be changed.
         @param wait - should method wait for movement end or not
         """
+        self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_joint_value_target(joint_states)
         self._move_group_commander.go(wait=wait)
 
@@ -87,6 +90,7 @@ class SrRobotCommander(object):
         be changed.
         This is a blocking method.
         """
+        self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_joint_value_target(joint_states)
         self.__plan = self._move_group_commander.plan()
 
@@ -96,6 +100,7 @@ class SrRobotCommander(object):
         @param name - name of the target pose defined in SRDF
         @param wait - should method wait for movement end or not
         """
+        self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_named_target(name)
         self._move_group_commander.go(wait=wait)
 
@@ -105,6 +110,7 @@ class SrRobotCommander(object):
         This is a blocking method.
         @param name - name of the target pose defined in SRDF
         """
+        self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_named_target(name)
         self.__plan = self._move_group_commander.plan()
 
@@ -149,6 +155,7 @@ class SrRobotCommander(object):
         @param end_effector_link - name of the end effector link
         @param wait - should method wait for movement end or not
         """
+        self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_position_target(xyz, end_effector_link)
         self._move_group_commander.go(wait=wait)
 
@@ -159,6 +166,7 @@ class SrRobotCommander(object):
         @param xyz - new position of end-effector
         @param end_effector_link - name of the end effector link
         """
+        self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_position_target(xyz, end_effector_link)
         self.__plan = self._move_group_commander.plan()
         
@@ -170,6 +178,7 @@ class SrRobotCommander(object):
         @param end_effector_link - name of the end effector link
         @param wait - should method wait for movement end or not
         """
+        self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_pose_target(pose, end_effector_link)
         self._move_group_commander.go(wait=wait)
 
@@ -181,6 +190,7 @@ class SrRobotCommander(object):
                         [x, y, z, rot_x, rot_y, rot_z] or a list of 7 floats [x, y, z, qx, qy, qz, qw]
         @param end_effector_link - name of the end effector link
         """
+        self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_position_target(pose, end_effector_link)
         self.__plan = self._move_group_commander.plan()
 
@@ -256,7 +266,6 @@ class SrRobotCommander(object):
                         for it not to be rejected by the trajectory controller)
         @param wait - should method wait for movement end or not
         """
-
         self._update_default_trajectory()
         self._set_targets_to_default_trajectory(joint_states)
         self._trajectory_goal.trajectory.points[0].time_from_start = rospy.Duration.from_sec(time)
