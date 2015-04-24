@@ -1,4 +1,5 @@
 <launch>
+  <arg name="planning" default="ompl" />
 
   <!-- By default, we are not in debug mode -->
   <arg name="debug" default="false" />
@@ -13,6 +14,7 @@
     <arg name="info" value="true"/>
     <arg name="debug" value="$(arg debug)"/>
     <arg name="publish_monitored_planning_scene" value="true" />
+    <arg name="pipeline" value="$(arg planning)" />
   </include>
 
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
