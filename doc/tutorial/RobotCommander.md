@@ -1,16 +1,15 @@
 # Robot Commander
 
-## Overview
+## Description
 
 Main purpose of the commander is to provide simplified access to [hand](HandCommander.md) or [arm](ArmCommander.md).
 It provides methods which can be used on both [hand](HandCommander.md) and [arm](ArmCommander.md).
 
 Examples of usage can be found in the package **sr_example** in files **sr_hand_examples.py** and **sr_arm_examples.py**
 
-## Usage
-### move_to_joint_value_target
+## move_to_joint_value_target
 
-#### Overview
+### Description
 
 This method sets target of the robot's links and moves to it.
 
@@ -19,7 +18,7 @@ Parameters:
    * *joint_states* is a dictionary with joint name and value. It can contain joints values of which need to be changed.
    * *wait_result* indicates if method should wait for movement end or not (default value is True)
 
-#### Example
+### Example
 
 ```python
 
@@ -35,9 +34,9 @@ joints_states = {'ra_shoulder_pan_joint': 0.5157461682721474,
 arm_commander.move_to_joint_value_target(joints_states)
 ```
 
-### move_to_named_target
+## move_to_named_target
 
-#### Overview
+### Description
 
 Using this method will allow to move hand or arm to predefined pose. This pose can be define using MoveIt assistant.
 
@@ -66,10 +65,10 @@ roslaunch ur10srh_moveit_config setup_assistant.launch
 * Press "Generate Package" and wait until progress is 100%
 * Exit wizard
 
-![MoveIt Setup Assistant](images/moveit_setup_assistant.gif)
+![MoveIt Setup Assistant](/sr_robot_commander/doc/tutorial/images/moveit_setup_assistant.gif)
 
 
-#### Example
+### Example
 
 ```python
 
@@ -77,17 +76,17 @@ rospy.init_node("robot_commander_examples", anonymous=True)
 
 hand_commander = SrHandCommander()
 
-## pack is predefined pose from SRDF file
+# pack is predefined pose from SRDF file
 hand_commander.move_to_named_target("pack")
 ```
 
-### get_joints_position and get_joints_velocity
+## get_joints_position and get_joints_velocity
 
-#### Overview
+### Description
 
 These methods do not take any parameters and return dictionary with position and velocity of the robot joints
 
-#### Example
+### Example
 
 ```python
 
@@ -101,20 +100,3 @@ joints_velocity = arm_commander.get_joints_velocity()
 print("Arm joints position\n" + str(joints_position) + "\n")
 print("Arm joints velocity\n" + str(joints_velocity) + "\n")
 ```
-
-## Advanced usage
-As we use [MoveIt!](http://moveit.ros.org/) for the underlying mechanism, there are some advanced features that can be used.
-
-### Collisions with the environment
-It is possible to load a model of your environment which will be taken into account during the planning. Some simple examples of scene files are available in the scene folder of [sr_multi_moveit](sr_multi_moveit/ur10srh_moveit_config/scenes). You can load them from the **Scene Objects** tab of the Motion Planning plugin in rviz. To do so, simply run:
-
-```
-roslaunch ur10srh_moveit_config moveit_planning_and_execution.launch
-```
-
-Then:
-* select the **Scene Objects** tab
-* click on **Import From Text**
-* select the *.scene* file you want to load
-
-Your planning will now check for collisions with the objects you added to the environment.
