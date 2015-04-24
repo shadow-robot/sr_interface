@@ -16,7 +16,7 @@ This method sets target of the robot's links and moves to it.
 Parameters:
 
    * *joint_states* is a dictionary with joint name and value. It can contain joints values of which need to be changed.
-   * *wait_result* indicates if method should wait for movement end or not (default value is True)
+   * *wait* indicates if method should wait for movement end or not (default value is True)
 
 ### Example
 
@@ -43,7 +43,7 @@ Using this method will allow to move hand or arm to predefined pose. This pose c
 Parameters:
 
    * *name* is the unique identifier of the target pose defined in SRDF
-   * *wait_result* indicates if method should wait for movement end or not (default value is True)
+   * *wait* indicates if method should wait for movement end or not (default value is True)
 
 In order to created a new named pose you can do following:
 

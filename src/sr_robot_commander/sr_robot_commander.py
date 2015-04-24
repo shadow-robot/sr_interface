@@ -70,15 +70,15 @@ class SrRobotCommander(object):
         else:
             rospy.logwarn("No plans where made, not executing anything.")
 
-    def move_to_joint_value_target(self, joint_states, wait_result=True):
+    def move_to_joint_value_target(self, joint_states, wait=True):
         """
         Set target of the robot's links and moves to it.
         @param joint_states - dictionary with joint name and value. It can contain only joints values of which need to
         be changed.
-        @param wait_result - should method wait for movement end or not
+        @param wait - should method wait for movement end or not
         """
         self._move_group_commander.set_joint_value_target(joint_states)
-        self._move_group_commander.go(wait=wait_result)
+        self._move_group_commander.go(wait=wait)
 
     def plan_to_joint_value_target(self, joint_states):
         """
@@ -90,14 +90,14 @@ class SrRobotCommander(object):
         self._move_group_commander.set_joint_value_target(joint_states)
         self.__plan = self._move_group_commander.plan()
 
-    def move_to_named_target(self, name, wait_result=True):
+    def move_to_named_target(self, name, wait=True):
         """
         Set target of the robot's links and moves to it
         @param name - name of the target pose defined in SRDF
-        @param wait_result - should method wait for movement end or not
+        @param wait - should method wait for movement end or not
         """
         self._move_group_commander.set_named_target(name)
-        self._move_group_commander.go(wait=wait_result)
+        self._move_group_commander.go(wait=wait)
 
     def plan_to_named_target(self, name):
         """
@@ -137,21 +137,20 @@ class SrRobotCommander(object):
         Moves robot through all joint states with specified timeouts
         @param joint_trajectory - JointTrajectory class object. Represents trajectory of the joints which would be
         executed.
-        @param wait_result - should method wait for movement end or not
         """
         plan = RobotTrajectory()
         plan.joint_trajectory = joint_trajectory
         self._move_group_commander.execute(plan)
 
-    def _move_to_position_target(self, xyz, end_effector_link="", wait_result=True):
+    def _move_to_position_target(self, xyz, end_effector_link="", wait=True):
         """
         Specify a target position for the end-effector and moves to it
         @param xyz - new position of end-effector
         @param end_effector_link - name of the end effector link
-        @param wait_result - should method wait for movement end or not
+        @param wait - should method wait for movement end or not
         """
         self._move_group_commander.set_position_target(xyz, end_effector_link)
-        self._move_group_commander.go(wait=wait_result)
+        self._move_group_commander.go(wait=wait)
 
     def _plan_to_position_target(self, xyz, end_effector_link=""):
         """
@@ -163,16 +162,16 @@ class SrRobotCommander(object):
         self._move_group_commander.set_position_target(xyz, end_effector_link)
         self.__plan = self._move_group_commander.plan()
         
-    def _move_to_pose_target(self, pose, end_effector_link="", wait_result=True):
+    def _move_to_pose_target(self, pose, end_effector_link="", wait=True):
         """
         Specify a target pose for the end-effector and moves to it
         @param pose - new pose of end-effector: a Pose message, a PoseStamped message or a list of 6 floats:
                         [x, y, z, rot_x, rot_y, rot_z] or a list of 7 floats [x, y, z, qx, qy, qz, qw]
         @param end_effector_link - name of the end effector link
-        @param wait_result - should method wait for movement end or not
+        @param wait - should method wait for movement end or not
         """
         self._move_group_commander.set_pose_target(pose, end_effector_link)
-        self._move_group_commander.go(wait=wait_result)
+        self._move_group_commander.go(wait=wait)
 
     def _plan_to_pose_target(self, pose, end_effector_link=""):
         """
@@ -248,14 +247,14 @@ class SrRobotCommander(object):
             i = self._trajectory_goal.trajectory.joint_names.index(name)
             self._trajectory_goal.trajectory.points[0].positions[i] = pos
 
-    def move_to_joint_value_target_unsafe(self, joint_states, time = 0.002, wait_result=True):
+    def move_to_joint_value_target_unsafe(self, joint_states, time=0.002, wait=True):
         """
         Set target of the robot's links and moves to it.
         @param joint_states - dictionary with joint name and value. It can contain only joints values of which need to
                                be changed.
-        @param wait_result - should method wait for movement end or not
         @param time - time in s (counting from now) for the robot to reach the target (it needs to be greater than 0.0
                         for it not to be rejected by the trajectory controller)
+        @param wait - should method wait for movement end or not
         """
 
         self._update_default_trajectory()
@@ -263,24 +262,24 @@ class SrRobotCommander(object):
         self._trajectory_goal.trajectory.points[0].time_from_start = rospy.Duration.from_sec(time)
         self._client.send_goal(self._trajectory_goal)
 
-        if not wait_result:
+        if not wait:
             return
 
         if not self._client.wait_for_result():
             rospy.loginfo("Trajectory not completed")
 
-    def run_joint_trajectory_unsafe(self, joint_trajectory, wait_result=True):
+    def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
         """
         Moves robot through all joint states with specified timeouts
         @param joint_trajectory - JointTrajectory class object. Represents trajectory of the joints which would be
                                    executed.
-        @param wait_result - should method wait for movement end or not
+        @param wait - should method wait for movement end or not
         """
         goal = FollowJointTrajectoryGoal()
         goal.trajectory = joint_trajectory
         self._client.send_goal(goal)
 
-        if not wait_result:
+        if not wait:
             return
 
         if not self._client.wait_for_result():

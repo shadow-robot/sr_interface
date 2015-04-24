@@ -43,7 +43,7 @@ class SrArmCommander(SrRobotCommander):
         @param end_effector_link - name of the end effector link
         @param wait - should method wait for movement end or not
         """
-        self._move_to_position_target(xyz, end_effector_link, wait_result=wait)
+        self._move_to_position_target(xyz, end_effector_link, wait=wait)
 
     def plan_to_position_target(self, xyz, end_effector_link=""):
         """
@@ -54,15 +54,15 @@ class SrArmCommander(SrRobotCommander):
         """
         self._plan_to_position_target(xyz, end_effector_link)
         
-    def move_to_pose_target(self, pose, end_effector_link="", wait_result=True):
+    def move_to_pose_target(self, pose, end_effector_link="", wait=True):
         """
         Specify a target pose for the end-effector and moves to it
         @param pose - new pose of end-effector: a Pose message, a PoseStamped message or a list of 6 floats:
                         [x, y, z, rot_x, rot_y, rot_z] or a list of 7 floats [x, y, z, qx, qy, qz, qw]
         @param end_effector_link - name of the end effector link
-        @param wait_result - should method wait for movement end or not
+        @param wait - should method wait for movement end or not
         """
-        self._move_to_pose_target(pose, end_effector_link, wait_result=wait_result)
+        self._move_to_pose_target(pose, end_effector_link, wait=wait)
 
     def plan_to_pose_target(self, pose, end_effector_link=""):
         """
