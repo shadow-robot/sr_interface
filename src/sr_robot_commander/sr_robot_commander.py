@@ -191,7 +191,7 @@ class SrRobotCommander(object):
         @param end_effector_link - name of the end effector link
         """
         self._move_group_commander.set_start_state_to_current_state()
-        self._move_group_commander.set_position_target(pose, end_effector_link)
+        self._move_group_commander.set_pose_target(pose, end_effector_link)
         self.__plan = self._move_group_commander.plan()
 
     def _joint_states_callback(self, joint_state):
