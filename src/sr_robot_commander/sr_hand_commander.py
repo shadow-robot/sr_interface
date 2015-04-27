@@ -43,7 +43,7 @@ class SrHandCommander(SrRobotCommander):
         Returns joints effort
         @return - dictionary with joints efforts
         """
-        return self._joints_effort()
+        return self._get_joints_effort()
 
     def set_max_force(self, joint_name, value):
         """
