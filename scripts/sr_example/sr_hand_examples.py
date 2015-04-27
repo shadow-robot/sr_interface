@@ -38,3 +38,8 @@ hand_joints_effort = hand_commander.get_joints_effort()
 print("Hand joints position \n " + str(hand_joints_state) + "\n")
 print("Hand joints velocity \n " + str(hand_joints_velocity) + "\n")
 print("Hand joints effort \n " + str(hand_joints_effort) + "\n")
+
+tactile_type = hand_commander.get_tactile_type()
+tactile_state = hand_commander.get_tactile_state()
+print("Tactile type \n " + str(tactile_type) + "\n")
+print("Tactile state \n " + str(tactile_state) + "\n")
