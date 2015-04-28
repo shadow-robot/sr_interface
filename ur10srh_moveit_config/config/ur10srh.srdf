@@ -92,10 +92,10 @@
         <joint name="rh_RFJ3" value="1.5707" />
         <joint name="rh_RFJ4" value="0" />
         <joint name="rh_THJ1" value="0.35" />
-        <joint name="rh_THJ2" value="0.6981" />
+        <joint name="rh_THJ2" value="0.58" />
         <joint name="rh_THJ3" value="0" />
-        <joint name="rh_THJ4" value="0.8048" />
-        <joint name="rh_THJ5" value="-0.0706" />
+        <joint name="rh_THJ4" value="0.39" />
+        <joint name="rh_THJ5" value="0.19" />
         <joint name="rh_WRJ1" value="0" />
         <joint name="rh_WRJ2" value="0" />
     </group_state>
