@@ -5,15 +5,18 @@ from rospy import logerr, loginfo, get_param
 import rospkg, genpy
 import moveit_msgs.msg
 from trajectory_msgs.msg import JointTrajectoryPoint
-from sr_grasp.utils import mk_grasp
 from sr_robot_msgs.msg import GraspArray
 
-#http://code.activestate.com/recipes/66055-changing-the-indentation-of-a-multi-line-string/
+
 def reindent(s, numSpaces):
+    """
+    http://code.activestate.com/recipes/66055-changing-the-indentation-of-a-multi-line-string/
+    """
     s = string.split(s, '\n')
     s = [(numSpaces * ' ') + line for line in s]
     s = string.join(s, '\n')
     return s
+
 
 class Grasp(moveit_msgs.msg.Grasp):
     """
@@ -21,7 +24,7 @@ class Grasp(moveit_msgs.msg.Grasp):
     with added functions and Shadow Hand specific knowledge.
     """
     def __init__(self):
-        super(Grasp, self).__init__()
+        Grasp.__init__(self)
         self.grasp_quality = 0.001
         self.joint_names = [
             'FFJ1', 'FFJ2', 'FFJ3', 'FFJ4',
@@ -87,12 +90,12 @@ class Grasp(moveit_msgs.msg.Grasp):
 
         # Extend the array to be big enough.
         if len(posture.points) < point+1:
-            for i in range(point+1):
+            for _ in range(point+1):
                 posture.points.append(JointTrajectoryPoint())
 
         # Update the point in place
         jtp = JointTrajectoryPoint()
-        for name, pos in positions.iteritems():
+        for _, pos in positions.iteritems():
             jtp.positions.append(pos)
         posture.points[point] = jtp
 
@@ -110,8 +113,8 @@ class GraspStash(object):
         self._store = {}
         rp = rospkg.RosPack()
         self.grasps_file = get_param('~grasps_file',
-                default = os.path.join(
-                rp.get_path('sr_grasp'), 'resource', 'grasps.yaml') )
+                                     default = os.path.join(
+                                         rp.get_path('sr_grasp'), 'resource', 'grasps.yaml') )
 
     def get_all(self):
         """Return list of all grasps."""
@@ -122,10 +125,14 @@ class GraspStash(object):
         arr.grasps = self.get_all()
         return arr
 
-    def get_grasp(self, id):
+    def get_grasp(self, grasp_index):
         """Return a single grasp from the stash from it's id field."""
-        Grasp()
-        return Grasp;
+        grasp = None
+        try:
+            grasp = self._store[grasp_index]
+        except IndexError:
+            pass
+        return grasp
 
     def get_grasp_at(self, idx):
         """Return the Grasp at the given index."""
