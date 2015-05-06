@@ -23,12 +23,12 @@
 # ros publisher to make sure a data is received even if we don't stream
 # the data.
 
-import roslib; roslib.load_manifest('sr_example')
 import rospy
 
 import time
 import math
 from std_msgs.msg import Float64
+
 
 class SexyExampleLatching(object):
 
@@ -69,7 +69,6 @@ class SexyExampleLatching(object):
         wave_1 = {"WRJ2":-20}
         wave_2 = {"WRJ2":5}
 
-
         self.publish_pose(start)
         time.sleep(self.sleep_time)
 
@@ -85,12 +84,11 @@ class SexyExampleLatching(object):
         self.publish_pose(start)
         time.sleep(self.sleep_time)
 
-        for i in range(0,4):
+        for _ in range(4):
             self.publish_pose(wave_1)
             time.sleep(self.sleep_time)
             self.publish_pose(wave_2)
             time.sleep(self.sleep_time)
-
 
     def publish_pose(self, pose):
         """
