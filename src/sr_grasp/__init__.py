@@ -127,13 +127,8 @@ class GraspStash(object):
 
     def get_grasp(self, grasp_index):
         """Return a single grasp from the stash from it's id field."""
-        grasp = None
-        try:
-            grasp = self._store[grasp_index]
-        except IndexError:
-            pass
-        return grasp
-
+        return self._store.get(grasp_index)
+        
     def get_grasp_at(self, idx):
         """Return the Grasp at the given index."""
         return self.get_all()[idx]
