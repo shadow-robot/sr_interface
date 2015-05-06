@@ -24,7 +24,7 @@ class Grasp(moveit_msgs.msg.Grasp):
     with added functions and Shadow Hand specific knowledge.
     """
     def __init__(self):
-        Grasp.__init__(self)
+        moveit_msgs.msg.Grasp.__init__(self)
         self.grasp_quality = 0.001
         self.joint_names = [
             'FFJ1', 'FFJ2', 'FFJ3', 'FFJ4',
