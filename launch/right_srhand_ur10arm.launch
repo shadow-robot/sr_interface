@@ -108,6 +108,8 @@
       <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen"/>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--wait-for=/arms_ready --shutdown-timeout=1.0 ra_trajectory_controller"/>
     </group>
+    
+    <node name="teach_mode_node" pkg="sr_robot_launch" type="teach_mode_node" output="screen" />
   </group>
 
 </launch>
