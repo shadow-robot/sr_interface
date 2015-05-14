@@ -22,6 +22,7 @@ from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryG
 from moveit_commander import MoveGroupCommander, RobotCommander, PlanningSceneInterface
 from moveit_msgs.msg import RobotTrajectory
 from sensor_msgs.msg import JointState
+from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, RobotTeachModeResponse
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 
@@ -29,16 +30,17 @@ class SrRobotCommander(object):
     """
     Base class for hand and arm commanders
     """
-    __group_prefixes= {"right_arm": "ra_",
-                       "left_arm": "la_",
-                       "right_hand": "rh_",
-                       "left_hand": "lh_"}
+    __group_prefixes = {"right_arm": "ra_",
+                        "left_arm": "la_",
+                        "right_hand": "rh_",
+                        "left_hand": "lh_"}
 
     def __init__(self, name):
         """
         Initialize MoveGroupCommander object
         @param name - name of the MoveIt group
         """
+        self._name = name
         self._move_group_commander = MoveGroupCommander(name)
         self._robot_commander = RobotCommander()
         self._planning_scene = PlanningSceneInterface()
@@ -293,3 +295,34 @@ class SrRobotCommander(object):
 
         if not self._client.wait_for_result():
             rospy.loginfo("Trajectory not completed")
+
+    def set_teach_mode(self, teach):
+        """
+        Activates/deactivate the teach mode for the robot.
+        Activation stops the the trajectory controllers for the robot, and sets it to teach mode.
+        Deactivation stops the teach mode and starts trajectory controllers for the robot.
+        Currently this method blocks for a few seconds when called on a hand, while the hand parameters are reloaded.
+        @param teach - bool to activate or deactivate teach mode
+        """
+
+        if teach:
+            mode = RobotTeachModeRequest.TEACH_MODE
+        else:
+            mode = RobotTeachModeRequest.TRAJECTORY_MODE
+        self.change_teach_mode(mode, self._name)
+
+    @staticmethod
+    def change_teach_mode(mode, robot):
+        teach_mode_client = rospy.ServiceProxy('/teach_mode', RobotTeachMode)
+
+        req = RobotTeachModeRequest()
+        req.teach_mode = mode
+        req.robot = robot
+        try:
+            resp = teach_mode_client(req)
+            if resp.result == RobotTeachModeResponse.ERROR:
+                rospy.logerr("Failed to change robot %s to mode %d", robot, mode)
+            else:
+                rospy.loginfo("Changed robot %s to mode %d Result = %d", robot, mode, resp.result)
+        except rospy.ServiceException:
+            rospy.logerr("Failed to call service teach_mode")
