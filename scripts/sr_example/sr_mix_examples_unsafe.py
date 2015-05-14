@@ -10,6 +10,14 @@ rospy.init_node("basic_arm_examples", anonymous=True)
 hand_commander = SrHandCommander()
 arm_commander = SrArmCommander()
 
+rospy.loginfo("Set arm teach mode ON")
+arm_commander.set_teach_mode(True)
+# sleep for some time during which the arm can be moved around by pushing it
+# but be careful to get away before the time runs out. You are warned
+rospy.sleep(20.0)
+rospy.loginfo("Set arm teach mode OFF")
+arm_commander.set_teach_mode(False)
+
 hand_joint_states_1 = {'rh_FFJ1': 0.35, 'rh_FFJ2': 0.0, 'rh_FFJ3': 0.0, 'rh_FFJ4': 0.0,
                        'rh_MFJ1': 0.35, 'rh_MFJ2': 0.0, 'rh_MFJ3': 0.0, 'rh_MFJ4': 0.0,
                        'rh_RFJ1': 0.35, 'rh_RFJ2': 0.0, 'rh_RFJ3': 0.0, 'rh_RFJ4': 0.0,
@@ -62,7 +70,12 @@ rospy.loginfo("Moving arm to joint states\n" + str(joint_states) + "\n")
 arm_commander.move_to_joint_value_target_unsafe(joint_states, 3.0, wait= True)
 
 
-#rospy.sleep(5.0)
+hand_commander.set_teach_mode(True)
+# sleep for some time during which the hand joints can be moved manually
+rospy.sleep(20.0)
+rospy.loginfo("Set hand teach mode OFF")
+hand_commander.set_teach_mode(False)
+
 
 
 
