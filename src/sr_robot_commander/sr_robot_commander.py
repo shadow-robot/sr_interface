@@ -298,9 +298,9 @@ class SrRobotCommander(object):
 
     def set_teach_mode(self, teach):
         """
-        Activates/deactivate the teach mode for the robot.
-        Activation stops the the trajectory controllers for the robot, and sets it to teach mode.
-        Deactivation stops the teach mode and starts trajectory controllers for the robot.
+        Activates/deactivates the teach mode for the robot.
+        Activation: stops the the trajectory controllers for the robot, and sets it to teach mode.
+        Deactivation: stops the teach mode and starts trajectory controllers for the robot.
         Currently this method blocks for a few seconds when called on a hand, while the hand parameters are reloaded.
         @param teach - bool to activate or deactivate teach mode
         """
