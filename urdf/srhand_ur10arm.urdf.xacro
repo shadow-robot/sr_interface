@@ -2,7 +2,7 @@
 
   <!--<xacro:include filename="$(find ur_description)/urdf/gazebo.urdf.xacro" />-->
   <xacro:include filename="$(find ur_description)/urdf/ur10.urdf.xacro" />
-
+  <arg name="reflect" default="1.0" />
   <link name="world" />
 
   <joint name="world_joint" type="fixed">
@@ -17,7 +17,7 @@
   <xacro:include filename="$(find sr_description)/hand/xacro/full_hand.urdf.xacro" />
   <xacro:include filename="$(find sr_description)/other/xacro/gazebo/gazebo.urdf.xacro" />
 
-  <xacro:shadowhand muscletrans="false" muscle="false" bio="true" ubi="false" eli="false" reflect="1.0" prefix="$(arg prefix)h_" />
+  <xacro:shadowhand muscletrans="false" muscle="false" bio="true" ubi="false" eli="false" reflect="$(arg reflect)" prefix="$(arg prefix)h_" />
 
     <joint name="arm_to_hand" type="fixed">
       <parent link="$(arg prefix)a_ee_link" />
