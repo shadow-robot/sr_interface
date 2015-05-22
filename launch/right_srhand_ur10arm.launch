@@ -7,8 +7,6 @@
   <arg name="use_xacro_prefix" default="true"/>
   <!--Left or right hand/arm  -->
   <arg name="xacro_prefix" default="r"/>
-  <!--Reflect value, 1.0 for right, -1.0 for left  -->
-  <arg name="reflect" defalt="1.0"/>
   <!-- Set to true for debugging -->
   <arg name="debug" default="false"/>
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
@@ -21,14 +19,14 @@
   <arg name="hand_serial" default="1082" />
 
   <!-- Loads the robot description -->
-  <arg name="robot_description" value="$(find sr_multi_description)/urdf/sr_right_hand_ur10.urdf.xacro"/>
+  <arg name="robot_description" value="$(find sr_multi_description)/urdf/right_srhand_ur10.urdf.xacro"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
     <arg name="world_name" value="$(find sr_description)/other/worlds/shadowhand.world"/>
     <arg name="paused" value="false"/>
 
-    <param name="robot_description" command="$(find xacro)/xacro.py '$(arg robot_description)' prefix:=$(arg xacro_prefix)"/>
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(arg robot_description)'"/>
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
       <arg name="world_name" default="$(arg world_name)"/>
