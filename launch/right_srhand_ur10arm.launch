@@ -7,6 +7,8 @@
   <arg name="use_xacro_prefix" default="true"/>
   <!--Left or right hand/arm  -->
   <arg name="xacro_prefix" default="r"/>
+  <!--Reflect value, 1.0 for right, -1.0 for left  -->
+  <arg name="reflect" defalt="1.0"/>
   <!-- Set to true for debugging -->
   <arg name="debug" default="false"/>
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
@@ -19,7 +21,7 @@
   <arg name="hand_serial" default="1082" />
 
   <!-- Loads the robot description -->
-  <arg name="robot_description" value="$(find sr_multi_description)/urdf/srhand_ur10arm.urdf.xacro"/>
+  <arg name="robot_description" value="$(find sr_multi_description)/urdf/sr_right_hand_ur10.urdf.xacro"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
