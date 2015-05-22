@@ -46,10 +46,10 @@
     </include>
 
     <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/la_trajectory_controller.yaml" command="load"/>
-    <group if="$(arg arm_trajectory)">      
+    <group if="$(arg arm_trajectory)">
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 la_trajectory_controller"/>
-    </group>    
-    
+    </group>
+
     <rosparam command="load" file="$(find sr_robot_launch)/config/lh_trajectory_controller.yaml"/>
     <group if="$(arg hand_trajectory)">
       <node name="hand_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 lh_trajectory_controller"/>
@@ -110,7 +110,7 @@
       <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen"/>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--wait-for=/arms_ready --shutdown-timeout=1.0 la_trajectory_controller"/>
     </group>
-    
+
     <node name="teach_mode_node" pkg="sr_robot_launch" type="teach_mode_node" output="screen" />
   </group>
 
