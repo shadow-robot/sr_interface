@@ -56,13 +56,13 @@ right_arm:
   planner_configs:
     - SBLkConfigDefault
     - ESTkConfigDefault
-   #- LBKPIECEkConfigDefault
-   #- BKPIECEkConfigDefault
+   # - LBKPIECEkConfigDefault
+   # - BKPIECEkConfigDefault
     - KPIECEkConfigDefault
     - RRTkConfigDefault
     - RRTConnectkConfigDefault
     - RRTstarkConfigDefault
-   #- TRRTkConfigDefault
+   # - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
   projection_evaluator: joints(ra_shoulder_pan_joint,ra_shoulder_lift_joint)
@@ -71,13 +71,13 @@ right_hand:
   planner_configs:
     - SBLkConfigDefault
     - ESTkConfigDefault
-   #- LBKPIECEkConfigDefault
-   #- BKPIECEkConfigDefault
+   # - LBKPIECEkConfigDefault
+   # - BKPIECEkConfigDefault
     - KPIECEkConfigDefault
     - RRTkConfigDefault
     - RRTConnectkConfigDefault
     - RRTstarkConfigDefault
-   #- TRRTkConfigDefault
+   # - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
   projection_evaluator: joints(rh_FFJ4,rh_FFJ3)
@@ -92,11 +92,8 @@ rh_mf:
     - RRTkConfigDefault
     - RRTConnectkConfigDefault
     - RRTstarkConfigDefault
-    #- TRRTkConfigDefault
+   # - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
   projection_evaluator: joints(rh_MFJ4,rh_MFJ3)
   longest_valid_segment_fraction: 0.05
-  
-
-  
