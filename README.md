@@ -20,5 +20,5 @@ roslaunch sr_robot_launch right_srhand_ur10arm.launch sim:=false
 For more advanced behaviour (inverse kinematics, planning, collision detectection, etc...), you can use the moveit config:
 
 ```bash
-roslaunch ur10srh_moveit_config moveit_planning_and_execution.launch
+roslaunch ur10srh_moveit_config moveit_planning_and_execution.launch load_robot_description:=false
 ```
