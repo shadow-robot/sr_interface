@@ -19,7 +19,7 @@
   <arg name="hand_serial" default="1082" />
 
   <!-- Loads the robot description -->
-  <arg name="robot_description" value="$(find sr_multi_description)/urdf/srhand_ur10arm.urdf.xacro"/>
+  <arg name="robot_description" default="$(find sr_multi_description)/urdf/srhand_ur10arm.urdf.xacro"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
