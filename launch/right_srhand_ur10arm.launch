@@ -4,7 +4,7 @@
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
   <arg name="sim" default="true"/>
   <!-- Use xacro prefix for hand or not -->
-  <arg name="use_xacro_prefix" default="true"/>
+  <arg name="use_xacro_prefix" default="false"/>
   <!--Left or right hand/arm  -->
   <arg name="xacro_prefix" default="r"/>
   <!-- Set to true for debugging -->
@@ -19,7 +19,7 @@
   <arg name="hand_serial" default="1082" />
 
   <!-- Loads the robot description -->
-  <arg name="robot_description" value="$(find sr_multi_description)/urdf/right_srhand_ur10.urdf.xacro"/>
+  <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur10.urdf.xacro"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
