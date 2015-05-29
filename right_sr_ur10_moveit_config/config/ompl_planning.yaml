@@ -62,7 +62,7 @@ right_arm:
     - RRTkConfigDefault
     - RRTConnectkConfigDefault
     - RRTstarkConfigDefault
-    - TRRTkConfigDefault
+   # - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
   projection_evaluator: joints(ra_shoulder_pan_joint,ra_shoulder_lift_joint)
@@ -77,7 +77,7 @@ right_hand:
     - RRTkConfigDefault
     - RRTConnectkConfigDefault
     - RRTstarkConfigDefault
-    - TRRTkConfigDefault
+   # - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
   projection_evaluator: joints(rh_FFJ4,rh_FFJ3)
@@ -92,7 +92,7 @@ rh_mf:
     - RRTkConfigDefault
     - RRTConnectkConfigDefault
     - RRTstarkConfigDefault
-    - TRRTkConfigDefault
+   # - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
   projection_evaluator: joints(rh_MFJ4,rh_MFJ3)
