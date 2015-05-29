@@ -4,7 +4,7 @@
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
   <arg name="sim" default="true"/>
   <!-- Use xacro prefix for hand or not -->
-  <arg name="use_xacro_prefix" default="true"/>
+  <arg name="use_xacro_prefix" default="false"/>
   <!--Left or right hand/arm  -->
   <arg name="xacro_prefix" default="l"/>
   <!-- Set to true for debugging -->
@@ -16,10 +16,10 @@
   <!-- Set to true to spawn the position controllers for the hands-->
   <arg name="hand_ctrl" default="true"/>
   <!-- Serial number of the hand to be used-->
-  <arg name="hand_serial" default="1082" />
+  <arg name="hand_serial" default="1322" />
 
   <!-- Loads the robot description -->
-  <arg name="robot_description" value="$(find sr_multi_description)/urdf/left_srhand_ur10.urdf.xacro"/>
+  <arg name="robot_description" default="$(find sr_multi_description)/urdf/left_srhand_ur10_joint_limited.urdf.xacro"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
@@ -57,7 +57,7 @@
   <!-- REAL ROBOTS -->
   <group unless="$(arg sim)">
     <!-- controllers for arm -->
-    <rosparam command="load" file="$(find sr_ur_controller)/config/left_ur_arm_controller.yaml"/>
+    <rosparam command="load" file="$(find sr_robot_launch)/config/left_ur_arm_controller.yaml"/>
 
     <!-- trajectory controller -->
     <rosparam command="load" file="$(find sr_robot_launch)/config/lh_trajectory_controller.yaml"/>
@@ -105,7 +105,9 @@
     </group>
 
     <group if="$(arg arm_trajectory)">
-      <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen"/>
+      <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen">
+        <rosparam param="controllers">["la_sr_ur_controller"]</rosparam>
+      </node>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--wait-for=/arms_ready --shutdown-timeout=1.0 la_trajectory_controller"/>
     </group>
 

@@ -13,7 +13,7 @@ class ArmChecker(object):
     We will use this signal to load the arm trajectory controllers
     """
     def __init__(self):
-        self.controllers = ["ra_sr_ur_controller"]
+        self.controllers = rospy.get_param("~controllers", [])
         self.arms_ready = False
         self.pub = rospy.Publisher('arms_ready', Bool, queue_size=1)
         # Time between checks
