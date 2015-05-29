@@ -19,17 +19,14 @@ position_1 = {'rh_FFJ1': 0.3490658767850654, 'rh_FFJ2': 0.1747066021773609, 'rh_
               'rh_MFJ4': -0.03698607363380546, 'rh_WRJ2': 0.020004520938839754, 'rh_WRJ1': 2.8093405901152835e-05}
 
 hand_commander.move_to_joint_value_target(position_1)
-rospy.sleep(rospy.Duration(5))
 
 named_target_1 = "pack"
 print("Moving to hand named target " + named_target_1)
 hand_commander.move_to_named_target(named_target_1)
-rospy.sleep(rospy.Duration(5))
 
 named_target_2 = "open"
 print("Moving to hand named target " + named_target_2)
 hand_commander.move_to_named_target(named_target_2)
-rospy.sleep(rospy.Duration(5))
 
 hand_joints_state = hand_commander.get_joints_position()
 hand_joints_velocity = hand_commander.get_joints_velocity()
