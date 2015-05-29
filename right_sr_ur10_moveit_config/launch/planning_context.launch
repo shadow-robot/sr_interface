@@ -1,7 +1,4 @@
 <launch>
-  <!--Left or right hand/arm  -->
-  <arg name="left_right" default="r"/>
-
   <!-- By default we do not overwrite the URDF. Change the following to true to change the default behavior -->
   <arg name="load_robot_description" default="false"/>
   <arg name="limited" default="false"/>
@@ -11,8 +8,8 @@
 
   <!-- Load universal robot description format (URDF) -->
   <group if="$(arg load_robot_description)">
-    <param unless="$(arg limited)" name="$(arg robot_description)" command="$(find xacro)/xacro.py '$(find sr_multi_description)/urdf/srhand_ur10arm.urdf.xacro' prefix:=$(arg left_right)"/>
-    <param if="$(arg limited)" name="$(arg robot_description)" command="$(find xacro)/xacro.py '$(find sr_multi_description)/urdf/srhand_ur10arm_joint_limited.urdf.xacro'  prefix:=$(arg left_right)" />
+    <param unless="$(arg limited)" name="$(arg robot_description)" command="$(find xacro)/xacro.py '$(find sr_multi_description)/urdf/right_srhand_ur10.urdf.xacro'"/>
+    <param if="$(arg limited)" name="$(arg robot_description)" command="$(find xacro)/xacro.py '$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro'" />
   </group>
 
   <!-- The semantic description that corresponds to the URDF -->

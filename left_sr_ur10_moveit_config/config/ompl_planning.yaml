@@ -6,17 +6,17 @@ planner_configs:
     type: geometric::EST
     range: 0.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0 setup()
     goal_bias: 0.05  # When close to goal select goal, with this probability. default: 0.05
-  LBKPIECEkConfigDefault:
-    type: geometric::LBKPIECE
-    range: 0.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
-    border_fraction: 0.9  # Fraction of time focused on boarder default: 0.9
-    min_valid_path_fraction: 0.5  # Accept partially valid moves above fraction. default: 0.5
-  BKPIECEkConfigDefault:
-    type: geometric::BKPIECE
-    range: 0.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
-    border_fraction: 0.9  # Fraction of time focused on boarder default: 0.9
-    failed_expansion_score_factor: 0.5  # When extending motion fails, scale score by factor. default: 0.5
-    min_valid_path_fraction: 0.5  # Accept partially valid moves above fraction. default: 0.5
+#  LBKPIECEkConfigDefault:
+#    type: geometric::LBKPIECE
+#    range: 0.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+#    border_fraction: 0.9  # Fraction of time focused on boarder default: 0.9
+#    min_valid_path_fraction: 0.5  # Accept partially valid moves above fraction. default: 0.5
+#  BKPIECEkConfigDefault:
+#    type: geometric::BKPIECE
+#    range: 0.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+#    border_fraction: 0.9  # Fraction of time focused on boarder default: 0.9
+#    failed_expansion_score_factor: 0.5  # When extending motion fails, scale score by factor. default: 0.5
+#    min_valid_path_fraction: 0.5  # Accept partially valid moves above fraction. default: 0.5
   KPIECEkConfigDefault:
     type: geometric::KPIECE
     range: 0.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
@@ -62,7 +62,7 @@ left_arm:
     - RRTkConfigDefault
     - RRTConnectkConfigDefault
     - RRTstarkConfigDefault
-    - TRRTkConfigDefault
+   # - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
   projection_evaluator: joints(la_shoulder_pan_joint,la_shoulder_lift_joint)
@@ -77,7 +77,7 @@ left_hand:
     - RRTkConfigDefault
     - RRTConnectkConfigDefault
     - RRTstarkConfigDefault
-    - TRRTkConfigDefault
+   # - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
   projection_evaluator: joints(lh_FFJ4,lh_FFJ3)
@@ -92,7 +92,7 @@ lh_mf:
     - RRTkConfigDefault
     - RRTConnectkConfigDefault
     - RRTstarkConfigDefault
-    - TRRTkConfigDefault
+   # - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
   projection_evaluator: joints(lh_MFJ4,lh_MFJ3)
