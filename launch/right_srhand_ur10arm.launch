@@ -15,6 +15,8 @@
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the hands-->
   <arg name="hand_ctrl" default="true"/>
+  <!-- Set to true to spawn the position controllers for the arm-->
+  <arg name="arm_ctrl" default="true"/>
   <!-- Serial number of the hand to be used-->
   <arg name="hand_serial" default="1082" />
 
@@ -89,8 +91,10 @@
     </group>
     -->
 
-    <param name="ra_sr_ur_controller/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
-    <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 ra_sr_ur_controller"/>
+    <group if="$(arg arm_ctrl)">
+      <param name="ra_sr_ur_controller/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
+      <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 ra_sr_ur_controller"/>
+    </group>
 
     <!-- Should only be used when testing arm alone, as hand launch includes joint state publisher -->
     <!-- <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"/> -->

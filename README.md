@@ -28,6 +28,20 @@ or, for the left hand
 roslaunch sr_robot_launch left_srhand_ur10arm.launch sim:=false
 ```
 
+### Real Robot hand only
+
+To start the hand without an arm:
+
+```bash
+roslaunch sr_robot_launch right_srhand_ur10arm.launch sim:=false arm_ctrl:=false arm_trajectory:=false
+```
+
+or, for the left hand
+
+```bash
+roslaunch sr_robot_launch left_srhand_ur10arm.launch sim:=false arm_ctrl:=false arm_trajectory:=false
+```
+
 ## Starting the moveit configuration
 For more advanced behaviour (inverse kinematics, planning, collision detectection, etc...), you can use the moveit config:
 
