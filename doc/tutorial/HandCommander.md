@@ -2,14 +2,14 @@
  
 ## Description
 
-This commander provide commands specific to hand which allows to execute all actions of the [robot commander](RobotCommander.md).
+This commander provides commands specific to hand which allows to execute all actions of the [robot commander](RobotCommander.md).
 Also it allows to get state of tactile sensors, set max force and get joints effort.
 
 ## get_joints_effort
 
 ### Description 
 
-This method do not take any parameters and return dictionary with efforts of the robot joints
+This method does not take any parameters and returns dictionary with efforts of the robot joints
 
 ### Example
 
@@ -17,7 +17,7 @@ This method do not take any parameters and return dictionary with efforts of the
 
 rospy.init_node("robot_commander_examples", anonymous=True)
 
-hand_commander = SrHandCommander()
+hand_commander = SrHandCommander("right_hand", "rh")
 
 hand_joints_effort = hand_commander.get_joints_effort()
 
@@ -41,7 +41,7 @@ Parameters:
 
 rospy.init_node("robot_commander_examples", anonymous=True)
 
-hand_commander = SrHandCommander()
+hand_commander = SrHandCommander("right_hand", "rh")
 
 # The limits in the current implementation of the firmware are from 200 to 1000 (measured in custom units) 
 hand_commander.set_max_force("rh_FFJ3", 600)
@@ -60,7 +60,7 @@ hand_commander.set_max_force("rh_FFJ3", 600)
 
 rospy.init_node("robot_commander_examples", anonymous=True)
 
-hand_commander = SrHandCommander()
+hand_commander = SrHandCommander("right_hand", "rh")
 
 tactile_type = hand_commander.get_tactile_type()
 tactile_state = hand_commander.get_tactile_state()

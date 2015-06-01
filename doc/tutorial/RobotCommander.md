@@ -7,6 +7,36 @@ It provides methods which can be used on both [hand](HandCommander.md) and [arm]
 
 Examples of usage can be found in the package **sr_example** in files **sr_hand_examples.py** and **sr_arm_examples.py**
 
+## Constructor
+
+The constructors for `SrArmCommander` and `SrHandCommander` take a name parameter that should match the group name of the robot to be used.
+
+### Example
+
+For a right arm:
+
+```python
+arm_commander = SrArmCommander(name="right_arm", set_ground=True)
+```
+
+For a left arm:
+
+```python
+arm_commander = SrArmCommander(name="left_arm", set_ground=True)
+```
+
+For a right hand:
+
+```python
+hand_commander = SrHandCommander(name="right_hand", prefix="rh")
+```
+
+For a left hand:
+
+```python
+hand_commander = SrHandCommander(name="left_hand", prefix="lh")
+```
+
 ## move_to_joint_value_target
 
 ### Description
@@ -18,13 +48,15 @@ Parameters:
    * *joint_states* is a dictionary with joint name and value. It can contain joints values of which need to be changed.
    * *wait* indicates if method should wait for movement end or not (default value is True)
 
+*IMPORTANT:* Bear in mind that the names of the joints are different for the right arm/hand and for the left one.
+
 ### Example
 
 ```python
 
 rospy.init_node("robot_commander_examples", anonymous=True)
 
-arm_commander = SrArmCommander()
+arm_commander = SrArmCommander(name="right_arm", set_ground=True)
 joints_states = {'ra_shoulder_pan_joint': 0.5157461682721474,
                  'ra_elbow_joint': 0.6876824920327893,
                  'ra_wrist_1_joint': -0.7695210732233582,
@@ -55,10 +87,10 @@ roslaunch ur10srh_moveit_config setup_assistant.launch
 * Wait until files load successfully
 * Go to section "Robot Poses" of the wizard (select from list on the left)
 * Press "Add Pose"
-* On the screen which will appear you can add your pose for at least two "Planing Group"
+* On the screen which will appear you can add your pose for at least two "Planing Group" (it depends on the robot you are running right or left), e.g.:
   * right_hand
   * right_arm
-* You should provide unique name of the pose (which will be referred in move_to_named_target method) and select joints position for this pose using slider and simulated image of robot
+* You should provide the unique name of the pose (which will be referred in move_to_named_target method) and select joints position for this pose using slider and simulated image of robot
 * Press save button
 * Go to "Configurations File" section of the wizard
 * Tick checkbox with text "config/ur10srh.srdf" in the checkbox list
@@ -74,7 +106,7 @@ roslaunch ur10srh_moveit_config setup_assistant.launch
 
 rospy.init_node("robot_commander_examples", anonymous=True)
 
-hand_commander = SrHandCommander()
+hand_commander = SrHandCommander("left_hand", "lh")
 
 # pack is predefined pose from SRDF file
 hand_commander.move_to_named_target("pack")
@@ -92,11 +124,13 @@ These methods do not take any parameters and return dictionary with position and
 
 rospy.init_node("robot_commander_examples", anonymous=True)
 
-arm_commander = SrArmCommander()
+arm_commander = SrArmCommander(name="right_arm", set_ground=True)
 
 joints_position = arm_commander.get_joints_position()
 joints_velocity = arm_commander.get_joints_velocity()
 
 print("Arm joints position\n" + str(joints_position) + "\n")
 print("Arm joints velocity\n" + str(joints_velocity) + "\n")
+
+
 ```

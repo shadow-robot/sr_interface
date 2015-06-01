@@ -25,10 +25,34 @@ Parameters:
 
 rospy.init_node("robot_commander_examples", anonymous=True)
 
-arm_commander = SrArmCommander()
+arm_commander = SrArmCommander(name="right_arm", set_ground=True)
 
 new_position = [0.25527, 0.36682, 0.5426]
 arm_commander.move_to_position_target(new_position)
+```
+
+## move_to_pose_target
+
+### Description
+
+This method allows to move the end effector of the arm to certain pose (position and orientation) in the space represented by (x, y, z, rot_x, rot_y, rot_z).
+
+Parameters:
+ 
+  * *pose* new pose of end-effector: a Pose message, a PoseStamped message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z] or a list of 7 floats [x, y, z, qx, qy, qz, qw]
+  * *end_effector_link* name of the end effector link (default value is empty string)
+  * *wait* indicates if method should wait for movement end or not (default value is True)
+
+### Example
+
+```python
+
+rospy.init_node("robot_commander_examples", anonymous=True)
+
+arm_commander = SrArmCommander(name="right_arm", set_ground=True)
+
+new_pose = [0.5, 0.3, 1.2, 0, 1.57, 0]
+arm_commander.move_to_pose_target(new_pose)
 ```
 
 ## run_joint_trajectory
@@ -41,13 +65,15 @@ Parameters:
  
   * *joint_trajectory* object of JointTrajectory class. Represents trajectory of the joints which would be executed.
   
+*IMPORTANT:* Bear in mind that the names of the joints are different for the right arm/hand and for the left one.
+  
 ### Example
 
 ```python
 
 rospy.init_node("robot_commander_examples", anonymous=True)
 
-arm_commander = SrArmCommander()
+arm_commander = SrArmCommander(name="right_arm", set_ground=True)
 
 joints_states_1 = {'ra_shoulder_pan_joint': 0.43221632746577665, 
                    'ra_elbow_joint': 2.118891128999479,
