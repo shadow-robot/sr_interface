@@ -5,7 +5,7 @@ from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 rospy.init_node("basic_hand_examples", anonymous=True)
 
-hand_commander = SrHandCommander(name="left_hand")
+hand_commander = SrHandCommander(name="left_hand", prefix="lh")
 
 print("Moving to hand position defined by joint values")
 
