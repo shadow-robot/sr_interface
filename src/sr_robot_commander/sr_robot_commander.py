@@ -48,7 +48,7 @@ class SrRobotCommander(object):
         self._move_group_commander.set_planner_id("ESTkConfigDefault")
 
         self._joint_states_lock = threading.Lock()
-        self._joint_states_listener = rospy.Subscriber("joint_states", JointState, self._joint_states_callback)
+        self._joint_states_listener = rospy.Subscriber("joint_states", JointState, self._joint_states_callback, queue_size=1)
         self._joints_position = {}
         self._joints_velocity = {}
         self._joints_effort = {}

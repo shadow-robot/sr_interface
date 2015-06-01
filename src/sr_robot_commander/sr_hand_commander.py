@@ -33,10 +33,15 @@ class SrHandCommander(SrRobotCommander):
         """
         Initialize object
         @param name - name of the MoveIt group
-        @param prefix - prefix used for the tactiles
+        @param prefix - prefix used for the tactiles and max_force
         """
         super(SrHandCommander, self).__init__(name)
         self._tactiles = TactileReceiver(prefix)
+        
+        # appends trailing slash if necessary
+        self._topic_prefix = prefix
+        if self._topic_prefix and not self._topic_prefix.endswith("/"):
+            self._topic_prefix += "/"
 
     def get_joints_effort(self):
         """
@@ -50,16 +55,17 @@ class SrHandCommander(SrRobotCommander):
         Set maximum force for hand
         @param value - maximum force value
         """
+        
         # This is for a beta version of our firmware.
         # It uses the motor I and Imax to set a max effort.
         if not self.__set_force_srv.get(joint_name):
-            service_name = "realtime_loop/change_force_PID_"+joint_name.upper()
+            service_name = "realtime_loop/" + self._topic_prefix + "change_force_PID_"+joint_name.upper()
             self.__set_force_srv[joint_name] = rospy.ServiceProxy(service_name, ForceController)
 
         # get the current settings for the motor
         motor_settings = None
         try:
-            motor_settings = rospy.get_param(joint_name.lower() + "/pid")
+            motor_settings = rospy.get_param(self._topic_prefix + joint_name.lower() + "/pid")
         except KeyError, e:
             rospy.logerr("Couldn't get the motor parameters for joint " + joint_name + " -> " + str(e))
 
