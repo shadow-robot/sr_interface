@@ -55,7 +55,7 @@ roslaunch sr_robot_launch left_srhand_ur10arm.launch sim:=false arm_ctrl:=false 
 By default the URDF used for the UR10 arm uses a limited range for the joints, as that helps moveit find a planning solution. But as that restricts the robot movements, the user might want to start the robots with the full joint range. To do that:
 
 ```bash
-roslaunch sr_robot_launch left_srhand_ur10arm.launch sim:=false robot_description:=`rospack find sr_multi_description`/urdf/left_srhand_ur10.urdf.xacro hand_serial:=1178
+roslaunch sr_robot_launch right_srhand_ur10arm.launch sim:=false robot_description:=`rospack find sr_multi_description`/urdf/right_srhand_ur10.urdf.xacro hand_serial:=1178
 ```
 
 or, for the left hand and arm
