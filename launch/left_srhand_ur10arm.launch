@@ -69,7 +69,7 @@
     <!-- launch for right hand -->
     <include file="$(find sr_edc_launch)/sr_edc.launch" >
       <arg name="hand_serial" value="$(arg hand_serial)" />
-      <arg name="eth_port" value="eth1" />
+      <arg name="eth_port" value="eth3" />
       <arg name="robot_description" value="$(arg robot_description)" />
       <arg name="debug" value="$(arg debug)" />
       <arg name="pwm_control" value="true" />
