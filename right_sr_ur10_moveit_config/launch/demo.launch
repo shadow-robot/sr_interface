@@ -3,7 +3,7 @@
   <arg name="db" default="false" />
   <!-- By default, we are not in debug mode -->
   <arg name="debug" default="false" />
-  <arg name="limited" default="false" />
+  <arg name="limited" default="true" />
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <include file="$(find right_sr_ur10_moveit_config)/launch/planning_context.launch">
 
