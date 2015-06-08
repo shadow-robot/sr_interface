@@ -1,9 +1,13 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(right_sr_ur10_moveit_config)
 
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED
+	  rostest
+)
 
 catkin_package()
 
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 install(DIRECTORY config DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+
+catkin_add_nosetests(test)
