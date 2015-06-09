@@ -63,6 +63,15 @@ or, for the left hand and arm
 ```bash
 roslaunch sr_robot_launch left_srhand_ur10arm.launch sim:=false robot_description:=`rospack find sr_multi_description`/urdf/left_srhand_ur10.urdf.xacro hand_serial:=1178
 ```
+
+### Hand with Biotacs
+
+If your hand has biotacs, simply append `_biotacs` to the `robot_description:=` as seen below:
+
+```bash
+robot_description:=`rospack find sr_multi_description`/urdf/right_srhand_ur10_joint_limited_biotacs.urdf.xacro
+``` 
+
 ## Starting the moveit configuration
 For more advanced behaviour (inverse kinematics, planning, collision detectection, etc...), you can use the moveit config:
 
