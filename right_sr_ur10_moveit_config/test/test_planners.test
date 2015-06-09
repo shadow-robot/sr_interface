@@ -1,7 +1,4 @@
 <launch>
   <include file="$(find right_sr_ur10_moveit_config)/launch/demo.launch" />
-
-  
-  
   <test test-name="test_planners" pkg="right_sr_ur10_moveit_config" type="test_planners.py"/>
 </launch>
