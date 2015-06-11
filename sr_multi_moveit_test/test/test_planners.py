@@ -122,45 +122,45 @@ class TestPlanners(TestCase):
         joints = [-1.67232, -2.39104, 0.264862, 0.43346, 2.44148, 2.48026]
         self.assertTrue(self._plan_joints(joints),msg="Unable to plan to: "+str(joints))
 
-#               
-#         #Down
-#         joints = [-0.000348431194526, 0.397651011661, 0.0766181197394, -0.600353691727, -0.000441966540076, 0.12612019707]
-#         self.assertTrue(self._plan_joints(joints),msg="Unable to plan to: "+str(joints))
-#               
-#         #left
-#         joints = [0.146182953165, -2.6791929848, -0.602721109682, -3.00575848765, 0.146075718452, 0.00420656698366]
-#         self.assertTrue(self._plan_joints(joints),msg="Unable to plan to: "+str(joints))
-#                
-#         #Front     
-#         joints = [ 1.425279839, -0.110370375874, -1.52548746261, -1.50659865247, -1.42700242769, 3.1415450794]
-#         self.assertTrue(self._plan_joints(joints),msg="Unable to plan to: "+str(joints))
-#               
-#         #Behind
-#         joints = [1.57542451065, 3.01734161219, 2.01043257686, -1.14647092839, 0.694689321451, -0.390769365032]
-#         self.assertTrue(self._plan_joints(joints),msg="Unable to plan to: "+str(joints))
-#              
-#         #Should fail because it is in self-collision
-#         joints = [-0.289797803762, 2.37263860495, 2.69118483159,  1.65486712181, 1.04235601797, -1.69730925867]
-#         self.assertFalse(self._plan_joints(joints),msg="Unable to plan to: "+str(joints))
-#              
-#     def test_trajectories_with_walls_and_ground(self):
-#         self._add_walls_and_ground()
-#                
-#         #Should fail to plan: Goal is in collision with the wall_front
-#         joints = [0.302173213174, 0.192487443763, -1.94298265002, 1.74920382275, 0.302143499777, 0.00130280337897]
-#         self.assertFalse(self._plan_joints(joints),msg="Able to plan to: "+str(joints))
-#              
-#         #Should fail to plan: Goal is in collision with the ground
-#         joints = [3.84825722288e-05, 0.643694953509, -1.14391175311, 1.09463824437, 0.000133883149666, -0.594498939239]
-#         self.assertFalse(self._plan_joints(joints),msg="Able to plan to: "+str(joints))
-#              
-#         #Goal close to left corner - Fails sometimes
-#         #joints = [1.22262556307, -2.22935714353, 1.94043810556, 0.288788732588, 1.22183316693, 0.0873097240233]       
-#         #self.assertTrue(self._plan_joints(joints),msg="Unable to plan to: "+str(joints))
-#              
-#         #Goal close to right corner       
-#         joints =[0.354696232081, -0.982224980654, 0.908055961723, -1.92328051116, -1.3516255551, 2.8225061435]
-#         self.assertTrue(self._plan_joints(joints),msg="Unable to plan to: "+str(joints))        
+               
+        #Down
+        joints = [-0.000348431194526, 0.397651011661, 0.0766181197394, -0.600353691727, -0.000441966540076, 0.12612019707]
+        self.assertTrue(self._plan_joints(joints),msg="Unable to plan to: "+str(joints))
+               
+        #left
+        joints = [0.146182953165, -2.6791929848, -0.602721109682, -3.00575848765, 0.146075718452, 0.00420656698366]
+        self.assertTrue(self._plan_joints(joints),msg="Unable to plan to: "+str(joints))
+                
+        #Front     
+        joints = [ 1.425279839, -0.110370375874, -1.52548746261, -1.50659865247, -1.42700242769, 3.1415450794]
+        self.assertTrue(self._plan_joints(joints),msg="Unable to plan to: "+str(joints))
+               
+        #Behind
+        joints = [1.57542451065, 3.01734161219, 2.01043257686, -1.14647092839, 0.694689321451, -0.390769365032]
+        self.assertTrue(self._plan_joints(joints),msg="Unable to plan to: "+str(joints))
+              
+        #Should fail because it is in self-collision
+        joints = [-0.289797803762, 2.37263860495, 2.69118483159,  1.65486712181, 1.04235601797, -1.69730925867]
+        self.assertFalse(self._plan_joints(joints),msg="Unable to plan to: "+str(joints))
+              
+    def test_trajectories_with_walls_and_ground(self):
+        self._add_walls_and_ground()
+                
+        #Should fail to plan: Goal is in collision with the wall_front
+        joints = [0.302173213174, 0.192487443763, -1.94298265002, 1.74920382275, 0.302143499777, 0.00130280337897]
+        self.assertFalse(self._plan_joints(joints),msg="Able to plan to: "+str(joints))
+              
+        #Should fail to plan: Goal is in collision with the ground
+        joints = [3.84825722288e-05, 0.643694953509, -1.14391175311, 1.09463824437, 0.000133883149666, -0.594498939239]
+        self.assertFalse(self._plan_joints(joints),msg="Able to plan to: "+str(joints))
+              
+        #Goal close to left corner - Fails sometimes
+        #joints = [1.22262556307, -2.22935714353, 1.94043810556, 0.288788732588, 1.22183316693, 0.0873097240233]       
+        #self.assertTrue(self._plan_joints(joints),msg="Unable to plan to: "+str(joints))
+              
+        #Goal close to right corner       
+        joints =[0.354696232081, -0.982224980654, 0.908055961723, -1.92328051116, -1.3516255551, 2.8225061435]
+        self.assertTrue(self._plan_joints(joints),msg="Unable to plan to: "+str(joints))        
      
 if __name__ == "__main__":
      import rostest
