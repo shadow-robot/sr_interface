@@ -30,7 +30,7 @@ hand_joint_states_2 = {'rh_FFJ1': 0.35, 'rh_FFJ2': 1.5707, 'rh_FFJ3': 1.5707, 'r
                        'rh_LFJ1': 0.35, 'rh_LFJ2': 1.5707, 'rh_LFJ3': 1.5707, 'rh_LFJ4': 0.0,
                        'rh_THJ1': 0.35, 'rh_THJ2': 0.0, 'rh_THJ3': 0.0, 'rh_THJ4': 0.0, 'rh_THJ5': 0.0,
                        'rh_WRJ1': 0.0, 'rh_WRJ2': 0.0}
-hand_joint_states_3 = {'rh_MFJ1': 0.35, 'rh_MFJ2': 0.0, 'rh_MFJ3': 0.0}
+hand_joint_states_3 = {'rh_FFJ1': 0.35, 'rh_FFJ2': 0.0, 'rh_MFJ3': 0.0}
 
 
 joint_states_1 = {'ra_shoulder_pan_joint': 0.43221632746577665, 'ra_elbow_joint': 2.118891128999479,
