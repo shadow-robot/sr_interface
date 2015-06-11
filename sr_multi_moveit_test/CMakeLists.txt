@@ -5,4 +5,8 @@ find_package(catkin REQUIRED)
 
 catkin_package()
 
-catkin_add_nosetests(test)
+if (CATKIN_ENABLE_TESTING)
+  find_package(rostest REQUIRED)
+  add_rostest(test/test_planners_left_arm.test)
+  add_rostest(test/test_planners_right_arm.test)
+endif()
