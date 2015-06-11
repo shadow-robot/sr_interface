@@ -89,4 +89,4 @@ class SrArmCommander(SrRobotCommander):
         pose.pose.orientation.w = 1
         pose.header.stamp = get_rostime()
         pose.header.frame_id = self._robot_commander.get_root_link()
-        self._planning_scene.attach_box(self._robot_commander.get_root_link(), "ground", pose, (3, 3, 0.1))
+        self._planning_scene.add_box("ground", pose, (3, 3, 0.1))
