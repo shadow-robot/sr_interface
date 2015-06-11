@@ -5,7 +5,7 @@
   <arg name="debug" default="false" />
   <arg name="limited" default="true" />
   <!-- Do not open Rviz if running tests -->
-  <arg name="visualization" default="false" />
+  <arg name="visualization" default="true" />
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <include file="$(find right_sr_ur10_moveit_config)/launch/planning_context.launch">
 

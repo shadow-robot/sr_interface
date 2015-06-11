@@ -400,6 +400,7 @@
     <disable_collisions link1="rh_mfknuckle" link2="rh_rfdistal" reason="Never" />
     <disable_collisions link1="rh_mfknuckle" link2="rh_rfknuckle" reason="Never" />
     <disable_collisions link1="rh_mfknuckle" link2="rh_rfmiddle" reason="Never" />
+    <disable_collisions link1="rh_mfknuckle" link2="rh_rfproximal" reason="Never" />
     <disable_collisions link1="rh_mfknuckle" link2="rh_thbase" reason="Never" />
     <disable_collisions link1="rh_mfknuckle" link2="rh_thhub" reason="Never" />
     <disable_collisions link1="rh_mfknuckle" link2="rh_thmiddle" reason="Never" />
