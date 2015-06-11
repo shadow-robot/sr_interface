@@ -74,7 +74,9 @@ arm_joint_states_6 = {'la_shoulder_lift_joint': -1.3556659857379358, 'la_elbow_j
 arm_joint_states_7 = {'la_shoulder_lift_joint': -1.3484209219561976, 'la_elbow_joint': 1.0440430641174316,
                       'la_wrist_2_joint': 1.5493569374084473, 'la_wrist_1_joint': 0.08041524887084961,
                       'la_shoulder_pan_joint': -1.6396897474872034, 'la_wrist_3_joint': -1.407604996358053}
-arm_joint_states_8 = {'la_shoulder_lift_joint': -1.5496943632708948, 'la_elbow_joint': 1.4070467948913574, 'la_wrist_2_joint': 0.023541511967778206, 'la_wrist_1_joint': 0.6106277704238892, 'la_shoulder_pan_joint': -1.549493137990133, 'la_wrist_3_joint': -0.5691126028644007}
+arm_joint_states_8 = {'la_shoulder_lift_joint': -1.5496943632708948, 'la_elbow_joint': 1.4070467948913574,
+                      'la_wrist_2_joint': 0.023541511967778206, 'la_wrist_1_joint': 0.6106277704238892,
+                      'la_shoulder_pan_joint': -1.549493137990133, 'la_wrist_3_joint': -0.5691126028644007}
 # Move hand
 joint_states = hand_joint_states_1
 rospy.loginfo("Moving hand to joint states\n" + str(joint_states) + "\n")
@@ -135,10 +137,3 @@ arm_commander.move_to_joint_value_target_unsafe(joint_states, 3.0, False)
 joint_states = hand_joint_states_5
 rospy.loginfo("Moving hand to joint states\n" + str(joint_states) + "\n")
 hand_commander.move_to_joint_value_target_unsafe(joint_states, 3.0, True)
-
-
-
-
-
-
-
