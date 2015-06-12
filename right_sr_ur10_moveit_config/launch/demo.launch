@@ -6,17 +6,20 @@
   <arg name="limited" default="true" />
   <!-- Do not open Rviz if running tests -->
   <arg name="visualization" default="true" />
+  <!-- Loads the hand with biotac sensors -->
+  <arg name="biotacs" default="false" />
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <include file="$(find right_sr_ur10_moveit_config)/launch/planning_context.launch">
 
     <arg name="load_robot_description" value="true" />
     <arg name="limited" value="$(arg limited)" />
+    <arg name="biotacs" value="$(arg biotacs)" />
   </include>
   <!-- If needed, broadcast static tf for robot root -->
   <!-- We do not have a robot connected, so publish fake joint states -->
   <node name="joint_state_publisher" pkg="joint_state_publisher"
   type="joint_state_publisher">
-    <param name="/use_gui" value="false" />
+    <param name="/use_gui" value="true" />
     <rosparam param="/source_list">
     [/move_group/fake_controller_joint_states]</rosparam>
   </node>
