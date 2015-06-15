@@ -155,8 +155,8 @@ class TestPlanners(TestCase):
         self.assertFalse(self._plan_joints(joints),msg="Able to plan to: "+str(joints))
               
         #Goal close to left corner - Fails sometimes
-        #joints = [1.22262556307, -2.22935714353, 1.94043810556, 0.288788732588, 1.22183316693, 0.0873097240233]       
-        #self.assertTrue(self._plan_joints(joints),msg="Unable to plan to: "+str(joints))
+        joints = [1.22262556307, -2.22935714353, 1.94043810556, 0.288788732588, 1.22183316693, 0.0873097240233]       
+        self.assertTrue(self._plan_joints(joints),msg="Unable to plan to: "+str(joints))
               
         #Goal close to right corner       
         joints =[0.354696232081, -0.982224980654, 0.908055961723, -1.92328051116, -1.3516255551, 2.8225061435]
