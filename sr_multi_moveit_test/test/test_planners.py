@@ -10,6 +10,7 @@ from moveit_commander import RobotCommander, PlanningSceneInterface, MoveGroupCo
 from moveit_msgs.msg import RobotState
 from moveit_msgs.msg import DisplayRobotState
 import geometry_msgs.msg
+import copy
 # 
 PKG = "right_sr_ur10_moveit_config"
   
@@ -142,7 +143,57 @@ class TestPlanners(TestCase):
         #Should fail because it is in self-collision
         joints = [-0.289797803762, 2.37263860495, 2.69118483159,  1.65486712181, 1.04235601797, -1.69730925867]
         self.assertFalse(self._plan_joints(joints),msg="Unable to plan to: "+str(joints))
-              
+    
+    def test_waypoins(self):        
+        #Start planning in a given joint position   
+        joints = [-0.324590029242, -1.42602359749, -1.02523472017, -0.754761892979, 0.344227622185, -3.03250264451] 
+        current = RobotState()
+        current.joint_state.name =  self.robot.get_current_state().joint_state.name  
+        current_joints = list(self.robot.get_current_state().joint_state.position)
+        current_joints[0:6] = joints
+        current.joint_state.position = current_joints
+       
+         
+        self.group.set_start_state(current)
+        
+        waypoints = []
+        
+        initial_pose = self.group.get_current_pose().pose
+          
+        initial_pose.position.x = -0.301185959729
+        initial_pose.position.y = 0.377069787724
+        initial_pose.position.z = 1.20681710541
+        initial_pose.orientation.x =  0.0207499700474
+        initial_pose.orientation.y = -0.723943002716
+        initial_pose.orientation.z = -0.689528413407
+        initial_pose.orientation.w = 0.00515118111221
+    
+        # start with a specific position
+        waypoints.append(initial_pose)
+         
+        # first move it down 
+        wpose = geometry_msgs.msg.Pose()
+        wpose.orientation = waypoints[0].orientation
+        wpose.position.x = waypoints[0].position.x 
+        wpose.position.y = waypoints[0].position.y
+        wpose.position.z = waypoints[0].position.z - 0.20
+        waypoints.append(copy.deepcopy(wpose))
+         
+        # second front
+        wpose.position.y += 0.20
+        waypoints.append(copy.deepcopy(wpose))
+         
+        # third side
+        wpose.position.x -= 0.20
+        waypoints.append(copy.deepcopy(wpose))
+        
+        #fourth return to initial pose
+        wpose= waypoints[0]
+        waypoints.append(copy.deepcopy(wpose))
+        
+        (plan3, fraction) = self.group.compute_cartesian_path(waypoints, 0.01, 0.0)
+        self.assertTrue(self._check_plan(plan3) and fraction > 0.8,msg="Unable to plan waypoints")                
+        
     def test_trajectories_with_walls_and_ground(self):
         self._add_walls_and_ground()
                 
