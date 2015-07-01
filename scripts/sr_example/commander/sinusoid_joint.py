@@ -14,7 +14,7 @@ w = 2*pi*f
 
 rospy.init_node("hand_sine_example", anonymous=True)
 
-hand_commander = SrHandCommander(set_ground=False)
+hand_commander = SrHandCommander()
 
 
 # specify 2 joints to move
