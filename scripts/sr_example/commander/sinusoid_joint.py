@@ -7,8 +7,10 @@ from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from numpy import sin, cos, pi, arange
 
-# joint speed in rad/s
-w = pi/2
+# cycles per second of sine wave
+f = 1
+# angular frequency, rads/s
+w = 2*pi*f
 
 rospy.init_node("hand_sine_example", anonymous=True)
 
