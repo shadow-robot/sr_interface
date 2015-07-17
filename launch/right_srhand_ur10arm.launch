@@ -45,7 +45,7 @@
     <include file="$(find sr_hand)/launch/gazebo/loaders/hand_controllers.launch">
 
       <arg name="hand_controller_gazebo"
-      value="$(find sr_description)/hand/config/right_hand_controller_gazebo.yaml" />
+      value="$(find sr_description)/hand/config/rh_controller_gazebo.yaml" />
     </include>
     <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/ra_trajectory_controller.yaml"
     command="load" />
