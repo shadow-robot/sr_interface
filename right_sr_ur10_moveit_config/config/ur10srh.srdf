@@ -18,10 +18,10 @@
         <joint name="ra_wrist_3_joint" />
         <joint name="ra_ee_fixed_joint" />
         <joint name="arm_to_hand" />
-        <joint name="rh_WRJ2" />
-        <joint name="rh_WRJ1" />
     </group>
     <group name="right_hand">
+        <joint name="rh_WRJ2" />
+        <joint name="rh_WRJ1" />
         <joint name="rh_FFJ4" />
         <joint name="rh_FFJ3" />
         <joint name="rh_FFJ2" />
@@ -50,7 +50,8 @@
         <joint name="rh_THJ1" />
         <joint name="rh_thtip" />
     </group>
-    <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
+
+        <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
     <group_state name="open" group="right_hand">
         <joint name="rh_FFJ1" value="0" />
         <joint name="rh_FFJ2" value="0" />
@@ -103,32 +104,34 @@
         <joint name="rh_WRJ1" value="0" />
         <joint name="rh_WRJ2" value="0" />
     </group_state>
+
     <group_state name="hold_bottle" group="right_hand">
-        <joint name="rh_FFJ1" value="0.349066" />
-        <joint name="rh_FFJ2" value="0.983083" />
-        <joint name="rh_FFJ3" value="0.8836" />
-        <joint name="rh_FFJ4" value="-0.343389" />
-        <joint name="rh_LFJ1" value="0.349066" />
-        <joint name="rh_LFJ2" value="1.10156" />
-        <joint name="rh_LFJ3" value="0.21051" />
-        <joint name="rh_LFJ4" value="-0.225866" />
-        <joint name="rh_LFJ5" value="0.151445" />
-        <joint name="rh_MFJ1" value="0.349066" />
-        <joint name="rh_MFJ2" value="0.866061" />
-        <joint name="rh_MFJ3" value="1.03581" />
-        <joint name="rh_MFJ4" value="0.0548824" />
-        <joint name="rh_RFJ1" value="0.349066" />
-        <joint name="rh_RFJ2" value="1.0316" />
-        <joint name="rh_RFJ3" value="0.680193" />
-        <joint name="rh_RFJ4" value="-0.236836" />
-        <joint name="rh_THJ1" value="0.349066" />
-        <joint name="rh_THJ2" value="0.690249" />
-        <joint name="rh_THJ3" value="0.179636" />
-        <joint name="rh_THJ4" value="1.20445" />
-        <joint name="rh_THJ5" value="-0.106896" />
-        <joint name="rh_WRJ1" value="-0.0749983" />
-        <joint name="rh_WRJ2" value="-0.216515" />
+        <joint name="rh_FFJ1" value="0.3490658503988659" />
+        <joint name="rh_FFJ2" value="0.9830834154090509" />
+        <joint name="rh_FFJ3" value="0.8836001119136382" />
+        <joint name="rh_FFJ4" value="-0.3433889154842039" />
+        <joint name="rh_LFJ1" value="0.3490658503988659" />
+        <joint name="rh_LFJ2" value="1.1015648362028108" />
+        <joint name="rh_LFJ3" value="0.21050953974664583" />
+        <joint name="rh_LFJ4" value="-0.22586610365180432" />
+        <joint name="rh_LFJ5" value="0.1514451482661953" />
+        <joint name="rh_MFJ1" value="0.3490658503988659" />
+        <joint name="rh_MFJ2" value="0.8660606774761052" />
+        <joint name="rh_MFJ3" value="1.0358130501858152" />
+        <joint name="rh_MFJ4" value="0.05488235851138667" />
+        <joint name="rh_RFJ1" value="0.3490658503988659" />
+        <joint name="rh_RFJ2" value="1.0315981058096018" />
+        <joint name="rh_RFJ3" value="0.6801927165431521" />
+        <joint name="rh_RFJ4" value="-0.23683635235619582" />
+        <joint name="rh_THJ1" value="0.34906585039886584" />
+        <joint name="rh_THJ2" value="0.6902490018683629" />
+        <joint name="rh_THJ3" value="0.17963601489554304" />
+        <joint name="rh_THJ4" value="1.2044514536345325" />
+        <joint name="rh_THJ5" value="-0.106895614116264807" />
+        <joint name="rh_WRJ1" value="-0.07499826746320828" />
+        <joint name="rh_WRJ2" value="-0.21651525474794753" />
     </group_state>
+
     <group_state name="open_bottle" group="right_hand">
         <joint name="rh_FFJ1" value="0" />
         <joint name="rh_FFJ2" value="0" />
@@ -155,42 +158,47 @@
         <joint name="rh_WRJ1" value="0" />
         <joint name="rh_WRJ2" value="0" />
     </group_state>
+
     <group_state name="hold_bottle" group="right_arm">
-        <joint name="ra_elbow_joint" value="1.77309" />
-        <joint name="ra_shoulder_lift_joint" value="-1.19301" />
-        <joint name="ra_shoulder_pan_joint" value="-0.0515431" />
-        <joint name="ra_wrist_1_joint" value="-1.07142" />
-        <joint name="ra_wrist_2_joint" value="0.0315687" />
-        <joint name="ra_wrist_3_joint" value="2.02308" />
+        <joint name="ra_elbow_joint" value="1.7730913162231445" />
+        <joint name="ra_shoulder_lift_joint" value="-1.1930134932147425" />
+        <joint name="ra_shoulder_pan_joint" value="-0.05154306093324834" />
+        <joint name="ra_wrist_1_joint" value="-1.0714204947101038" />
+        <joint name="ra_wrist_2_joint" value="0.03156869485974312" />
+        <joint name="ra_wrist_3_joint" value="2.023080348968506" />
     </group_state>
+
     <group_state name="approach_bottle" group="right_arm">
-        <joint name="ra_elbow_joint" value="1.32014" />
-        <joint name="ra_shoulder_lift_joint" value="-0.928423" />
-        <joint name="ra_shoulder_pan_joint" value="-0.227875" />
-        <joint name="ra_wrist_1_joint" value="-0.290639" />
-        <joint name="ra_wrist_2_joint" value="-0.149103" />
-        <joint name="ra_wrist_3_joint" value="1.4321" />
+        <joint name="ra_elbow_joint" value="1.3201355934143066" />
+        <joint name="ra_shoulder_lift_joint" value="-0.9284232298480433" />
+        <joint name="ra_shoulder_pan_joint" value="-0.22787458101381475" />
+        <joint name="ra_wrist_1_joint" value="-0.2906392256366175" />
+        <joint name="ra_wrist_2_joint" value="-0.1491025129901331" />
+        <joint name="ra_wrist_3_joint" value="1.432104468345642" />
     </group_state>
+
     <group_state name="pour_bottle" group="right_arm">
-        <joint name="ra_elbow_joint" value="2.22995" />
-        <joint name="ra_shoulder_lift_joint" value="-1.89373" />
-        <joint name="ra_shoulder_pan_joint" value="-0.0354384" />
-        <joint name="ra_wrist_1_joint" value="-0.900667" />
-        <joint name="ra_wrist_2_joint" value="0.0442319" />
-        <joint name="ra_wrist_3_joint" value="-0.0796583" />
+        <joint name="ra_elbow_joint" value="2.229947566986084" />
+        <joint name="ra_shoulder_lift_joint" value="-1.8937347571002405" />
+        <joint name="ra_shoulder_pan_joint" value="-0.035438362752096" />
+        <joint name="ra_wrist_1_joint" value="-0.9006665388690394" />
+        <joint name="ra_wrist_2_joint" value="0.044231902807950974" />
+        <joint name="ra_wrist_3_joint" value="-0.079658333455221" />
     </group_state>
+
     <group_state name="victory" group="right_arm">
-        <joint name="ra_elbow_joint" value="1.00792" />
-        <joint name="ra_shoulder_lift_joint" value="-0.770882" />
-        <joint name="ra_shoulder_pan_joint" value="-0.207239" />
-        <joint name="ra_wrist_1_joint" value="1.24231" />
-        <joint name="ra_wrist_2_joint" value="-1.18834" />
-        <joint name="ra_wrist_3_joint" value="-1.43955" />
+        <joint name="ra_elbow_joint" value="1.0079150199890137" />
+        <joint name="ra_shoulder_lift_joint" value="-0.7708819548236292" />
+        <joint name="ra_shoulder_pan_joint" value="-0.2072394529925745" />
+        <joint name="ra_wrist_1_joint" value="1.2423092126846313" />
+        <joint name="ra_wrist_2_joint" value="-1.1883366743670862" />
+        <joint name="ra_wrist_3_joint" value="-1.4395459334002894" />
     </group_state>
+
     <group_state name="victory" group="right_hand">
         <joint name="rh_FFJ1" value="0.35" />
-        <joint name="rh_FFJ2" value="0" />
-        <joint name="rh_FFJ3" value="0" />
+        <joint name="rh_FFJ2" value="0.0" />
+        <joint name="rh_FFJ3" value="0.0" />
         <joint name="rh_FFJ4" value="-0.35" />
         <joint name="rh_LFJ1" value="0.35" />
         <joint name="rh_LFJ2" value="1.5707" />
@@ -213,6 +221,7 @@
         <joint name="rh_WRJ1" value="0" />
         <joint name="rh_WRJ2" value="0" />
     </group_state>
+
     <group_state name="gamma" group="right_arm">
         <joint name="ra_elbow_joint" value="1.4119" />
         <joint name="ra_shoulder_lift_joint" value="-1.6943" />
@@ -221,8 +230,9 @@
         <joint name="ra_wrist_2_joint" value="0" />
         <joint name="ra_wrist_3_joint" value="0" />
     </group_state>
+
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="right_hand" parent_link="rh_palm" group="right_hand" />
+    <end_effector name="right_hand" parent_link="rh_forearm" group="right_hand" />
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="world_to_arm" type="fixed" parent_frame="world" child_link="ra_base_link" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
@@ -455,26 +465,32 @@
     <disable_collisions link1="rh_thmiddle" link2="rh_thproximal" reason="Never" />
     <disable_collisions link1="rh_thmiddle" link2="rh_wrist" reason="Never" />
     <disable_collisions link1="rh_thproximal" link2="rh_wrist" reason="Never" />
+
     <disable_collisions link1="rh_ffproximal" link2="rh_mfproximal" reason="Adjacent" />
     <disable_collisions link1="rh_ffproximal" link2="rh_mfmiddle" reason="Adjacent" />
     <disable_collisions link1="rh_ffmiddle" link2="rh_mfmiddle" reason="Adjacent" />
     <disable_collisions link1="rh_ffmiddle" link2="rh_mfdistal" reason="Adjacent" />
     <disable_collisions link1="rh_ffdistal" link2="rh_mfdistal" reason="Adjacent" />
+
     <disable_collisions link1="rh_mfproximal" link2="rh_rfproximal" reason="Adjacent" />
     <disable_collisions link1="rh_mfproximal" link2="rh_rfmiddle" reason="Adjacent" />
     <disable_collisions link1="rh_mfmiddle" link2="rh_rfmiddle" reason="Adjacent" />
     <disable_collisions link1="rh_mfmiddle" link2="rh_rfdistal" reason="Adjacent" />
     <disable_collisions link1="rh_mfdistal" link2="rh_rfdistal" reason="Adjacent" />
+
     <disable_collisions link1="rh_rfproximal" link2="rh_lfproximal" reason="Adjacent" />
     <disable_collisions link1="rh_rfproximal" link2="rh_lfmiddle" reason="Adjacent" />
     <disable_collisions link1="rh_rfmiddle" link2="rh_lfmiddle" reason="Adjacent" />
     <disable_collisions link1="rh_rfmiddle" link2="rh_lfdistal" reason="Adjacent" />
     <disable_collisions link1="rh_rfdistal" link2="rh_lfdistal" reason="Adjacent" />
+
+
     <disable_collisions link1="rh_ffproximal" link2="rh_palm" reason="Adjacent" />
     <disable_collisions link1="rh_mfproximal" link2="rh_palm" reason="Adjacent" />
     <disable_collisions link1="rh_rfproximal" link2="rh_palm" reason="Adjacent" />
     <disable_collisions link1="rh_lfproximal" link2="rh_palm" reason="Adjacent" />
     <disable_collisions link1="rh_thproximal" link2="rh_palm" reason="Adjacent" />
+
     <disable_collisions link1="rh_ffdistal" link2="rh_fftip" reason="Adjacent" />
     <disable_collisions link1="rh_mfdistal" link2="rh_mftip" reason="Adjacent" />
     <disable_collisions link1="rh_rfdistal" link2="rh_rftip" reason="Adjacent" />
