@@ -5,8 +5,6 @@ from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
 
 rospy.init_node("basic_hand_examples", anonymous=True)
-rospy.set_param("hand/joint_prefix/1", "rh_")
-rospy.set_param("hand/mapping/1", "rh")
 hand_finder = HandFinder()
 hand_parameters = hand_finder.get_hand_parameters()
 if len(hand_parameters.mapping) is 0:
@@ -16,12 +14,12 @@ if len(hand_parameters.mapping) is 0:
 hand_serial = hand_parameters.mapping.keys()[0]
 hand_mapping = hand_parameters.mapping[hand_serial]
 prefix = hand_parameters.joint_prefix[hand_serial]
-# if hand_mapping == 'rh':
-#     hand_commander = SrHandCommander()
-# else:
-#     hand_commander = SrHandCommander(name="left_hand", prefix="lh")
+if hand_mapping == 'rh':
+    hand_commander = SrHandCommander()
+else:
+    hand_commander = SrHandCommander(name="left_hand", prefix="lh")
 joints = hand_finder.get_hand_joints()[hand_mapping]
-if len(joints) is not 20:
+if len(joints) is not 24:
     print("Joints are less than 24")
     sys.exit("no hand detected")
 print("Moving to hand position defined by joint values")
