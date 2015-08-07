@@ -1,5 +1,6 @@
 <launch>
   <!-- This launch file is for a right UR10 arm and shadow hand -->
+  <arg name="hand_id" default="rh" />
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
   <arg name="sim" default="true" />
   <!-- Use xacro prefix for hand or not -->
@@ -43,7 +44,7 @@
     respawn="false" output="screen" />
     <include file="$(find ur_gazebo)/launch/controller_utils.launch" />
     <include file="$(find sr_hand)/launch/gazebo/loaders/hand_controllers.launch">
-
+      <arg name="hand_serial" value="$(arg hand_serial)"/>
       <arg name="hand_controller_gazebo"
       value="$(find sr_description)/hand/config/rh_controller_gazebo.yaml" />
     </include>
