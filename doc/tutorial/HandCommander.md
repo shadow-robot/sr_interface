@@ -17,6 +17,28 @@ This method does not take any parameters and returns dictionary with efforts of 
 
 rospy.init_node("robot_commander_examples", anonymous=True)
 
+hand_finder = HandFinder()
+
+hand_parameters = hand_finder.get_hand_parameters()
+
+hand_mapping = hand_parameters.mapping[hand_serial]
+
+if hand_mapping == 'rh':
+    hand_commander = SrHandCommander(name="right_hand", prefix="rh")
+else:
+    hand_commander = SrHandCommander(name="left_hand", prefix="lh")
+
+hand_joints_effort = hand_commander.get_joints_effort()
+
+print("Hand joints effort \n " + str(hand_joints_effort) + "\n")
+
+```
+Alternatively if you do not want to use the hand_finder module, you can hardcode the hand prefix into the code similar to the example below. 
+
+```python
+
+rospy.init_node("robot_commander_examples", anonymous=True)
+
 hand_commander = SrHandCommander("right_hand", "rh")
 
 hand_joints_effort = hand_commander.get_joints_effort()
@@ -36,6 +58,26 @@ Parameters:
   * *value* maximum force value
 
 ### Example
+
+```python
+
+rospy.init_node("robot_commander_examples", anonymous=True)
+
+hand_finder = HandFinder()
+
+hand_parameters = hand_finder.get_hand_parameters()
+
+hand_mapping = hand_parameters.mapping[hand_serial]
+
+prefix = hand_parameters.joint_prefix[hand_serial]
+
+if hand_mapping == 'rh':
+    hand_commander = SrHandCommander(name="right_hand", prefix="rh")
+else:
+    hand_commander = SrHandCommander(name="left_hand", prefix="lh")
+# The limits in the current implementation of the firmware are from 200 to 1000 (measured in custom units) 
+hand_commander.set_max_force(prefix + "FFJ3", 600)
+```
 
 ```python
 
