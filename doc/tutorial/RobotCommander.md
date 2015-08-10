@@ -36,7 +36,22 @@ For a left hand:
 ```python
 hand_commander = SrHandCommander(name="left_hand", prefix="lh")
 ```
+Alternatively (encouraged) you can use hand_finder utility to find the hand launched on the system.
 
+```python
+hand_finder = HandFinder()
+
+hand_parameters = hand_finder.get_hand_parameters()
+
+hand_mapping = hand_parameters.mapping[hand_serial]
+
+prefix = hand_parameters.joint_prefix[hand_serial]
+
+if hand_mapping == 'rh':
+    hand_commander = SrHandCommander(name="right_hand", prefix="rh")
+else:
+    hand_commander = SrHandCommander(name="left_hand", prefix="lh")
+```
 ## move_to_joint_value_target
 
 ### Description

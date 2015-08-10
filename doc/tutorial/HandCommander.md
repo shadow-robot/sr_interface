@@ -33,7 +33,7 @@ hand_joints_effort = hand_commander.get_joints_effort()
 print("Hand joints effort \n " + str(hand_joints_effort) + "\n")
 
 ```
-Alternatively if you do not want to use the hand_finder module, you can hardcode the hand prefix into the code similar to the example below. 
+Alternatively if you do not want to use the hand_finder module, you can hardcode the hand prefix into the code similar to the example below (discouraged). 
 
 ```python
 
@@ -78,6 +78,7 @@ else:
 # The limits in the current implementation of the firmware are from 200 to 1000 (measured in custom units) 
 hand_commander.set_max_force(prefix + "FFJ3", 600)
 ```
+Similarly if you do not want to use hand_finder, you can hardcode the parameters into the code (discouraged).
 
 ```python
 
@@ -97,6 +98,28 @@ hand_commander.set_max_force("rh_FFJ3", 600)
 *get_tactile_state* returns an object containing tactile data. The structure of the data is different for every tactile_type .
 
 ### Example
+
+```python
+
+hand_finder = HandFinder()
+
+hand_parameters = hand_finder.get_hand_parameters()
+
+hand_mapping = hand_parameters.mapping[hand_serial]
+
+prefix = hand_parameters.joint_prefix[hand_serial]
+
+if hand_mapping == 'rh':
+    hand_commander = SrHandCommander(name="right_hand", prefix="rh")
+else:
+    hand_commander = SrHandCommander(name="left_hand", prefix="lh")
+
+tactile_type = hand_commander.get_tactile_type()
+tactile_state = hand_commander.get_tactile_state()
+
+print("Hand tactile type\n" + tactile_type + "\n")
+print("Hand tactile state\n" + str(tactile_state) + "\n")
+```
 
 ```python
 
