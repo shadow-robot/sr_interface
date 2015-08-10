@@ -121,11 +121,29 @@ roslaunch ur10srh_moveit_config setup_assistant.launch
 
 rospy.init_node("robot_commander_examples", anonymous=True)
 
-hand_commander = SrHandCommander("left_hand", "lh")
+hand_finder = HandFinder()
+
+hand_parameters = hand_finder.get_hand_parameters()
+
+hand_mapping = hand_parameters.mapping[hand_serial]
+
+if hand_mapping == 'rh':
+    hand_commander = SrHandCommander(name="right_hand", prefix="rh")
+else:
+    hand_commander = SrHandCommander(name="left_hand", prefix="lh")
 
 # pack is predefined pose from SRDF file
 hand_commander.move_to_named_target("pack")
 ```
+Note: you can hardcode the parameters instead of using HandFinder utility```python
+```python
+rospy.init_node("robot_commander_examples", anonymous=True)
+
+hand_commander = SrHandCommander("left_hand", "lh")
+
+# pack is predefined pose from SRDF file
+hand_commander.move_to_named_target("pack")
+``` 
 
 ## get_joints_position and get_joints_velocity
 
