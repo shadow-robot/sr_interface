@@ -166,10 +166,6 @@ class PartialTrajListener():
 def construct_trajectory_point(posture, duration):
     trajectory_point = JointTrajectoryPoint()
     trajectory_point.time_from_start = rospy.Duration.from_sec(float(duration))
-    trajectory_point.positions = []
-    trajectory_point.velocities = []
-    trajectory_point.accelerations = []
-    trajectory_point.effort = []
     for key in joint_trajectory.joint_names:
         trajectory_point.positions.append(posture[key])
     return trajectory_point

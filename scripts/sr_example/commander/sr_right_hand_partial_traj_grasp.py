@@ -10,15 +10,8 @@ rospy.sleep(1)  # Do not start with zero
 def construct_trajectory_point(posture, duration):
     trajectory_point = JointTrajectoryPoint()
     trajectory_point.time_from_start = rospy.Duration.from_sec(float(duration))
-    trajectory_point.positions = []
-    trajectory_point.velocities = []
-    trajectory_point.accelerations = []
-    trajectory_point.effort = []
     for key in joint_trajectory.joint_names:
         trajectory_point.positions.append(posture[key])
-        trajectory_point.velocities.append(0.0)
-        trajectory_point.accelerations.append(0.0)
-        trajectory_point.effort.append(0.0)
     return trajectory_point
 
 hand_commander = SrHandCommander()
