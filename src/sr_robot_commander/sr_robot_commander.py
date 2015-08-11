@@ -56,10 +56,7 @@ class SrRobotCommander(object):
 
         # prefix of the trajectory controller
         self._prefix = self.__group_prefixes[name]
-        # a trajectory goal that will contain a single trajectory point (for the move unsafe command)
-        self._trajectory_goal = FollowJointTrajectoryGoal()
-        self._trajectory_goal.trajectory = JointTrajectory()
-        self._set_default_trajectory()
+
         self._set_up_action_client()
 
         threading.Thread(None, rospy.spin)
@@ -220,45 +217,6 @@ class SrRobotCommander(object):
             rospy.logfatal("Failed to connect to action server in 4 sec")
             raise
 
-    def _set_default_trajectory(self):
-        """
-        Builds a default trajectory for this group, With the correct joint names and containing one point
-        with the positions set to 0
-        """
-        active_joints = self._move_group_commander.get_active_joints()
-        print active_joints
-        self._trajectory_goal.trajectory.joint_names = active_joints
-        point = JointTrajectoryPoint()
-        point.positions = [0.0] * len(self._trajectory_goal.trajectory.joint_names)
-        point.velocities = [0.0] * len(self._trajectory_goal.trajectory.joint_names)
-        self._trajectory_goal.trajectory.points = []
-        self._trajectory_goal.trajectory.points.append(point)
-
-    def _update_default_trajectory(self):
-        """
-        Fill a trajectory point with the current position of the robot. It will serve as a base to move only the
-        joints the user specifies in the move_to_joint_value_target_unsafe
-        """
-        current_joints_position = self.get_joints_position()
-        if len(current_joints_position) >= len(self._trajectory_goal.trajectory.joint_names):
-            for i, joint_name in enumerate(self._trajectory_goal.trajectory.joint_names):
-                self._trajectory_goal.trajectory.points[0].positions[i] = current_joints_position[joint_name]
-        else:
-            rospy.logerr("Joints position length mismatch {} vs traj {}".format(len(current_joints_position), len(self._trajectory_goal.trajectory.joint_names)))
-
-        print self._trajectory_goal.trajectory.points[0].positions
-
-    def _set_targets_to_default_trajectory(self, joint_states):
-        """
-        Set the target values in joint_states to the default trajectory goal (leaving the others with their original
-         value).
-        @param joint_states - dictionary with joint name and value. It can contain only joints values of which need to
-                               be changed.
-        """
-        for name, pos in joint_states.items():
-            i = self._trajectory_goal.trajectory.joint_names.index(name)
-            self._trajectory_goal.trajectory.points[0].positions[i] = pos
-
     def move_to_joint_value_target_unsafe(self, joint_states, time=0.002, wait=True):
         """
         Set target of the robot's links and moves to it.
@@ -268,10 +226,23 @@ class SrRobotCommander(object):
                         for it not to be rejected by the trajectory controller)
         @param wait - should method wait for movement end or not
         """
-        self._update_default_trajectory()
-        self._set_targets_to_default_trajectory(joint_states)
-        self._trajectory_goal.trajectory.points[0].time_from_start = rospy.Duration.from_sec(time)
-        self._client.send_goal(self._trajectory_goal)
+        #self._update_default_trajectory()
+        #self._set_targets_to_default_trajectory(joint_states)
+        goal = FollowJointTrajectoryGoal()
+        goal.trajectory.joint_names = list(joint_states.keys())
+        point = JointTrajectoryPoint()
+        point.time_from_start = rospy.Duration.from_sec(time)
+        point.positions = []
+        point.velocities = []
+        point.accelerations = []
+        point.effort = []
+        for key in goal.trajectory.joint_names:
+            point.positions.append(joint_states[key])
+
+        goal.trajectory.points = []
+        goal.trajectory.points.append(point)
+
+        self._client.send_goal(goal)
 
         if not wait:
             return
