@@ -28,6 +28,8 @@
    
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
+    <param name="/hand/mapping/$(arg hand_serial)" value="$(arg hand_id)"/>
+    <param name="/hand/joint_prefix/$(arg hand_serial)" value="$(arg hand_id)_"/>
     <arg name="world_name"
     value="$(find sr_description)/other/worlds/shadowhand.world" />
     <arg name="paused" value="false" />
