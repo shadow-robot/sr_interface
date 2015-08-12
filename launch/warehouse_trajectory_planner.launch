@@ -1,0 +1,21 @@
+<launch>
+  <arg name="right_hand" default="true"/>
+  <arg name="real_robot" default="false"/>
+  
+  <group if="$(arg right_hand)">
+    <include if="$(arg real_robot)" file="$(find right_sr_ur10_moveit_config)/launch/moveit_planning_and_execution.launch"/>
+    <include unless="$(arg real_robot)" file="$(find right_sr_ur10_moveit_config)/launch/demo.launch"/>
+    <include file="$(find right_sr_ur10_moveit_config)/launch/default_warehouse_db.launch"/>
+  </group>
+  <group unless="$(arg right_hand)">
+    <include if="$(arg real_robot)" file="$(find left_sr_ur10_moveit_config)/launch/moveit_planning_and_execution.launch"/>
+    <include unless="$(arg real_robot)" file="$(find left_sr_ur10_moveit_config)/launch/demo.launch"/>
+    <include file="$(find left_sr_ur10_moveit_config)/launch/default_warehouse_db.launch"/>
+  </group>
+  
+  <node name="warehouse_trajectory_planner" pkg="sr_robot_commander" type="follow_warehouse_trajectory.py" output="screen">
+    <param                        name="min_waypoint_fraction" type="double" value="0.9"/>
+    <param if="$(arg right_hand)" name="arm_group_name" value="right_arm"/>
+  </node>
+  
+</launch>

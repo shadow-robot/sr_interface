@@ -1,0 +1,56 @@
+plan_named_trajectory_service: plan_named_trajectory
+list_named_trajectories_service: list_named_trajectories
+
+service_mapping:
+        - name: test_1
+          list:
+                - lwa4p_sf_state_0001
+                - lwa4p_sf_state_0002
+                - lwa4p_sf_state_0003
+                - lwa4p_sf_state_0004
+
+
+        - name: test_2
+          list:
+                - lwa4p_sf_state_0003
+                - lwa4p_sf_state_0002
+                - lwa4p_sf_state_0001
+                - lwa4p_sf_state_0000
+
+        - name: test_3
+          list:
+                - lwa4p_sf_state_0004
+                - lwa4p_sf_state_0005
+                - lwa4p_sf_state_0006
+
+        - name: test_4
+          prefix: lwa4p_sf
+
+
+
+joy_mapping:
+        - button_type: button
+          button_index: 0
+          service: test_1
+
+        - button_type: axis
+          button_index: 4
+          lt: -0.5
+          service: test_2
+
+        - button_type: button
+          button_index: 2
+          service: test_3
+
+        - button_type: button
+          deadman: true
+          button_index: 6
+
+        - button_type: button
+          deadman: true
+          button_index: 7
+
+        - button_type: axis
+          button_index: 4
+          gt: 0.5
+          service: test_4
