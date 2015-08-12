@@ -15,15 +15,19 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import rospy
 import threading
+
+import rospy
 from actionlib import SimpleActionClient
-from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal
-from moveit_commander import MoveGroupCommander, RobotCommander, PlanningSceneInterface
+from control_msgs.msg import FollowJointTrajectoryAction, \
+    FollowJointTrajectoryGoal
+from moveit_commander import MoveGroupCommander, RobotCommander, \
+    PlanningSceneInterface
 from moveit_msgs.msg import RobotTrajectory
 from sensor_msgs.msg import JointState
-from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, RobotTeachModeResponse
-from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, \
+    RobotTeachModeResponse
+from trajectory_msgs.msg import JointTrajectoryPoint
 
 
 class SrRobotCommander(object):
@@ -48,7 +52,9 @@ class SrRobotCommander(object):
         self._move_group_commander.set_planner_id("ESTkConfigDefault")
 
         self._joint_states_lock = threading.Lock()
-        self._joint_states_listener = rospy.Subscriber("joint_states", JointState, self._joint_states_callback, queue_size=1)
+        self._joint_states_listener = \
+            rospy.Subscriber("joint_states", JointState,
+                             self._joint_states_callback, queue_size=1)
         self._joints_position = {}
         self._joints_velocity = {}
         self._joints_effort = {}
@@ -74,8 +80,8 @@ class SrRobotCommander(object):
     def move_to_joint_value_target(self, joint_states, wait=True):
         """
         Set target of the robot's links and moves to it.
-        @param joint_states - dictionary with joint name and value. It can contain only joints values of which need to
-        be changed.
+        @param joint_states - dictionary with joint name and value. It can
+        contain only joints values of which need to be changed.
         @param wait - should method wait for movement end or not
         """
         self._move_group_commander.set_start_state_to_current_state()
@@ -85,8 +91,8 @@ class SrRobotCommander(object):
     def plan_to_joint_value_target(self, joint_states):
         """
         Set target of the robot's links and plans.
-        @param joint_states - dictionary with joint name and value. It can contain only joints values of which need to
-        be changed.
+        @param joint_states - dictionary with joint name and value. It can
+        contain only joints values of which need to be changed.
         This is a blocking method.
         """
         self._move_group_commander.set_start_state_to_current_state()
@@ -140,8 +146,8 @@ class SrRobotCommander(object):
     def run_joint_trajectory(self, joint_trajectory):
         """
         Moves robot through all joint states with specified timeouts
-        @param joint_trajectory - JointTrajectory class object. Represents trajectory of the joints which would be
-        executed.
+        @param joint_trajectory - JointTrajectory class object. Represents
+        trajectory of the joints which would be executed.
         """
         plan = RobotTrajectory()
         plan.joint_trajectory = joint_trajectory
@@ -168,12 +174,13 @@ class SrRobotCommander(object):
         self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_position_target(xyz, end_effector_link)
         self.__plan = self._move_group_commander.plan()
-        
+
     def _move_to_pose_target(self, pose, end_effector_link="", wait=True):
         """
         Specify a target pose for the end-effector and moves to it
-        @param pose - new pose of end-effector: a Pose message, a PoseStamped message or a list of 6 floats:
-                        [x, y, z, rot_x, rot_y, rot_z] or a list of 7 floats [x, y, z, qx, qy, qz, qw]
+        @param pose - new pose of end-effector: a Pose message, a PoseStamped
+        message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z] or a list
+        of 7 floats [x, y, z, qx, qy, qz, qw]
         @param end_effector_link - name of the end effector link
         @param wait - should method wait for movement end or not
         """
@@ -185,8 +192,9 @@ class SrRobotCommander(object):
         """
         Specify a target pose for the end-effector and plans.
         This is a blocking method.
-        @param pose - new pose of end-effector: a Pose message, a PoseStamped message or a list of 6 floats:
-                        [x, y, z, rot_x, rot_y, rot_z] or a list of 7 floats [x, y, z, qx, qy, qz, qw]
+        @param pose - new pose of end-effector: a Pose message, a PoseStamped
+        message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z] or a list
+        of 7 floats [x, y, z, qx, qy, qz, qw]
         @param end_effector_link - name of the end effector link
         """
         self._move_group_commander.set_start_state_to_current_state()
@@ -196,13 +204,19 @@ class SrRobotCommander(object):
     def _joint_states_callback(self, joint_state):
         """
         The callback function for the topic joint_states.
-        It will store the received joint position, velocity and efforts information into dictionaries
+        It will store the received joint position, velocity and efforts
+        information into dictionaries
         @param joint_state - the message containing the joints data.
         """
         with self._joint_states_lock:
-            self._joints_position = {n: p for n, p in zip(joint_state.name, joint_state.position)}
-            self._joints_velocity = {n: v for n, v in zip(joint_state.name, joint_state.velocity)}
-            self._joints_effort = {n: v for n, v in zip(joint_state.name, joint_state.effort)}
+            self._joints_position = {n: p for n, p in
+                                     zip(joint_state.name,
+                                         joint_state.position)}
+            self._joints_velocity = {n: v for n, v in
+                                     zip(joint_state.name,
+                                         joint_state.velocity)}
+            self._joints_effort = {n: v for n, v in
+                                   zip(joint_state.name, joint_state.effort)}
 
     def _set_up_action_client(self):
         """
@@ -217,25 +231,23 @@ class SrRobotCommander(object):
             rospy.logfatal("Failed to connect to action server in 4 sec")
             raise
 
-    def move_to_joint_value_target_unsafe(self, joint_states, time=0.002, wait=True):
+    def move_to_joint_value_target_unsafe(self, joint_states, time=0.002,
+                                          wait=True):
         """
         Set target of the robot's links and moves to it.
-        @param joint_states - dictionary with joint name and value. It can contain only joints values of which need to
-                               be changed.
-        @param time - time in s (counting from now) for the robot to reach the target (it needs to be greater than 0.0
-                        for it not to be rejected by the trajectory controller)
+        @param joint_states - dictionary with joint name and value. It can
+        contain only joints values of which need to be changed.
+        @param time - time in s (counting from now) for the robot to reach the
+        target (it needs to be greater than 0.0 for it not to be rejected by
+        the trajectory controller)
         @param wait - should method wait for movement end or not
         """
-        #self._update_default_trajectory()
-        #self._set_targets_to_default_trajectory(joint_states)
+        # self._update_default_trajectory()
+        # self._set_targets_to_default_trajectory(joint_states)
         goal = FollowJointTrajectoryGoal()
         goal.trajectory.joint_names = list(joint_states.keys())
         point = JointTrajectoryPoint()
         point.time_from_start = rospy.Duration.from_sec(time)
-        point.positions = []
-        point.velocities = []
-        point.accelerations = []
-        point.effort = []
         for key in goal.trajectory.joint_names:
             point.positions.append(joint_states[key])
 
@@ -253,8 +265,8 @@ class SrRobotCommander(object):
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
         """
         Moves robot through all joint states with specified timeouts
-        @param joint_trajectory - JointTrajectory class object. Represents trajectory of the joints which would be
-                                   executed.
+        @param joint_trajectory - JointTrajectory class object. Represents
+        trajectory of the joints which would be executed.
         @param wait - should method wait for movement end or not
         """
         goal = FollowJointTrajectoryGoal()
@@ -270,9 +282,12 @@ class SrRobotCommander(object):
     def set_teach_mode(self, teach):
         """
         Activates/deactivates the teach mode for the robot.
-        Activation: stops the the trajectory controllers for the robot, and sets it to teach mode.
-        Deactivation: stops the teach mode and starts trajectory controllers for the robot.
-        Currently this method blocks for a few seconds when called on a hand, while the hand parameters are reloaded.
+        Activation: stops the the trajectory controllers for the robot, and
+        sets it to teach mode.
+        Deactivation: stops the teach mode and starts trajectory controllers
+        for the robot.
+        Currently this method blocks for a few seconds when called on a hand,
+        while the hand parameters are reloaded.
         @param teach - bool to activate or deactivate teach mode
         """
 
@@ -292,8 +307,10 @@ class SrRobotCommander(object):
         try:
             resp = teach_mode_client(req)
             if resp.result == RobotTeachModeResponse.ERROR:
-                rospy.logerr("Failed to change robot %s to mode %d", robot, mode)
+                rospy.logerr("Failed to change robot %s to mode %d", robot,
+                             mode)
             else:
-                rospy.loginfo("Changed robot %s to mode %d Result = %d", robot, mode, resp.result)
+                rospy.loginfo("Changed robot %s to mode %d Result = %d", robot,
+                              mode, resp.result)
         except rospy.ServiceException:
             rospy.logerr("Failed to call service teach_mode")
