@@ -21,6 +21,8 @@ hand_finder = HandFinder()
 
 hand_parameters = hand_finder.get_hand_parameters()
 
+hand_serial = hand_parameters.mapping.keys()[0]
+
 hand_mapping = hand_parameters.mapping[hand_serial]
 
 if hand_mapping == 'rh':
@@ -67,6 +69,8 @@ hand_finder = HandFinder()
 
 hand_parameters = hand_finder.get_hand_parameters()
 
+hand_serial = hand_parameters.mapping.keys()[0]
+
 hand_mapping = hand_parameters.mapping[hand_serial]
 
 prefix = hand_parameters.joint_prefix[hand_serial]
@@ -104,6 +108,8 @@ hand_commander.set_max_force("rh_FFJ3", 600)
 hand_finder = HandFinder()
 
 hand_parameters = hand_finder.get_hand_parameters()
+
+hand_serial = hand_parameters.mapping.keys()[0]
 
 hand_mapping = hand_parameters.mapping[hand_serial]
 

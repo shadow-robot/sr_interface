@@ -5,7 +5,7 @@
 Main purpose of the commander is to provide simplified access to [hand](HandCommander.md) or [arm](ArmCommander.md).
 It provides methods which can be used on both [hand](HandCommander.md) and [arm](ArmCommander.md).
 
-Examples of usage can be found in the package **sr_example** in files **sr_hand_examples.py** and **sr_arm_examples.py**
+Examples of usage can be found in the package **sr_example** in files **sr_hand_examples.py**, **sr_arm_examples.py** and **sr_handfinder_examples.py**.
 
 ## Constructor
 
@@ -24,6 +24,25 @@ For a left arm:
 ```python
 arm_commander = SrArmCommander(name="left_arm", set_ground=True)
 ```
+You can use HandFinder utility to find the hand launched on the system.
+
+```python
+hand_finder = HandFinder()
+
+hand_parameters = hand_finder.get_hand_parameters()
+
+hand_serial = hand_parameters.mapping.keys()[0]
+
+hand_mapping = hand_parameters.mapping[hand_serial]
+
+prefix = hand_parameters.joint_prefix[hand_serial]
+
+if hand_mapping == 'rh':
+    hand_commander = SrHandCommander(name="right_hand", prefix="rh")
+else:
+    hand_commander = SrHandCommander(name="left_hand", prefix="lh")
+```
+Alternatively you can hardcode the hand you are launching.
 
 For a right hand:
 
@@ -36,22 +55,7 @@ For a left hand:
 ```python
 hand_commander = SrHandCommander(name="left_hand", prefix="lh")
 ```
-Alternatively (encouraged) you can use hand_finder utility to find the hand launched on the system.
 
-```python
-hand_finder = HandFinder()
-
-hand_parameters = hand_finder.get_hand_parameters()
-
-hand_mapping = hand_parameters.mapping[hand_serial]
-
-prefix = hand_parameters.joint_prefix[hand_serial]
-
-if hand_mapping == 'rh':
-    hand_commander = SrHandCommander(name="right_hand", prefix="rh")
-else:
-    hand_commander = SrHandCommander(name="left_hand", prefix="lh")
-```
 ## move_to_joint_value_target
 
 ### Description
@@ -124,6 +128,8 @@ rospy.init_node("robot_commander_examples", anonymous=True)
 hand_finder = HandFinder()
 
 hand_parameters = hand_finder.get_hand_parameters()
+
+hand_serial = hand_parameters.mapping.keys()[0]
 
 hand_mapping = hand_parameters.mapping[hand_serial]
 
