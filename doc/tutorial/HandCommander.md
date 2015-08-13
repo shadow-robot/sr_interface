@@ -12,6 +12,7 @@ Also it allows to get state of tactile sensors, set max force and get joints eff
 This method does not take any parameters and returns dictionary with efforts of the robot joints
 
 ### Example
+This example uses [HandFinder](../../../sr_utilities/README.md) for finding launched hand.
 
 ```python
 

@@ -13,7 +13,7 @@ Examples of usage can be found in the package **sr_example** in files **sr_hand_
 The constructors for `SrArmCommander` and `SrHandCommander` take a name parameter that should match the group name of the robot to be used.
 
 ### Example
-
+This example uses [HandFinder](../../../sr_utilities/README.md) for finding launched hand.
 For a right arm:
 
 ```python
