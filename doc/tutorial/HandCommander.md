@@ -23,9 +23,9 @@ hand_parameters = hand_finder.get_hand_parameters()
 
 hand_serial = hand_parameters.mapping.keys()[0]
 
-hand_mapping = hand_parameters.mapping[hand_serial]
+hand_id = hand_parameters.mapping[hand_serial]
 
-if hand_mapping == 'rh':
+if hand_id == 'rh':
     hand_commander = SrHandCommander(name="right_hand", prefix="rh")
 else:
     hand_commander = SrHandCommander(name="left_hand", prefix="lh")
@@ -35,6 +35,7 @@ hand_joints_effort = hand_commander.get_joints_effort()
 print("Hand joints effort \n " + str(hand_joints_effort) + "\n")
 
 ```
+
 Alternatively if you do not want to use the HandFinder utility, you can hardcode the hand prefix into the code similar to the example below (discouraged). 
 
 ```python
@@ -71,11 +72,11 @@ hand_parameters = hand_finder.get_hand_parameters()
 
 hand_serial = hand_parameters.mapping.keys()[0]
 
-hand_mapping = hand_parameters.mapping[hand_serial]
+hand_id = hand_parameters.mapping[hand_serial]
 
 prefix = hand_parameters.joint_prefix[hand_serial]
 
-if hand_mapping == 'rh':
+if hand_id == 'rh':
     hand_commander = SrHandCommander(name="right_hand", prefix="rh")
 else:
     hand_commander = SrHandCommander(name="left_hand", prefix="lh")
@@ -111,11 +112,11 @@ hand_parameters = hand_finder.get_hand_parameters()
 
 hand_serial = hand_parameters.mapping.keys()[0]
 
-hand_mapping = hand_parameters.mapping[hand_serial]
+hand_id = hand_parameters.mapping[hand_serial]
 
 prefix = hand_parameters.joint_prefix[hand_serial]
 
-if hand_mapping == 'rh':
+if hand_id == 'rh':
     hand_commander = SrHandCommander(name="right_hand", prefix="rh")
 else:
     hand_commander = SrHandCommander(name="left_hand", prefix="lh")
@@ -139,3 +140,4 @@ tactile_state = hand_commander.get_tactile_state()
 print("Hand tactile type\n" + tactile_type + "\n")
 print("Hand tactile state\n" + str(tactile_state) + "\n")
 ```
+**Warning** All of above codes will crash if hand is not launched yet. If you are using HandFinder, you can avoid this by checking the length of the mapping. Otherwise you can check the parameter server directly to see if the hand is launched.

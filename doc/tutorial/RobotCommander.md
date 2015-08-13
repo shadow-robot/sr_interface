@@ -7,6 +7,7 @@ It provides methods which can be used on both [hand](HandCommander.md) and [arm]
 
 Examples of usage can be found in the package **sr_example** in files **sr_hand_examples.py**, **sr_arm_examples.py** and **sr_handfinder_examples.py**.
 
+**Warning** RobotCommander should not direcly be used. Unless necessary use [Hand commander](HandCommander.md) or [Arm commander](ArmCommander.md).
 ## Constructor
 
 The constructors for `SrArmCommander` and `SrHandCommander` take a name parameter that should match the group name of the robot to be used.
@@ -33,11 +34,11 @@ hand_parameters = hand_finder.get_hand_parameters()
 
 hand_serial = hand_parameters.mapping.keys()[0]
 
-hand_mapping = hand_parameters.mapping[hand_serial]
+hand_id = hand_parameters.mapping[hand_serial]
 
 prefix = hand_parameters.joint_prefix[hand_serial]
 
-if hand_mapping == 'rh':
+if hand_id == 'rh':
     hand_commander = SrHandCommander(name="right_hand", prefix="rh")
 else:
     hand_commander = SrHandCommander(name="left_hand", prefix="lh")
@@ -131,9 +132,9 @@ hand_parameters = hand_finder.get_hand_parameters()
 
 hand_serial = hand_parameters.mapping.keys()[0]
 
-hand_mapping = hand_parameters.mapping[hand_serial]
+hand_id = hand_parameters.mapping[hand_serial]
 
-if hand_mapping == 'rh':
+if hand_id == 'rh':
     hand_commander = SrHandCommander(name="right_hand", prefix="rh")
 else:
     hand_commander = SrHandCommander(name="left_hand", prefix="lh")
@@ -173,3 +174,4 @@ print("Arm joints velocity\n" + str(joints_velocity) + "\n")
 
 
 ```
+**Warning** All of above codes will crash if hand is not launched yet. If you are using HandFinder, you can avoid this by checking the length of the mapping. Otherwise you can check the parameter server directly to see if the hand is launched.
