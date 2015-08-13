@@ -4,8 +4,6 @@
 
 It provides methods which can be used to plan trajectories based on previously saved states.
 
-Examples of usage can be found in the package **sr_example** in files ** .py** ...
-
 ## Saving waypoints into the database
 
   a. First the robot must be loaded into rviz, and the Mongo DB started. This can be most easily done by running:
@@ -26,7 +24,7 @@ Examples of usage can be found in the package **sr_example** in files ** .py** .
 
   d. Waypoints can then be saved using the "Stored States" tab of the motion planner. If you plan to use prefix-based trajectories, now is the time to name waypoints accordingly.
 
- **N.B.** Although the waypoints are saved in the db as ```moveit_msgs/RobotState```, the cartesian pose of the end effector actually defines the waypoint. I.E. the joint angles of the robot as the trajectory plays back may not be the same as they appear in rviz as the point is saved.
+ **N.B.** Although the waypoints are saved in the db as ```moveit_msgs/RobotState```, the cartesian pose of the end effector actually defines the waypoint, i.e. the joint angles of the robot as the trajectory plays back may not be the same as they appear in rviz as the point is saved.
 
 ## Planning trajectories using saved waypoints
  1. Using the service directly
