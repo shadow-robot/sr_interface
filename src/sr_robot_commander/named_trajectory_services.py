@@ -11,7 +11,7 @@ from functools import partial
 from copy import deepcopy
 
 
-class WaypointNamedServices:
+class WaypointNamedServices(object):
     def __init__(self):
 
         rospy.init_node('waypoint_named_services')
