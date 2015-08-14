@@ -43,9 +43,8 @@
     respawn="false" output="screen" />
     <include file="$(find ur_gazebo)/launch/controller_utils.launch" />
     <include file="$(find sr_hand)/launch/gazebo/loaders/hand_controllers.launch">
-
-      <arg name="hand_controller_gazebo"
-      value="$(find sr_description)/hand/config/lh_controller_gazebo.yaml" />
+      <arg name="hand_id"
+      value="lh" />
     </include>
     <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/la_trajectory_controller.yaml"
     command="load" />
