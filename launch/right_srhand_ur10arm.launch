@@ -25,7 +25,7 @@
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
   <!-- Set to true to allow planning trajectories-->
-  <arg name="use_moveit" default="true" />
+  <arg name="use_moveit" default="false" />
    
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
