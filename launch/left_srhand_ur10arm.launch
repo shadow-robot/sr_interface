@@ -25,6 +25,8 @@
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
+  <!-- Set to true to allow planning trajectories-->
+  <arg name="use_moveit" default="false" />
    
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
@@ -125,5 +127,15 @@
       pkg="controller_manager" type="spawner" output="screen"
       args="--wait-for=/arms_ready --shutdown-timeout=1.0 la_trajectory_controller" />
     </group>
+  </group>
+  <!-- MOVEIT -->
+  <group if="$(arg use_moveit)">
+    <include file="$(find right_sr_ur10_moveit_config)/launch/moveit_planning_and_execution.launch">
+       <arg name="load_robot_description" value="false" />
+    </include>
+    <include file="$(find right_sr_ur10_moveit_config)/launch/default_warehouse_db.launch"/>
+    <include file="$(find sr_robot_launch)/launch/trajectory_services.launch">
+      <arg name="arm_group_name" value="left_arm"/>
+    </include>
   </group>
 </launch>
