@@ -9,15 +9,8 @@ It provides methods which can be used to plan trajectories based on previously s
   a. First the robot must be loaded into rviz, and the Mongo DB started. This can be most easily done by running:
 
   ```bash
-  roslaunch sr_robot_launch warehouse_trajectory_planner.launch 
+  roslaunch sr_robot_launch right_srhand_ur10arm.launch
   ```
-
-  If using the real robot, launch with the following instead:
-
-  ```bash
-  roslaunch sr_robot_launch warehouse_trajectory_planner.launch real_robot:=true
-  ```
-
   b. Connect to the Mongo DB using the "Connect" button on the "Context" tab of the motion planning plugin in rviz.
 
   c. Position the robot in the pose to be saved.
@@ -51,7 +44,7 @@ It provides methods which can be used to plan trajectories based on previously s
 
  2. Using predefined trajectories
   ```bash
-  roslaunch sr_robot_launch named_trajectory_services.launch
+  roslaunch sr_robot_launch right_srhand_ur10arm.launch
   ```
 
   A list of available named trajectories can be found with:
