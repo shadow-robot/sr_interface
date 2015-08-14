@@ -17,7 +17,7 @@ from std_msgs.msg import Header
 import geometry_msgs.msg
 
 
-class WarehousePlanner:
+class WarehousePlanner(object):
     def __init__(self):
         rospy.init_node('moveit_warehouse_planner', anonymous=True)
         self.scene = PlanningSceneInterface()
@@ -38,19 +38,19 @@ class WarehousePlanner:
 
         rospy.sleep(4)
         rospy.loginfo("Waiting for warehouse services...")
-        rospy.wait_for_service('/moveit_warehouse_services/list_robot_states')
-        rospy.wait_for_service('/moveit_warehouse_services/get_robot_state')
-        rospy.wait_for_service('/moveit_warehouse_services/has_robot_state')
+        rospy.wait_for_service('moveit_warehouse_services/list_robot_states')
+        rospy.wait_for_service('moveit_warehouse_services/get_robot_state')
+        rospy.wait_for_service('moveit_warehouse_services/has_robot_state')
 
         rospy.wait_for_service('/compute_fk')
         self._list_states = rospy.ServiceProxy(
-            '/moveit_warehouse_services/list_robot_states', ListStates)
+            'moveit_warehouse_services/list_robot_states', ListStates)
         self._get_state = rospy.ServiceProxy(
-            '/moveit_warehouse_services/get_robot_state', GetState)
+            'moveit_warehouse_services/get_robot_state', GetState)
         self._has_state = rospy.ServiceProxy(
-            '/moveit_warehouse_services/has_robot_state', HasState)
+            'moveit_warehouse_services/has_robot_state', HasState)
         self._forward_k = rospy.ServiceProxy(
-            '/compute_fk', GetPositionFK)
+            'compute_fk', GetPositionFK)
         rospy.loginfo("Service proxies connected")
 
         self._tr_frm_list_srv = rospy.Service('plan_trajectory_from_list',
@@ -126,10 +126,8 @@ class WarehousePlanner:
             # +1 because current position is used as first waypiont.
             rospy.logerr("Not all waypoints existed, not executing.")
             return False
-        (plan,
-         fraction) = self.group.compute_cartesian_path(waypoints,
-                                                       self.eef_step,
-                                                       self.jump_threshold)
+        (plan, fraction) = self.group.compute_cartesian_path(
+            waypoints, self.eef_step, self.jump_threshold)
 
         if fraction < self._min_wp_fraction:
             rospy.logerr("Only managed to generate trajectory through" +
@@ -160,7 +158,6 @@ class WarehousePlanner:
         response = self.group.execute(self.__plan)
         self.__plan = None
         return response
-
 
 if __name__ == "__main__":
     sf = WarehousePlanner()
