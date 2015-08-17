@@ -28,6 +28,7 @@ from sensor_msgs.msg import JointState
 from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, \
     RobotTeachModeResponse
 from trajectory_msgs.msg import JointTrajectoryPoint
+from math import radians
 
 
 class SrRobotCommander(object):
@@ -77,24 +78,33 @@ class SrRobotCommander(object):
         else:
             rospy.logwarn("No plans where made, not executing anything.")
 
-    def move_to_joint_value_target(self, joint_states, wait=True):
+    def move_to_joint_value_target(self, joint_states, wait=True,
+                                   angle_degrees=False):
         """
         Set target of the robot's links and moves to it.
         @param joint_states - dictionary with joint name and value. It can
         contain only joints values of which need to be changed.
         @param wait - should method wait for movement end or not
+        @param angle_degrees - are joint_states in degrees or not
         """
+        if angle_degrees:
+            joint_states.update((joint, radians(i))
+                                for joint, i in joint_states.items())
         self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_joint_value_target(joint_states)
         self._move_group_commander.go(wait=wait)
 
-    def plan_to_joint_value_target(self, joint_states):
+    def plan_to_joint_value_target(self, joint_states, angle_degrees=False):
         """
         Set target of the robot's links and plans.
         @param joint_states - dictionary with joint name and value. It can
         contain only joints values of which need to be changed.
+        @param angle_degrees - are joint_states in degrees or not
         This is a blocking method.
         """
+        if angle_degrees:
+            joint_states.update((joint, radians(i))
+                                for joint, i in joint_states.items())
         self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_joint_value_target(joint_states)
         self.__plan = self._move_group_commander.plan()
@@ -232,7 +242,7 @@ class SrRobotCommander(object):
             raise
 
     def move_to_joint_value_target_unsafe(self, joint_states, time=0.002,
-                                          wait=True):
+                                          wait=True, angle_degrees=False):
         """
         Set target of the robot's links and moves to it.
         @param joint_states - dictionary with joint name and value. It can
@@ -241,9 +251,13 @@ class SrRobotCommander(object):
         target (it needs to be greater than 0.0 for it not to be rejected by
         the trajectory controller)
         @param wait - should method wait for movement end or not
+        @param angle_degrees - are joint_states in degrees or not
         """
         # self._update_default_trajectory()
         # self._set_targets_to_default_trajectory(joint_states)
+        if angle_degrees:
+            joint_states.update((joint, radians(i))
+                                for joint, i in joint_states.items())
         goal = FollowJointTrajectoryGoal()
         goal.trajectory.joint_names = list(joint_states.keys())
         point = JointTrajectoryPoint()
