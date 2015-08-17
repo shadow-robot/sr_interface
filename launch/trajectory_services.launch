@@ -1,0 +1,9 @@
+<launch>
+  <arg name="arm_group_name"/>
+  <node name="warehouse_trajectory_planner" pkg="sr_robot_commander" type="follow_warehouse_trajectory.py" output="screen">
+    <param name="arm_group_name" value="$(arg arm_group_name)"/>
+  </node>
+  <node name="warehouse_named_trajectory_services" pkg="sr_robot_commander" type="named_trajectory_services.py" output="screen">
+    <rosparam command="load" file="$(find sr_robot_launch)/launch/warehouse_trajectory_mapping.yaml"/>
+  </node>
+</launch>
