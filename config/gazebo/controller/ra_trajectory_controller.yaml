@@ -1,31 +1,21 @@
 ra_trajectory_controller:
-  type: effort_controllers/JointTrajectoryController
-  topic: "ra_trajectory_controller"
+  type: "position_controllers/JointTrajectoryController"
   joints:
-     - ra_shoulder_pan_joint
-     - ra_shoulder_lift_joint
-     - ra_elbow_joint
-     - ra_wrist_1_joint
-     - ra_wrist_2_joint
-     - ra_wrist_3_joint
-  gains:
-    ra_shoulder_pan_joint: {p: 600.0, i: 500.0, d: 100.0, i_clamp: 100.0}
-    ra_shoulder_lift_joint: {p: 1500.0, i: 500.0, d: 100.0, i_clamp: 100.0}
-    ra_elbow_joint: {p: 1500.0, i: 500.0, d: 100.0, i_clamp: 100.0}
-    ra_wrist_1_joint: {p: 100.0, i: 0.0, d: 0.0, i_clamp: 0.0}
-    ra_wrist_2_joint: {p: 100.0, i: 0.0, d: 0.0, i_clamp: 0.0}
-    ra_wrist_3_joint: {p: 100.0, i: 0.0, d: 0.0, i_clamp: 0.0}
+    - ra_shoulder_pan_joint
+    - ra_shoulder_lift_joint
+    - ra_elbow_joint
+    - ra_wrist_1_joint
+    - ra_wrist_2_joint
+    - ra_wrist_3_joint
   constraints:
       goal_time: 0.6
-      stopped_velocity_tolerance: 0.5
-
-      ra_shoulder_pan_joint: {trajectory: 0.1, goal: 0.1}
-      ra_shoulder_lift_joint: {trajectory: 0.1, goal: 0.1}
-      ra_elbow_joint: {trajectory: 0.1, goal: 0.1}
-      ra_wrist_1_joint: {trajectory: 0.1, goal: 0.1}
-      ra_wrist_2_joint: {trajectory: 0.1, goal: 0.1}
-      ra_wrist_3_joint: {trajectory: 0.1, goal: 0.1}
-
+      stopped_velocity_tolerance: 0.05
+      ra_shoulder_pan_joint: {trajectory: 0.3, goal: 0.1}
+      ra_shoulder_lift_joint: {trajectory: 0.3, goal: 0.1}
+      ra_elbow_joint: {trajectory: 0.3, goal: 0.1}
+      ra_wrist_1_joint: {trajectory: 0.3, goal: 0.1}
+      ra_wrist_2_joint: {trajectory: 0.3, goal: 0.1}
+      ra_wrist_3_joint: {trajectory: 0.3, goal: 0.1}
   stop_trajectory_duration: 0.5
   state_publish_rate:  25
   action_monitor_rate: 10
