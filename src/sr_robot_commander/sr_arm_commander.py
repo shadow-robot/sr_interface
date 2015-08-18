@@ -53,12 +53,14 @@ class SrArmCommander(SrRobotCommander):
         @param end_effector_link - name of the end effector link
         """
         self._plan_to_position_target(xyz, end_effector_link)
-        
+
     def move_to_pose_target(self, pose, end_effector_link="", wait=True):
         """
         Specify a target pose for the end-effector and moves to it
-        @param pose - new pose of end-effector: a Pose message, a PoseStamped message or a list of 6 floats:
-                        [x, y, z, rot_x, rot_y, rot_z] or a list of 7 floats [x, y, z, qx, qy, qz, qw]
+        @param pose - new pose of end-effector: a Pose message, a PoseStamped
+        message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z]
+        or a list of 7 floats: [x, y, z, qx, qy, qz, qw]
+
         @param end_effector_link - name of the end effector link
         @param wait - should method wait for movement end or not
         """
@@ -68,12 +70,14 @@ class SrArmCommander(SrRobotCommander):
         """
         Specify a target pose for the end-effector and plans.
         This is a blocking method.
-        @param pose - new pose of end-effector: a Pose message, a PoseStamped message or a list of 6 floats:
-                        [x, y, z, rot_x, rot_y, rot_z] or a list of 7 floats [x, y, z, qx, qy, qz, qw]
+        @param pose - new pose of end-effector: a Pose message, PoseStamped
+        message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z]
+        or a list of 7 floats [x, y, z, qx, qy, qz, qw]
+
         @param end_effector_link - name of the end effector link
         """
         self._plan_to_pose_target(pose, end_effector_link)
-        
+
     def _set_ground(self):
         """
         Sets a plane for the ground.
@@ -81,7 +85,8 @@ class SrArmCommander(SrRobotCommander):
         pose = PoseStamped()
         pose.pose.position.x = 0
         pose.pose.position.y = 0
-        # offset such that the box is 0.1 mm below ground (to prevent collision with the robot itself)
+        # offset such that the box is 0.1 mm below ground
+        # (to prevent collision with the robot itself)
         pose.pose.position.z = -0.0501
         pose.pose.orientation.x = 0
         pose.pose.orientation.y = 0
