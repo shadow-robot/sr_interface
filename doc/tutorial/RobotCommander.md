@@ -86,6 +86,26 @@ joints_states = {'ra_shoulder_pan_joint': 0.5157461682721474,
                  'ra_wrist_3_joint': -0.25991215955733704}
 arm_commander.move_to_joint_value_target(joints_states)
 ```
+This example demonstrates how joint states for an arm can be sent to SrArmCommander, as neither the 'wait' nor 'angle_degrees' arguments are specified, they take the default values of 'True' and 'False, respectively. 
+
+
+### Example 2
+
+```python
+
+rospy.init_node("robot_commander_examples", anonymous=True)
+
+hand_commander = SrHandCommander(name="right_hand")
+joints_states = {'rh_FFJ1': 90, 'rh_FFJ2': 90, 'rh_FFJ3': 90, 'rh_FFJ4': 0.0,
+                 'rh_MFJ1': 90, 'rh_MFJ2': 90, 'rh_MFJ3': 90, 'rh_MFJ4': 0.0,
+                 'rh_RFJ1': 90, 'rh_RFJ2': 90, 'rh_RFJ3': 90, 'rh_RFJ4': 0.0,
+                 'rh_LFJ1': 90, 'rh_LFJ2': 90, 'rh_LFJ3': 90, 'rh_LFJ4': 0.0, 'rh_LFJ5': 0.0,
+                 'rh_THJ1': 40, 'rh_THJ2': 35, 'rh_THJ3': 0.0, 'rh_THJ4': 65, 'rh_THJ5': 15,
+                 'rh_WRJ1': 0.0, 'rh_WRJ2': 0.0}
+hand_commander.move_to_joint_value_target(joints_states, wait=False, angle_degrees=True))
+```
+
+In this example, joint states for a hand are sent to SrHandCommander, the method is prompted by the 'wait=False' argument to not wait for the movement to finish executing before moving on to the next command and the 'angle_degrees=True' argument tells the method that the input angles are in degrees, so require a conversion to radians. 
 
 ## move_to_named_target
 
