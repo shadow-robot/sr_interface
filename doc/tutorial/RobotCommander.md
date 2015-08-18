@@ -67,6 +67,7 @@ Parameters:
 
    * *joint_states* is a dictionary with joint name and value. It can contain joints values of which need to be changed.
    * *wait* indicates if method should wait for movement end or not (default value is True)
+   * *angle_degrees* should be set to true if the input angles are in degrees (default value is False)
 
 *IMPORTANT:* Bear in mind that the names of the joints are different for the right arm/hand and for the left one.
 
