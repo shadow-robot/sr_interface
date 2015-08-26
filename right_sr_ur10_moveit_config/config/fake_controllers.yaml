@@ -7,6 +7,8 @@ controller_list:
       - ra_wrist_1_joint
       - ra_wrist_2_joint
       - ra_wrist_3_joint
+      - rh_WRJ2
+      - rh_WRJ1
   - name: fake_right_hand_controller
     joints:
       - rh_FFJ4
