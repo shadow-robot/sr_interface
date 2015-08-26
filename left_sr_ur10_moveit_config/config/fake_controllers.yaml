@@ -7,10 +7,10 @@ controller_list:
       - la_wrist_1_joint
       - la_wrist_2_joint
       - la_wrist_3_joint
-  - name: fake_left_hand_controller
-    joints:
       - lh_WRJ2
       - lh_WRJ1
+  - name: fake_left_hand_controller
+    joints:
       - lh_FFJ4
       - lh_FFJ3
       - lh_FFJ2
