@@ -18,10 +18,10 @@
         <joint name="ra_wrist_3_joint" />
         <joint name="ra_ee_fixed_joint" />
         <joint name="arm_to_hand" />
-    </group>
-    <group name="right_hand">
         <joint name="rh_WRJ2" />
         <joint name="rh_WRJ1" />
+    </group>
+    <group name="right_hand">
         <joint name="rh_FFJ4" />
         <joint name="rh_FFJ3" />
         <joint name="rh_FFJ2" />
@@ -75,8 +75,6 @@
         <joint name="rh_THJ3" value="0" />
         <joint name="rh_THJ4" value="0" />
         <joint name="rh_THJ5" value="0" />
-        <joint name="rh_WRJ1" value="0" />
-        <joint name="rh_WRJ2" value="0" />
     </group_state>
     <group_state name="pack" group="right_hand">
         <joint name="rh_FFJ1" value="0.35" />
@@ -101,8 +99,6 @@
         <joint name="rh_THJ3" value="0" />
         <joint name="rh_THJ4" value="0.39" />
         <joint name="rh_THJ5" value="0.19" />
-        <joint name="rh_WRJ1" value="0" />
-        <joint name="rh_WRJ2" value="0" />
     </group_state>
 
     <group_state name="hold_bottle" group="right_hand">
@@ -128,8 +124,6 @@
         <joint name="rh_THJ3" value="0.17963601489554304" />
         <joint name="rh_THJ4" value="1.2044514536345325" />
         <joint name="rh_THJ5" value="-0.106895614116264807" />
-        <joint name="rh_WRJ1" value="-0.07499826746320828" />
-        <joint name="rh_WRJ2" value="-0.21651525474794753" />
     </group_state>
 
     <group_state name="open_bottle" group="right_hand">
@@ -155,8 +149,6 @@
         <joint name="rh_THJ3" value="0" />
         <joint name="rh_THJ4" value="0.95" />
         <joint name="rh_THJ5" value="-0.87" />
-        <joint name="rh_WRJ1" value="0" />
-        <joint name="rh_WRJ2" value="0" />
     </group_state>
 
     <group_state name="hold_bottle" group="right_arm">
@@ -166,6 +158,8 @@
         <joint name="ra_wrist_1_joint" value="-1.0714204947101038" />
         <joint name="ra_wrist_2_joint" value="0.03156869485974312" />
         <joint name="ra_wrist_3_joint" value="2.023080348968506" />
+        <joint name="rh_WRJ1" value="-0.07499826746320828" />
+        <joint name="rh_WRJ2" value="-0.21651525474794753" />
     </group_state>
 
     <group_state name="approach_bottle" group="right_arm">
@@ -175,6 +169,8 @@
         <joint name="ra_wrist_1_joint" value="-0.2906392256366175" />
         <joint name="ra_wrist_2_joint" value="-0.1491025129901331" />
         <joint name="ra_wrist_3_joint" value="1.432104468345642" />
+        <joint name="rh_WRJ1" value="0" />
+        <joint name="rh_WRJ2" value="0" />
     </group_state>
 
     <group_state name="pour_bottle" group="right_arm">
@@ -184,6 +180,8 @@
         <joint name="ra_wrist_1_joint" value="-0.9006665388690394" />
         <joint name="ra_wrist_2_joint" value="0.044231902807950974" />
         <joint name="ra_wrist_3_joint" value="-0.079658333455221" />
+        <joint name="rh_WRJ1" value="0" />
+        <joint name="rh_WRJ2" value="0" />
     </group_state>
 
     <group_state name="victory" group="right_arm">
@@ -193,6 +191,8 @@
         <joint name="ra_wrist_1_joint" value="1.2423092126846313" />
         <joint name="ra_wrist_2_joint" value="-1.1883366743670862" />
         <joint name="ra_wrist_3_joint" value="-1.4395459334002894" />
+        <joint name="rh_WRJ1" value="0" />
+        <joint name="rh_WRJ2" value="0" />
     </group_state>
 
     <group_state name="victory" group="right_hand">
@@ -218,8 +218,6 @@
         <joint name="rh_THJ3" value="0" />
         <joint name="rh_THJ4" value="0.87" />
         <joint name="rh_THJ5" value="0.55" />
-        <joint name="rh_WRJ1" value="0" />
-        <joint name="rh_WRJ2" value="0" />
     </group_state>
 
     <group_state name="gamma" group="right_arm">
@@ -229,10 +227,12 @@
         <joint name="ra_wrist_1_joint" value="0" />
         <joint name="ra_wrist_2_joint" value="0" />
         <joint name="ra_wrist_3_joint" value="0" />
+        <joint name="rh_WRJ1" value="0" />
+        <joint name="rh_WRJ2" value="0" />
     </group_state>
 
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="right_hand" parent_link="rh_forearm" group="right_hand" />
+    <end_effector name="right_hand" parent_link="rh_palm" group="right_hand" />
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="world_to_arm" type="fixed" parent_frame="world" child_link="ra_base_link" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->

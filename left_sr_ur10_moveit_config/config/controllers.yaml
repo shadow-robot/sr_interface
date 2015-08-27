@@ -10,6 +10,8 @@ controller_list:
      - la_wrist_1_joint
      - la_wrist_2_joint
      - la_wrist_3_joint
+     - lh_WRJ2
+     - lh_WRJ1
  - name: lh_trajectory_controller
    action_ns: follow_joint_trajectory
    type: FollowJointTrajectory
@@ -37,5 +39,3 @@ controller_list:
      - lh_THJ3
      - lh_THJ2
      - lh_THJ1
-     - lh_WRJ2
-     - lh_WRJ1

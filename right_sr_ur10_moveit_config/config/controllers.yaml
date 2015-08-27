@@ -10,6 +10,8 @@ controller_list:
      - ra_wrist_1_joint
      - ra_wrist_2_joint
      - ra_wrist_3_joint
+     - rh_WRJ2
+     - rh_WRJ1
  - name: rh_trajectory_controller
    action_ns: follow_joint_trajectory
    type: FollowJointTrajectory
@@ -37,5 +39,3 @@ controller_list:
      - rh_THJ3
      - rh_THJ2
      - rh_THJ1
-     - rh_WRJ2
-     - rh_WRJ1
