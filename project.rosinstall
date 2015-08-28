@@ -1,0 +1,29 @@
+- git:
+    local-name: sr_config
+    uri: https://github.com/shadow-robot/sr-config
+    version: 'indigo-devel'
+
+- git:
+    local-name: universal_robot
+    uri: 'https://github.com/ros-industrial/universal_robot.git'
+    version: indigo-devel
+
+- git:
+    local-name: sr_ur_arm
+    uri: 'https://github.com/shadow-robot/sr_ur_arm.git'
+    version: indigo-devel
+
+- git:
+    local-name: lma_kinematics_plugin
+    uri: 'https://github.com/shadow-robot/lma_kinematics_plugin'
+    version: F_ik_with_joint_limits
+
+- git:
+    local-name: moveit_ros
+    uri: https://github.com/shadow-robot/moveit_ros.git
+    version: F#276_add_db_state
+
+- git:
+    local-name: moveit_msgs
+    uri: https://github.com/shadow-robot/moveit_msgs.git
+    version: F#276_add_db_state
