@@ -4,7 +4,7 @@ python:
 
 # codecov token and slack web hook URL (encrypted)
 env:
-  - secure: d0IhOrOePO1sxKOzHhM1C//uGrzCP4QrMMbAqL3oqhk7Fto4FyEGsX2c+okN4O/lXfAcdRUtBbCqdIs0SPXwSEUu6JpGZwC7jjnf0CGaEdIWUhF35RBS+DumAPIcnjkG5KTr4KcwqK50mVI8Yx8YnYuOiqDJqQs86R00hflCriV4o6IHK8wdbwsdOk/LiqwRPO2S5t/BxT4DFo1RzCHEBi9k7AxDm/xWMGXaLExPmxPXlXZMDPfL1flLVgnFNYC5MHUo4bYcI8cXXwHD6FVgoVJrYmi6Cd9n6aKe/QI5C5a+Gx3JYuLt0WLemMpGXv/vWX+JnSgJqA3Vn6XjLhJRIw==
+  - secure: oXM0nFsDG4BEE2GqdVjxfY4eYAoBo2g0M4i9uvS10sF7iQRortdNQxS9nVZL/ENb0khrvz6hby3KmM6DKZnbssYlGcq2W9MpD5w1PNFU0lbSeQY4yJMPLAmeQe5clLBQy0W/SaxL9dxy2JccW+j/aKIisrbvoVtSPXApw/vwxt7d7XcZ3ucq0acvyM6DG+rdPGOJV4QJlJN9JpSgCFJDUykVLPFoi6h6pU1ym2m4r1qVyOgabjNNbCHU4ZbSnEGJfkyrr6omcXF1Cd438++tUPRjjPvrFYLoKKkRjPCLgTkOfCD/nhba9xFv60/zzC4oYtXWZQ9jjAhBHm11Xwft0Q==
 
 install:
   - sudo apt-get update
