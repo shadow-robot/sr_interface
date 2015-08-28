@@ -1,0 +1,38 @@
+<launch>
+  <!--	<param name="robot_description" command="$(find xacro)/xacro.py '$(find sr_hand)/model/robots/xacro/arm_and_hand_motor.urdf.xacro'"/>-->
+  <include file="$(find sr_description)/loaders/load_hand_model.launch" >
+   <arg name="robot_param" value="robot_description" />
+  </include>
+  <node pkg="hand_kinematics" name="ff_kinematics" type="hand_kinematics_coupling"  output="screen">
+    <param name="root_name" type="string" value="palm"/>
+    <param name="tip_name" type="string" value="fftip"/>
+    <param name="maxIterations" type="int" value="1000"/>
+    <param name="epsilon" type="double" value="0.001"/>
+  </node>
+  <node pkg="hand_kinematics" name="mf_kinematics" type="hand_kinematics_coupling"  output="screen">
+    <param name="root_name" type="string" value="palm"/>
+    <param name="tip_name" type="string" value="mftip"/>
+    <param name="maxIterations" type="int" value="1000"/>
+    <param name="epsilon" type="double" value="0.001"/>
+  </node>
+  <node pkg="hand_kinematics" name="rf_kinematics" type="hand_kinematics_coupling" output="screen">
+    <param name="root_name" type="string" value="palm"/>
+    <param name="tip_name" type="string" value="rftip"/>
+    <param name="maxIterations" type="int" value="1000"/>
+    <param name="epsilon" type="double" value="0.001"/>
+  </node>
+  <node pkg="hand_kinematics" name="lf_kinematics" type="hand_kinematics_coupling" output="screen">
+    <param name="root_name" type="string" value="palm"/>
+    <param name="tip_name" type="string" value="lftip"/>
+    <param name="maxIterations" type="int" value="1000"/>
+    <param name="epsilon" type="double" value="0.001"/>
+  </node>
+  <node pkg="hand_kinematics" name="th_kinematics" type="hand_kinematics_coupling" output="screen">
+    <param name="root_name" type="string" value="palm"/>
+    <param name="tip_name" type="string" value="thtip"/>
+    <param name="maxIterations" type="int" value="1000"/>
+    <param name="epsilon" type="double" value="0.001"/>
+  </node>
+</launch>
+
+

@@ -1,0 +1,30 @@
+rosservice call /compute_fk "{header: {frame_id: "palm"}, fk_link_names: ["fftip"], robot_state: {joint_state: {header: { seq: 57313,  stamp: {secs: 1311162659,nsecs: 346940994},  frame_id: ''}, name: ['FFJ1', 'FFJ2', 'FFJ3', 'FFJ4'],
+ position: [0.3, 0.3, 0.5, 0.0]} } }"
+
+rosservice call /compute_fk "{header: {frame_id: "palm"}, fk_link_names: ["mftip"], robot_state: {joint_state: {header: { seq: 57313,  stamp: {secs: 1311162659,nsecs: 346940994},  frame_id: ''}, name: ['MFJ1', 'MFJ2', 'MFJ3', 'MFJ4'],
+ position: [0.3, 0.3, 0.5, 0.0]} } }"
+
+
+
+rosservice call /ff_kinematics/get_ik "{
+ik_request:{
+ik_link_name: "fftip",
+pose_stamped:{
+ header:{ seq: 0, stamp: {secs: 1311164025, nsecs: 700270985} , frame_id: "palm"},
+ pose: {
+      position: {
+        x: 0.01935,
+        y: -0.0627,
+        z: 0.1623},
+      orientation:{ 
+        x: 0.0,
+        y: 0.0,
+        z: 0.0,
+        w: 0.1}
+}
+         },
+ik_seed_state: {
+joint_state: {
+header: { seq: 57313,  stamp: {secs: 1311162659,nsecs: 346940994},  frame_id: ''}, name: ['FFJ1', 'FFJ2', 'FFJ3', 'FFJ4'],
+position: [0.78,0.78,0.78,0.0] } } },
+timeout: 1000}"
