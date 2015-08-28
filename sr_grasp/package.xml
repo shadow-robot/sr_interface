@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package>
+  <name>sr_grasp</name>
+  <version>1.4.0</version>
+  <description>Execute moveit_msgs/Grasp grasps on the Shadow Hand.</description>
+  <license>GPL</license>
+
+  <url type="website">http://ros.org/wiki/sr_grasp</url>
+  <url type="repository">https://github.com/shadow-robot/sr-ros-interface</url>
+  <url type="bugtracker">https://github.com/shadow-robot/sr-ros-interface/issues</url>
+
+  <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
+  <author email="mark@shadowrobot.com">Mark Pitchless</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>actionlib</build_depend>
+  <build_depend>dynamic_reconfigure</build_depend>
+  <build_depend>gazebo_msgs</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>rostest</build_depend>
+  <build_depend>sr_robot_msgs</build_depend>
+  <build_depend>sr_hand</build_depend>
+
+  <run_depend>actionlib</run_depend>
+  <run_depend>dynamic_reconfigure</run_depend>
+  <run_depend>gazebo_msgs</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>rostest</run_depend>
+  <run_depend>sr_robot_msgs</run_depend>
+  <run_depend>sr_hand</run_depend>
+
+  <export>
+  </export>
+</package>
