@@ -1,0 +1,27 @@
+plan_named_trajectory_service: plan_named_trajectory
+list_named_trajectories_service: list_named_trajectories
+
+service_mapping:
+        - name: trajectory_1
+          list:
+                - ur10srh_state_0000
+                - ur10srh_state_0001
+                - ur10srh_state_0002
+                - ur10srh_state_0003
+
+        - name: trajectory_2
+          list:
+                - ur10srh_state_0004
+                - ur10srh_state_0005
+                - ur10srh_state_0006
+                - ur10srh_state_0007
+
+        - name: trajectory_3
+          list:
+                - ur10srh_state_0007
+                - ur10srh_state_0008
+                - ur10srh_state_0000
+
+        - name: trajectory_4
+          prefix: ur10srh
+
