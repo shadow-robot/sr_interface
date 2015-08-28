@@ -1,0 +1,47 @@
+controller_list:
+  - name: fake_left_arm_controller
+    joints:
+      - la_shoulder_pan_joint
+      - la_shoulder_lift_joint
+      - la_elbow_joint
+      - la_wrist_1_joint
+      - la_wrist_2_joint
+      - la_wrist_3_joint
+      - lh_WRJ2
+      - lh_WRJ1
+  - name: fake_left_hand_controller
+    joints:
+      - lh_FFJ4
+      - lh_FFJ3
+      - lh_FFJ2
+      - lh_FFJ1
+      - lh_LFJ5
+      - lh_LFJ4
+      - lh_LFJ3
+      - lh_LFJ2
+      - lh_LFJ1
+      - lh_MFJ4
+      - lh_MFJ3
+      - lh_MFJ2
+      - lh_MFJ1
+      - lh_RFJ4
+      - lh_RFJ3
+      - lh_RFJ2
+      - lh_RFJ1
+      - lh_THJ5
+      - lh_THJ4
+      - lh_THJ3
+      - lh_THJ2
+      - lh_THJ1
+  - name: fake_lh_ff_controller
+    joints:
+      - lh_FFJ4
+      - lh_FFJ3
+      - lh_FFJ2
+      - lh_FFJ1
+  - name: fake_lh_mf_controller
+    joints:
+      - lh_MFJ4
+      - lh_MFJ3
+      - lh_MFJ2
+      - lh_MFJ1

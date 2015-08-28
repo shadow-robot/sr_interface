@@ -1,0 +1,16 @@
+<launch>
+  <include file="$(find left_sr_ur10_moveit_config)/launch/demo.launch">
+    <arg name="visualization" value="false" />
+  </include>
+  
+  <test test-name="test_planner_BKPIECEkConfigDefault" pkg="sr_multi_moveit_test" type="test_planners.py" time-limit="300.0" retry="3" args="left_arm BKPIECEkConfigDefault"/>
+  <test test-name="test_planner_ESTkConfigDefault" pkg="sr_multi_moveit_test" type="test_planners.py" time-limit="300.0" retry="3" args="left_arm ESTkConfigDefault"/>
+  <test test-name="test_planner_KPIECEkConfigDefault" pkg="sr_multi_moveit_test" type="test_planners.py" time-limit="300.0" retry="3" args="left_arm KPIECEkConfigDefault"/>
+  <test test-name="test_planner_LBKPIECEkConfigDefault" pkg="sr_multi_moveit_test" type="test_planners.py" time-limit="300.0" retry="3" args="left_arm LBKPIECEkConfigDefault"/>
+  <test test-name="test_planner_PRMkConfigDefault" pkg="sr_multi_moveit_test" type="test_planners.py" time-limit="300.0" retry="3" args="left_arm PRMkConfigDefault"/>
+  <test test-name="test_planner_RRTkConfigDefault" pkg="sr_multi_moveit_test" type="test_planners.py" time-limit="300.0" retry="3" args="left_arm RRTkConfigDefault"/>
+  <test test-name="test_planner_SBLkConfigDefault" pkg="sr_multi_moveit_test" type="test_planners.py" time-limit="300.0" retry="3" args="left_arm SBLkConfigDefault"/>
+  <test test-name="test_planner_PRMstarkConfigDefault" pkg="sr_multi_moveit_test" type="test_planners.py" time-limit="300.0" retry="3" args="left_arm PRMstarkConfigDefault"/>
+  <test test-name="test_planner_RRTstarkConfigDefault" pkg="sr_multi_moveit_test" type="test_planners.py" time-limit="300.0" retry="3" args="left_arm RRTstarkConfigDefault"/>
+  
+</launch>
