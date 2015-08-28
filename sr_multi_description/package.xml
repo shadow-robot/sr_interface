@@ -1,0 +1,29 @@
+<package>
+  <name>sr_multi_description</name>
+  <version>0.0.1</version>
+  <description>sr_multi_description contains the description of multi robot systems </description>
+  <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
+
+  <license>GPL</license>
+
+  <url type="website">http://www.shadowrobot.com</url>
+  <url type="repository">https://github.com/shadow-robot/sr-ros-interface</url>
+  <url type="bugtracker">https://github.com/shadow-robot/sr-ros-interface/issues</url>
+
+  <author>Kirsty Ellis</author>
+
+    <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>urdf</build_depend>
+  <build_depend>xacro</build_depend>
+
+  <!-- Dependencies needed after this package is compiled. -->
++ <run_depend>urdf</run_depend>
+  <run_depend>xacro</run_depend>
+
+  <!-- Dependencies needed only for running tests. -->
+
+</package>
+
