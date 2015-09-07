@@ -11,8 +11,10 @@ print("Joints positions")
 
 all_joints_state = hand_commander.get_joints_position()
 
-hand_joints_state = {k: v for k, v in all_joints_state.items() if k.startswith("rh_")}
-arm_joints_state = {k: v for k, v in all_joints_state.items() if k.startswith("ra_")}
+hand_joints_state = {
+    k: v for k, v in all_joints_state.items() if k.startswith("rh_")}
+arm_joints_state = {
+    k: v for k, v in all_joints_state.items() if k.startswith("ra_")}
 
 
 print("Hand joints position \n " + str(hand_joints_state) + "\n")

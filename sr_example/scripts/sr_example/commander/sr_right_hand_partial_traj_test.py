@@ -12,6 +12,7 @@ from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 
 class PartialTrajListener():
+
     def __init__(self):
         self.start_time_goals = []
         self.start_time_goals_trajectory = []

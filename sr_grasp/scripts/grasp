@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# ##########################################################################
+#
 # Copyright (c) 2014 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
@@ -16,9 +16,10 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-# ###########################################################################
+#
 
-import rospy, actionlib
+import rospy
+import actionlib
 from math import degrees, radians, sqrt
 
 from dynamic_reconfigure.server import Server
@@ -27,13 +28,15 @@ from sr_grasp.cfg import GraspConfig
 from sr_robot_msgs.msg import ShadowPST, ShadowContactStateStamped, GraspAction
 from gazebo_msgs.msg import ContactsState
 
+
 class InterpolatedJoint(object):
+
     def __init__(self, name, start=0, end=0, active=True):
-        self.name    = name
-        self.start   = start
-        self.end     = end
-        self.active  = active
-        self.i       = 0
+        self.name = name
+        self.start = start
+        self.end = end
+        self.active = active
+        self.i = 0
         self.current = self.start
 
     def inc(self, amt=1):
@@ -43,14 +46,18 @@ class InterpolatedJoint(object):
             self.active = False
             self.current = self.end
         else:
-            self.current = self.start + (self.end-self.start)*(self.i/100.0)
+            self.current = self.start + \
+                (self.end - self.start) * (self.i / 100.0)
         return self.current
 
     def at_target(self):
-        if self.i >= 100: return True
+        if self.i >= 100:
+            return True
         return False
 
+
 class GraspNode(object):
+
     def __init__(self, ):
         """
         @brief Construct a new GraspNode, setting up it's publishers,
@@ -58,7 +65,7 @@ class GraspNode(object):
         """
 
         # Config
-        self.interpolation_rate = 20 # hz (percent per second)
+        self.interpolation_rate = 20  # hz (percent per second)
         self.force_threshold = 0.3
         self.squeeze = 4
         self.first_contact_only = False
@@ -66,7 +73,8 @@ class GraspNode(object):
         self.grasp = None
         # Dict of target positions in degrees keyed on joint name
         self.targets = None
-        # Key is finger, value force, normalised to a positive value for all sensor types
+        # Key is finger, value force, normalised to a positive value for all
+        # sensor types
         self.tactiles = {}
         self.pst_bias = None
 
@@ -79,7 +87,8 @@ class GraspNode(object):
         # We need to find a better way to determine when that happens (provided that we don't know
         # which controllers will exist and which will not).
         # For the time being we only wait for a while ( 4 sec)
-        rospy.loginfo("Waiting for hand to pop up and hand controllers to be launched...")
+        rospy.loginfo(
+            "Waiting for hand to pop up and hand controllers to be launched...")
         rospy.sleep(4.0)
         # Hand access. Do early (before subscribing, advertising actions etc),
         # as it blocks for a while detecting hands.
@@ -87,11 +96,12 @@ class GraspNode(object):
         self.hand = ShadowHand_ROS()
         t = "Unknown"
         t = self.hand.hand_type
-        rospy.loginfo("Found %s hand with %s tactile."%(t, self.hand.get_tactile_type()))
+        rospy.loginfo("Found %s hand with %s tactile." %
+                      (t, self.hand.get_tactile_type()))
 
         # Action server for running this node
         self.grasp_server = actionlib.SimpleActionServer(
-                'grasp', GraspAction, auto_start = False)
+            'grasp', GraspAction, auto_start=False)
         self.grasp_server.register_goal_callback(self.grasp_goal_cb)
         self.grasp_server.register_preempt_callback(self.grasp_preempt_cb)
         self.grasp_server.start()
@@ -109,10 +119,12 @@ class GraspNode(object):
         }
         for finger, topic in finger_map.items():
             try:
-                rospy.wait_for_message(topic, ShadowContactStateStamped, timeout = 0.2)
-                rospy.loginfo("Found fancy tactile on %s finger"%finger)
+                rospy.wait_for_message(
+                    topic, ShadowContactStateStamped, timeout=0.2)
+                rospy.loginfo("Found fancy tactile on %s finger" % finger)
                 found_fancy += 1
-                self.sub_tactile_shadow[finger] = rospy.Subscriber(topic, ShadowContactStateStamped, self.shadow_tactile_cb, finger)
+                self.sub_tactile_shadow[finger] = rospy.Subscriber(
+                    topic, ShadowContactStateStamped, self.shadow_tactile_cb, finger)
             except Exception as e:
                 rospy.logwarn(e)
 
@@ -123,13 +135,15 @@ class GraspNode(object):
                 self.sub_tactile_gazebo = {}
                 for finger in ['lf', 'rf', 'mf', 'ff', 'th']:
                     self.sub_tactile_gazebo[finger] = rospy.Subscriber(
-                            'contacts/'+finger+'/distal', ContactsState,
-                            self.gazebo_tactile_cb, finger)
+                        'contacts/' + finger + '/distal', ContactsState,
+                        self.gazebo_tactile_cb, finger)
             elif self.hand.get_tactile_type() == 'PST':
                 rospy.loginfo("Using PST tactiles")
-                self.sub_pst = rospy.Subscriber('tactile', ShadowPST, self.pst_tactile_cb)
+                self.sub_pst = rospy.Subscriber(
+                    'tactile', ShadowPST, self.pst_tactile_cb)
             else:
-                rospy.logerr("Don't know how to handle %s tactiles!"%(self.hand.get_tactile_type()))
+                rospy.logerr("Don't know how to handle %s tactiles!" %
+                             (self.hand.get_tactile_type()))
 
         rospy.loginfo("Ready to grasp")
 
@@ -140,8 +154,8 @@ class GraspNode(object):
         @param config Config object, a GraspConfig
         """
         self.interpolation_rate = config.interpolation_rate
-        self.force_threshold    = config.force_threshold
-        self.squeeze            = config.squeeze
+        self.force_threshold = config.force_threshold
+        self.squeeze = config.squeeze
         self.first_contact_only = config.first_contact_only
         return config
 
@@ -151,12 +165,12 @@ class GraspNode(object):
             self.tactiles[finger] = 0
             return
         f = msg.states[0].total_wrench.force
-        self.tactiles[finger] = sqrt(f.x**2 + f.y**2 + f.z**2)
+        self.tactiles[finger] = sqrt(f.x ** 2 + f.y ** 2 + f.z ** 2)
 
     def shadow_tactile_cb(self, msg, finger):
         """Fills self.tactiles with force value."""
         # Force is negative as it is into the finger, so normalise to positive
-        self.tactiles[finger] = (-1.0*msg.Fnormal)
+        self.tactiles[finger] = (-1.0 * msg.Fnormal)
 
     def pst_tactile_cb(self, msg):
         if self.pst_bias is None:
@@ -173,7 +187,7 @@ class GraspNode(object):
         self.tactiles['rf'] = msg.pressure[2] - self.pst_bias['rf']
         self.tactiles['lf'] = msg.pressure[3] - self.pst_bias['lf']
         self.tactiles['th'] = msg.pressure[4] - self.pst_bias['th']
-        #rospy.loginfo(self.tactiles)
+        # rospy.loginfo(self.tactiles)
 
     def grasp_goal_cb(self):
         rospy.loginfo("Grasp Goal received")
@@ -218,16 +232,16 @@ class GraspNode(object):
         """
         # Fixup J0
         for j in ['LFJ', 'RFJ', 'MFJ', 'FFJ']:
-            if j+"1" in targets and j+"2" in targets:
-                targets[j+"0"] = targets[j+"1"] + targets[j+"2"]
-                del targets[j+"1"]
-                del targets[j+"2"]
+            if j + "1" in targets and j + "2" in targets:
+                targets[j + "0"] = targets[j + "1"] + targets[j + "2"]
+                del targets[j + "1"]
+                del targets[j + "2"]
 
         # Remove unknown joints
         jnames = [j.name for j in self.hand.allJoints]
         for j in targets.keys():
             if j not in jnames:
-                rospy.logwarn("Unknown joint %s, ignoring."%j)
+                rospy.logwarn("Unknown joint %s, ignoring." % j)
                 del targets[j]
 
     def run_posture(self, posture):
@@ -236,14 +250,16 @@ class GraspNode(object):
         self.start_position = self.hand.read_all_current_positions()
 
         if self.start_position == None:
-            rospy.logerr("Unable to read current hand position. Check if position controllers are running.")
+            rospy.logerr(
+                "Unable to read current hand position. Check if position controllers are running.")
 
         unknown = []
         for name in self.targets:
             if name not in self.start_position:
                 unknown.append(name)
         if unknown:
-            rospy.logerr("Unknown joints in targets (they will be ignored): %s"%unknown)
+            rospy.logerr(
+                "Unknown joints in targets (they will be ignored): %s" % unknown)
 
         # Convert the targets into objects
         self.joints = []
@@ -296,7 +312,7 @@ class GraspNode(object):
                     has_active = True
                     j.active = False
         if has_active:
-            rospy.loginfo("Stopping finger %s"%finger)
+            rospy.loginfo("Stopping finger %s" % finger)
 
     def start_finger(self, finger):
         prefix = finger.upper()
@@ -307,7 +323,7 @@ class GraspNode(object):
                     changed = True
                     j.active = True
         if changed:
-            rospy.loginfo("Starting finger %s"%finger)
+            rospy.loginfo("Starting finger %s" % finger)
 
 
 if __name__ == "__main__":

@@ -45,29 +45,29 @@ class SexyExampleLatching(object):
         """
         Runs the hand through different predefined position in a given order.
         """
-        start = {"FFJ0":0, "FFJ3":0, "FFJ4":0,
-                 "MFJ0":0, "MFJ3":0, "MFJ4":0,
-                 "RFJ0":0, "RFJ3":0, "RFJ4":0,
-                 "LFJ0":0, "LFJ3":0, "LFJ4":0, "LFJ5":0,
-                 "THJ1":0, "THJ2":0, "THJ3":0, "THJ4":0, "THJ5":0,
-                 "WRJ1":0, "WRJ2":0 }
+        start = {"FFJ0": 0, "FFJ3": 0, "FFJ4": 0,
+                 "MFJ0": 0, "MFJ3": 0, "MFJ4": 0,
+                 "RFJ0": 0, "RFJ3": 0, "RFJ4": 0,
+                 "LFJ0": 0, "LFJ3": 0, "LFJ4": 0, "LFJ5": 0,
+                 "THJ1": 0, "THJ2": 0, "THJ3": 0, "THJ4": 0, "THJ5": 0,
+                 "WRJ1": 0, "WRJ2": 0}
 
-        fist = {"FFJ0":180, "FFJ3":90, "FFJ4":0,
-                "MFJ0":180, "MFJ3":90, "MFJ4":0,
-                "RFJ0":180, "RFJ3":90, "RFJ4":0,
-                "LFJ0":180, "LFJ3":90, "LFJ4":0, "LFJ5":0,
-                "THJ1":0, "THJ2":0, "THJ3":0, "THJ4":50, "THJ5":-50,
-                "WRJ1":0, "WRJ2":0 }
+        fist = {"FFJ0": 180, "FFJ3": 90, "FFJ4": 0,
+                "MFJ0": 180, "MFJ3": 90, "MFJ4": 0,
+                "RFJ0": 180, "RFJ3": 90, "RFJ4": 0,
+                "LFJ0": 180, "LFJ3": 90, "LFJ4": 0, "LFJ5": 0,
+                "THJ1": 0, "THJ2": 0, "THJ3": 0, "THJ4": 50, "THJ5": -50,
+                "WRJ1": 0, "WRJ2": 0}
 
-        victory = {"FFJ0":0, "FFJ3":0, "FFJ4":-20,
-                   "MFJ0":0, "MFJ3":0, "MFJ4":20,
-                   "RFJ0":180, "RFJ3":90, "RFJ4":-10,
-                   "LFJ0":180, "LFJ3":90, "LFJ4":-10, "LFJ5":0,
-                   "THJ1":40, "THJ2":20, "THJ3":0, "THJ4":50, "THJ5":35,
-                   "WRJ1":0, "WRJ2":0 }
+        victory = {"FFJ0": 0, "FFJ3": 0, "FFJ4": -20,
+                   "MFJ0": 0, "MFJ3": 0, "MFJ4": 20,
+                   "RFJ0": 180, "RFJ3": 90, "RFJ4": -10,
+                   "LFJ0": 180, "LFJ3": 90, "LFJ4": -10, "LFJ5": 0,
+                   "THJ1": 40, "THJ2": 20, "THJ3": 0, "THJ4": 50, "THJ5": 35,
+                   "WRJ1": 0, "WRJ2": 0}
 
-        wave_1 = {"WRJ2":-20}
-        wave_2 = {"WRJ2":5}
+        wave_1 = {"WRJ2": -20}
+        wave_2 = {"WRJ2": 5}
 
         self.publish_pose(start)
         time.sleep(self.sleep_time)
@@ -110,17 +110,19 @@ class SexyExampleLatching(object):
                       "RFJ0", "RFJ3", "RFJ4",
                       "LFJ0", "LFJ3", "LFJ4", "LFJ5",
                       "THJ1", "THJ2", "THJ3", "THJ4", "THJ5",
-                      "WRJ1", "WRJ2" ]:
+                      "WRJ1", "WRJ2"]:
             # Here we initialize the publisher with the latch set to True.
             # this will ensure that the hand gets the message, even though we're
             # using the messages more as a service (we don't stream the data, we
             # just ask the hand to take a given position)
-            hand_pub[joint] = rospy.Publisher('sh_'+joint.lower() + self.controller_type + '/command', Float64, latch=True)
+            hand_pub[joint] = rospy.Publisher(
+                'sh_' + joint.lower() + self.controller_type + '/command', Float64, latch=True)
 
         return hand_pub
 
+
 def main():
-    rospy.init_node('sexy_example_latching', anonymous = True)
+    rospy.init_node('sexy_example_latching', anonymous=True)
     sexy_example = SexyExampleLatching()
     sexy_example.run()
 
