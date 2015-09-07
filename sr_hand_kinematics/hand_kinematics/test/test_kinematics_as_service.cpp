@@ -85,20 +85,20 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
   std::vector<double> jj;
   for( int i=0; i < n_tests; i++ ) {
     jj.resize(0);
-    if (isThumb) { // min-degrees 0 -30 -15 0 -60  max-degrees 90 30 15 75 60
-      jj.push_back( rand_range(   0*DEG2RAD,  90*DEG2RAD ) ); // J1
-      jj.push_back( rand_range( -40*DEG2RAD,  40*DEG2RAD ) ); // J2
-      jj.push_back( rand_range( -12*DEG2RAD,  12*DEG2RAD ) ); // J3
-      jj.push_back( rand_range(   0*DEG2RAD,  70*DEG2RAD ) ); // J4
-      jj.push_back( rand_range( -60*DEG2RAD,  60*DEG2RAD ) ); // J5
+    if (isThumb) {  // min-degrees 0 -30 -15 0 -60  max-degrees 90 30 15 75 60
+      jj.push_back( rand_range(   0*DEG2RAD,  90*DEG2RAD ) );  // J1
+      jj.push_back( rand_range( -40*DEG2RAD,  40*DEG2RAD ) );  // J2
+      jj.push_back( rand_range( -12*DEG2RAD,  12*DEG2RAD ) );  // J3
+      jj.push_back( rand_range(   0*DEG2RAD,  70*DEG2RAD ) );  // J4
+      jj.push_back( rand_range( -60*DEG2RAD,  60*DEG2RAD ) );  // J5
     }
     else {
-      jj.push_back( j1j2= rand_range( 0*DEG2RAD, 90*DEG2RAD ) ); // J1
+      jj.push_back( j1j2= rand_range( 0*DEG2RAD, 90*DEG2RAD ) );  // J1
       jj.push_back( j1j2 );    // we need J2==J1 to enforce the joint-coupling
-      jj.push_back( rand_range(   0*DEG2RAD, 90*DEG2RAD ) ); // J3
-      jj.push_back( rand_range( -20*DEG2RAD, 20*DEG2RAD )); // J4 abduction
+      jj.push_back( rand_range(   0*DEG2RAD, 90*DEG2RAD ) );  // J3
+      jj.push_back( rand_range( -20*DEG2RAD, 20*DEG2RAD ));  // J4 abduction
       if (isLittleFinger) {
-        jj.push_back( rand_range( 0*DEG2RAD, 45*DEG2RAD ) ); // LFJ5
+        jj.push_back( rand_range( 0*DEG2RAD, 45*DEG2RAD ) );  // LFJ5
       }
     }
 
@@ -121,7 +121,7 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
       if(verbose)
         ROS_INFO( "FK req %d joint %d %s   radians %6.2f", i, j, jointNames[j].c_str(), jj[j] );
     }
-    fk.call( fkdata ); // (fkeq, fkres );
+    fk.call( fkdata );  // (fkeq, fkres );
 
     // arm_navigation_msgs::ArmNavigationErrorCodes status = fkdata.response.error_code.val;
     int status = fkdata.response.error_code.val;
@@ -129,7 +129,7 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
       ROS_INFO( "FK returned status %d", (int) status );
 
     std::vector<geometry_msgs::PoseStamped> pp = fkdata.response.pose_stamped;
-    geometry_msgs::Pose pose = pp[0].pose; // position.xyz orientation.xyzw
+    geometry_msgs::Pose pose = pp[0].pose;  // position.xyz orientation.xyzw
     // string[] fk_link_names
     if (status == fkdata.response.error_code.SUCCESS) {
       if(verbose)
@@ -139,7 +139,7 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
                   pose.position.z );
     }
     else {
-      continue; // no use trying IK without FK success
+      continue;  // no use trying IK without FK success
     }
 
     // now try IK to reconstruct FK angles
@@ -153,7 +153,7 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
     ikreq.ik_request.pose_stamped.pose.position.y = pose.position.y;
     ikreq.ik_request.pose_stamped.pose.position.z = pose.position.z;
 
-    //ori is not relevant with the used ik_solver but set it anyway to identity
+   // ori is not relevant with the used ik_solver but set it anyway to identity
     ikreq.ik_request.pose_stamped.pose.orientation.x = 0.0;
     ikreq.ik_request.pose_stamped.pose.orientation.y = 0.0;
     ikreq.ik_request.pose_stamped.pose.orientation.z = 0.0;
@@ -194,7 +194,7 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
     }
     else
     {
-			//not solved
+		  // not solved
 			ROS_WARN("IK Not solved for FK req %d",i);
 			for( unsigned int j=0; j < jointNames.size(); j++ ) {
 				ROS_WARN( "    joint %d %s radians %6.2f", j, jointNames[j].c_str(), jj[j] );
@@ -226,14 +226,14 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
       if(verbose)
         ROS_INFO( "FK req %d with IK result, joint %d %s   radians %6.2f", i, j, jointNames[ix].c_str(), x );
     }
-    fk.call( fkdata ); // (fkeq, fkres );
+    fk.call( fkdata );  // (fkeq, fkres );
 
     status = fkdata.response.error_code.val;
     if(verbose)
       ROS_INFO( "FK returned status %d", (int) status );
 
     std::vector<geometry_msgs::PoseStamped> ppp = fkdata.response.pose_stamped;
-    geometry_msgs::Pose pppose = ppp[0].pose; // position.xyz orientation.xyzw
+    geometry_msgs::Pose pppose = ppp[0].pose;  // position.xyz orientation.xyzw
     // string[] fk_link_names
     if (status == fkdata.response.error_code.SUCCESS) {
       if(verbose)
@@ -250,9 +250,9 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
   }
 
   ROS_INFO( "-#- tested %d random positions, %d IK solved, %d matched", n_tests, n_iksolved, n_matched );
-  EXPECT_NEAR(n_iksolved,n_tests,2); // very few times, when values are close to joint limits, no solution is found
-  //matching is when angles are the same at 0.5 deg precision, but this seems not often true although IK can reach 1e-4 precision
-  //EXPECT_TRUE(double(n_matched)/n_tests >= 0.80);
+  EXPECT_NEAR(n_iksolved,n_tests,2);  // very few times, when values are close to joint limits, no solution is found
+ // matching is when angles are the same at 0.5 deg precision, but this seems not often true although IK can reach 1e-4 precision
+ // EXPECT_TRUE(double(n_matched)/n_tests >= 0.80);
 }
 
 // Declare a test
@@ -311,7 +311,7 @@ int main(int argc, char **argv){
   
   int seed = 0;
   while( seed == 0 ) {
-    seed = ros::Time::now().sec; // wait until /clock received
+    seed = ros::Time::now().sec;  // wait until /clock received
   }
   ROS_INFO( "-#- FK/IK test started, random seed is %d", seed );
   srandom( seed ); 

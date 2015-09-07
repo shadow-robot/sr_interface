@@ -46,21 +46,21 @@ namespace KDL
         int k=0;
         Frame total;
         for (unsigned int i=0;i<chain.getNrOfSegments();i++) {
-            //Calculate new Frame_base_ee
+           // Calculate new Frame_base_ee
             if(chain.getSegment(i).getJoint().getType()!=Joint::None){
-            	//pose of the new end-point expressed in the base
+            // pose of the new end-point expressed in the base
                 total = T_tmp*chain.getSegment(i).pose(q_in(j));
-                //changing base of new segment's twist to base frame
-                //t_tmp = T_tmp.M*chain.getSegment(i).twist(1.0);
+               // changing base of new segment's twist to base frame
+               // t_tmp = T_tmp.M*chain.getSegment(i).twist(1.0);
                 t_tmp = T_tmp.M*chain.getSegment(i).twist(q_in(j),1.0);
             }else{
                 total = T_tmp*chain.getSegment(i).pose(0.0);
             }
 
-            //Changing Refpoint of all columns to new ee
+           // Changing Refpoint of all columns to new ee
             changeRefPoint(jac_tmp,total.p-T_tmp.p,jac_tmp);
 
-            //Only increase jointnr if the segment has a joint
+           // Only increase jointnr if the segment has a joint
             if(chain.getSegment(i).getJoint().getType()!=Joint::None){
 		jac_tmp.setColumn(k++,t_tmp);
                 j++;

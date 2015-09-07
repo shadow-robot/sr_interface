@@ -106,7 +106,7 @@ PLUGINLIB_EXPORT_CLASS( hand_kinematics::HandKinematicsPlugin, kinematics::Kinem
       dimension_=5;
     }
 
-    Eigen::MatrixXd Mx(6,6); // Task space weighting matrix: We will only consider translation components.
+    Eigen::MatrixXd Mx(6,6);  // Task space weighting matrix: We will only consider translation components.
     for(unsigned int i=0; i < 6; i++)
     {
       for(unsigned int j=0; j < 6; j++)
@@ -115,12 +115,12 @@ PLUGINLIB_EXPORT_CLASS( hand_kinematics::HandKinematicsPlugin, kinematics::Kinem
       }
     }
     // Control only position of the fingertip. Discard error in orientation
-    Mx(0,0)= 1.0; // coordinate X
-    Mx(1,1)= 1.0; // coordinate Y
-    Mx(2,2)= 1.0; // coordinate Z
-    Mx(3,3)= 0.0; // rotation X
-    Mx(4,4)= 0.0; // rotation Y
-    Mx(5,5)= 0.0; // rotation Z
+    Mx(0,0)= 1.0;  // coordinate X
+    Mx(1,1)= 1.0;  // coordinate Y
+    Mx(2,2)= 1.0;  // coordinate Z
+    Mx(3,3)= 0.0;  // rotation X
+    Mx(4,4)= 0.0;  // rotation Y
+    Mx(5,5)= 0.0;  // rotation Z
       
     ROS_INFO("CHAIN--> Joints:%d, Ind. Joints:%d, Segments:%d",kdl_chain_.getNrOfJoints(),kdl_chain_.getNrOfIndJoints(),kdl_chain_.getNrOfSegments());
     // Get Solver Parameters
@@ -177,7 +177,7 @@ PLUGINLIB_EXPORT_CLASS( hand_kinematics::HandKinematicsPlugin, kinematics::Kinem
     KDL::Frame pose_desired;
     tf::poseMsgToKDL(ik_pose, pose_desired);
 
-    //Do the IK
+   // Do the IK
     KDL::JntArray jnt_pos_in;
     KDL::JntArray jnt_pos_out;
     jnt_pos_in.resize(dimension_);
@@ -187,7 +187,7 @@ PLUGINLIB_EXPORT_CLASS( hand_kinematics::HandKinematicsPlugin, kinematics::Kinem
     }
     
     int ik_valid=-1;
-    //restart 10 times with different rand
+   // restart 10 times with different rand
     for(int i=0; i < 10 && ik_valid < 0; i++)
     {
       if(tip_frame_.find("thtip")!=std::string::npos || tip_frame_.find("lftip")!=std::string::npos)
@@ -288,7 +288,7 @@ PLUGINLIB_EXPORT_CLASS( hand_kinematics::HandKinematicsPlugin, kinematics::Kinem
     KDL::Frame pose_desired;
     tf::poseMsgToKDL(ik_pose, pose_desired);
 
-    //Do the IK
+   // Do the IK
     KDL::JntArray jnt_pos_in;
     KDL::JntArray jnt_pos_out;
     jnt_pos_in.resize(dimension_);
@@ -298,7 +298,7 @@ PLUGINLIB_EXPORT_CLASS( hand_kinematics::HandKinematicsPlugin, kinematics::Kinem
     }
 
     int ik_valid=-1;
-    //restart 10 times with different rand
+   // restart 10 times with different rand
     for(int i=0; i < 10 && ik_valid < 0; i++)
     {
       if(tip_frame_.find("thtip")!=std::string::npos || tip_frame_.find("lftip")!=std::string::npos)
@@ -423,6 +423,6 @@ PLUGINLIB_EXPORT_CLASS( hand_kinematics::HandKinematicsPlugin, kinematics::Kinem
   }
 
 
-}//end namespace 
+// end namespace 
 
 

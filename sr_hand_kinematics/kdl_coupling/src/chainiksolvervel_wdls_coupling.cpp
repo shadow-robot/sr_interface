@@ -76,23 +76,23 @@ namespace KDL
     
     int ChainIkSolverVel_wdls_coupling::CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out)
     {
-	// Update the coupling matrix of the chain
+	  // Update the coupling matrix of the chain
 	this->chain.updateCoupling(q_in);
-	// Compute the Jacobian
+	  // Compute the Jacobian
         jnt2jac.JntToJac(q_in,jac);
         
         double sum;
         unsigned int i,j;
  
         // Create the Weighted jacobian
-        //tmp_jac_weight1 = jac.data.lazyProduct(weight_js); // RE-USE THIS LINE IF FAILURE
-        //tmp_jac_weight2 = weight_ts.lazyProduct(tmp_jac_weight1); // RE-USE THIS LINE IF FAILURE
+       // tmp_jac_weight1 = jac.data.lazyProduct(weight_js);  // RE-USE THIS LINE IF FAILURE
+       // tmp_jac_weight2 = weight_ts.lazyProduct(tmp_jac_weight1);  // RE-USE THIS LINE IF FAILURE
         tmp_jac_weight1.noalias() = jac.data*weight_js;
         tmp_jac_weight2.noalias() = weight_ts*tmp_jac_weight1;
 
         // Compute the SVD of the weighted jacobian
         int ret = svd_eigen_HH(tmp_jac_weight2,U,S,V,tmp,maxiter);
-        //Pre-multiply U and V by the task space and joint space weighting matrix respectively
+       // Pre-multiply U and V by the task space and joint space weighting matrix respectively
         
         Eigen::MatrixXd U_temp(6,6);
         U_temp.setZero();
@@ -102,8 +102,8 @@ namespace KDL
         else
                 U_temp.topLeftCorner(U.rows(),U.cols())=U;
 
-        //tmp_ts = weight_ts.lazyProduct(U_temp);  // RE-USE THIS LINE IF FAILURE
-        tmp_js = weight_js.lazyProduct(V); // DO NOT REMOVE LAZY HERE
+       // tmp_ts = weight_ts.lazyProduct(U_temp);  // RE-USE THIS LINE IF FAILURE
+        tmp_js = weight_js.lazyProduct(V);  // DO NOT REMOVE LAZY HERE
         tmp_ts.noalias() = weight_ts*U_temp;
         
         // tmp = (Si*U'*Ly*y), 
@@ -121,7 +121,7 @@ namespace KDL
                 tmp(i) = sum/S(i);
         }
 
-        //qdot_out.data=(chain.cm*(tmp_js*tmp).lazy()).lazy();
+       // qdot_out.data=(chain.cm*(tmp_js*tmp).lazy()).lazy();
         qdot_out.data.noalias()=chain.cm*(tmp_js*tmp);
         return ret;
     }

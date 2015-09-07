@@ -53,11 +53,11 @@ namespace KDL {
 
     Chain_coupling& Chain_coupling::operator=(const Chain_coupling& in)
     {
-	// Copy KDL Chains
+	  // Copy KDL Chains
 	Chain & c1=(Chain &)(*this);
 	const Chain & c2=(const Chain &)(in);
 	c1= c2;
-	// Copy Coupling Components (coupling matrix and coupling function)
+	  // Copy Coupling Components (coupling matrix and coupling function)
 	this->setUpdateCouplingFunction(in.getUpdateCouplingFunction());
         return *this;
 
@@ -65,10 +65,10 @@ namespace KDL {
 
     Chain_coupling& Chain_coupling::operator=(const Chain& in)
     {
-	// Copy KDL Chains
+	  // Copy KDL Chains
 	Chain & c1=(Chain &)(*this);
 	c1= in;
-	// The number of independent joints is the same as the total number of joints
+	  // The number of independent joints is the same as the total number of joints
 	this->nrOfIndJoints= in.getNrOfJoints();
 	this->cm= Eigen::MatrixXd::Identity(in.getNrOfJoints(), in.getNrOfJoints());
         return *this;
@@ -87,7 +87,7 @@ namespace KDL {
 		this->updateFunction= NULL;
 		return 0;
 	}
-	// Verify that the update function generates a coupling matrix with correct size
+	  // Verify that the update function generates a coupling matrix with correct size
 	JntArray jnt(this->getNrOfJoints());
 	KDL::SetToZero(jnt);
 	Eigen::MatrixXd cm_init= updateFunc(jnt);
@@ -96,11 +96,11 @@ namespace KDL {
 		ROS_ERROR("Number of rows of coupling matrix has to match total number of joints");
 		return -1;
 	}
-	// Initialize number of independent joints
+	  // Initialize number of independent joints
 	nrOfIndJoints= cm_init.cols();
-	// Initialize update function
+	  // Initialize update function
 	this->updateFunction= updateFunc;
-	// Initialize coupling matrix
+	  // Initialize coupling matrix
 	this->cm= cm_init;
 	return 0;
     }

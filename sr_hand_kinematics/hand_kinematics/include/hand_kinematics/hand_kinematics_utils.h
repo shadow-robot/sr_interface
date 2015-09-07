@@ -124,4 +124,4 @@ namespace hand_kinematics
   
 }
 
-#endif// HAND_IK_UTILS_H
+#endif  // HAND_IK_UTILS_H

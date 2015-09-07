@@ -83,7 +83,7 @@ ros::Publisher pub;
  */
 void callback(const control_msgs::JointControllerStateConstPtr& msg)
 {
-  //publish the message
+ // publish the message
   std_msgs::Float64 command;
   command.data = msg->set_point;
   pub.publish(command);
@@ -101,7 +101,7 @@ void callback(const control_msgs::JointControllerStateConstPtr& msg)
  */
 int main(int argc, char** argv)
 {
-  //init the ros node
+ // init the ros node
   ros::init(argc, argv, "link_joints_example");
   ros::NodeHandle node;
 
@@ -118,7 +118,7 @@ int main(int argc, char** argv)
    */
   pub = node.advertise<std_msgs::Float64>("sh_" + child_name + controller_type + "/command", 2);
 
-  //subscribe until interrupted.
+ // subscribe until interrupted.
   while( ros::ok() )
     ros::spin();
 

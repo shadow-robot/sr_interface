@@ -44,13 +44,13 @@ tf::Vector3 interPolCir(tf::Vector3 center, unsigned int direction, float radius
     {
         switch(direction)
         {
-        case 1: //around x axis (// to J3 axis)
+        case 1:// around x axis (  // to J3 axis)
             pos=center+tf::Vector3(0,radius*cos(ang),radius*sin(ang));
             break;
-        case 2: //around y axis (// to J4 axis)
+        case 2:// around y axis (  // to J4 axis)
             pos=center+tf::Vector3(radius*cos(ang),0,radius*sin(ang));
             break;
-        case 3: //around z axis (// along finger length axis when straight at J3=0)
+        case 3:// around z axis (  // along finger length axis when straight at J3=0)
             pos=center+tf::Vector3(radius*cos(ang),radius*sin(ang),0);
             break;
         }
@@ -158,7 +158,7 @@ int main(int argc, char **argv)
     gpik_req.ik_request.pose_stamped.pose.position.y = 0;
     gpik_req.ik_request.pose_stamped.pose.position.z = 0;
 
-    //pos is not relevant with the used ik_solver but set it anyway to identity
+   // pos is not relevant with the used ik_solver but set it anyway to identity
     gpik_req.ik_request.pose_stamped.pose.orientation.x = 0.0;
     gpik_req.ik_request.pose_stamped.pose.orientation.y = 0.0;
     gpik_req.ik_request.pose_stamped.pose.orientation.z = 0.0;
@@ -175,7 +175,7 @@ int main(int argc, char **argv)
     }
 
     ros::spinOnce();
-    sleep(1); // this is required otherwise publishers are not ready for first messages to be sent
+    sleep(1);  // this is required otherwise publishers are not ready for first messages to be sent
 
 
     // do a linear forware and backward movement in reachable domain of the FF finger

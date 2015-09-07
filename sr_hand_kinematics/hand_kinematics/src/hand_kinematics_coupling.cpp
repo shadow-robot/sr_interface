@@ -45,10 +45,10 @@ Eigen::MatrixXd updateCouplingFF(const KDL::JntArray& q)
     for (unsigned int j=0; j<3; j++)
       cm(i,j) = 0.0;
 
-  cm(0,0) = 1.0; // J4
-  cm(1,1) = 1.0; // J3
-  cm(2,2) = 1.0; // J2
-  cm(3,2) = 1.0; // J1
+  cm(0,0) = 1.0;  // J4
+  cm(1,1) = 1.0;  // J3
+  cm(2,2) = 1.0;  // J2
+  cm(3,2) = 1.0;  // J1
 
   return cm;
 }
@@ -59,10 +59,10 @@ Eigen::MatrixXd updateCouplingMF(const KDL::JntArray& q)
     for (unsigned int j=0; j<3; j++)
       cm(i,j) = 0.0;
 
-  cm(0,0) = 1.0; // J4
-  cm(1,1) = 1.0; // J3
-  cm(2,2) = 1.0; // J2
-  cm(3,2) = 1.0; // J1
+  cm(0,0) = 1.0;  // J4
+  cm(1,1) = 1.0;  // J3
+  cm(2,2) = 1.0;  // J2
+  cm(3,2) = 1.0;  // J1
 
   return cm;
 }
@@ -73,10 +73,10 @@ Eigen::MatrixXd updateCouplingRF(const KDL::JntArray& q)
     for (unsigned int j=0; j<3; j++)
       cm(i,j) = 0.0;
 
-  cm(0,0) = 1.0; // J4
-  cm(1,1) = 1.0; // J3
-  cm(2,2) = 1.0; // J2
-  cm(3,2) = 1.0; // J1
+  cm(0,0) = 1.0;  // J4
+  cm(1,1) = 1.0;  // J3
+  cm(2,2) = 1.0;  // J2
+  cm(3,2) = 1.0;  // J1
 
   return cm;
 }
@@ -87,11 +87,11 @@ Eigen::MatrixXd updateCouplingLF(const KDL::JntArray& q)
     for (unsigned int j=0; j<4; j++)
       cm(i,j) = 0.0;
 
-  cm(0,0) = 1.0; // J5
-  cm(1,1) = 1.0; // J4
-  cm(2,2) = 1.0; // J3
-  cm(3,3) = 1.0; // J2
-  cm(4,3) = 1.0; // J1
+  cm(0,0) = 1.0;  // J5
+  cm(1,1) = 1.0;  // J4
+  cm(2,2) = 1.0;  // J3
+  cm(3,3) = 1.0;  // J2
+  cm(4,3) = 1.0;  // J1
 
   return cm;
 }
@@ -242,7 +242,7 @@ bool Kinematics::init() {
     chain.setUpdateCouplingFunction(updateCouplingTH);
   }
 
-  Eigen::MatrixXd Mx(6,6); // Task space weighting matrix: We will only consider translation components.
+  Eigen::MatrixXd Mx(6,6);  // Task space weighting matrix: We will only consider translation components.
   for(unsigned int i=0; i < 6; i++)
   {
     for(unsigned int j=0; j < 6; j++)
@@ -251,12 +251,12 @@ bool Kinematics::init() {
     }
   }
   // Control only position of the fingertip. Discard error in orientation
-  Mx(0,0)= 1.0; // coordinate X
-  Mx(1,1)= 1.0; // coordinate Y
-  Mx(2,2)= 1.0; // coordinate Z
-  Mx(3,3)= 0.0; // rotation X
-  Mx(4,4)= 0.0; // rotation Y
-  Mx(5,5)= 0.0; // rotation Z
+  Mx(0,0)= 1.0;  // coordinate X
+  Mx(1,1)= 1.0;  // coordinate Y
+  Mx(2,2)= 1.0;  // coordinate Z
+  Mx(3,3)= 0.0;  // rotation X
+  Mx(4,4)= 0.0;  // rotation Y
+  Mx(5,5)= 0.0;  // rotation Z
 
   ROS_DEBUG("CHAIN--> Joints:%d, Ind. Joints:%d, Segments:%d",chain.getNrOfJoints(),chain.getNrOfIndJoints(),chain.getNrOfSegments());
   // Get Solver Parameters
@@ -284,7 +284,7 @@ bool Kinematics::init() {
   ROS_DEBUG("IK Solver, maxIterations: %d, epsilon: %f, lambda: %f",maxIterations, epsilon, lambda);
 
   // Build Solvers
-  fk_solver = new KDL::ChainFkSolverPos_recursive(chain); //keep the standard arm_kinematics fk_solver
+  fk_solver = new KDL::ChainFkSolverPos_recursive(chain);  // keep the standard arm_kinematics fk_solver
   ik_solver_vel= new KDL::ChainIkSolverVel_wdls_coupling(chain,epsilon,maxIterations);
   ik_solver_vel->setLambda(lambda);
   ik_solver_vel->setWeightTS(Mx);
@@ -429,7 +429,7 @@ bool Kinematics::getPositionIK(moveit_msgs::GetPositionIK::Request &request,
   tf::Stamped<tf::Pose> transform_root;
   tf::poseStampedMsgToTF( pose_msg_in, transform );
 
-  //Do the IK
+ // Do the IK
   KDL::JntArray jnt_pos_in;
   KDL::JntArray jnt_pos_out;
   jnt_pos_in.resize(num_joints);
@@ -441,7 +441,7 @@ bool Kinematics::getPositionIK(moveit_msgs::GetPositionIK::Request &request,
       ROS_ERROR("i: %d, No joint index for %s",i,request.ik_request.robot_state.joint_state.name[i].c_str());
     }
   }
-  //Convert F to our root_frame
+ // Convert F to our root_frame
   try {
     tf_listener.transformPose(root_name, transform, transform_root);
   } catch (...) {

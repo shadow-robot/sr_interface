@@ -31,7 +31,7 @@
 #include <kdl/chain.hpp>
 
 namespace KDL {
-    typedef Eigen::MatrixXd (*updateFuncPtr)(const JntArray& q); // Pointer to update function of coupling matrix
+    typedef Eigen::MatrixXd (*updateFuncPtr)(const JntArray& q);  // Pointer to update function of coupling matrix
     /**
 	  * \brief This class encapsulates a <strong>serial</strong> kinematic
 	  * interconnection structure. It is build out of segments.
@@ -84,12 +84,12 @@ namespace KDL {
         unsigned int getNrOfIndJoints()const {return nrOfIndJoints;};
         ~Chain_coupling();
 
-	// Matrix with coupling coefficients between joints
+	  // Matrix with coupling coefficients between joints
         Eigen::MatrixXd cm;
     };
 
 
 
-}//end of namespace KDL
+// end of namespace KDL
 
 #endif

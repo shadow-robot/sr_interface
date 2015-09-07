@@ -79,7 +79,7 @@ namespace KDL
          */
 
         explicit ChainIkSolverVel_wdls_coupling(const Chain_coupling& chain,double eps=0.00001,int maxiter=150);
-        //=ublas::identity_matrix<double>
+       // =ublas::identity_matrix<double>
         ~ChainIkSolverVel_wdls_coupling();
 
         virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);

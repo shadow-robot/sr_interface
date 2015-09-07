@@ -51,7 +51,7 @@ namespace KDL
 
         ChainIkSolverVel_wdls_coupling* iksolver_wdls;
         iksolver_wdls= dynamic_cast<ChainIkSolverVel_wdls_coupling*> (&iksolver);
-        if(iksolver_wdls != NULL) // Verify Mx matrix if ik velocity solver is based on WDLS
+        if(iksolver_wdls != NULL)  // Verify Mx matrix if ik velocity solver is based on WDLS
         {
           Eigen::MatrixXd Mx= iksolver_wdls->getWeightTS();
           // Remove the error of those components which are null in Mx matrix.

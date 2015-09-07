@@ -116,7 +116,7 @@ namespace hand_kinematics
 	void getKDLChainInfo(const KDL::Chain &chain,
                        moveit_msgs::KinematicSolverInfo &chain_info)
   {
-    int i=0; // segment number
+    int i=0;  // segment number
     while(i < (int)chain.getNrOfSegments())
     {
       chain_info.link_names.push_back(chain.getSegment(i).getName());
@@ -127,7 +127,7 @@ namespace hand_kinematics
 	int getKDLSegmentIndex(const KDL::Chain &chain,
                          const std::string &name)
   {
-    int i=0; // segment number
+    int i=0;  // segment number
     while(i < (int)chain.getNrOfSegments())
     {
       if(chain.getSegment(i).getName() == name)
@@ -314,10 +314,10 @@ namespace hand_kinematics
 			for (unsigned int j=0; j<3; j++)
 							cm(i,j) = 0.0;
 
-		cm(0,0) = 1.0; // J4
-		cm(1,1) = 1.0; // J3
-		cm(2,2) = 1.0; // J2
-		cm(3,2) = 1.0; // J1
+		cm(0,0) = 1.0;  // J4
+		cm(1,1) = 1.0;  // J3
+		cm(2,2) = 1.0;  // J2
+		cm(3,2) = 1.0;  // J1
 
 		return cm;
 	}
@@ -328,10 +328,10 @@ namespace hand_kinematics
 			for (unsigned int j=0; j<3; j++)
 							cm(i,j) = 0.0;
 
-		cm(0,0) = 1.0; // J4
-		cm(1,1) = 1.0; // J3
-		cm(2,2) = 1.0; // J2
-		cm(3,2) = 1.0; // J1
+		cm(0,0) = 1.0;  // J4
+		cm(1,1) = 1.0;  // J3
+		cm(2,2) = 1.0;  // J2
+		cm(3,2) = 1.0;  // J1
 
 		return cm;
 	}
@@ -342,10 +342,10 @@ namespace hand_kinematics
 			for (unsigned int j=0; j<3; j++)
 							cm(i,j) = 0.0;
 
-		cm(0,0) = 1.0; // J4
-		cm(1,1) = 1.0; // J3
-		cm(2,2) = 1.0; // J2
-		cm(3,2) = 1.0; // J1
+		cm(0,0) = 1.0;  // J4
+		cm(1,1) = 1.0;  // J3
+		cm(2,2) = 1.0;  // J2
+		cm(3,2) = 1.0;  // J1
 
 		return cm;
 	}
@@ -356,17 +356,17 @@ namespace hand_kinematics
 				for (unsigned int j=0; j<4; j++)
 							cm(i,j) = 0.0;
 
-		cm(0,0) = 1.0; // J5
-		cm(1,1) = 1.0; // J4
-		cm(2,2) = 1.0; // J3
-		cm(3,3) = 1.0; // J2
-		cm(4,3) = 1.0; // J1
+		cm(0,0) = 1.0;  // J5
+		cm(1,1) = 1.0;  // J4
+		cm(2,2) = 1.0;  // J3
+		cm(3,3) = 1.0;  // J2
+		cm(4,3) = 1.0;  // J1
 
 		return cm;
 	}
 	Eigen::MatrixXd updateCouplingTH(const KDL::JntArray& q)
 	{
-		// There is no coupling in the thumb. So the coupling matrix is the identity matrix
+		  // There is no coupling in the thumb. So the coupling matrix is the identity matrix
 		return Eigen::MatrixXd::Identity(5,5);
 	}
 

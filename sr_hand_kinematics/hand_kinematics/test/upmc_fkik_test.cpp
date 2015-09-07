@@ -92,7 +92,7 @@ void random_test_finger_fkik( ros::NodeHandle nh, std::string PREFIX, std::strin
   }
 
   // check that the FK/IK services are available for the finger
-  //
+ // 
   ROS_INFO( "waiting for FK/IK service for finger %s", prefix.c_str() );
   ros::service::waitForService(prefix+"_kinematics/get_fk_solver_info");
   ros::service::waitForService(prefix+"_kinematics/get_fk");
@@ -101,7 +101,7 @@ void random_test_finger_fkik( ros::NodeHandle nh, std::string PREFIX, std::strin
 
   // create the service clients; note that we reuse them throughout
   // the whole test for a given finger
-  //
+ // 
   ros::ServiceClient fk = nh.serviceClient<moveit_msgs::GetPositionFK>(prefix+"_kinematics/get_fk", true);
   ros::ServiceClient ik = nh.serviceClient<moveit_msgs::GetPositionIK>(prefix+"_kinematics/get_ik", true);
 
@@ -116,25 +116,25 @@ void random_test_finger_fkik( ros::NodeHandle nh, std::string PREFIX, std::strin
   std::vector<double> jj;
   for( int i=0; i < n_tests; i++ ) {
     jj.resize(0);
-    if (isThumb) { // min-degrees 0 -30 -15 0 -60  max-degrees 90 30 15 75 60
-      jj.push_back( rand_range(   0*DEG2RAD,  90*DEG2RAD ) ); // J1
-      jj.push_back( rand_range( -30*DEG2RAD,  30*DEG2RAD ) ); // J1
-      jj.push_back( rand_range( -15*DEG2RAD,  15*DEG2RAD ) ); // J1
-      jj.push_back( rand_range(   0*DEG2RAD,  75*DEG2RAD ) ); // J1
-      jj.push_back( rand_range( -60*DEG2RAD,  60*DEG2RAD ) ); // J1
+    if (isThumb) {  // min-degrees 0 -30 -15 0 -60  max-degrees 90 30 15 75 60
+      jj.push_back( rand_range(   0*DEG2RAD,  90*DEG2RAD ) );  // J1
+      jj.push_back( rand_range( -30*DEG2RAD,  30*DEG2RAD ) );  // J1
+      jj.push_back( rand_range( -15*DEG2RAD,  15*DEG2RAD ) );  // J1
+      jj.push_back( rand_range(   0*DEG2RAD,  75*DEG2RAD ) );  // J1
+      jj.push_back( rand_range( -60*DEG2RAD,  60*DEG2RAD ) );  // J1
     }
     else {
-      jj.push_back( j1j2= rand_range( 0*DEG2RAD, 90*DEG2RAD ) ); // J1
+      jj.push_back( j1j2= rand_range( 0*DEG2RAD, 90*DEG2RAD ) );  // J1
       jj.push_back( j1j2 );    // we need J2==J1 to enforce the joint-coupling
-      jj.push_back( rand_range(   0*DEG2RAD, 90*DEG2RAD ) ); // J3
-      jj.push_back( rand_range( -25*DEG2RAD, 25*DEG2RAD )); // J4 abduction
+      jj.push_back( rand_range(   0*DEG2RAD, 90*DEG2RAD ) );  // J3
+      jj.push_back( rand_range( -25*DEG2RAD, 25*DEG2RAD ));  // J4 abduction
       if (isLittleFinger) {
-        jj.push_back( rand_range( 0*DEG2RAD, 40*DEG2RAD ) ); // LFJ5
+        jj.push_back( rand_range( 0*DEG2RAD, 40*DEG2RAD ) );  // LFJ5
       }
     }
 
     // call fk to get the fingertip <prefix+tip> position
-    //
+   // 
     fkdata.request.header.frame_id = "palm";
     fkdata.request.header.stamp = ros::Time::now();
     fkdata.request.fk_link_names.resize( 1 );
@@ -152,7 +152,7 @@ void random_test_finger_fkik( ros::NodeHandle nh, std::string PREFIX, std::strin
       if(verbose)
         ROS_INFO( "FK req %d joint %d %s   radians %6.2f", i, j, jointNames[j].c_str(), jj[j] );
     }
-    fk.call( fkdata ); // (fkeq, fkres );
+    fk.call( fkdata );  // (fkeq, fkres );
 
     // arm_navigation_msgs::ArmNavigationErrorCodes status = fkdata.response.error_code.val;
     int status = fkdata.response.error_code.val;
@@ -160,7 +160,7 @@ void random_test_finger_fkik( ros::NodeHandle nh, std::string PREFIX, std::strin
       ROS_INFO( "FK returned status %d", (int) status );
 
     std::vector<geometry_msgs::PoseStamped> pp = fkdata.response.pose_stamped;
-    geometry_msgs::Pose pose = pp[0].pose; // position.xyz orientation.xyzw
+    geometry_msgs::Pose pose = pp[0].pose;  // position.xyz orientation.xyzw
     // string[] fk_link_names
     if (status == fkdata.response.error_code.SUCCESS) {
       if(verbose)
@@ -170,7 +170,7 @@ void random_test_finger_fkik( ros::NodeHandle nh, std::string PREFIX, std::strin
                   pose.position.z );
     }
     else {
-      continue; // no use trying IK without FK success
+      continue;  // no use trying IK without FK success
     }
 
     // now try IK to reconstruct FK angles
@@ -184,7 +184,7 @@ void random_test_finger_fkik( ros::NodeHandle nh, std::string PREFIX, std::strin
     ikreq.ik_request.pose_stamped.pose.position.y = pose.position.y;
     ikreq.ik_request.pose_stamped.pose.position.z = pose.position.z;
 
-    //pos is not relevant with the used ik_solver but set it anyway to identity
+   // pos is not relevant with the used ik_solver but set it anyway to identity
     ikreq.ik_request.pose_stamped.pose.orientation.x = 0.0;
     ikreq.ik_request.pose_stamped.pose.orientation.y = 0.0;
     ikreq.ik_request.pose_stamped.pose.orientation.z = 0.0;
@@ -225,7 +225,7 @@ void random_test_finger_fkik( ros::NodeHandle nh, std::string PREFIX, std::strin
     }
 
     // call fk again but this time with the joint-angles from IK 
-    //
+   // 
     fkdata.request.header.frame_id = "palm";
     fkdata.request.header.stamp = ros::Time::now();
     fkdata.request.fk_link_names.resize( 1 );
@@ -246,14 +246,14 @@ void random_test_finger_fkik( ros::NodeHandle nh, std::string PREFIX, std::strin
       if(verbose)
         ROS_INFO( "FK req %d joint %d %s   radians %6.2f", i, j, jointNames[ix].c_str(), x );
     }
-    fk.call( fkdata ); // (fkeq, fkres );
+    fk.call( fkdata );  // (fkeq, fkres );
 
     status = fkdata.response.error_code.val;
     if(verbose)
       ROS_INFO( "FK returned status %d", (int) status );
 
     std::vector<geometry_msgs::PoseStamped> ppp = fkdata.response.pose_stamped;
-    geometry_msgs::Pose pppose = ppp[0].pose; // position.xyz orientation.xyzw
+    geometry_msgs::Pose pppose = ppp[0].pose;  // position.xyz orientation.xyzw
     // string[] fk_link_names
     if (status == fkdata.response.error_code.SUCCESS) {
       if(verbose)
@@ -297,7 +297,7 @@ int main(int argc, char **argv)
   
   int seed = 0;
   while( seed == 0 ) {
-    seed = ros::Time::now().sec; // wait until /clock received
+    seed = ros::Time::now().sec;  // wait until /clock received
   }
   ROS_INFO( "-#- FK/IK test started, random seed is %d", seed );
   srandom( seed );

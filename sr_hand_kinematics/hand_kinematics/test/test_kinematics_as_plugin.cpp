@@ -73,7 +73,7 @@ class MyTest
     {
       kinematics_solver_ = kinematics_loader_->createInstance(plugin_name);
     }
-    catch(pluginlib::PluginlibException& ex)//handle the class failing to load
+    catch(pluginlib::PluginlibException& ex  // handle the class failing to load
     {
       ROS_ERROR("The plugin failed to load. Error: %s", ex.what());
       EXPECT_TRUE(0);
@@ -251,7 +251,7 @@ TEST(HandIKPlugin, searchIK)
   kinematic_model.reset(new robot_model::RobotModel(urdf_model, srdf_model));
   robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(my_test.kinematics_solver_->getGroupName());
 
-  //Test inverse kinematics
+ // Test inverse kinematics
   std::vector<double> seed, fk_values, solution;
   double timeout = 5.0;
   moveit_msgs::MoveItErrorCodes error_code;
@@ -331,7 +331,7 @@ TEST(HandIKPlugin, searchIKWithCallbacks)
   kinematic_model.reset(new robot_model::RobotModel(urdf_model, srdf));
   robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(my_test.kinematics_solver_->getGroupName());
 
-  //Test inverse kinematics
+ // Test inverse kinematics
   std::vector<double> seed,fk_values,solution;
   double timeout = 5.0;
   moveit_msgs::MoveItErrorCodes error_code;
@@ -357,7 +357,7 @@ TEST(HandIKPlugin, searchIKWithCallbacks)
     kinematic_state.setToRandomPositions(joint_model_group);
     kinematic_state.copyJointGroupPositions(joint_model_group, fk_values);
 
-	// make the coupling 1:1 in random values
+	  // make the coupling 1:1 in random values
     if(joint_names[0].find("TH")==std::string::npos && joint_names[0].find("LF")==std::string::npos)
     {
       fk_values[3]=fk_values[2];
