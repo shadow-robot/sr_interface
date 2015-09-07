@@ -20,6 +20,7 @@
 #include <moveit_msgs/GetKinematicSolverInfo.h>
 #include <moveit_msgs/GetPositionFK.h>
 #include <moveit_msgs/GetPositionIK.h>
+#include <sr_utilities/sr_math_utils.hpp>
 // #include <std_msgs/Float64.h>
 // #include <pr2_mechanism_msgs/ListControllers.h>
 
@@ -67,7 +68,7 @@ timeout: 1000}"
 
 double rand_range(double min_n, double max_n)
 {
-  return static_cast<double>(rand()) / RAND_MAX * (max_n - min_n) + min_n;
+  return sr_math_utils::Random::instance().generate<double>(min_n, max_n);
 }
 
 
