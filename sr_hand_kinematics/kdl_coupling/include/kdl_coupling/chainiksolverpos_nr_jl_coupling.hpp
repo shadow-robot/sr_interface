@@ -32,7 +32,6 @@
 
 namespace KDL
 {
-
   /**
    * Implementation of a general inverse position kinematics
    * algorithm based on Newton-Raphson iterations to calculate the
@@ -83,7 +82,6 @@ namespace KDL
     unsigned int maxiter;
     double eps;
   };
-
-}
+}  // namespace KDL
 
 #endif

@@ -6,7 +6,7 @@
 // URL: http://www.orocos.org/kdl
 
 // Modified by Juan A. Corrales, ISIR, UPMC
-// Added coupled joint support based on a modified version of the patch by Federico Ruiz: 
+// Added coupled joint support based on a modified version of the patch by Federico Ruiz:
 // http://www.orocos.org/forum/rtt/rtt-dev/patches-coupled-joints-locked-joints-and-python-executable-detection
 
 // This library is free software; you can redistribute it and/or
@@ -25,10 +25,9 @@
 
 #include <kdl_coupling/chainiksolvervel_wdls_coupling.hpp>
 #include <kdl/utilities/svd_eigen_HH.hpp>
-//#include <cstdio>
+
 namespace KDL
 {
-
   ChainIkSolverVel_wdls_coupling::ChainIkSolverVel_wdls_coupling(const Chain_coupling &_chain, double _eps,
                                                                  int _maxiter) :
           chain(_chain),
@@ -145,5 +144,4 @@ namespace KDL
     qdot_out.data.noalias() = chain.cm * (tmp_js * tmp);
     return ret;
   }
-
-}
+}  // namespace KDL

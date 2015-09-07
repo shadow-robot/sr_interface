@@ -169,6 +169,6 @@ namespace KDL
     Eigen::MatrixXd weight_js;
     double lambda;
   };
-}
+}  // namespace KDL
 #endif
 

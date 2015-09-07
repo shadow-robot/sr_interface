@@ -6,11 +6,13 @@
  * 08.08.2012 - new file
  *
  * (C) 2012 fnh
+ * Copyright Guillaume Walck <Guillaume Walck>
  */
 
 
 #include <map>
 #include <string>
+#include <vector>
 #include <math.h>
 
 #include <ros/ros.h>
@@ -65,7 +67,7 @@ timeout: 1000}"
 
 double rand_range(double min_n, double max_n)
 {
-  return (double) rand() / RAND_MAX * (max_n - min_n) + min_n;
+  return static_cast<double>(rand()) / RAND_MAX * (max_n - min_n) + min_n;
 }
 
 
@@ -89,7 +91,6 @@ void random_test_finger_fkik(ros::NodeHandle nh, std::string PREFIX, std::string
 
   // we also want a map from joint-name to index, because IK returns
   // the joints in a different order
-  // 
   std::map<std::string, int> jointIndexMap;
   for (unsigned int j = 0; j < jointNames.size(); j++)
   {
@@ -97,7 +98,6 @@ void random_test_finger_fkik(ros::NodeHandle nh, std::string PREFIX, std::string
   }
 
   // check that the FK/IK services are available for the finger
-  //
   ROS_INFO("waiting for FK/IK service for finger %s", prefix.c_str());
   ros::service::waitForService(prefix + "_kinematics/get_fk_solver_info");
   ros::service::waitForService(prefix + "_kinematics/get_fk");
@@ -106,7 +106,6 @@ void random_test_finger_fkik(ros::NodeHandle nh, std::string PREFIX, std::string
 
   // create the service clients; note that we reuse them throughout
   // the whole test for a given finger
-  //
   ros::ServiceClient fk = nh.serviceClient<moveit_msgs::GetPositionFK>(prefix + "_kinematics/get_fk", true);
   ros::ServiceClient ik = nh.serviceClient<moveit_msgs::GetPositionIK>(prefix + "_kinematics/get_ik", true);
 
@@ -114,7 +113,6 @@ void random_test_finger_fkik(ros::NodeHandle nh, std::string PREFIX, std::string
 
   // generate n_tests random positions, check that pos(fk) == ik(joints)
   // hardcoded joint limits: J1=J2=J3: 0..90 degrees, J4 -25..25 degrees
-  // 
   double j1j2 = 0;
   int n_matched = 0;
   int n_iksolved = 0;
@@ -172,7 +170,7 @@ void random_test_finger_fkik(ros::NodeHandle nh, std::string PREFIX, std::string
     int status = fkdata.response.error_code.val;
     if (verbose)
     {
-      ROS_INFO("FK returned status %d", (int) status);
+      ROS_INFO("FK returned status %d", static_cast<int>(status));
     }
 
     std::vector <geometry_msgs::PoseStamped> pp = fkdata.response.pose_stamped;
@@ -194,7 +192,6 @@ void random_test_finger_fkik(ros::NodeHandle nh, std::string PREFIX, std::string
     }
 
     // now try IK to reconstruct FK angles
-    // 
     moveit_msgs::GetPositionIK::Request ikreq;
     moveit_msgs::GetPositionIK::Response ikres;
 
@@ -258,8 +255,7 @@ void random_test_finger_fkik(ros::NodeHandle nh, std::string PREFIX, std::string
       }
     }
 
-    // call fk again but this time with the joint-angles from IK 
-    //
+    // call fk again but this time with the joint-angles from IK
     fkdata.request.header.frame_id = "palm";
     fkdata.request.header.stamp = ros::Time::now();
     fkdata.request.fk_link_names.resize(1);
@@ -290,7 +286,7 @@ void random_test_finger_fkik(ros::NodeHandle nh, std::string PREFIX, std::string
     status = fkdata.response.error_code.val;
     if (verbose)
     {
-      ROS_INFO("FK returned status %d", (int) status);
+      ROS_INFO("FK returned status %d", static_cast<int>(status));
     }
 
     std::vector <geometry_msgs::PoseStamped> ppp = fkdata.response.pose_stamped;
@@ -333,7 +329,7 @@ int main(int argc, char **argv)
   bool verbose = false;
   if (argc > 1)
   {
-    char argument = (char) (argv[1][0]);
+    char argument = static_cast<char>(argv[1][0]);
     if (argument == 'v')
     {
       verbose = true;

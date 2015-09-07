@@ -26,8 +26,6 @@
 
 namespace KDL
 {
-  using namespace std;
-
   Chain_coupling::Chain_coupling() :
           Chain(),
           nrOfIndJoints(0),
@@ -62,7 +60,6 @@ namespace KDL
     // Copy Coupling Components (coupling matrix and coupling function)
     this->setUpdateCouplingFunction(in.getUpdateCouplingFunction());
     return *this;
-
   }
 
   Chain_coupling &Chain_coupling::operator=(const Chain &in)
@@ -74,7 +71,6 @@ namespace KDL
     this->nrOfIndJoints = in.getNrOfJoints();
     this->cm = Eigen::MatrixXd::Identity(in.getNrOfJoints(), in.getNrOfJoints());
     return *this;
-
   }
 
   bool Chain_coupling::isCoupled() const
@@ -123,5 +119,5 @@ namespace KDL
   Chain_coupling::~Chain_coupling()
   {
   }
-}
+}  // namespace KDL
 

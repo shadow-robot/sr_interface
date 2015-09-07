@@ -25,7 +25,6 @@
 
 #include <kdl_coupling/chainiksolverpos_nr_jl_coupling.hpp>
 #include <kdl_coupling/chainiksolvervel_wdls_coupling.hpp>
-//#include <cstdio>
 
 namespace KDL
 {
@@ -93,7 +92,7 @@ namespace KDL
 
       iksolver.CartToJnt(q_out, delta_twist, delta_q);
       Add(q_out, delta_q, q_out);
-//			printf("it:%d,dtw %f %f %f , dq:%f %f %f %f, q:%f %f %f %f\n",i,delta_twist.vel.x(),delta_twist.vel.y(),delta_twist.vel.z(),delta_q(0),delta_q(1),delta_q(2),delta_q(3),q_out(0),q_out(1),q_out(2),q_out(3));
+
       for (unsigned int j = 0; j < q_min.rows(); j++)
       {
         if (q_out(j) < q_min(j))
@@ -110,7 +109,6 @@ namespace KDL
           q_out(j) = q_max(j);
         }
       }
-//					 printf("it:%d,dtw %f %f %f , dq:%f %f %f %f, q:%f %f %f %f\n",i,delta_twist.vel.x(),delta_twist.vel.y(),delta_twist.vel.z(),delta_q(0),delta_q(1),delta_q(2),delta_q(3),q_out(0),q_out(1),q_out(2),q_out(3));
     }
 
     if (i != maxiter)
@@ -126,6 +124,5 @@ namespace KDL
   ChainIkSolverPos_NR_JL_coupling::~ChainIkSolverPos_NR_JL_coupling()
   {
   }
-
-}
+}  // namespace KDL
 

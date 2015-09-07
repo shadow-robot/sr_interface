@@ -1,9 +1,13 @@
+// Copyright Guillaume Walck <Guillaume Walck>
+
 #include <ros/ros.h>
 #include <tf/transform_datatypes.h>
 #include <moveit_msgs/GetKinematicSolverInfo.h>
 #include <moveit_msgs/GetPositionIK.h>
 
 #include <map>
+#include <string>
+#include <vector>
 
 #include <std_msgs/Float64.h>
 #include <pr2_mechanism_msgs/ListControllers.h>
@@ -28,7 +32,6 @@ tf::Vector3 interPolLin(tf::Vector3 start, tf::Vector3 end, float q)
   if (q >= 0.0 && q <= 1.0)
   {
     pos = (1 - q) * start + q * end;
-
   }
   return pos;
 }
@@ -44,13 +47,13 @@ tf::Vector3 interPolCir(tf::Vector3 center, unsigned int direction, float radius
   {
     switch (direction)
     {
-      case 1:// around x axis (  // to J3 axis)
+      case 1:  // around x axis (  // to J3 axis)
         pos = center + tf::Vector3(0, radius * cos(ang), radius * sin(ang));
         break;
-      case 2:// around y axis (  // to J4 axis)
+      case 2:  // around y axis (  // to J4 axis)
         pos = center + tf::Vector3(radius * cos(ang), 0, radius * sin(ang));
         break;
-      case 3:// around z axis (  // along finger length axis when straight at J3=0)
+      case 3:  // around z axis (  // along finger length axis when straight at J3=0)
         pos = center + tf::Vector3(radius * cos(ang), radius * sin(ang), 0);
         break;
     }
@@ -78,7 +81,6 @@ int moveIK(float x, float y, float z)
   {
     if (gpik_res.error_code.val == gpik_res.error_code.SUCCESS)
     {
-
       std_msgs::Float64 message;
       for (unsigned int i = 0; i < gpik_res.solution.joint_state.name.size(); i++)
       {
@@ -91,12 +93,12 @@ int moveIK(float x, float y, float z)
         if (gpik_res.solution.joint_state.name[i].compare(finger_joint_prefix + "J1") == 0 ||
             gpik_res.solution.joint_state.name[i].compare(finger_joint_prefix + "J2") == 0)
         {
-          message.data = (double) gpik_res.solution.joint_state.position[i] * 2;
+          message.data = static_cast<double>(gpik_res.solution.joint_state.position[i] * 2);
         }
         else
 #endif
         {
-          message.data = (double) gpik_res.solution.joint_state.position[i];
+          message.data = static_cast<double>(gpik_res.solution.joint_state.position[i]);
         }
 
         pub[jointPubIdxMap[gpik_res.solution.joint_state.name[i]]].publish(message);

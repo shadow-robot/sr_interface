@@ -1,6 +1,7 @@
 // bsd license blah blah
 // majority of this code comes from package urdf_tool/arm_kinematics
 // written by David Lu!!
+// Copyright David Lu <David Lu>
 //
 // Modified by Juan A. Corrales, ISIR, UPMC
 // -Added support for coupled joints of Shadow Hand. Now, the coupling is a fixed 1:1 value
@@ -10,10 +11,12 @@
 // -IK is solved at the fingertip frame, which should be defined in the URDF/Xacro file of the
 //  Shadow Hand.
 
-// Modified by Guillaume WALCK (UPMC) 2012 
+// Modified by Guillaume WALCK (UPMC) 2012
 // - Turned it into a kinematics_plugin
 
 #include <cstring>
+#include <string>
+#include <vector>
 #include <hand_kinematics/hand_kinematics_plugin.h>
 #include <pluginlib/class_list_macros.h>
 
@@ -78,8 +81,10 @@ namespace hand_kinematics
       ROS_ERROR("Could not load kdl tree");
     }
 
-    // Define coupling matrix for fingers ff, mf, rf: their first two joints (J1 and J2) are coupled while J3 and J4 are independent.
-    // The rows of coupling matrix correspond to all joints (unlocked ones) while the columns correspond to independent joints (not coupled).
+    // Define coupling matrix for fingers ff, mf, rf: their first two joints (J1 and J2)
+    // are coupled while J3 and J4 are independent.
+    // The rows of coupling matrix correspond to all joints (unlocked ones) while the columns
+    // correspond to independent joints (not coupled).
     if (tip_frame_.find("fftip") != string::npos)
     {
       // Assign update function for dynamic coupling
@@ -433,12 +438,10 @@ namespace hand_kinematics
     {
       double min = ik_solver_info_.limits[i].min_position;
       double max = ik_solver_info_.limits[i].max_position;
-      double r = min + ((double) rand()) / RAND_MAX * (max - min);
+      double r = min + (static_cast<double>(rand())) / RAND_MAX * (max - min);
       jnt_pos_in(i) = r;
     }
   }
-
-
-// end namespace 
+}  // namespace hand_kinematics
 
 

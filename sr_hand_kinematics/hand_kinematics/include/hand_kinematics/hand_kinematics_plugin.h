@@ -37,16 +37,15 @@
 * 
 *********************************************************************/
 
-#ifndef HAND_IK_NODE_H
-#define HAND_IK_NODE_H
+#ifndef HAND_KINEMATICS_HAND_KINEMATICS_PLUGIN_H
+#define HAND_KINEMATICS_HAND_KINEMATICS_PLUGIN_H
 
 #include <ros/ros.h>
-#include <tf/tf.h>
-#include <tf/transform_listener.h>
 #include <angles/angles.h>
 
 #include <hand_kinematics/hand_kinematics_utils.h>
 
+#include <tf/tf.h>
 #include <tf/transform_listener.h>
 #include <tf/transform_datatypes.h>
 
@@ -70,7 +69,6 @@ namespace hand_kinematics
           public kinematics::KinematicsBase
   {
   public:
-
     /** @class
      *  @brief Plugin-able interface to the Shadow hand kinematics
      */
@@ -90,14 +88,16 @@ namespace hand_kinematics
                                const std::vector<double> &ik_seed_state,
                                std::vector<double> &solution,
                                moveit_msgs::MoveItErrorCodes &error_code,
-                               const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
+                               const kinematics::KinematicsQueryOptions &options =
+                                 kinematics::KinematicsQueryOptions()) const;
 
     virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                   const std::vector<double> &ik_seed_state,
                                   double timeout,
                                   std::vector<double> &solution,
                                   moveit_msgs::MoveItErrorCodes &error_code,
-                                  const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
+                                  const kinematics::KinematicsQueryOptions &options =
+                                    kinematics::KinematicsQueryOptions()) const;
 
 
     virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
@@ -106,7 +106,8 @@ namespace hand_kinematics
                                   const std::vector<double> &consistency_limits,
                                   std::vector<double> &solution,
                                   moveit_msgs::MoveItErrorCodes &error_code,
-                                  const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
+                                  const kinematics::KinematicsQueryOptions &options =
+                                    kinematics::KinematicsQueryOptions()) const;
 
 
     /**
@@ -120,7 +121,8 @@ namespace hand_kinematics
                                   std::vector<double> &solution,
                                   const IKCallbackFn &solution_callback,
                                   moveit_msgs::MoveItErrorCodes &error_code,
-                                  const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
+                                  const kinematics::KinematicsQueryOptions &options =
+                                    kinematics::KinematicsQueryOptions()) const;
 
     /**
      * @brief Given a desired pose of the end-effector, search for the joint angles required to reach it.
@@ -134,7 +136,8 @@ namespace hand_kinematics
                                   std::vector<double> &solution,
                                   const IKCallbackFn &solution_callback,
                                   moveit_msgs::MoveItErrorCodes &error_code,
-                                  const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
+                                  const kinematics::KinematicsQueryOptions &options =
+                                    kinematics::KinematicsQueryOptions()) const;
 
 
     /**
@@ -171,7 +174,6 @@ namespace hand_kinematics
     const std::vector<std::string> &getLinkNames() const;
 
   protected:
-
     bool active_;
     urdf::Model robot_model_;
     double search_discretization_;
@@ -198,8 +200,7 @@ namespace hand_kinematics
     * @param Joint vector to be initialized with random values.
     */
     void generateRandomJntSeed(KDL::JntArray &jnt_pos_in) const;
-
   };
-}
+}  // namespace hand_kinematics
 
-#endif
+#endif  // HAND_KINEMATICS_HAND_KINEMATICS_PLUGIN_H

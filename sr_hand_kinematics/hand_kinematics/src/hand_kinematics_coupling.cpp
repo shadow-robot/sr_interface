@@ -1,6 +1,7 @@
 // bsd license blah blah
 // majority of this code comes from package urdf_tool/arm_kinematics
 // written by David Lu!!
+// Copyright David Lu <David Lu>
 //
 // Modified by Juan A. Corrales, ISIR, UPMC
 // -Added support for coupled joints of Shadow Hand. Now, the coupling is a fixed 1:1 value
@@ -10,7 +11,6 @@
 // -IK is solved at the fingertip frame, which should be defined in the URDF/Xacro file of the
 //  Shadow Hand.
 
-//#include <cstdlib>
 #include <cmath>
 #include <ros/ros.h>
 #include <tf/transform_listener.h>
@@ -166,7 +166,8 @@ private:
   /**
    * @brief This is the basic kinematics info service that will return information about the kinematics node.
    * @param A request message. See service definition for GetKinematicSolverInfo for more information on this message.
-   * @param The response message. See service definition for GetKinematicSolverInfo for more information on this message.
+   * @param The response message. See service definition for GetKinematicSolverInfo for more
+   *        information on this message.
    */
   bool getIKSolverInfo(moveit_msgs::GetKinematicSolverInfo::Request &request,
                        moveit_msgs::GetKinematicSolverInfo::Response &response);
@@ -174,13 +175,15 @@ private:
   /**
    * @brief This is the basic kinematics info service that will return information about the kinematics node.
    * @param A request message. See service definition for GetKinematicSolverInfo for more information on this message.
-   * @param The response message. See service definition for GetKinematicSolverInfo for more information on this message.
+   * @param The response message. See service definition for GetKinematicSolverInfo for more
+   *        information on this message.
    */
   bool getFKSolverInfo(moveit_msgs::GetKinematicSolverInfo::Request &request,
                        moveit_msgs::GetKinematicSolverInfo::Response &response);
 
   /**
-   * @brief This method generates a random joint array vector between the joint limits so that local minima in IK can be avoided.
+   * @brief This method generates a random joint array vector between the joint limits so that local minima in IK
+   *        can be avoided.
    * @param Joint vector to be initialized with random values.
    */
   void generateRandomJntSeed(KDL::JntArray &jnt_pos_in);
@@ -251,8 +254,10 @@ bool Kinematics::init()
     return false;
   }
 
-  // Define coupling matrix for fingers ff, mf, rf: their first two joints (J1 and J2) are coupled while J3 and J4 are independent.
-  // The rows of coupling matrix correspond to all joints (unlocked ones) while the columns correspond to independent joints (not coupled).
+  // Define coupling matrix for fingers ff, mf, rf: their first two joints (J1 and J2) are coupled while
+  // J3 and J4 are independent.
+  // The rows of coupling matrix correspond to all joints (unlocked ones) while the columns correspond to
+  // independent joints (not coupled).
   if (tip_name.find("fftip") != string::npos)
   {
     // Assign update function for dynamic coupling
@@ -453,7 +458,7 @@ int Kinematics::getJointIndex(const std::string &name)
 int Kinematics::getKDLSegmentIndex(const std::string &name)
 {
   int i = 0;
-  while (i < (int) chain.getNrOfSegments())
+  while (i < static_cast<int>(chain.getNrOfSegments()))
   {
     if (chain.getSegment(i).getName() == name)
     {
@@ -470,7 +475,7 @@ void Kinematics::generateRandomJntSeed(KDL::JntArray &jnt_pos_in)
   {
     double min = info.limits[i].min_position;
     double max = info.limits[i].max_position;
-    double r = min + ((double) rand()) / RAND_MAX * (max - min);
+    double r = min + (static_cast<double>(rand())) / RAND_MAX * (max - min);
     jnt_pos_in(i) = r;
   }
 }
@@ -478,7 +483,6 @@ void Kinematics::generateRandomJntSeed(KDL::JntArray &jnt_pos_in)
 bool Kinematics::getPositionIK(moveit_msgs::GetPositionIK::Request &request,
                                moveit_msgs::GetPositionIK::Response &response)
 {
-
   if ((request.ik_request.ik_link_name.find("fftip") == std::string::npos) &&
       (request.ik_request.ik_link_name.find("mftip") == std::string::npos)
       && (request.ik_request.ik_link_name.find("rftip") == std::string::npos) &&
@@ -514,7 +518,8 @@ bool Kinematics::getPositionIK(moveit_msgs::GetPositionIK::Request &request,
   try
   {
     tf_listener.transformPose(root_name, transform, transform_root);
-  } catch (...)
+  }
+  catch (...)
   {
     ROS_ERROR("Could not transform IK pose to frame: %s", root_name.c_str());
     response.error_code.val = response.error_code.FRAME_TRANSFORM_FAILURE;
@@ -583,7 +588,6 @@ bool Kinematics::getFKSolverInfo(moveit_msgs::GetKinematicSolverInfo::Request &r
 bool Kinematics::getPositionFK(moveit_msgs::GetPositionFK::Request &request,
                                moveit_msgs::GetPositionFK::Response &response)
 {
-
   KDL::Frame p_out;
   KDL::JntArray jnt_pos_in;
   geometry_msgs::PoseStamped pose;
@@ -619,7 +623,8 @@ bool Kinematics::getPositionFK(moveit_msgs::GetPositionFK::Request &request,
       try
       {
         tf_listener.transformPose(request.header.frame_id, tf_pose, tf_pose);
-      } catch (...)
+      }
+      catch (...)
       {
         ROS_ERROR("Could not transform FK pose to frame: %s", request.header.frame_id.c_str());
         response.error_code.val = response.error_code.FRAME_TRANSFORM_FAILURE;

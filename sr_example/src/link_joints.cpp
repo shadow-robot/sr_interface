@@ -59,7 +59,7 @@
 #include <ros/ros.h>
 #include <string>
 
-//messages
+// messages
 #include <std_msgs/Float64.h>
 #include <control_msgs/JointControllerState.h>
 
@@ -70,9 +70,9 @@ std::string child_name = "mfj3";
 /// the type of controller that will be running
 std::string controller_type = "_position_controller";
 
-//a ros subscriber (will be instantiated later on)
+// a ros subscriber (will be instantiated later on)
 ros::Subscriber sub;
-//a ros publisher (will be instantiated later on)
+// a ros publisher (will be instantiated later on)
 ros::Publisher pub;
 
 /**

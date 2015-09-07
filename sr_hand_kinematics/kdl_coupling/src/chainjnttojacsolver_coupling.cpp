@@ -79,5 +79,5 @@ namespace KDL
     jac.data.noalias() = jac_tmp.data * chain.cm;
     return 0;
   }
-}
+}  // namespace KDL
 

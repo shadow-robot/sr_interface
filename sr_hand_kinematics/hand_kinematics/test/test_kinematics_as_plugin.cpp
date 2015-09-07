@@ -38,6 +38,8 @@
 #include <ros/ros.h>
 #include <gtest/gtest.h>
 #include <pluginlib/class_loader.h>
+#include <string>
+#include <vector>
 
 // HandKinematics
 #include <hand_kinematics/hand_kinematics_plugin.h>
@@ -132,7 +134,6 @@ public:
       EXPECT_TRUE(0);
       return false;
     }
-
   };
 
   void joint_state_callback(const geometry_msgs::Pose &ik_pose,
@@ -175,7 +176,7 @@ TEST(HandIKPlugin, initialize)
 
   if (tool_name.find("fftip") != std::string::npos)
   {
-    EXPECT_EQ((int) joint_names.size(), 4);
+    EXPECT_EQ(static_cast<int>(joint_names.size()), 4);
     EXPECT_TRUE(joint_names[0].find("FFJ4") != std::string::npos);
     EXPECT_TRUE(joint_names[1].find("FFJ3") != std::string::npos);
     EXPECT_TRUE(joint_names[2].find("FFJ2") != std::string::npos);
@@ -183,7 +184,7 @@ TEST(HandIKPlugin, initialize)
   }
   if (tool_name.find("mftip") != std::string::npos)
   {
-    EXPECT_EQ((int) joint_names.size(), 4);
+    EXPECT_EQ(static_cast<int>(joint_names.size()), 4);
     EXPECT_TRUE(joint_names[0].find("MFJ4") != std::string::npos);
     EXPECT_TRUE(joint_names[1].find("MFJ3") != std::string::npos);
     EXPECT_TRUE(joint_names[2].find("MFJ2") != std::string::npos);
@@ -191,7 +192,7 @@ TEST(HandIKPlugin, initialize)
   }
   if (tool_name.find("rftip") != std::string::npos)
   {
-    EXPECT_EQ((int) joint_names.size(), 4);
+    EXPECT_EQ(static_cast<int>(joint_names.size()), 4);
     EXPECT_TRUE(joint_names[0].find("RFJ4") != std::string::npos);
     EXPECT_TRUE(joint_names[1].find("RFJ3") != std::string::npos);
     EXPECT_TRUE(joint_names[2].find("RFJ2") != std::string::npos);
@@ -199,7 +200,7 @@ TEST(HandIKPlugin, initialize)
   }
   if (tool_name.find("lftip") != std::string::npos)
   {
-    EXPECT_EQ((int) joint_names.size(), 5);
+    EXPECT_EQ(static_cast<int>(joint_names.size()), 5);
     EXPECT_TRUE(joint_names[0].find("LFJ5") != std::string::npos);
     EXPECT_TRUE(joint_names[1].find("LFJ4") != std::string::npos);
     EXPECT_TRUE(joint_names[2].find("LFJ3") != std::string::npos);
@@ -208,7 +209,7 @@ TEST(HandIKPlugin, initialize)
   }
   if (tool_name.find("thtip") != std::string::npos)
   {
-    EXPECT_EQ((int) joint_names.size(), 5);
+    EXPECT_EQ(static_cast<int>(joint_names.size()), 5);
     EXPECT_TRUE(joint_names[0].find("THJ5") != std::string::npos);
     EXPECT_TRUE(joint_names[1].find("THJ4") != std::string::npos);
     EXPECT_TRUE(joint_names[2].find("THJ3") != std::string::npos);
@@ -275,7 +276,6 @@ TEST(HandIKPlugin, searchIK)
   fk_names.push_back(my_test.kinematics_solver_->getTipFrame());
 
   robot_state::RobotState kinematic_state(kinematic_model);
-  //  robot_state::JointStateGroup* joint_state_group = kinematic_state.getJointStateGroup(my_test.kinematics_solver_->getGroupName());
 
   ros::NodeHandle nh("~");
   int number_ik_tests;
@@ -331,7 +331,7 @@ TEST(HandIKPlugin, searchIK)
     EXPECT_NEAR(poses[0].position.y, new_poses[0].position.y, IK_NEAR);
     EXPECT_NEAR(poses[0].position.z, new_poses[0].position.z, IK_NEAR);
   }
-  ROS_INFO("Success Rate: %f", (double) success / number_ik_tests);
+  ROS_INFO("Success Rate: %f", static_cast<double>(success / number_ik_tests));
   bool success_count = (success > 0.99 * number_ik_tests);
   EXPECT_TRUE(success_count);
   ROS_INFO("Elapsed time: %f", (ros::WallTime::now() - start_time).toSec());
@@ -357,7 +357,6 @@ TEST(HandIKPlugin, searchIKWithCallbacks)
   fk_names.push_back(my_test.kinematics_solver_->getTipFrame());
 
   robot_state::RobotState kinematic_state(kinematic_model);
-  //  robot_state::JointStateGroup* joint_state_group = kinematic_state.getJointStateGroup(my_test.kinematics_solver_->getGroupName());
 
   ros::NodeHandle nh("~");
   int number_ik_tests;
@@ -414,7 +413,7 @@ TEST(HandIKPlugin, searchIKWithCallbacks)
       break;
     }
   }
-  ROS_INFO("Success with callbacks (%%): %f", (double) success / num_actual_tests * 100.0);
+  ROS_INFO("Success with callbacks (%%): %f", static_cast<double>(success / num_actual_tests) * 100.0);
 }
 
 

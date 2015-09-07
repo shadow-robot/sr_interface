@@ -7,11 +7,13 @@
  *
  * (C) 2012 fnh
  * moved to gtest by Guillaume WALCK in 2014
+ * Copyright Guillaume Walck <Guillaume Walck>
  */
 
 
 #include <map>
 #include <string>
+#include <vector>
 #include <math.h>
 
 #include <pluginlib/class_loader.h>
@@ -34,7 +36,7 @@ bool verbose;
 
 double rand_range(double min_n, double max_n)
 {
-  return (double) rand() / RAND_MAX * (max_n - min_n) + min_n;
+  return static_cast<double>(rand()) / RAND_MAX * (max_n - min_n) + min_n;
 }
 
 void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests, bool verbose = false)
@@ -56,7 +58,7 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
 
   // we also want a map from joint-name to index, because IK returns
   // the joints in a different order
-  // 
+
   std::map<std::string, int> jointIndexMap;
   for (unsigned int j = 0; j < jointNames.size(); j++)
   {
@@ -64,7 +66,6 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
   }
 
   // check that the FK/IK services are available for the finger
-  //
   ROS_INFO("waiting for FK/IK service for finger %s", prefix.c_str());
   ros::service::waitForService(prefix + "_kinematics/get_fk_solver_info");
   ros::service::waitForService(prefix + "_kinematics/get_fk");
@@ -73,7 +74,6 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
 
   // create the service clients; note that we reuse them throughout
   // the whole test for a given finger
-  //
   ros::ServiceClient fk = nh->serviceClient<moveit_msgs::GetPositionFK>(prefix + "_kinematics/get_fk", true);
   ros::ServiceClient ik = nh->serviceClient<moveit_msgs::GetPositionIK>(prefix + "_kinematics/get_ik", true);
 
@@ -81,7 +81,6 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
 
   // generate n_tests random positions, check that pos(fk) == ik(joints)
   // hardcoded joint limits: J1=J2=J3: 0..90 degrees, J4 -25..25 degrees
-  // 
   double j1j2 = 0;
   int n_matched = 0;
   int n_iksolved = 0;
@@ -90,7 +89,8 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
   {
     jj.resize(0);
     if (isThumb)
-    {  // min-degrees 0 -30 -15 0 -60  max-degrees 90 30 15 75 60
+    {
+      // min-degrees 0 -30 -15 0 -60  max-degrees 90 30 15 75 60
       jj.push_back(rand_range(0 * DEG2RAD, 90 * DEG2RAD));  // J1
       jj.push_back(rand_range(-40 * DEG2RAD, 40 * DEG2RAD));  // J2
       jj.push_back(rand_range(-12 * DEG2RAD, 12 * DEG2RAD));  // J3
@@ -134,7 +134,7 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
     // arm_navigation_msgs::ArmNavigationErrorCodes status = fkdata.response.error_code.val;
     int status = fkdata.response.error_code.val;
     if (verbose)
-      ROS_INFO("FK returned status %d", (int) status);
+      ROS_INFO("FK returned status %d", static_cast<int>(status));
 
     std::vector<geometry_msgs::PoseStamped> pp = fkdata.response.pose_stamped;
     geometry_msgs::Pose pose = pp[0].pose;  // position.xyz orientation.xyzw
@@ -153,7 +153,6 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
     }
 
     // now try IK to reconstruct FK angles
-    // 
     moveit_msgs::GetPositionIK::Request ikreq;
     moveit_msgs::GetPositionIK::Response ikres;
 
@@ -217,12 +216,9 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
         ROS_WARN("    joint %d %s radians %6.2f", j, jointNames[j].c_str(), jj[j]);
       }
       ROS_WARN("Pose was %f, %f, %f", pose.position.x, pose.position.y, pose.position.z);
-
-
     }
 
-    // call fk again but this time with the joint-angles from IK 
-    //
+    // call fk again but this time with the joint-angles from IK
     fkdata.request.header.frame_id = "palm";
     fkdata.request.header.stamp = ros::Time::now();
     fkdata.request.fk_link_names.resize(1);
@@ -248,7 +244,7 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
 
     status = fkdata.response.error_code.val;
     if (verbose)
-      ROS_INFO("FK returned status %d", (int) status);
+      ROS_INFO("FK returned status %d", static_cast<int>(status));
 
     std::vector<geometry_msgs::PoseStamped> ppp = fkdata.response.pose_stamped;
     geometry_msgs::Pose pppose = ppp[0].pose;  // position.xyz orientation.xyzw
@@ -270,7 +266,8 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
 
   ROS_INFO("-#- tested %d random positions, %d IK solved, %d matched", n_tests, n_iksolved, n_matched);
   EXPECT_NEAR(n_iksolved, n_tests, 2);  // very few times, when values are close to joint limits, no solution is found
-  // matching is when angles are the same at 0.5 deg precision, but this seems not often true although IK can reach 1e-4 precision
+  // matching is when angles are the same at 0.5 deg precision, but this seems
+  // not often true although IK can reach 1e-4 precision
   // EXPECT_TRUE(double(n_matched)/n_tests >= 0.80);
 }
 
@@ -314,7 +311,6 @@ TEST(FKIK, thumb)
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {
-
   testing::InitGoogleTest(&argc, argv);
 
   ros::init(argc, argv, "upmc_fkik_test");
@@ -322,7 +318,7 @@ int main(int argc, char **argv)
 
   if (argc > 1)
   {
-    char argument = (char) (argv[1][0]);
+    char argument = static_cast<char>((argv[1][0]));
     if (argument == 'v')
     {
       verbose = true;

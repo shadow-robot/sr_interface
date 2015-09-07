@@ -65,6 +65,7 @@ namespace KDL
     Frame T_tmp;
     Jacobian jac_tmp;
   };
-}
+}  // namespace KDL
+
 #endif
 

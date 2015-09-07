@@ -54,7 +54,7 @@ namespace KDL
 
     Chain_coupling(const Chain_coupling &in);
 
-    Chain_coupling(const Chain &in);
+    explicit Chain_coupling(const Chain &in);
 
     Chain_coupling &operator=(const Chain_coupling &in);
 
@@ -103,9 +103,6 @@ namespace KDL
     // Matrix with coupling coefficients between joints
     Eigen::MatrixXd cm;
   };
-
-
-
-// end of namespace KDL
+}  // namespace KDL
 
 #endif
