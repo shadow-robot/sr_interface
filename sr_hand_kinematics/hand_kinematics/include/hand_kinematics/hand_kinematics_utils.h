@@ -58,9 +58,9 @@ using namespace angles;
 
 namespace hand_kinematics
 {
-	 bool loadRobotModel(ros::NodeHandle node_handle,
+  bool loadRobotModel(ros::NodeHandle node_handle,
                       urdf::Model &robot_model,
-                      std::string &root_name, 
+                      std::string &root_name,
                       std::string &tip_name,
                       std::string &xml_string);
 
@@ -70,9 +70,9 @@ namespace hand_kinematics
                    KDL::Chain &kdl_chain);
 
   bool getKDLTree(const std::string &xml_string,
-                   const std::string &root_name,
-                   const std::string &tip_name,
-                   KDL::Tree &kdl_chain);
+                  const std::string &root_name,
+                  const std::string &tip_name,
+                  KDL::Tree &kdl_chain);
 
   bool checkJointNames(const std::vector<std::string> &joint_names,
                        const moveit_msgs::KinematicSolverInfo &chain_info);
@@ -100,28 +100,33 @@ namespace hand_kinematics
   bool convertPoseToRootFrame(const geometry_msgs::PoseStamped &pose_msg,
                               KDL::Frame &pose_kdl,
                               const std::string &root_frame,
-                              tf::TransformListener& tf);
+                              tf::TransformListener &tf);
 
   bool convertPoseToRootFrame(const geometry_msgs::PoseStamped &pose_msg,
                               geometry_msgs::PoseStamped &pose_msg_out,
                               const std::string &root_frame,
-                              tf::TransformListener& tf);
+                              tf::TransformListener &tf);
 
   int getKDLSegmentIndex(const KDL::Chain &chain,
                          const std::string &name);
 
   void getKDLChainInfo(const KDL::Chain &chain,
                        moveit_msgs::KinematicSolverInfo &chain_info);
-              
-  bool init_ik(urdf::Model &robot_model, const std::string &root_name, const std::string &tip_name, KDL::JntArray &joint_min, KDL::JntArray &joint_max, moveit_msgs::KinematicSolverInfo &info);
-  
+
+  bool init_ik(urdf::Model &robot_model, const std::string &root_name, const std::string &tip_name,
+               KDL::JntArray &joint_min, KDL::JntArray &joint_max, moveit_msgs::KinematicSolverInfo &info);
+
   // coupling matrices
-  Eigen::MatrixXd updateCouplingFF(const KDL::JntArray& q);
-  Eigen::MatrixXd updateCouplingMF(const KDL::JntArray& q);
-  Eigen::MatrixXd updateCouplingRF(const KDL::JntArray& q);
-  Eigen::MatrixXd updateCouplingLF(const KDL::JntArray& q);
-  Eigen::MatrixXd updateCouplingTH(const KDL::JntArray& q);
-  
+  Eigen::MatrixXd updateCouplingFF(const KDL::JntArray &q);
+
+  Eigen::MatrixXd updateCouplingMF(const KDL::JntArray &q);
+
+  Eigen::MatrixXd updateCouplingRF(const KDL::JntArray &q);
+
+  Eigen::MatrixXd updateCouplingLF(const KDL::JntArray &q);
+
+  Eigen::MatrixXd updateCouplingTH(const KDL::JntArray &q);
+
 }
 
 #endif  // HAND_IK_UTILS_H

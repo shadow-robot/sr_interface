@@ -1,38 +1,38 @@
 <launch>
-  <!-- robot_description must be on the parameter server -->
+    <!-- robot_description must be on the parameter server -->
 
-  <node pkg="hand_kinematics" name="ff_kinematics" type="hand_kinematics_coupling"  output="screen">
-    <param name="root_name" type="string" value="palm"/>
-    <param name="tip_name" type="string" value="fftip"/>
-    <param name="maxIterations" type="int" value="1000"/>
-    <param name="epsilon" type="double" value="0.001"/>
-    <!--		<param name="lambda" type="double" value="0.02"/>-->
+    <node pkg="hand_kinematics" name="ff_kinematics" type="hand_kinematics_coupling" output="screen">
+        <param name="root_name" type="string" value="palm"/>
+        <param name="tip_name" type="string" value="fftip"/>
+        <param name="maxIterations" type="int" value="1000"/>
+        <param name="epsilon" type="double" value="0.001"/>
+        <!--		<param name="lambda" type="double" value="0.02"/>-->
 
-  </node>
-  <node pkg="hand_kinematics" name="mf_kinematics" type="hand_kinematics_coupling"  output="screen">
-    <param name="root_name" type="string" value="palm"/>
-    <param name="tip_name" type="string" value="mftip"/>
-    <param name="maxIterations" type="int" value="1000"/>
-    <param name="epsilon" type="double" value="0.001"/>
-  </node>
-  <node pkg="hand_kinematics" name="rf_kinematics" type="hand_kinematics_coupling" output="screen">
-    <param name="root_name" type="string" value="palm"/>
-    <param name="tip_name" type="string" value="rftip"/>
-    <param name="maxIterations" type="int" value="1000"/>
-    <param name="epsilon" type="double" value="0.001"/>
-  </node>
-  <node pkg="hand_kinematics" name="lf_kinematics" type="hand_kinematics_coupling" output="screen">
-    <param name="root_name" type="string" value="palm"/>
-    <param name="tip_name" type="string" value="lftip"/>
-    <param name="maxIterations" type="int" value="1000"/>
-    <param name="epsilon" type="double" value="0.001"/>
-  </node>
-  <node pkg="hand_kinematics" name="th_kinematics" type="hand_kinematics_coupling" output="screen">
-    <param name="root_name" type="string" value="palm"/>
-    <param name="tip_name" type="string" value="thtip"/>
-    <param name="maxIterations" type="int" value="1000"/>
-    <param name="epsilon" type="double" value="0.001"/>
-  </node>
+    </node>
+    <node pkg="hand_kinematics" name="mf_kinematics" type="hand_kinematics_coupling" output="screen">
+        <param name="root_name" type="string" value="palm"/>
+        <param name="tip_name" type="string" value="mftip"/>
+        <param name="maxIterations" type="int" value="1000"/>
+        <param name="epsilon" type="double" value="0.001"/>
+    </node>
+    <node pkg="hand_kinematics" name="rf_kinematics" type="hand_kinematics_coupling" output="screen">
+        <param name="root_name" type="string" value="palm"/>
+        <param name="tip_name" type="string" value="rftip"/>
+        <param name="maxIterations" type="int" value="1000"/>
+        <param name="epsilon" type="double" value="0.001"/>
+    </node>
+    <node pkg="hand_kinematics" name="lf_kinematics" type="hand_kinematics_coupling" output="screen">
+        <param name="root_name" type="string" value="palm"/>
+        <param name="tip_name" type="string" value="lftip"/>
+        <param name="maxIterations" type="int" value="1000"/>
+        <param name="epsilon" type="double" value="0.001"/>
+    </node>
+    <node pkg="hand_kinematics" name="th_kinematics" type="hand_kinematics_coupling" output="screen">
+        <param name="root_name" type="string" value="palm"/>
+        <param name="tip_name" type="string" value="thtip"/>
+        <param name="maxIterations" type="int" value="1000"/>
+        <param name="epsilon" type="double" value="0.001"/>
+    </node>
 </launch>
 
 

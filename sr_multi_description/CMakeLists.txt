@@ -5,8 +5,8 @@ project(sr_multi_description)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  urdf
-  xacro
+        urdf
+        xacro
 )
 
 ## System dependencies are found with CMake's conventions
@@ -93,7 +93,7 @@ catkin_package(
 ## Your package locations should be listed before other locations
 # include_directories(include)
 include_directories(
-  ${catkin_INCLUDE_DIRS}
+        ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a cpp library
@@ -163,4 +163,4 @@ include_directories(
 
 
 install(DIRECTORY urdf/
-   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf)
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf)

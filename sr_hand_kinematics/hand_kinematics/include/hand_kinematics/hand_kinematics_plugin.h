@@ -66,9 +66,10 @@
 
 namespace hand_kinematics
 {
-class HandKinematicsPlugin : public kinematics::KinematicsBase
+  class HandKinematicsPlugin :
+          public kinematics::KinematicsBase
   {
-    public:
+  public:
 
     /** @class
      *  @brief Plugin-able interface to the Shadow hand kinematics
@@ -86,27 +87,26 @@ class HandKinematicsPlugin : public kinematics::KinematicsBase
      * @return True if a valid solution was found, false otherwise
      */
     virtual bool getPositionIK(const geometry_msgs::Pose &ik_pose,
-                             const std::vector<double> &ik_seed_state,
-                             std::vector<double> &solution,
-                             moveit_msgs::MoveItErrorCodes &error_code,
-                             const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
+                               const std::vector<double> &ik_seed_state,
+                               std::vector<double> &solution,
+                               moveit_msgs::MoveItErrorCodes &error_code,
+                               const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
 
     virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
-                                const std::vector<double> &ik_seed_state,
-                                double timeout,
-                                std::vector<double> &solution,
-                                moveit_msgs::MoveItErrorCodes &error_code,
-                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
+                                  const std::vector<double> &ik_seed_state,
+                                  double timeout,
+                                  std::vector<double> &solution,
+                                  moveit_msgs::MoveItErrorCodes &error_code,
+                                  const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
 
-                               
-    
+
     virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
-                                const std::vector<double> &ik_seed_state,
-                                double timeout,
-                                const std::vector<double> &consistency_limits,
-                                std::vector<double> &solution,
-                                moveit_msgs::MoveItErrorCodes &error_code,
-                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
+                                  const std::vector<double> &ik_seed_state,
+                                  double timeout,
+                                  const std::vector<double> &consistency_limits,
+                                  std::vector<double> &solution,
+                                  moveit_msgs::MoveItErrorCodes &error_code,
+                                  const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
 
 
     /**
@@ -115,12 +115,12 @@ class HandKinematicsPlugin : public kinematics::KinematicsBase
      * (or other numerical routines).
      */
     virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
-                                const std::vector<double> &ik_seed_state,
-                                double timeout,
-                                std::vector<double> &solution,
-                                const IKCallbackFn &solution_callback,
-                                moveit_msgs::MoveItErrorCodes &error_code,
-                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
+                                  const std::vector<double> &ik_seed_state,
+                                  double timeout,
+                                  std::vector<double> &solution,
+                                  const IKCallbackFn &solution_callback,
+                                  moveit_msgs::MoveItErrorCodes &error_code,
+                                  const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
 
     /**
      * @brief Given a desired pose of the end-effector, search for the joint angles required to reach it.
@@ -128,16 +128,15 @@ class HandKinematicsPlugin : public kinematics::KinematicsBase
      * (or other numerical routines).
      */
     virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
-                                const std::vector<double> &ik_seed_state,
-                                double timeout,
-                                const std::vector<double> &consistency_limits,
-                                std::vector<double> &solution,
-                                const IKCallbackFn &solution_callback,
-                                moveit_msgs::MoveItErrorCodes &error_code,
-                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
+                                  const std::vector<double> &ik_seed_state,
+                                  double timeout,
+                                  const std::vector<double> &consistency_limits,
+                                  std::vector<double> &solution,
+                                  const IKCallbackFn &solution_callback,
+                                  moveit_msgs::MoveItErrorCodes &error_code,
+                                  const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
 
 
-    
     /**
      * @brief Given a set of joint angles and a set of links, compute their pose
      * @param link_names - set of links for which poses are to be computed
@@ -146,41 +145,40 @@ class HandKinematicsPlugin : public kinematics::KinematicsBase
      * @return True if a valid solution was found, false otherwise
      */
     virtual bool getPositionFK(const std::vector<std::string> &link_names,
-                            const std::vector<double> &joint_angles,
-                            std::vector<geometry_msgs::Pose> &poses) const;
+                               const std::vector<double> &joint_angles,
+                               std::vector<geometry_msgs::Pose> &poses) const;
 
 
-    
     /**
      * @brief  Initialization function for the kinematics
      * @return True if initialization was successful, false otherwise
      */
-    virtual bool initialize(const std::string& robot_description,
-                          const std::string& group_name,
-                          const std::string& base_frame,
-                          const std::string& tip_frame,
-                          double search_discretization);
+    virtual bool initialize(const std::string &robot_description,
+                            const std::string &group_name,
+                            const std::string &base_frame,
+                            const std::string &tip_frame,
+                            double search_discretization);
 
-       
+
     /**
      * @brief Return all the joint names in the order they are used internally
      */
-      const std::vector<std::string>& getJointNames() const;
+    const std::vector<std::string> &getJointNames() const;
 
     /**
      * @brief Return all the link names in the order they are represented internally
      */
-      const std::vector<std::string>& getLinkNames() const;
-      
+    const std::vector<std::string> &getLinkNames() const;
+
   protected:
 
     bool active_;
     urdf::Model robot_model_;
     double search_discretization_;
     ros::NodeHandle node_handle_, root_handle_;
-    
-    
-    KDL::ChainFkSolverPos_recursive* fk_solver;
+
+
+    KDL::ChainFkSolverPos_recursive *fk_solver;
     KDL::ChainIkSolverPos_NR_JL_coupling *ik_solver_pos;
     KDL::ChainIkSolverVel_wdls_coupling *ik_solver_vel;
     moveit_msgs::KinematicSolverInfo solver_info_;
@@ -188,17 +186,17 @@ class HandKinematicsPlugin : public kinematics::KinematicsBase
     std::string finger_base_name;
     int dimension_;
     boost::shared_ptr<KDL::ChainFkSolverPos_recursive> jnt_to_pose_solver_;
-    
+
     KDL::Chain_coupling kdl_chain_;
-    
+
     KDL::JntArray joint_min_, joint_max_;
-   
+
     moveit_msgs::KinematicSolverInfo ik_solver_info_, fk_solver_info_;
-    
+
     /**
     * @brief This method generates a random joint array vector between the joint limits so that local minima in IK can be avoided.
     * @param Joint vector to be initialized with random values.
-    */  
+    */
     void generateRandomJntSeed(KDL::JntArray &jnt_pos_in) const;
 
   };

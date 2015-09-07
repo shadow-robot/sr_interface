@@ -1,27 +1,27 @@
 <?xml version="1.0"?>
 <package>
-  <name>sr_robot_launch</name>
-  <version>0.0.1</version>
-  <description>sr_robot_launch contains the launch file for the UR10 arm and SR hand </description>
-  <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
+    <name>sr_robot_launch</name>
+    <version>0.0.1</version>
+    <description>sr_robot_launch contains the launch file for the UR10 arm and SR hand</description>
+    <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
 
-  <license>GPL</license>
+    <license>GPL</license>
 
-  <url type="website">http://www.shadowrobot.com</url>
-  <url type="repository">https://github.com/shadow-robot/sr-ros-interface</url>
-  <url type="bugtracker">https://github.com/shadow-robot/sr-ros-interface/issues</url>
+    <url type="website">http://www.shadowrobot.com</url>
+    <url type="repository">https://github.com/shadow-robot/sr-ros-interface</url>
+    <url type="bugtracker">https://github.com/shadow-robot/sr-ros-interface/issues</url>
 
-  <author>Kirsty Ellis</author>
+    <author>Kirsty Ellis</author>
 
     <!-- Dependencies which this package needs to build itself. -->
-  <buildtool_depend>catkin</buildtool_depend>
-  <run_depend>controller_manager_msgs</run_depend>
-  <run_depend>joint_state_publisher</run_depend>
-  <run_depend>robot_state_publisher</run_depend>
-  <run_depend>rospy</run_depend>
-  <run_depend>sr_multi_description</run_depend>
-  <run_depend>sr_robot_msgs</run_depend>
-  <run_depend>sr_ur_msgs</run_depend>
-  <run_depend>ur_gazebo</run_depend>
+    <buildtool_depend>catkin</buildtool_depend>
+    <run_depend>controller_manager_msgs</run_depend>
+    <run_depend>joint_state_publisher</run_depend>
+    <run_depend>robot_state_publisher</run_depend>
+    <run_depend>rospy</run_depend>
+    <run_depend>sr_multi_description</run_depend>
+    <run_depend>sr_robot_msgs</run_depend>
+    <run_depend>sr_ur_msgs</run_depend>
+    <run_depend>ur_gazebo</run_depend>
 
 </package>

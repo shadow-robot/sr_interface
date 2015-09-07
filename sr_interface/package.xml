@@ -1,27 +1,29 @@
 <?xml version="1.0"?>
 <package>
-  <name>sr_interface</name>
-  <version>0.0.0</version>
-  <description>This repository contains the high level interface and its dependencies for interacting simply with our robots.</description>
+    <name>sr_interface</name>
+    <version>0.0.0</version>
+    <description>This repository contains the high level interface and its dependencies for interacting simply with our
+        robots.
+    </description>
 
-  <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
+    <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
 
-  <license>GPL</license>
+    <license>GPL</license>
 
-  <author email="ugo@shadowrobot.com">Ugo Cupcic</author>
+    <author email="ugo@shadowrobot.com">Ugo Cupcic</author>
 
-  <buildtool_depend>catkin</buildtool_depend>
+    <buildtool_depend>catkin</buildtool_depend>
 
-  <run_depend>hand_kinematics</run_depend>
-  <run_depend>kdl_coupling</run_depend>
-  <run_depend>sr_robot_commander</run_depend>
-  <run_depend>sr_example</run_depend>
-  <run_depend>sr_multi_moveit</run_depend>
-  <run_depend>sr_multi_description</run_depend>
-  <run_depend>sr_robot_launch</run_depend>
-  <run_depend>sr_grasp</run_depend>
+    <run_depend>hand_kinematics</run_depend>
+    <run_depend>kdl_coupling</run_depend>
+    <run_depend>sr_robot_commander</run_depend>
+    <run_depend>sr_example</run_depend>
+    <run_depend>sr_multi_moveit</run_depend>
+    <run_depend>sr_multi_description</run_depend>
+    <run_depend>sr_robot_launch</run_depend>
+    <run_depend>sr_grasp</run_depend>
 
-  <export>
-    <metapackage/>
-  </export>
+    <export>
+        <metapackage/>
+    </export>
 </package>

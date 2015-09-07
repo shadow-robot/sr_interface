@@ -1,10 +1,10 @@
 <launch>
-	<node pkg="hand_kinematics" name="fingertip_pos" type="fingertip_pos_publisher.py" output="screen"/>
-	<node pkg="hand_kinematics" name="fftest" type="circle_ik" args="ff" output="screen"/>
-	<node pkg="hand_kinematics" name="mftest" type="circle_ik" args="mf" output="screen"/>
-	<node pkg="hand_kinematics" name="rftest" type="circle_ik" args="rf" output="screen"/>
-<!--	<node pkg="hand_kinematics" name="lftest" type="circle_ik" args="lf" output="screen"/> 
-	<node pkg="hand_kinematics" name="thtest" type="square_ik_th"  output="screen"/> -->
+    <node pkg="hand_kinematics" name="fingertip_pos" type="fingertip_pos_publisher.py" output="screen"/>
+    <node pkg="hand_kinematics" name="fftest" type="circle_ik" args="ff" output="screen"/>
+    <node pkg="hand_kinematics" name="mftest" type="circle_ik" args="mf" output="screen"/>
+    <node pkg="hand_kinematics" name="rftest" type="circle_ik" args="rf" output="screen"/>
+    <!--	<node pkg="hand_kinematics" name="lftest" type="circle_ik" args="lf" output="screen"/>
+        <node pkg="hand_kinematics" name="thtest" type="square_ik_th"  output="screen"/> -->
 
 
 </launch>

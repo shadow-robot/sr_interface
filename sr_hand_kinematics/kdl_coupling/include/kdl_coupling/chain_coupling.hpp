@@ -30,63 +30,79 @@
 #include <kdl/jntarray.hpp>
 #include <kdl/chain.hpp>
 
-namespace KDL {
-    typedef Eigen::MatrixXd (*updateFuncPtr)(const JntArray& q);  // Pointer to update function of coupling matrix
+namespace KDL
+{
+  typedef Eigen::MatrixXd (*updateFuncPtr)(const JntArray &q);  // Pointer to update function of coupling matrix
+  /**
+  * \brief This class encapsulates a <strong>serial</strong> kinematic
+  * interconnection structure. It is build out of segments.
+   *
+   * @ingroup KinematicFamily
+   */
+  class Chain_coupling :
+          public KDL::Chain
+  {
+  private:
+    unsigned int nrOfIndJoints;
+    updateFuncPtr updateFunction;
+  public:
     /**
-	  * \brief This class encapsulates a <strong>serial</strong> kinematic
-	  * interconnection structure. It is build out of segments.
+     * The constructor of a Chain_coupling, a new Chain_coupling is always empty.
      *
-     * @ingroup KinematicFamily
      */
-    class Chain_coupling:public KDL::Chain {
-    private:
-	unsigned int nrOfIndJoints;
-	updateFuncPtr updateFunction;
-    public:
-        /**
-         * The constructor of a Chain_coupling, a new Chain_coupling is always empty.
-         *
-         */
-        Chain_coupling();
-        Chain_coupling(const Chain_coupling& in);
-	Chain_coupling(const Chain& in);
-        Chain_coupling& operator= (const Chain_coupling& in);
-	Chain_coupling& operator= (const Chain& in);
-	/**
-	 * Determines if there is coupling between the joints of a Chain_coupling.
-	 * @return true or false if there is or not coupling.
-	 */
-	bool isCoupled() const;
-        /**
-         * Gets the function which updates the value of the coupling matrix depending
-         * on the current joint values.
-         * @return pointer to update function.
-	 */
-        updateFuncPtr getUpdateCouplingFunction() const;
-        /**
-         * Sets the function which updates the value of the coupling matrix depending
-         * on the current joint values.
-         * @param updateFunc pointer to the function which implements the coupling update.
-	 * @return true if the fucntion generates correct coupling matrices and false otherwise
-	 */
-        bool setUpdateCouplingFunction(updateFuncPtr updateFunc);
-        /**
-         * Calls the update function which changes the coupling matrix according to the
-         * joint values passed as parameter.
-         * @param q array of current joint values.
-         */
-	void updateCoupling(const JntArray& q);     
-        /**
-	 * Request the total number of independent joints in the Chain_coupling.
-	 * It's the Coupling matrix rank.
-	 * @return total nr of independ joints
-	 */
-        unsigned int getNrOfIndJoints()const {return nrOfIndJoints;};
-        ~Chain_coupling();
+    Chain_coupling();
 
-	  // Matrix with coupling coefficients between joints
-        Eigen::MatrixXd cm;
+    Chain_coupling(const Chain_coupling &in);
+
+    Chain_coupling(const Chain &in);
+
+    Chain_coupling &operator=(const Chain_coupling &in);
+
+    Chain_coupling &operator=(const Chain &in);
+
+    /**
+     * Determines if there is coupling between the joints of a Chain_coupling.
+     * @return true or false if there is or not coupling.
+     */
+    bool isCoupled() const;
+
+    /**
+     * Gets the function which updates the value of the coupling matrix depending
+     * on the current joint values.
+     * @return pointer to update function.
+*/
+    updateFuncPtr getUpdateCouplingFunction() const;
+
+    /**
+     * Sets the function which updates the value of the coupling matrix depending
+     * on the current joint values.
+     * @param updateFunc pointer to the function which implements the coupling update.
+* @return true if the fucntion generates correct coupling matrices and false otherwise
+*/
+    bool setUpdateCouplingFunction(updateFuncPtr updateFunc);
+
+    /**
+     * Calls the update function which changes the coupling matrix according to the
+     * joint values passed as parameter.
+     * @param q array of current joint values.
+     */
+    void updateCoupling(const JntArray &q);
+
+    /**
+* Request the total number of independent joints in the Chain_coupling.
+* It's the Coupling matrix rank.
+* @return total nr of independ joints
+*/
+    unsigned int getNrOfIndJoints() const
+    {
+      return nrOfIndJoints;
     };
+
+    ~Chain_coupling();
+
+    // Matrix with coupling coefficients between joints
+    Eigen::MatrixXd cm;
+  };
 
 
 

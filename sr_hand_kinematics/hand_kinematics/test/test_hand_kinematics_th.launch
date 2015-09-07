@@ -1,6 +1,6 @@
 <launch>
-	<node pkg="hand_kinematics" name="fingertip_pos" type="fingertip_pos_publisher.py" output="screen"/>
-	<node pkg="hand_kinematics" name="thtest" type="square_ik_th"  output="screen"/> 
+    <node pkg="hand_kinematics" name="fingertip_pos" type="fingertip_pos_publisher.py" output="screen"/>
+    <node pkg="hand_kinematics" name="thtest" type="square_ik_th" output="screen"/>
 
 
 </launch>

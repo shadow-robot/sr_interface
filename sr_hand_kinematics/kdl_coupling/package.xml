@@ -1,27 +1,29 @@
 <package>
-  <name>kdl_coupling</name>
-  <version>1.3.0</version>
-  <description>Provides additionnal KDL functions or modified functions to handle coupling in joints as well as 3D IK solutions for less than 6 DOF chains.</description>
-  <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
+    <name>kdl_coupling</name>
+    <version>1.3.0</version>
+    <description>Provides additionnal KDL functions or modified functions to handle coupling in joints as well as 3D IK
+        solutions for less than 6 DOF chains.
+    </description>
+    <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
 
-  <license>GPL</license>
+    <license>GPL</license>
 
-  <url type="repository">https://github.com/shadow-robot/sr-contrib</url>
-  <url type="bugtracker">https://github.com/shadow-robot/sr-contrib/issues</url>
+    <url type="repository">https://github.com/shadow-robot/sr-contrib</url>
+    <url type="bugtracker">https://github.com/shadow-robot/sr-contrib/issues</url>
 
-  <author>Juan Antonio Corrales Ramon (UPMC)</author>
+    <author>Juan Antonio Corrales Ramon (UPMC)</author>
 
-  <!-- Dependencies which this package needs to build itself. -->
-  <buildtool_depend>catkin</buildtool_depend>
+    <!-- Dependencies which this package needs to build itself. -->
+    <buildtool_depend>catkin</buildtool_depend>
 
-  <!-- Dependencies needed to compile this package. -->
-  <build_depend>roscpp</build_depend>
-  <build_depend>orocos_kdl</build_depend>
-  <!-- Dependencies needed after this package is compiled. -->
-  <run_depend>roscpp</run_depend>
-  <run_depend>orocos_kdl</run_depend>
-  
-  <export>
-	  <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lkdl_coupling" />
-  </export>
+    <!-- Dependencies needed to compile this package. -->
+    <build_depend>roscpp</build_depend>
+    <build_depend>orocos_kdl</build_depend>
+    <!-- Dependencies needed after this package is compiled. -->
+    <run_depend>roscpp</run_depend>
+    <run_depend>orocos_kdl</run_depend>
+
+    <export>
+        <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lkdl_coupling"/>
+    </export>
 </package>

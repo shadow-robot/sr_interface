@@ -66,7 +66,7 @@
 /// the name of the parent joint
 std::string parent_name = "ffj3";
 /// the name of the child joint to link to the parent
-std::string child_name  = "mfj3";
+std::string child_name = "mfj3";
 /// the type of controller that will be running
 std::string controller_type = "_position_controller";
 
@@ -81,9 +81,9 @@ ros::Publisher pub;
  *
  * @param msg message of type sr_hand::joints_data
  */
-void callback(const control_msgs::JointControllerStateConstPtr& msg)
+void callback(const control_msgs::JointControllerStateConstPtr &msg)
 {
- // publish the message
+  // publish the message
   std_msgs::Float64 command;
   command.data = msg->set_point;
   pub.publish(command);
@@ -99,9 +99,9 @@ void callback(const control_msgs::JointControllerStateConstPtr& msg)
  *
  * @return 0 on success
  */
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
- // init the ros node
+  // init the ros node
   ros::init(argc, argv, "link_joints_example");
   ros::NodeHandle node;
 
@@ -110,7 +110,7 @@ int main(int argc, char** argv)
    * parent joint controller topic using the callback function
    * callback()
    */
-  sub = node.subscribe("sh_" + parent_name + controller_type + "/state", 2,  callback);
+  sub = node.subscribe("sh_" + parent_name + controller_type + "/state", 2, callback);
 
   /**
    * init the publisher on the child joint controller command topic
@@ -118,9 +118,11 @@ int main(int argc, char** argv)
    */
   pub = node.advertise<std_msgs::Float64>("sh_" + child_name + controller_type + "/command", 2);
 
- // subscribe until interrupted.
-  while( ros::ok() )
+  // subscribe until interrupted.
+  while (ros::ok())
+  {
     ros::spin();
+  }
 
   return 0;
 }

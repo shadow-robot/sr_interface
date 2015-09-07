@@ -30,54 +30,59 @@
 #include <kdl/chainfksolver.hpp>
 #include <kdl_coupling/chain_coupling.hpp>
 
-namespace KDL {
+namespace KDL
+{
 
+  /**
+   * Implementation of a general inverse position kinematics
+   * algorithm based on Newton-Raphson iterations to calculate the
+   * position transformation from Cartesian to joint space of a general
+   * KDL::Chain. Takes joint limits into account.
+   *
+   * @ingroup KinematicFamily
+   */
+  class ChainIkSolverPos_NR_JL_coupling :
+          public ChainIkSolverPos
+  {
+  public:
     /**
-     * Implementation of a general inverse position kinematics
-     * algorithm based on Newton-Raphson iterations to calculate the
-     * position transformation from Cartesian to joint space of a general
-     * KDL::Chain. Takes joint limits into account.
+     * Constructor of the solver, it needs the chain, a forward
+     * position kinematics solver and an inverse velocity
+     * kinematics solver for that chain.
      *
-     * @ingroup KinematicFamily
+     * @param chain the chain to calculate the inverse position for
+     * @param q_max the maximum joint positions
+     * @param q_min the minimum joint positions
+     * @param fksolver a forward position kinematics solver
+     * @param iksolver an inverse velocity kinematics solver
+     * @param maxiter the maximum Newton-Raphson iterations,
+     * default: 100
+     * @param eps the precision for the position, used to end the
+     * iterations, default: epsilon (defined in kdl.hpp)
+     *
+     * @return
      */
-    class ChainIkSolverPos_NR_JL_coupling : public ChainIkSolverPos
-    {
-    public:
-        /**
-         * Constructor of the solver, it needs the chain, a forward
-         * position kinematics solver and an inverse velocity
-         * kinematics solver for that chain.
-         *
-         * @param chain the chain to calculate the inverse position for
-         * @param q_max the maximum joint positions
-         * @param q_min the minimum joint positions
-         * @param fksolver a forward position kinematics solver
-         * @param iksolver an inverse velocity kinematics solver
-         * @param maxiter the maximum Newton-Raphson iterations,
-         * default: 100
-         * @param eps the precision for the position, used to end the
-         * iterations, default: epsilon (defined in kdl.hpp)
-         *
-         * @return
-         */
-        ChainIkSolverPos_NR_JL_coupling(const Chain_coupling& chain,const JntArray& q_min, const JntArray& q_max, ChainFkSolverPos& fksolver,ChainIkSolverVel& iksolver,unsigned int maxiter=100,double eps=1e-6);
-        ~ChainIkSolverPos_NR_JL_coupling();
+    ChainIkSolverPos_NR_JL_coupling(const Chain_coupling &chain, const JntArray &q_min, const JntArray &q_max,
+                                    ChainFkSolverPos &fksolver, ChainIkSolverVel &iksolver, unsigned int maxiter = 100,
+                                    double eps = 1e-6);
 
-        virtual int CartToJnt(const JntArray& q_init, const Frame& p_in, JntArray& q_out);
+    ~ChainIkSolverPos_NR_JL_coupling();
 
-    private:
-        const Chain_coupling chain;
-        JntArray q_min;
-        JntArray q_max;
-        ChainFkSolverPos& fksolver;        
-	ChainIkSolverVel& iksolver;
-        JntArray delta_q;
-        Frame f;
-        Twist delta_twist;
+    virtual int CartToJnt(const JntArray &q_init, const Frame &p_in, JntArray &q_out);
 
-        unsigned int maxiter;
-        double eps;
-    };
+  private:
+    const Chain_coupling chain;
+    JntArray q_min;
+    JntArray q_max;
+    ChainFkSolverPos &fksolver;
+    ChainIkSolverVel &iksolver;
+    JntArray delta_q;
+    Frame f;
+    Twist delta_twist;
+
+    unsigned int maxiter;
+    double eps;
+  };
 
 }
 
