@@ -23,20 +23,20 @@ from moveit_msgs.msg import Grasp
 from trajectory_msgs.msg import JointTrajectoryPoint
 
 _sr_joint_names = [
-        'FFJ1', 'FFJ2', 'FFJ3', 'FFJ4',
-        'LFJ1', 'LFJ2', 'LFJ3', 'LFJ4', 'LFJ5',
-        'MFJ1', 'MFJ2', 'MFJ3', 'MFJ4',
-        'RFJ1', 'RFJ2', 'RFJ3', 'RFJ4',
-        'THJ1', 'THJ2', 'THJ3', 'THJ4', 'THJ5',
-        'WRJ1', 'WRJ2']
+    'FFJ1', 'FFJ2', 'FFJ3', 'FFJ4',
+    'LFJ1', 'LFJ2', 'LFJ3', 'LFJ4', 'LFJ5',
+    'MFJ1', 'MFJ2', 'MFJ3', 'MFJ4',
+    'RFJ1', 'RFJ2', 'RFJ3', 'RFJ4',
+    'THJ1', 'THJ2', 'THJ3', 'THJ4', 'THJ5',
+    'WRJ1', 'WRJ2']
 
 _sr_joint_names_j0 = [
-        'LFJ0', 'LFJ3', 'LFJ4', 'LFJ5',
-        'RFJ0', 'RFJ3', 'RFJ4',
-        'MFJ0', 'MFJ3', 'MFJ4',
-        'FFJ0', 'FFJ3', 'FFJ4',
-        'THJ1', 'THJ2', 'THJ3', 'THJ4', 'THJ5',
-        'WRJ1', 'WRJ2']
+    'LFJ0', 'LFJ3', 'LFJ4', 'LFJ5',
+    'RFJ0', 'RFJ3', 'RFJ4',
+    'MFJ0', 'MFJ3', 'MFJ4',
+    'FFJ0', 'FFJ3', 'FFJ4',
+    'THJ1', 'THJ2', 'THJ3', 'THJ4', 'THJ5',
+    'WRJ1', 'WRJ2']
 
 
 def _fix_j0(joints):

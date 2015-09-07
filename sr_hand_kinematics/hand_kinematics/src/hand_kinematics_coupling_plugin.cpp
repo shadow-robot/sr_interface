@@ -25,6 +25,7 @@
 #include <tf_conversions/tf_kdl.h>
 #include <kdl_parser/kdl_parser.hpp>
 #include <moveit_msgs/MoveItErrorCodes.h>
+#include <sr_utilities/sr_math_utils.hpp>
 
 
 using std::string;
@@ -41,6 +42,7 @@ static const std::string FK_INFO_SERVICE = "get_fk_solver_info";
 namespace hand_kinematics
 {
   static const double IK_DEFAULT_TIMEOUT = 10.0;
+
   // register the plugin
   PLUGINLIB_EXPORT_CLASS(hand_kinematics::HandKinematicsPlugin, kinematics::KinematicsBase)
 
@@ -438,7 +440,7 @@ namespace hand_kinematics
     {
       double min = ik_solver_info_.limits[i].min_position;
       double max = ik_solver_info_.limits[i].max_position;
-      double r = min + (static_cast<double>(rand())) / RAND_MAX * (max - min);
+      double r = sr_math_utils::Random::instance().generate<double>(min, max);
       jnt_pos_in(i) = r;
     }
   }

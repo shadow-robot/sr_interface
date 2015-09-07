@@ -58,6 +58,7 @@
 #include <urdf/model.h>
 #include <string>
 #include <vector>
+
 #include <tf_conversions/tf_kdl.h>
 #include <moveit_msgs/MoveItErrorCodes.h>
 #include <boost/shared_ptr.hpp>
@@ -178,7 +179,6 @@ namespace hand_kinematics
     urdf::Model robot_model_;
     double search_discretization_;
     ros::NodeHandle node_handle_, root_handle_;
-
 
     KDL::ChainFkSolverPos_recursive *fk_solver;
     KDL::ChainIkSolverPos_NR_JL_coupling *ik_solver_pos;

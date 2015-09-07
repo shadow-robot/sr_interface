@@ -26,6 +26,7 @@
 #include <moveit_msgs/GetPositionIK.h>
 #include <moveit_msgs/GetKinematicSolverInfo.h>
 #include <moveit_msgs/KinematicSolverInfo.h>
+#include <sr_utilities/sr_math_utils.hpp>
 #include <urdf/model.h>
 #include <string>
 #include <vector>
@@ -475,7 +476,7 @@ void Kinematics::generateRandomJntSeed(KDL::JntArray &jnt_pos_in)
   {
     double min = info.limits[i].min_position;
     double max = info.limits[i].max_position;
-    double r = min + (static_cast<double>(rand())) / RAND_MAX * (max - min);
+    double r = sr_math_utils::Random::instance().generate<double>(min, max);
     jnt_pos_in(i) = r;
   }
 }

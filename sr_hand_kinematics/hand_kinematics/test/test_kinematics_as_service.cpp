@@ -22,6 +22,7 @@
 
 // Gtest
 #include <gtest/gtest.h>
+#include <sr_utilities/sr_math_utils.hpp>
 
 
 #define DEG2RAD  (M_PI / 180.0)
@@ -36,7 +37,7 @@ bool verbose;
 
 double rand_range(double min_n, double max_n)
 {
-  return static_cast<double>(rand()) / RAND_MAX * (max_n - min_n) + min_n;
+  return sr_math_utils::Random::instance().generate<double>(min_n, max_n);
 }
 
 void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests, bool verbose = false)
