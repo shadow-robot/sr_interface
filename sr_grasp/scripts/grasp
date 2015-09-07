@@ -249,7 +249,7 @@ class GraspNode(object):
         self.fix_joints(self.targets)
         self.start_position = self.hand.read_all_current_positions()
 
-        if self.start_position == None:
+        if self.start_position is None:
             rospy.logerr(
                 "Unable to read current hand position. Check if position controllers are running.")
 

@@ -7,7 +7,7 @@
 // -Added support for coupled joints of Shadow Hand. Now, the coupling is a fixed 1:1 value
 // but the updateCoupling functions can be modified in order to implement dynamic coupling
 // (which can be modified depending on the values of the joint values of the finger).
-// -Use of WDLS velocity IK method in order to solve IK only for 3D position. 
+// -Use of WDLS velocity IK method in order to solve IK only for 3D position.
 // -IK is solved at the fingertip frame, which should be defined in the URDF/Xacro file of the
 //  Shadow Hand.
 
@@ -41,7 +41,7 @@ static const std::string FK_INFO_SERVICE = "get_fk_solver_info";
 namespace hand_kinematics
 {
   static const double IK_DEFAULT_TIMEOUT = 10.0;
-//register the plugin
+  // register the plugin
   PLUGINLIB_EXPORT_CLASS(hand_kinematics::HandKinematicsPlugin, kinematics::KinematicsBase)
 
   HandKinematicsPlugin::HandKinematicsPlugin() : active_(false)

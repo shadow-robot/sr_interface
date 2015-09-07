@@ -36,6 +36,8 @@
 /* Modified by Guillaume Walck for Shadow Hands */
 
 #include <hand_kinematics/hand_kinematics_utils.h>
+#include <string>
+#include <vector>
 
 namespace hand_kinematics
 {
@@ -126,7 +128,7 @@ namespace hand_kinematics
                        moveit_msgs::KinematicSolverInfo &chain_info)
   {
     int i = 0;  // segment number
-    while (i < (int) chain.getNrOfSegments())
+    while (i < static_cast<int>(chain.getNrOfSegments()))
     {
       chain_info.link_names.push_back(chain.getSegment(i).getName());
       i++;
@@ -137,7 +139,7 @@ namespace hand_kinematics
                          const std::string &name)
   {
     int i = 0;  // segment number
-    while (i < (int) chain.getNrOfSegments())
+    while (i < static_cast<int>(chain.getNrOfSegments()))
     {
       if (chain.getSegment(i).getName() == name)
       {
@@ -205,10 +207,11 @@ namespace hand_kinematics
   bool checkRobotState(moveit_msgs::RobotState &robot_state,
                        const moveit_msgs::KinematicSolverInfo &chain_info)
   {
-    if ((int) robot_state.joint_state.position.size() != (int) robot_state.joint_state.name.size())
+    if (robot_state.joint_state.position.size() != robot_state.joint_state.name.size())
     {
       ROS_ERROR(
-              "Number of joints in robot_state.joint_state does not match number of positions in robot_state.joint_state");
+              "Number of joints in robot_state.joint_state does not match number of"
+                      " positions in robot_state.joint_state");
       return false;
     }
     if (!checkJointNames(robot_state.joint_state.name, chain_info))
@@ -481,6 +484,5 @@ namespace hand_kinematics
       link = robot_model.getLink(link->getParent()->name);
     }
     return true;
-
   }
-}
+}  // namespace hand_kinematics

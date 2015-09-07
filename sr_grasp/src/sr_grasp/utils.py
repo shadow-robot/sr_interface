@@ -38,6 +38,7 @@ _sr_joint_names_j0 = [
         'THJ1', 'THJ2', 'THJ3', 'THJ4', 'THJ5',
         'WRJ1', 'WRJ2']
 
+
 def _fix_j0(joints):
     """
     Convert joints targets using J1 and J2 to J0, which the controllers use.
@@ -48,6 +49,7 @@ def _fix_j0(joints):
             joints[finger+'0'] = joints[finger+'1'] + joints[finger+'2']
             del joints[finger+'1']
             del joints[finger+'2']
+
 
 def mk_grasp(joints, pre_joints=None, fix_j0=False):
     """

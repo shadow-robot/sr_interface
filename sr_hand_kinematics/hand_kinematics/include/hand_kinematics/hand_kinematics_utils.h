@@ -125,6 +125,6 @@ namespace hand_kinematics
   Eigen::MatrixXd updateCouplingLF(const KDL::JntArray &q);
 
   Eigen::MatrixXd updateCouplingTH(const KDL::JntArray &q);
-} // namespace hand_kinematics
+}  // namespace hand_kinematics
 
 #endif  // HAND_KINEMATICS_HAND_KINEMATICS_UTILS_H

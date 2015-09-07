@@ -24,10 +24,18 @@ class ControllerHelper(object):
                        "thj1", "thj2", "thj3", "thj4", "thj5",
                        "wrj1", "wrj2"]
         self.hand_controllers = {
-            "effort": ["sh_{0}{1}_effort_controller".format(hand_joint_prefix, joint) for joint in self.joints for hand_joint_prefix in self.robot_joint_prefixes],
-            "position": ["sh_{0}{1}_position_controller".format(hand_joint_prefix, joint) for joint in self.joints for hand_joint_prefix in self.robot_joint_prefixes],
-            "mixed": ["sh_{0}{1}_mixed_position_velocity_controller".format(hand_joint_prefix, joint) for joint in self.joints for hand_joint_prefix in self.robot_joint_prefixes],
-            "velocity": ["sh_{0}{1}_velocity_controller".format(hand_joint_prefix, joint) for joint in self.joints for hand_joint_prefix in self.robot_joint_prefixes],
+            "effort": ["sh_{0}{1}_effort_controller".format(hand_joint_prefix, joint)
+                       for joint in self.joints
+                       for hand_joint_prefix in self.robot_joint_prefixes],
+            "position": ["sh_{0}{1}_position_controller".format(hand_joint_prefix, joint)
+                         for joint in self.joints
+                         for hand_joint_prefix in self.robot_joint_prefixes],
+            "mixed": ["sh_{0}{1}_mixed_position_velocity_controller".format(hand_joint_prefix, joint)
+                      for joint in self.joints
+                      for hand_joint_prefix in self.robot_joint_prefixes],
+            "velocity": ["sh_{0}{1}_velocity_controller".format(hand_joint_prefix, joint)
+                         for joint in self.joints
+                         for hand_joint_prefix in self.robot_joint_prefixes],
             "stop": []}
         self.managed_hand_controllers = [
             cont for type_conts in self.hand_controllers.itervalues() for cont in type_conts]

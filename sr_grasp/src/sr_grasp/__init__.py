@@ -1,8 +1,11 @@
 
 from copy import deepcopy
-import os, yaml, string
+import os
+import yaml
+import string
 from rospy import logerr, loginfo, get_param
-import rospkg, genpy
+import rospkg
+import genpy
 import moveit_msgs.msg
 from trajectory_msgs.msg import JointTrajectoryPoint
 from sr_robot_msgs.msg import GraspArray
@@ -43,14 +46,14 @@ class Grasp(moveit_msgs.msg.Grasp):
         """Construct a shadow grasp object from moveit grasp object."""
         grasp = Grasp()
         grasp.id = msg.id
-        grasp.pre_grasp_posture  = deepcopy(msg.pre_grasp_posture)
-        grasp.grasp_posture      = deepcopy(msg.grasp_posture)
-        grasp.grasp_pose         = deepcopy(msg.grasp_pose)
-        grasp.grasp_quality      = msg.grasp_quality
+        grasp.pre_grasp_posture = deepcopy(msg.pre_grasp_posture)
+        grasp.grasp_posture = deepcopy(msg.grasp_posture)
+        grasp.grasp_pose = deepcopy(msg.grasp_pose)
+        grasp.grasp_quality = msg.grasp_quality
         grasp.pre_grasp_approach = deepcopy(msg.pre_grasp_approach)
         grasp.post_grasp_retreat = deepcopy(msg.post_grasp_retreat)
         grasp.post_place_retreat = deepcopy(msg.post_place_retreat)
-        grasp.max_contact_force  = msg.max_contact_force
+        grasp.max_contact_force = msg.max_contact_force
         grasp.allowed_touch_objects = deepcopy(msg.allowed_touch_objects)
         return grasp
 
@@ -100,8 +103,6 @@ class Grasp(moveit_msgs.msg.Grasp):
         posture.points[point] = jtp
 
 
-
-
 class GraspStash(object):
     """
     Interface to the list of grasps stored in the system. Clients should all
@@ -113,12 +114,12 @@ class GraspStash(object):
         self._store = {}
         rp = rospkg.RosPack()
         self.grasps_file = get_param('~grasps_file',
-                                     default = os.path.join(
-                                         rp.get_path('sr_grasp'), 'resource', 'grasps.yaml') )
+                                     default=os.path.join(
+                                         rp.get_path('sr_grasp'), 'resource', 'grasps.yaml'))
 
     def get_all(self):
         """Return list of all grasps."""
-        return self._store.values();
+        return self._store.values()
 
     def get_grasp_array(self):
         arr = GraspArray()
@@ -128,7 +129,7 @@ class GraspStash(object):
     def get_grasp(self, grasp_index):
         """Return a single grasp from the stash from it's id field."""
         return self._store.get(grasp_index)
-        
+
     def get_grasp_at(self, idx):
         """Return the Grasp at the given index."""
         return self.get_all()[idx]
@@ -159,10 +160,10 @@ class GraspStash(object):
             data = yaml.load(file(fname))
             self.load_yaml(data)
         except Exception as e:
-            logerr("Failed to load YAML grasp file: %s error:%s"%(fname, e))
+            logerr("Failed to load YAML grasp file: %s error:%s" % (fname, e))
             return False
         else:
-            loginfo("Loaded grasps from file: %s"%(fname))
+            loginfo("Loaded grasps from file: %s" % (fname))
             return True
 
     def load_yaml(self, data):
@@ -176,4 +177,3 @@ class GraspStash(object):
             fname = self.grasps_file
         with open(fname, "w") as txtfile:
             txtfile.write(self.as_yaml())
-

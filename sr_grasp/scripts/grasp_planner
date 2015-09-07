@@ -83,7 +83,8 @@ class GraspPlanner(object):
         power_grasp.grasp_pose.pose.position.x = 0.02
         power_grasp.grasp_pose.pose.position.y = -0.085
         power_grasp.grasp_pose.pose.position.z = 0.333
-        # This will make the object vertical if it's a mesh from db. The meshes from the clusterer would need a different orientation, but we opt fro the db mesh to look good
+        # This will make the object vertical if it's a mesh from db. The meshes from the clusterer would
+        # need a different orientation, but we opt fro the db mesh to look good
         # as it's quite more obvious when it's wrong
         power_grasp.grasp_pose.pose.orientation.x = 0.0
         power_grasp.grasp_pose.pose.orientation.y = 0.707106781

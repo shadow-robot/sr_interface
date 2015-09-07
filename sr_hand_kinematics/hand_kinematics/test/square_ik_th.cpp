@@ -33,7 +33,6 @@ tf::Vector3 interPolLin(tf::Vector3 start, tf::Vector3 end, float q)
   if (q >= 0.0 && q <= 1.0)
   {
     pos = (1 - q) * start + q * end;
-
   }
   return pos;
 }

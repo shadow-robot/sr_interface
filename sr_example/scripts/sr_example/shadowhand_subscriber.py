@@ -17,7 +17,8 @@
 #
 
 """
-This is a simple subscriber example, subscribing to the joint_states topic and printing out the data in a per-joint basis
+This is a simple subscriber example, subscribing to the joint_states topic and printing
+out the data in a per-joint basis.
 To see how the joint_states topic looks like you can type the following in a terminal:
 > rostopic echo /joint_states
 
@@ -38,7 +39,8 @@ def callback(joint_state):
 
     @param joint_state: the message containing the joints data.
     """
-    for joint_name, position, velocity, effort in zip(joint_state.name, joint_state.position, joint_state.velocity, joint_state.effort):
+    for joint_name, position, velocity, effort in zip(joint_state.name, joint_state.position,
+                                                      joint_state.velocity, joint_state.effort):
         rospy.loginfo(
             "[%s] : Pos = %f | Pos_deg = %f | Vel = %f | Effort = %f",
             joint_name, position, math.degrees(position), velocity, effort)
