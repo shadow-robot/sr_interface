@@ -2,8 +2,8 @@
 
   <name>sr_multi_moveit_test</name>
   <version>0.0.1</version>
-  <description> 
-     A package to test the MoveIt Motion Planning Framework on the left_sr_ur10 and right_sr_ur10 arms
+  <description>
+    A package to test the MoveIt Motion Planning Framework on the left_sr_ur10 and right_sr_ur10 arms
   </description>
   <author email="beatriz@shadowrobot.com">Beatriz Leon</author>
   <maintainer email="beatriz@shadowrobot.com">Beatriz Leon</maintainer>
@@ -22,5 +22,5 @@
   <build_depend>rostest</build_depend>
 
   <buildtool_depend>catkin</buildtool_depend>
-  
+
 </package>

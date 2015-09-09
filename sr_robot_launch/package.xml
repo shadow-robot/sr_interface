@@ -2,7 +2,7 @@
 <package>
   <name>sr_robot_launch</name>
   <version>0.0.1</version>
-  <description>sr_robot_launch contains the launch file for the UR10 arm and SR hand </description>
+  <description>sr_robot_launch contains the launch file for the UR10 arm and SR hand</description>
   <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
 
   <license>GPL</license>
@@ -13,7 +13,7 @@
 
   <author>Kirsty Ellis</author>
 
-    <!-- Dependencies which this package needs to build itself. -->
+  <!-- Dependencies which this package needs to build itself. -->
   <buildtool_depend>catkin</buildtool_depend>
   <run_depend>controller_manager_msgs</run_depend>
   <run_depend>joint_state_publisher</run_depend>

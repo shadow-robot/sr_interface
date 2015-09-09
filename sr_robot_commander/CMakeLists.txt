@@ -5,13 +5,13 @@ project(sr_robot_commander)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-    rospy
-    moveit_commander
-    pluginlib
-    moveit_core
-    moveit_ros_planning_interface
-    moveit_ros_perception
-    interactive_markers
+        rospy
+        moveit_commander
+        pluginlib
+        moveit_core
+        moveit_ros_planning_interface
+        moveit_ros_perception
+        interactive_markers
 )
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -85,14 +85,14 @@ catkin_python_setup()
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES sr_robot_commander
-  CATKIN_DEPENDS
-    rospy
-    moveit_commander
-    pluginlib
-    moveit_core
-    moveit_ros_planning_interface
-    moveit_ros_perception
-    interactive_markers
+        CATKIN_DEPENDS
+        rospy
+        moveit_commander
+        pluginlib
+        moveit_core
+        moveit_ros_planning_interface
+        moveit_ros_perception
+        interactive_markers
 #  DEPENDS system_lib
 )
 
@@ -151,8 +151,8 @@ catkin_package(
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 install(DIRECTORY
-  src
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+        src
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
 #############

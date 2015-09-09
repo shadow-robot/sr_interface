@@ -5,10 +5,10 @@ find_package(orocos_kdl REQUIRED)
 include_directories(include ${catkin_INCLUDE_DIRS} ${orocos_kdl_INCLUDE_DIRS})
 
 catkin_package(
-    DEPENDS orocos_kdl
-    CATKIN_DEPENDS roscpp
-    INCLUDE_DIRS include
-    LIBRARIES kdl_coupling
+        DEPENDS orocos_kdl
+        CATKIN_DEPENDS roscpp
+        INCLUDE_DIRS include
+        LIBRARIES kdl_coupling
 )
 
 add_definitions(-DEIGEN2_SUPPORT)
@@ -17,10 +17,10 @@ add_dependencies(kdl_coupling ${catkin_EXPORTED_TARGETS})
 target_link_libraries(kdl_coupling ${catkin_LIBRARIES} ${orocos_kdl_LIBRARIES})
 
 install(DIRECTORY include/${PROJECT_NAME}/
-   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-   FILES_MATCHING PATTERN "*.hpp"
+        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+        FILES_MATCHING PATTERN "*.hpp"
 )
 
 install(TARGETS kdl_coupling
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )

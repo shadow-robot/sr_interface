@@ -2,7 +2,9 @@
 <package>
   <name>sr_interface</name>
   <version>0.0.0</version>
-  <description>This repository contains the high level interface and its dependencies for interacting simply with our robots.</description>
+  <description>This repository contains the high level interface and its dependencies for interacting simply with our
+    robots.
+  </description>
 
   <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
 

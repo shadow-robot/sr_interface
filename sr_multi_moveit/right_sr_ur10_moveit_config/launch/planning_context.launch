@@ -1,36 +1,36 @@
 <launch>
   <!-- By default we do not overwrite the URDF. Change the following to true to change the default behavior -->
-  <arg name="load_robot_description" default="false" />
-  <arg name="limited" default="true" />
-  <arg name="biotacs" default="false" />
+  <arg name="load_robot_description" default="false"/>
+  <arg name="limited" default="true"/>
+  <arg name="biotacs" default="false"/>
   <!-- The name of the parameter under which the URDF is loaded -->
-  <arg name="robot_description" default="robot_description" />
+  <arg name="robot_description" default="robot_description"/>
   <!-- Load universal robot description format (URDF) -->
   <group if="$(arg load_robot_description)">
-  	<group unless="$(arg biotacs)">
+    <group unless="$(arg biotacs)">
       <param unless="$(arg limited)" name="$(arg robot_description)"
-      command="$(find xacro)/xacro.py '$(find sr_multi_description)/urdf/right_srhand_ur10.urdf.xacro'" />
+             command="$(find xacro)/xacro.py '$(find sr_multi_description)/urdf/right_srhand_ur10.urdf.xacro'"/>
       <param if="$(arg limited)" name="$(arg robot_description)"
-      command="$(find xacro)/xacro.py '$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro'" />
+             command="$(find xacro)/xacro.py '$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro'"/>
     </group>
-  	<group if="$(arg biotacs)">
+    <group if="$(arg biotacs)">
       <param unless="$(arg limited)" name="$(arg robot_description)"
-      command="$(find xacro)/xacro.py '$(find sr_multi_description)/urdf/right_srhand_ur10_biotacs.urdf.xacro'" />
+             command="$(find xacro)/xacro.py '$(find sr_multi_description)/urdf/right_srhand_ur10_biotacs.urdf.xacro'"/>
       <param if="$(arg limited)" name="$(arg robot_description)"
-      command="$(find xacro)/xacro.py '$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited_biotacs.urdf.xacro'" />
-    </group>    
+             command="$(find xacro)/xacro.py '$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited_biotacs.urdf.xacro'"/>
+    </group>
   </group>
   <!-- The semantic description that corresponds to the URDF -->
   <param name="$(arg robot_description)_semantic"
-  textfile="$(find right_sr_ur10_moveit_config)/config/ur10srh.srdf" />
+         textfile="$(find right_sr_ur10_moveit_config)/config/ur10srh.srdf"/>
   <!-- Load updated joint limits (override information from URDF) -->
   <group ns="$(arg robot_description)_planning">
     <rosparam command="load"
-    file="$(find right_sr_ur10_moveit_config)/config/joint_limits.yaml" />
+              file="$(find right_sr_ur10_moveit_config)/config/joint_limits.yaml"/>
   </group>
   <!-- Load default settings for kinematics; these settings are overridden by settings in a node's namespace -->
   <group ns="$(arg robot_description)_kinematics">
     <rosparam command="load"
-    file="$(find right_sr_ur10_moveit_config)/config/kinematics.yaml" />
+              file="$(find right_sr_ur10_moveit_config)/config/kinematics.yaml"/>
   </group>
 </launch>

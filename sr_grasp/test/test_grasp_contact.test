@@ -5,8 +5,8 @@
     <!-- The node to test -->
     <node name="grasp" pkg="sr_grasp" type="grasp" output="screen">
         <!-- Run grasp slow for gazebo -->
-        <param name="interpolation_rate" value="20" />
+        <param name="interpolation_rate" value="20"/>
     </node>
     <!-- The test -->
-    <test test-name="test_grasp_contact" pkg="sr_grasp" type="test_grasp_contact.py" />
+    <test test-name="test_grasp_contact" pkg="sr_grasp" type="test_grasp_contact.py"/>
 </launch>

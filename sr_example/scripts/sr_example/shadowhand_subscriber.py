@@ -17,16 +17,19 @@
 #
 
 """
-This is a simple subscriber example, subscribing to the joint_states topic and printing out the data in a per-joint basis
+This is a simple subscriber example, subscribing to the joint_states topic and printing
+out the data in a per-joint basis.
 To see how the joint_states topic looks like you can type the following in a terminal:
 > rostopic echo /joint_states
 
 """
 
-import roslib; roslib.load_manifest('sr_example')
+import roslib
+roslib.load_manifest('sr_example')
 import rospy
 import math
 from sensor_msgs.msg import JointState
+
 
 def callback(joint_state):
     """
@@ -36,15 +39,19 @@ def callback(joint_state):
 
     @param joint_state: the message containing the joints data.
     """
-    for joint_name, position, velocity, effort in zip(joint_state.name, joint_state.position, joint_state.velocity, joint_state.effort):
-        rospy.loginfo("[%s] : Pos = %f | Pos_deg = %f | Vel = %f | Effort = %f",
-                      joint_name, position, math.degrees(position), velocity, effort)
+    for joint_name, position, velocity, effort in zip(joint_state.name, joint_state.position,
+                                                      joint_state.velocity, joint_state.effort):
+        rospy.loginfo(
+            "[%s] : Pos = %f | Pos_deg = %f | Vel = %f | Effort = %f",
+            joint_name, position, math.degrees(position), velocity, effort)
+
 
 def listener():
     """
     Initialize the ROS node and the topic to which it subscribes.
     """
-    rospy.init_node('shadowhand_joint_states_subscriber_python', anonymous=True)
+    rospy.init_node(
+        'shadowhand_joint_states_subscriber_python', anonymous=True)
 
     rospy.Subscriber("joint_states", JointState, callback)
 

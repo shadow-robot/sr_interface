@@ -21,23 +21,26 @@
 PKG = 'sr_grasp'
 NAME = 'test_grasp_object'
 
-import os, unittest;
-import rospy, rostest
+import os
+import unittest
+import rospy
+import rostest
 from actionlib import SimpleActionClient, GoalStatus
 from sr_robot_msgs.msg import GraspAction, GraspGoal
 from moveit_msgs.msg import Grasp
 from trajectory_msgs.msg import JointTrajectoryPoint
 
+
 class TestGrasp(unittest.TestCase):
     longMessage = True
 
     joint_names = [
-            'LFJ0', 'LFJ3', 'LFJ4', 'LFJ5',
-            'RFJ0', 'RFJ3', 'RFJ4',
-            'MFJ0', 'MFJ3', 'MFJ4',
-            'FFJ0', 'FFJ3', 'FFJ4',
-            'THJ1', 'THJ2', 'THJ3', 'THJ4', 'THJ5',
-            'WRJ1', 'WRJ2']
+        'LFJ0', 'LFJ3', 'LFJ4', 'LFJ5',
+        'RFJ0', 'RFJ3', 'RFJ4',
+        'MFJ0', 'MFJ3', 'MFJ4',
+        'FFJ0', 'FFJ3', 'FFJ4',
+        'THJ1', 'THJ2', 'THJ3', 'THJ4', 'THJ5',
+        'WRJ1', 'WRJ2']
 
     def mk_grasp(self, joints):
         grasp = Grasp()
@@ -57,7 +60,6 @@ class TestGrasp(unittest.TestCase):
                 jtp.positions.append(0.0)
         grasp.grasp_posture.points.append(jtp)
         return grasp
-
 
     # Tests
     ########
@@ -79,7 +81,7 @@ class TestGrasp(unittest.TestCase):
         client.send_goal(goal)
         client.wait_for_result(rospy.Duration.from_sec(20.0))
         self.assertEqual(client.get_state(), GoalStatus.SUCCEEDED,
-                "Action did not return in SUCCEEDED state.")
+                         "Action did not return in SUCCEEDED state.")
 
         rospy.sleep(2)
 
@@ -88,10 +90,9 @@ class TestGrasp(unittest.TestCase):
         client.send_goal(goal)
         client.wait_for_result(rospy.Duration.from_sec(20.0))
         self.assertEqual(client.get_state(), GoalStatus.SUCCEEDED,
-                "Action did not return in SUCCEEDED state.")
+                         "Action did not return in SUCCEEDED state.")
 
 
 if __name__ == '__main__':
     rospy.init_node(NAME)
     rostest.rosrun(PKG, NAME, TestGrasp)
-
