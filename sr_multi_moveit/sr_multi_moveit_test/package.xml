@@ -1,26 +1,26 @@
 <package>
 
-    <name>sr_multi_moveit_test</name>
-    <version>0.0.1</version>
-    <description>
-        A package to test the MoveIt Motion Planning Framework on the left_sr_ur10 and right_sr_ur10 arms
-    </description>
-    <author email="beatriz@shadowrobot.com">Beatriz Leon</author>
-    <maintainer email="beatriz@shadowrobot.com">Beatriz Leon</maintainer>
+  <name>sr_multi_moveit_test</name>
+  <version>0.0.1</version>
+  <description>
+    A package to test the MoveIt Motion Planning Framework on the left_sr_ur10 and right_sr_ur10 arms
+  </description>
+  <author email="beatriz@shadowrobot.com">Beatriz Leon</author>
+  <maintainer email="beatriz@shadowrobot.com">Beatriz Leon</maintainer>
 
-    <license>BSD</license>
+  <license>BSD</license>
 
-    <run_depend>moveit_ros_move_group</run_depend>
-    <run_depend>moveit_planners_ompl</run_depend>
-    <run_depend>moveit_ros_visualization</run_depend>
-    <run_depend>joint_state_publisher</run_depend>
-    <run_depend>robot_state_publisher</run_depend>
-    <run_depend>moveit_simple_controller_manager</run_depend>
-    <run_depend>xacro</run_depend>
-    <build_depend>sr_multi_description</build_depend>
-    <run_depend>sr_multi_description</run_depend>
-    <build_depend>rostest</build_depend>
+  <run_depend>moveit_ros_move_group</run_depend>
+  <run_depend>moveit_planners_ompl</run_depend>
+  <run_depend>moveit_ros_visualization</run_depend>
+  <run_depend>joint_state_publisher</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
+  <run_depend>moveit_simple_controller_manager</run_depend>
+  <run_depend>xacro</run_depend>
+  <build_depend>sr_multi_description</build_depend>
+  <run_depend>sr_multi_description</run_depend>
+  <build_depend>rostest</build_depend>
 
-    <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>catkin</buildtool_depend>
 
 </package>

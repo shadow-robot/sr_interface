@@ -1,36 +1,36 @@
 <package>
-    <name>sr_example</name>
-    <version>1.4.0</version>
-    <description>sr_example is an example of a real package interfaced with our robot. Please refer to the tutorial
-        Creating a package to interact with our robots.
-    </description>
-    <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
+  <name>sr_example</name>
+  <version>1.4.0</version>
+  <description>sr_example is an example of a real package interfaced with our robot. Please refer to the tutorial
+    Creating a package to interact with our robots.
+  </description>
+  <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
 
-    <license>GPL</license>
+  <license>GPL</license>
 
-    <url type="website">http://ros.org/wiki/sr_example</url>
-    <url type="repository">https://github.com/shadow-robot/sr-ros-interface</url>
-    <url type="bugtracker">https://github.com/shadow-robot/sr-ros-interface/issues</url>
+  <url type="website">http://ros.org/wiki/sr_example</url>
+  <url type="repository">https://github.com/shadow-robot/sr-ros-interface</url>
+  <url type="bugtracker">https://github.com/shadow-robot/sr-ros-interface/issues</url>
 
-    <author>Ugo Cupcic</author>
+  <author>Ugo Cupcic</author>
 
-    <!-- Dependencies which this package needs to build itself. -->
-    <buildtool_depend>catkin</buildtool_depend>
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
 
-    <!-- Dependencies needed to compile this package. -->
-    <build_depend>roscpp</build_depend>
-    <build_depend>rospy</build_depend>
-    <build_depend>sr_robot_msgs</build_depend>
-    <build_depend>sensor_msgs</build_depend>
-    <build_depend>std_msgs</build_depend>
-    <build_depend>control_msgs</build_depend>
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>sr_robot_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>control_msgs</build_depend>
 
-    <!-- Dependencies needed after this package is compiled. -->
-    <run_depend>roscpp</run_depend>
-    <run_depend>rospy</run_depend>
-    <run_depend>sr_robot_msgs</run_depend>
-    <run_depend>sensor_msgs</run_depend>
-    <run_depend>std_msgs</run_depend>
-    <run_depend>control_msgs</run_depend>
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>roscpp</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>sr_robot_msgs</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>control_msgs</run_depend>
 
 </package>
