@@ -10,7 +10,7 @@
   </include>
 
   <!-- Run the DB server -->
-  <node unless="remote_warehouse" name="$(anon mongo_wrapper_ros)" cwd="ROS_HOME"
+  <node unless="$(arg remote_warehouse)" name="$(anon mongo_wrapper_ros)" cwd="ROS_HOME"
         type="mongo_wrapper_ros.py" pkg="warehouse_ros">
     <param name="overwrite" value="false"/>
     <param name="database_path"
