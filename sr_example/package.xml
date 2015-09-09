@@ -1,7 +1,9 @@
 <package>
   <name>sr_example</name>
   <version>1.4.0</version>
-  <description>sr_example is an example of a real package interfaced with our robot. Please refer to the tutorial Creating a package to interact with our robots.</description>
+  <description>sr_example is an example of a real package interfaced with our robot. Please refer to the tutorial
+    Creating a package to interact with our robots.
+  </description>
   <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
 
   <license>GPL</license>

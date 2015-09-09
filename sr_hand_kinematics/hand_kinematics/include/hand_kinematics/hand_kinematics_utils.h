@@ -1,43 +1,44 @@
-//Software License Agreement (BSD License)
+// Software License Agreement (BSD License)
 
-//Copyright (c) 2008, Willow Garage, Inc.
-//All rights reserved.
+// Copyright (c) 2008, Willow Garage, Inc.
+// All rights reserved.
 
-//Redistribution and use in source and binary forms, with or without
-//modification, are permitted provided that the following conditions
-//are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
 
-// * Redistributions of source code must retain the above copyright
-//   notice, this list of conditions and the following disclaimer.
-// * Redistributions in binary form must reproduce the above
-//   copyright notice, this list of conditions and the following
-//   disclaimer in the documentation and/or other materials provided
-//   with the distribution.
-// * Neither the name of Willow Garage, Inc. nor the names of its
-//   contributors may be used to endorse or promote products derived
-//   from this software without specific prior written permission.
+//  * Redistributions of source code must retain the above copyright
+//    notice, this list of conditions and the following disclaimer.
+//  * Redistributions in binary form must reproduce the above
+//    copyright notice, this list of conditions and the following
+//    disclaimer in the documentation and/or other materials provided
+//    with the distribution.
+//  * Neither the name of Willow Garage, Inc. nor the names of its
+//    contributors may be used to endorse or promote products derived
+//    from this software without specific prior written permission.
 
-//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-//"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-//LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-//FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-//COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-//BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-//CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-//LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-//ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-//POSSIBILITY OF SUCH DAMAGE.
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+// COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+// BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+// LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+// ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
-// Modified by Guillaume WALCK (UPMC) 2012
+//  Modified by Guillaume WALCK (UPMC) 2012
 
 
-#ifndef HAND_IK_UTILS_H
-#define HAND_IK_UTILS_H
+#ifndef HAND_KINEMATICS_HAND_KINEMATICS_UTILS_H
+#define HAND_KINEMATICS_HAND_KINEMATICS_UTILS_H
 
 #include <ros/ros.h>
 #include <vector>
+#include <string>
 #include <angles/angles.h>
 #include <Eigen/Core>
 #include <kdl/frames.hpp>
@@ -54,13 +55,11 @@
 #include <moveit_msgs/GetConstraintAwarePositionIK.h>
 #include <moveit_msgs/GetKinematicSolverInfo.h>
 
-using namespace angles;
-
 namespace hand_kinematics
 {
-	 bool loadRobotModel(ros::NodeHandle node_handle,
+  bool loadRobotModel(ros::NodeHandle node_handle,
                       urdf::Model &robot_model,
-                      std::string &root_name, 
+                      std::string &root_name,
                       std::string &tip_name,
                       std::string &xml_string);
 
@@ -70,9 +69,9 @@ namespace hand_kinematics
                    KDL::Chain &kdl_chain);
 
   bool getKDLTree(const std::string &xml_string,
-                   const std::string &root_name,
-                   const std::string &tip_name,
-                   KDL::Tree &kdl_chain);
+                  const std::string &root_name,
+                  const std::string &tip_name,
+                  KDL::Tree &kdl_chain);
 
   bool checkJointNames(const std::vector<std::string> &joint_names,
                        const moveit_msgs::KinematicSolverInfo &chain_info);
@@ -100,28 +99,32 @@ namespace hand_kinematics
   bool convertPoseToRootFrame(const geometry_msgs::PoseStamped &pose_msg,
                               KDL::Frame &pose_kdl,
                               const std::string &root_frame,
-                              tf::TransformListener& tf);
+                              tf::TransformListener &tf);
 
   bool convertPoseToRootFrame(const geometry_msgs::PoseStamped &pose_msg,
                               geometry_msgs::PoseStamped &pose_msg_out,
                               const std::string &root_frame,
-                              tf::TransformListener& tf);
+                              tf::TransformListener &tf);
 
   int getKDLSegmentIndex(const KDL::Chain &chain,
                          const std::string &name);
 
   void getKDLChainInfo(const KDL::Chain &chain,
                        moveit_msgs::KinematicSolverInfo &chain_info);
-              
-  bool init_ik(urdf::Model &robot_model, const std::string &root_name, const std::string &tip_name, KDL::JntArray &joint_min, KDL::JntArray &joint_max, moveit_msgs::KinematicSolverInfo &info);
-  
-  // coupling matrices
-  Eigen::MatrixXd updateCouplingFF(const KDL::JntArray& q);
-  Eigen::MatrixXd updateCouplingMF(const KDL::JntArray& q);
-  Eigen::MatrixXd updateCouplingRF(const KDL::JntArray& q);
-  Eigen::MatrixXd updateCouplingLF(const KDL::JntArray& q);
-  Eigen::MatrixXd updateCouplingTH(const KDL::JntArray& q);
-  
-}
 
-#endif// HAND_IK_UTILS_H
+  bool init_ik(urdf::Model &robot_model, const std::string &root_name, const std::string &tip_name,
+               KDL::JntArray &joint_min, KDL::JntArray &joint_max, moveit_msgs::KinematicSolverInfo &info);
+
+  // coupling matrices
+  Eigen::MatrixXd updateCouplingFF(const KDL::JntArray &q);
+
+  Eigen::MatrixXd updateCouplingMF(const KDL::JntArray &q);
+
+  Eigen::MatrixXd updateCouplingRF(const KDL::JntArray &q);
+
+  Eigen::MatrixXd updateCouplingLF(const KDL::JntArray &q);
+
+  Eigen::MatrixXd updateCouplingTH(const KDL::JntArray &q);
+}  // namespace hand_kinematics
+
+#endif  // HAND_KINEMATICS_HAND_KINEMATICS_UTILS_H

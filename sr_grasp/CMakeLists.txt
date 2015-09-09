@@ -5,13 +5,13 @@ project(sr_grasp)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  actionlib
-  dynamic_reconfigure
-  gazebo_msgs
-  rospy
-  rostest
-  sr_robot_msgs
-  sr_hand
+        actionlib
+        dynamic_reconfigure
+        gazebo_msgs
+        rospy
+        rostest
+        sr_robot_msgs
+        sr_hand
 )
 
 ## System dependencies are found with CMake's conventions
@@ -80,8 +80,8 @@ catkin_python_setup()
 ########################
 
 generate_dynamic_reconfigure_options(
-  cfg/Grasp.cfg
-  cfg/GraspPlanner.cfg
+        cfg/Grasp.cfg
+        cfg/GraspPlanner.cfg
 )
 
 ###################################
@@ -108,7 +108,7 @@ catkin_package(
 ## Your package locations should be listed before other locations
 # include_directories(include)
 include_directories(
-  ${catkin_INCLUDE_DIRS}
+        ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a cpp library
@@ -158,8 +158,8 @@ include_directories(
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 install(FILES
-  resource/grasps.yaml
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+        resource/grasps.yaml
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
 #############

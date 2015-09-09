@@ -1,74 +1,79 @@
 <launch>
-  <!-- send hand urdf to param server -->
-  <include file="$(find sr_description)/loaders/load_hand_model.launch" >
-   <arg name="robot_param" value="robot_description" />
-  </include>
+    <!-- send hand urdf to param server -->
+    <include file="$(find sr_description)/loaders/load_hand_model.launch">
+        <arg name="robot_param" value="robot_description"/>
+    </include>
 
-  <!-- the semantic description that corresponds to the URDF-->
-  <param name="robot_description_semantic" textfile="$(find sr_moveit_config)/config/shadowhand_motor.srdf" /> 
-  <test test-name="hand_kinematics_plugin_test_ff" pkg="hand_kinematics" type="test_kinematics_as_plugin" name="right_hand_kinematics_ff" time-limit="180">
-   <param name="tip_name" value="fftip" />     
-   <param name="root_name" value="palm" />  
-   <param name="first_finger/maxIterations" type="int" value="1000"/>
-   <param name="first_finger/epsilon" type="double" value="0.001"/>
-   <param name="search_discretization" value="0.025" />  
-   <param name="number_fk_tests" value="100" />  
-   <param name="number_ik_tests" value="100" />  
-   <param name="number_fk_tests_with_callbacks" value="100" />  
-   <param name="group_name" value="first_finger" />  
-   <param name="plugin_name" value="hand_kinematics/HandKinematicsPlugin" />  
-  </test>
-  
-  <test test-name="hand_kinematics_plugin_test_mf" pkg="hand_kinematics" type="test_kinematics_as_plugin" name="right_hand_kinematics_mf" time-limit="180">
-   <param name="tip_name" value="mftip" />     
-   <param name="root_name" value="palm" />  
-   <param name="middle_finger/maxIterations" type="int" value="1000"/>
-   <param name="middle_finger/epsilon" type="double" value="0.001"/>
-   <param name="search_discretization" value="0.025" />  
-   <param name="number_fk_tests" value="100" />  
-   <param name="number_ik_tests" value="100" />  
-   <param name="number_fk_tests_with_callbacks" value="100" />  
-   <param name="group_name" value="middle_finger" />  
-   <param name="plugin_name" value="hand_kinematics/HandKinematicsPlugin" />  
-  </test>
+    <!-- the semantic description that corresponds to the URDF-->
+    <param name="robot_description_semantic" textfile="$(find sr_moveit_config)/config/shadowhand_motor.srdf"/>
+    <test test-name="hand_kinematics_plugin_test_ff" pkg="hand_kinematics" type="test_kinematics_as_plugin"
+          name="right_hand_kinematics_ff" time-limit="180">
+        <param name="tip_name" value="fftip"/>
+        <param name="root_name" value="palm"/>
+        <param name="first_finger/maxIterations" type="int" value="1000"/>
+        <param name="first_finger/epsilon" type="double" value="0.001"/>
+        <param name="search_discretization" value="0.025"/>
+        <param name="number_fk_tests" value="100"/>
+        <param name="number_ik_tests" value="100"/>
+        <param name="number_fk_tests_with_callbacks" value="100"/>
+        <param name="group_name" value="first_finger"/>
+        <param name="plugin_name" value="hand_kinematics/HandKinematicsPlugin"/>
+    </test>
 
-  <test test-name="hand_kinematics_plugin_test_rf" pkg="hand_kinematics" type="test_kinematics_as_plugin" name="right_hand_kinematics_rf" time-limit="180">
-   <param name="tip_name" value="rftip" />     
-   <param name="root_name" value="palm" />  
-   <param name="ring_finger/maxIterations" type="int" value="1000"/>
-   <param name="ring_finger/epsilon" type="double" value="0.001"/>
-   <param name="search_discretization" value="0.025" />  
-   <param name="number_fk_tests" value="100" />  
-   <param name="number_ik_tests" value="100" />  
-   <param name="number_fk_tests_with_callbacks" value="100" />  
-   <param name="group_name" value="ring_finger" />  
-   <param name="plugin_name" value="hand_kinematics/HandKinematicsPlugin" />  
-  </test>
-  
-  <test test-name="hand_kinematics_plugin_test_lf" pkg="hand_kinematics" type="test_kinematics_as_plugin" name="right_hand_kinematics_lf" time-limit="180">
-   <param name="tip_name" value="lftip" />     
-   <param name="root_name" value="palm" />  
-   <param name="little_finger/maxIterations" type="int" value="1000"/>
-   <param name="little_finger/epsilon" type="double" value="0.001"/>
-   <param name="search_discretization" value="0.025" />  
-   <param name="number_fk_tests" value="100" />  
-   <param name="number_ik_tests" value="100" />  
-   <param name="number_fk_tests_with_callbacks" value="100" />  
-   <param name="group_name" value="little_finger" />  
-   <param name="plugin_name" value="hand_kinematics/HandKinematicsPlugin" />  
+    <test test-name="hand_kinematics_plugin_test_mf" pkg="hand_kinematics" type="test_kinematics_as_plugin"
+          name="right_hand_kinematics_mf" time-limit="180">
+        <param name="tip_name" value="mftip"/>
+        <param name="root_name" value="palm"/>
+        <param name="middle_finger/maxIterations" type="int" value="1000"/>
+        <param name="middle_finger/epsilon" type="double" value="0.001"/>
+        <param name="search_discretization" value="0.025"/>
+        <param name="number_fk_tests" value="100"/>
+        <param name="number_ik_tests" value="100"/>
+        <param name="number_fk_tests_with_callbacks" value="100"/>
+        <param name="group_name" value="middle_finger"/>
+        <param name="plugin_name" value="hand_kinematics/HandKinematicsPlugin"/>
+    </test>
 
-  </test>
-  <test test-name="hand_kinematics_plugin_test_th" pkg="hand_kinematics" type="test_kinematics_as_plugin" name="right_hand_kinematics_th" time-limit="180">
-   <param name="tip_name" value="thtip" />     
-   <param name="root_name" value="palm" />  
-   <param name="thumb/maxIterations" type="int" value="1000"/>
-   <param name="thumb/epsilon" type="double" value="0.001"/>
-   <param name="search_discretization" value="0.025" />  
-   <param name="number_fk_tests" value="100" />  
-   <param name="number_ik_tests" value="100" />  
-   <param name="number_fk_tests_with_callbacks" value="100" />  
-   <param name="group_name" value="thumb" />  
-   <param name="plugin_name" value="hand_kinematics/HandKinematicsPlugin" />  
-  </test>
+    <test test-name="hand_kinematics_plugin_test_rf" pkg="hand_kinematics" type="test_kinematics_as_plugin"
+          name="right_hand_kinematics_rf" time-limit="180">
+        <param name="tip_name" value="rftip"/>
+        <param name="root_name" value="palm"/>
+        <param name="ring_finger/maxIterations" type="int" value="1000"/>
+        <param name="ring_finger/epsilon" type="double" value="0.001"/>
+        <param name="search_discretization" value="0.025"/>
+        <param name="number_fk_tests" value="100"/>
+        <param name="number_ik_tests" value="100"/>
+        <param name="number_fk_tests_with_callbacks" value="100"/>
+        <param name="group_name" value="ring_finger"/>
+        <param name="plugin_name" value="hand_kinematics/HandKinematicsPlugin"/>
+    </test>
+
+    <test test-name="hand_kinematics_plugin_test_lf" pkg="hand_kinematics" type="test_kinematics_as_plugin"
+          name="right_hand_kinematics_lf" time-limit="180">
+        <param name="tip_name" value="lftip"/>
+        <param name="root_name" value="palm"/>
+        <param name="little_finger/maxIterations" type="int" value="1000"/>
+        <param name="little_finger/epsilon" type="double" value="0.001"/>
+        <param name="search_discretization" value="0.025"/>
+        <param name="number_fk_tests" value="100"/>
+        <param name="number_ik_tests" value="100"/>
+        <param name="number_fk_tests_with_callbacks" value="100"/>
+        <param name="group_name" value="little_finger"/>
+        <param name="plugin_name" value="hand_kinematics/HandKinematicsPlugin"/>
+
+    </test>
+    <test test-name="hand_kinematics_plugin_test_th" pkg="hand_kinematics" type="test_kinematics_as_plugin"
+          name="right_hand_kinematics_th" time-limit="180">
+        <param name="tip_name" value="thtip"/>
+        <param name="root_name" value="palm"/>
+        <param name="thumb/maxIterations" type="int" value="1000"/>
+        <param name="thumb/epsilon" type="double" value="0.001"/>
+        <param name="search_discretization" value="0.025"/>
+        <param name="number_fk_tests" value="100"/>
+        <param name="number_ik_tests" value="100"/>
+        <param name="number_fk_tests_with_callbacks" value="100"/>
+        <param name="group_name" value="thumb"/>
+        <param name="plugin_name" value="hand_kinematics/HandKinematicsPlugin"/>
+    </test>
 
 </launch>

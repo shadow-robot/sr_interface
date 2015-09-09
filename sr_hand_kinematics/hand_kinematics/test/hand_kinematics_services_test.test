@@ -1,9 +1,10 @@
 <launch>
-  <!-- launch the services in a standalone manner -->
-  <include file="$(find hand_kinematics)/launch/hand_kinematics_standalone.launch" />
+    <!-- launch the services in a standalone manner -->
+    <include file="$(find hand_kinematics)/launch/hand_kinematics_standalone.launch"/>
 
-  <test test-name="hand_kinematics_services_test" pkg="hand_kinematics" type="test_kinematics_as_service" name="right_hand_kinematics" time-limit="180">
+    <test test-name="hand_kinematics_services_test" pkg="hand_kinematics" type="test_kinematics_as_service"
+          name="right_hand_kinematics" time-limit="180">
 
-  </test>
+    </test>
 
 </launch>

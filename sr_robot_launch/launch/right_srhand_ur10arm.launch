@@ -1,90 +1,90 @@
 <launch>
   <!-- This launch file is for a right UR10 arm and shadow hand -->
-  <arg name="hand_id" default="rh" />
+  <arg name="hand_id" default="rh"/>
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
-  <arg name="sim" default="true" />
+  <arg name="sim" default="true"/>
   <!-- Use xacro prefix for hand or not -->
-  <arg name="use_xacro_prefix" default="false" />
+  <arg name="use_xacro_prefix" default="false"/>
   <!--Left or right hand/arm  -->
-  <arg name="xacro_prefix" default="r" />
+  <arg name="xacro_prefix" default="r"/>
   <!-- Set to true for debugging -->
-  <arg name="debug" default="false" />
+  <arg name="debug" default="false"/>
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
-  <arg name="hand_trajectory" default="true" />
+  <arg name="hand_trajectory" default="true"/>
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
-  <arg name="arm_trajectory" default="true" />
+  <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the hands-->
-  <arg name="hand_ctrl" default="true" />
+  <arg name="hand_ctrl" default="true"/>
   <!-- Set to true to spawn the position controllers for the arm-->
-  <arg name="arm_ctrl" default="true" />
+  <arg name="arm_ctrl" default="true"/>
   <!-- Serial number of the hand to be used-->
-  <arg name="hand_serial" default="1082" />
+  <arg name="hand_serial" default="1082"/>
   <!-- Loads the robot description -->
   <arg name="robot_description"
-  default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro" />
+       default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/>
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
   <!-- Set to true to allow planning trajectories-->
-  <arg name="use_moveit" default="false" />
-   
+  <arg name="use_moveit" default="false"/>
+
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
     <param name="/hand/mapping/$(arg hand_serial)" value="$(arg hand_id)"/>
     <param name="/hand/joint_prefix/$(arg hand_serial)" value="$(arg hand_id)_"/>
     <arg name="world_name"
-    value="$(find sr_description)/other/worlds/shadowhand.world" />
-    <arg name="paused" value="false" />
+         value="$(find sr_description)/other/worlds/shadowhand.world"/>
+    <arg name="paused" value="false"/>
     <param name="robot_description"
-    command="$(find xacro)/xacro.py '$(arg robot_description)'" />
+           command="$(find xacro)/xacro.py '$(arg robot_description)'"/>
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-      <arg name="world_name" default="$(arg world_name)" />
-      <arg name="gui" default="true" />
-      <arg name="paused" value="$(arg paused)" />
-      <arg name="debug" value="$(arg debug)" />
+      <arg name="world_name" default="$(arg world_name)"/>
+      <arg name="gui" default="true"/>
+      <arg name="paused" value="$(arg paused)"/>
+      <arg name="debug" value="$(arg debug)"/>
     </include>
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model"
-    args="-urdf -param robot_description -model ur10srh -z 0.1 -J ra_elbow_joint 0.0 -J ra_shoulder_lift_joint 0.0 -J ra_shoulder_pan_joint 0.0 -J ra_wrist_1_joint 0.0 -J ra_wrist_2_joint 0.0 -J ra_wrist_3_joint 0.0"
-    respawn="false" output="screen" />
-    <include file="$(find ur_gazebo)/launch/controller_utils.launch" />
+          args="-urdf -param robot_description -model ur10srh -z 0.1 -J ra_elbow_joint 0.0 -J ra_shoulder_lift_joint 0.0 -J ra_shoulder_pan_joint 0.0 -J ra_wrist_1_joint 0.0 -J ra_wrist_2_joint 0.0 -J ra_wrist_3_joint 0.0"
+          respawn="false" output="screen"/>
+    <include file="$(find ur_gazebo)/launch/controller_utils.launch"/>
     <include file="$(find sr_hand)/launch/gazebo/loaders/hand_controllers.launch">
       <arg name="hand_id"
-      value="$(arg hand_id)" />
+           value="$(arg hand_id)"/>
     </include>
     <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/ra_trajectory_controller.yaml"
-    command="load" />
+              command="load"/>
     <group if="$(arg arm_trajectory)">
       <node name="arm_trajectory_controller_spawner"
-      pkg="controller_manager" type="spawner" output="screen"
-      args="--shutdown-timeout=1.0 ra_trajectory_controller" />
+            pkg="controller_manager" type="spawner" output="screen"
+            args="--shutdown-timeout=1.0 ra_trajectory_controller"/>
     </group>
     <rosparam command="load"
-    file="$(find sr_robot_launch)/config/rh_trajectory_controller.yaml" />
+              file="$(find sr_robot_launch)/config/rh_trajectory_controller.yaml"/>
     <group if="$(arg hand_trajectory)">
       <node name="hand_trajectory_controller_spawner"
-      pkg="controller_manager" type="spawner" output="screen"
-      args="--shutdown-timeout=1.0 rh_trajectory_controller" />
+            pkg="controller_manager" type="spawner" output="screen"
+            args="--shutdown-timeout=1.0 rh_trajectory_controller"/>
     </group>
   </group>
   <!-- REAL ROBOTS -->
   <group unless="$(arg sim)">
     <!-- controllers for arm -->
     <rosparam command="load"
-    file="$(find sr_robot_launch)/config/right_ur_arm_controller.yaml" />
+              file="$(find sr_robot_launch)/config/right_ur_arm_controller.yaml"/>
     <!-- trajectory controller -->
     <rosparam command="load"
-    file="$(find sr_robot_launch)/config/rh_trajectory_controller.yaml" />
+              file="$(find sr_robot_launch)/config/rh_trajectory_controller.yaml"/>
     <rosparam command="load"
-    file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml" />
+              file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml"/>
     <!-- launch for right hand -->
     <include file="$(find sr_edc_launch)/sr_edc.launch">
-      <arg name="hand_serial" value="$(arg hand_serial)" />
-      <arg name="eth_port" value="$(arg eth_port)" />
+      <arg name="hand_serial" value="$(arg hand_serial)"/>
+      <arg name="eth_port" value="$(arg eth_port)"/>
       <arg name="robot_description"
-      value="$(arg robot_description)" />
-      <arg name="debug" value="$(arg debug)" />
-      <arg name="pwm_control" value="true" />
-      <arg name="hand_id" value="rh" />
+           value="$(arg robot_description)"/>
+      <arg name="debug" value="$(arg debug)"/>
+      <arg name="pwm_control" value="true"/>
+      <arg name="hand_id" value="rh"/>
     </include>
     <!-- real time control loop -->
     <!--
@@ -99,38 +99,39 @@
     -->
     <group if="$(arg arm_ctrl)">
       <param name="ra_sr_ur_controller/robot_program_path"
-      type="str" value="$(find sr_ur_bringup)/robot_programs/" />
+             type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
       <node name="arm_controller_spawner" pkg="controller_manager"
-      type="spawner" output="screen"
-      args="--shutdown-timeout=1.0 ra_sr_ur_controller" />
+            type="spawner" output="screen"
+            args="--shutdown-timeout=1.0 ra_sr_ur_controller"/>
     </group>
     <!-- Should only be used when testing arm alone, as hand launch includes joint state publisher -->
     <!-- <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"/> -->
     <group if="$(arg hand_trajectory)">
       <node name="hand_trajectory_controller_spawner"
-      pkg="controller_manager" type="spawner" output="screen"
-      args="--shutdown-timeout=1.0 rh_trajectory_controller" />
+            pkg="controller_manager" type="spawner" output="screen"
+            args="--shutdown-timeout=1.0 rh_trajectory_controller"/>
     </group>
     <group if="$(arg hand_ctrl)">
       <node name="rh_controllers_spawner" pkg="controller_manager"
-      type="spawner" output="screen"
-      args="--wait-for=/calibrated --shutdown-timeout=1.0 sh_rh_ffj0_position_controller sh_rh_ffj3_position_controller sh_rh_ffj4_position_controller sh_rh_mfj0_position_controller sh_rh_mfj3_position_controller sh_rh_mfj4_position_controller sh_rh_rfj0_position_controller sh_rh_rfj3_position_controller sh_rh_rfj4_position_controller sh_rh_lfj0_position_controller sh_rh_lfj3_position_controller sh_rh_lfj4_position_controller sh_rh_lfj5_position_controller sh_rh_thj1_position_controller sh_rh_thj2_position_controller sh_rh_thj3_position_controller sh_rh_thj4_position_controller sh_rh_thj5_position_controller sh_rh_wrj1_position_controller sh_rh_wrj2_position_controller" />
+            type="spawner" output="screen"
+            args="--wait-for=/calibrated --shutdown-timeout=1.0 sh_rh_ffj0_position_controller sh_rh_ffj3_position_controller sh_rh_ffj4_position_controller sh_rh_mfj0_position_controller sh_rh_mfj3_position_controller sh_rh_mfj4_position_controller sh_rh_rfj0_position_controller sh_rh_rfj3_position_controller sh_rh_rfj4_position_controller sh_rh_lfj0_position_controller sh_rh_lfj3_position_controller sh_rh_lfj4_position_controller sh_rh_lfj5_position_controller sh_rh_thj1_position_controller sh_rh_thj2_position_controller sh_rh_thj3_position_controller sh_rh_thj4_position_controller sh_rh_thj5_position_controller sh_rh_wrj1_position_controller sh_rh_wrj2_position_controller"/>
     </group>
     <group if="$(arg arm_trajectory)">
       <node name="arm_checker" pkg="sr_robot_launch"
-      type="check_arms_ready" output="screen">
+            type="check_arms_ready" output="screen">
         <rosparam param="controllers">
-        ["ra_sr_ur_controller"]</rosparam>
+          ["ra_sr_ur_controller"]
+        </rosparam>
       </node>
       <node name="arm_trajectory_controller_spawner"
-      pkg="controller_manager" type="spawner" output="screen"
-      args="--wait-for=/arms_ready --shutdown-timeout=1.0 ra_trajectory_controller" />
+            pkg="controller_manager" type="spawner" output="screen"
+            args="--wait-for=/arms_ready --shutdown-timeout=1.0 ra_trajectory_controller"/>
     </group>
   </group>
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
     <include file="$(find right_sr_ur10_moveit_config)/launch/moveit_planning_and_execution.launch">
-       <arg name="load_robot_description" value="false" />
+      <arg name="load_robot_description" value="false"/>
     </include>
     <include file="$(find right_sr_ur10_moveit_config)/launch/default_warehouse_db.launch"/>
     <include file="$(find sr_robot_launch)/launch/trajectory_services.launch">

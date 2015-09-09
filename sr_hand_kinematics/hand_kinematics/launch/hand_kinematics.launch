@@ -1,7 +1,7 @@
 <launch>
   <!-- robot_description must be on the parameter server -->
 
-  <node pkg="hand_kinematics" name="ff_kinematics" type="hand_kinematics_coupling"  output="screen">
+  <node pkg="hand_kinematics" name="ff_kinematics" type="hand_kinematics_coupling" output="screen">
     <param name="root_name" type="string" value="palm"/>
     <param name="tip_name" type="string" value="fftip"/>
     <param name="maxIterations" type="int" value="1000"/>
@@ -9,7 +9,7 @@
     <!--		<param name="lambda" type="double" value="0.02"/>-->
 
   </node>
-  <node pkg="hand_kinematics" name="mf_kinematics" type="hand_kinematics_coupling"  output="screen">
+  <node pkg="hand_kinematics" name="mf_kinematics" type="hand_kinematics_coupling" output="screen">
     <param name="root_name" type="string" value="palm"/>
     <param name="tip_name" type="string" value="mftip"/>
     <param name="maxIterations" type="int" value="1000"/>

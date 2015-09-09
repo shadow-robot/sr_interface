@@ -3,7 +3,8 @@
   <name>right_sr_ur10_moveit_config</name>
   <version>0.0.1</version>
   <description>
-     An automatically generated package with all the configuration and launch files for using the right_sr_ur10 with the MoveIt Motion Planning Framework
+    An automatically generated package with all the configuration and launch files for using the right_sr_ur10 with
+    the MoveIt Motion Planning Framework
   </description>
   <author email="assistant@moveit.ros.org">MoveIt Setup Assistant</author>
   <maintainer email="assistant@moveit.ros.org">MoveIt Setup Assistant</maintainer>
@@ -26,5 +27,5 @@
 
 
   <buildtool_depend>catkin</buildtool_depend>
-  
+
 </package>

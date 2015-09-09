@@ -78,7 +78,7 @@ find_package(catkin REQUIRED)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES sr_robot_launch
-  CATKIN_DEPENDS controller_manager_msgs joint_state_publisher robot_state_publisher rospy sr_multi_description sr_robot_msgs sr_ur_msgs ur_gazebo
+        CATKIN_DEPENDS controller_manager_msgs joint_state_publisher robot_state_publisher rospy sr_multi_description sr_robot_msgs sr_ur_msgs ur_gazebo
 #  DEPENDS system_lib
 )
 
@@ -90,7 +90,7 @@ catkin_package(
 ## Your package locations should be listed before other locations
 # include_directories(include)
 include_directories(
-  ${catkin_INCLUDE_DIRS}
+        ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a cpp library
@@ -159,13 +159,13 @@ include_directories(
 # catkin_add_nosetests(test)
 
 install(PROGRAMS
-  scripts/check_arms_ready
-  scripts/teach_mode_node
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+        scripts/check_arms_ready
+        scripts/teach_mode_node
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 install(DIRECTORY launch/
-   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch)
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch)
 
 install(DIRECTORY config/
-   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config)
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config)
