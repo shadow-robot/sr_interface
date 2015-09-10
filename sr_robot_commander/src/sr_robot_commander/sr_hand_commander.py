@@ -117,4 +117,4 @@ class SrHandCommander(SrRobotCommander):
         @param joint_name the joint name
         @return stripped joint name
         """
-        return joint_name[4:]
+        return joint_name[-4:]
