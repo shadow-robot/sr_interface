@@ -1,31 +1,15 @@
 <launch>
   <!-- Set the parameters for the warehouse and run the mongodb server. -->
 
-  <arg name="remote_warehouse" default="false"/>
-
   <!-- The default DB port for moveit (not default MongoDB port to avoid potential conflicts) -->
+  <arg name="moveit_warehouse_port" default="33829"/>
 
-  <group unless="$(arg remote_warehouse)">
-    <arg name="moveit_warehouse_port" default="33829"/>
+  <!-- The default DB host for moveit -->
+  <arg name="moveit_warehouse_host" default="localhost"/>
 
-    <!-- The default DB host for moveit -->
-    <arg name="moveit_warehouse_host" default="localhost"/>
 
-    <arg name="warehouse_authenticate" default="false"/>
-    <arg name="warehouse_database_name" default=""/>
-    <arg name="warehouse_user" default=""/>
-    <arg name="warehouse_pwd" default=""/>
-
-    <!-- Set parameters for the warehouse -->
-    <param name="warehouse_port" value="$(arg moveit_warehouse_port)"/>
-    <param name="warehouse_host" value="$(arg moveit_warehouse_host)"/>
-    <param name="warehouse_authenticate" value="$(arg warehouse_authenticate)"/>
-    <param name="warehouse_database_name" value="$(arg warehouse_database_name)"/>
-    <param name="warehouse_user" value="$(arg warehouse_user)"/>
-    <param name="warehouse_pwd" value="$(arg warehouse_pwd)"/>
-    <param name="warehouse_exec" value="mongod" />
-  </group>
-
-  <rosparam if="$(arg remote_warehouse)" file="$(find right_sr_ur10_moveit_config)/launch/remote_warehouse.yaml"/>
+  <!-- Set parameters for the warehouse -->
+  <param name="warehouse_port" value="$(arg moveit_warehouse_port)"/>
+  <param name="warehouse_host" value="$(arg moveit_warehouse_host)"/>
 
 </launch>
