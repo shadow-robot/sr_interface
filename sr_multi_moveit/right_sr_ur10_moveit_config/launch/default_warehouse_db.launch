@@ -8,7 +8,7 @@
        value="$(find right_sr_ur10_moveit_config)/default_warehouse_mongo_db"/>
   </include>
 
-  <include if="$(arg remote_warehouse)" file="$(find sr_remote_mongo)/launch/remote_warehouse.launch">
+  <include if="$(arg remote_warehouse)" file="$(find sr_remote_warehouse)/launch/remote_warehouse.launch">
     <arg name="launch_services" value="false"/>
   </include>
 
