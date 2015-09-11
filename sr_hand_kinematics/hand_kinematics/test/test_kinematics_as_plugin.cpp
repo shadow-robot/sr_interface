@@ -76,7 +76,7 @@ public:
     {
       kinematics_solver_ = kinematics_loader_->createInstance(plugin_name);
     }
-    catch (pluginlib::PluginlibException &ex  // handle the class failing to load
+    catch (pluginlib::PluginlibException &ex)  // handle the class failing to load
     {
       ROS_ERROR("The plugin failed to load. Error: %s", ex.what());
       EXPECT_TRUE(0);

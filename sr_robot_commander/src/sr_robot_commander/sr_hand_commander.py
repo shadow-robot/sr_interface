@@ -55,6 +55,7 @@ class SrHandCommander(SrRobotCommander):
         Set maximum force for hand
         @param value - maximum force value
         """
+        joint_name = self._strip_prefix(joint_name)
 
         # This is for a beta version of our firmware.
         # It uses the motor I and Imax to set a max effort.
@@ -106,3 +107,14 @@ class SrHandCommander(SrRobotCommander):
         data is different for every tactile_type.
         """
         return self._tactiles.get_tactile_state()
+
+    def _strip_prefix(self, joint_name):
+        """
+        Strips the prefix from the joint name (e.g. rh_ffj3 -> ffj3) if present, returns the joint name otherwise.
+
+        We know that all joint names for the shadow hands are 4 char long. So we only keep the last 4 chars.
+
+        @param joint_name the joint name
+        @return stripped joint name
+        """
+        return joint_name[-4:]
