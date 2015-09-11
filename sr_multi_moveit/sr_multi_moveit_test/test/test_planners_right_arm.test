@@ -4,22 +4,22 @@
     </include>
 
     <test test-name = "test_planner_BKPIECEkConfigDefault" pkg = "sr_multi_moveit_test" type = "test_planners.py"
-        time-limit = "300.0" retry = "3" args = "right_arm BKPIECEkConfigDefault" / >
+        time-limit = "300.0" retry = "3" args = "right_arm BKPIECEkConfigDefault" />
     <test test-name = "test_planner_ESTkConfigDefault" pkg = "sr_multi_moveit_test" type = "test_planners.py"
-        time-limit = "300.0" retry = "3" args = "right_arm ESTkConfigDefault" / >
+        time-limit = "300.0" retry = "3" args = "right_arm ESTkConfigDefault" />
     <test test-name = "test_planner_KPIECEkConfigDefault" pkg = "sr_multi_moveit_test" type = "test_planners.py"
-        time-limit = "300.0" retry = "3" args = "right_arm KPIECEkConfigDefault" / >
+        time-limit = "300.0" retry = "3" args = "right_arm KPIECEkConfigDefault" />
     <test test-name = "test_planner_LBKPIECEkConfigDefault" pkg = "sr_multi_moveit_test" type = "test_planners.py"
-        time-limit = "300.0" retry = "3" args = "right_arm LBKPIECEkConfigDefault" / >
+        time-limit = "300.0" retry = "3" args = "right_arm LBKPIECEkConfigDefault" />
     <test test-name = "test_planner_PRMkConfigDefault" pkg = "sr_multi_moveit_test" type = "test_planners.py"
-        time-limit = "300.0" retry = "3" args = "right_arm PRMkConfigDefault" / >
+        time-limit = "300.0" retry = "3" args = "right_arm PRMkConfigDefault" />
     <test test-name = "test_planner_RRTkConfigDefault" pkg = "sr_multi_moveit_test" type = "test_planners.py"
-        time-limit = "300.0" retry = "3" args = "right_arm RRTkConfigDefault" / >
+        time-limit = "300.0" retry = "3" args = "right_arm RRTkConfigDefault" />
     <test test-name = "test_planner_SBLkConfigDefault" pkg = "sr_multi_moveit_test" type = "test_planners.py"
-        time-limit = "300.0" retry = "3" args = "right_arm SBLkConfigDefault" / >
+        time-limit = "300.0" retry = "3" args = "right_arm SBLkConfigDefault" />
     <test test-name = "test_planner_PRMstarkConfigDefault" pkg = "sr_multi_moveit_test" type = "test_planners.py"
-        time-limit = "300.0" retry = "3" args = "right_arm PRMstarkConfigDefault" / >
+        time-limit = "300.0" retry = "3" args = "right_arm PRMstarkConfigDefault" />
     <test test-name = "test_planner_RRTstarkConfigDefault" pkg = "sr_multi_moveit_test" type = "test_planners.py"
-        time-limit = "300.0" retry = "3" args = "right_arm RRTstarkConfigDefault" / >
+        time-limit = "300.0" retry = "3" args = "right_arm RRTstarkConfigDefault" />
 
 </launch>
