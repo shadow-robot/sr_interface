@@ -1,6 +1,6 @@
 <launch>
   <!-- The path to the database must be specified -->
-  <arg name="moveit_warehouse_database_path" />
+  <arg name="moveit_warehouse_database_path"/>
   <!-- Load warehouse parameters -->
   <include file="$(find right_sr_ur10_moveit_config)/launch/warehouse_settings.launch.xml"/>
   <!-- Run the DB server -->
