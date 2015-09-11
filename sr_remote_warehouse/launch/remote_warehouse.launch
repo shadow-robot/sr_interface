@@ -1,8 +1,0 @@
-<launch>
-  <!-- The path to the database must be specified -->
-  <arg name="launch_services" default="true"/>
-  <rosparam file="$(find sr_remote_warehouse)/launch/remote_warehouse.yaml"/>
-  <node if="$(arg launch_services)" name="moveit_warehouse_services" 
-        pkg="moveit_ros_warehouse" respawn="true"
-        type="moveit_warehouse_services" output="screen"/>
-</launch>

@@ -1,5 +1,0 @@
-warehouse_authenticate: true
-warehouse_user: grasp
-warehouse_pwd: grasper
-warehouse_host: candidate.51.mongolayer.com
-warehouse_port: 10252
