@@ -1,0 +1,131 @@
+controller_list:
+  - name: fake_shadow_hand_controller
+    joints:
+      - WRJ2
+      - WRJ1
+      - FFJ4
+      - FFJ3
+      - FFJ2
+      - FFJ1
+      - LFJ5
+      - LFJ4
+      - LFJ3
+      - LFJ2
+      - LFJ1
+      - MFJ4
+      - MFJ3
+      - MFJ2
+      - MFJ1
+      - RFJ4
+      - RFJ3
+      - RFJ2
+      - RFJ1
+      - THJ5
+      - THJ4
+      - THJ3
+      - THJ2
+      - THJ1
+  - name: fake_first_finger_controller
+    joints:
+      - FFJ4
+      - FFJ3
+      - FFJ2
+      - FFJ1
+  - name: fake_middle_finger_controller
+    joints:
+      - MFJ4
+      - MFJ3
+      - MFJ2
+      - MFJ1
+  - name: fake_ring_finger_controller
+    joints:
+      - RFJ4
+      - RFJ3
+      - RFJ2
+      - RFJ1
+  - name: fake_little_finger_controller
+    joints:
+      - LFJ5
+      - LFJ4
+      - LFJ3
+      - LFJ2
+      - LFJ1
+  - name: fake_thumb_controller
+    joints:
+      - THJ5
+      - THJ4
+      - THJ3
+      - THJ2
+      - THJ1
+  - name: fake_fingertips_controller
+    joints:
+      []
+  - name: fake_fingers_controller
+    joints:
+      - FFJ4
+      - FFJ3
+      - FFJ2
+      - FFJ1
+      - LFJ5
+      - LFJ4
+      - LFJ3
+      - LFJ2
+      - LFJ1
+      - MFJ4
+      - MFJ3
+      - MFJ2
+      - MFJ1
+      - RFJ4
+      - RFJ3
+      - RFJ2
+      - RFJ1
+      - THJ5
+      - THJ4
+      - THJ3
+      - THJ2
+      - THJ1
+  - name: fake_first_finger_thumb_controller
+    joints:
+      - FFJ4
+      - FFJ3
+      - FFJ2
+      - FFJ1
+      - THJ5
+      - THJ4
+      - THJ3
+      - THJ2
+      - THJ1
+  - name: fake_middle_finger_thumb_controller
+    joints:
+      - MFJ4
+      - MFJ3
+      - MFJ2
+      - MFJ1
+      - THJ5
+      - THJ4
+      - THJ3
+      - THJ2
+      - THJ1
+  - name: fake_ring_finger_thumb_controller
+    joints:
+      - RFJ4
+      - RFJ3
+      - RFJ2
+      - RFJ1
+      - THJ5
+      - THJ4
+      - THJ3
+      - THJ2
+      - THJ1
+  - name: fake_little_finger_thumb_controller
+    joints:
+      - LFJ5
+      - LFJ4
+      - LFJ3
+      - LFJ2
+      - LFJ1
+      - THJ5
+      - THJ4
+      - THJ3
+      - THJ2
+      - THJ1
