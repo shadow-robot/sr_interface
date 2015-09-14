@@ -4,6 +4,16 @@
     version: 'indigo-devel'
 
 - git:
+    local-name: sr_core
+    uri: https://github.com/shadow-robot/sr_core
+    version: 'indigo-devel'
+
+- git:
+    local-name: sr_common
+    uri: https://github.com/shadow-robot/sr_common
+    version: 'indigo-devel'
+
+- git:
     local-name: universal_robot
     uri: 'https://github.com/ros-industrial/universal_robot.git'
     version: indigo-devel
