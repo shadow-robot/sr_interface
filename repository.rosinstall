@@ -21,9 +21,14 @@
 - git:
     local-name: moveit_ros
     uri: https://github.com/shadow-robot/moveit_ros.git
-    version: F#276_add_db_state
+    version: F#4_add_remote_mongo
 
 - git:
     local-name: moveit_msgs
     uri: https://github.com/shadow-robot/moveit_msgs.git
     version: F#276_add_db_state
+
+- git:
+    local-name: warehouse_ros
+    uri: git@github.com:shadow-robot/warehouse_ros.git
+    version: F#4_add_remote_mongo

@@ -7,6 +7,7 @@
   <!-- The default DB host for moveit -->
   <arg name="moveit_warehouse_host" default="localhost"/>
 
+
   <!-- Set parameters for the warehouse -->
   <param name="warehouse_port" value="$(arg moveit_warehouse_port)"/>
   <param name="warehouse_host" value="$(arg moveit_warehouse_host)"/>
