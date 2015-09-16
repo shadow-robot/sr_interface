@@ -6,18 +6,14 @@ from sr_utilities.hand_finder import HandFinder
 
 rospy.init_node("basic_hand_examples", anonymous=True)
 hand_finder = HandFinder()
-hand_parameters = hand_finder.get_hand_parameters()
-if len(hand_parameters.mapping) is 0:
-    print("No hand detected")
-    sys.exit("no hand detected")
 
+hand_parameters = hand_finder.get_hand_parameters()
 hand_serial = hand_parameters.mapping.keys()[0]
+hand_commander = SrHandCommander(hand_parameters=hand_parameters,
+                                 hand_serial=hand_serial)
+
 hand_mapping = hand_parameters.mapping[hand_serial]
-prefix = hand_parameters.joint_prefix[hand_serial]
-if hand_mapping == 'rh':
-    hand_commander = SrHandCommander()
-else:
-    hand_commander = SrHandCommander(name="left_hand", prefix="lh")
+
 joints = hand_finder.get_hand_joints()[hand_mapping]
 if len(joints) is not 24:
     print("Joints are less than 24")

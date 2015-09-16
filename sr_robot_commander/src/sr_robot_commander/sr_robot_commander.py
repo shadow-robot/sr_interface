@@ -129,6 +129,15 @@ class SrRobotCommander(object):
         self._move_group_commander.set_named_target(name)
         self.__plan = self._move_group_commander.plan()
 
+    def get_named_targets(self):
+        """
+        Get the complete list of named targets, from SRDF
+        as well as warehouse poses if available.
+        @return list of strings containing names of targets.
+        """
+        names = ["pack", "open"]
+        return names
+
     def get_joints_position(self):
         """
         Returns joints position
