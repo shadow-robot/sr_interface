@@ -43,11 +43,10 @@
           args="-urdf -param robot_description -model usrh -z 0.1 "
           respawn="false" output="screen"/>
 	<rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
-	
   </group>
+  
   <!-- REAL ROBOTS -->
   <group unless="$(arg sim)">
-
     <!-- launch for right hand -->
     <include file="$(find sr_edc_launch)/sr_edc.launch">
       <arg name="hand_serial" value="$(arg hand_serial)"/>
