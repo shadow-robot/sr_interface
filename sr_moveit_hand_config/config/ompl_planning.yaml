@@ -34,7 +34,7 @@ shadow_hand:
     - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
-  projection_evaluator: joints(WRJ2,WRJ1)
+  projection_evaluator: joints(rh_WRJ2,rh_WRJ1)
   longest_valid_segment_fraction: 0.05
 first_finger:
   planner_configs:
@@ -49,7 +49,7 @@ first_finger:
     - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
-  projection_evaluator: joints(FFJ4,FFJ3)
+  projection_evaluator: joints(rh_FFJ4,rh_FFJ3)
   longest_valid_segment_fraction: 0.05
 middle_finger:
   planner_configs:
@@ -64,7 +64,7 @@ middle_finger:
     - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
-  projection_evaluator: joints(MFJ4,MFJ3)
+  projection_evaluator: joints(rh_MFJ4,rh_MFJ3)
   longest_valid_segment_fraction: 0.05
 ring_finger:
   planner_configs:
@@ -79,7 +79,7 @@ ring_finger:
     - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
-  projection_evaluator: joints(RFJ4,RFJ3)
+  projection_evaluator: joints(rh_RFJ4,rh_RFJ3)
   longest_valid_segment_fraction: 0.05
 little_finger:
   planner_configs:
@@ -94,7 +94,7 @@ little_finger:
     - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
-  projection_evaluator: joints(LFJ5,LFJ4)
+  projection_evaluator: joints(rh_LFJ5,rh_LFJ4)
   longest_valid_segment_fraction: 0.05
 thumb:
   planner_configs:
@@ -109,7 +109,7 @@ thumb:
     - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
-  projection_evaluator: joints(THJ5,THJ4)
+  projection_evaluator: joints(rh_THJ5,rh_THJ4)
   longest_valid_segment_fraction: 0.05
 fingertips:
   planner_configs:
@@ -137,7 +137,7 @@ fingers:
     - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
-  projection_evaluator: joints(FFJ4,FFJ3)
+  projection_evaluator: joints(rh_FFJ4,rh_FFJ3)
   longest_valid_segment_fraction: 0.05
 first_finger_thumb:
   planner_configs:
@@ -152,7 +152,7 @@ first_finger_thumb:
     - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
-  projection_evaluator: joints(FFJ4,FFJ3)
+  projection_evaluator: joints(rh_FFJ4,rh_FFJ3)
   longest_valid_segment_fraction: 0.05
 middle_finger_thumb:
   planner_configs:
@@ -167,7 +167,7 @@ middle_finger_thumb:
     - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
-  projection_evaluator: joints(MFJ4,MFJ3)
+  projection_evaluator: joints(rh_MFJ4,rh_MFJ3)
   longest_valid_segment_fraction: 0.05
 ring_finger_thumb:
   planner_configs:
@@ -182,7 +182,7 @@ ring_finger_thumb:
     - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
-  projection_evaluator: joints(RFJ4,RFJ3)
+  projection_evaluator: joints(rh_RFJ4,rh_RFJ3)
   longest_valid_segment_fraction: 0.05
 little_finger_thumb:
   planner_configs:
@@ -197,5 +197,5 @@ little_finger_thumb:
     - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
-  projection_evaluator: joints(LFJ5,LFJ4)
+  projection_evaluator: joints(rh_LFJ5,rh_LFJ4)
   longest_valid_segment_fraction: 0.05
