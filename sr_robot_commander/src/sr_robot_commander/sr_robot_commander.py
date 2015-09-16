@@ -129,7 +129,7 @@ class SrRobotCommander(object):
         self._move_group_commander.set_named_target(name)
         self.__plan = self._move_group_commander.plan()
 
-    def get_all_named_targets(self):
+    def get_named_targets(self):
         """
         Get the complete list of named targets, from SRDF
         as well as warehouse poses if available.
