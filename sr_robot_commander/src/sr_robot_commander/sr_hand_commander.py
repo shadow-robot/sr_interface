@@ -20,7 +20,7 @@ import rospy
 from sr_robot_commander import SrRobotCommander
 from sr_robot_msgs.srv import ForceController
 from sr_hand.tactile_receiver import TactileReceiver
-
+from sys import exit
 
 class SrHandCommander(SrRobotCommander):
     """
@@ -29,13 +29,30 @@ class SrHandCommander(SrRobotCommander):
 
     __set_force_srv = {}
 
-    def __init__(self, name="right_hand", prefix="rh"):
+    def __init__(self, name="right_hand", prefix="rh", hand_parameters=None, hand_serial=None):
         """
-        Initialize object
+        Initialize the hand commander, using either a name + prefix, or the parameters returned by the hand finder.
         @param name - name of the MoveIt group
         @param prefix - prefix used for the tactiles and max_force
+        @param hand_parameters - from hand_finder.get_hand_parameters(). Will overwrite the name and prefix
+        @param hand_serial - which hand are you using
         """
+        # extracting the name and prefix from the hand finder parameters
+        if hand_parameters is not None:
+            if len(hand_parameters.mapping) is 0:
+                rospy.logerr("No hand detected")
+                exit("no hand detected")
+
+            hand_mapping = hand_parameters.mapping[hand_serial]
+            prefix = hand_parameters.joint_prefix[hand_serial]
+
+            if hand_mapping == 'rh':
+                 name = "right_hand"
+            else:
+                name = "left_hand"
+
         super(SrHandCommander, self).__init__(name)
+
         self._tactiles = TactileReceiver(prefix)
 
         # appends trailing slash if necessary
