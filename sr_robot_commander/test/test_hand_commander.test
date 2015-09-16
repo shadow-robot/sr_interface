@@ -1,8 +1,10 @@
 <launch>
-    <include file="$(find right_sr_ur10_moveit_config)/launch/demo.launch">
-        <arg name="visualization" value="false"/>
+    <include file="$(find sr_robot_launch)/launch/right_srhand_ur10arm.launch">
+        <arg name="sim" value="true"/>
+        <arg name="gui" value="false"/>
+        <arg name="use_moveit" value="true"/>
     </include>
 
     <test test-name="test_hand_commander" pkg="sr_robot_commander" type="test_hand_commander.py"
-          time-limit="300.0" retry="1"/>
+          time-limit="300.0"/>
 </launch>
