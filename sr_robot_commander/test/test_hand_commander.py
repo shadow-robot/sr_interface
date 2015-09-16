@@ -40,7 +40,8 @@ class TestSrHandCommander(TestCase):
     def test_hand_finder_init(self):
         hand_finder = HandFinder()
         hand_parameters = hand_finder.get_hand_parameters()
-        hand_commander = SrHandCommander(hand_parameters=hand_parameters, hand_serial="1082")
+        hand_commander = SrHandCommander(hand_parameters=hand_parameters,
+                                         hand_serial=hand_parameters.mapping.keys()[0])
         self.assertGreater(len(hand_commander.get_joints_position()), 0, "No joints found, init must have failed.")
 
 if __name__ == "__main__":
