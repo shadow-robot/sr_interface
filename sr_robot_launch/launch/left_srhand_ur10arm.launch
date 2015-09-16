@@ -27,6 +27,8 @@
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
   <!-- Set to true to allow planning trajectories-->
   <arg name="use_moveit" default="false"/>
+  <!-- Set to false if you want to start without guis -->
+  <arg name="gui" default="true"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
@@ -39,6 +41,7 @@
            command="$(find xacro)/xacro.py '$(arg robot_description)'"/>
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
       <arg name="world_name" default="$(arg world_name)"/>
+      <arg name="gui" default="$(arg gui)"/>
       <arg name="gui" default="true"/>
       <arg name="paused" value="$(arg paused)"/>
       <arg name="debug" value="$(arg debug)"/>
@@ -132,6 +135,7 @@
   <group if="$(arg use_moveit)">
     <include file="$(find right_sr_ur10_moveit_config)/launch/moveit_planning_and_execution.launch">
       <arg name="load_robot_description" value="false"/>
+      <arg name="gui" default="$(arg gui)"/>
     </include>
     <include file="$(find right_sr_ur10_moveit_config)/launch/default_warehouse_db.launch"/>
     <include file="$(find sr_robot_launch)/launch/trajectory_services.launch">
