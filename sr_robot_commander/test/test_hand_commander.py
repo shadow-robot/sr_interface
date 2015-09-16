@@ -17,6 +17,7 @@
 
 import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
+from sr_utilities.hand_finder import HandFinder
 from unittest import TestCase
 
 PKG = "sr_robot_commander"
@@ -30,12 +31,17 @@ class TestSrHandCommander(TestCase):
     def setUp(self):
         rospy.init_node('test_hand_commander', anonymous=True)
 
-        self._hand_commander = SrHandCommander()
-
     def test_strip_prefix(self):
-        self.assertEqual(self._hand_commander._strip_prefix("rh_ffj3"), "ffj3", msg="Strip failed")
-        self.assertEqual(self._hand_commander._strip_prefix("ffj3"), "ffj3", msg="Strip failed")
+        hand_commander = SrHandCommander()
 
+        self.assertEqual(hand_commander._strip_prefix("rh_ffj3"), "ffj3", msg="Strip failed")
+        self.assertEqual(hand_commander._strip_prefix("ffj3"), "ffj3", msg="Strip failed")
+
+    def test_hand_finder_init(self):
+        hand_finder = HandFinder()
+        hand_parameters = hand_finder.get_hand_parameters()
+        hand_commander = SrHandCommander(hand_parameters=hand_parameters, hand_serial="1082")
+        self.assertGreater(len(hand_commander.get_joints_position()), 0, "No joints found, init must have failed.")
 
 if __name__ == "__main__":
     import rostest
