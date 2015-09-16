@@ -22,6 +22,7 @@ from sr_robot_msgs.srv import ForceController
 from sr_hand.tactile_receiver import TactileReceiver
 from sys import exit
 
+
 class SrHandCommander(SrRobotCommander):
     """
     Commander class for hand
@@ -47,7 +48,7 @@ class SrHandCommander(SrRobotCommander):
             prefix = hand_parameters.joint_prefix[hand_serial]
 
             if hand_mapping == 'rh':
-                 name = "right_hand"
+                name = "right_hand"
             else:
                 name = "left_hand"
 
