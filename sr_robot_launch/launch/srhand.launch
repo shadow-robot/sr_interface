@@ -42,16 +42,11 @@
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model"
           args="-urdf -param robot_description -model usrh -z 0.1 "
           respawn="false" output="screen"/>
-<!--    <include file="$(find sr_hand)/launch/gazebo/loaders/hand_controllers.launch"-->
-<!--      <arg name="hand_id-->
-<!--           value="$(arg hand_id)"/-->
-<!--    </include-->
 	<rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
 	
   </group>
   <!-- REAL ROBOTS -->
   <group unless="$(arg sim)">
-    <!-- trajectory controller -->
 
     <!-- launch for right hand -->
     <include file="$(find sr_edc_launch)/sr_edc.launch">
@@ -80,10 +75,8 @@
   
   <!-- Trajectory controller -->
 	<group if="$(arg hand_ctrl)">  
-
-			<node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py"
-			args="$(arg hand_trajectory)" />
-
+		<node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py"
+		args="$(arg hand_trajectory)" />
 	</group>
   
 </launch>
