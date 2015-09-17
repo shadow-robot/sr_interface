@@ -73,9 +73,8 @@
   </group>
   
   <!-- Trajectory controller -->
-	<group if="$(arg hand_ctrl)">  
-		<node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py"
-		args="$(arg hand_trajectory)" />
-	</group>
-  
+  <group if="$(arg hand_ctrl)">  
+    <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py"
+          args="$(arg hand_trajectory)" />
+  </group>
 </launch>
