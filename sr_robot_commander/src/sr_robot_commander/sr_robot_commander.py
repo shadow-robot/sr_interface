@@ -27,6 +27,10 @@ from moveit_msgs.msg import RobotTrajectory
 from sensor_msgs.msg import JointState
 from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, \
     RobotTeachModeResponse
+
+from moveit_msgs.srv import ListRobotStatesInWarehouse as ListStates
+from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
+
 from trajectory_msgs.msg import JointTrajectoryPoint
 from math import radians
 
@@ -47,7 +51,19 @@ class SrRobotCommander(object):
         """
         self._name = name
         self._move_group_commander = MoveGroupCommander(name)
+
         self._robot_commander = RobotCommander()
+
+        self._robot_name = self._robot_commander._r.get_robot_name()
+
+        self._warehouse_name_list_srv = rospy.ServiceProxy("list_robot_states",
+                                                           ListStates)
+
+        self._warehouse_name_get_srv = rospy.ServiceProxy("get_robot_state",
+                                                           GetState)
+
+        rospy.logwarn(self._robot_name);
+
         self._planning_scene = PlanningSceneInterface()
 
         self._move_group_commander.set_planner_id("ESTkConfigDefault")
@@ -129,14 +145,22 @@ class SrRobotCommander(object):
         self._move_group_commander.set_named_target(name)
         self.__plan = self._move_group_commander.plan()
 
+    def __get_warehouse_names(self):
+        return self._warehouse_name_list_srv("", self._robot_name).states
+
+    def __get_srdf_names(self):
+        return self._move_group_commander._g.get_named_targets()
+
     def get_named_targets(self):
         """
         Get the complete list of named targets, from SRDF
         as well as warehouse poses if available.
         @return list of strings containing names of targets.
         """
-        return self._move_group_commander._g.get_named_targets()
-        return names
+        srdf_names = self.__get_srdf_names()
+        warehouse_names = self.__get_warehouse_names()
+
+        return srdf_names + warehouse_names
 
     def get_joints_position(self):
         """
