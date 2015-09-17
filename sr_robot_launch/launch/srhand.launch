@@ -26,7 +26,6 @@
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <!-- set parameter on the server for running the trajectory controller -->
-  <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
@@ -79,6 +78,8 @@
   
   <!-- Trajectory controller -->
   <group if="$(arg hand_ctrl)">  
-    <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py"/>
+    <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py">
+  		  <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
+    </node>
   </group>
 </launch>
