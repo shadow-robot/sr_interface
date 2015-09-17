@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 # Example to demonstrate moving to stored/names targets. Both arm and hand movements executed.
+# Available named targets can be viewed in MoveIt, on the planning tab.
 
 import rospy
 from sr_robot_commander.sr_arm_commander import SrArmCommander

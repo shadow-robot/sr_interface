@@ -25,11 +25,11 @@ print("Joints positions")
 all_joints_state = hand_commander.get_joints_position()
 
 hand_joints_state = {
-    k: v for k, v in all_joints_state.items() if k.startswith(prefix[0] + "_")}
+    k: v for k, v in all_joints_state.items() if k.startswith(prefix + "_")}
 arm_joints_state = {
-    k: v for k, v in all_joints_state.items() if k.startswith(prefix[0][0] + "a_")}
+    k: v for k, v in all_joints_state.items() if k.startswith(prefix[0] + "a_") or k.startswith(prefix + "_W")}
 
 
-rospy.loginfo("Hand joints position \n " + str(hand_joints_state) + "\n")
+print("Hand joints position \n " + str(hand_joints_state) + "\n")
 
-rospy.loginfo("Arm joints position \n " + str(arm_joints_state) + "\n")
+print("Arm joints position \n " + str(arm_joints_state) + "\n")
