@@ -135,7 +135,7 @@ class SrRobotCommander(object):
         as well as warehouse poses if available.
         @return list of strings containing names of targets.
         """
-        names = ["pack", "open"]
+        return self._move_group_commander._g.get_named_targets()
         return names
 
     def get_joints_position(self):
