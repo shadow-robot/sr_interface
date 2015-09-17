@@ -1,12 +1,12 @@
 <launch>
-  <!-- This launch file is for a left UR10 arm and shadow hand -->
+  <!-- This launch file is for shadow hand only -->
   <arg name="hand_id" default="rh"/>
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
   <arg name="sim" default="true"/>
   <!-- Use xacro prefix for hand or not -->
   <arg name="use_xacro_prefix" default="false"/>
   <!--Left or right hand/arm  -->
-  <arg name="xacro_prefix" default="l"/>
+  <arg name="xacro_prefix" default="r"/>
   <!-- Set to true for debugging -->
   <arg name="debug" default="false"/>
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
@@ -25,6 +25,7 @@
   <arg name="use_moveit" default="false"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
+  <!-- set parameter on the server for running the trajectory controller -->
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
@@ -44,7 +45,7 @@
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model"
           args="-urdf -param robot_description -model usrh -z 0.1 "
           respawn="false" output="screen"/>
-	<rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
+    <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
   </group>
   
   <!-- REAL ROBOTS -->
@@ -77,7 +78,8 @@
   
   <!-- Trajectory controller -->
   <group if="$(arg hand_ctrl)">  
-    <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py"
-          args="$(arg hand_trajectory)" />
+    <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py">
+      <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
+    </node>
   </group>
 </launch>
