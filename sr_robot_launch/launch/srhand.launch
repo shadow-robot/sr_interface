@@ -46,6 +46,7 @@
           args="-urdf -param robot_description -model usrh -z 0.1 "
           respawn="false" output="screen"/>
     <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
+    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
   </group>
   
   <!-- REAL ROBOTS -->
