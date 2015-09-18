@@ -65,7 +65,6 @@ tf::Vector3 interPolCir(tf::Vector3 center, unsigned int direction, float radius
 // get IK for x,y,z and send joint pos to joint pos controllers
 int moveIK(float x, float y, float z)
 {
-  ROS_INFO("Inside moveIK");
   if (x != 0.0 && y != 0.0 && z != 0.0)
   {
     gpik_req.ik_request.pose_stamped.pose.position.x = x;
@@ -80,15 +79,14 @@ int moveIK(float x, float y, float z)
 
   if (ik_client.call(gpik_req, gpik_res))
   {
-	ROS_INFO("Inside first if");
     if (gpik_res.error_code.val == gpik_res.error_code.SUCCESS)
     {
       std_msgs::Float64 message;
       for (unsigned int i = 0; i < gpik_res.solution.joint_state.name.size(); i++)
       {
-        ROS_INFO("Joint: %s %f", gpik_res.solution.joint_state.name[i].c_str(),
+        ROS_DEBUG("Joint: %s %f", gpik_res.solution.joint_state.name[i].c_str(),
                   gpik_res.solution.joint_state.position[i]);
-        ROS_INFO("we publish to %s", pub[i].getTopic().c_str());
+        ROS_DEBUG("we publish to %s", pub[i].getTopic().c_str());
 
 
 #ifndef GAZEBO
@@ -180,7 +178,6 @@ int main(int argc, char **argv)
   ros::ServiceClient controller_list_client = rh.serviceClient<controller_manager_msgs::ListControllers>(
           "controller_manager/list_controllers");
 
-  ROS_ERROR("Print 1");
   // init treated joint (to be modified to get more generic behaviour)
   std::string controlled_joint_name;
   std::vector <std::string> joint_name;
@@ -206,21 +203,19 @@ int main(int argc, char **argv)
 	  {
 		if (rh.getParam("/" + controller_list.response.controller[i].name + "/joint", controlled_joint_name))
 		{
-		  ROS_INFO("controller %d:%s controlls joint %s\n", i, controller_list.response.controller[i].name.c_str(),
+		  ROS_DEBUG("controller %d:%s controlls joint %s\n", i, controller_list.response.controller[i].name.c_str(),
 					controlled_joint_name.c_str());
 		  jointControllerMap[controlled_joint_name] = controller_list.response.controller[i].name;
 		}
 	  }
   }
 
-  ROS_ERROR("Print 2");
-
   // get possible computable joints
   if (query_client.call(request, response))
   {
     for (unsigned int i = 0; i < response.kinematic_solver_info.joint_names.size(); i++)
     {
-      ROS_INFO("Joint: %d %s", i, response.kinematic_solver_info.joint_names[i].c_str());
+      ROS_DEBUG("Joint: %d %s", i, response.kinematic_solver_info.joint_names[i].c_str());
     }
   }
   else
@@ -246,7 +241,6 @@ int main(int argc, char **argv)
   gpik_req.ik_request.robot_state.joint_state.position.resize(response.kinematic_solver_info.joint_names.size());
   gpik_req.ik_request.robot_state.joint_state.name = response.kinematic_solver_info.joint_names;
 
-  ROS_ERROR("Print 3");
 
   // prepare the publishers
   for (unsigned int i = 0; i < joint_name.size(); i++)
@@ -258,8 +252,6 @@ int main(int argc, char **argv)
   jointPubIdxMap["rh_"+finger_joint_prefix + "J1"] = 0;
   jointPubIdxMap["rh_"+finger_joint_prefix + "J2"] = 0;
 #endif
-
-  ROS_ERROR("Print 4");
 
   ros::spinOnce();
   sleep(1);  // this is required otherwise publishers are not ready for first messages to be sent
@@ -274,9 +266,6 @@ int main(int argc, char **argv)
   usleep(1000000);
   moveIK(interPolCir(PointD, 1, circleradius, (M_PI / 72.0) * 0));
   usleep(1000000);
-
-  ROS_ERROR("Print 5");
-
   // axis x
   for (unsigned int i = 0; i < 144; i++)
   {
@@ -285,12 +274,10 @@ int main(int argc, char **argv)
       break;
     }
     curpos = interPolCir(PointD, 1, circleradius, (M_PI / 72.0) * i);
-    ROS_INFO("curpos:%f,%f,%f\n", curpos.x(), curpos.y(), curpos.z());
+    ROS_DEBUG("curpos:%f,%f,%f\n", curpos.x(), curpos.y(), curpos.z());
     moveIK(curpos);
     usleep(200000);
   }
-
-  ROS_ERROR("Print 6");
 
 /*    usleep(1000000);
     moveIK(interPolCir(PointE,3,circleradius,(M_PI/72.0)*0));
