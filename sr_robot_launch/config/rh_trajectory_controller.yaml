@@ -23,6 +23,8 @@ rh_trajectory_controller:
     - rh_THJ3
     - rh_THJ4
     - rh_THJ5
+    - rh_WRJ1
+    - rh_WRJ2
   constraints:
       goal_time: 0.6
       stopped_velocity_tolerance: 0.05
@@ -34,6 +36,7 @@ rh_trajectory_controller:
       rh_LFJ2: {trajectory: 0.9, goal: 0.4}
       rh_LFJ3: {trajectory: 0.9, goal: 0.4}
       rh_LFJ4: {trajectory: 0.9, goal: 0.4}
+      rh_LFJ5: {trajectory: 0.9, goal: 0.4}
       rh_MFJ1: {trajectory: 0.9, goal: 0.4}
       rh_MFJ2: {trajectory: 0.9, goal: 0.4}
       rh_MFJ3: {trajectory: 0.9, goal: 0.4}
@@ -47,5 +50,7 @@ rh_trajectory_controller:
       rh_THJ3: {trajectory: 0.9, goal: 0.4}
       rh_THJ4: {trajectory: 0.9, goal: 0.4}
       rh_THJ5: {trajectory: 0.9, goal: 0.4}
+      rh_WRJ1: {trajectory: 0.9, goal: 0.4}
+      rh_WRJ2: {trajectory: 0.9, goal: 0.4}
   stop_trajectory_duration: 0.5
   allow_partial_joints_goal: true
