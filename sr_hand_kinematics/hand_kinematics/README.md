@@ -8,7 +8,7 @@ The IK services requires a 3D pose to be requested and not a 6D pose since 6D re
 However, the request pose message must be 6D, only 3D translation part will be considered.
 
 This code is based on some modified functions taken out of kdl and augmented with coupling possibilities. These functions are in package kdl_coupling, 
-under the same KDL:: namespace and can work together with standard KDL functionnalities. Indeed all the functions created have different names.
+under the same KDL:: namespace and can work together with standard KDL functionalities. Indeed all the functions created have different names.
 
 
 PRE-REQUEST
