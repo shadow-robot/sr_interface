@@ -25,6 +25,9 @@ target_link_libraries(hand_kinematics_coupling_lib ${moveit_core_LIBRARIES} ${ca
 add_executable(hand_kinematics_coupling src/hand_kinematics_coupling.cpp)
 target_link_libraries(hand_kinematics_coupling ${catkin_LIBRARIES} ${orocos_kdl_LIBRARIES})
 
+add_executable(circle_ik test/circle_ik.cpp)
+target_link_libraries(circle_ik ${catkin_LIBRARIES} ${orocos_kdl_LIBRARIES})
+
 add_rostest_gtest(test_kinematics_as_plugin test/hand_kinematics_plugin_test.test test/test_kinematics_as_plugin.cpp)
 target_link_libraries(test_kinematics_as_plugin ${moveit_core_LIBRARIES} hand_kinematics ${catkin_LIBRARIES})
 add_dependencies(test_kinematics_as_plugin hand_kinematics_gencpp ${catkin_EXPORTED_TARGETS})

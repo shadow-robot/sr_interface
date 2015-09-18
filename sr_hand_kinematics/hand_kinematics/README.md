@@ -43,8 +43,7 @@ To test the FK/IK several possibilities are offered:
   * start a simulation of the hand:
        
   ```
-  roslaunch sr_hand gazebo_arm_and_hand_motor.launch
-  roslaunch sr_hand sr_arm_motor.launch
+  roslaunch sr_robot_launch srhand.launch use_moveit:=false
   ```
 	
   * start the kinematic node:
