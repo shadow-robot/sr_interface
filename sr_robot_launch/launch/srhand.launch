@@ -60,11 +60,6 @@
       <arg name="pwm_control" value="true"/>
       <arg name="hand_id" value="$(arg hand_id)"/>
     </include>
-    <group if="$(arg hand_ctrl)">
-      <node name="$(arg hand_id)_controllers_spawner" pkg="controller_manager"
-            type="spawner" output="screen"
-            args="--wait-for=/calibrated --shutdown-timeout=1.0 sh_$(arg hand_id)_ffj0_position_controller sh_$(arg hand_id)_ffj3_position_controller sh_$(arg hand_id)_ffj4_position_controller sh_$(arg hand_id)_mfj0_position_controller sh_$(arg hand_id)_mfj3_position_controller sh_$(arg hand_id)_mfj4_position_controller sh_$(arg hand_id)_rfj0_position_controller sh_$(arg hand_id)_rfj3_position_controller sh_$(arg hand_id)_rfj4_position_controller sh_$(arg hand_id)_lfj0_position_controller sh_$(arg hand_id)_lfj3_position_controller sh_$(arg hand_id)_lfj4_position_controller sh_$(arg hand_id)_lfj5_position_controller sh_$(arg hand_id)_thj1_position_controller sh_$(arg hand_id)_thj2_position_controller sh_$(arg hand_id)_thj3_position_controller sh_$(arg hand_id)_thj4_position_controller sh_$(arg hand_id)_thj5_position_controller sh_$(arg hand_id)_wrj1_position_controller sh_$(arg hand_id)_wrj2_position_controller"/>
-    </group>
   </group>
   
   <!-- MOVEIT -->
