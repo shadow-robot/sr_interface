@@ -40,5 +40,5 @@
 
 - git:
     local-name: warehouse_ros
-    uri: git@github.com:shadow-robot/warehouse_ros.git
+    uri: https://github.com:shadow-robot/warehouse_ros.git
     version: F#4_add_remote_mongo
