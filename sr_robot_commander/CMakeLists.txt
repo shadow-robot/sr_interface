@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
         moveit_ros_planning_interface
         moveit_ros_perception
         interactive_markers
+        moveit_msgs
 )
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)

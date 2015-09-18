@@ -31,7 +31,7 @@
 - git:
     local-name: moveit_ros
     uri: https://github.com/shadow-robot/moveit_ros.git
-    version: F#4_add_remote_mongo
+    version: F#20_aggegate_named_poses
 
 - git:
     local-name: moveit_msgs
@@ -40,7 +40,7 @@
 
 - git:
     local-name: warehouse_ros
-    uri: git@github.com:shadow-robot/warehouse_ros.git
+    uri: https://github.com:shadow-robot/warehouse_ros.git
     version: F#4_add_remote_mongo
 
 - git:
