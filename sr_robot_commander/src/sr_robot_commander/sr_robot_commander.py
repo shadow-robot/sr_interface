@@ -27,6 +27,10 @@ from moveit_msgs.msg import RobotTrajectory
 from sensor_msgs.msg import JointState
 from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, \
     RobotTeachModeResponse
+
+from moveit_msgs.srv import ListRobotStatesInWarehouse as ListStates
+from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
+
 from trajectory_msgs.msg import JointTrajectoryPoint
 from math import radians
 
@@ -47,7 +51,16 @@ class SrRobotCommander(object):
         """
         self._name = name
         self._move_group_commander = MoveGroupCommander(name)
+
         self._robot_commander = RobotCommander()
+
+        self._robot_name = self._robot_commander._r.get_robot_name()
+
+        self._srdf_names = self.__get_srdf_names()
+        self._warehouse_names = self.__get_warehouse_names()
+
+        self._warehouse_name_get_srv = rospy.ServiceProxy("get_robot_state",
+                                                          GetState)
         self._planning_scene = PlanningSceneInterface()
 
         self._move_group_commander.set_planner_id("ESTkConfigDefault")
@@ -109,6 +122,17 @@ class SrRobotCommander(object):
         self._move_group_commander.set_joint_value_target(joint_states)
         self.__plan = self._move_group_commander.plan()
 
+    def set_named_target(self, name):
+        if name in self._srdf_names:
+            self._move_group_commander.set_named_target(name)
+        elif (name in self._warehouse_names):
+            self._move_group_commander.set_joint_value_target(
+                self._warehouse_name_get_srv(name, self._robot_name))
+        else:
+            rospy.err("Unknown named state...")
+            return False
+        return True
+
     def move_to_named_target(self, name, wait=True):
         """
         Set target of the robot's links and moves to it
@@ -116,8 +140,8 @@ class SrRobotCommander(object):
         @param wait - should method wait for movement end or not
         """
         self._move_group_commander.set_start_state_to_current_state()
-        self._move_group_commander.set_named_target(name)
-        self._move_group_commander.go(wait=wait)
+        if self.set_named_target(name):
+            self._move_group_commander.go(wait=wait)
 
     def plan_to_named_target(self, name):
         """
@@ -126,8 +150,20 @@ class SrRobotCommander(object):
         @param name - name of the target pose defined in SRDF
         """
         self._move_group_commander.set_start_state_to_current_state()
-        self._move_group_commander.set_named_target(name)
-        self.__plan = self._move_group_commander.plan()
+        if self.set_named_target(name):
+            self.__plan = self._move_group_commander.plan()
+
+    def __get_warehouse_names(self):
+        try:
+            list_srv = rospy.ServiceProxy("list_robot_states", ListStates)
+            return list_srv("", self._robot_name).states
+
+        except rospy.ServiceException as exc:
+            rospy.logwarn("Couldn't access warehouse: " + str(exc))
+            return list()
+
+    def __get_srdf_names(self):
+        return self._move_group_commander._g.get_named_targets()
 
     def get_named_targets(self):
         """
@@ -135,8 +171,7 @@ class SrRobotCommander(object):
         as well as warehouse poses if available.
         @return list of strings containing names of targets.
         """
-        names = ["pack", "open"]
-        return names
+        return self._srdf_names + self._warehouse_names
 
     def get_joints_position(self):
         """
