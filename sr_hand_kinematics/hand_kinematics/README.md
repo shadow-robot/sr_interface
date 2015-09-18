@@ -32,24 +32,31 @@ TEST
 To test the FK/IK several possibilities are offered: 
 
 1) Automatic test
+
   * start a roscore
-	* rostest hand_kinematics hand_kinematics_services_test.test
-	* rostest hand_kinematics hand_kinematics_plugin_test.test
+  
+  ```   
+  rostest hand_kinematics hand_kinematics_services_test.test
+  rostest hand_kinematics hand_kinematics_plugin_test.test
+  ```
 	
 2) Manual provided tests 
 
        * start a simulation of the hand:
+       
        ```
 	roslaunch sr_hand gazebo_arm_and_hand_motor.launch
 	roslaunch sr_hand sr_arm_motor.launch
 	```
 	
        * start the kinematic node:
+       
        ```
 	roslaunch hand_kinematics hand_kinematics.launch
 	```
 	
        * start the test:
+       
        ```
 	roslaunch hand_kinematics test_hand_kinematics.launch
 	```
