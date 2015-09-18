@@ -57,10 +57,6 @@ To test the FK/IK several possibilities are offered:
   ```
   roslaunch hand_kinematics test_hand_kinematics.launch
   ```
-  OR
-  ```
-  roslaunch hand_kinematics test_hand_kinematics_th.launch
-  ```
 
   This will start a finger tip pos publisher to get a pos vector in space for each finger.
   It will also start 3 test nodes or 1 test node, each one moving one finger. A circular movement is performed on each finger and a square movement for the thumb.
