@@ -33,8 +33,6 @@ To test the FK/IK several possibilities are offered:
 
 1) Automatic test
 
-  * start a roscore
-  
   ```   
   rostest hand_kinematics hand_kinematics_services_test.test
   rostest hand_kinematics hand_kinematics_plugin_test.test
