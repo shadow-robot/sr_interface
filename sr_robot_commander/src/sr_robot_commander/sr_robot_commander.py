@@ -126,7 +126,7 @@ class SrRobotCommander(object):
         if name in self._srdf_names:
             self._move_group_commander.set_named_target(name)
         elif (name in self._warehouse_names):
-            response = self._warehouse_name_get_srv(name, self._robot_name) 
+            response = self._warehouse_name_get_srv(name, self._robot_name)
             js = response.state.joint_state
             self._move_group_commander.set_joint_value_target(js)
         else:
