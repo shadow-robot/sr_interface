@@ -29,33 +29,46 @@ or in standard version supposing you have already LOADED the robot_description o
 
 TEST
 ----
-To test the FK/IK several possibilities are offered : 
+To test the FK/IK several possibilities are offered: 
+
 1) Automatic test
   * start a roscore
 	* rostest hand_kinematics hand_kinematics_services_test.test
 	* rostest hand_kinematics hand_kinematics_plugin_test.test
+	
 2) Manual provided tests 
-       * start a simulation of the hand :
+
+       * start a simulation of the hand:
+       ```
 	roslaunch sr_hand gazebo_arm_and_hand_motor.launch
 	roslaunch sr_hand sr_arm_motor.launch
-       * start the kinematic node
+	```
+	
+       * start the kinematic node:
+       ```
 	roslaunch hand_kinematics hand_kinematics.launch
-       * start the test
+	```
+	
+       * start the test:
+       ```
 	roslaunch hand_kinematics test_hand_kinematics.launch
+	```
 	OR
+	```
 	roslaunch hand_kinematics test_hand_kinematics_th.launch
+	```
 
-	This will start a finger tip pos publisher to get a pos vector in space for each finger
-	It will also start 3 test nodes or 1 test node, each one moving one finger. A circular movement is performed on each finger and a square movement for the thumb
+	This will start a finger tip pos publisher to get a pos vector in space for each finger.
+	It will also start 3 test nodes or 1 test node, each one moving one finger. A circular movement is performed on each finger and a square movement for the thumb.
 	DO NOT START both at the same time on a real hand as the thumb and first finger will come into collision.
 
 	To verify the result, plot the finger tip pos like this (xx = [ff:mf:rf:lf:th])
 	
-	rxplot -M 3d /xxtip/position/x /xxtip/position/y /xxtip/position/z
+	```
+	rxplot -M 3d /xxtip/position/x /xxtip/position/y /xxtip/position/z```
 
 	look at the provided snapshots in test folder to verify what you should see.
 	
 3) Use provided command line requests (test/command_line_tests.txt) and paste them into the shell (works for first finger)
+
 4) Use standard IK tutorials from ROS and adapt the service topics you request from
-
-
