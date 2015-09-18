@@ -130,8 +130,8 @@ class SrRobotCommander(object):
                 self._warehouse_name_get_srv(name, self._robot_name))
         else:
             rospy.err("Unknown named state...")
-            return 0
-        return 1
+            return False
+        return True
 
     def move_to_named_target(self, name, wait=True):
         """
