@@ -42,3 +42,8 @@
     local-name: warehouse_ros
     uri: git@github.com:shadow-robot/warehouse_ros.git
     version: F#4_add_remote_mongo
+
+- git:
+    local-name: ros_controllers
+    uri: https://github.com/shadow-robot/ros_controllers.git
+    version: F#182_partial_trajectory_mod
