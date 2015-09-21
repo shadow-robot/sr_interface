@@ -134,7 +134,7 @@ namespace hand_kinematics
     Mx(4, 4) = 0.0;  // rotation Y
     Mx(5, 5) = 0.0;  // rotation Z
 
-    ROS_INFO("CHAIN--> Joints:%d, Ind. Joints:%d, Segments:%d", kdl_chain_.getNrOfJoints(),
+    ROS_DEBUG("CHAIN--> Joints:%d, Ind. Joints:%d, Segments:%d", kdl_chain_.getNrOfJoints(),
              kdl_chain_.getNrOfIndJoints(), kdl_chain_.getNrOfSegments());
     // Get Solver Parameters
     int maxIterations;
