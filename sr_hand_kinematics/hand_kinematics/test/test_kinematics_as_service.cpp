@@ -113,7 +113,7 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
 
     // call fk to get the fingertip <prefix+tip> position
     //
-    fkdata.request.header.frame_id = "rh_palm";
+    fkdata.request.header.frame_id = hand_prefix + "palm";
     fkdata.request.header.stamp = ros::Time::now();
     fkdata.request.fk_link_names.resize(1);
     fkdata.request.fk_link_names.push_back(tipName);
@@ -159,7 +159,7 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
     moveit_msgs::GetPositionIK::Response ikres;
 
     ikreq.ik_request.ik_link_name = tipName;
-    ikreq.ik_request.pose_stamped.header.frame_id = "rh_palm";
+    ikreq.ik_request.pose_stamped.header.frame_id = hand_prefix + "palm";
     ikreq.ik_request.pose_stamped.pose.position.x = pose.position.x;
     ikreq.ik_request.pose_stamped.pose.position.y = pose.position.y;
     ikreq.ik_request.pose_stamped.pose.position.z = pose.position.z;
@@ -221,7 +221,7 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
     }
 
     // call fk again but this time with the joint-angles from IK
-    fkdata.request.header.frame_id = "rh_palm";
+    fkdata.request.header.frame_id = hand_prefix + "palm";
     fkdata.request.header.stamp = ros::Time::now();
     fkdata.request.fk_link_names.resize(1);
     fkdata.request.fk_link_names.push_back(tipName);
