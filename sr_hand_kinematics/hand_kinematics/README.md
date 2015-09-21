@@ -15,11 +15,6 @@ PRE-REQUEST
 This package provides several interfaces, one of them is a plugin for constraint aware kinematics that depends on moveit_core package whereas the service interface only requires moveit_msgs. 
 The plugin is now activated by default, comment out the dependencies in manifest and CMakelists.txt if you don't want it.
 
-INSTALL
--------
-make sure you have kdl_coupling in the workspace
-rosmake hand_kinematics --rosdep-install
-
 TEST
 ----
 To test the FK/IK run:
