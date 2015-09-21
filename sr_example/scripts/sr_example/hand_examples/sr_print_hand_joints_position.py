@@ -10,7 +10,7 @@ from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
 
 
-rospy.init_node("print_joints_position", anonymous=True)
+rospy.init_node("print_hand_joints_position", anonymous=True)
 
 # Use the hand finder to get the hand prefix, to allow this script to be used with either left or right hands
 hand_finder = HandFinder()
@@ -26,11 +26,7 @@ all_joints_state = hand_commander.get_joints_position()
 
 
 hand_joints_state = {
-    k: v for k, v in all_joints_state.items() if k.startswith(prefix + "_") and not k.startswith(prefix + "_W")}
-arm_joints_state = {
-    k: v for k, v in all_joints_state.items() if k.startswith(prefix[0] + "a_") or k.startswith(prefix + "_W")}
+    k: v for k, v in all_joints_state.items() if k.startswith(prefix + "_")}
 
 
 print("Hand joints position \n " + str(hand_joints_state) + "\n")
-
-print("Arm joints position \n " + str(arm_joints_state) + "\n")
