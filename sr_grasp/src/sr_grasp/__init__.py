@@ -88,7 +88,7 @@ class Grasp(moveit_msgs.msg.Grasp):
     def _set_posture_point(self, posture, positions, point=0):
         """Set the posture positions using a dict of joint positions."""
         # XXX: Why have we been doing this?
-        #posture.header.stamp = now
+        # posture.header.stamp = now
         posture.joint_names = positions.keys()
 
         # Extend the array to be big enough.

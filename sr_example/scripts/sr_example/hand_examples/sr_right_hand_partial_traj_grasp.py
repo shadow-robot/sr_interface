@@ -40,7 +40,7 @@ position = [1.07, 0.26, 0.88, -0.34, 0.85, 0.60,
             0.05, 1.04, 0.34, 0.68, -0.24, 0.35,
             0.69, 0.18, 1.20, -0.11]
 
-#generate new grasp dictionary
+# Generate new grasp dictionary
 grasp_pose = dict(zip(keys, position))
 
 # Partial list of goals
