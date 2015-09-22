@@ -34,15 +34,15 @@ from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
 from trajectory_msgs.msg import JointTrajectoryPoint
 from math import radians
 
+from sr_utilities.hand_finder import HandFinder
+
 
 class SrRobotCommander(object):
     """
     Base class for hand and arm commanders
     """
     __group_prefixes = {"right_arm": "ra_",
-                        "left_arm": "la_",
-                        "right_hand": "rh_",
-                        "left_hand": "lh_"}
+                        "left_arm": "la_"}
 
     def __init__(self, name):
         """
@@ -75,7 +75,13 @@ class SrRobotCommander(object):
         self.__plan = None
 
         # prefix of the trajectory controller
-        self._prefix = self.__group_prefixes[name]
+        if name == "right_arm" or name == "left_arm":
+            self._prefix = self.__group_prefixes[name]
+        else:
+            hand_finder = HandFinder()
+            hand_parameters = hand_finder.get_hand_parameters()
+            hand_serial = hand_parameters.mapping.keys()[0]
+            self._prefix = hand_parameters.joint_prefix[hand_serial]
 
         self._set_up_action_client()
 
@@ -337,6 +343,16 @@ class SrRobotCommander(object):
 
         if not self._client.wait_for_result():
             rospy.loginfo("Trajectory not completed")
+    
+    def plan_to_waypoints_target(self, waypoints, eef_step = 0.01, jump_threshold = 0.0):
+        """
+        Specify a set of waypoints for the end-effector and plans.
+        This is a blocking method.
+        @param waypoints - an array of poses of end-effector
+        @param eef_step - configurations are computed for every eef_step meters
+        @param jump_threshold - maximum distance in configuration space between consecutive points in the resulting path
+        """
+        (self.__plan, fraction) = self._move_group_commander.compute_cartesian_path(waypoints, eef_step, jump_threshold)
 
     def set_teach_mode(self, teach):
         """
