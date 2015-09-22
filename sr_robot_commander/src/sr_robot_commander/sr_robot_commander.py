@@ -42,7 +42,9 @@ class SrRobotCommander(object):
     Base class for hand and arm commanders
     """
     __group_prefixes = {"right_arm": "ra_",
-                        "left_arm": "la_"}
+                        "left_arm": "la_",
+                        "right_hand": "rh_",
+                        "left_hand": "lh_"}
 
     def __init__(self, name):
         """
@@ -75,9 +77,11 @@ class SrRobotCommander(object):
         self.__plan = None
 
         # prefix of the trajectory controller
-        if name == "right_arm" or name == "left_arm":
+        if name in self.__group_prefixes.keys(): 
             self._prefix = self.__group_prefixes[name]
         else:
+            # Group name is one of the ones to plan for specific fingers. 
+            # We need to find the hand prefix using the hand finder 
             hand_finder = HandFinder()
             hand_parameters = hand_finder.get_hand_parameters()
             hand_serial = hand_parameters.mapping.keys()[0]
