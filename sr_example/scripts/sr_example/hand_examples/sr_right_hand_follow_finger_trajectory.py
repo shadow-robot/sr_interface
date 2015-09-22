@@ -17,11 +17,11 @@ hand_serial = hand_parameters.mapping.keys()[0]
 
 # Open fingers
 group_id = "fingers"
-hand_commander = SrHandCommander(name = group_id)
+hand_commander = SrHandCommander(name=group_id)
 hand_commander.move_to_named_target("fingers_open")
 
 group_id = "first_finger"
-hand_commander = SrHandCommander(name = group_id)
+hand_commander = SrHandCommander(name=group_id)
 
 rospy.sleep(2)
 print("\nMoving Index finger following a set of waypoints")
@@ -71,4 +71,3 @@ waypoints.append(copy.deepcopy(pose))
 
 hand_commander.plan_to_waypoints_target(waypoints)
 hand_commander.execute()
-

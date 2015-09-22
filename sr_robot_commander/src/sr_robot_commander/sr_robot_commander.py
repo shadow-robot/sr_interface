@@ -77,11 +77,11 @@ class SrRobotCommander(object):
         self.__plan = None
 
         # prefix of the trajectory controller
-        if name in self.__group_prefixes.keys(): 
+        if name in self.__group_prefixes.keys():
             self._prefix = self.__group_prefixes[name]
         else:
-            # Group name is one of the ones to plan for specific fingers. 
-            # We need to find the hand prefix using the hand finder 
+            # Group name is one of the ones to plan for specific fingers.
+            # We need to find the hand prefix using the hand finder
             hand_finder = HandFinder()
             hand_parameters = hand_finder.get_hand_parameters()
             hand_serial = hand_parameters.mapping.keys()[0]
@@ -348,7 +348,7 @@ class SrRobotCommander(object):
         if not self._client.wait_for_result():
             rospy.loginfo("Trajectory not completed")
     
-    def plan_to_waypoints_target(self, waypoints, eef_step = 0.01, jump_threshold = 0.0):
+    def plan_to_waypoints_target(self, waypoints, eef_step=0.01, jump_threshold=0.0):
         """
         Specify a set of waypoints for the end-effector and plans.
         This is a blocking method.
