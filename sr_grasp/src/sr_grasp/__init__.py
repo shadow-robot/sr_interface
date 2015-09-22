@@ -1,4 +1,3 @@
-
 from copy import deepcopy
 import os
 import yaml
@@ -26,6 +25,7 @@ class Grasp(moveit_msgs.msg.Grasp):
     Represents a single grasp, basically a wrapper around moveit_msgs/Grasp
     with added functions and Shadow Hand specific knowledge.
     """
+
     def __init__(self):
         moveit_msgs.msg.Grasp.__init__(self)
         self.grasp_quality = 0.001
@@ -92,8 +92,8 @@ class Grasp(moveit_msgs.msg.Grasp):
         posture.joint_names = positions.keys()
 
         # Extend the array to be big enough.
-        if len(posture.points) < point+1:
-            for _ in range(point+1):
+        if len(posture.points) < point + 1:
+            for _ in range(point + 1):
                 posture.points.append(JointTrajectoryPoint())
 
         # Update the point in place
@@ -109,6 +109,7 @@ class GraspStash(object):
     use this library so that it can deal with the detail of the undelying
     storage.
     """
+
     def __init__(self):
         # Store of all loaded grasps, indexed on grasp.id.
         self._store = {}
