@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 import roslib
-roslib.load_manifest('hand_kinematics')
 import rospy
-import math
 import tf
 from geometry_msgs.msg import Vector3
+
+roslib.load_manifest('hand_kinematics')
 
 if __name__ == '__main__':
     rospy.init_node('tf_tippos_publisher')

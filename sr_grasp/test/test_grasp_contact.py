@@ -18,9 +18,6 @@
 #
 # ###########################################################################
 
-PKG = 'sr_grasp'
-NAME = 'test_grasp_contact'
-
 import os
 import unittest
 import rospy
@@ -30,6 +27,9 @@ from sr_robot_msgs.msg import GraspAction, GraspGoal
 from moveit_msgs.msg import Grasp
 from trajectory_msgs.msg import JointTrajectoryPoint
 from sr_hand.shadowhand_ros import ShadowHand_ROS
+
+PKG = 'sr_grasp'
+NAME = 'test_grasp_contact'
 
 
 class TestGraspContact(unittest.TestCase):
@@ -79,7 +79,7 @@ class TestGraspContact(unittest.TestCase):
         goal.grasp = self.mk_grasp({
             'LFJ3': 1.4, 'RFJ3': 1.4, 'MFJ3': 1.4, 'FFJ3': 1.4,
             'LFJ0': 2.0, 'RFJ0': 2.0, 'MFJ0': 2.0, 'FFJ0': 2.0,
-            })
+        })
         goal.pre_grasp = False
 
         client = SimpleActionClient('grasp', GraspAction)
