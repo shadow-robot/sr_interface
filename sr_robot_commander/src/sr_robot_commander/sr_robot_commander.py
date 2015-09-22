@@ -133,6 +133,17 @@ class SrRobotCommander(object):
             rospy.err("Unknown named state...")
             return False
         return True
+    
+    def get_named_target_joint_values(self, name):
+        if (name in self._srdf_names):
+            return self._move_group_commander._g.get_named_target_values(str(name))
+        elif (name in self._warehouse_names):
+            rospy.loginfo("warehouse name")
+
+    def get_current_pose(self):
+        joint_names = self._move_group_commander._g.get_joint_names()
+        joint_values = self._move_group_commander._g.get_current_joint_values()
+        return dict(zip(joint_names, joint_values))
 
     def move_to_named_target(self, name, wait=True):
         """
