@@ -81,7 +81,7 @@ rospy.sleep(rospy.Duration(5))
 print("Arm joints position:\n" + str(arm_commander.get_joints_position()) + "\n")
 
 joints_states_3 = {'la_shoulder_pan_joint': 1.61, 'la_elbow_joint': 1.15, 'la_wrist_1_joint': -0.24,
-                   'la_wrist_2_joint': 0.49, 'la_shoulder_lift_joint': -1.58, 'la_wrist_3_joint': 2.11, 
+                   'la_wrist_2_joint': 0.49, 'la_shoulder_lift_joint': -1.58, 'la_wrist_3_joint': 2.11,
                    'lh_WRJ1': 0.0, 'lh_WRJ2': 0.0}
 
 # A trajectory is generated from the 3 positions for each joint, specified in joint_states_1, joint_states_2
