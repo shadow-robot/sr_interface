@@ -19,23 +19,24 @@
 """
 This is a simple subscriber example, subscribing to the joint_states topic and printing
 out the data in a per-joint basis.
-To see how the joint_states topic looks like you can type the following in a terminal:
+To view the joint_states, type the following in a terminal:
 > rostopic echo /joint_states
 
 """
 
 import roslib
-roslib.load_manifest('sr_example')
 import rospy
 import math
 from sensor_msgs.msg import JointState
+
+roslib.load_manifest('sr_example')
 
 
 def callback(joint_state):
     """
     The callback function for the topic /joint_states
 
-    It just displays the received information on the console.
+    It displays the received information in the console.
 
     @param joint_state: the message containing the joints data.
     """
@@ -51,8 +52,9 @@ def listener():
     Initialize the ROS node and the topic to which it subscribes.
     """
     rospy.init_node(
-        'shadowhand_joint_states_subscriber_python', anonymous=True)
+        'subscriber_example', anonymous=True)
 
+    # Subscribes to topic 'joint_states'
     rospy.Subscriber("joint_states", JointState, callback)
 
     rospy.spin()

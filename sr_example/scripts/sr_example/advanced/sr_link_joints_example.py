@@ -16,32 +16,42 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# This example can be tested with the simulated hand (or simulated hand and arm)
-# by using the following command in a separate terminal
-# roslaunch sr_hand  gazebo_arm_and_hand.launch
-# or
-# roslaunch sr_hand  gazebo_hand.launch
-# and then
-# rosrun sr_example link_joints.py
-# rosrun rqt_gui rqt_gui
+"""
+This example demonstrates how two joints can have their positions 'linked' by
+having a child joint subscribing to the parent joint's controller state topic.
+The messages are then published to the child joint's controller.
 
-# in the rqt_gui go to plugins->ShadowRobot->joint slider and select EtherCAT hand
-# If you move the joint slider for FFJ3, then MFJ3 will move as well.
+The hand should be launched but the trajectory controllers should
+not be running as they overwrite position commands. To check if they are, a call
+to rosservice can be made with the following command:
+>rosservice call /controller_manager/list_controllers
+To stop the trajectory controllers, open the gui (type rqt) and select position control in
+plugins > Shadow Robot > Change controllers
+NOTE: If the joint sliders plugin is open during this change of controllers, it will
+need to be reloaded.
+
+A position can then be published to the parent joint or the joint could be moved by
+using the joint sliders in the gui, plugins > Shadow Robot > joint slider
+
+If you move the joint slider for the parent joint, the child joint will move as well.
+"""
 
 import roslib
-roslib.load_manifest('sr_example')
 import rospy
 from std_msgs.msg import Float64
 from control_msgs.msg import JointControllerState
 
-parent_name = "ffj3"
-child_name = "mfj3"
+roslib.load_manifest('sr_example')
 
-# type of controller that is running
+# Joints to be linked
+parent_name = "rh_ffj3"
+child_name = "rh_mfj3"
+
+# Controller that controls joint position
 controller_type = "_position_controller"
 
 pub = rospy.Publisher(
-    'sh_' + child_name + controller_type + '/command', Float64)
+    '/sh_' + child_name + controller_type + '/command', Float64, queue_size=1)
 
 
 def callback(data):
@@ -61,12 +71,12 @@ def listener():
     The main function
     """
     # init the ros node
-    rospy.init_node('joints_link_test', anonymous=True)
+    rospy.init_node('link_joints_example', anonymous=True)
 
     # init the subscriber: subscribe to the
     # parent joint controller topic, using the callback function
     # callback()
-    rospy.Subscriber('sh_' + parent_name + controller_type +
+    rospy.Subscriber('/sh_' + parent_name + controller_type +
                      '/state', JointControllerState, callback)
     # subscribe until interrupted
     rospy.spin()
