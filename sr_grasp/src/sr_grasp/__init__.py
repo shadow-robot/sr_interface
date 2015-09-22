@@ -143,7 +143,7 @@ class GraspStash(object):
         if grasp.id is None or grasp.id == "":
             raise Exception("Grasp has no id")
         # Up convert a plain grasp msg to our wrapper
-        #if isinstance(grasp, moveit_msgs.msg.Grasp):
+        # if isinstance(grasp, moveit_msgs.msg.Grasp):
         #    grasp = Grasp.from_msg(grasp)
         self._store[grasp.id] = grasp
 
