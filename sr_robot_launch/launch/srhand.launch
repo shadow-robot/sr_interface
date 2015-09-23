@@ -25,6 +25,8 @@
   <arg name="use_moveit" default="false"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
+  <!-- the path to the mapping files -->
+  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_ethercat.yaml"/>
   <!-- set parameter on the server for running the trajectory controller -->
 
   <!-- SIMULATED ROBOTS -->
@@ -48,7 +50,7 @@
     <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
   </group>
-  
+
   <!-- REAL ROBOTS -->
   <group unless="$(arg sim)">
     <!-- launch for right hand -->
@@ -60,9 +62,10 @@
       <arg name="debug" value="$(arg debug)"/>
       <arg name="pwm_control" value="true"/>
       <arg name="hand_id" value="$(arg hand_id)"/>
+      <arg name="mapping_path" value="$(arg mapping_path)"/>
     </include>
   </group>
-  
+
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
     <include file="$(find sr_moveit_hand_config)/launch/moveit_planning_and_execution.launch">
@@ -71,9 +74,9 @@
     </include>
     <include file="$(find sr_moveit_hand_config)/launch/default_warehouse_db.launch"/>
   </group>
-  
+
   <!-- Trajectory controller -->
-  <group if="$(arg hand_ctrl)">  
+  <group if="$(arg hand_ctrl)">
     <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py">
       <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
     </node>
