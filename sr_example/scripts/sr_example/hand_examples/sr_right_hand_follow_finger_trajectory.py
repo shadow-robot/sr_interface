@@ -29,7 +29,6 @@ print("\nMoving Index finger following a set of waypoints")
 waypoints = []
 pose = geometry_msgs.msg.Pose()
 
-pose = geometry_msgs.msg.Pose()
 pose.position.x = 0.057038
 pose.position.y = -0.13281
 pose.position.z = 0.37172
@@ -39,7 +38,6 @@ pose.orientation.z = -0.044238
 pose.orientation.w = 0.79001
 waypoints.append(copy.deepcopy(pose))
 
-pose = geometry_msgs.msg.Pose()
 pose.position.x = 0.08341
 pose.position.y = -0.13383
 pose.position.z = 0.36473
@@ -49,7 +47,6 @@ pose.orientation.z = -0.058283
 pose.orientation.w = 0.80052
 waypoints.append(copy.deepcopy(pose))
 
-pose = geometry_msgs.msg.Pose()
 pose.position.x = 0.083263
 pose.position.y = -0.10451
 pose.position.z = 0.39957
@@ -59,7 +56,6 @@ pose.orientation.z = -0.0061039
 pose.orientation.w = 0.94632
 waypoints.append(copy.deepcopy(pose))
 
-pose = geometry_msgs.msg.Pose()
 pose.position.x = 0.067446
 pose.position.y = -0.099706
 pose.position.z = 0.40685
