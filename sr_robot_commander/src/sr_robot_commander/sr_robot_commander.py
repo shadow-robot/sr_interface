@@ -100,6 +100,7 @@ class SrRobotCommander(object):
         @param wait - should method wait for movement end or not
         @param angle_degrees - are joint_states in degrees or not
         """
+        
         if angle_degrees:
             joint_states.update((joint, radians(i))
                                 for joint, i in joint_states.items())
@@ -135,15 +136,21 @@ class SrRobotCommander(object):
         return True
     
     def get_named_target_joint_values(self, name):
-        joint_names = self._move_group_commander._g.get_joints()
-        joint_values = list()
-    
-        if (name in self._srdf_names):
-            joint_values = self._move_group_commander._g.get_named_target_values(str(name))
-        elif (name in self._warehouse_names):
-            rospy.loginfo("warehouse name")
+        output = dict()
 
-        return dict(zip(joint_names, joint_values))
+        if (name in self._srdf_names):
+            output = self._move_group_commander.\
+                           _g.get_named_target_values(str(name))
+
+        elif (name in self._warehouse_names):
+            js = self._warehouse_name_get_srv(
+                name, self._robot_name).state.joint_state
+
+            for x, n in enumerate(js.name):
+                if n in self._move_group_commander._g.get_joints():
+                    output[n] = js.position[x]
+
+        return output
 
 
     def get_current_pose(self):
