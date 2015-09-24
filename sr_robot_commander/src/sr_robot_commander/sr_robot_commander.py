@@ -55,10 +55,9 @@ class SrRobotCommander(object):
         self._robot_commander = RobotCommander()
 
         self._robot_name = self._robot_commander._r.get_robot_name()
-
-        self._srdf_names = self.__get_srdf_names()
-        self._warehouse_names = self.__get_warehouse_names()
-
+        
+        self.refresh_named_targets()
+        
         self._warehouse_name_get_srv = rospy.ServiceProxy("get_robot_state",
                                                           GetState)
         self._planning_scene = PlanningSceneInterface()
@@ -80,6 +79,11 @@ class SrRobotCommander(object):
         self._set_up_action_client()
 
         threading.Thread(None, rospy.spin)
+
+    def refresh_named_targets(self):
+        self._srdf_names = self.__get_srdf_names()
+        self._warehouse_names = self.__get_warehouse_names()
+
 
     def execute(self):
         """
@@ -122,6 +126,9 @@ class SrRobotCommander(object):
         self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_joint_value_target(joint_states)
         self.__plan = self._move_group_commander.plan()
+
+    def get_robot_name(self):
+        return self._robot_name
 
     def set_named_target(self, name):
         if name in self._srdf_names:
