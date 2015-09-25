@@ -5,6 +5,7 @@ first_finger:
   kinematics_solver_attempts: 3
   maxIterations: 100
   epsilon: 0.001
+  lambda: 0.01
   root_name: palm
   tip_name: fftip
 middle_finger:
@@ -12,6 +13,8 @@ middle_finger:
   kinematics_solver_search_resolution: 0.001
   kinematics_solver_timeout: 0.005
   kinematics_solver_attempts: 3
+  maxIterations: 100
+  lambda: 0.01
   epsilon: 0.001
   tip_name: mftip
 ring_finger:
@@ -19,6 +22,8 @@ ring_finger:
   kinematics_solver_search_resolution: 0.001
   kinematics_solver_timeout: 0.005
   kinematics_solver_attempts: 3
+  maxIterations: 100
+  lambda: 0.01
   epsilon: 0.001
   tip_name: rftip
 little_finger:
@@ -26,6 +31,8 @@ little_finger:
   kinematics_solver_search_resolution: 0.001
   kinematics_solver_timeout: 0.005
   kinematics_solver_attempts: 3
+  maxIterations: 100
+  lambda: 0.01
   epsilon: 0.001
   tip_name: lftip
 thumb:
@@ -33,5 +40,7 @@ thumb:
   kinematics_solver_search_resolution: 0.001
   kinematics_solver_timeout: 0.005
   kinematics_solver_attempts: 3
+  maxIterations: 100
+  lambda: 0.01
   epsilon: 0.001
   tip_name: thtip
