@@ -603,12 +603,12 @@
     <end_effector name="rh_lftip_ee" parent_link="rh_lftip" group="rh_little_finger" parent_group="right_hand" />
     <end_effector name="rh_thtip_ee" parent_link="rh_thtip" group="rh_thumb" parent_group="right_hand" />
 
-    <end_effector name="right_hand_ee" parent_link="lh_wrist" group="right_hand" />
-    <end_effector name="lh_fftip_ee" parent_link="lh_fftip" group="lh_first_finger" parent_group="right_hand" />
-    <end_effector name="lh_mftip_ee" parent_link="lh_mftip" group="lh_middle_finger" parent_group="right_hand" />
-    <end_effector name="lh_rftip_ee" parent_link="lh_rftip" group="lh_ring_finger" parent_group="right_hand" />
-    <end_effector name="lh_lftip_ee" parent_link="lh_lftip" group="lh_little_finger" parent_group="right_hand" />
-    <end_effector name="lh_thtip_ee" parent_link="lh_thtip" group="lh_thumb" parent_group="right_hand" />
+    <end_effector name="left_hand_ee" parent_link="lh_wrist" group="left_hand" />
+    <end_effector name="lh_fftip_ee" parent_link="lh_fftip" group="lh_first_finger" parent_group="left_hand" />
+    <end_effector name="lh_mftip_ee" parent_link="lh_mftip" group="lh_middle_finger" parent_group="left_hand" />
+    <end_effector name="lh_rftip_ee" parent_link="lh_rftip" group="lh_ring_finger" parent_group="left_hand" />
+    <end_effector name="lh_lftip_ee" parent_link="lh_lftip" group="lh_little_finger" parent_group="left_hand" />
+    <end_effector name="lh_thtip_ee" parent_link="lh_thtip" group="lh_thumb" parent_group="left_hand" />
 
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="world_to_right" type="fixed" parent_frame="world" child_link="rh_forearm" />
