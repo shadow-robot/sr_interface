@@ -2,9 +2,11 @@
 
   <!-- This file makes it easy to include different planning pipelines; 
        It is assumed that all planning pipelines are named XXX_planning_pipeline.launch  -->  
-
+  <arg name="hand_id" default="rh"/>
   <arg name="pipeline" default="ompl" />
 
-  <include file="$(find sr_moveit_hand_config)/launch/$(arg pipeline)_planning_pipeline.launch.xml" />
+  <include file="$(find sr_moveit_hand_config)/launch/$(arg hand_id)/$(arg pipeline)_planning_pipeline.launch.xml">
+    <arg name="hand_id" value="$(arg hand_id)"/>
+  </include>
 
 </launch>
