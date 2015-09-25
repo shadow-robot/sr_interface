@@ -35,9 +35,9 @@
         <joint name="rh_LFJ2" />
         <joint name="rh_LFJ1" />
         <chain base_link="rh_forearm" tip_link="rh_palm" />
-        <group name="fingers" />
+        <group name="rh_fingers" />
     </group>
-    <group name="first_finger">
+    <group name="rh_first_finger">
         <joint name="rh_FFJ4" />
         <joint name="rh_FFJ3" />
         <joint name="rh_FFJ2" />
@@ -45,7 +45,7 @@
         <joint name="rh_FFtip" />
         <chain base_link="rh_palm" tip_link="rh_fftip" />
     </group>
-    <group name="middle_finger">
+    <group name="rh_middle_finger">
         <joint name="rh_MFJ4" />
         <joint name="rh_MFJ3" />
         <joint name="rh_MFJ2" />
@@ -53,7 +53,7 @@
         <joint name="rh_MFtip" />
         <chain base_link="rh_palm" tip_link="rh_mftip" />
     </group>
-    <group name="ring_finger">
+    <group name="rh_ring_finger">
         <joint name="rh_RFJ4" />
         <joint name="rh_RFJ3" />
         <joint name="rh_RFJ2" />
@@ -61,7 +61,7 @@
         <joint name="rh_RFtip" />
         <chain base_link="rh_palm" tip_link="rh_rftip" />
     </group>
-    <group name="little_finger">
+    <group name="rh_little_finger">
         <joint name="rh_LFJ5" />
         <joint name="rh_LFJ4" />
         <joint name="rh_LFJ3" />
@@ -70,7 +70,7 @@
         <joint name="rh_LFtip" />
         <chain base_link="rh_palm" tip_link="rh_lftip" />
     </group>
-    <group name="thumb">
+    <group name="rh_thumb">
         <joint name="rh_THJ5" />
         <joint name="rh_THJ4" />
         <joint name="rh_THJ3" />
@@ -79,14 +79,14 @@
         <joint name="rh_thtip" />
         <chain base_link="rh_palm" tip_link="rh_thtip" />
     </group>
-    <group name="fingertips">
+    <group name="rh_fingertips">
         <link name="rh_fftip" />
         <link name="rh_lftip" />
         <link name="rh_rftip" />
         <link name="rh_mftip" />
         <link name="rh_thtip" />
     </group>
-    <group name="fingers">
+    <group name="rh_fingers">
         <joint name="rh_FFJ4" />
         <joint name="rh_FFJ3" />
         <joint name="rh_FFJ2" />
@@ -114,13 +114,13 @@
         <joint name="rh_THJ2" />
         <joint name="rh_THJ1" />
         <joint name="rh_thtip" />
-        <group name="first_finger" />
-        <group name="middle_finger" />
-        <group name="ring_finger" />
-        <group name="little_finger" />
-        <group name="thumb" />
+        <group name="rh_first_finger" />
+        <group name="rh_middle_finger" />
+        <group name="rh_ring_finger" />
+        <group name="rh_little_finger" />
+        <group name="rh_thumb" />
     </group>
-    <group name="first_finger_thumb">
+    <group name="rh_first_finger_thumb">
         <joint name="rh_FFJ4" />
         <joint name="rh_FFJ3" />
         <joint name="rh_FFJ2" />
@@ -133,7 +133,7 @@
         <joint name="rh_THJ1" />
         <joint name="rh_thtip" />
     </group>
-    <group name="middle_finger_thumb">
+    <group name="rh_middle_finger_thumb">
         <joint name="rh_MFJ4" />
         <joint name="rh_MFJ3" />
         <joint name="rh_MFJ2" />
@@ -146,7 +146,7 @@
         <joint name="rh_THJ1" />
         <joint name="rh_thtip" />
     </group>
-    <group name="ring_finger_thumb">
+    <group name="rh_ring_finger_thumb">
         <joint name="rh_RFJ4" />
         <joint name="rh_RFJ3" />
         <joint name="rh_RFJ2" />
@@ -159,7 +159,7 @@
         <joint name="rh_THJ1" />
         <joint name="rh_thtip" />
     </group>
-    <group name="little_finger_thumb">
+    <group name="rh_little_finger_thumb">
         <joint name="rh_LFJ5" />
         <joint name="rh_LFJ4" />
         <joint name="rh_LFJ3" />
