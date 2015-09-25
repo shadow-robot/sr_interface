@@ -1,0 +1,93 @@
+rh_first_finger:
+  kinematics_solver: hand_kinematics/HandKinematicsPlugin
+  kinematics_solver_search_resolution: 0.001
+  kinematics_solver_timeout: 0.005
+  kinematics_solver_attempts: 3
+  maxIterations: 100
+  epsilon: 0.001
+  lambda: 0.01
+  root_name: rh_palm
+  tip_name: rh_fftip
+rh_middle_finger:
+  kinematics_solver: hand_kinematics/HandKinematicsPlugin
+  kinematics_solver_search_resolution: 0.001
+  kinematics_solver_timeout: 0.005
+  kinematics_solver_attempts: 3
+  maxIterations: 100
+  lambda: 0.01
+  epsilon: 0.001
+  tip_name: rh_mftip
+rh_ring_finger:
+  kinematics_solver: hand_kinematics/HandKinematicsPlugin
+  kinematics_solver_search_resolution: 0.001
+  kinematics_solver_timeout: 0.005
+  kinematics_solver_attempts: 3
+  maxIterations: 100
+  lambda: 0.01
+  epsilon: 0.001
+  tip_name: rh_rftip
+rh_little_finger:
+  kinematics_solver: hand_kinematics/HandKinematicsPlugin
+  kinematics_solver_search_resolution: 0.001
+  kinematics_solver_timeout: 0.005
+  kinematics_solver_attempts: 3
+  maxIterations: 100
+  lambda: 0.01
+  epsilon: 0.001
+  tip_name: rh_lftip
+rh_thumb:
+  kinematics_solver: hand_kinematics/HandKinematicsPlugin
+  kinematics_solver_search_resolution: 0.001
+  kinematics_solver_timeout: 0.005
+  kinematics_solver_attempts: 3
+  maxIterations: 100
+  lambda: 0.01
+  epsilon: 0.001
+  tip_name: rh_thtip
+
+lh_first_finger:
+  kinematics_solver: hand_kinematics/HandKinematicsPlugin
+  kinematics_solver_search_resolution: 0.001
+  kinematics_solver_timeout: 0.005
+  kinematics_solver_attempts: 3
+  maxIterations: 100
+  epsilon: 0.001
+  lambda: 0.01
+  root_name: lh_palm
+  tip_name: lh_fftip
+lh_middle_finger:
+  kinematics_solver: hand_kinematics/HandKinematicsPlugin
+  kinematics_solver_search_resolution: 0.001
+  kinematics_solver_timeout: 0.005
+  kinematics_solver_attempts: 3
+  maxIterations: 100
+  lambda: 0.01
+  epsilon: 0.001
+  tip_name: lh_mftip
+lh_ring_finger:
+  kinematics_solver: hand_kinematics/HandKinematicsPlugin
+  kinematics_solver_search_resolution: 0.001
+  kinematics_solver_timeout: 0.005
+  kinematics_solver_attempts: 3
+  maxIterations: 100
+  lambda: 0.01
+  epsilon: 0.001
+  tip_name: lh_rftip
+lh_little_finger:
+  kinematics_solver: hand_kinematics/HandKinematicsPlugin
+  kinematics_solver_search_resolution: 0.001
+  kinematics_solver_timeout: 0.005
+  kinematics_solver_attempts: 3
+  maxIterations: 100
+  lambda: 0.01
+  epsilon: 0.001
+  tip_name: lh_lftip
+lh_thumb:
+  kinematics_solver: hand_kinematics/HandKinematicsPlugin
+  kinematics_solver_search_resolution: 0.001
+  kinematics_solver_timeout: 0.005
+  kinematics_solver_attempts: 3
+  maxIterations: 100
+  lambda: 0.01
+  epsilon: 0.001
+  tip_name: lh_thtip
