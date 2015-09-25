@@ -46,7 +46,7 @@
       <arg name="debug" value="$(arg debug)"/>
     </include>
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model"
-          args="-urdf -param robot_description -model usrh -z 0.1 "
+          args="-urdf -param robot_description -model usrh -z 0.0 "
           respawn="false" output="screen"/>
     <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />

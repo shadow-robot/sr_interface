@@ -30,7 +30,7 @@ class SrHandCommander(SrRobotCommander):
 
     __set_force_srv = {}
 
-    def __init__(self, name="right_hand", prefix="rh", hand_parameters=None, hand_serial=None):
+    def __init__(self, name=None, prefix=None, hand_parameters=None, hand_serial=None):
         """
         Initialize the hand commander, using either a name + prefix, or the parameters returned by the hand finder.
         @param name - name of the MoveIt group
@@ -47,10 +47,16 @@ class SrHandCommander(SrRobotCommander):
             hand_mapping = hand_parameters.mapping[hand_serial]
             prefix = hand_parameters.joint_prefix[hand_serial]
 
-            if hand_mapping == 'rh':
+            if name is None:
+                if hand_mapping == 'rh':
+                    name = "right_hand"
+                else:
+                    name = "left_hand"
+        else:
+            if name is None:
                 name = "right_hand"
-            else:
-                name = "left_hand"
+            if prefix is None:
+                prefix = "rh_"
 
         super(SrHandCommander, self).__init__(name)
 
