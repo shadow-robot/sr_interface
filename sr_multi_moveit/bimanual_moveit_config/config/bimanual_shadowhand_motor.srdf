@@ -493,7 +493,7 @@
         <joint name="lh_WRJ1" value="0" />
         <joint name="lh_WRJ2" value="0" />
     </group_state>
-    <group_state name="first_finger_open" group="first_finger">
+    <group_state name="first_finger_open" group="lh_first_finger">
         <joint name="lh_FFJ1" value="0" />
         <joint name="lh_FFJ2" value="0" />
         <joint name="lh_FFJ3" value="0" />
