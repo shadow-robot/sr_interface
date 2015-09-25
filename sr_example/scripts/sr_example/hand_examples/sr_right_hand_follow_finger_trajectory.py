@@ -27,8 +27,8 @@ rospy.sleep(2)
 rospy.loginfo("\nMoving Index finger following a set of waypoints")
 
 waypoints = []
-pose = geometry_msgs.msg.Pose()
 
+pose = geometry_msgs.msg.Pose()
 pose.position.x = 0.057038
 pose.position.y = -0.13281
 pose.position.z = 0.37172
@@ -36,8 +36,9 @@ pose.orientation.x = 0.60863
 pose.orientation.y = 0.05909
 pose.orientation.z = -0.044238
 pose.orientation.w = 0.79001
-waypoints.append(copy.deepcopy(pose))
+waypoints.append(pose)
 
+pose = geometry_msgs.msg.Pose()
 pose.position.x = 0.08341
 pose.position.y = -0.13383
 pose.position.z = 0.36473
@@ -45,8 +46,9 @@ pose.orientation.x = 0.55
 pose.orientation.y = 0.23079
 pose.orientation.z = -0.058283
 pose.orientation.w = 0.80052
-waypoints.append(copy.deepcopy(pose))
+waypoints.append(pose)
 
+pose = geometry_msgs.msg.Pose()
 pose.position.x = 0.083263
 pose.position.y = -0.10451
 pose.position.z = 0.39957
@@ -54,8 +56,9 @@ pose.orientation.x = 0.27607
 pose.orientation.y = 0.16801
 pose.orientation.z = -0.0061039
 pose.orientation.w = 0.94632
-waypoints.append(copy.deepcopy(pose))
+waypoints.append(pose)
 
+pose = geometry_msgs.msg.Pose()
 pose.position.x = 0.067446
 pose.position.y = -0.099706
 pose.position.z = 0.40685
@@ -63,7 +66,7 @@ pose.orientation.x = 0.24168
 pose.orientation.y = 0.083281
 pose.orientation.z = -0.021483
 pose.orientation.w = 0.96654
-waypoints.append(copy.deepcopy(pose))
+waypoints.append(pose)
 
 hand_commander.plan_to_waypoints_target(waypoints)
 hand_commander.execute()
