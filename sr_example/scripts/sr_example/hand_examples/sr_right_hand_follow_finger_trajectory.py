@@ -24,7 +24,7 @@ group_id = "first_finger"
 hand_commander = SrHandCommander(name=group_id)
 
 rospy.sleep(2)
-print("\nMoving Index finger following a set of waypoints")
+rospy.loginfo("\nMoving Index finger following a set of waypoints")
 
 waypoints = []
 pose = geometry_msgs.msg.Pose()
