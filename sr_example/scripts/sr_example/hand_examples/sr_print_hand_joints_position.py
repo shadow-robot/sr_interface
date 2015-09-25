@@ -8,6 +8,7 @@
 import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
+from numpy import arange
 
 
 rospy.init_node("print_hand_joints_position", anonymous=True)
@@ -15,18 +16,18 @@ rospy.init_node("print_hand_joints_position", anonymous=True)
 # Use the hand finder to get the hand prefix, to allow this script to be used with either left or right hands
 hand_finder = HandFinder()
 hand_parameters = hand_finder.get_hand_parameters()
-prefix = hand_parameters.mapping.values()[0]
-hand_serial = hand_parameters.mapping.keys()[0]
 
-hand_commander = SrHandCommander(hand_parameters=hand_parameters, hand_serial=hand_serial)
+prefix = hand_parameters.mapping.values()
+hand_serial = hand_parameters.mapping.keys()
 
-print("Joints positions")
+for i in arange(0, len(prefix)):
+    hand_commander = SrHandCommander(hand_parameters=hand_parameters, hand_serial=hand_serial[i])
 
-all_joints_state = hand_commander.get_joints_position()
+    print("Joints positions")
 
+    all_joints_state = hand_commander.get_joints_position()
 
-hand_joints_state = {
-    k: v for k, v in all_joints_state.items() if k.startswith(prefix + "_")}
+    hand_joints_state = {
+        k: v for k, v in all_joints_state.items() if k.startswith(prefix[i] + "_")}
 
-
-print("Hand joints position \n " + str(hand_joints_state) + "\n")
+    print("Hand joints position \n " + str(hand_joints_state) + "\n")
