@@ -11,14 +11,14 @@
   
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
       More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
-  <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
+  <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth1_eth2)"/>
   
   <!-- The ethercat serial number for the right hand -->
-  <arg name="rh_serial" default="1050"/>
+  <arg name="rh_serial" default="1290"/>
   <!-- The id for the right hand. It needs to be the same (but without trailing underscore) as the prefix used in the hand model. -->
   <arg name="rh_id" default="rh"/>
   <!-- The ethercat serial number for the left hand -->
-  <arg name="lh_serial" default="1098"/>
+  <arg name="lh_serial" default="1338"/>
   <!-- The id for the left hand. It needs to be the same (but without trailing underscore) as the prefix used in the hand model. -->
   <arg name="lh_id" default="lh"/> 
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
@@ -33,7 +33,7 @@
     <!-- Set to true for debugging -->
     <arg name="debug" value="$(arg debug)"/>
     <!-- Set to 0 if we don't want to run calibration controllers (e.g. for the muscle hand) -->
-    <arg name="calibration_controllers" value="$(arg valibration_controllers)"/>
+    <arg name="calibration_controllers" value="$(arg calibration_controllers)"/>
     <!-- Xacro file containing the robot description we want to load -->
     <arg name="robot_description" value="$(arg robot_description)"/>
     <!-- The control mode PWM (true) or torque (false) -->
@@ -51,10 +51,7 @@
   
   <!-- Trajectory controller -->
   <group if="$(arg hand_ctrl)">
-    <node name="$(arg rh_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py">
-      <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
-    </node>
-    <node name="$(arg lh_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py">
+    <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py">
       <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
     </node>
   </group>
