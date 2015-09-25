@@ -347,7 +347,7 @@ class SrRobotCommander(object):
 
         if not self._client.wait_for_result():
             rospy.loginfo("Trajectory not completed")
-    
+
     def plan_to_waypoints_target(self, waypoints, eef_step=0.01, jump_threshold=0.0):
         """
         Specify a set of waypoints for the end-effector and plans.
