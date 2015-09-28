@@ -136,16 +136,7 @@ class SrRobotCommander(object):
         elif (name in self._warehouse_names):
             response = self._warehouse_name_get_srv(name, self._robot_name)
             js = response.state.joint_state
-
-            name = self._move_group_commander.get_active_joints()
-            position = self._move_group_commander.get_current_joint_values()
-
-            js_dict = dict(zip(js.name, js.position))
-
-            #current_dict = self.get_current_pose_bounded()
-
             self._move_group_commander.set_joint_value_target(js)#;//current_dict)#js_dict)
-            
 
         else:
             rospy.logerr("Unknown named state '%s'..." % name)
