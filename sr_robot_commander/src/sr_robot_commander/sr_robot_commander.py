@@ -136,9 +136,48 @@ class SrRobotCommander(object):
         elif (name in self._warehouse_names):
             response = self._warehouse_name_get_srv(name, self._robot_name)
             js = response.state.joint_state
-            self._move_group_commander.set_joint_value_target(js)
+
+            name = self._move_group_commander.get_active_joints()
+            position = self._move_group_commander.get_current_joint_values()
+
+            # for x,n in enumerate(name):
+            #     if n in js.name:
+            #         index_in_js = js.name.index(n)
+            #         rospy.logwarn(n + "-" + str(position[x]/js.position[index_in_js]) + "-" + str(position[x]) + "-" + str(js.position[index_in_js]))
+
+            # js.position = position
+
+            #js = JointState()
+
+            # js.name = ['ra_shoulder_pan_joint', 'ra_shoulder_lift_joint', 'ra_elbow_joint', 'ra_wrist_1_joint', 'ra_wrist_2_joint', 'ra_wrist_3_joint', 'rh_WRJ2', 'rh_WRJ1', 'rh_FFJ4', 'rh_FFJ3', 'rh_FFJ2', 'rh_FFJ1', 'rh_LFJ5', 'rh_LFJ4', 'rh_LFJ3', 'rh_LFJ2', 'rh_LFJ1', 'rh_MFJ4', 'rh_MFJ3', 'rh_MFJ2', 'rh_MFJ1', 'rh_RFJ4', 'rh_RFJ3', 'rh_RFJ2', 'rh_RFJ1', 'rh_THJ5', 'rh_THJ4', 'rh_THJ3', 'rh_THJ2', 'rh_THJ1'] 
+            # js.position = [-0.32852909733042523, -0.6926637156278654, 0.08463253121912158, -2.6818331996384206, 0.3259571560943634, -2.992137001987922, -0.010149302538439802, 0.3805478553985926, -0.34824490233031913, 0.0060506720782660395, 0.024036735446049562, 0.31542212449050755, 6.548405997719442e-05, -0.001352781671640102, 1.5695233286636272, 0.3495679991649654, 1.5708801015982603, 0.3416723176943144, 0.007685031695081612, 0.009476643814382513, 0.3285369909056923, 0.00018533955012145498, 1.5706687807086261, 0.34828205891414044, 1.5708221073033828, 0.5453479511321087, 0.8685981999202657, -0.0003979504664171074, 0.6287204245492681, 0.346065478692414]
+
+            js_dict = dict(zip(js.name, js.position))
+
+            current_dict = dict(zip(name, position))
+
+            for k in js_dict.keys():
+                #js_dict[k] = js_dict[k]/2
+                if js_dict[k] < 0:
+                    js_dict[k] = 0
+
+                if 'ra_' in k :
+                    del(js_dict[k])
+                elif 'FJ2' in k:
+                    #js_dict[k] = current_dict[k]
+                    rospy.logwarn(k + " " + str(js_dict[k]))
+
+
+            #position = list()
+            
+            # for n in name:
+            #     position.append(current_dict)
+
+            self._move_group_commander.set_joint_value_target(js_dict)
+            
+
         else:
-            rospy.err("Unknown named state...")
+            rospy.logerr("Unknown named state '%s'..." % name)
             return False
         return True
     
@@ -161,9 +200,20 @@ class SrRobotCommander(object):
 
 
     def get_current_pose(self):
-        joint_names = self._move_group_commander._g.get_joints()
+        joint_names = self._move_group_commander._g.get_active_joints()
         joint_values = self._move_group_commander._g.get_current_joint_values()
+
         return dict(zip(joint_names, joint_values))
+
+    def get_current_pose_bounded(self):
+        state = self._move_group_commander._g.get_current_state_bounded()
+        names =  self._move_group_commander._g.get_active_joints()
+        output = dict()
+
+        for x,n in enumerate(state.joint_state.name):
+            if n in names: output[n] = state.joint_state.position
+
+        return self.get_current_pose(self)
 
     def move_to_named_target(self, name, wait=True):
         """
