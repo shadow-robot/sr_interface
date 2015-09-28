@@ -177,8 +177,8 @@ class SrRobotCommander(object):
 
     def get_current_pose_bounded(self):
         current = self._move_group_commander._g.get_current_state_bounded()
-        names =  self._move_group_commander._g.get_active_joints()
-        output = {n:current[n] for n in names if n in current}
+        names = self._move_group_commander._g.get_active_joints()
+        output = {n: current[n] for n in names if n in current}
 
         return output
 
