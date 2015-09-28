@@ -169,7 +169,7 @@ TEST(HandIKPlugin, initialize)
   ASSERT_TRUE(my_test.initialize());
   // Test getting chain information
   std::string root_name = my_test.kinematics_solver_->getBaseFrame();
-  EXPECT_TRUE(root_name == std::string("palm"));
+  EXPECT_TRUE(root_name == std::string("rh_palm"));
   std::string tool_name = my_test.kinematics_solver_->getTipFrame();
   EXPECT_TRUE(tool_name.find("tip") != std::string::npos);
   std::vector<std::string> joint_names = my_test.kinematics_solver_->getJointNames();

@@ -35,26 +35,24 @@
 * You should have received a copy of the GNU General Public License along
 * with this program.  If not, see <http://www.gnu.org/licenses/>.
 *
- * @brief This is an example to show how to get data from the hand,
- * read the position for a specific joint and send this as the target to
- * another joint.
- *
- * This example can be tested with the simulated hand (or simulated hand and arm)
- * by using the following commands in separate terminals
- * * \verbatim
- * roslaunch sr_hand  gazebo_arm_and_hand.launch
- * or
- * roslaunch sr_hand  gazebo_hand.launch
- * and then
- * rosrun sr_example link_joints
- * rosrun rqt_gui rqt_gui
- \endverbatim
- * in the rqt_gui go to plugins->ShadowRobot->joint slider and select EtherCAT hand
- * If you move the joint slider for FFJ3, then MFJ3 will move as well.
- *
- *
- *
- */
+* This example demonstrates how two joints can have their positions 'linked' by
+* having a child joint subscribing to the parent joint's controller state topic.
+* The messages are then published to the child joint's controller.
+*
+* The hand should be launched but the trajectory controllers should
+* not be running as they overwrite position commands. To check if they are, a call
+* to rosservice can be made with the following command:
+* >rosservice call /controller_manager/list_controllers
+* To stop the trajectory controllers, open the gui (type rqt) and select position control in
+* plugins > Shadow Robot > Change controllers
+* NOTE: If the joint sliders plugin is open during this change of controllers, it will
+* need to be reloaded.
+*
+* A position can then be published to the parent joint or the joint could be moved by
+* using the joint sliders in the gui, plugins > Shadow Robot > joint slider
+*
+* If you move the joint slider for FFJ3, then MFJ3 will move as well.
+*/
 
 #include <ros/ros.h>
 #include <string>
@@ -64,10 +62,10 @@
 #include <control_msgs/JointControllerState.h>
 
 /// the name of the parent joint
-std::string parent_name = "ffj3";
+std::string parent_name = "rh_ffj3";
 /// the name of the child joint to link to the parent
-std::string child_name = "mfj3";
-/// the type of controller that will be running
+std::string child_name = "rh_mfj3";
+/// Controller that controls joint position
 std::string controller_type = "_position_controller";
 
 // a ros subscriber (will be instantiated later on)

@@ -18,10 +18,7 @@
 #
 # ###########################################################################
 
-PKG = 'sr_grasp'
-NAME = 'test_grasp_object'
 
-import os
 import unittest
 import rospy
 import rostest
@@ -29,6 +26,9 @@ from actionlib import SimpleActionClient, GoalStatus
 from sr_robot_msgs.msg import GraspAction, GraspGoal
 from moveit_msgs.msg import Grasp
 from trajectory_msgs.msg import JointTrajectoryPoint
+
+PKG = 'sr_grasp'
+NAME = 'test_grasp_object'
 
 
 class TestGrasp(unittest.TestCase):
