@@ -1,5 +1,5 @@
 <launch>
-
+  <arg name="hand_id" default="rh"/>
   <arg name="debug" default="false" />
   <arg unless="$(arg debug)" name="launch_prefix" value="" />
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
@@ -10,7 +10,7 @@
   
   <node name="$(anon rviz)" launch-prefix="$(arg launch_prefix)" pkg="rviz" type="rviz" respawn="false"
 	args="$(arg command_args)" output="screen">
-    <rosparam command="load" file="$(find sr_moveit_hand_config)/config/kinematics.yaml"/>
+    <rosparam command="load" file="$(find sr_moveit_hand_config)/config/$(arg hand_id)/kinematics.yaml"/>
   </node>
 
 </launch>
