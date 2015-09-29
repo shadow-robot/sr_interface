@@ -58,8 +58,7 @@ class SrRobotCommander(object):
 
         self._robot_name = self._robot_commander._r.get_robot_name()
 
-        self._srdf_names = self.__get_srdf_names()
-        self._warehouse_names = self.__get_warehouse_names()
+        self.refresh_named_targets()
 
         self._warehouse_name_get_srv = rospy.ServiceProxy("get_robot_state",
                                                           GetState)
@@ -91,6 +90,10 @@ class SrRobotCommander(object):
 
         threading.Thread(None, rospy.spin)
 
+    def refresh_named_targets(self):
+        self._srdf_names = self.__get_srdf_names()
+        self._warehouse_names = self.__get_warehouse_names()
+
     def execute(self):
         """
         Executes the last plan made.
@@ -110,6 +113,7 @@ class SrRobotCommander(object):
         @param wait - should method wait for movement end or not
         @param angle_degrees - are joint_states in degrees or not
         """
+
         if angle_degrees:
             joint_states.update((joint, radians(i))
                                 for joint, i in joint_states.items())
@@ -132,6 +136,9 @@ class SrRobotCommander(object):
         self._move_group_commander.set_joint_value_target(joint_states)
         self.__plan = self._move_group_commander.plan()
 
+    def get_robot_name(self):
+        return self._robot_name
+
     def set_named_target(self, name):
         if name in self._srdf_names:
             self._move_group_commander.set_named_target(name)
@@ -139,10 +146,41 @@ class SrRobotCommander(object):
             response = self._warehouse_name_get_srv(name, self._robot_name)
             js = response.state.joint_state
             self._move_group_commander.set_joint_value_target(js)
+
         else:
-            rospy.err("Unknown named state...")
+            rospy.logerr("Unknown named state '%s'..." % name)
             return False
         return True
+
+    def get_named_target_joint_values(self, name):
+        output = dict()
+
+        if (name in self._srdf_names):
+            output = self._move_group_commander.\
+                           _g.get_named_target_values(str(name))
+
+        elif (name in self._warehouse_names):
+            js = self._warehouse_name_get_srv(
+                name, self._robot_name).state.joint_state
+
+            for x, n in enumerate(js.name):
+                if n in self._move_group_commander._g.get_joints():
+                    output[n] = js.position[x]
+
+        return output
+
+    def get_current_pose(self):
+        joint_names = self._move_group_commander._g.get_active_joints()
+        joint_values = self._move_group_commander._g.get_current_joint_values()
+
+        return dict(zip(joint_names, joint_values))
+
+    def get_current_pose_bounded(self):
+        current = self._move_group_commander._g.get_current_state_bounded()
+        names = self._move_group_commander._g.get_active_joints()
+        output = {n: current[n] for n in names if n in current}
+
+        return output
 
     def move_to_named_target(self, name, wait=True):
         """
