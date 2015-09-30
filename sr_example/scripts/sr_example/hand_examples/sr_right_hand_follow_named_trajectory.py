@@ -18,21 +18,21 @@ hand_commander = SrHandCommander()
 
 trajectory = [
     {
-        'name':'open',
-        'interpolate_time':3.0
+        'name': 'open',
+        'interpolate_time': 3.0
     },
     {
-        'name':'pack',
-        'interpolate_time':3.0,
-        'pause_time':2
+        'name': 'pack',
+        'interpolate_time': 3.0,
+        'pause_time': 2
     },
     {
-        'name':'open',
-        'interpolate_time':3.0
+        'name': 'open',
+        'interpolate_time': 3.0
     },
     {
-        'name':'pack',
-        'interpolate_time':3.0
+        'name': 'pack',
+        'interpolate_time': 3.0
     }
 ]
 

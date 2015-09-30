@@ -168,7 +168,7 @@ class SrRobotCommander(object):
                     output[n] = js.position[x]
 
         else:
-            rospy.logerr("No target named %s"%name)
+            rospy.logerr("No target named %s" % name)
             return None
 
         return output
@@ -331,7 +331,6 @@ class SrRobotCommander(object):
         joint_trajectory = self.make_named_trajectory(trajectory)
         if joint_trajectory is not None:
             self.run_joint_trajectory(joint_trajectory)
-
 
     def _move_to_position_target(self, xyz, end_effector_link="", wait=True):
         """
