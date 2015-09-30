@@ -291,7 +291,7 @@ class SrRobotCommander(object):
                 joint_positions[n] if n in joint_positions else current[n]
                 for n in joint_names]
 
-            current = joint_postions
+            current = joint_positions
 
             time_from_start += wp['interpolate_time']
             trajectory_point.time_from_start = rospy.Duration.from_sec(time_from_start)
