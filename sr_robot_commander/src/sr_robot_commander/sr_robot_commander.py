@@ -291,6 +291,8 @@ class SrRobotCommander(object):
                 joint_positions[n] if n in joint_positions else current[n]
                 for n in joint_names]
 
+            current = joint_postions
+
             time_from_start += wp['interpolate_time']
             trajectory_point.time_from_start = rospy.Duration.from_sec(time_from_start)
             joint_trajectory.points.append(trajectory_point)
@@ -307,7 +309,7 @@ class SrRobotCommander(object):
     def run_named_trajectory_unsafe(self, trajectory, wait=False):
         """
         Moves robot through trajectory specified by named poses, either from
-        SRDF or from warehouse.
+        SRDF or from warehouse. Runs trajectory directly via contoller.
         @param trajectory - list of waypoints, each waypoint is a dict with
                             the following elements:
                             - name -> the name of the way point
@@ -321,7 +323,7 @@ class SrRobotCommander(object):
     def run_named_trajectory(self, trajectory):
         """
         Moves robot through trajectory specified by named poses, either from
-        SRDF or from warehouse.
+        SRDF or from warehouse. Runs trajectory via moveit.
         @param trajectory - list of waypoints, each waypoint is a dict with
                             the following elements:
                             - name -> the name of the way point
