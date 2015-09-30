@@ -36,9 +36,9 @@ trajectory = [
     }
 ]
 
+
 # Run trajectory via moveit
 hand_commander.run_named_trajectory(trajectory)
-rospy.sleep(1)
 
 # Run trajectory by sending directly to controllers - faster but no collision checking.
 hand_commander.run_named_trajectory_unsafe(trajectory,True)
