@@ -403,6 +403,8 @@ class SrRobotCommander(object):
         """
         Sets up an action client to communicate with the trajectory controller
         """
+        self._action_running = False
+
         self._client = SimpleActionClient(
             self._prefix + "trajectory_controller/follow_joint_trajectory",
             FollowJointTrajectoryAction
@@ -439,13 +441,25 @@ class SrRobotCommander(object):
         goal.trajectory.points = []
         goal.trajectory.points.append(point)
 
-        self._client.send_goal(goal)
+        self._call_action(goal)
 
         if not wait:
             return
 
         if not self._client.wait_for_result():
             rospy.loginfo("Trajectory not completed")
+
+    def action_is_running(self):
+        return self._action_running
+
+    def _action_done_cb(self, terminal_state, result):
+        rospy.logwarn("done cb called")
+        self._action_running = False
+
+    def _call_action(self, goal):
+        self._set_up_action_client()
+        self._action_running = True
+        self._client.send_goal(goal, self._action_done_cb)
 
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
         """
@@ -456,7 +470,7 @@ class SrRobotCommander(object):
         """
         goal = FollowJointTrajectoryGoal()
         goal.trajectory = joint_trajectory
-        self._client.send_goal(goal)
+        self._call_action(goal)
 
         if not wait:
             return
