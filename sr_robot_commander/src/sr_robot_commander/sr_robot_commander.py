@@ -31,7 +31,7 @@ from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, \
 from moveit_msgs.srv import ListRobotStatesInWarehouse as ListStates
 from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
 
-from trajectory_msgs.msg import JointTrajectoryPoint
+from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
 from math import radians
 
 from sr_utilities.hand_finder import HandFinder
@@ -167,6 +167,10 @@ class SrRobotCommander(object):
                 if n in self._move_group_commander._g.get_joints():
                     output[n] = js.position[x]
 
+        else:
+            rospy.logerr("No target named %s" % name)
+            return None
+
         return output
 
     def get_current_pose(self):
@@ -255,6 +259,80 @@ class SrRobotCommander(object):
         plan = RobotTrajectory()
         plan.joint_trajectory = joint_trajectory
         self._move_group_commander.execute(plan)
+
+    def make_named_trajectory(self, trajectory):
+        """
+        Makes joint value trajectory from specified by named poses (either from
+        SRDF or from warehouse)
+        @param trajectory - list of waypoints, each waypoint is a dict with
+                            the following elements:
+                            - name -> the name of the way point
+                            - interpolate_time -> time to move from last wp
+                            - pause_time -> time to wait at this wp
+        """
+        current = self.get_current_pose_bounded()
+        joint_trajectory = JointTrajectory()
+        joint_names = current.keys()
+        joint_trajectory.joint_names = joint_names
+        time_from_start = 0
+
+        first_point = JointTrajectoryPoint()
+        first_point.positions = current.values()
+        joint_trajectory.points.append(first_point)
+
+        for wp in trajectory:
+            joint_positions = self.get_named_target_joint_values(wp['name'])
+            if joint_positions is None:
+                rospy.logerr("Invalid point name - can't finish trajectory")
+                return None
+
+            trajectory_point = JointTrajectoryPoint()
+            trajectory_point.positions = [
+                joint_positions[n] if n in joint_positions else current[n]
+                for n in joint_names]
+
+            current = joint_positions
+
+            time_from_start += wp['interpolate_time']
+            trajectory_point.time_from_start = rospy.Duration.from_sec(time_from_start)
+            joint_trajectory.points.append(trajectory_point)
+
+            if 'pause_time' in wp:
+                extra = JointTrajectoryPoint()
+                extra.positions = trajectory_point.positions
+                time_from_start += wp['pause_time']
+                extra.time_from_start = rospy.Duration.from_sec(time_from_start)
+                joint_trajectory.points.append(extra)
+
+        return joint_trajectory
+
+    def run_named_trajectory_unsafe(self, trajectory, wait=False):
+        """
+        Moves robot through trajectory specified by named poses, either from
+        SRDF or from warehouse. Runs trajectory directly via contoller.
+        @param trajectory - list of waypoints, each waypoint is a dict with
+                            the following elements:
+                            - name -> the name of the way point
+                            - interpolate_time -> time to move from last wp
+                            - pause_time -> time to wait at this wp
+        """
+        joint_trajectory = self.make_named_trajectory(trajectory)
+        if joint_trajectory is not None:
+            self.run_joint_trajectory_unsafe(joint_trajectory, wait)
+
+    def run_named_trajectory(self, trajectory):
+        """
+        Moves robot through trajectory specified by named poses, either from
+        SRDF or from warehouse. Runs trajectory via moveit.
+        @param trajectory - list of waypoints, each waypoint is a dict with
+                            the following elements:
+                            - name -> the name of the way point
+                            - interpolate_time -> time to move from last wp
+                            - pause_time -> time to wait at this wp
+        """
+        joint_trajectory = self.make_named_trajectory(trajectory)
+        if joint_trajectory is not None:
+            self.run_joint_trajectory(joint_trajectory)
 
     def _move_to_position_target(self, xyz, end_effector_link="", wait=True):
         """
