@@ -5,12 +5,17 @@
 import rospy
 
 from sr_robot_commander.sr_hand_commander import SrHandCommander
-
+from sr_utilities.hand_finder import HandFinder
 rospy.init_node("named_traj_example", anonymous=True)
-rospy.sleep(1)  # Do not start at time zero
 
+hand_finder = HandFinder()
 
-hand_commander = SrHandCommander()
+hand_parameters = hand_finder.get_hand_parameters()
+hand_serial = hand_parameters.mapping.keys()[0]
+
+hand_commander = SrHandCommander(hand_parameters=hand_parameters,
+                                 hand_serial=hand_serial)
+
 
 # Define trajectory. Interpolate time (time to move to each point from previous posture)
 # must be specified. Pause time is optional. Names are either the default poses defined
