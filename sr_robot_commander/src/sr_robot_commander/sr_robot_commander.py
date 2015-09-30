@@ -297,7 +297,7 @@ class SrRobotCommander(object):
             trajectory_point.time_from_start = rospy.Duration.from_sec(time_from_start)
             joint_trajectory.points.append(trajectory_point)
 
-            if 'pause_time' in wp:
+            if 'pause_time' in wp and wp['pause_time'] > 0:
                 extra = JointTrajectoryPoint()
                 extra.positions = trajectory_point.positions
                 time_from_start += wp['pause_time']
