@@ -69,14 +69,11 @@
 
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
-    <include file="$(find sr_moveit_hand_config)/launch/$(arg hand_id)/moveit_planning_and_execution.launch">
+    <include file="$(find sr_moveit_hand_config)/launch/moveit_planning_and_execution.launch">
       <arg name="load_robot_description" value="false"/>
-      <arg name="hand_id" value="$(arg hand_id)"/>
       <arg name="gui" default="$(arg gui)"/>
     </include>
-    <include file="$(find sr_moveit_hand_config)/launch/$(arg hand_id)/default_warehouse_db.launch">
-    <arg name="hand_id" value="$(arg hand_id)"/>
-    </include>
+    <include file="$(find sr_moveit_hand_config)/launch/default_warehouse_db.launch"/>
   </group>
 
   <!-- Trajectory controller -->

@@ -6,7 +6,8 @@
      An automatically generated package with all the configuration and launch files for using the shadowhand_motor with the MoveIt Motion Planning Framework
   </description>
   <author email="assistant@moveit.ros.org">MoveIt Setup Assistant</author>
-  <maintainer email="assistant@moveit.ros.org">MoveIt Setup Assistant</maintainer>
+  <author email="gwalck@techfak.uni-bielefeld.de">Guillaume Walck</author>
+  <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
 
   <license>BSD</license>
 
@@ -14,6 +15,10 @@
   <url type="bugtracker">https://github.com/ros-planning/moveit_setup_assistant/issues</url>
   <url type="repository">https://github.com/ros-planning/moveit_setup_assistant</url>
 
+  <run_depend>srdfdom</run_depend>
+  <run_depend>urdfdom_py</run_depend>
+  <run_depend>python-yaml</run_depend>
+  <run_depend>rosparam</run_depend>
   <run_depend>moveit_ros_move_group</run_depend>
   <run_depend>moveit_planners_ompl</run_depend>
   <run_depend>moveit_ros_visualization</run_depend>
