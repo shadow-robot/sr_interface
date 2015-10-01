@@ -274,11 +274,8 @@ class SrRobotCommander(object):
         joint_trajectory = JointTrajectory()
         joint_names = current.keys()
         joint_trajectory.joint_names = joint_names
-        time_from_start = 0
 
-        first_point = JointTrajectoryPoint()
-        first_point.positions = current.values()
-        joint_trajectory.points.append(first_point)
+        time_from_start = 0.0
 
         for wp in trajectory:
             joint_positions = self.get_named_target_joint_values(wp['name'])
@@ -305,6 +302,24 @@ class SrRobotCommander(object):
                 joint_trajectory.points.append(extra)
 
         return joint_trajectory
+
+    def send_stop_trajectory_unsafe(self):
+        """
+        Sends a trajectory of all active joints at their current position.
+        This stops the robot.
+        """
+
+        current = self.get_current_pose_bounded()
+
+        trajectory_point = JointTrajectoryPoint()
+        trajectory_point.positions = current.values()
+        trajectory_point.time_from_start = rospy.Duration.from_sec(0.1)
+
+        trajectory = JointTrajectory()
+        trajectory.points.append(trajectory_point)
+        trajectory.joint_names = current.keys()
+
+        self.run_joint_trajectory_unsafe(trajectory)
 
     def run_named_trajectory_unsafe(self, trajectory, wait=False):
         """
@@ -403,6 +418,8 @@ class SrRobotCommander(object):
         """
         Sets up an action client to communicate with the trajectory controller
         """
+        self._action_running = False
+
         self._client = SimpleActionClient(
             self._prefix + "trajectory_controller/follow_joint_trajectory",
             FollowJointTrajectoryAction
@@ -439,13 +456,24 @@ class SrRobotCommander(object):
         goal.trajectory.points = []
         goal.trajectory.points.append(point)
 
-        self._client.send_goal(goal)
+        self._call_action(goal)
 
         if not wait:
             return
 
         if not self._client.wait_for_result():
             rospy.loginfo("Trajectory not completed")
+
+    def action_is_running(self):
+        return self._action_running
+
+    def _action_done_cb(self, terminal_state, result):
+        self._action_running = False
+
+    def _call_action(self, goal):
+        self._set_up_action_client()
+        self._action_running = True
+        self._client.send_goal(goal, self._action_done_cb)
 
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
         """
@@ -456,7 +484,7 @@ class SrRobotCommander(object):
         """
         goal = FollowJointTrajectoryGoal()
         goal.trajectory = joint_trajectory
-        self._client.send_goal(goal)
+        self._call_action(goal)
 
         if not wait:
             return
