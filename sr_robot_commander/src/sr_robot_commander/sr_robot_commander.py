@@ -321,7 +321,6 @@ class SrRobotCommander(object):
 
         self.run_joint_trajectory_unsafe(trajectory)
 
-
     def run_named_trajectory_unsafe(self, trajectory, wait=False):
         """
         Moves robot through trajectory specified by named poses, either from
