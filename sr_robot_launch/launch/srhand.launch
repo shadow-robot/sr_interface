@@ -48,6 +48,11 @@
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model"
           args="-urdf -param robot_description -model usrh -z 0.0 "
           respawn="false" output="screen"/>
+    <!-- Robot state publisher -->
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+      <param name="publish_frequency" type="double" value="50.0" />
+      <param name="tf_prefix" type="string" value="" />
+    </node>
     <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
   </group>
@@ -78,7 +83,7 @@
 
   <!-- Trajectory controller -->
   <group if="$(arg hand_ctrl)">
-    <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py">
+    <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
       <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
     </node>
   </group>

@@ -33,6 +33,7 @@
 """
 generate_moveit_config provides:
     generate_fake_controllers : generage a fake controllers config file
+    generate_real_controllers : generage a controllers config file
     generate_ompl_planning : generate ompl_planning config file
     generate_kinematics : generate kinematics config file
     generate_joint_limits : generate joint limits config file
@@ -123,6 +124,45 @@ def generate_fake_controllers(robot, output_path=None, ns_=None):
     # load on param server or output to file
     upload_output_params(output_str, output_path, ns_)
 
+def generate_real_controllers(robot, output_path=None, ns_=None):
+    """
+    Generate controller yaml and direct it to file
+    or load it to parameter server.
+        @param robot: Parsed SRDF
+        @type  robot: SRDF object
+        @param output_path: file_path to save the generated data in,
+        will load on parameter server if empty
+        @type  output_path: str
+        @param ns_: namespace
+        @type  ns_: str
+    """
+    output_str = ""
+    output_str += "controller_list:\n"
+    
+    prefix = find_prefix(robot)
+
+    # find full hand key name
+    sh_group = None
+    for group in robot.groups:
+        if group.name.endswith("_hand"):
+            sh_group = group
+            break
+
+    controller_name = "  - name: " + prefix + "trajectory_controller\n"
+    output_str += controller_name
+    output_str += "    action_ns: follow_joint_trajectory\n"
+    output_str += "    type: FollowJointTrajectory\n"
+    output_str += "    default: true\n"
+    output_str += "    joints:\n"
+    if len(group.joints) == 0:
+        output_str += "      []\n"
+    else:
+        for joint in group.joints:
+            if joint.name[-3:] != "tip":
+                output_str += "      - " + joint.name + "\n"
+    #print "output_str: ", output_str
+    # load on param server or output to file
+    upload_output_params(output_str, output_path, ns_)
 
 def generate_ompl_planning(robot,
                            template_path="ompl_planning_template.yaml",
@@ -244,12 +284,12 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
     finger_with_fixed_joint = [False, False, False, False, False]
     for joint in robot_urdf.joints:
         joint_name = joint.name[len(prefix):]
-        print joint_name
-        print joint.type
+        #print joint_name
+        #print joint.type
         for index, finger_prefix in enumerate(finger_prefixes): 
             if joint_name[0:2].upper() == finger_prefix and joint_name[-3:] != "tip" and joint.type == "fixed":
                 finger_with_fixed_joint[index] = True
-                print "found fixed joint:",joint_name
+                #print "found fixed joint:",joint_name
     print finger_with_fixed_joint
     
     is_fixed['first_finger'] = finger_with_fixed_joint [0]
@@ -351,6 +391,8 @@ if __name__ == '__main__':
         ROBOT = SRDF.from_xml_string(ARGS.file.read())
         generate_fake_controllers(ROBOT,
                                   output_path="fake_controllers.yaml")
+        generate_real_controllers(ROBOT,
+                                  output_path="controllers.yaml")
         generate_ompl_planning(ROBOT,
                                "ompl_planning_template.yaml",
                                output_path="ompl_planning.yaml")

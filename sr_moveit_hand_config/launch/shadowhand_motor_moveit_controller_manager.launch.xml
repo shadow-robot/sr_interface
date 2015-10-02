@@ -4,5 +4,5 @@
   <param name="moveit_controller_manager" value="$(arg moveit_controller_manager)"/>
   <!-- load controller_list -->
 
-  <rosparam file="$(find sr_moveit_hand_config)/config/controllers.yaml" command="load"/>
+  <node name="load_controllers" pkg="sr_moveit_hand_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="real_controllers --"/>
 </launch>

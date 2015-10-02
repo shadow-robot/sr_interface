@@ -43,7 +43,7 @@
 import sys
 import time
 import rospy
-from generate_moveit_config import generate_fake_controllers,\
+from generate_moveit_config import generate_fake_controllers, generate_real_controllers,\
     generate_ompl_planning, generate_kinematics, generate_joint_limits
 from srdfdom.srdf import SRDF
 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
         
         command = sys.argv[1]
         rospy.init_node('moveit_config_generator', anonymous=True)
-        if command in ['fake_controllers', 'ompl_planning',
+        if command in ['fake_controllers', 'real_controllers', 'ompl_planning',
                        'kinematics', 'joint_limits']:
             NS = rospy.get_namespace()
             # wait for parameters
@@ -72,6 +72,8 @@ if __name__ == '__main__':
             # generate the desired yaml and load it.
             if command == "fake_controllers":
                 generate_fake_controllers(robot, ns_=NS)
+            elif command == "real_controllers":
+                generate_real_controllers(robot, ns_=NS)
             elif command == "ompl_planning":
                 # get the template file
                 if len(sys.argv) > 2:

@@ -47,6 +47,7 @@ from xml.dom.minidom import parse
 from xacro import set_substitution_args_context
 from rosgraph.names import load_mappings
 
+
 if __name__ == '__main__':
 
     if len(sys.argv) > 1:
@@ -184,3 +185,4 @@ if __name__ == '__main__':
         srdf_xacro_file.close()
     else:
         print "No srdf.xacro file provided"
+
