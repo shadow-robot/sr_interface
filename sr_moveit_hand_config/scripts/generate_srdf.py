@@ -72,11 +72,11 @@ if __name__ == '__main__':
         for key in robot.joint_map:
             # any joint is supposed to have the same prefix and a joint name with 4 chars
             if not extracted_prefix:
-                prefix = key[0:-4]
+                prefix = key.split("_")[0] + "_"
                 rospy.loginfo("Found prefix:" + prefix)
                 extracted_prefix = True
-                if prefix is "lh":
-                    hand_name = "right_hand"
+                if prefix == "lh_":
+                    hand_name = "left_hand"
 
             if not ff and key.endswith("FFJ4"):
                 ff = True
@@ -137,15 +137,6 @@ if __name__ == '__main__':
             rospy.set_param(robot_description_param,
                             srdf_xacro_xml.toprettyxml(indent='  '))
 
-            OUTPUT_PATH = "/home/beatriz/workspace/shadow/src/sr_interface/sr_moveit_hand_config/config/generated_shadowhand.srdf"
-            FW = open(OUTPUT_PATH, "wb")
-            FW.write(srdf_xacro_xml.toprettyxml(indent='  '))
-            FW.close()
-
-            OUTPUT_PATH = "/home/beatriz/workspace/shadow/src/sr_interface/sr_moveit_hand_config/config/generated_shadowhand.urdf"
-            FW = open(OUTPUT_PATH, "wb")
-            FW.write(urdf_str)
-            FW.close()
         else:
             rospy.loginfo(" Writing SRDF to file ", OUTPUT_PATH)
             FW = open(OUTPUT_PATH, "wb")
