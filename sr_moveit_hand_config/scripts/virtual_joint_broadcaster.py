@@ -6,6 +6,7 @@ import rospy
 import tf
 from sr_utilities.local_urdf_parser_py import URDF
 
+
 def publish_world_to_base_transform():
     rospy.init_node('virtual_joint_broadcaster', anonymous=True)
 
