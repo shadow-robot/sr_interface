@@ -35,7 +35,7 @@
     <link name="${prefix}${link_prefix}${middle}" />
     <link name="${prefix}${link_prefix}${distal}" />
   </xacro:macro>
-  
+
   <xacro:macro name="thumbjoints" params="prefix" >
     <joint name="${prefix}THJ5" />
     <joint name="${prefix}THJ4" />
@@ -45,7 +45,7 @@
     <joint name="${prefix}THJ2" />
     <joint name="${prefix}THJ1" />
   </xacro:macro>
-  
+
   <xacro:macro name="thumblinks" params="prefix" >
     <link name="${prefix}thbase" />
     <link name="${prefix}thproximal" />
@@ -128,7 +128,6 @@
     <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}forearm" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}palm" reason="Never" />
 
-    
     <xacro:if value="${lf}">
       <!-- Little finger special case -->
       <disable_collisions link1="${prefix}lfmetacarpal" link2="${prefix}forearm" reason="Never" />
@@ -142,10 +141,8 @@
       <disable_collisions link1="${prefix}lfknuckle" link2="${prefix}lfmetacarpal" reason="Adjacent" />      
     </xacro:if> 
   </xacro:macro>  
-  
+
   <xacro:macro name="thumb_collisions" params="prefix" >  
-    
-    
     <disable_collisions link1="${prefix}forearm" link2="${prefix}thbase" reason="Never" />
     <disable_collisions link1="${prefix}forearm" link2="${prefix}th${distal}" reason="Never" />
     <disable_collisions link1="${prefix}forearm" link2="${prefix}thhub" reason="Never" />
@@ -172,7 +169,7 @@
     <disable_collisions link1="${prefix}thhub" link2="${prefix}thproximal" reason="Adjacent" />
     <disable_collisions link1="${prefix}thmiddle" link2="${prefix}thproximal" reason="Never" />
   </xacro:macro>  
-  
+
   <xacro:macro name="hand_collisions" params="prefix" >  
   	<xacro:unless value="$(arg is_lite)">
       <disable_collisions link1="${prefix}forearm" link2="${prefix}wrist" reason="Adjacent" />
@@ -180,7 +177,7 @@
     </xacro:unless>
     <disable_collisions link1="${prefix}forearm" link2="${prefix}palm" reason="Never" />
   </xacro:macro>    
-  
+
   <!-- finger to other finger with a finger in between -->
   <xacro:macro name="finger_farfinger_collisions" params="prefix link_prefix link_prefix2 lf" >
     <disable_collisions link1="${prefix}${link_prefix}${distal}" link2="${prefix}${link_prefix2}knuckle" reason="Never" />
@@ -197,7 +194,7 @@
       <disable_collisions link1="${prefix}${link_prefix}${middle}" link2="${prefix}lfmetacarpal" reason="Never" />
       <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}lfmetacarpal" reason="Never" />
     </xacro:if> 
-    
+
     <xacro:unless value="${lf}">
       <!-- Standard finger -->
       <disable_collisions link1="${prefix}${link_prefix}${distal}" link2="${prefix}${link_prefix2}proximal" reason="Never" />
@@ -207,7 +204,7 @@
       <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}${link_prefix2}proximal" reason="Never" />
     </xacro:unless> 
   </xacro:macro>
- 
+
   <!-- finger with two fingers in between (only ff-lf) --> 
   <xacro:macro name="first_little_collisions" params="prefix" >
     <disable_collisions link1="${prefix}ff${distal}" link2="${prefix}lfknuckle" reason="Never" />
@@ -244,7 +241,7 @@
     
     <disable_collisions link1="${prefix}${link_prefix}${middle}" link2="${prefix}${link_prefix2}knuckle" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}${link_prefix2}knuckle" reason="Never" />
-   
+
     <xacro:if value="${lf}">
       <!-- Little finger special case -->
       <disable_collisions link1="${prefix}${link_prefix}${distal}" link2="${prefix}lfmetacarpal" reason="Never" />
@@ -252,22 +249,17 @@
       <disable_collisions link1="${prefix}${link_prefix}${middle}" link2="${prefix}lfmetacarpal" reason="Never" />
       <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}lfmetacarpal" reason="Never" />
     </xacro:if> 
-  
   </xacro:macro>
   
    <!-- finger to thumb, far is 1 if at least one finger is in between -->
    <xacro:macro name="finger_thumb_collisions" params="prefix link_prefix far lf" >
-    
-     
     <disable_collisions link1="${prefix}${link_prefix}${distal}" link2="${prefix}thbase" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}${distal}" link2="${prefix}thhub" reason="Never" />
-  
     <disable_collisions link1="${prefix}${link_prefix}knuckle" link2="${prefix}thbase" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}knuckle" link2="${prefix}${thdistal}" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}knuckle" link2="${prefix}thhub" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}knuckle" link2="${prefix}thmiddle" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}knuckle" link2="${prefix}thproximal" reason="Never" />
-    
     <disable_collisions link1="${prefix}${link_prefix}${middle}" link2="${prefix}thbase" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}${middle}" link2="${prefix}thhub" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}${middle}" link2="${prefix}thproximal" reason="Never" /> 

@@ -38,6 +38,7 @@ generate_moveit_config provides:
     generate_kinematics : generate kinematics config file
     generate_joint_limits : generate joint limits config file
 """
+
 import rospy
 import argparse
 import rosparam
@@ -58,7 +59,6 @@ def yaml_reindent(in_str, numspaces):
     s_indent = "\n".join((numspaces * " ") + i for i in in_str.splitlines())
     return s_indent
 
-
 def find_prefix(robot):
     """
     Find the prefix using the always available shadow_hand group name
@@ -70,9 +70,7 @@ def find_prefix(robot):
     for key in robot.group_map:
         if key.endswith("fingers"):
             prefix = key[0:key.find("fingers")]
-    #print "found prefix:", prefix
     return prefix
-
 
 def upload_output_params(upload_str, output_path=None, ns_=None):
     """
@@ -94,7 +92,6 @@ def upload_output_params(upload_str, output_path=None, ns_=None):
         file_writer = open(output_path, "wb")
         file_writer.write(upload_str)
         file_writer.close()
-
 
 def generate_fake_controllers(robot, output_path=None, ns_=None):
     """
@@ -138,7 +135,6 @@ def generate_real_controllers(robot, output_path=None, ns_=None):
     """
     output_str = ""
     output_str += "controller_list:\n"
-    
     prefix = find_prefix(robot)
 
     # find full hand key name
@@ -160,7 +156,6 @@ def generate_real_controllers(robot, output_path=None, ns_=None):
         for joint in group.joints:
             if joint.name[-3:] != "tip":
                 output_str += "      - " + joint.name + "\n"
-    #print "output_str: ", output_str
     # load on param server or output to file
     upload_output_params(output_str, output_path, ns_)
 
@@ -223,7 +218,6 @@ def generate_ompl_planning(robot,
     # load on param server or output to file
     upload_output_params(output_str, output_path, ns_)
 
-
 def generate_kinematics(robot, template_path="kinematics_template.yaml",
                         output_path=None, ns_=None):
     """
@@ -245,7 +239,7 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
     
     while not rospy.has_param('/robot_description'):
         rospy.sleep(0.5)
-        print "waiting for robot_description"
+        rospy.loginfo("waiting for robot_description")
     urdf_str = rospy.get_param('/robot_description')
     robot_urdf = URDF.from_xml_string(urdf_str)
     
@@ -280,17 +274,13 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
               "little_finger": False,
               "thumb": False}
 
-    #Find in any finger has a fix joint appart from the tip as it needs to use a different kinematics
+    #Find in any finger has a fix joint apart from the tip as it needs to use a different kinematics
     finger_with_fixed_joint = [False, False, False, False, False]
     for joint in robot_urdf.joints:
         joint_name = joint.name[len(prefix):]
-        #print joint_name
-        #print joint.type
         for index, finger_prefix in enumerate(finger_prefixes): 
             if joint_name[0:2].upper() == finger_prefix and joint_name[-3:] != "tip" and joint.type == "fixed":
                 finger_with_fixed_joint[index] = True
-                #print "found fixed joint:",joint_name
-    print finger_with_fixed_joint
     
     is_fixed['first_finger'] = finger_with_fixed_joint [0]
     is_fixed['middle_finger'] = finger_with_fixed_joint [1]
@@ -303,16 +293,13 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
         kinematics_config = None
         # strip prefix if any
         group_name = group.name[len(prefix):]
-        # check for biotac link for this group
+        # check for fixed joint for this group
         if is_fixed.get(group_name):
             if group_name in yamldockdl:
                 kinematics_config = yamldockdl[group_name]
         else:
             if group_name in yamldoc:
                 kinematics_config = yamldoc[group_name]
-
-        #if is_light == True and group_name == "thumb" and group_name in yamldockdl:
-        #    kinematics_config = yamldockdl[group_name]
 
         if kinematics_config is not None:
             if prefix:
@@ -328,10 +315,8 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
                                         default_flow_style=False,
                                         allow_unicode=True), 2)
             output_str += "\n"
-
     # load on param server or output to file
     upload_output_params(output_str, output_path, ns_)
-
 
 def generate_joint_limits(robot,
                           template_path="joint_limits_template.yaml",
@@ -363,7 +348,6 @@ def generate_joint_limits(robot,
         # for each joint in full hand group
         for joint in robot.group_map[group_name].joints:
             joint_name = joint.name[-4:]
-            #print "testing joint name ",joint_name," out of ",joint.name
             if joint_name in yamldoc["joint_limits"]:
                 joint_limits_config = yamldoc["joint_limits"][joint_name]
                 output_str += "  " + joint.name + ":\n"
@@ -403,4 +387,4 @@ if __name__ == '__main__':
                               "joint_limits_template.yaml",
                               output_path="joint_limits.yaml")
     else:
-        print "No file SRDF provided"
+        rospy.logerr("No file SRDF provided")

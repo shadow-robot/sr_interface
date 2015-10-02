@@ -7,68 +7,34 @@
   <xacro:arg name="rf" default="1"/>
   <xacro:arg name="lf" default="1"/>
   <xacro:arg name="th" default="1"/>
-  <xacro:arg name="ff_bio" default="0"/>
-  <xacro:arg name="mf_bio" default="0"/>
-  <xacro:arg name="rf_bio" default="0"/>
-  <xacro:arg name="lf_bio" default="0"/>
-  <xacro:arg name="th_bio" default="0"/>     
   <xacro:arg name="is_lite" default="0"/>
   <xacro:arg name="robot_name" default="shadowhand_motor"/> 
   <xacro:arg name="hand_name" default="right_hand"/> 
 
   <group name="$(arg hand_name)">
     <xacro:if value="$(arg th)">
-      <xacro:if value="$(arg th_bio)">
-        <xacro:property name="distal" value="biotac"/>
-      </xacro:if>
-      <xacro:unless value="$(arg th_bio)">
-        <xacro:property name="distal" value="distal"/>
-      </xacro:unless>
+      <xacro:property name="distal" value="distal"/>
       <xacro:thumbjoints prefix="$(arg prefix)"/>
     </xacro:if>
     <xacro:if value="$(arg ff)">
-      <xacro:if value="$(arg ff_bio)">
-        <xacro:property name="" value="biotac"/>
-        <xacro:property name="middle" value="adapter"/>
-      </xacro:if>
-      <xacro:unless value="$(arg ff_bio)">  
-        <xacro:property name="distal" value="distal"/>
-        <xacro:property name="middle" value="middle"/>
-      </xacro:unless>
+      <xacro:property name="distal" value="distal"/>
+      <xacro:property name="middle" value="middle"/>
       <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="FF" lf="0"/>
     </xacro:if>
     <xacro:if value="$(arg mf)">
-      <xacro:if value="$(arg mf_bio)">
-        <xacro:property name="distal" value="biotac"/>
-        <xacro:property name="middle" value="adapter"/>
-      </xacro:if>
-      <xacro:unless value="$(arg mf_bio)">  
-        <xacro:property name="distal" value="distal"/>
-        <xacro:property name="middle" value="middle"/>
-      </xacro:unless>
+      <xacro:property name="distal" value="distal"/>
+      <xacro:property name="middle" value="middle"/>
       <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="MF" lf="0"/>
     </xacro:if>
     <xacro:if value="$(arg rf)">
-      <xacro:if value="$(arg rf_bio)">
-        <xacro:property name="distal" value="biotac"/>
-        <xacro:property name="middle" value="adapter"/>
-      </xacro:if>
-      <xacro:unless value="$(arg rf_bio)">  
-        <xacro:property name="distal" value="distal"/>
-        <xacro:property name="middle" value="middle"/>
-      </xacro:unless>
+      <xacro:property name="distal" value="distal"/>
+      <xacro:property name="middle" value="middle"/>
       <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="RF" lf="0"/>
     </xacro:if>
     <xacro:unless value="$(arg is_lite)">
       <xacro:if value="$(arg lf)">
-        <xacro:if value="$(arg lf_bio)">
-          <xacro:property name="distal" value="biotac"/>
-          <xacro:property name="middle" value="adapter"/>
-        </xacro:if>
-        <xacro:unless value="$(arg lf_bio)">  
-          <xacro:property name="distal" value="distal"/>
-          <xacro:property name="middle" value="middle"/>
-        </xacro:unless>
+        <xacro:property name="distal" value="distal"/>
+        <xacro:property name="middle" value="middle"/>
         <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="LF" lf="1"/>
       </xacro:if>
       <joint name="$(arg prefix)WRJ2" />
@@ -77,9 +43,9 @@
     </xacro:unless>
     <group name="$(arg prefix)fingers" />
   </group>
- 
+
   <!-- single finger groups -->  
-  <xacro:if value="$(arg ff)">  
+  <xacro:if value="$(arg ff)">
     <group name="$(arg prefix)first_finger">
       <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="FF" lf="0"/>
       <chain base_link="$(arg prefix)palm" tip_link="$(arg prefix)fftip" />
@@ -111,7 +77,7 @@
       <chain base_link="$(arg prefix)palm" tip_link="$(arg prefix)thtip" />
     </group>
   </xacro:if>
-  
+
   <!-- all fingerstips --> 
   <group name="$(arg prefix)fingertips">
     <xacro:if value="$(arg ff)">
@@ -130,8 +96,8 @@
       <link name="$(arg prefix)thtip" />
     </xacro:if>
   </group>
-  
-  <!-- all fingers group -->     
+
+  <!-- all fingers group -->
   <group name="$(arg prefix)fingers">
    <xacro:if value="$(arg th)">
       <xacro:thumbjoints prefix="$(arg prefix)" />
@@ -154,9 +120,9 @@
         <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="LF" lf="1"/>
         <group name="$(arg prefix)little_finger" />
       </xacro:if>
-    </xacro:unless>      
+    </xacro:unless>
   </group>
-  
+
    <!-- pairs with thumb for groups -->
   <xacro:if value="$(arg th)">
     <xacro:if value="$(arg ff)">
@@ -184,11 +150,11 @@
           <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="LF" lf="1"/>
         </group>
       </xacro:if>
-    </xacro:unless>  
-  </xacro:if>   
-    
+    </xacro:unless>
+  </xacro:if>
+
   <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
-  
+
   <!-- hand state --> 
   <group_state name="hand_zero" group="$(arg hand_name)">
     <xacro:if value="$(arg th)">
@@ -211,8 +177,8 @@
       <joint name="$(arg prefix)WRJ2" value="0" />
     </xacro:unless>
   </group_state>
-  
-  <!-- single fingers state --> 
+
+  <!-- single fingers state -->
   <xacro:if value="$(arg ff)">
     <group_state name="first_finger_open" group="$(arg prefix)first_finger">
         <xacro:finger_state_open  prefix="$(arg prefix)" joint_prefix="FF" lf="0" />
@@ -261,7 +227,7 @@
       </xacro:if>
     </xacro:unless>
   </group_state>
- 
+
   <!-- pairs with thumb for state -->
   <xacro:if value="$(arg th)">
     <xacro:if value="$(arg ff)">
@@ -281,7 +247,7 @@
   </xacro:if>
 
   <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    
+
   <!-- single finger end-effectors --> 
   <xacro:if value="$(arg ff)">
     <xacro:finger_ee prefix="$(arg prefix)" link_prefix="ff" finger_name="first_finger" hand_name="$(arg hand_name)"/>
@@ -300,189 +266,93 @@
   <xacro:if value="$(arg th)">
     <xacro:finger_ee prefix="$(arg prefix)" link_prefix="th" finger_name="thumb" hand_name="$(arg hand_name)"/>
   </xacro:if>
-  
+
   <xacro:unless value="$(arg is_lite)">
-    <end_effector name="$(arg hand_name)_ee" parent_link="$(arg prefix)wrist" group="$(arg hand_name)" />
+    <end_effector name="$(arg hand_name)_ee" parent_link="$(arg prefix)palm" group="$(arg hand_name)"/>
   </xacro:unless>  
-    
-    
+
   <xacro:virtual_joints prefix="$(arg prefix)" />
-    
 
   <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
 
-  <xacro:hand_collisions prefix="$(arg prefix)" /> 
+  <xacro:hand_collisions prefix="$(arg prefix)" />
   <!-- single fingers collision --> 
   <xacro:if value="$(arg ff)">
-    <xacro:if value="$(arg ff_bio)">
-      <xacro:property name="distal" value="biotac"/>
-      <xacro:property name="middle" value="adapter"/>
-    </xacro:if>
-    <xacro:unless value="$(arg ff_bio)">
-      <xacro:property name="distal" value="distal"/>
-      <xacro:property name="middle" value="middle"/>
-    </xacro:unless>
+    <xacro:property name="distal" value="distal"/>
+    <xacro:property name="middle" value="middle"/>
     <xacro:finger_collisions prefix="$(arg prefix)" link_prefix="ff" lf="0" />
   </xacro:if>
   <xacro:if value="$(arg mf)">
-    <xacro:if value="$(arg mf_bio)">
-      <xacro:property name="distal" value="biotac"/>
-      <xacro:property name="middle" value="adapter"/>
-    </xacro:if>
-    <xacro:unless value="$(arg mf_bio)">
-      <xacro:property name="distal" value="distal"/>
-      <xacro:property name="middle" value="middle"/>
-    </xacro:unless>
+    <xacro:property name="distal" value="distal"/>
+    <xacro:property name="middle" value="middle"/>
     <xacro:finger_collisions prefix="$(arg prefix)" link_prefix="mf" lf="0" />
   </xacro:if>
   <xacro:if value="$(arg rf)">
-    <xacro:if value="$(arg rf_bio)">
-      <xacro:property name="distal" value="biotac"/>
-      <xacro:property name="middle" value="adapter"/>
-    </xacro:if>
-    <xacro:unless value="$(arg rf_bio)">
-      <xacro:property name="distal" value="distal"/>
-      <xacro:property name="middle" value="middle"/>
-    </xacro:unless>
+    <xacro:property name="distal" value="distal"/>
+    <xacro:property name="middle" value="middle"/>
     <xacro:finger_collisions prefix="$(arg prefix)" link_prefix="rf" lf="0" />
   </xacro:if>
   <xacro:unless value="$(arg is_lite)">
     <xacro:if value="$(arg lf)">
-      <xacro:if value="$(arg lf_bio)">
-        <xacro:property name="distal" value="biotac"/>
-        <xacro:property name="middle" value="adapter"/>
-      </xacro:if>
-      <xacro:unless value="$(arg lf_bio)">
-        <xacro:property name="distal" value="distal"/>
-        <xacro:property name="middle" value="middle"/>
-      </xacro:unless>
-       <xacro:finger_collisions prefix="$(arg prefix)" link_prefix="lf" lf="1" />
+      <xacro:property name="distal" value="distal"/>
+      <xacro:property name="middle" value="middle"/>
+      <xacro:finger_collisions prefix="$(arg prefix)" link_prefix="lf" lf="1" />
     </xacro:if>
   </xacro:unless>  
   <xacro:if value="$(arg th)">
-    <xacro:if value="$(arg th_bio)">
-      <xacro:property name="distal" value="biotac"/>
-    </xacro:if>
-    <xacro:unless value="$(arg th_bio)">
-      <xacro:property name="distal" value="distal"/>
-    </xacro:unless>
+    <xacro:property name="distal" value="distal"/>
     <xacro:thumb_collisions prefix="$(arg prefix)" /> 
   </xacro:if>
 
   <!-- pairs with thumb for collision-->
   <xacro:if value="$(arg th)">
-    <xacro:if value="$(arg th_bio)">
-      <xacro:property name="thdistal" value="thbiotac"/>
-    </xacro:if>
-    <xacro:unless value="$(arg th_bio)">  
-      <xacro:property name="thdistal" value="thdistal"/>
-    </xacro:unless>
+    <xacro:property name="thdistal" value="thdistal"/>
     <xacro:if value="$(arg ff)">
-      <xacro:if value="$(arg ff_bio)">
-        <xacro:property name="distal" value="biotac"/>
-        <xacro:property name="middle" value="adapter"/>
-      </xacro:if>
-      <xacro:unless value="$(arg ff_bio)">  
-        <xacro:property name="distal" value="distal"/>
-        <xacro:property name="middle" value="middle"/>
-      </xacro:unless>
+      <xacro:property name="distal" value="distal"/>
+      <xacro:property name="middle" value="middle"/>
       <xacro:finger_thumb_collisions  prefix="$(arg prefix)" link_prefix="ff" far="0" lf="0" />
     </xacro:if>
     <xacro:if value="$(arg mf)">
-      <xacro:if value="$(arg mf_bio)">
-        <xacro:property name="distal" value="biotac"/>
-        <xacro:property name="middle" value="adapter"/>
-      </xacro:if>
-      <xacro:unless value="$(arg mf_bio)">  
-        <xacro:property name="distal" value="distal"/>
-        <xacro:property name="middle" value="middle"/>
-      </xacro:unless>
+      <xacro:property name="distal" value="distal"/>
+      <xacro:property name="middle" value="middle"/>
       <xacro:finger_thumb_collisions  prefix="$(arg prefix)" link_prefix="mf" far="1" lf="0" />
     </xacro:if>
     <xacro:if value="$(arg rf)">
-      <xacro:if value="$(arg rf_bio)">
-        <xacro:property name="distal" value="biotac"/>
-        <xacro:property name="middle" value="adapter"/>
-      </xacro:if>
-      <xacro:unless value="$(arg rf_bio)">  
-        <xacro:property name="distal" value="distal"/>
-        <xacro:property name="middle" value="middle"/>
-      </xacro:unless>
+      <xacro:property name="distal" value="distal"/>
+      <xacro:property name="middle" value="middle"/>
       <xacro:finger_thumb_collisions  prefix="$(arg prefix)" link_prefix="rf" far="1" lf="0" />
     </xacro:if>
     <xacro:unless value="$(arg is_lite)">
       <xacro:if value="$(arg lf)">
-          <xacro:if value="$(arg lf_bio)">
-            <xacro:property name="distal" value="biotac"/>
-            <xacro:property name="middle" value="adapter"/>
-          </xacro:if>
-          <xacro:unless value="$(arg lf_bio)">  
-            <xacro:property name="distal" value="distal"/>
-            <xacro:property name="middle" value="middle"/>
-          </xacro:unless>
-          <xacro:finger_thumb_collisions  prefix="$(arg prefix)" link_prefix="lf" far="1" lf="1" />
+       <xacro:property name="distal" value="distal"/>
+       <xacro:property name="middle" value="middle"/>
+       <xacro:finger_thumb_collisions  prefix="$(arg prefix)" link_prefix="lf" far="1" lf="1" />
       </xacro:if>
     </xacro:unless>
   </xacro:if>
-  
+
   <!-- pairs with other fingers for collision-->
   <xacro:if value="$(arg ff)">
     <xacro:if value="$(arg mf)">
-      <xacro:if value="$(arg ff_bio)">
-        <xacro:property name="distal" value="biotac"/>
-        <xacro:property name="middle" value="adapter"/>
-      </xacro:if>
-      <xacro:unless value="$(arg ff_bio)">  
-        <xacro:property name="distal" value="distal"/>
-        <xacro:property name="middle" value="middle"/>
-      </xacro:unless>
-      <xacro:if value="$(arg mf_bio)">
-        <xacro:property name="distal2" value="biotac"/>
-        <xacro:property name="middle2" value="adapter"/>
-        </xacro:if>
-      <xacro:unless value="$(arg mf_bio)">  
-        <xacro:property name="distal2" value="distal"/>
-        <xacro:property name="middle2" value="middle"/>
-      </xacro:unless>
+      <xacro:property name="distal" value="distal"/>
+      <xacro:property name="middle" value="middle"/>
+      <xacro:property name="distal2" value="distal"/>
+      <xacro:property name="middle2" value="middle"/>
       <xacro:finger_closefinger_collisions prefix="$(arg prefix)" link_prefix="ff" link_prefix2="mf"  lf="0"/>
     </xacro:if>
     <xacro:if value="$(arg rf)">
-      <xacro:if value="$(arg ff_bio)">
-        <xacro:property name="distal" value="biotac"/>
-        <xacro:property name="middle" value="adapter"/>
-      </xacro:if>
-      <xacro:unless value="$(arg ff_bio)">  
-        <xacro:property name="distal" value="distal"/>
-        <xacro:property name="middle" value="middle"/>
-      </xacro:unless>
-      <xacro:if value="$(arg rf_bio)">
-        <xacro:property name="distal2" value="biotac"/>
-        <xacro:property name="middle2" value="adapter"/>
-        </xacro:if>
-      <xacro:unless value="$(arg rf_bio)">  
-        <xacro:property name="distal2" value="distal"/>
-        <xacro:property name="middle2" value="middle"/>
-      </xacro:unless>
+      <xacro:property name="distal" value="distal"/>
+      <xacro:property name="middle" value="middle"/>
+      <xacro:property name="distal2" value="distal"/>
+      <xacro:property name="middle2" value="middle"/>
       <xacro:finger_farfinger_collisions prefix="$(arg prefix)" link_prefix="ff" link_prefix2="rf"  lf="0" />
     </xacro:if>   
     <xacro:unless value="$(arg is_lite)">
       <xacro:if value="$(arg lf)">
-        <xacro:if value="$(arg ff_bio)">
-          <xacro:property name="distal" value="biotac"/>
-          <xacro:property name="middle" value="adapter"/>
-        </xacro:if>
-        <xacro:unless value="$(arg ff_bio)">  
-          <xacro:property name="distal" value="distal"/>
-          <xacro:property name="middle" value="middle"/>
-        </xacro:unless>
-        <xacro:if value="$(arg lf_bio)">
-          <xacro:property name="distal2" value="biotac"/>
-          <xacro:property name="middle2" value="adapter"/>
-          </xacro:if>
-        <xacro:unless value="$(arg lf_bio)">  
-          <xacro:property name="distal2" value="distal"/>
-          <xacro:property name="middle2" value="middle"/>
-        </xacro:unless>
+        <xacro:property name="distal" value="distal"/>
+        <xacro:property name="middle" value="middle"/>
+        <xacro:property name="distal2" value="distal"/>
+        <xacro:property name="middle2" value="middle"/>
         <xacro:first_little_collisions prefix="$(arg prefix)" />
       </xacro:if> 
     </xacro:unless>
@@ -490,42 +360,18 @@
 
   <xacro:if value="$(arg mf)">
     <xacro:if value="$(arg rf)">
-      <xacro:if value="$(arg mf_bio)">
-        <xacro:property name="distal" value="biotac"/>
-        <xacro:property name="middle" value="adapter"/>
-      </xacro:if>
-      <xacro:unless value="$(arg mf_bio)">  
-        <xacro:property name="distal" value="distal"/>
-        <xacro:property name="middle" value="middle"/>
-      </xacro:unless>
-      <xacro:if value="$(arg rf_bio)">
-        <xacro:property name="distal2" value="biotac"/>
-        <xacro:property name="middle2" value="adapter"/>
-        </xacro:if>
-      <xacro:unless value="$(arg rf_bio)">  
-        <xacro:property name="distal2" value="distal"/>
-        <xacro:property name="middle2" value="middle"/>
-      </xacro:unless>
+      <xacro:property name="distal" value="distal"/>
+      <xacro:property name="middle" value="middle"/>
+      <xacro:property name="distal2" value="distal"/>
+      <xacro:property name="middle2" value="middle"/>
       <xacro:finger_closefinger_collisions prefix="$(arg prefix)" link_prefix="mf" link_prefix2="rf"  lf="0" />
     </xacro:if>
     <xacro:unless value="$(arg is_lite)">
       <xacro:if value="$(arg lf)">
-        <xacro:if value="$(arg mf_bio)">
-          <xacro:property name="distal" value="biotac"/>
-          <xacro:property name="middle" value="adapter"/>
-        </xacro:if>
-        <xacro:unless value="$(arg mf_bio)">  
-          <xacro:property name="distal" value="distal"/>
-          <xacro:property name="middle" value="middle"/>
-        </xacro:unless>
-        <xacro:if value="$(arg lf_bio)">
-          <xacro:property name="distal2" value="biotac"/>
-          <xacro:property name="middle2" value="adapter"/>
-          </xacro:if>
-        <xacro:unless value="$(arg lf_bio)">  
-          <xacro:property name="distal2" value="distal"/>
-          <xacro:property name="middle2" value="middle"/>
-        </xacro:unless>
+        <xacro:property name="distal" value="distal"/>
+        <xacro:property name="middle" value="middle"/>
+        <xacro:property name="distal2" value="distal"/>
+        <xacro:property name="middle2" value="middle"/>
         <xacro:finger_farfinger_collisions prefix="$(arg prefix)" link_prefix="mf" link_prefix2="lf"  lf="1" />
       </xacro:if>   
     </xacro:unless> 
@@ -534,22 +380,10 @@
   <xacro:if value="$(arg rf)">
     <xacro:unless value="$(arg is_lite)">
       <xacro:if value="$(arg lf)">
-        <xacro:if value="$(arg rf_bio)">
-          <xacro:property name="distal" value="biotac"/>
-          <xacro:property name="middle" value="adapter"/>
-        </xacro:if>
-        <xacro:unless value="$(arg rf_bio)">  
-          <xacro:property name="distal" value="distal"/>
-          <xacro:property name="middle" value="middle"/>
-        </xacro:unless>
-        <xacro:if value="$(arg lf_bio)">
-          <xacro:property name="distal2" value="biotac"/>
-          <xacro:property name="middle2" value="adapter"/>
-          </xacro:if>
-        <xacro:unless value="$(arg lf_bio)">  
-          <xacro:property name="distal2" value="distal"/>
-          <xacro:property name="middle2" value="middle"/>
-        </xacro:unless>
+        <xacro:property name="distal" value="distal"/>
+        <xacro:property name="middle" value="middle"/>
+        <xacro:property name="distal2" value="distal"/>
+        <xacro:property name="middle2" value="middle"/>
         <xacro:finger_closefinger_collisions prefix="$(arg prefix)" link_prefix="rf" link_prefix2="lf"  lf="1" />
       </xacro:if>
     </xacro:unless>
