@@ -39,14 +39,14 @@
 
 import sys
 import os
+from xml.dom.minidom import parse
 
-from sr_utilities.local_urdf_parser_py import URDF
 import xacro
 import rospy
-from xml.dom.minidom import parse
 from xacro import set_substitution_args_context
 from rosgraph.names import load_mappings
 
+from sr_utilities.local_urdf_parser_py import URDF
 
 if __name__ == '__main__':
 
@@ -57,18 +57,18 @@ if __name__ == '__main__':
 
         while not rospy.has_param('robot_description'):
             rospy.sleep(0.5)
-            rospy.loginfo( "waiting for robot_description")
+            rospy.loginfo("waiting for robot_description")
 
         # load the urdf from the parameter server
         urdf_str = rospy.get_param('robot_description')
         robot = URDF.from_xml_string(urdf_str)
-        
+
         extracted_prefix = False
         prefix = ""
         ff = mf = rf = lf = th = False
         is_lite = True
         hand_name = "right_hand"
-        
+
         for key in robot.joint_map:
             # any joint is supposed to have the same prefix and a joint name with 4 chars
             if not extracted_prefix:
@@ -77,7 +77,7 @@ if __name__ == '__main__':
                 extracted_prefix = True
                 if prefix is "lh":
                     hand_name = "right_hand"
-                        
+
             if not ff and key.endswith("FFJ4"):
                 ff = True
             if not mf and key.endswith("MFJ4"):
@@ -90,22 +90,22 @@ if __name__ == '__main__':
                 th = True
             if is_lite and key.endswith("WRJ2"):
                 is_lite = False
-        
+
         rospy.logdebug("Found fingers (ff mf rf lf th)" + str(ff) + str(mf) + str(rf) + str(lf) + str(th))
         rospy.logdebug("is_lite: " + str(is_lite))
         rospy.logdebug("Hand name: " + str(hand_name))
 
         set_substitution_args_context(
             load_mappings(['prefix:=' + str(prefix),
-                          'robot_name:='+ robot.name,
-                          'ff:=' + str(int(ff)),
-                          'mf:=' + str(int(mf)),
-                          'rf:=' + str(int(rf)),
-                          'lf:=' + str(int(lf)),
-                          'th:=' + str(int(th)),
-                          'is_lite:=' + str(int(is_lite)),
-                          'hand_name:=' + str(hand_name)
-                          ]))
+                           'robot_name:=' + robot.name,
+                           'ff:=' + str(int(ff)),
+                           'mf:=' + str(int(mf)),
+                           'rf:=' + str(int(rf)),
+                           'lf:=' + str(int(lf)),
+                           'th:=' + str(int(th)),
+                           'is_lite:=' + str(int(is_lite)),
+                           'hand_name:=' + str(hand_name)
+                           ]))
 
         # the prefix version of the srdf_xacro must be loaded
         srdf_xacro_filename = srdf_xacro_filename.replace(".srdf.xacro", "_prefix.srdf.xacro")
@@ -124,24 +124,24 @@ if __name__ == '__main__':
             OUTPUT_PATH = sys.argv[2]
             # reject ROS internal parameters and detect termination
             if (OUTPUT_PATH.startswith("_") or
-               OUTPUT_PATH.startswith("--")):
+                    OUTPUT_PATH.startswith("--")):
                 OUTPUT_PATH = None
         else:
             OUTPUT_PATH = None
 
         # Upload or output the input string on the correct param namespace or file
         if OUTPUT_PATH is None:
-            rospy.loginfo( " Loading SRDF on parameter server")
+            rospy.loginfo(" Loading SRDF on parameter server")
             robot_description_param = rospy.resolve_name(
                 'robot_description') + "_semantic"
             rospy.set_param(robot_description_param,
                             srdf_xacro_xml.toprettyxml(indent='  '))
-            
+
             OUTPUT_PATH = "/home/beatriz/workspace/shadow/src/sr_interface/sr_moveit_hand_config/config/generated_shadowhand.srdf"
             FW = open(OUTPUT_PATH, "wb")
             FW.write(srdf_xacro_xml.toprettyxml(indent='  '))
             FW.close()
-            
+
             OUTPUT_PATH = "/home/beatriz/workspace/shadow/src/sr_interface/sr_moveit_hand_config/config/generated_shadowhand.urdf"
             FW = open(OUTPUT_PATH, "wb")
             FW.write(urdf_str)
@@ -154,4 +154,4 @@ if __name__ == '__main__':
 
         srdf_xacro_file.close()
     else:
-        rospy.logerr( "No srdf.xacro file provided")
+        rospy.logerr("No srdf.xacro file provided")

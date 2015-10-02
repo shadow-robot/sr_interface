@@ -42,17 +42,19 @@
 
 import sys
 import time
+
 import rospy
-from generate_moveit_config import generate_fake_controllers, generate_real_controllers,\
-    generate_ompl_planning, generate_kinematics, generate_joint_limits
+
 from srdfdom.srdf import SRDF
 
+from generate_moveit_config import generate_fake_controllers, generate_real_controllers, \
+    generate_ompl_planning, generate_kinematics, generate_joint_limits
 
 if __name__ == '__main__':
 
     # detect the command to be executed
     if len(sys.argv) > 1:
-        
+
         command = sys.argv[1]
         rospy.init_node('moveit_config_generator', anonymous=True)
         if command in ['fake_controllers', 'real_controllers', 'ompl_planning', 'kinematics', 'joint_limits']:
