@@ -14,14 +14,15 @@ def publish_world_to_base_transform():
     robot_root = robot.get_root()
 
     if robot_root is not None:
-        rate = rospy.Rate(10) # 10hz
+        rate = rospy.Rate(10)
         while not rospy.is_shutdown():
             br = tf.TransformBroadcaster()
-            br.sendTransform((0.0, 0.0, 0.0), (0.0, 0.0, 0.0, 1.0), rospy.Time.now(),  robot_root, "shadow_world_frame")
+            br.sendTransform((0.0, 0.0, 0.0), (0.0, 0.0, 0.0, 1.0),
+                             rospy.Time.now(),  robot_root, "shadow_world_frame")
             rate.sleep()
-        
+
 if __name__ == '__main__':
-    #Publish world to base transform
+    # Publish world to base transform
     try:
         publish_world_to_base_transform()
     except rospy.ROSInterruptException:
