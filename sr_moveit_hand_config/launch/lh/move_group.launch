@@ -1,7 +1,8 @@
 <launch>
-
-  <include file="$(find sr_moveit_hand_config)/launch/planning_context.launch" />
-
+  <arg name="hand_id" default="rh"/>
+  <include file="$(find sr_moveit_hand_config)/launch/$(arg hand_id)/planning_context.launch">
+  <arg name="hand_id" value="$(arg hand_id)"/>
+  </include>
   <arg name="pipeline" default="ompl"/>
   <!-- GDB Debug Option -->
   <arg name="debug" default="false" />
@@ -21,20 +22,23 @@
   <arg name="publish_monitored_planning_scene" default="true"/>
 
   <!-- Planning Functionality -->
-  <include ns="move_group" file="$(find sr_moveit_hand_config)/launch/planning_pipeline.launch.xml">
+  <include ns="move_group" file="$(find sr_moveit_hand_config)/launch/$(arg hand_id)/planning_pipeline.launch.xml">
     <arg name="pipeline" value="$(arg pipeline)" />
+    <arg name="hand_id" value="$(arg hand_id)"/>
   </include>
 
   <!-- Trajectory Execution Functionality -->
-  <include ns="move_group" file="$(find sr_moveit_hand_config)/launch/trajectory_execution.launch.xml" if="$(arg allow_trajectory_execution)">
+  <include ns="move_group" file="$(find sr_moveit_hand_config)/launch/$(arg hand_id)/trajectory_execution.launch.xml" if="$(arg allow_trajectory_execution)">
     <arg name="moveit_manage_controllers" value="true" />
+    <arg name="hand_id" value="$(arg hand_id)"/>
     <arg name="moveit_controller_manager" value="shadowhand_motor" unless="$(arg fake_execution)"/>
     <arg name="moveit_controller_manager" value="fake" if="$(arg fake_execution)"/>
   </include>
 
   <!-- Sensors Functionality -->
-  <include ns="move_group" file="$(find sr_moveit_hand_config)/launch/sensor_manager.launch.xml" if="$(arg allow_trajectory_execution)">
-    <arg name="moveit_sensor_manager" value="shadowhand_motor" /> 
+  <include ns="move_group" file="$(find sr_moveit_hand_config)/launch/$(arg hand_id)/sensor_manager.launch.xml" if="$(arg allow_trajectory_execution)">
+    <arg name="moveit_sensor_manager" value="shadowhand_motor" />
+    <arg name="hand_id" value="$(arg hand_id)"/>
   </include>
 
   <!-- Start the actual move_group node/action server -->

@@ -9,7 +9,7 @@
   <!-- Xacro file containing the robot description we want to load -->
   <arg name="robot_description" default="$(find sr_description)/robots/bimanual_shadowhand_motor.urdf.xacro"/>
   <!-- The control mode PWM (true) or torque (false) -->
-  <arg name="pwm_control" default="$(optenv PWM_CONTROL 0)"/>
+  <arg name="pwm_control" default="$(optenv PWM_CONTROL 1)"/>
 
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
       More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
@@ -31,6 +31,9 @@
   <arg name="use_moveit" default="false"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
+  <!-- the path to the mapping files -->
+  <arg name="rh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_ethercat.yaml"/>
+  <arg name="lh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_ethercat.yaml"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
@@ -80,6 +83,10 @@
       <arg name="lh_serial" value="$(arg lh_serial)"/>
       <!-- The id for the left hand. It needs to be the same (but without trailing underscore) as the prefix used in the hand model. -->
       <arg name="lh_id" value="$(arg lh_id)"/>
+      <!-- the path to the mapping files -->
+      <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
+      <arg name="lh_mapping_path" value="$(arg lh_mapping_path)"/>
+
     </include>
   </group>
 
