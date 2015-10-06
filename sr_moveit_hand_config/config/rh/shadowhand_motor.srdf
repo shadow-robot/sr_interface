@@ -35,7 +35,7 @@
         <joint name="rh_LFJ2" />
         <joint name="rh_LFJ1" />
         <chain base_link="rh_forearm" tip_link="rh_palm" />
-        <group name="fingers" />
+        <group name="rh_fingers" />
     </group>
     <group name="rh_first_finger">
         <joint name="rh_FFJ4" />
@@ -114,11 +114,11 @@
         <joint name="rh_THJ2" />
         <joint name="rh_THJ1" />
         <joint name="rh_thtip" />
-        <group name="first_finger" />
-        <group name="middle_finger" />
-        <group name="ring_finger" />
-        <group name="little_finger" />
-        <group name="thumb" />
+        <group name="rh_first_finger" />
+        <group name="rh_middle_finger" />
+        <group name="rh_ring_finger" />
+        <group name="rh_little_finger" />
+        <group name="rh_thumb" />
     </group>
     <group name="rh_first_finger_thumb">
         <joint name="rh_FFJ4" />
@@ -399,11 +399,11 @@
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="shadow_hand_ee" parent_link="rh_wrist" group="right_hand" />
-    <end_effector name="fftip_ee" parent_link="rh_fftip" group="first_finger" parent_group="right_hand" />
-    <end_effector name="mftip_ee" parent_link="rh_mftip" group="middle_finger" parent_group="right_hand" />
-    <end_effector name="rftip_ee" parent_link="rh_rftip" group="ring_finger" parent_group="right_hand" />
-    <end_effector name="lftip_ee" parent_link="rh_lftip" group="little_finger" parent_group="right_hand" />
-    <end_effector name="thtip_ee" parent_link="rh_thtip" group="thumb" parent_group="right_hand" />
+    <end_effector name="fftip_ee" parent_link="rh_fftip" group="rh_first_finger" parent_group="right_hand" />
+    <end_effector name="mftip_ee" parent_link="rh_mftip" group="rh_middle_finger" parent_group="right_hand" />
+    <end_effector name="rftip_ee" parent_link="rh_rftip" group="rh_ring_finger" parent_group="right_hand" />
+    <end_effector name="lftip_ee" parent_link="rh_lftip" group="rh_little_finger" parent_group="right_hand" />
+    <end_effector name="thtip_ee" parent_link="rh_thtip" group="rh_thumb" parent_group="right_hand" />
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="virtual_joint" type="floating" parent_frame="shadow_world_frame" child_link="rh_forearm" />
     <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->

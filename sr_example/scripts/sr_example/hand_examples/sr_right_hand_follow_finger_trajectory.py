@@ -16,11 +16,11 @@ prefix = hand_parameters.mapping.values()[0]
 hand_serial = hand_parameters.mapping.keys()[0]
 
 # Open fingers
-group_id = "fingers"
+group_id = prefix + "_fingers"
 hand_commander = SrHandCommander(name=group_id)
 hand_commander.move_to_named_target("fingers_open")
 
-group_id = "first_finger"
+group_id = prefix + "_first_finger"
 hand_commander = SrHandCommander(name=group_id)
 
 rospy.sleep(2)
