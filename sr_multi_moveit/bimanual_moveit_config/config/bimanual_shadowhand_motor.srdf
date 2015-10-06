@@ -301,6 +301,102 @@
         <joint name="rh_THJ4" value="0" />
         <joint name="rh_THJ5" value="0" />
     </group_state>
+    <group_state name="open" group="right_hand">
+        <joint name="rh_FFJ1" value="0" />
+        <joint name="rh_FFJ2" value="0" />
+        <joint name="rh_FFJ3" value="0" />
+        <joint name="rh_FFJ4" value="0" />
+        <joint name="rh_LFJ1" value="0" />
+        <joint name="rh_LFJ2" value="0" />
+        <joint name="rh_LFJ3" value="0" />
+        <joint name="rh_LFJ4" value="0" />
+        <joint name="rh_LFJ5" value="0" />
+        <joint name="rh_MFJ1" value="0" />
+        <joint name="rh_MFJ2" value="0" />
+        <joint name="rh_MFJ3" value="0" />
+        <joint name="rh_MFJ4" value="0" />
+        <joint name="rh_RFJ1" value="0" />
+        <joint name="rh_RFJ2" value="0" />
+        <joint name="rh_RFJ3" value="0" />
+        <joint name="rh_RFJ4" value="0" />
+        <joint name="rh_THJ1" value="0" />
+        <joint name="rh_THJ2" value="0" />
+        <joint name="rh_THJ3" value="0" />
+        <joint name="rh_THJ4" value="0" />
+        <joint name="rh_THJ5" value="0" />
+    </group_state>
+    <group_state name="pack" group="right_hand">
+        <joint name="rh_FFJ1" value="0.35" />
+        <joint name="rh_FFJ2" value="1.5707" />
+        <joint name="rh_FFJ3" value="1.5707" />
+        <joint name="rh_FFJ4" value="0" />
+        <joint name="rh_LFJ1" value="0.35" />
+        <joint name="rh_LFJ2" value="1.5707" />
+        <joint name="rh_LFJ3" value="1.5707" />
+        <joint name="rh_LFJ4" value="0" />
+        <joint name="rh_LFJ5" value="0" />
+        <joint name="rh_MFJ1" value="0.35" />
+        <joint name="rh_MFJ2" value="1.5707" />
+        <joint name="rh_MFJ3" value="1.5707" />
+        <joint name="rh_MFJ4" value="0" />
+        <joint name="rh_RFJ1" value="0.35" />
+        <joint name="rh_RFJ2" value="1.5707" />
+        <joint name="rh_RFJ3" value="1.5707" />
+        <joint name="rh_RFJ4" value="0" />
+        <joint name="rh_THJ1" value="0.35" />
+        <joint name="rh_THJ2" value="0.58" />
+        <joint name="rh_THJ3" value="0" />
+        <joint name="rh_THJ4" value="0.39" />
+        <joint name="rh_THJ5" value="0.19" />
+    </group_state>
+    <group_state name="hold_bottle" group="right_hand">
+        <joint name="rh_FFJ1" value="0.3490658503988659" />
+        <joint name="rh_FFJ2" value="0.9830834154090509" />
+        <joint name="rh_FFJ3" value="0.8836001119136382" />
+        <joint name="rh_FFJ4" value="-0.3433889154842039" />
+        <joint name="rh_LFJ1" value="0.3490658503988659" />
+        <joint name="rh_LFJ2" value="1.1015648362028108" />
+        <joint name="rh_LFJ3" value="0.21050953974664583" />
+        <joint name="rh_LFJ4" value="-0.22586610365180432" />
+        <joint name="rh_LFJ5" value="0.1514451482661953" />
+        <joint name="rh_MFJ1" value="0.3490658503988659" />
+        <joint name="rh_MFJ2" value="0.8660606774761052" />
+        <joint name="rh_MFJ3" value="1.0358130501858152" />
+        <joint name="rh_MFJ4" value="0.05488235851138667" />
+        <joint name="rh_RFJ1" value="0.3490658503988659" />
+        <joint name="rh_RFJ2" value="1.0315981058096018" />
+        <joint name="rh_RFJ3" value="0.6801927165431521" />
+        <joint name="rh_RFJ4" value="-0.23683635235619582" />
+        <joint name="rh_THJ1" value="0.34906585039886584" />
+        <joint name="rh_THJ2" value="0.6902490018683629" />
+        <joint name="rh_THJ3" value="0.17963601489554304" />
+        <joint name="rh_THJ4" value="1.2044514536345325" />
+        <joint name="rh_THJ5" value="-0.106895614116264807" />
+    </group_state>
+    <group_state name="open_bottle" group="right_hand">
+        <joint name="rh_FFJ1" value="0" />
+        <joint name="rh_FFJ2" value="0" />
+        <joint name="rh_FFJ3" value="0" />
+        <joint name="rh_FFJ4" value="0" />
+        <joint name="rh_LFJ1" value="0" />
+        <joint name="rh_LFJ2" value="0" />
+        <joint name="rh_LFJ3" value="0" />
+        <joint name="rh_LFJ4" value="0" />
+        <joint name="rh_LFJ5" value="0" />
+        <joint name="rh_MFJ1" value="0" />
+        <joint name="rh_MFJ2" value="0" />
+        <joint name="rh_MFJ3" value="0" />
+        <joint name="rh_MFJ4" value="0" />
+        <joint name="rh_RFJ1" value="0" />
+        <joint name="rh_RFJ2" value="0" />
+        <joint name="rh_RFJ3" value="0" />
+        <joint name="rh_RFJ4" value="0" />
+        <joint name="rh_THJ1" value="0" />
+        <joint name="rh_THJ2" value="0" />
+        <joint name="rh_THJ3" value="0" />
+        <joint name="rh_THJ4" value="0.95" />
+        <joint name="rh_THJ5" value="-0.87" />
+    </group_state>
 
     <group name="left_hand">
         <joint name="lh_THJ5" />
@@ -594,6 +690,103 @@
         <joint name="lh_THJ4" value="0" />
         <joint name="lh_THJ5" value="0" />
     </group_state>
+    <group_state name="open" group="left_hand">
+        <joint name="lh_FFJ1" value="0" />
+        <joint name="lh_FFJ2" value="0" />
+        <joint name="lh_FFJ3" value="0" />
+        <joint name="lh_FFJ4" value="0" />
+        <joint name="lh_LFJ1" value="0" />
+        <joint name="lh_LFJ2" value="0" />
+        <joint name="lh_LFJ3" value="0" />
+        <joint name="lh_LFJ4" value="0" />
+        <joint name="lh_LFJ5" value="0" />
+        <joint name="lh_MFJ1" value="0" />
+        <joint name="lh_MFJ2" value="0" />
+        <joint name="lh_MFJ3" value="0" />
+        <joint name="lh_MFJ4" value="0" />
+        <joint name="lh_RFJ1" value="0" />
+        <joint name="lh_RFJ2" value="0" />
+        <joint name="lh_RFJ3" value="0" />
+        <joint name="lh_RFJ4" value="0" />
+        <joint name="lh_THJ1" value="0" />
+        <joint name="lh_THJ2" value="0" />
+        <joint name="lh_THJ3" value="0" />
+        <joint name="lh_THJ4" value="0" />
+        <joint name="lh_THJ5" value="0" />
+    </group_state>
+    <group_state name="pack" group="left_hand">
+        <joint name="lh_FFJ1" value="0.35" />
+        <joint name="lh_FFJ2" value="1.5707" />
+        <joint name="lh_FFJ3" value="1.5707" />
+        <joint name="lh_FFJ4" value="0" />
+        <joint name="lh_LFJ1" value="0.35" />
+        <joint name="lh_LFJ2" value="1.5707" />
+        <joint name="lh_LFJ3" value="1.5707" />
+        <joint name="lh_LFJ4" value="0" />
+        <joint name="lh_LFJ5" value="0" />
+        <joint name="lh_MFJ1" value="0.35" />
+        <joint name="lh_MFJ2" value="1.5707" />
+        <joint name="lh_MFJ3" value="1.5707" />
+        <joint name="lh_MFJ4" value="0" />
+        <joint name="lh_RFJ1" value="0.35" />
+        <joint name="lh_RFJ2" value="1.5707" />
+        <joint name="lh_RFJ3" value="1.5707" />
+        <joint name="lh_RFJ4" value="0" />
+        <joint name="lh_THJ1" value="0.35" />
+        <joint name="lh_THJ2" value="0.58" />
+        <joint name="lh_THJ3" value="0" />
+        <joint name="lh_THJ4" value="0.39" />
+        <joint name="lh_THJ5" value="0.19" />
+    </group_state>
+    <group_state name="hold_bottle" group="left_hand">
+        <joint name="lh_FFJ1" value="0.3490658503988659" />
+        <joint name="lh_FFJ2" value="0.9830834154090509" />
+        <joint name="lh_FFJ3" value="0.8836001119136382" />
+        <joint name="lh_FFJ4" value="-0.3433889154842039" />
+        <joint name="lh_LFJ1" value="0.3490658503988659" />
+        <joint name="lh_LFJ2" value="1.1015648362028108" />
+        <joint name="lh_LFJ3" value="0.21050953974664583" />
+        <joint name="lh_LFJ4" value="-0.22586610365180432" />
+        <joint name="lh_LFJ5" value="0.1514451482661953" />
+        <joint name="lh_MFJ1" value="0.3490658503988659" />
+        <joint name="lh_MFJ2" value="0.8660606774761052" />
+        <joint name="lh_MFJ3" value="1.0358130501858152" />
+        <joint name="lh_MFJ4" value="0.05488235851138667" />
+        <joint name="lh_RFJ1" value="0.3490658503988659" />
+        <joint name="lh_RFJ2" value="1.0315981058096018" />
+        <joint name="lh_RFJ3" value="0.6801927165431521" />
+        <joint name="lh_RFJ4" value="-0.23683635235619582" />
+        <joint name="lh_THJ1" value="0.34906585039886584" />
+        <joint name="lh_THJ2" value="0.6902490018683629" />
+        <joint name="lh_THJ3" value="0.17963601489554304" />
+        <joint name="lh_THJ4" value="1.2044514536345325" />
+        <joint name="lh_THJ5" value="-0.106895614116264807" />
+    </group_state>
+    <group_state name="open_bottle" group="left_hand">
+        <joint name="lh_FFJ1" value="0" />
+        <joint name="lh_FFJ2" value="0" />
+        <joint name="lh_FFJ3" value="0" />
+        <joint name="lh_FFJ4" value="0" />
+        <joint name="lh_LFJ1" value="0" />
+        <joint name="lh_LFJ2" value="0" />
+        <joint name="lh_LFJ3" value="0" />
+        <joint name="lh_LFJ4" value="0" />
+        <joint name="lh_LFJ5" value="0" />
+        <joint name="lh_MFJ1" value="0" />
+        <joint name="lh_MFJ2" value="0" />
+        <joint name="lh_MFJ3" value="0" />
+        <joint name="lh_MFJ4" value="0" />
+        <joint name="lh_RFJ1" value="0" />
+        <joint name="lh_RFJ2" value="0" />
+        <joint name="lh_RFJ3" value="0" />
+        <joint name="lh_RFJ4" value="0" />
+        <joint name="lh_THJ1" value="0" />
+        <joint name="lh_THJ2" value="0" />
+        <joint name="lh_THJ3" value="0" />
+        <joint name="lh_THJ4" value="0.95" />
+        <joint name="lh_THJ5" value="-0.87" />
+    </group_state>
+    
 
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="right_hand_ee" parent_link="rh_wrist" group="right_hand" />
