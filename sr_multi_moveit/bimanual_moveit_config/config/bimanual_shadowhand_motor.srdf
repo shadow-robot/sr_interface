@@ -819,6 +819,8 @@
     <disable_collisions link1="lh_ffdistal" link2="lh_rfknuckle" reason="Never" />
     <disable_collisions link1="lh_ffdistal" link2="lh_rfproximal" reason="Never" />
     <disable_collisions link1="lh_ffdistal" link2="lh_thbase" reason="Never" />
+    <disable_collisions link1="lh_ffdistal" link2="lh_thhub" reason="Never" />
+    <disable_collisions link1="lh_ffdistal" link2="lh_thproximal" reason="Never" />
     <disable_collisions link1="lh_ffdistal" link2="lh_wrist" reason="Never" />
     <disable_collisions link1="lh_ffdistal" link2="rh_ffdistal" reason="Never" />
     <disable_collisions link1="lh_ffdistal" link2="rh_ffknuckle" reason="Never" />
@@ -863,6 +865,7 @@
     <disable_collisions link1="lh_ffknuckle" link2="lh_rfmiddle" reason="Never" />
     <disable_collisions link1="lh_ffknuckle" link2="lh_rfproximal" reason="Never" />
     <disable_collisions link1="lh_ffknuckle" link2="lh_thbase" reason="Never" />
+    <disable_collisions link1="lh_ffknuckle" link2="lh_thdistal" reason="Never" />
     <disable_collisions link1="lh_ffknuckle" link2="lh_thhub" reason="Never" />
     <disable_collisions link1="lh_ffknuckle" link2="lh_thmiddle" reason="Never" />
     <disable_collisions link1="lh_ffknuckle" link2="lh_thproximal" reason="Never" />
@@ -896,10 +899,12 @@
     <disable_collisions link1="lh_ffmiddle" link2="lh_forearm" reason="Never" />
     <disable_collisions link1="lh_ffmiddle" link2="lh_lfknuckle" reason="Never" />
     <disable_collisions link1="lh_ffmiddle" link2="lh_lfmetacarpal" reason="Never" />
+    <disable_collisions link1="lh_ffmiddle" link2="lh_lfmiddle" reason="Never" />
     <disable_collisions link1="lh_ffmiddle" link2="lh_lfproximal" reason="Never" />
     <disable_collisions link1="lh_ffmiddle" link2="lh_mfknuckle" reason="Never" />
     <disable_collisions link1="lh_ffmiddle" link2="lh_palm" reason="Never" />
     <disable_collisions link1="lh_ffmiddle" link2="lh_rfknuckle" reason="Never" />
+    <disable_collisions link1="lh_ffmiddle" link2="lh_rfproximal" reason="Never" />
     <disable_collisions link1="lh_ffmiddle" link2="lh_thbase" reason="Never" />
     <disable_collisions link1="lh_ffmiddle" link2="lh_thhub" reason="Never" />
     <disable_collisions link1="lh_ffmiddle" link2="lh_thproximal" reason="Never" />
@@ -935,11 +940,16 @@
     <disable_collisions link1="lh_ffproximal" link2="lh_lfmetacarpal" reason="Never" />
     <disable_collisions link1="lh_ffproximal" link2="lh_lfmiddle" reason="Never" />
     <disable_collisions link1="lh_ffproximal" link2="lh_lfproximal" reason="Never" />
+    <disable_collisions link1="lh_ffproximal" link2="lh_mfdistal" reason="Never" />
+    <disable_collisions link1="lh_ffproximal" link2="lh_mfknuckle" reason="Never" />
+    <disable_collisions link1="lh_ffproximal" link2="lh_palm" reason="Never" />
     <disable_collisions link1="lh_ffproximal" link2="lh_rfdistal" reason="Never" />
     <disable_collisions link1="lh_ffproximal" link2="lh_rfknuckle" reason="Never" />
+    <disable_collisions link1="lh_ffproximal" link2="lh_rfmiddle" reason="Never" />
     <disable_collisions link1="lh_ffproximal" link2="lh_rfproximal" reason="Never" />
     <disable_collisions link1="lh_ffproximal" link2="lh_thbase" reason="Never" />
     <disable_collisions link1="lh_ffproximal" link2="lh_thhub" reason="Never" />
+    <disable_collisions link1="lh_ffproximal" link2="lh_thmiddle" reason="Never" />
     <disable_collisions link1="lh_ffproximal" link2="lh_thproximal" reason="Never" />
     <disable_collisions link1="lh_ffproximal" link2="lh_wrist" reason="Never" />
     <disable_collisions link1="lh_ffproximal" link2="rh_ffdistal" reason="Never" />
@@ -1017,6 +1027,7 @@
     <disable_collisions link1="lh_lfdistal" link2="lh_lfmiddle" reason="Adjacent" />
     <disable_collisions link1="lh_lfdistal" link2="lh_lfproximal" reason="Never" />
     <disable_collisions link1="lh_lfdistal" link2="lh_mfknuckle" reason="Never" />
+    <disable_collisions link1="lh_lfdistal" link2="lh_mfproximal" reason="Never" />
     <disable_collisions link1="lh_lfdistal" link2="lh_palm" reason="Never" />
     <disable_collisions link1="lh_lfdistal" link2="lh_rfknuckle" reason="Never" />
     <disable_collisions link1="lh_lfdistal" link2="lh_thbase" reason="Never" />
@@ -1056,8 +1067,11 @@
     <disable_collisions link1="lh_lfknuckle" link2="lh_mfknuckle" reason="Never" />
     <disable_collisions link1="lh_lfknuckle" link2="lh_mfmiddle" reason="Never" />
     <disable_collisions link1="lh_lfknuckle" link2="lh_mfproximal" reason="Never" />
+    <disable_collisions link1="lh_lfknuckle" link2="lh_palm" reason="Never" />
+    <disable_collisions link1="lh_lfknuckle" link2="lh_rfdistal" reason="Never" />
     <disable_collisions link1="lh_lfknuckle" link2="lh_rfknuckle" reason="Never" />
     <disable_collisions link1="lh_lfknuckle" link2="lh_rfmiddle" reason="Never" />
+    <disable_collisions link1="lh_lfknuckle" link2="lh_rfproximal" reason="Never" />
     <disable_collisions link1="lh_lfknuckle" link2="lh_thbase" reason="Never" />
     <disable_collisions link1="lh_lfknuckle" link2="lh_thdistal" reason="Never" />
     <disable_collisions link1="lh_lfknuckle" link2="lh_thhub" reason="Never" />
@@ -1090,11 +1104,13 @@
     <disable_collisions link1="lh_lfknuckle" link2="rh_thproximal" reason="Never" />
     <disable_collisions link1="lh_lfknuckle" link2="rh_wrist" reason="Never" />
     <disable_collisions link1="lh_lfmetacarpal" link2="lh_lfmiddle" reason="Never" />
+    <disable_collisions link1="lh_lfmetacarpal" link2="lh_lfproximal" reason="Never" />
     <disable_collisions link1="lh_lfmetacarpal" link2="lh_mfdistal" reason="Never" />
     <disable_collisions link1="lh_lfmetacarpal" link2="lh_mfknuckle" reason="Never" />
     <disable_collisions link1="lh_lfmetacarpal" link2="lh_mfmiddle" reason="Never" />
     <disable_collisions link1="lh_lfmetacarpal" link2="lh_mfproximal" reason="Never" />
     <disable_collisions link1="lh_lfmetacarpal" link2="lh_palm" reason="Adjacent" />
+    <disable_collisions link1="lh_lfmetacarpal" link2="lh_rfdistal" reason="Never" />
     <disable_collisions link1="lh_lfmetacarpal" link2="lh_rfknuckle" reason="Never" />
     <disable_collisions link1="lh_lfmetacarpal" link2="lh_rfmiddle" reason="Never" />
     <disable_collisions link1="lh_lfmetacarpal" link2="lh_rfproximal" reason="Never" />
@@ -1165,6 +1181,7 @@
     <disable_collisions link1="lh_lfmiddle" link2="rh_wrist" reason="Never" />
     <disable_collisions link1="lh_lfproximal" link2="lh_mfknuckle" reason="Never" />
     <disable_collisions link1="lh_lfproximal" link2="lh_palm" reason="Never" />
+    <disable_collisions link1="lh_lfproximal" link2="lh_rfknuckle" reason="Never" />
     <disable_collisions link1="lh_lfproximal" link2="lh_thbase" reason="Never" />
     <disable_collisions link1="lh_lfproximal" link2="lh_thhub" reason="Never" />
     <disable_collisions link1="lh_lfproximal" link2="lh_thmiddle" reason="Never" />
@@ -1200,7 +1217,9 @@
     <disable_collisions link1="lh_mfdistal" link2="lh_mfproximal" reason="Never" />
     <disable_collisions link1="lh_mfdistal" link2="lh_palm" reason="Never" />
     <disable_collisions link1="lh_mfdistal" link2="lh_rfknuckle" reason="Never" />
+    <disable_collisions link1="lh_mfdistal" link2="lh_rfproximal" reason="Never" />
     <disable_collisions link1="lh_mfdistal" link2="lh_thbase" reason="Never" />
+    <disable_collisions link1="lh_mfdistal" link2="lh_thhub" reason="Never" />
     <disable_collisions link1="lh_mfdistal" link2="lh_thproximal" reason="Never" />
     <disable_collisions link1="lh_mfdistal" link2="lh_wrist" reason="Never" />
     <disable_collisions link1="lh_mfdistal" link2="rh_ffdistal" reason="Never" />
@@ -1234,7 +1253,9 @@
     <disable_collisions link1="lh_mfknuckle" link2="lh_rfdistal" reason="Never" />
     <disable_collisions link1="lh_mfknuckle" link2="lh_rfknuckle" reason="Never" />
     <disable_collisions link1="lh_mfknuckle" link2="lh_rfmiddle" reason="Never" />
+    <disable_collisions link1="lh_mfknuckle" link2="lh_rfproximal" reason="Never" />
     <disable_collisions link1="lh_mfknuckle" link2="lh_thbase" reason="Never" />
+    <disable_collisions link1="lh_mfknuckle" link2="lh_thdistal" reason="Never" />
     <disable_collisions link1="lh_mfknuckle" link2="lh_thhub" reason="Never" />
     <disable_collisions link1="lh_mfknuckle" link2="lh_thmiddle" reason="Never" />
     <disable_collisions link1="lh_mfknuckle" link2="lh_thproximal" reason="Never" />
@@ -1269,8 +1290,10 @@
     <disable_collisions link1="lh_mfmiddle" link2="lh_rfknuckle" reason="Never" />
     <disable_collisions link1="lh_mfmiddle" link2="lh_thbase" reason="Never" />
     <disable_collisions link1="lh_mfmiddle" link2="lh_thhub" reason="Never" />
+    <disable_collisions link1="lh_mfmiddle" link2="lh_thmiddle" reason="Never" />
     <disable_collisions link1="lh_mfmiddle" link2="lh_thproximal" reason="Never" />
     <disable_collisions link1="lh_mfmiddle" link2="lh_wrist" reason="Never" />
+    <disable_collisions link1="lh_mfproximal" link2="lh_palm" reason="Never" />
     <disable_collisions link1="lh_mfmiddle" link2="rh_ffdistal" reason="Never" />
     <disable_collisions link1="lh_mfmiddle" link2="rh_ffknuckle" reason="Never" />
     <disable_collisions link1="lh_mfmiddle" link2="rh_ffmiddle" reason="Never" />
@@ -1330,8 +1353,12 @@
     <disable_collisions link1="lh_palm" link2="lh_rfdistal" reason="Never" />
     <disable_collisions link1="lh_palm" link2="lh_rfknuckle" reason="Adjacent" />
     <disable_collisions link1="lh_palm" link2="lh_rfmiddle" reason="Never" />
+    <disable_collisions link1="lh_palm" link2="lh_rfproximal" reason="Never" />
+    <disable_collisions link1="lh_palm" link2="lh_thproximal" reason="Adjacent" />
     <disable_collisions link1="lh_palm" link2="lh_thbase" reason="Adjacent" />
+    <disable_collisions link1="lh_palm" link2="lh_thdistal" reason="Never" />
     <disable_collisions link1="lh_palm" link2="lh_thhub" reason="Never" />
+    <disable_collisions link1="lh_palm" link2="lh_thmiddle" reason="Never" />
     <disable_collisions link1="lh_palm" link2="lh_wrist" reason="Adjacent" />
     <disable_collisions link1="lh_palm" link2="rh_ffdistal" reason="Never" />
     <disable_collisions link1="lh_palm" link2="rh_ffknuckle" reason="Never" />
@@ -1394,6 +1421,7 @@
     <disable_collisions link1="lh_rfknuckle" link2="lh_rfmiddle" reason="Never" />
     <disable_collisions link1="lh_rfknuckle" link2="lh_rfproximal" reason="Adjacent" />
     <disable_collisions link1="lh_rfknuckle" link2="lh_thbase" reason="Never" />
+    <disable_collisions link1="lh_rfknuckle" link2="lh_thdistal" reason="Never" />
     <disable_collisions link1="lh_rfknuckle" link2="lh_thhub" reason="Never" />
     <disable_collisions link1="lh_rfknuckle" link2="lh_thmiddle" reason="Never" />
     <disable_collisions link1="lh_rfknuckle" link2="lh_thproximal" reason="Never" />
@@ -1661,6 +1689,8 @@
     <disable_collisions link1="rh_ffdistal" link2="rh_rfknuckle" reason="Never" />
     <disable_collisions link1="rh_ffdistal" link2="rh_rfproximal" reason="Never" />
     <disable_collisions link1="rh_ffdistal" link2="rh_thbase" reason="Never" />
+    <disable_collisions link1="rh_ffdistal" link2="rh_thhub" reason="Never" />
+    <disable_collisions link1="rh_ffdistal" link2="rh_thproximal" reason="Never" />
     <disable_collisions link1="rh_ffdistal" link2="rh_wrist" reason="Never" />
     <disable_collisions link1="rh_ffknuckle" link2="rh_ffmiddle" reason="Never" />
     <disable_collisions link1="rh_ffknuckle" link2="rh_ffproximal" reason="Adjacent" />
@@ -1680,6 +1710,7 @@
     <disable_collisions link1="rh_ffknuckle" link2="rh_rfmiddle" reason="Never" />
     <disable_collisions link1="rh_ffknuckle" link2="rh_rfproximal" reason="Never" />
     <disable_collisions link1="rh_ffknuckle" link2="rh_thbase" reason="Never" />
+    <disable_collisions link1="rh_ffknuckle" link2="rh_thdistal" reason="Never" />
     <disable_collisions link1="rh_ffknuckle" link2="rh_thhub" reason="Never" />
     <disable_collisions link1="rh_ffknuckle" link2="rh_thmiddle" reason="Never" />
     <disable_collisions link1="rh_ffknuckle" link2="rh_thproximal" reason="Never" />
@@ -1688,10 +1719,12 @@
     <disable_collisions link1="rh_ffmiddle" link2="rh_forearm" reason="Never" />
     <disable_collisions link1="rh_ffmiddle" link2="rh_lfknuckle" reason="Never" />
     <disable_collisions link1="rh_ffmiddle" link2="rh_lfmetacarpal" reason="Never" />
+    <disable_collisions link1="rh_ffmiddle" link2="rh_lfmiddle" reason="Never" />
     <disable_collisions link1="rh_ffmiddle" link2="rh_lfproximal" reason="Never" />
     <disable_collisions link1="rh_ffmiddle" link2="rh_mfknuckle" reason="Never" />
     <disable_collisions link1="rh_ffmiddle" link2="rh_palm" reason="Never" />
     <disable_collisions link1="rh_ffmiddle" link2="rh_rfknuckle" reason="Never" />
+    <disable_collisions link1="rh_ffmiddle" link2="rh_rfproximal" reason="Never" />
     <disable_collisions link1="rh_ffmiddle" link2="rh_thbase" reason="Never" />
     <disable_collisions link1="rh_ffmiddle" link2="rh_thhub" reason="Never" />
     <disable_collisions link1="rh_ffmiddle" link2="rh_thproximal" reason="Never" />
@@ -1702,11 +1735,16 @@
     <disable_collisions link1="rh_ffproximal" link2="rh_lfmetacarpal" reason="Never" />
     <disable_collisions link1="rh_ffproximal" link2="rh_lfmiddle" reason="Never" />
     <disable_collisions link1="rh_ffproximal" link2="rh_lfproximal" reason="Never" />
+    <disable_collisions link1="rh_ffproximal" link2="rh_mfdistal" reason="Never" />
+    <disable_collisions link1="rh_ffproximal" link2="rh_mfknuckle" reason="Never" />
+    <disable_collisions link1="rh_ffproximal" link2="rh_palm" reason="Never" />
     <disable_collisions link1="rh_ffproximal" link2="rh_rfdistal" reason="Never" />
     <disable_collisions link1="rh_ffproximal" link2="rh_rfknuckle" reason="Never" />
+    <disable_collisions link1="rh_ffproximal" link2="rh_rfmiddle" reason="Never" />
     <disable_collisions link1="rh_ffproximal" link2="rh_rfproximal" reason="Never" />
     <disable_collisions link1="rh_ffproximal" link2="rh_thbase" reason="Never" />
     <disable_collisions link1="rh_ffproximal" link2="rh_thhub" reason="Never" />
+    <disable_collisions link1="rh_ffproximal" link2="rh_thmiddle" reason="Never" />
     <disable_collisions link1="rh_ffproximal" link2="rh_thproximal" reason="Never" />
     <disable_collisions link1="rh_ffproximal" link2="rh_wrist" reason="Never" />
     <disable_collisions link1="rh_forearm" link2="rh_lfdistal" reason="Never" />
@@ -1734,6 +1772,7 @@
     <disable_collisions link1="rh_lfdistal" link2="rh_lfmiddle" reason="Adjacent" />
     <disable_collisions link1="rh_lfdistal" link2="rh_lfproximal" reason="Never" />
     <disable_collisions link1="rh_lfdistal" link2="rh_mfknuckle" reason="Never" />
+    <disable_collisions link1="rh_lfdistal" link2="rh_mfproximal" reason="Never" />
     <disable_collisions link1="rh_lfdistal" link2="rh_palm" reason="Never" />
     <disable_collisions link1="rh_lfdistal" link2="rh_rfknuckle" reason="Never" />
     <disable_collisions link1="rh_lfdistal" link2="rh_thbase" reason="Never" />
@@ -1748,8 +1787,11 @@
     <disable_collisions link1="rh_lfknuckle" link2="rh_mfknuckle" reason="Never" />
     <disable_collisions link1="rh_lfknuckle" link2="rh_mfmiddle" reason="Never" />
     <disable_collisions link1="rh_lfknuckle" link2="rh_mfproximal" reason="Never" />
+    <disable_collisions link1="rh_lfknuckle" link2="rh_palm" reason="Never" />
+    <disable_collisions link1="rh_lfknuckle" link2="rh_rfdistal" reason="Never" />
     <disable_collisions link1="rh_lfknuckle" link2="rh_rfknuckle" reason="Never" />
     <disable_collisions link1="rh_lfknuckle" link2="rh_rfmiddle" reason="Never" />
+    <disable_collisions link1="rh_lfknuckle" link2="rh_rfproximal" reason="Never" />
     <disable_collisions link1="rh_lfknuckle" link2="rh_thbase" reason="Never" />
     <disable_collisions link1="rh_lfknuckle" link2="rh_thdistal" reason="Never" />
     <disable_collisions link1="rh_lfknuckle" link2="rh_thhub" reason="Never" />
@@ -1763,6 +1805,7 @@
     <disable_collisions link1="rh_lfmetacarpal" link2="rh_mfmiddle" reason="Never" />
     <disable_collisions link1="rh_lfmetacarpal" link2="rh_mfproximal" reason="Never" />
     <disable_collisions link1="rh_lfmetacarpal" link2="rh_palm" reason="Adjacent" />
+    <disable_collisions link1="rh_lfmetacarpal" link2="rh_rfdistal" reason="Never" />
     <disable_collisions link1="rh_lfmetacarpal" link2="rh_rfknuckle" reason="Never" />
     <disable_collisions link1="rh_lfmetacarpal" link2="rh_rfmiddle" reason="Never" />
     <disable_collisions link1="rh_lfmetacarpal" link2="rh_rfproximal" reason="Never" />
@@ -1783,6 +1826,7 @@
     <disable_collisions link1="rh_lfmiddle" link2="rh_wrist" reason="Never" />
     <disable_collisions link1="rh_lfproximal" link2="rh_mfknuckle" reason="Never" />
     <disable_collisions link1="rh_lfproximal" link2="rh_palm" reason="Never" />
+    <disable_collisions link1="rh_lfproximal" link2="rh_rfknuckle" reason="Never" />
     <disable_collisions link1="rh_lfproximal" link2="rh_thbase" reason="Never" />
     <disable_collisions link1="rh_lfproximal" link2="rh_thhub" reason="Never" />
     <disable_collisions link1="rh_lfproximal" link2="rh_thmiddle" reason="Never" />
@@ -1793,7 +1837,9 @@
     <disable_collisions link1="rh_mfdistal" link2="rh_mfproximal" reason="Never" />
     <disable_collisions link1="rh_mfdistal" link2="rh_palm" reason="Never" />
     <disable_collisions link1="rh_mfdistal" link2="rh_rfknuckle" reason="Never" />
+    <disable_collisions link1="rh_mfdistal" link2="rh_rfproximal" reason="Never" />
     <disable_collisions link1="rh_mfdistal" link2="rh_thbase" reason="Never" />
+    <disable_collisions link1="rh_mfdistal" link2="rh_thhub" reason="Never" />
     <disable_collisions link1="rh_mfdistal" link2="rh_thproximal" reason="Never" />
     <disable_collisions link1="rh_mfdistal" link2="rh_wrist" reason="Never" />
     <disable_collisions link1="rh_mfknuckle" link2="rh_mfmiddle" reason="Never" />
@@ -1802,7 +1848,9 @@
     <disable_collisions link1="rh_mfknuckle" link2="rh_rfdistal" reason="Never" />
     <disable_collisions link1="rh_mfknuckle" link2="rh_rfknuckle" reason="Never" />
     <disable_collisions link1="rh_mfknuckle" link2="rh_rfmiddle" reason="Never" />
+    <disable_collisions link1="rh_mfknuckle" link2="rh_rfproximal" reason="Never" />
     <disable_collisions link1="rh_mfknuckle" link2="rh_thbase" reason="Never" />
+    <disable_collisions link1="rh_mfknuckle" link2="rh_thdistal" reason="Never" />
     <disable_collisions link1="rh_mfknuckle" link2="rh_thhub" reason="Never" />
     <disable_collisions link1="rh_mfknuckle" link2="rh_thmiddle" reason="Never" />
     <disable_collisions link1="rh_mfknuckle" link2="rh_thproximal" reason="Never" />
@@ -1812,8 +1860,10 @@
     <disable_collisions link1="rh_mfmiddle" link2="rh_rfknuckle" reason="Never" />
     <disable_collisions link1="rh_mfmiddle" link2="rh_thbase" reason="Never" />
     <disable_collisions link1="rh_mfmiddle" link2="rh_thhub" reason="Never" />
+    <disable_collisions link1="rh_mfmiddle" link2="rh_thmiddle" reason="Never" />
     <disable_collisions link1="rh_mfmiddle" link2="rh_thproximal" reason="Never" />
     <disable_collisions link1="rh_mfmiddle" link2="rh_wrist" reason="Never" />
+    <disable_collisions link1="rh_mfproximal" link2="rh_palm" reason="Never" />
     <disable_collisions link1="rh_mfproximal" link2="rh_rfknuckle" reason="Never" />
     <disable_collisions link1="rh_mfproximal" link2="rh_thbase" reason="Never" />
     <disable_collisions link1="rh_mfproximal" link2="rh_thhub" reason="Never" />
@@ -1823,19 +1873,25 @@
     <disable_collisions link1="rh_palm" link2="rh_rfdistal" reason="Never" />
     <disable_collisions link1="rh_palm" link2="rh_rfknuckle" reason="Adjacent" />
     <disable_collisions link1="rh_palm" link2="rh_rfmiddle" reason="Never" />
+    <disable_collisions link1="rh_palm" link2="rh_rfproximal" reason="Never" />
+    <disable_collisions link1="rh_palm" link2="rh_thproximal" reason="Adjacent" />
     <disable_collisions link1="rh_palm" link2="rh_thbase" reason="Adjacent" />
+    <disable_collisions link1="rh_palm" link2="rh_thdistal" reason="Never" />
     <disable_collisions link1="rh_palm" link2="rh_thhub" reason="Never" />
+    <disable_collisions link1="rh_palm" link2="rh_thmiddle" reason="Never" />
     <disable_collisions link1="rh_palm" link2="rh_wrist" reason="Adjacent" />
     <disable_collisions link1="rh_rfdistal" link2="rh_rfknuckle" reason="Never" />
     <disable_collisions link1="rh_rfdistal" link2="rh_rfmiddle" reason="Adjacent" />
     <disable_collisions link1="rh_rfdistal" link2="rh_rfproximal" reason="Never" />
     <disable_collisions link1="rh_rfdistal" link2="rh_thbase" reason="Never" />
     <disable_collisions link1="rh_rfdistal" link2="rh_thhub" reason="Never" />
+    <disable_collisions link1="rh_rfdistal" link2="rh_thmiddle" reason="Never" />
     <disable_collisions link1="rh_rfdistal" link2="rh_thproximal" reason="Never" />
     <disable_collisions link1="rh_rfdistal" link2="rh_wrist" reason="Never" />
     <disable_collisions link1="rh_rfknuckle" link2="rh_rfmiddle" reason="Never" />
     <disable_collisions link1="rh_rfknuckle" link2="rh_rfproximal" reason="Adjacent" />
     <disable_collisions link1="rh_rfknuckle" link2="rh_thbase" reason="Never" />
+    <disable_collisions link1="rh_rfknuckle" link2="rh_thdistal" reason="Never" />
     <disable_collisions link1="rh_rfknuckle" link2="rh_thhub" reason="Never" />
     <disable_collisions link1="rh_rfknuckle" link2="rh_thmiddle" reason="Never" />
     <disable_collisions link1="rh_rfknuckle" link2="rh_thproximal" reason="Never" />
