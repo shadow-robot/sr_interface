@@ -32,7 +32,7 @@
 
 """
     generate the srdf according to the urdf
-    syntax  generate_srdf <srdf.xacro filename> [output filename]
+    syntax  generate_hand_srdf <srdf.xacro filename> [output filename]
     Note : The srdf.xacro filename should be without _prefix,
     as the name with prefix is generated from the one without if needed
 """
@@ -48,13 +48,10 @@ from rosgraph.names import load_mappings
 
 from sr_utilities.local_urdf_parser_py import URDF
 
-if __name__ == '__main__':
-
-    if len(sys.argv) > 1:
-        srdf_xacro_filename = sys.argv[1]
-
+class SRDFGenerator(object):
+    def __init__(self, srdf_xacro_filename):
         rospy.init_node('srdf_generator', anonymous=True)
-
+        
         while not rospy.has_param('robot_description'):
             rospy.sleep(0.5)
             rospy.loginfo("waiting for robot_description")
@@ -144,5 +141,11 @@ if __name__ == '__main__':
             FW.close()
 
         srdf_xacro_file.close()
+
+if __name__ == '__main__':
+    
+    if len(sys.argv) > 1:
+        srdf_xacro_filename = sys.argv[1]
+        srdfGenerator = SRDFGenerator(srdf_xacro_filename) 
     else:
         rospy.logerr("No srdf.xacro file provided")
