@@ -19,6 +19,18 @@ from sr_utilities.local_urdf_parser_py import URDF
 if __name__ == '__main__':
     
     rospy.init_node('srdf_generator', anonymous=True)
+    
+    rospack = rospkg.RosPack()
+    package_path = rospack.get_path('sr_multi_moveit_config')
+
+    arm_name = "ur10"
+    arm_srdf_path = package_path + "/config/" + arm_name + "/" + arm_name + ".srdf"
+    
+    stream = open(arm_srdf_path, 'r')
+    srdf_xml = parse(stream)
+    stream.close()
+    
+    print srdf_xml.toprettyxml(indent='  ')
 
     while not rospy.has_param('robot_description'):
         rospy.sleep(0.5)
@@ -28,13 +40,7 @@ if __name__ == '__main__':
     urdf_str = rospy.get_param('robot_description')
     robot = URDF.from_xml_string(urdf_str)
     
-    # get an instance of RosPack with the default search paths
-    rospack = rospkg.RosPack()
-
-    # get the file path for rospy_tutorials
-    package_path = rospack.get_path('sr_multi_moveit_config')
-
-    print "\n package_path: ",package_path
+    
     OUTPUT_PATH = package_path + "/config/generated_shadowhand.urdf"
     FW = open(OUTPUT_PATH, "wb")
     FW.write(urdf_str)
