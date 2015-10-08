@@ -32,9 +32,7 @@
 
 """
     generate the srdf according to the urdf
-    syntax  generate_hand_srdf <srdf.xacro filename> [output filename]
-    Note : The srdf.xacro filename should be without _prefix,
-    as the name with prefix is generated from the one without if needed
+    syntax  generate_hand_srdf [output filename]
 """
 
 import sys
@@ -43,21 +41,22 @@ from xml.dom.minidom import parse
 
 import xacro
 import rospy
+import rospkg
 from xacro import set_substitution_args_context
 from rosgraph.names import load_mappings
 
 from sr_utilities.local_urdf_parser_py import URDF
 
 class SRDFGenerator(object):
-    def __init__(self, srdf_xacro_filename):
-        rospy.init_node('srdf_generator', anonymous=True)
-        
-        while not rospy.has_param('robot_description'):
-            rospy.sleep(0.5)
-            rospy.loginfo("waiting for robot_description")
+    def __init__(self, urdf_str = None):
+        if urdf_str is None:
+            while not rospy.has_param('robot_description'):
+                rospy.sleep(0.5)
+                rospy.loginfo("waiting for robot_description")
+    
+            # load the urdf from the parameter server
+            urdf_str = rospy.get_param('robot_description')
 
-        # load the urdf from the parameter server
-        urdf_str = rospy.get_param('robot_description')
         robot = URDF.from_xml_string(urdf_str)
 
         extracted_prefix = False
@@ -105,6 +104,10 @@ class SRDFGenerator(object):
                            ]))
 
         # the prefix version of the srdf_xacro must be loaded
+        rospack = rospkg.RosPack()
+        package_path = rospack.get_path('sr_moveit_hand_config')
+        srdf_xacro_filename = package_path + "/config/shadowhands.srdf.xacro"
+
         srdf_xacro_filename = srdf_xacro_filename.replace(".srdf.xacro", "_prefix.srdf.xacro")
         rospy.loginfo("File loaded " + srdf_xacro_filename)
 
@@ -113,12 +116,11 @@ class SRDFGenerator(object):
         srdf_xacro_xml = parse(srdf_xacro_file)
 
         # expand the xacro
-        xacro.process_includes(srdf_xacro_xml,
-                               os.path.dirname(sys.argv[0]))
+        xacro.process_includes(srdf_xacro_xml, os.path.dirname(sys.argv[0]))
         xacro.eval_self_contained(srdf_xacro_xml)
 
-        if len(sys.argv) > 2:
-            OUTPUT_PATH = sys.argv[2]
+        if len(sys.argv) > 1:
+            OUTPUT_PATH = sys.argv[1]
             # reject ROS internal parameters and detect termination
             if (OUTPUT_PATH.startswith("_") or
                     OUTPUT_PATH.startswith("--")):
@@ -129,8 +131,7 @@ class SRDFGenerator(object):
         # Upload or output the input string on the correct param namespace or file
         if OUTPUT_PATH is None:
             rospy.loginfo(" Loading SRDF on parameter server")
-            robot_description_param = rospy.resolve_name(
-                'robot_description') + "_semantic"
+            robot_description_param = rospy.resolve_name('robot_description') + "_semantic"
             rospy.set_param(robot_description_param,
                             srdf_xacro_xml.toprettyxml(indent='  '))
 
@@ -143,9 +144,6 @@ class SRDFGenerator(object):
         srdf_xacro_file.close()
 
 if __name__ == '__main__':
-    
-    if len(sys.argv) > 1:
-        srdf_xacro_filename = sys.argv[1]
-        srdfGenerator = SRDFGenerator(srdf_xacro_filename) 
-    else:
-        rospy.logerr("No srdf.xacro file provided")
+    rospy.init_node('hand_srdf_generator', anonymous=True)
+    srdfGenerator = SRDFGenerator() 
+
