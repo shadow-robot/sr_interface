@@ -134,6 +134,16 @@ class SRDFGenerator(object):
             robot_description_param = rospy.resolve_name('robot_description') + "_semantic"
             rospy.set_param(robot_description_param,
                             srdf_xacro_xml.toprettyxml(indent='  '))
+            
+            OUTPUT_PATH = "/home/beatriz/workspace/shadow/src/sr_interface/sr_moveit_hand_config/config/generated_shadowhand.srdf"
+            FW = open(OUTPUT_PATH, "wb")
+            FW.write(srdf_xacro_xml.toprettyxml(indent='  '))
+            FW.close()
+
+            OUTPUT_PATH = "/home/beatriz/workspace/shadow/src/sr_interface/sr_moveit_hand_config/config/generated_shadowhand.urdf"
+            FW = open(OUTPUT_PATH, "wb")
+            FW.write(urdf_str)
+            FW.close()
 
         else:
             rospy.loginfo(" Writing SRDF to file ", OUTPUT_PATH)

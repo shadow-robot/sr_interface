@@ -13,28 +13,19 @@
 
   <group name="$(arg hand_name)">
     <xacro:if value="$(arg th)">
-      <xacro:property name="distal" value="distal"/>
       <xacro:thumbjoints prefix="$(arg prefix)"/>
     </xacro:if>
     <xacro:if value="$(arg ff)">
-      <xacro:property name="distal" value="distal"/>
-      <xacro:property name="middle" value="middle"/>
       <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="FF" lf="0"/>
     </xacro:if>
     <xacro:if value="$(arg mf)">
-      <xacro:property name="distal" value="distal"/>
-      <xacro:property name="middle" value="middle"/>
       <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="MF" lf="0"/>
     </xacro:if>
     <xacro:if value="$(arg rf)">
-      <xacro:property name="distal" value="distal"/>
-      <xacro:property name="middle" value="middle"/>
       <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="RF" lf="0"/>
     </xacro:if>
     <xacro:unless value="$(arg is_lite)">
       <xacro:if value="$(arg lf)">
-        <xacro:property name="distal" value="distal"/>
-        <xacro:property name="middle" value="middle"/>
         <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="LF" lf="1"/>
       </xacro:if>
       <joint name="$(arg prefix)WRJ2" />
@@ -278,29 +269,20 @@
   <xacro:hand_collisions prefix="$(arg prefix)" />
   <!-- single fingers collision --> 
   <xacro:if value="$(arg ff)">
-    <xacro:property name="distal" value="distal"/>
-    <xacro:property name="middle" value="middle"/>
     <xacro:finger_collisions prefix="$(arg prefix)" link_prefix="ff" lf="0" />
   </xacro:if>
   <xacro:if value="$(arg mf)">
-    <xacro:property name="distal" value="distal"/>
-    <xacro:property name="middle" value="middle"/>
     <xacro:finger_collisions prefix="$(arg prefix)" link_prefix="mf" lf="0" />
   </xacro:if>
   <xacro:if value="$(arg rf)">
-    <xacro:property name="distal" value="distal"/>
-    <xacro:property name="middle" value="middle"/>
     <xacro:finger_collisions prefix="$(arg prefix)" link_prefix="rf" lf="0" />
   </xacro:if>
   <xacro:unless value="$(arg is_lite)">
     <xacro:if value="$(arg lf)">
-      <xacro:property name="distal" value="distal"/>
-      <xacro:property name="middle" value="middle"/>
       <xacro:finger_collisions prefix="$(arg prefix)" link_prefix="lf" lf="1" />
     </xacro:if>
   </xacro:unless>  
   <xacro:if value="$(arg th)">
-    <xacro:property name="distal" value="distal"/>
     <xacro:thumb_collisions prefix="$(arg prefix)" /> 
   </xacro:if>
 
@@ -308,24 +290,16 @@
   <xacro:if value="$(arg th)">
     <xacro:property name="thdistal" value="thdistal"/>
     <xacro:if value="$(arg ff)">
-      <xacro:property name="distal" value="distal"/>
-      <xacro:property name="middle" value="middle"/>
       <xacro:finger_thumb_collisions  prefix="$(arg prefix)" link_prefix="ff" far="0" lf="0" />
     </xacro:if>
     <xacro:if value="$(arg mf)">
-      <xacro:property name="distal" value="distal"/>
-      <xacro:property name="middle" value="middle"/>
       <xacro:finger_thumb_collisions  prefix="$(arg prefix)" link_prefix="mf" far="1" lf="0" />
     </xacro:if>
     <xacro:if value="$(arg rf)">
-      <xacro:property name="distal" value="distal"/>
-      <xacro:property name="middle" value="middle"/>
       <xacro:finger_thumb_collisions  prefix="$(arg prefix)" link_prefix="rf" far="1" lf="0" />
     </xacro:if>
     <xacro:unless value="$(arg is_lite)">
       <xacro:if value="$(arg lf)">
-       <xacro:property name="distal" value="distal"/>
-       <xacro:property name="middle" value="middle"/>
        <xacro:finger_thumb_collisions  prefix="$(arg prefix)" link_prefix="lf" far="1" lf="1" />
       </xacro:if>
     </xacro:unless>
