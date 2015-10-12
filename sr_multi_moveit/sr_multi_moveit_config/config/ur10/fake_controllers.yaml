@@ -7,5 +7,4 @@ controller_list:
       - wrist_1_joint
       - wrist_2_joint
       - wrist_3_joint
-      - WRJ2
-      - WRJ1
+
