@@ -122,8 +122,6 @@ if __name__ == '__main__':
                             group_element.parentNode.removeChild(group_element)
                     else:
                         group_element.getAttributeNode("name").nodeValue = (arm_prefix + attribute_name)
-
-                print "writing"
                 elt.writexml(new_robot_srdf,  indent="  ", addindent="  ", newl="\n")
 
         previous = elt

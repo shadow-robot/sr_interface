@@ -17,7 +17,7 @@
         <joint name="la_wrist_2_joint" />
         <joint name="la_wrist_3_joint" />
         <joint name="la_ee_fixed_joint" />
-        <joint name="arm_to_hand" />
+        <joint name="la_arm_to_hand" />
         <joint name="lh_WRJ2" />
         <joint name="lh_WRJ1" />
     </group>
