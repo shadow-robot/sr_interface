@@ -30,9 +30,9 @@ if __name__ == '__main__':
     arm_name = "ur10"
     arm_srdf_path = package_path + "/config/" + arm_name + "/" + arm_name + ".srdf"
     
-    arm_main_group = "manipulator"
+    arm_main_group = "right_arm"
     arm_other_groups = []
-    arm_group_states = ["home", "up"]
+    arm_group_states = ["hold_bottle", "approach_bottle", "pour_bottle", "victory", "gamma"]
     end_effectors = [] # Ignore the one in the arm
     #Generate the virtual joint and ignore the one available using info in the urdf
     
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     print arm_side
     print arm_prefix
 
-#     is_lite = True
+    hand_lite = False
 
     # Parse arm srdf
     stream = open(arm_srdf_path, 'r')
@@ -89,15 +89,24 @@ if __name__ == '__main__':
                                                                                group_element.getAttribute(attribute))
                 for tagName in ["joint", "link", "group"]:
                     for index, group_element in enumerate(elt.getElementsByTagName(tagName)):
-                        attribute = "name"
-                        group_element.getAttributeNode(attribute).nodeValue = (arm_prefix +
-                                                                           group_element.getAttribute(attribute))
+                        attribute_name = group_element.getAttribute("name")
+                        if attribute_name in ["WRJ1", "WRJ2"]: 
+                            if not hand_lite:
+                                group_element.getAttributeNode("name").nodeValue = (hand_prefix + attribute_name)
+                            else:
+                                group_element.parentNode.removeChild(group_element)
+                        else:
+                            group_element.getAttributeNode("name").nodeValue = (arm_prefix + attribute_name)
+
                 elt.writexml(new_robot_srdf,  indent="  ", addindent="  ", newl="\n")
                 # TODO: ADD hand wrist joints!
         elif elt.tagName == 'group_state':
             print "elt: ", elt.toprettyxml(indent='  ')
             group_state_name = elt.getAttribute('name')
             group_name = elt.getAttribute('group')
+            
+            print "group_name",group_name
+            print "group_state_name",group_state_name
             if group_state_name in arm_group_states and (group_name == arm_main_group or group_name in arm_other_groups):
                 elt.setAttribute('name',arm_prefix + group_state_name)
                 if group_name == arm_main_group:
@@ -105,9 +114,16 @@ if __name__ == '__main__':
                 else:
                     elt.setAttribute('group',arm_prefix + group_name)
                 for index, group_element in enumerate(elt.getElementsByTagName("joint")):
-                    attribute = "name"
-                    group_element.getAttributeNode(attribute).nodeValue = (arm_prefix +
-                                                                           group_element.getAttribute(attribute))
+                    attribute_name = group_element.getAttribute("name")
+                    if attribute_name in ["WRJ1", "WRJ2"]: 
+                        if not hand_lite:
+                            group_element.getAttributeNode("name").nodeValue = (hand_prefix + attribute_name)
+                        else:
+                            group_element.parentNode.removeChild(group_element)
+                    else:
+                        group_element.getAttributeNode("name").nodeValue = (arm_prefix + attribute_name)
+
+                print "writing"
                 elt.writexml(new_robot_srdf,  indent="  ", addindent="  ", newl="\n")
 
         previous = elt
