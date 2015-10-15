@@ -90,6 +90,9 @@ class SrRobotCommander(object):
 
         threading.Thread(None, rospy.spin)
 
+    def get_group_name(self):
+        return self._name
+
     def refresh_named_targets(self):
         self._srdf_names = self.__get_srdf_names()
         self._warehouse_names = self.__get_warehouse_names()
