@@ -47,8 +47,8 @@ from rosgraph.names import load_mappings
 
 from sr_utilities.local_urdf_parser_py import URDF
 
-class SRDFGenerator(object):
-    def __init__(self, urdf_str = None):
+class SRDFHandGenerator(object):
+    def __init__(self, urdf_str = None, load = True, save = True):
         if urdf_str is None:
             while not rospy.has_param('robot_description'):
                 rospy.sleep(0.5)
@@ -113,11 +113,11 @@ class SRDFGenerator(object):
 
         # open and parse the xacro.srdf file
         srdf_xacro_file = open(srdf_xacro_filename, 'r')
-        srdf_xacro_xml = parse(srdf_xacro_file)
+        self.srdf_xacro_xml = parse(srdf_xacro_file)
 
         # expand the xacro
-        xacro.process_includes(srdf_xacro_xml, os.path.dirname(sys.argv[0]))
-        xacro.eval_self_contained(srdf_xacro_xml)
+        xacro.process_includes(self.srdf_xacro_xml, os.path.dirname(sys.argv[0]))
+        xacro.eval_self_contained(self.srdf_xacro_xml)
 
         if len(sys.argv) > 1:
             OUTPUT_PATH = sys.argv[1]
@@ -129,31 +129,34 @@ class SRDFGenerator(object):
             OUTPUT_PATH = None
 
         # Upload or output the input string on the correct param namespace or file
-        if OUTPUT_PATH is None:
+        if OUTPUT_PATH is not None:
+            rospy.loginfo(" Writing SRDF to file ", OUTPUT_PATH)
+            FW = open(OUTPUT_PATH, "wb")
+            FW.write(self.srdf_xacro_xml.toprettyxml(indent=' '))
+            FW.close()
+
+        if load:
             rospy.loginfo(" Loading SRDF on parameter server")
             robot_description_param = rospy.resolve_name('robot_description') + "_semantic"
             rospy.set_param(robot_description_param,
-                            srdf_xacro_xml.toprettyxml(indent='  '))
-            
-            OUTPUT_PATH = "/home/beatriz/workspace/shadow/src/sr_interface/sr_moveit_hand_config/config/generated_shadowhand.srdf"
+                            self.srdf_xacro_xml.toprettyxml(indent='  '))
+        if save:
+            OUTPUT_PATH = package_path + "/config/generated_shadowhand.srdf"
             FW = open(OUTPUT_PATH, "wb")
-            FW.write(srdf_xacro_xml.toprettyxml(indent='  '))
+            FW.write(self.srdf_xacro_xml.toprettyxml(indent='  '))
             FW.close()
 
-            OUTPUT_PATH = "/home/beatriz/workspace/shadow/src/sr_interface/sr_moveit_hand_config/config/generated_shadowhand.urdf"
+            OUTPUT_PATH = package_path + "/config/generated_shadowhand.urdf"
             FW = open(OUTPUT_PATH, "wb")
             FW.write(urdf_str)
             FW.close()
 
-        else:
-            rospy.loginfo(" Writing SRDF to file ", OUTPUT_PATH)
-            FW = open(OUTPUT_PATH, "wb")
-            FW.write(srdf_xacro_xml.toprettyxml(indent=' '))
-            FW.close()
-
         srdf_xacro_file.close()
+
+    def get_hand_srdf(self):
+        return self.srdf_xacro_xml
 
 if __name__ == '__main__':
     rospy.init_node('hand_srdf_generator', anonymous=True)
-    srdfGenerator = SRDFGenerator() 
+    srdfGenerator = SRDFHandGenerator() 
 
