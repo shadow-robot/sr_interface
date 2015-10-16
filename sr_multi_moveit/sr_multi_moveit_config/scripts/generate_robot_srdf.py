@@ -61,18 +61,20 @@ class Manipulator(object):
 
 
 class SRDFRobotGenerator(object):
-    def __init__(self):
+    def __init__(self, description_file = "/config/description_ur10_sh.yaml", load = True):
         self.manipulators = []
+
 
         # ARM
         self.rospack = rospkg.RosPack()
         self.package_path = self.rospack.get_path('sr_multi_moveit_config')
 
         #description_file = "/config/description_two_sh.yaml"
-        description_file = "/config/description_sh.yaml"
+        description_file = "/config/description_ur10_sh.yaml"
         self.set_parameters(description_file)
 
-        self.start_new_srdf()
+        new_srdf_file_name = "generated_robot.srdf"
+        self.start_new_srdf(new_srdf_file_name)
         for manipulator in self.manipulators:
             if manipulator.has_arm:
                 # Read arm srdf
@@ -129,6 +131,15 @@ class SRDFRobotGenerator(object):
         #Finish and close file
         self.new_robot_srdf.write('</robot>\n')
         self.new_robot_srdf.close()
+        if load:
+            stream = open(self.package_path + "/config/" + new_srdf_file_name, 'r')
+            srdf = parse(stream)
+            stream.close()
+            rospy.loginfo("Loading SRDF on parameter server")
+            robot_description_param = rospy.resolve_name('robot_description') + "_semantic"
+            rospy.set_param(robot_description_param,
+                            srdf.toprettyxml(indent='  '))
+
         rospy.loginfo("generated_robot.srdf has been generated and saved.")
 
     def set_parameters(self, description_file):
@@ -188,9 +199,9 @@ class SRDFRobotGenerator(object):
         else:
             raise SRDFRobotGeneratorException("robot description did not specified a robot")
 
-    def start_new_srdf(self):
+    def start_new_srdf(self, file_name):
         # Generate new robot srdf with arm information
-        self.new_robot_srdf = open(self.package_path + "/config/generated_robot.srdf", 'w')
+        self.new_robot_srdf = open(self.package_path + "/config/" + file_name, 'w')
 
         self.new_robot_srdf.write('<?xml version="1.0" ?>\n')
         banner = ["This does not replace URDF, and is not an extension of URDF.\n"+

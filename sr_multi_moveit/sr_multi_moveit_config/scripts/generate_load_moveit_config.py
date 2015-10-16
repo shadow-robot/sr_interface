@@ -110,6 +110,6 @@ if __name__ == '__main__':
             rospy.loginfo("Successfully loaded " + command + " params")
         else:
             rospy.logerr("Unrecognized command " + command +
-                         ". Choose among fake_controllers, real_controllers, ompl_planning, kinematics joint_limits")
+                         ". Choose among fake_controllers, ompl_planning, kinematics joint_limits")
     else:
         rospy.logerr("Argument needed. Choose among fake_controllers, ompl_planning, kinematics joint_limits")
