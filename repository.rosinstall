@@ -36,6 +36,7 @@
 - git:
     local-name: moveit_msgs
     uri: https://github.com/ros-planning/moveit_msgs.git
+    version: indigo-devel
 
 - git:
     local-name: warehouse_ros
