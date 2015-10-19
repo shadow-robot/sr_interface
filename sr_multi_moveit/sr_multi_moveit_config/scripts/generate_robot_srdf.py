@@ -59,23 +59,84 @@ class Manipulator(object):
                 self.hand.prefix = "lh_"
                 self.hand.internal_name = "left_hand"
 
-
-class SRDFRobotGenerator(object):
-    def __init__(self, description_file = "/config/description_ur10_sh.yaml", load = True):
+class Robot(object):
+    def __init__(self):
+        self.name = ""
         self.manipulators = []
 
+    def set_parameters(self, description_str):
+        # Read robot description yaml
+        yamldoc = yaml.load(description_str)
+        if "robot" in yamldoc:
+            robot_yaml = yamldoc["robot"]
+            self.name = robot_yaml["name"]
+            if "manipulators" in robot_yaml:
+                manipulators_yaml = robot_yaml["manipulators"]
+                for manipulator_name in manipulators_yaml.keys():
+                    manipulator_yaml = manipulators_yaml[manipulator_name]
+                    side = manipulator_yaml["side"]
+                    if side not in ["left", "right"]:
+                        raise SRDFRobotGeneratorException("robot description did not specified a correct side for a manipulator")
+                    has_arm = True if "arm" in manipulator_yaml else False
+                    has_hand = True if "hand" in manipulator_yaml else False
+                    if not has_hand and not has_arm:
+                        raise SRDFRobotGeneratorException("robot description did not specified either an arm or hand for a manipulator")
+                    # TODO: check that each manipulator do not have more than one arm and hand
+                    manipulator = Manipulator(manipulator_name, side, has_arm, has_hand)
+                    if has_arm:
+                        arm_yaml = manipulator_yaml["arm"]
+                        if "name" in arm_yaml:
+                            manipulator.arm.name = arm_yaml["name"]
+                        else:
+                            raise SRDFRobotGeneratorException("arm name should be specified")
+                        if "main_group" in arm_yaml:
+                            manipulator.arm.main_group = arm_yaml["main_group"]
+                        else:
+                            raise SRDFRobotGeneratorException("arm main_group should be specified")
+                        if "other_groups" in arm_yaml:
+                            for group in arm_yaml["other_groups"]:
+                                manipulator.arm.other_groups.append(group)
+                        if "group_states" in arm_yaml:
+                            for group_state in arm_yaml["group_states"]:
+                                manipulator.arm.group_states.append(group_state)
 
+                    if has_hand:
+                        hand_yaml = manipulator_yaml["hand"]
+                        if "name" in hand_yaml:
+                            manipulator.hand.name = hand_yaml["name"]
+                        if "main_group" in hand_yaml:
+                            manipulator.hand.main_group = hand_yaml["main_group"]
+                        if "other_groups" in hand_yaml:
+                            for group in hand_yaml["other_groups"]:
+                                manipulator.hand.other_groups.append(group)
+                        if "group_states" in hand_yaml:
+                            for group_state in hand_yaml["group_states"]:
+                                manipulator.hand.group_states.append(group_state)
+                        if "is_lite" in hand_yaml:
+                            manipulator.hand.is_lite = bool(hand_yaml["is_lite"])
+
+                    self.manipulators.append(manipulator)
+        else:
+            raise SRDFRobotGeneratorException("robot description did not specified a robot")
+
+
+class SRDFRobotGenerator(object):
+    def __init__(self, description_file = None, load = True):
+        if description_file is None and len(sys.argv) > 1:
+            description_file = sys.argv[1]
         # ARM
         self.rospack = rospkg.RosPack()
         self.package_path = self.rospack.get_path('sr_multi_moveit_config')
 
+        self.robot = Robot()
+        print description_file
         #description_file = "/config/description_two_sh.yaml"
-        description_file = "/config/description_ur10_sh.yaml"
-        self.set_parameters(description_file)
+        
+        self.robot.set_parameters(description_file)
 
         new_srdf_file_name = "generated_robot.srdf"
         self.start_new_srdf(new_srdf_file_name)
-        for manipulator in self.manipulators:
+        for manipulator in self.robot.manipulators:
             if manipulator.has_arm:
                 # Read arm srdf
                 arm_srdf_path = self.package_path + "/config/" + manipulator.arm.name + "/" + manipulator.arm.name + ".srdf"
@@ -142,62 +203,7 @@ class SRDFRobotGenerator(object):
 
         rospy.loginfo("generated_robot.srdf has been generated and saved.")
 
-    def set_parameters(self, description_file):
-        # Read robot description yaml
-        stream = open(self.package_path + description_file, 'r')
-        yamldoc = yaml.load(stream)
-        stream.close()
-        if "robot" in yamldoc:
-            robot_yaml = yamldoc["robot"]
-            self.robot_name = robot_yaml["name"]
-            if "manipulators" in robot_yaml:
-                manipulators_yaml = robot_yaml["manipulators"]
-                for manipulator_name in manipulators_yaml.keys():
-                    manipulator_yaml = manipulators_yaml[manipulator_name]
-                    side = manipulator_yaml["side"]
-                    if side not in ["left", "right"]:
-                        raise SRDFRobotGeneratorException("robot description did not specified a correct side for a manipulator")
-                    has_arm = True if "arm" in manipulator_yaml else False
-                    has_hand = True if "hand" in manipulator_yaml else False
-                    if not has_hand and not has_arm:
-                        raise SRDFRobotGeneratorException("robot description did not specified either an arm or hand for a manipulator")
-                    # TODO: check that each manipulator do not have more than one arm and hand
-                    manipulator = Manipulator(manipulator_name, side, has_arm, has_hand)
-                    if has_arm:
-                        arm_yaml = manipulator_yaml["arm"]
-                        if "name" in arm_yaml:
-                            manipulator.arm.name = arm_yaml["name"]
-                        else:
-                            raise SRDFRobotGeneratorException("arm name should be specified")
-                        if "main_group" in arm_yaml:
-                            manipulator.arm.main_group = arm_yaml["main_group"]
-                        else:
-                            raise SRDFRobotGeneratorException("arm main_group should be specified")
-                        if "other_groups" in arm_yaml:
-                            for group in arm_yaml["other_groups"]:
-                                manipulator.arm.other_groups.append(group)
-                        if "group_states" in arm_yaml:
-                            for group_state in arm_yaml["group_states"]:
-                                manipulator.arm.group_states.append(group_state)
 
-                    if has_hand:
-                        hand_yaml = manipulator_yaml["hand"]
-                        if "name" in hand_yaml:
-                            manipulator.hand.name = hand_yaml["name"]
-                        if "main_group" in hand_yaml:
-                            manipulator.hand.main_group = hand_yaml["main_group"]
-                        if "other_groups" in hand_yaml:
-                            for group in hand_yaml["other_groups"]:
-                                manipulator.hand.other_groups.append(group)
-                        if "group_states" in hand_yaml:
-                            for group_state in hand_yaml["group_states"]:
-                                manipulator.hand.group_states.append(group_state)
-                        if "is_lite" in hand_yaml:
-                            manipulator.hand.is_lite = bool(hand_yaml["is_lite"])
-
-                    self.manipulators.append(manipulator)
-        else:
-            raise SRDFRobotGeneratorException("robot description did not specified a robot")
 
     def start_new_srdf(self, file_name):
         # Generate new robot srdf with arm information
@@ -209,7 +215,7 @@ class SRDFRobotGenerator(object):
                   "    A URDF file must exist for this robot as well, where the joints and the links that are referenced are defined\n"
                  ]
         self.add_comments(banner, "")
-        self.new_robot_srdf.write('<robot name="'+self.robot_name+'">\n')
+        self.new_robot_srdf.write('<robot name="'+self.robot.name+'">\n')
         comments = ["GROUPS: Representation of a set of joints and links. This can be useful for specifying DOF to plan for, defining arms, end effectors, etc",
                     "LINKS: When a link is specified, the parent joint of that link (if it exists) is automatically included",
                     "JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included",

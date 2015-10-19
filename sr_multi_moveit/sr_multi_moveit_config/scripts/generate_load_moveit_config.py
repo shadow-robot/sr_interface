@@ -68,6 +68,18 @@ if __name__ == '__main__':
             srdf_str = rospy.get_param(full_param_name)
             # parse it
             robot = SRDF.from_xml_string(srdf_str)
+            
+            while (not rospy.search_param('robot_description_config') and not rospy.is_shutdown()):
+                time.sleep(0.5)
+                rospy.loginfo("waiting for robot_description_config")
+            # load the yaml from the parameter server
+            full_param_name = rospy.search_param('robot_description_config')
+            robot_config_str = rospy.get_param(full_param_name)
+            robot_config = generate_robot_srdf.Robot()
+            robot_config.set_parameters(robot_config_str)
+            
+            # parse it
+            robot_config = SRDF.from_xml_string(robot_config_str)
 
             # generate the desired yaml and load it.
             if command == "fake_controllers":

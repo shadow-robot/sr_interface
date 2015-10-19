@@ -164,6 +164,7 @@ def generate_real_controllers(robot, output_path=None, ns_=None):
                 output_str += "      - " + joint.name + "\n"
     # load on param server or output to file
     upload_output_params(output_str, output_path, ns_)
+    return output_str
 
 
 def generate_ompl_planning(robot,

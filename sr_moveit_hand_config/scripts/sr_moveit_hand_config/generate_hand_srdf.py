@@ -128,13 +128,6 @@ class SRDFHandGenerator(object):
         else:
             OUTPUT_PATH = None
 
-        # Upload or output the input string on the correct param namespace or file
-        if OUTPUT_PATH is not None:
-            rospy.loginfo(" Writing SRDF to file ", OUTPUT_PATH)
-            FW = open(OUTPUT_PATH, "wb")
-            FW.write(self.srdf_xacro_xml.toprettyxml(indent=' '))
-            FW.close()
-
         if load:
             rospy.loginfo(" Loading SRDF on parameter server")
             robot_description_param = rospy.resolve_name('robot_description') + "_semantic"

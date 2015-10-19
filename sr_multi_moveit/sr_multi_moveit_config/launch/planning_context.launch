@@ -1,0 +1,35 @@
+<launch>
+  <!-- By default we do not overwrite the URDF. Change the following to true to change the default behavior -->
+  <arg name="load_robot_description" default="false"/>
+
+  <!-- The name of the parameter under which the URDF is loaded -->
+  <arg name="robot_description" default="robot_description"/>
+  
+  <!-- The name of the URDF file to load -->
+  <arg name="robot_urdf" default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/>
+  
+  <!-- Load universal robot description format (URDF) -->
+  <param if="$(arg load_robot_description)" name="$(arg robot_description)" command="$(find xacro)/xacro.py '$(arg robot_urdf)'"/>
+
+  <!-- The name of the robot config file to load -->
+  <arg name="robot_config" default="$(find sr_multi_moveit_config)/config/description_ur10_sh.yaml"/>
+
+  <!--param ="load" file="$(find sr_moveit_hand_config)/config/kinematics.yaml"/-->	
+
+  <!-- The semantic description that corresponds to the URDF -->
+  <node name="generate_robot_srdf" pkg="sr_multi_moveit_config" type="generate_robot_srdf.py" respawn="false" output="screen" args="$(arg robot_config)" />
+  
+  <!-- TEST -->
+  <node name="load_controllers" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="real_controllers --"/>
+    	  
+  <!-- Load updated joint limits (override information from URDF) -->
+  <!--group ns="$(arg robot_description)_planning">
+    <node name="load_joint_limits" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="joint_limits $(find sr_multi_moveit_config)/config/joint_limits_template.yaml" />    
+  </group-->
+
+  <!-- Load default settings for kinematics; these settings are overridden by settings in a node's namespace -->
+  <!--group ns="$(arg robot_description)_kinematics">
+    <node name="load_kinematics" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="kinematics $(find sr_multi_moveit_config)/config/kinematics_template.yaml" />
+  </group-->
+
+</launch>

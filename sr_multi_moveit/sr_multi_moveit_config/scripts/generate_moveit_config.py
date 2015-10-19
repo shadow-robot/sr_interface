@@ -44,10 +44,13 @@ import yaml
 import re
 
 import rospy
+import rospkg
 import rosparam
 from srdfdom.srdf import SRDF
 
 from sr_utilities.local_urdf_parser_py import URDF
+import generate_robot_srdf
+import sr_moveit_hand_config.generate_moveit_config as hand_config
 
 
 def yaml_reindent(in_str, numspaces):
@@ -127,7 +130,7 @@ def generate_fake_controllers(robot, output_path=None, ns_=None):
     upload_output_params(output_str, output_path, ns_)
 
 
-def generate_real_controllers(robot, output_path=None, ns_=None):
+def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
     """
     Generate controller yaml and direct it to file
     or load it to parameter server.
@@ -139,31 +142,51 @@ def generate_real_controllers(robot, output_path=None, ns_=None):
         @param ns_: namespace
         @type  ns_: str
     """
+
+
     output_str = ""
     output_str += "controller_list:\n"
-    prefix = find_prefix(robot)
+    for manipulator in robot_config.manipulators:
+        if manipulator.has_arm:
+            # Read arm srdf
+            arm_yaml_path = package_path + "/config/" + manipulator.arm.name + "/" + "controllers.yaml"
+            stream = open(arm_yaml_path, 'r')
+            arm_yamldoc = yaml.load(stream)
+            stream.close()
+            
+            #print arm_yamldoc
+        if manipulator.has_hand:
+            # Generate hand srdf
+            #hand_yamldoc = hand_config.generate_real_controllers(robot)
+            #print hand_yamldoc
+            
+            prefix = manipulator.hand.prefix
+            sh_group = None
+            for group in robot.groups:
+                print "group name:", group.name
+                if group.name == manipulator.hand.internal_name:
+                    sh_group = group
+                    break
+            #print "********************************"
+            #print "manipulator.hand.internal_name:", manipulator.hand.internal_name
+            #print "sh_group:", sh_group
+            #print "groups", group
+            controller_name = "  - name: " + prefix + "trajectory_controller\n"
+            output_str += controller_name
+            output_str += "    action_ns: follow_joint_trajectory\n"
+            output_str += "    type: FollowJointTrajectory\n"
+            output_str += "    default: true\n"
+            output_str += "    joints:\n"
+            if len(group.joints) == 0:
+                output_str += "      []\n"
+            else:
+                for joint in group.joints:
+                    if joint.name[-3:] != "tip":
+                        output_str += "      - " + joint.name + "\n"
 
-    # find full hand key name
-    sh_group = None
-    for group in robot.groups:
-        if group.name.endswith("_hand"):
-            sh_group = group
-            break
-
-    controller_name = "  - name: " + prefix + "trajectory_controller\n"
-    output_str += controller_name
-    output_str += "    action_ns: follow_joint_trajectory\n"
-    output_str += "    type: FollowJointTrajectory\n"
-    output_str += "    default: true\n"
-    output_str += "    joints:\n"
-    if len(group.joints) == 0:
-        output_str += "      []\n"
-    else:
-        for joint in group.joints:
-            if joint.name[-3:] != "tip":
-                output_str += "      - " + joint.name + "\n"
+    print "output_str:", output_str
     # load on param server or output to file
-    upload_output_params(output_str, output_path, ns_)
+    #upload_output_params(output_str, output_path, ns_)
 
 
 def generate_ompl_planning(robot,
