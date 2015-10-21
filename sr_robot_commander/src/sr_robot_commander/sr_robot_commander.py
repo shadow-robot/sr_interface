@@ -523,28 +523,18 @@ class SrRobotCommander(object):
             mode = RobotTeachModeRequest.TRAJECTORY_MODE
         self.change_teach_mode(mode, self._name)
 
-    def reverse_joint_trajectory(self, trajectory):
+    def move_reversed_trajectory(self, trajectory, wait=True):
+        """
+        Make and execute a plan from the current state to the first state in an existing trajectory
+        """
+
         if len(trajectory.points) <= 0:
             rospy.logerr("Trajectory has no points in it, can't reverse...")
             return None
 
-        last_point = trajectory.points[-1]
-        end_time = last_point.time_from_start
-
-        output = JointTrajectory()
-        output.joint_names = trajectory.joint_names
-
-        for point in reversed(trajectory.points):
-            new_point = JointTrajectoryPoint()
-
-            new_point.time_from_start = end_time - point.time_from_start
-            new_point.velocities = [x * -1 for x in point.velocities]
-            new_point.accelerations = [x * -1 for x in point.accelerations]
-            new_point.efforts = [x * -1 for x in point.efforts]
-
-            output.points.append(new_point)
-
-        return output
+        first_point = trajectory.points[0]
+        end_state = dict(zip(trajectory.joint_names, first_point.positions))
+        self.move_to_joint_value_target(end_state, wait=wait)
 
     @staticmethod
     def change_teach_mode(mode, robot):
