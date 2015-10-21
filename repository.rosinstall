@@ -31,16 +31,17 @@
 - git:
     local-name: moveit_ros
     uri: https://github.com/shadow-robot/moveit_ros.git
-    version: F#20_add_current_state_bounded
+    version: shadow-indigo-latest
 
 - git:
     local-name: moveit_msgs
     uri: https://github.com/ros-planning/moveit_msgs.git
+    version: indigo-devel
 
 - git:
     local-name: warehouse_ros
     uri: https://github.com/shadow-robot/warehouse_ros.git
-    version: F#4_add_remote_mongo
+    version: shadow-indigo-latest
 
 - git:
     local-name: ros_controllers
