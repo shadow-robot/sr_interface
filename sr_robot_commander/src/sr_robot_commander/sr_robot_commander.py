@@ -546,7 +546,6 @@ class SrRobotCommander(object):
 
         return output
 
-
     @staticmethod
     def change_teach_mode(mode, robot):
         teach_mode_client = rospy.ServiceProxy('/teach_mode', RobotTeachMode)
