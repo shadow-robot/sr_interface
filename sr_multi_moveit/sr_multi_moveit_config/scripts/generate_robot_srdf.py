@@ -33,7 +33,7 @@ class Subrobot(object):
         self.group_states = []
         self.is_lite = False
         self.prefix = ""
-
+        self.moveit_path = ""
 
 class Manipulator(object):
     def __init__(self, name, side, has_arm, has_hand):
@@ -64,9 +64,8 @@ class Robot(object):
         self.name = ""
         self.manipulators = []
 
-    def set_parameters(self, description_str):
+    def set_parameters(self, yamldoc):
         # Read robot description yaml
-        yamldoc = yaml.load(description_str)
         if "robot" in yamldoc:
             robot_yaml = yamldoc["robot"]
             self.name = robot_yaml["name"]
@@ -89,6 +88,10 @@ class Robot(object):
                             manipulator.arm.name = arm_yaml["name"]
                         else:
                             raise SRDFRobotGeneratorException("arm name should be specified")
+                        if "moveit_path" in arm_yaml:
+                            package_name = arm_yaml["moveit_path"]["package"]
+                            relative_path = arm_yaml["moveit_path"]["relative_path"]
+                            manipulator.arm.moveit_path = rospkg.RosPack().get_path(package_name) + relative_path
                         if "main_group" in arm_yaml:
                             manipulator.arm.main_group = arm_yaml["main_group"]
                         else:
@@ -129,17 +132,18 @@ class SRDFRobotGenerator(object):
         self.package_path = self.rospack.get_path('sr_multi_moveit_config')
 
         self.robot = Robot()
-        print description_file
-        #description_file = "/config/description_two_sh.yaml"
-        
-        self.robot.set_parameters(description_file)
+
+        with open (description_file, "r") as stream:
+            yamldoc = yaml.load(stream)
+
+        self.robot.set_parameters(yamldoc)
 
         new_srdf_file_name = "generated_robot.srdf"
         self.start_new_srdf(new_srdf_file_name)
         for manipulator in self.robot.manipulators:
             if manipulator.has_arm:
                 # Read arm srdf
-                arm_srdf_path = self.package_path + "/config/" + manipulator.arm.name + "/" + manipulator.arm.name + ".srdf"
+                arm_srdf_path = manipulator.arm.moveit_path + "/" + manipulator.arm.name + ".srdf"
                 stream = open(arm_srdf_path, 'r')
                 self.arm_srdf_xml = parse(stream)
                 stream.close()
@@ -196,13 +200,19 @@ class SRDFRobotGenerator(object):
             stream = open(self.package_path + "/config/" + new_srdf_file_name, 'r')
             srdf = parse(stream)
             stream.close()
+            
             rospy.loginfo("Loading SRDF on parameter server")
             robot_description_param = rospy.resolve_name('robot_description') + "_semantic"
             rospy.set_param(robot_description_param,
                             srdf.toprettyxml(indent='  '))
+#             rospy.loginfo("Loading YAML on parameter server")
+#             robot_config_param = rospy.resolve_name('robot_description') + "_config"
+#             with open (description_file, "r") as stream:
+#                 data=stream.read()
+#             rospy.set_param(robot_config_param, data)
+#             stream.close()
 
         rospy.loginfo("generated_robot.srdf has been generated and saved.")
-
 
 
     def start_new_srdf(self, file_name):

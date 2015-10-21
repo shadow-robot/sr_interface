@@ -6,6 +6,9 @@ robot:
       arm:
         name: ur10
         main_group: right_arm
+        moveit_path: 
+          package: sr_multi_moveit_config
+          relative_path: /config/ur10
         group_states:
           - hold_bottle
           - approach_bottle
@@ -25,6 +28,9 @@ robot:
       arm:
         name: ur10
         main_group: left_arm
+        moveit_path: 
+          package: sr_multi_moveit_config
+          relative_path: /config/ur10
         group_states:
           - hold_bottle
           - approach_bottle

@@ -42,20 +42,23 @@
 
 import sys
 import time
-
+import yaml
 import rospy
+import rospkg
 
 from srdfdom.srdf import SRDF
 
 from generate_moveit_config import generate_fake_controllers, generate_real_controllers, \
     generate_ompl_planning, generate_kinematics, generate_joint_limits
+import generate_robot_srdf
 
 if __name__ == '__main__':
 
     # detect the command to be executed
-    if len(sys.argv) > 1:
+    if len(sys.argv) > 2:
 
         command = sys.argv[1]
+        robot_config_file = sys.argv[2]
         rospy.init_node('moveit_config_generator', anonymous=True)
         if command in ['fake_controllers', 'real_controllers', 'ompl_planning', 'kinematics', 'joint_limits']:
             NS = rospy.get_namespace()
@@ -69,53 +72,27 @@ if __name__ == '__main__':
             # parse it
             robot = SRDF.from_xml_string(srdf_str)
             
-            while (not rospy.search_param('robot_description_config') and not rospy.is_shutdown()):
-                time.sleep(0.5)
-                rospy.loginfo("waiting for robot_description_config")
-            # load the yaml from the parameter server
-            full_param_name = rospy.search_param('robot_description_config')
-            robot_config_str = rospy.get_param(full_param_name)
-            robot_config = generate_robot_srdf.Robot()
-            robot_config.set_parameters(robot_config_str)
+            sh_config_path = rospkg.RosPack().get_path('sr_multi_moveit_config') + "/config/sh/"
             
-            # parse it
-            robot_config = SRDF.from_xml_string(robot_config_str)
+            with open (robot_config_file, "r") as stream:
+                yamldoc = yaml.load(stream)
+            robot_config = generate_robot_srdf.Robot()
+            robot_config.set_parameters(yamldoc)
 
             # generate the desired yaml and load it.
             if command == "fake_controllers":
-                generate_fake_controllers(robot, ns_=NS)
+                generate_fake_controllers(robot, robot_config, ns_=NS)
             elif command == "real_controllers":
-                generate_real_controllers(robot, ns_=NS)
+                generate_real_controllers(robot, robot_config, ns_=NS)
             elif command == "ompl_planning":
-                # get the template file
-                if len(sys.argv) > 2:
-                    template_path = sys.argv[2]
-                    # reject ROS internal parameters and detect termination
-                    if (template_path.startswith("_") or template_path.startswith("--")):
-                        template_path = None
-                    generate_ompl_planning(robot, template_path=template_path, ns_=NS)
-                else:
-                    rospy.logerr("ompl_planning generation requires a template file, none provided")
-
+                hand_template_path = sh_config_path + "ompl_planning_template.yaml"
+                generate_ompl_planning(robot, robot_config, hand_template_path, ns_=NS)
             elif command == "kinematics":
-                # get the template file
-                if len(sys.argv) > 2:
-                    template_path = sys.argv[2]
-                    if (template_path.startswith("_") or template_path.startswith("--")):
-                        template_path = None
-                    generate_kinematics(robot, template_path=template_path, ns_=NS)
-                else:
-                    rospy.logerr("kinematics generation requires a template file, none provided")
-                    sys.exit(1)
+                hand_template_path = sh_config_path + "kinematics_template.yaml"
+                generate_kinematics(robot, robot_config, hand_template_path, ns_=NS)
             elif command == "joint_limits":
-                # get the template file
-                if len(sys.argv) > 2:
-                    template_path = sys.argv[2]
-                    if (template_path.startswith("_") or template_path.startswith("--")):
-                        template_path = None
-                    generate_joint_limits(robot, template_path=template_path, ns_=NS)
-                else:
-                    rospy.logerr("joint_limits generation requires a template file, none provided")
+                hand_template_path = sh_config_path + "joint_limits_template.yaml"
+                generate_joint_limits(robot, robot_config, hand_template_path, ns_=NS)
             else:
                 rospy.logerr("Wrong argument " + command)
 
