@@ -523,10 +523,10 @@ class SrRobotCommander(object):
             mode = RobotTeachModeRequest.TRAJECTORY_MODE
         self.change_teach_mode(mode, self._name)
 
-    def move_reversed_trajectory(self, trajectory, wait=True):
+    def move_to_trajectory_start(self, trajectory, wait=True):
         """
-        Make and execute a plan from the current state to the first state in an existing trajectory
-        @oaram trajectory - moveit_msgs/JointTrajectory
+        Make and execute a plan from the current state to the first state in an pre-existing trajectory
+        @param trajectory - moveit_msgs/JointTrajectory
         @param wait - Bool to specify if movement should block untill finished.
         """
 
