@@ -526,6 +526,8 @@ class SrRobotCommander(object):
     def move_reversed_trajectory(self, trajectory, wait=True):
         """
         Make and execute a plan from the current state to the first state in an existing trajectory
+        @oaram trajectory - moveit_msgs/JointTrajectory
+        @param wait - Bool to specify if movement should block untill finished.
         """
 
         if len(trajectory.points) <= 0:
