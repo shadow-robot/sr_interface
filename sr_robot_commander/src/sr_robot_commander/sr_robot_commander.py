@@ -90,6 +90,9 @@ class SrRobotCommander(object):
 
         threading.Thread(None, rospy.spin)
 
+    def get_planning_frame(self):
+        return self._move_group_commander.get_planning_frame()
+
     def get_group_name(self):
         return self._name
 
