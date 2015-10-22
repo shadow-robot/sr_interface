@@ -1,7 +1,0 @@
-<launch>
-  <!-- The name of the parameter under which the URDF is loaded -->
-  <arg name="robot_description" default="robot_description"/>
-  
-  <param name="$(arg robot_description)"
-             command="$(find xacro)/xacro.py '$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro'"/>
-</launch>
