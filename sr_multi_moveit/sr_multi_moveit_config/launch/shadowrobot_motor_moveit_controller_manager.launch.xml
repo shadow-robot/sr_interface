@@ -4,5 +4,9 @@
   <param name="moveit_controller_manager" value="$(arg moveit_controller_manager)"/>
   <!-- load controller_list -->
 
-  <node name="load_controllers" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="real_controllers --"/>
+  <!-- The name of the robot config file to load -->
+  <arg name="robot_config_file" default=""/>
+
+  <node name="load_controllers" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="real_controllers $(arg robot_config_file)"/>
+  
 </launch>

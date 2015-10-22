@@ -6,6 +6,9 @@
   <arg unless="$(arg debug)" name="launch_prefix" value="" />
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
+  <!-- The name of the robot config file to load -->
+  <arg name="robot_config_file" default=""/>
+
   <!-- Verbose Mode Option -->
   <arg name="info" default="$(arg debug)" />  
   <arg unless="$(arg info)" name="command_args" value="" />
@@ -21,18 +24,20 @@
   <!-- Planning Functionality -->
   <include ns="move_group" file="$(find sr_multi_moveit_config)/launch/planning_pipeline.launch.xml">
     <arg name="pipeline" value="$(arg pipeline)" />
+    <arg name="robot_config_file" value="$(arg robot_config_file)"/>
   </include>
 
   <!-- Trajectory Execution Functionality -->
   <include ns="move_group" file="$(find sr_multi_moveit_config)/launch/trajectory_execution.launch.xml" if="$(arg allow_trajectory_execution)">
     <arg name="moveit_manage_controllers" value="true" />
-    <arg name="moveit_controller_manager" value="shadowhand_motor" unless="$(arg fake_execution)"/>
+    <arg name="moveit_controller_manager" value="shadowrobot_motor" unless="$(arg fake_execution)"/>
     <arg name="moveit_controller_manager" value="fake" if="$(arg fake_execution)"/>
+    <arg name="robot_config_file" value="$(arg robot_config_file)"/>
   </include>
 
   <!-- Sensors Functionality -->
   <include ns="move_group" file="$(find sr_multi_moveit_config)/launch/sensor_manager.launch.xml" if="$(arg allow_trajectory_execution)">
-    <arg name="moveit_sensor_manager" value="shadowhand_motor" /> 
+    <arg name="moveit_sensor_manager" value="shadowrobot_motor" /> 
   </include>
 
   <!-- Start the actual move_group node/action server -->

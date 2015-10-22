@@ -1,6 +1,8 @@
 <launch>
 
   <!-- This file makes it easy to include the settings for trajectory execution  -->  
+  <!-- The name of the robot config file to load -->
+  <arg name="robot_config_file" default=""/>
 
   <!-- Flag indicating whether MoveIt! is allowed to load/unload  or switch controllers -->
   <arg name="moveit_manage_controllers" default="true"/>
@@ -13,6 +15,7 @@
   
   <!-- Load the robot specific controller manager; this sets the moveit_controller_manager ROS parameter -->
   <arg name="moveit_controller_manager" default="shadowhand_motor" />
-  <include file="$(find sr_multi_moveit_config)/launch/$(arg moveit_controller_manager)_moveit_controller_manager.launch.xml" />
-  
+  <include file="$(find sr_multi_moveit_config)/launch/$(arg moveit_controller_manager)_moveit_controller_manager.launch.xml">
+    <arg name="robot_config_file" value="$(arg robot_config_file)"/>
+  </include>
 </launch>
