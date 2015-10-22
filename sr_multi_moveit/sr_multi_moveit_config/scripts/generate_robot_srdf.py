@@ -240,7 +240,7 @@ class SRDFRobotGenerator(object):
             if elt.tagName == 'group':
                 if len(elt.childNodes) > 0: # Check it is not a subgroup
                     group_name = elt.getAttribute('name')
-                    if group_name == manipulator.arm.main_group or group_name in manipulator.arm.main_group:
+                    if group_name == manipulator.arm.main_group or group_name in manipulator.arm.other_groups:
                         if group_name == manipulator.arm.main_group:
                             elt.setAttribute('name',manipulator.arm.internal_name)
                         else:

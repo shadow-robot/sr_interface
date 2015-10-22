@@ -9,7 +9,7 @@
     <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
     <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
     <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
-    <group name="right_arm">
+    <group name="arm">
         <joint name="shoulder_pan_joint" />
         <joint name="shoulder_lift_joint" />
         <joint name="elbow_joint" />
@@ -21,7 +21,7 @@
         <joint name="WRJ2" />
         <joint name="WRJ1" />
     </group>
-    <group_state name="hold_bottle" group="right_arm">
+    <group_state name="hold_bottle" group="arm">
         <joint name="elbow_joint" value="1.7730913162231445" />
         <joint name="shoulder_lift_joint" value="-1.1930134932147425" />
         <joint name="shoulder_pan_joint" value="-0.05154306093324834" />
@@ -32,7 +32,7 @@
         <joint name="WRJ2" value="-0.21651525474794753" />
     </group_state>
 
-    <group_state name="approach_bottle" group="right_arm">
+    <group_state name="approach_bottle" group="arm">
         <joint name="elbow_joint" value="1.3201355934143066" />
         <joint name="shoulder_lift_joint" value="-0.9284232298480433" />
         <joint name="shoulder_pan_joint" value="-0.22787458101381475" />
@@ -43,7 +43,7 @@
         <joint name="WRJ2" value="0" />
     </group_state>
 
-    <group_state name="pour_bottle" group="right_arm">
+    <group_state name="pour_bottle" group="arm">
         <joint name="elbow_joint" value="2.229947566986084" />
         <joint name="shoulder_lift_joint" value="-1.8937347571002405" />
         <joint name="shoulder_pan_joint" value="-0.035438362752096" />
@@ -54,7 +54,7 @@
         <joint name="WRJ2" value="0" />
     </group_state>
 
-    <group_state name="victory" group="right_arm">
+    <group_state name="victory" group="arm">
         <joint name="elbow_joint" value="1.0079150199890137" />
         <joint name="shoulder_lift_joint" value="-0.7708819548236292" />
         <joint name="shoulder_pan_joint" value="-0.2072394529925745" />
@@ -65,7 +65,7 @@
         <joint name="WRJ2" value="0" />
     </group_state>
 
-    <group_state name="gamma" group="right_arm">
+    <group_state name="gamma" group="arm">
         <joint name="elbow_joint" value="1.4119" />
         <joint name="shoulder_lift_joint" value="-1.6943" />
         <joint name="shoulder_pan_joint" value="0.2118" />
@@ -76,7 +76,7 @@
         <joint name="WRJ2" value="0" />
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="moveit_ee" parent_link="ee_link" group="right_arm" />
+    <end_effector name="moveit_ee" parent_link="ee_link" group="arm" />
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="world_to_arm" type="fixed" parent_frame="world" child_link="base_link" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->

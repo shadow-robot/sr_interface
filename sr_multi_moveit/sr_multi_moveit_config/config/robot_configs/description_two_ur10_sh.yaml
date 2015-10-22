@@ -5,7 +5,7 @@ robot:
       side: right
       arm:
         name: ur10
-        main_group: right_arm
+        main_group: arm
         moveit_path: 
           package: sr_multi_moveit_config
           relative_path: /config/ur10
@@ -27,7 +27,7 @@ robot:
       side: left
       arm:
         name: ur10
-        main_group: left_arm
+        main_group: arm
         moveit_path: 
           package: sr_multi_moveit_config
           relative_path: /config/ur10

@@ -162,37 +162,91 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
     output_str += "planner_configs:\n"
     output_str += yaml_reindent(yaml.dump(hand_yamldoc["planner_configs"], default_flow_style=False, allow_unicode=True), 2)
     output_str += "\n"
-
-#     # find prefix
-#     prefix = find_prefix(robot)
-#     if prefix:
-#         proj_eval_re = re.compile(r'joints\(([TFMRLW][FHR]J[0-5]),([TFMRLW][FHR]J[0-5])\)')
-#     # for each group
-#     for group in robot.groups:
-#         # strip prefix if any
-#         group_name = group.name[len(prefix):]
-#         if group_name in yamldoc:
-#             output_str += group.name + ":\n"
-#             group_config = yamldoc[group_name]
-#             # prepend prefix on projection_evaluator
-#             if prefix:
-#                 if "projection_evaluator" in group_config:
-#                     proj_eval = group_config["projection_evaluator"]
-#                     proj_eval.strip()
-#                     proj_eval_new = proj_eval_re.sub(r'joints(' +
-#                                                      prefix +
-#                                                      r'\g<1>,' +
-#                                                      prefix +
-#                                                      r'\g<2>)',
-#                                                      proj_eval)
-#                     group_config["projection_evaluator"] = proj_eval_new
-#             group_dump = yaml.dump(group_config,
-#                                    default_flow_style=False,
-#                                    allow_unicode=True)
-#             output_str += yaml_reindent(group_dump, 2)
-#             output_str += "\n"
-#     stream.close()
     
+    for manipulator in robot_config.manipulators:
+        print "manipulator:", manipulator.name
+        print "has_arm", manipulator.has_arm
+        if manipulator.has_arm:
+            arm_yaml_path = manipulator.arm.moveit_path + "/" + "ompl_planning.yaml"
+            with open(arm_yaml_path, 'r') as stream:
+                arm_yamldoc = yaml.load(stream)
+
+            prefix = manipulator.arm.prefix
+            print "arm_prefix:", prefix
+
+            for group in robot.groups:
+                # strip prefix if any
+                group_name = group.name
+                if group_name == manipulator.arm.internal_name:
+                    group_name = "arm"
+                    group_prefix = prefix
+                    #print "here:", group.name
+                else:
+                    group_name = group.name[len(prefix):]
+                    group_prefix = group.name[:len(prefix)]
+                    #print "here2:", group.name
+
+                if group_name in arm_yamldoc and group_prefix == prefix:
+                    output_str += group.name + ":\n"
+                    group_config = arm_yamldoc[group_name]
+                    # prepend prefix on projection_evaluator
+                    if prefix:
+                        if "projection_evaluator" in group_config:
+                            proj_eval = group_config["projection_evaluator"]
+                            proj_eval.strip()
+                            #print "proj_eval", proj_eval
+                            proj_eval_striped = re.split('\W+',proj_eval)
+                            joints = [word for word in proj_eval_striped if word not in ["joints", ""]]
+                            proj_eval_new = "joints("
+                            for joint in joints:
+                                proj_eval_new = proj_eval_new + prefix + joint + ","
+                            proj_eval_new = proj_eval_new[:-1] + ")"
+                            print "proj_eval_new", proj_eval_new
+                            group_config["projection_evaluator"] = proj_eval_new
+                            group_dump = yaml.dump(group_config,
+                                                   default_flow_style=False,
+                                                   allow_unicode=True)
+                            output_str += yaml_reindent(group_dump, 2)
+                            output_str += "\n"
+                            
+                            #print "output_str: ", output_str
+
+        if manipulator.has_hand:
+            prefix = manipulator.hand.prefix
+            if prefix:
+                proj_eval_re = re.compile(r'joints\(([TFMRLW][FHR]J[0-5]),([TFMRLW][FHR]J[0-5])\)')
+            # for each group
+            for group in robot.groups:
+                # strip prefix if any
+                group_name = group.name
+                if group_name == manipulator.hand.internal_name:
+                    group_name = "hand"
+                    group_prefix = prefix
+                else:
+                    group_name = group.name[len(prefix):]
+                    group_prefix = group.name[:len(prefix)]
+                if group_name in hand_yamldoc and group_prefix == prefix:
+                    output_str += group.name + ":\n"
+                    group_config = hand_yamldoc[group_name]
+                    # prepend prefix on projection_evaluator
+                    if prefix:
+                        if "projection_evaluator" in group_config:
+                            proj_eval = group_config["projection_evaluator"]
+                            proj_eval.strip()
+                            proj_eval_new = proj_eval_re.sub(r'joints(' +
+                                                             prefix +
+                                                             r'\g<1>,' +
+                                                             prefix +
+                                                             r'\g<2>)',
+                                                             proj_eval)
+                            group_config["projection_evaluator"] = proj_eval_new
+                    group_dump = yaml.dump(group_config,
+                                           default_flow_style=False,
+                                           allow_unicode=True)
+                    output_str += yaml_reindent(group_dump, 2)
+                    output_str += "\n"
+            stream.close()
+
     # load on param server or output to file
     output_path = "/home/beatriz/workspace/shadow/src/sr_interface/sr_multi_moveit/sr_multi_moveit_config/config/ompl_planning.yaml"
     upload_output_params(output_str, output_path, ns_)
