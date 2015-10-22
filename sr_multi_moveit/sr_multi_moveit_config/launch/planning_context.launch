@@ -18,18 +18,18 @@
   <node name="generate_robot_srdf" pkg="sr_multi_moveit_config" type="generate_robot_srdf.py" respawn="false" output="screen" args="$(arg robot_config_file)" />
   
   <!-- TEST -->
-  <!--node name="load_controllers" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="real_controllers $(arg robot_config_file)"/>
-  <node name="load_fake_controllers" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="fake_controllers $(arg robot_config_file)"/-->
+  <node name="load_controllers" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="real_controllers $(arg robot_config_file)"/>
+  <node name="load_fake_controllers" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="fake_controllers $(arg robot_config_file)"/>
   <node name="load_ompl_planner" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="ompl_planning $(arg robot_config_file)" />
     	  
   <!-- Load updated joint limits (override information from URDF) -->
-  <!--group ns="$(arg robot_description)_planning">
+  <group ns="$(arg robot_description)_planning">
     <node name="load_joint_limits" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="joint_limits $(arg robot_config_file)" />    
-  </group-->
+  </group>
 
   <!-- Load default settings for kinematics; these settings are overridden by settings in a node's namespace -->
-  <!--group ns="$(arg robot_description)_kinematics">
+  <group ns="$(arg robot_description)_kinematics">
     <node name="load_kinematics" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="kinematics $(arg robot_config_file)" />
-  </group-->
+  </group>
 
 </launch>

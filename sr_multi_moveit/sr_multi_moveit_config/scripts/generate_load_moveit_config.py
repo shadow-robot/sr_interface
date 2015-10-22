@@ -29,16 +29,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 # Author: Guillaume Walck <gwalck@techfak.uni-bielefeld.de>
-
-"""
-    generate and load one the following moveit yaml config file
-    based on srdf on parameter server
-    syntax : generate_load_moveit_config command [template_file]
-    fake_controllers (no template)
-    ompl_planning (template required)
-    kinematics (template required)
-    joint_limits (template required)
-    """
+# Author: Shadow Robot Software Team <software@shadowrobot.com>
 
 import sys
 import time
@@ -81,18 +72,23 @@ if __name__ == '__main__':
 
             # generate the desired yaml and load it.
             if command == "fake_controllers":
+                output_path = rospkg.RosPack().get_path('sr_multi_moveit_config') + "/config/"+ "fake_controllers.yaml"
                 generate_fake_controllers(robot, robot_config, ns_=NS)
             elif command == "real_controllers":
-                generate_real_controllers(robot, robot_config, ns_=NS)
+                output_path = rospkg.RosPack().get_path('sr_multi_moveit_config') + "/config/"+ "controllers.yaml"
+                generate_real_controllers(robot, robot_config, output_path, ns_=NS)
             elif command == "ompl_planning":
                 hand_template_path = sh_config_path + "ompl_planning_template.yaml"
-                generate_ompl_planning(robot, robot_config, hand_template_path, ns_=NS)
+                output_path = rospkg.RosPack().get_path('sr_multi_moveit_config') + "/config/"+ "ompl_planning.yaml"
+                generate_ompl_planning(robot, robot_config, hand_template_path, output_path, ns_=NS)
             elif command == "kinematics":
                 hand_template_path = sh_config_path + "kinematics_template.yaml"
-                generate_kinematics(robot, robot_config, hand_template_path, ns_=NS)
+                output_path = rospkg.RosPack().get_path('sr_multi_moveit_config') + "/config/"+ "kinematics.yaml"
+                generate_kinematics(robot, robot_config, hand_template_path, output_path, ns_=NS)
             elif command == "joint_limits":
                 hand_template_path = sh_config_path + "joint_limits_template.yaml"
-                generate_joint_limits(robot, robot_config, hand_template_path, ns_=NS)
+                output_path = rospkg.RosPack().get_path('sr_multi_moveit_config') + "/config/"+ "joint_limits.yaml"
+                generate_joint_limits(robot, robot_config, hand_template_path, output_path, ns_=NS)
             else:
                 rospy.logerr("Wrong argument " + command)
 

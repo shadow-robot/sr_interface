@@ -50,14 +50,6 @@ def yaml_reindent(in_str, numspaces):
     s_indent = "\n".join((numspaces * " ") + i for i in in_str.splitlines())
     return s_indent
 
-# def find_prefix(robot):
-#     prefix = ""
-#     for key in robot.group_map:
-#         if key.endswith("fingers"):
-#             prefix = key[0:key.find("fingers")]
-#     return prefix
-
-
 def upload_output_params(upload_str, output_path=None, ns_=None):
     if output_path is None:
         paramlist = rosparam.load_str(upload_str, "generated",
@@ -104,7 +96,6 @@ def generate_fake_controllers(robot, robot_config, output_path=None, ns_=None):
                             output_str += "      - " + joint.name + "\n"
 
     # load on param server or output to file
-    output_path = "/home/beatriz/workspace/shadow/src/sr_interface/sr_multi_moveit/sr_multi_moveit_config/config/fake_controllers.yaml"
     upload_output_params(output_str, output_path, ns_)
 
 
@@ -150,7 +141,6 @@ def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
                             output_str += "      - " + joint.name + "\n"
 
     # load on param server or output to file
-    output_path = "/home/beatriz/workspace/shadow/src/sr_interface/sr_multi_moveit/sr_multi_moveit_config/config/controllers.yaml"
     upload_output_params(output_str, output_path, ns_)
 
 
@@ -164,27 +154,19 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
     output_str += "\n"
     
     for manipulator in robot_config.manipulators:
-        print "manipulator:", manipulator.name
-        print "has_arm", manipulator.has_arm
         if manipulator.has_arm:
             arm_yaml_path = manipulator.arm.moveit_path + "/" + "ompl_planning.yaml"
             with open(arm_yaml_path, 'r') as stream:
                 arm_yamldoc = yaml.load(stream)
-
             prefix = manipulator.arm.prefix
-            print "arm_prefix:", prefix
-
             for group in robot.groups:
-                # strip prefix if any
                 group_name = group.name
                 if group_name == manipulator.arm.internal_name:
                     group_name = "arm"
                     group_prefix = prefix
-                    #print "here:", group.name
                 else:
                     group_name = group.name[len(prefix):]
                     group_prefix = group.name[:len(prefix)]
-                    #print "here2:", group.name
 
                 if group_name in arm_yamldoc and group_prefix == prefix:
                     output_str += group.name + ":\n"
@@ -194,30 +176,24 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
                         if "projection_evaluator" in group_config:
                             proj_eval = group_config["projection_evaluator"]
                             proj_eval.strip()
-                            #print "proj_eval", proj_eval
                             proj_eval_striped = re.split('\W+',proj_eval)
                             joints = [word for word in proj_eval_striped if word not in ["joints", ""]]
                             proj_eval_new = "joints("
                             for joint in joints:
                                 proj_eval_new = proj_eval_new + prefix + joint + ","
                             proj_eval_new = proj_eval_new[:-1] + ")"
-                            print "proj_eval_new", proj_eval_new
                             group_config["projection_evaluator"] = proj_eval_new
                             group_dump = yaml.dump(group_config,
                                                    default_flow_style=False,
                                                    allow_unicode=True)
                             output_str += yaml_reindent(group_dump, 2)
                             output_str += "\n"
-                            
-                            #print "output_str: ", output_str
 
         if manipulator.has_hand:
             prefix = manipulator.hand.prefix
             if prefix:
                 proj_eval_re = re.compile(r'joints\(([TFMRLW][FHR]J[0-5]),([TFMRLW][FHR]J[0-5])\)')
-            # for each group
             for group in robot.groups:
-                # strip prefix if any
                 group_name = group.name
                 if group_name == manipulator.hand.internal_name:
                     group_name = "hand"
@@ -248,112 +224,109 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
             stream.close()
 
     # load on param server or output to file
-    output_path = "/home/beatriz/workspace/shadow/src/sr_interface/sr_multi_moveit/sr_multi_moveit_config/config/ompl_planning.yaml"
     upload_output_params(output_str, output_path, ns_)
 
 
 def generate_kinematics(robot, robot_config, hand_template_path="kinematics_template.yaml",
                         output_path=None, ns_=None):
-
     output_str = ""
-    group_name = None
-
     while not rospy.has_param('/robot_description'):
         rospy.sleep(0.5)
         rospy.loginfo("waiting for robot_description")
     urdf_str = rospy.get_param('/robot_description')
     robot_urdf = URDF.from_xml_string(urdf_str)
 
-    # open template file
-    stream = open(template_path, 'r')
-    yamldoc = yaml.load(stream)
-    stream.close()
+    for manipulator in robot_config.manipulators:
+        if manipulator.has_arm:
+            arm_yaml_path = manipulator.arm.moveit_path + "/" + "kinematics.yaml"
+            with open(arm_yaml_path, 'r') as stream:
+                arm_yamldoc = yaml.load(stream)
+            prefix = manipulator.arm.prefix
+            for group in robot.groups:
+                group_name = group.name
+                if group_name == manipulator.arm.internal_name:
+                    group_name = "arm"
+                    group_prefix = prefix
+                else:
+                    group_name = group.name[len(prefix):]
+                    group_prefix = group.name[:len(prefix)]
 
-    # open biotac template file
-    kdl_template_path = template_path[0:template_path.find("_template")] + "_kdl_template.yaml"
+                if group_name in arm_yamldoc and group_prefix == prefix:
+                    kinematics_config = arm_yamldoc[group_name]
+                    if prefix:
+                        if "tip_name" in kinematics_config:
+                            tip_name = kinematics_config["tip_name"]
+                            kinematics_config["tip_name"] = prefix + tip_name
+                        if "root_name" in kinematics_config:
+                            root_name = kinematics_config["root_name"]
+                            kinematics_config["root_name"] = prefix + root_name
 
-    stream = open(kdl_template_path, 'r')
-    yamldockdl = yaml.load(stream)
-    stream.close()
+                    output_str += group.name + ":\n"
+                    output_str += yaml_reindent(yaml.dump(kinematics_config,
+                                                          default_flow_style=False,
+                                                          allow_unicode=True), 2)
+                    output_str += "\n"
+        if manipulator.has_hand:
+                # open hand template files
+            kdl_template_path = hand_template_path[0:hand_template_path.find("_template")] + "_kdl_template.yaml"
+            with open(hand_template_path, 'r') as stream:
+                hand_yamldoc = yaml.load(stream)
+            with open(kdl_template_path, 'r') as stream:
+                hand_yamldockdl = yaml.load(stream)
 
-    # find prefix
-    prefix = find_prefix(robot)
-    finger_prefixes = ["FF", "MF", "RF", "LF", "TH"]
+            prefix = manipulator.hand.prefix
+            finger_prefixes = ["FF", "MF", "RF", "LF", "TH"]
 
-    # find full hand key name
-    sh_group = None
-    for group in robot.groups:
-        if group.name.endswith("_hand"):
-            sh_group = group
-            break
+            # Find in any finger has a fix joint apart from the tip as it needs to use a different kinematics
+            is_fixed = {"first_finger": False, "middle_finger": False, "ring_finger": False, "little_finger": False, "thumb": False}
+            finger_with_fixed_joint = [False, False, False, False, False]
+            for joint in robot_urdf.joints:
+                joint_name = joint.name[len(prefix):]
+                for index, finger_prefix in enumerate(finger_prefixes):
+                    if joint_name[0:2].upper() == finger_prefix and joint_name[-3:] != "tip" and joint.type == "fixed":
+                        finger_with_fixed_joint[index] = True
+            is_fixed['first_finger'] = finger_with_fixed_joint[0]
+            is_fixed['middle_finger'] = finger_with_fixed_joint[1]
+            is_fixed['ring_finger'] = finger_with_fixed_joint[2]
+            is_fixed['little_finger'] = finger_with_fixed_joint[3]
+            is_fixed['thumb'] = finger_with_fixed_joint[4]
+            
+            for group in robot.groups:
+                kinematics_config = None
+                group_name = group.name
+                if group_name == manipulator.hand.internal_name:
+                    group_name = "hand"
+                    group_prefix = prefix
+                else:
+                    group_name = group.name[len(prefix):]
+                    group_prefix = group.name[:len(prefix)]
+                    
+                if group_name in hand_yamldoc and group_prefix == prefix:
+                    if is_fixed.get(group_name):
+                        kinematics_config = hand_yamldockdl[group_name]
+                    else:
+                        kinematics_config = hand_yamldoc[group_name]
 
-    # detect biotac fingers. I think this is not needed any more as all links are called the same even for biotac hand
-    is_fixed = {"first_finger": False,
-                "middle_finger": False,
-                "ring_finger": False,
-                "little_finger": False,
-                "thumb": False}
+                if kinematics_config is not None:
+                    if prefix:
+                        if "tip_name" in kinematics_config:
+                            tip_name = kinematics_config["tip_name"]
+                            kinematics_config["tip_name"] = prefix + tip_name
+                        if "root_name" in kinematics_config:
+                            root_name = kinematics_config["root_name"]
+                            kinematics_config["root_name"] = prefix + root_name
 
-    # Find in any finger has a fix joint apart from the tip as it needs to use a different kinematics
-    finger_with_fixed_joint = [False, False, False, False, False]
-    for joint in robot_urdf.joints:
-        joint_name = joint.name[len(prefix):]
-        for index, finger_prefix in enumerate(finger_prefixes):
-            if joint_name[0:2].upper() == finger_prefix and joint_name[-3:] != "tip" and joint.type == "fixed":
-                finger_with_fixed_joint[index] = True
-
-    is_fixed['first_finger'] = finger_with_fixed_joint[0]
-    is_fixed['middle_finger'] = finger_with_fixed_joint[1]
-    is_fixed['ring_finger'] = finger_with_fixed_joint[2]
-    is_fixed['little_finger'] = finger_with_fixed_joint[3]
-    is_fixed['thumb'] = finger_with_fixed_joint[4]
-
-    # for each group
-    for group in robot.groups:
-        kinematics_config = None
-        # strip prefix if any
-        group_name = group.name[len(prefix):]
-        # check for fixed joint for this group
-        if is_fixed.get(group_name):
-            if group_name in yamldockdl:
-                kinematics_config = yamldockdl[group_name]
-        else:
-            if group_name in yamldoc:
-                kinematics_config = yamldoc[group_name]
-
-        if kinematics_config is not None:
-            if prefix:
-                if "tip_name" in kinematics_config:
-                    tip_name = kinematics_config["tip_name"]
-                    kinematics_config["tip_name"] = prefix + tip_name
-                if "root_name" in kinematics_config:
-                    root_name = kinematics_config["root_name"]
-                    kinematics_config["root_name"] = prefix + root_name
-
-            output_str += group.name + ":\n"
-            output_str += yaml_reindent(yaml.dump(kinematics_config,
-                                                  default_flow_style=False,
-                                                  allow_unicode=True), 2)
-            output_str += "\n"
+                    output_str += group.name + ":\n"
+                    output_str += yaml_reindent(yaml.dump(kinematics_config,
+                                                          default_flow_style=False,
+                                                          allow_unicode=True), 2)
+                    output_str += "\n"
     # load on param server or output to file
     upload_output_params(output_str, output_path, ns_)
 
 
 def generate_joint_limits(robot, robot_config, hand_template_path="joint_limits_template.yaml",
                           output_path=None, ns_=None):
-    """
-    Generate joint_limits yaml and direct it to file
-    or load it to parameter server.
-        @param robot: Parsed SRDF
-        @type  robot: SRDF object
-        @param hand_template_path: file_path to the required yaml template file
-        @type  hand_template_path: str
-        @param output_path: file_path to save the generated data in,
-        will load on parameter server if empty
-        @type  output_path: str
-        @param ns_: namespace
-        @type  ns_: str
-    """
     output_str = ""
     output_str += "joint_limits:\n"
     for manipulator in robot_config.manipulators:
@@ -391,7 +364,6 @@ def generate_joint_limits(robot, robot_config, hand_template_path="joint_limits_
                 stream.close()
 
     # load on param server or output to file
-    output_path = "/home/beatriz/workspace/shadow/src/sr_interface/sr_multi_moveit/sr_multi_moveit_config/config/joint_limits.yaml"
     upload_output_params(output_str, output_path, ns_)
 
 if __name__ == '__main__':
