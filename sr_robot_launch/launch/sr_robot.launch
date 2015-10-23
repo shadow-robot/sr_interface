@@ -18,6 +18,8 @@
   <!-- Loads the robot description -->
   <arg name="robot_description"
        default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/>
+    <!-- The name of the robot config file to load -->
+  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/sh_ur10_right.yaml"/>
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>

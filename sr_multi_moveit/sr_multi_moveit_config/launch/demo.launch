@@ -40,7 +40,7 @@
 
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
   <include file="$(find sr_multi_moveit_config)/launch/moveit_rviz.launch">
-    <arg name="config" value="true"/>
+    <arg name="config" value="false"/>
     <arg name="debug" value="$(arg debug)"/>
     <arg name="robot_config_file" value="$(arg robot_config_file)"/>
   </include>

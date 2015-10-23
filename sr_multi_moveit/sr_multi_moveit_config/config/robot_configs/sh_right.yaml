@@ -1,5 +1,5 @@
 robot:
-  name: sr
+  name: shadowhand_motor
   manipulators:
     right_manipulator:
       side: right

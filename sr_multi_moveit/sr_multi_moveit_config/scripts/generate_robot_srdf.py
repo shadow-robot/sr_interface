@@ -185,7 +185,8 @@ class SRDFRobotGenerator(object):
 
             # Add virtual joints
             if manipulator.has_arm:
-                self.parse_arm_virtual_joint(manipulator)
+                pass
+                #self.parse_arm_virtual_joint(manipulator)
             else:
                 self.parse_hand_virtual_joint(manipulator)
 
