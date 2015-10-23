@@ -18,7 +18,8 @@
 from sr_robot_commander import SrRobotCommander
 from geometry_msgs.msg import PoseStamped, Pose
 from rospy import get_rostime
-
+import rospy
+from tf import TransformerROS
 
 class SrArmCommander(SrRobotCommander):
     """
@@ -96,23 +97,22 @@ class SrArmCommander(SrRobotCommander):
         pose.header.frame_id = self._robot_commander.get_root_link()
         self._planning_scene.add_box("ground", pose, (3, 3, 0.1))
 
-    def plan_cartesian_path_to_pose(self, target_pose, min_fraction=1, eef_step=.01, jump_threshold=1000):
-        if type(target_pose) == PoseStamped:
-            reference_frame = self._move_group_commander.get_pose_reference_frame()
-            target_pose = transformPose(reference_frame, target_pose).pose
+    def get_pose_reference_frame(self):
+        return self._move_group_commander.get_pose_reference_frame()
 
-        elif type(target_pose) != Pose:
-            rospy.logerr("Target should be pose or pose_stamped")
+    def plan_cartesian_path_to_pose(self, target_pose, min_fraction=1, eef_step=.01, jump_threshold=1000):
+        if type(target_pose) != Pose:
+            rospy.logerr("Target should be Pose.")
             return None
 
-        start_pose = self._move_group_commander.get_current_pose()
+        start_pose = self._move_group_commander.get_current_pose().pose
 
-        (self.__plan, fraction) = self._move_group_commander.compute_cartesian_path(
+        (self._SrRobotCommander__plan, fraction) = self._move_group_commander.compute_cartesian_path(
             [start_pose, target_pose], eef_step, jump_threshold)
 
         if fraction < min_fraction:
-            rospy.logerr("Couldn't reach enough waypoints, path invalid")
-            self.__path = None
+            rospy.logerr("Couldn't reach enough waypoints, only %f" % fraction)
+            self._SrRobotCommande__path = None
             return None
 
         return True
