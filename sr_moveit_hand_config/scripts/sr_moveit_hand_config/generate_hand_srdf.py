@@ -47,13 +47,14 @@ from rosgraph.names import load_mappings
 
 from sr_utilities.local_urdf_parser_py import URDF
 
+
 class SRDFHandGenerator(object):
-    def __init__(self, urdf_str = None, load = True, save = True):
+    def __init__(self, urdf_str=None, load=True, save=True):
         if urdf_str is None:
             while not rospy.has_param('robot_description'):
                 rospy.sleep(0.5)
                 rospy.loginfo("waiting for robot_description")
-    
+
             # load the urdf from the parameter server
             urdf_str = rospy.get_param('robot_description')
 
@@ -151,5 +152,4 @@ class SRDFHandGenerator(object):
 
 if __name__ == '__main__':
     rospy.init_node('hand_srdf_generator', anonymous=True)
-    srdfGenerator = SRDFHandGenerator() 
-
+    srdfGenerator = SRDFHandGenerator()

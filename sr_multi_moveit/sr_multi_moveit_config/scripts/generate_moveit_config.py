@@ -50,6 +50,7 @@ def yaml_reindent(in_str, numspaces):
     s_indent = "\n".join((numspaces * " ") + i for i in in_str.splitlines())
     return s_indent
 
+
 def upload_output_params(upload_str, output_path=None, ns_=None):
     if output_path is None:
         paramlist = rosparam.load_str(upload_str, "generated",
@@ -60,6 +61,7 @@ def upload_output_params(upload_str, output_path=None, ns_=None):
         file_writer = open(output_path, "wb")
         file_writer.write(upload_str)
         file_writer.close()
+
 
 def generate_fake_controllers(robot, robot_config, output_path=None, ns_=None):
     output_str = ""
@@ -92,7 +94,7 @@ def generate_fake_controllers(robot, robot_config, output_path=None, ns_=None):
             else:
                 for joint in group.joints:
                     if joint.name[-3:] != "tip":
-                         if manipulator.has_arm and joint.name[len(manipulator.hand.prefix):] not in ["WRJ1","WRJ2"]:
+                        if manipulator.has_arm and joint.name[len(manipulator.hand.prefix):] not in ["WRJ1", "WRJ2"]:
                             output_str += "      - " + joint.name + "\n"
 
     # load on param server or output to file
@@ -137,7 +139,7 @@ def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
             else:
                 for joint in group.joints:
                     if joint.name[-3:] != "tip":
-                        if manipulator.has_arm and joint.name[len(manipulator.hand.prefix):] not in ["WRJ1","WRJ2"]:
+                        if manipulator.has_arm and joint.name[len(manipulator.hand.prefix):] not in ["WRJ1", "WRJ2"]:
                             output_str += "      - " + joint.name + "\n"
 
     # load on param server or output to file
@@ -150,9 +152,10 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
         hand_yamldoc = yaml.load(stream)
     output_str = ""
     output_str += "planner_configs:\n"
-    output_str += yaml_reindent(yaml.dump(hand_yamldoc["planner_configs"], default_flow_style=False, allow_unicode=True), 2)
+    output_str += yaml_reindent(yaml.dump(hand_yamldoc["planner_configs"],
+                                          default_flow_style=False, allow_unicode=True), 2)
     output_str += "\n"
-    
+
     for manipulator in robot_config.manipulators:
         if manipulator.has_arm:
             arm_yaml_path = manipulator.arm.moveit_path + "/" + "ompl_planning.yaml"
@@ -176,7 +179,7 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
                         if "projection_evaluator" in group_config:
                             proj_eval = group_config["projection_evaluator"]
                             proj_eval.strip()
-                            proj_eval_striped = re.split('\W+',proj_eval)
+                            proj_eval_striped = re.split('\W+', proj_eval)
                             joints = [word for word in proj_eval_striped if word not in ["joints", ""]]
                             proj_eval_new = "joints("
                             for joint in joints:
@@ -278,7 +281,8 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
             finger_prefixes = ["FF", "MF", "RF", "LF", "TH"]
 
             # Find in any finger has a fix joint apart from the tip as it needs to use a different kinematics
-            is_fixed = {"first_finger": False, "middle_finger": False, "ring_finger": False, "little_finger": False, "thumb": False}
+            is_fixed = {"first_finger": False, "middle_finger": False, "ring_finger": False,
+                        "little_finger": False, "thumb": False}
             finger_with_fixed_joint = [False, False, False, False, False]
             for joint in robot_urdf.joints:
                 joint_name = joint.name[len(prefix):]
@@ -290,7 +294,7 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
             is_fixed['ring_finger'] = finger_with_fixed_joint[2]
             is_fixed['little_finger'] = finger_with_fixed_joint[3]
             is_fixed['thumb'] = finger_with_fixed_joint[4]
-            
+
             for group in robot.groups:
                 kinematics_config = None
                 group_name = group.name
@@ -300,7 +304,7 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
                 else:
                     group_name = group.name[len(prefix):]
                     group_prefix = group.name[:len(prefix)]
-                    
+
                 if group_name in hand_yamldoc and group_prefix == prefix:
                     if is_fixed.get(group_name):
                         kinematics_config = hand_yamldockdl[group_name]
@@ -343,7 +347,7 @@ def generate_joint_limits(robot, robot_config, hand_template_path="joint_limits_
                     default_flow_style=False,
                     allow_unicode=True)
                 output_str += yaml_reindent(joint_limits_dump, 4)
-                output_str += "\n" 
+                output_str += "\n"
         if manipulator.has_hand:
             with open(hand_template_path, 'r') as stream:
                 hand_yamldoc = yaml.load(stream)

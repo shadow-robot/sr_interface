@@ -19,6 +19,7 @@ from sr_moveit_hand_config.generate_hand_srdf import SRDFHandGenerator
 class SRDFRobotGeneratorException(Exception):
     def __init__(self, msg):
         self.msg = msg
+
     def __str__(self):
         return self.msg
 
@@ -34,6 +35,7 @@ class Subrobot(object):
         self.is_lite = False
         self.prefix = ""
         self.moveit_path = ""
+
 
 class Manipulator(object):
     def __init__(self, name, side, has_arm, has_hand):
@@ -59,6 +61,7 @@ class Manipulator(object):
                 self.hand.prefix = "lh_"
                 self.hand.internal_name = "left_hand"
 
+
 class Robot(object):
     def __init__(self):
         self.name = ""
@@ -75,11 +78,13 @@ class Robot(object):
                     manipulator_yaml = manipulators_yaml[manipulator_name]
                     side = manipulator_yaml["side"]
                     if side not in ["left", "right"]:
-                        raise SRDFRobotGeneratorException("robot description did not specified a correct side for a manipulator")
+                        raise SRDFRobotGeneratorException("robot description did not specified " +
+                                                          "a correct side for a manipulator")
                     has_arm = True if "arm" in manipulator_yaml else False
                     has_hand = True if "hand" in manipulator_yaml else False
                     if not has_hand and not has_arm:
-                        raise SRDFRobotGeneratorException("robot description did not specified either an arm or hand for a manipulator")
+                        raise SRDFRobotGeneratorException("robot description did not specified " +
+                                                          "either an arm or hand for a manipulator")
                     # TODO: check that each manipulator do not have more than one arm and hand
                     manipulator = Manipulator(manipulator_name, side, has_arm, has_hand)
                     if has_arm:
