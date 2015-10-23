@@ -17,12 +17,6 @@ robot:
           - gamma
       hand:
         name: shadowhand_motor.urdf.xacro
-        group_states:
-          - hold_bottle
-          - approach_bottle
-          - pour_bottle
-          - victory
-          - gamma
     left_manipulator:
       side: left
       arm:
@@ -39,9 +33,4 @@ robot:
           - gamma
       hand:
         name: shadowhand_left_motor.urdf.xacro
-        group_states:
-          - hold_bottle
-          - approach_bottle
-          - pour_bottle
-          - victory
-          - gamma
+
