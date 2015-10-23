@@ -142,6 +142,12 @@ class SrRobotCommander(object):
         self._move_group_commander.set_joint_value_target(joint_states)
         self.__plan = self._move_group_commander.plan()
 
+    def check_plan_is_valid(self):
+        """
+        Checks if current plan contains a valid trajectory
+        """
+        return (self.__plan is not None and len(self.__plan.joint_trajectory.points) > 0)
+
     def get_robot_name(self):
         return self._robot_name
 
