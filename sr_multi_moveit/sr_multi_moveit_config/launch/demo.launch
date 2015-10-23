@@ -8,7 +8,7 @@
   <arg name="debug" default="false" />
   
   <!-- The name of the robot config file to load -->
-  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/description_ur10_sh.yaml"/>
+  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/sh_ur10_right.yaml"/>
   	
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <include file="$(find sr_multi_moveit_config)/launch/planning_context.launch">
