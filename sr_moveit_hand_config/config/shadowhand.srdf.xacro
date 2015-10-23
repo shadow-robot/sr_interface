@@ -102,7 +102,7 @@
   <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
   <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
   <xacro:macro name="virtual_joints" params="prefix">
-    <virtual_joint name="${prefix}virtual_joint" type="floating" parent_frame="shadow_world_frame" child_link="${prefix}forearm" />
+    <virtual_joint name="${prefix}virtual_joint" type="floating" parent_frame="world" child_link="${prefix}forearm" />
     <passive_joint name="${prefix}virtual_joint" />
   </xacro:macro>
 
