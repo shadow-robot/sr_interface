@@ -79,7 +79,7 @@ if __name__ == '__main__':
                 generate_real_controllers(robot, robot_config, output_path, ns_=NS)
             elif command == "ompl_planning":
                 hand_template_path = sh_config_path + "ompl_planning_template.yaml"
-                output_path = rospkg.RosPack().get_path('sr_multi_moveit_config') + "/config/"+ "ompl_planning.yaml"
+                output_path = rospkg.RosPack().get_path('sr_multi_moveit_config') + "/config/" + "ompl_planning.yaml"
                 generate_ompl_planning(robot, robot_config, hand_template_path, output_path, ns_=NS)
             elif command == "kinematics":
                 hand_template_path = sh_config_path + "kinematics_template.yaml"
