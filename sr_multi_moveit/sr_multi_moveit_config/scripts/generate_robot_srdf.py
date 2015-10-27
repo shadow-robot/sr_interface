@@ -163,7 +163,7 @@ class SRDFRobotGenerator(object):
                 xacro.process_includes(hand_urdf_xml, os.path.dirname(sys.argv[0]))
                 xacro.eval_self_contained(hand_urdf_xml)
                 hand_urdf = hand_urdf_xml.toprettyxml(indent='  ')
-                srdfHandGenerator = SRDFHandGenerator(hand_urdf, load=False, save=True)
+                srdfHandGenerator = SRDFHandGenerator(hand_urdf, load=False, save=False)
                 self.hand_srdf_xml = srdfHandGenerator.get_hand_srdf()
 
             comment = ["Manipulator:" + manipulator.name]

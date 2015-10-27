@@ -94,7 +94,10 @@ def generate_fake_controllers(robot, robot_config, output_path=None, ns_=None):
             else:
                 for joint in group.joints:
                     if joint.name[-3:] != "tip":
-                        if manipulator.has_arm and joint.name[len(manipulator.hand.prefix):] not in ["WRJ1", "WRJ2"]:
+                        if manipulator.has_arm:
+                            if joint.name[len(manipulator.hand.prefix):] not in ["WRJ1", "WRJ2"]:
+                                output_str += "      - " + joint.name + "\n"
+                        else:
                             output_str += "      - " + joint.name + "\n"
 
     # load on param server or output to file
