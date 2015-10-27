@@ -23,3 +23,4 @@ ra_trajectory_controller:
   stop_trajectory_duration: 0.5
   state_publish_rate:  25
   action_monitor_rate: 10
+  allow_partial_joints_goal: true

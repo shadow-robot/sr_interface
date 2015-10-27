@@ -51,13 +51,14 @@ def yaml_reindent(in_str, numspaces):
     return s_indent
 
 
-def upload_output_params(upload_str, output_path=None, ns_=None):
-    if output_path is None:
+def upload_output_params(upload_str, output_path=None, upload=True, ns_=None):
+    if upload:
+        #print "upload_str: ", upload_str
         paramlist = rosparam.load_str(upload_str, "generated",
                                       default_namespace=ns_)
         for params, namespace in paramlist:
             rosparam.upload_params(namespace, params)
-    else:
+    if output_path is not None:
         file_writer = open(output_path, "wb")
         file_writer.write(upload_str)
         file_writer.close()
@@ -139,7 +140,10 @@ def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
             else:
                 for joint in group.joints:
                     if joint.name[-3:] != "tip":
-                        if manipulator.has_arm and joint.name[len(manipulator.hand.prefix):] not in ["WRJ1", "WRJ2"]:
+                        if manipulator.has_arm:
+                            if joint.name[len(manipulator.hand.prefix):] not in ["WRJ1", "WRJ2"]:
+                                output_str += "      - " + joint.name + "\n"
+                        else:
                             output_str += "      - " + joint.name + "\n"
 
     # load on param server or output to file

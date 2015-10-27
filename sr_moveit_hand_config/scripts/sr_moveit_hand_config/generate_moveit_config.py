@@ -77,7 +77,7 @@ def find_prefix(robot):
     return prefix
 
 
-def upload_output_params(upload_str, output_path=None, ns_=None):
+def upload_output_params(upload_str, output_path=None, upload=True, ns_=None):
     """
     Upload or output the input string on the correct param ns or file
         @param upload_str: string to be uploaded or written
@@ -88,12 +88,12 @@ def upload_output_params(upload_str, output_path=None, ns_=None):
         @param ns_: namespace to use when uploading to param server
         @type ns_:  str
     """
-    if output_path is None:
+    if upload: 
         paramlist = rosparam.load_str(upload_str, "generated",
                                       default_namespace=ns_)
         for params, namespace in paramlist:
             rosparam.upload_params(namespace, params)
-    else:
+    if output_path is not None:
         file_writer = open(output_path, "wb")
         file_writer.write(upload_str)
         file_writer.close()

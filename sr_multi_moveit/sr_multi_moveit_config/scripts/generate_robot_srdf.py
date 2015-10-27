@@ -223,8 +223,7 @@ class SRDFRobotGenerator(object):
         banner = ["This does not replace URDF, and is not an extension of URDF.\n" +
                   "    This is a format for representing semantic information about the robot structure.\n" +
                   "    A URDF file must exist for this robot as well, where the joints and the links that are" +
-                  "referenced are defined\n"
-                 ]
+                  "referenced are defined\n"]
         self.add_comments(banner, "")
         self.new_robot_srdf.write('<robot name="' + self.robot.name + '">\n')
         comments = ["GROUPS: Representation of a set of joints and links. This can be useful for specifying DOF to " +
@@ -245,13 +244,14 @@ class SRDFRobotGenerator(object):
         elt = xacro.next_element(previous)
         while elt:
             if elt.tagName == 'group':
-                if len(elt.childNodes) > 0: # Check it is not a subgroup
+                # Check it is not a subgroup
+                if len(elt.childNodes) > 0:
                     group_name = elt.getAttribute('name')
                     if group_name == manipulator.arm.main_group or group_name in manipulator.arm.other_groups:
                         if group_name == manipulator.arm.main_group:
-                            elt.setAttribute('name',manipulator.arm.internal_name)
+                            elt.setAttribute('name', manipulator.arm.internal_name)
                         else:
-                            elt.setAttribute('name',manipulator.arm.prefix + group_name)
+                            elt.setAttribute('name', manipulator.arm.prefix + group_name)
                         for index, group_element in enumerate(elt.getElementsByTagName("chain")):
                             attributes = ["base_link", "tip_link"]
                             for attribute in attributes:
@@ -283,9 +283,9 @@ class SRDFRobotGenerator(object):
                                                                          group_name in manipulator.arm.other_groups):
                     elt.setAttribute('name',manipulator.arm.prefix + group_state_name)
                     if group_name == manipulator.arm.main_group:
-                        elt.setAttribute('group',manipulator.arm.internal_name)
+                        elt.setAttribute('group', manipulator.arm.internal_name)
                     else:
-                        elt.setAttribute('group',manipulator.arm.prefix + group_name)
+                        elt.setAttribute('group', manipulator.arm.prefix + group_name)
                     for index, group_element in enumerate(elt.getElementsByTagName("joint")):
                         attribute_name = group_element.getAttribute("name")
                         if attribute_name in ["WRJ1", "WRJ2"]:
@@ -335,7 +335,7 @@ class SRDFRobotGenerator(object):
         while elt:
             if elt.tagName == 'end_effector':
                 elt.getAttributeNode("name").nodeValue = manipulator.arm.prefix + elt.getAttribute("name")
-                elt.getAttributeNode("parent_link").nodeValue = (manipulator.arm.prefix + 
+                elt.getAttributeNode("parent_link").nodeValue = (manipulator.arm.prefix +
                                                                  elt.getAttribute("parent_link"))
                 elt.getAttributeNode("group").nodeValue = manipulator.arm.internal_name
                 elt.writexml(self.new_robot_srdf,  indent="  ", addindent="  ", newl="\n")
