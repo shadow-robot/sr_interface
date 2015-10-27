@@ -468,21 +468,36 @@
 
     <disable_collisions link1="rh_ffproximal" link2="rh_mfproximal" reason="Adjacent" />
     <disable_collisions link1="rh_ffproximal" link2="rh_mfmiddle" reason="Adjacent" />
+    <disable_collisions link1="rh_ffproximal" link2="rh_mfknuckle" reason="Adjacent" />
     <disable_collisions link1="rh_ffmiddle" link2="rh_mfmiddle" reason="Adjacent" />
     <disable_collisions link1="rh_ffmiddle" link2="rh_mfdistal" reason="Adjacent" />
     <disable_collisions link1="rh_ffdistal" link2="rh_mfdistal" reason="Adjacent" />
+    <disable_collisions link1="rh_ffdistal" link2="rh_mfmiddle" reason="Adjacent" />
 
     <disable_collisions link1="rh_mfproximal" link2="rh_rfproximal" reason="Adjacent" />
     <disable_collisions link1="rh_mfproximal" link2="rh_rfmiddle" reason="Adjacent" />
+    <disable_collisions link1="rh_mfproximal" link2="rh_ffmiddle" reason="Adjacent" />
+    <disable_collisions link1="rh_mfproximal" link2="rh_ffknuckle" reason="Adjacent" />
+    <disable_collisions link1="rh_mfproximal" link2="rh_rfknuckle" reason="Adjacent" />
     <disable_collisions link1="rh_mfmiddle" link2="rh_rfmiddle" reason="Adjacent" />
     <disable_collisions link1="rh_mfmiddle" link2="rh_rfdistal" reason="Adjacent" />
     <disable_collisions link1="rh_mfdistal" link2="rh_rfdistal" reason="Adjacent" />
+    <disable_collisions link1="rh_mfdistal" link2="rh_rfmiddle" reason="Adjacent" />
 
     <disable_collisions link1="rh_rfproximal" link2="rh_lfproximal" reason="Adjacent" />
     <disable_collisions link1="rh_rfproximal" link2="rh_lfmiddle" reason="Adjacent" />
+    <disable_collisions link1="rh_rfproximal" link2="rh_mfmiddle" reason="Adjacent" />
+    <disable_collisions link1="rh_rfproximal" link2="rh_mfknuckle" reason="Adjacent" />
+    <disable_collisions link1="rh_rfproximal" link2="rh_lfknuckle" reason="Adjacent" />
     <disable_collisions link1="rh_rfmiddle" link2="rh_lfmiddle" reason="Adjacent" />
     <disable_collisions link1="rh_rfmiddle" link2="rh_lfdistal" reason="Adjacent" />
     <disable_collisions link1="rh_rfdistal" link2="rh_lfdistal" reason="Adjacent" />
+    <disable_collisions link1="rh_rfdistal" link2="rh_lfmiddle" reason="Adjacent" />
+
+    <disable_collisions link1="rh_lfproximal" link2="rh_rfmiddle" reason="Adjacent" />
+    <disable_collisions link1="rh_lfproximal" link2="rh_rfknuckle" reason="Adjacent" />
+    <disable_collisions link1="rh_lfproximal" link2="rh_lfknuckle" reason="Adjacent" />
+    <disable_collisions link1="rh_lfmiddle" link2="rh_rfdistal" reason="Adjacent" />
 
 
     <disable_collisions link1="rh_ffproximal" link2="rh_palm" reason="Adjacent" />
