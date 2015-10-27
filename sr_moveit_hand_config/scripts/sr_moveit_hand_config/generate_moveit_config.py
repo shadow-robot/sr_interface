@@ -88,7 +88,7 @@ def upload_output_params(upload_str, output_path=None, upload=True, ns_=None):
         @param ns_: namespace to use when uploading to param server
         @type ns_:  str
     """
-    if upload: 
+    if upload:
         paramlist = rosparam.load_str(upload_str, "generated",
                                       default_namespace=ns_)
         for params, namespace in paramlist:

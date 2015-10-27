@@ -53,7 +53,6 @@ def yaml_reindent(in_str, numspaces):
 
 def upload_output_params(upload_str, output_path=None, upload=True, ns_=None):
     if upload:
-        #print "upload_str: ", upload_str
         paramlist = rosparam.load_str(upload_str, "generated",
                                       default_namespace=ns_)
         for params, namespace in paramlist:

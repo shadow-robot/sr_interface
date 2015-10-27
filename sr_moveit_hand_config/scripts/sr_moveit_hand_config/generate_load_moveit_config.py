@@ -73,11 +73,13 @@ if __name__ == '__main__':
             # generate the desired yaml and load it.
             if command == "fake_controllers":
                 if save_file:
-                    output_path = rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/" + "fake_controllers.yaml"
+                    output_path = (rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/" +
+                                   "fake_controllers.yaml")
                 generate_fake_controllers(robot, output_path=output_path, ns_=NS)
             elif command == "real_controllers":
                 if save_file:
-                    output_path = rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/" + "controllers.yaml"
+                    output_path = (rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/" +
+                                   "controllers.yaml")
                 generate_real_controllers(robot, output_path=output_path, ns_=NS)
             elif command == "ompl_planning":
                 # get the template file
@@ -87,7 +89,8 @@ if __name__ == '__main__':
                     if (template_path.startswith("_") or template_path.startswith("--")):
                         template_path = None
                     if save_file:
-                        output_path = rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/" + "ompl_planning.yaml"
+                        output_path = (rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/" +
+                                       "ompl_planning.yaml")
                     generate_ompl_planning(robot, template_path=template_path, output_path=output_path, ns_=NS)
                 else:
                     rospy.logerr("ompl_planning generation requires a template file, none provided")
@@ -99,7 +102,8 @@ if __name__ == '__main__':
                     if (template_path.startswith("_") or template_path.startswith("--")):
                         template_path = None
                     if save_file:
-                        output_path = rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/" + "kinematics.yaml"
+                        output_path = (rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/" +
+                                       "kinematics.yaml")
                     generate_kinematics(robot, template_path=template_path, output_path=output_path, ns_=NS)
                 else:
                     rospy.logerr("kinematics generation requires a template file, none provided")
@@ -111,7 +115,8 @@ if __name__ == '__main__':
                     if (template_path.startswith("_") or template_path.startswith("--")):
                         template_path = None
                     if save_file:
-                        output_path = rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/" + "joint_limits.yaml"
+                        output_path = (rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/" +
+                                       "joint_limits.yaml")
                     generate_joint_limits(robot, template_path=template_path, output_path=output_path, ns_=NS)
                 else:
                     rospy.logerr("joint_limits generation requires a template file, none provided")
