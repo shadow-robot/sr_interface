@@ -15,8 +15,6 @@
   <arg name="hand_serial" default="1322"/>
   <!-- Loads the robot description -->
   <arg name="robot_description" default="$(find sr_description)/robots/shadowhand_motor.urdf.xacro"/>
-  <!-- The name of the robot config file to load -->
-  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/sh_right.yaml"/>
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
@@ -71,12 +69,11 @@
 
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
-    <include file="$(find sr_multi_moveit_config)/launch/moveit_planning_and_execution.launch">
+    <include file="$(find sr_moveit_hand_config)/launch/moveit_planning_and_execution.launch">
       <arg name="load_robot_description" value="false"/>
       <arg name="gui" default="$(arg gui)"/>
-      <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
     </include>
-    <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
+    <include file="$(find sr_moveit_hand_config)/launch/default_warehouse_db.launch"/>
   </group>
 
   <!-- Trajectory controller -->
