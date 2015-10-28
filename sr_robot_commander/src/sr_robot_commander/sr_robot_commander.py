@@ -90,6 +90,9 @@ class SrRobotCommander(object):
 
         threading.Thread(None, rospy.spin)
 
+    def get_group_name(self):
+        return self._name
+
     def refresh_named_targets(self):
         self._srdf_names = self.__get_srdf_names()
         self._warehouse_names = self.__get_warehouse_names()
@@ -519,6 +522,21 @@ class SrRobotCommander(object):
         else:
             mode = RobotTeachModeRequest.TRAJECTORY_MODE
         self.change_teach_mode(mode, self._name)
+
+    def move_to_trajectory_start(self, trajectory, wait=True):
+        """
+        Make and execute a plan from the current state to the first state in an pre-existing trajectory
+        @param trajectory - moveit_msgs/JointTrajectory
+        @param wait - Bool to specify if movement should block untill finished.
+        """
+
+        if len(trajectory.points) <= 0:
+            rospy.logerr("Trajectory has no points in it, can't reverse...")
+            return None
+
+        first_point = trajectory.points[0]
+        end_state = dict(zip(trajectory.joint_names, first_point.positions))
+        self.move_to_joint_value_target(end_state, wait=wait)
 
     @staticmethod
     def change_teach_mode(mode, robot):
