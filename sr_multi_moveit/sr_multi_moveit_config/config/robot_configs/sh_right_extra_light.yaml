@@ -1,0 +1,8 @@
+robot:
+  name: shadowhand_motor
+  manipulators:
+    right_manipulator:
+      side: right
+      hand:
+        name: shadowhand_extra_lite.urdf.xacro
+        is_lite: true

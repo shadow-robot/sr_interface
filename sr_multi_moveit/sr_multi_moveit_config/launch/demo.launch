@@ -5,17 +5,32 @@
   <!-- By default, we do not start a database (it can be large) -->
   <arg name="db" default="false" />
 
-  <!-- The name of the robot config file to load -->
+  <!-- Single hand -->
+  <!--arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/sh_left.yaml"/>
+  <arg name="robot_description" default="$(find sr_description)/robots/shadowhand_left_motor.urdf.xacro"/-->
+  
+  <!-- Single light hand -->
+  <!--arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/sh_right_extra_light.yaml"/>
+  <arg name="robot_description" default="$(find sr_description)/robots/shadowhand_extra_lite.urdf.xacro"/-->
+ 
+  <!-- Single biotac hand -->
+  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/sh_right_motor_biotac.yaml"/>
+  <arg name="robot_description" default="$(find sr_description)/robots/shadowhand_motor_biotac.urdf.xacro"/>
+  
+  <!-- bimanual robot -->
+  <!--arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
+  <arg name="robot_description" default="$(find sr_description)/robots/bimanual_shadowhand_motor.urdf.xacro"/-->
+  
+  <!-- Hand and arm -->
   <!--arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/sh_ur10_right.yaml"/>
-  <arg name="robot_urdf" default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/-->
+  <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/-->
   
-  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/sh_left.yaml"/>
-  <arg name="robot_urdf" default="$(find sr_description)/robots/shadowhand_left_motor.urdf.xacro"/>
-  
+
+
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <include file="$(find sr_multi_moveit_config)/launch/planning_context.launch">
     <arg name="load_robot_description" value="true"/>
-    <arg name="robot_urdf" value="$(arg robot_urdf)"/>
+    <arg name="robot_description" value="$(arg robot_description)"/>
     <arg name="robot_config_file" value="$(arg robot_config_file)"/>
   </include>
 
