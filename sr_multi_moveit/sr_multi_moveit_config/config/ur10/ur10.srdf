@@ -18,8 +18,6 @@
         <joint name="wrist_3_joint" />
         <joint name="ee_fixed_joint" />
         <joint name="arm_to_hand" />
-        <joint name="WRJ2" />
-        <joint name="WRJ1" />
     </group>
     <group_state name="hold_bottle" group="arm">
         <joint name="elbow_joint" value="1.7730913162231445" />
@@ -28,8 +26,6 @@
         <joint name="wrist_1_joint" value="-1.0714204947101038" />
         <joint name="wrist_2_joint" value="0.03156869485974312" />
         <joint name="wrist_3_joint" value="2.023080348968506" />
-        <joint name="WRJ1" value="-0.07499826746320828" />
-        <joint name="WRJ2" value="-0.21651525474794753" />
     </group_state>
 
     <group_state name="approach_bottle" group="arm">
@@ -39,8 +35,6 @@
         <joint name="wrist_1_joint" value="-0.2906392256366175" />
         <joint name="wrist_2_joint" value="-0.1491025129901331" />
         <joint name="wrist_3_joint" value="1.432104468345642" />
-        <joint name="WRJ1" value="0" />
-        <joint name="WRJ2" value="0" />
     </group_state>
 
     <group_state name="pour_bottle" group="arm">
@@ -50,8 +44,6 @@
         <joint name="wrist_1_joint" value="-0.9006665388690394" />
         <joint name="wrist_2_joint" value="0.044231902807950974" />
         <joint name="wrist_3_joint" value="-0.079658333455221" />
-        <joint name="WRJ1" value="0" />
-        <joint name="WRJ2" value="0" />
     </group_state>
 
     <group_state name="victory" group="arm">
@@ -61,8 +53,6 @@
         <joint name="wrist_1_joint" value="1.2423092126846313" />
         <joint name="wrist_2_joint" value="-1.1883366743670862" />
         <joint name="wrist_3_joint" value="-1.4395459334002894" />
-        <joint name="WRJ1" value="0" />
-        <joint name="WRJ2" value="0" />
     </group_state>
 
     <group_state name="gamma" group="arm">
@@ -72,8 +62,6 @@
         <joint name="wrist_1_joint" value="0" />
         <joint name="wrist_2_joint" value="0" />
         <joint name="wrist_3_joint" value="0" />
-        <joint name="WRJ1" value="0" />
-        <joint name="WRJ2" value="0" />
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="moveit_ee" parent_link="ee_link" group="arm" />

@@ -27,12 +27,12 @@
   <!-- Serial number of the hand to be used-->
   <arg name="hand_serial" default="1082"/>
   <!-- the path to the mapping files -->
-  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_ethercat.yaml"/>
+  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
 
   <!-- Loads the robot description -->
   <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/>
   <!-- The name of the robot config file to load -->
-  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/sh_ur10_right.yaml"/>
+  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
 
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
