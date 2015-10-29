@@ -32,8 +32,8 @@
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <!-- the path to the mapping files -->
-  <arg name="rh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_ethercat.yaml"/>
-  <arg name="lh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_ethercat.yaml"/>
+  <arg name="rh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
+  <arg name="lh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_E_v3.yaml"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
