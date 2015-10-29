@@ -6,16 +6,16 @@
   <arg name="db" default="false" />
 
   <!-- Single hand -->
-  <!--arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/sh_left.yaml"/>
-  <arg name="robot_description" default="$(find sr_description)/robots/shadowhand_left_motor.urdf.xacro"/-->
+  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/sh_right.yaml"/>
+  <arg name="robot_description" default="$(find sr_description)/robots/shadowhand_motor.urdf.xacro"/>
   
   <!-- Single light hand -->
   <!--arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/sh_right_extra_light.yaml"/>
   <arg name="robot_description" default="$(find sr_description)/robots/shadowhand_extra_lite.urdf.xacro"/-->
  
   <!-- Single biotac hand -->
-  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/sh_right_motor_biotac.yaml"/>
-  <arg name="robot_description" default="$(find sr_description)/robots/shadowhand_motor_biotac.urdf.xacro"/>
+  <!--arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/sh_right_motor_biotac.yaml"/>
+  <arg name="robot_description" default="$(find sr_description)/robots/shadowhand_motor_biotac.urdf.xacro"/-->
   
   <!-- bimanual robot -->
   <!--arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
