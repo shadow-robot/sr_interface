@@ -64,8 +64,7 @@ def upload_output_params(upload_str, output_path=None, upload=True, ns_=None):
 
 
 def generate_fake_controllers(robot, robot_config, output_path=None, ns_=None):
-    output_str = ""
-    output_str += "controller_list:\n"
+    output_str = "controller_list:\n"
     for manipulator in robot_config.manipulators:
         if manipulator.has_arm:
             # Read arm srdf
@@ -105,8 +104,7 @@ def generate_fake_controllers(robot, robot_config, output_path=None, ns_=None):
 
 
 def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
-    output_str = ""
-    output_str += "controller_list:\n"
+    output_str = "controller_list:\n"
     for manipulator in robot_config.manipulators:
         if manipulator.has_arm:
             # Read arm srdf
