@@ -32,9 +32,7 @@
 
 """
     generate the srdf according to the urdf
-    syntax  generate_srdf <srdf.xacro filename> [output filename]
-    Note : The srdf.xacro filename should be without _prefix,
-    as the name with prefix is generated from the one without if needed
+    syntax  generate_hand_srdf [output filename]
 """
 
 import sys
@@ -43,24 +41,23 @@ from xml.dom.minidom import parse
 
 import xacro
 import rospy
+import rospkg
 from xacro import set_substitution_args_context
 from rosgraph.names import load_mappings
 
 from sr_utilities.local_urdf_parser_py import URDF
 
-if __name__ == '__main__':
 
-    if len(sys.argv) > 1:
-        srdf_xacro_filename = sys.argv[1]
+class SRDFHandGenerator(object):
+    def __init__(self, urdf_str=None, load=True, save=True):
+        if urdf_str is None:
+            while not rospy.has_param('robot_description'):
+                rospy.sleep(0.5)
+                rospy.loginfo("waiting for robot_description")
 
-        rospy.init_node('srdf_generator', anonymous=True)
+            # load the urdf from the parameter server
+            urdf_str = rospy.get_param('robot_description')
 
-        while not rospy.has_param('robot_description'):
-            rospy.sleep(0.5)
-            rospy.loginfo("waiting for robot_description")
-
-        # load the urdf from the parameter server
-        urdf_str = rospy.get_param('robot_description')
         robot = URDF.from_xml_string(urdf_str)
 
         extracted_prefix = False
@@ -108,20 +105,23 @@ if __name__ == '__main__':
                            ]))
 
         # the prefix version of the srdf_xacro must be loaded
+        rospack = rospkg.RosPack()
+        package_path = rospack.get_path('sr_moveit_hand_config')
+        srdf_xacro_filename = package_path + "/config/shadowhands.srdf.xacro"
+
         srdf_xacro_filename = srdf_xacro_filename.replace(".srdf.xacro", "_prefix.srdf.xacro")
         rospy.loginfo("File loaded " + srdf_xacro_filename)
 
         # open and parse the xacro.srdf file
         srdf_xacro_file = open(srdf_xacro_filename, 'r')
-        srdf_xacro_xml = parse(srdf_xacro_file)
+        self.srdf_xacro_xml = parse(srdf_xacro_file)
 
         # expand the xacro
-        xacro.process_includes(srdf_xacro_xml,
-                               os.path.dirname(sys.argv[0]))
-        xacro.eval_self_contained(srdf_xacro_xml)
+        xacro.process_includes(self.srdf_xacro_xml, os.path.dirname(sys.argv[0]))
+        xacro.eval_self_contained(self.srdf_xacro_xml)
 
-        if len(sys.argv) > 2:
-            OUTPUT_PATH = sys.argv[2]
+        if len(sys.argv) > 1:
+            OUTPUT_PATH = sys.argv[1]
             # reject ROS internal parameters and detect termination
             if (OUTPUT_PATH.startswith("_") or
                     OUTPUT_PATH.startswith("--")):
@@ -129,20 +129,27 @@ if __name__ == '__main__':
         else:
             OUTPUT_PATH = None
 
-        # Upload or output the input string on the correct param namespace or file
-        if OUTPUT_PATH is None:
-            rospy.loginfo(" Loading SRDF on parameter server")
-            robot_description_param = rospy.resolve_name(
-                'robot_description') + "_semantic"
+        if load:
+            rospy.loginfo("Loading SRDF on parameter server")
+            robot_description_param = rospy.resolve_name('robot_description') + "_semantic"
             rospy.set_param(robot_description_param,
-                            srdf_xacro_xml.toprettyxml(indent='  '))
-
-        else:
-            rospy.loginfo(" Writing SRDF to file ", OUTPUT_PATH)
+                            self.srdf_xacro_xml.toprettyxml(indent='  '))
+        if save:
+            OUTPUT_PATH = package_path + "/config/generated_shadowhand.srdf"
             FW = open(OUTPUT_PATH, "wb")
-            FW.write(srdf_xacro_xml.toprettyxml(indent=' '))
+            FW.write(self.srdf_xacro_xml.toprettyxml(indent='  '))
+            FW.close()
+
+            OUTPUT_PATH = package_path + "/config/generated_shadowhand.urdf"
+            FW = open(OUTPUT_PATH, "wb")
+            FW.write(urdf_str)
             FW.close()
 
         srdf_xacro_file.close()
-    else:
-        rospy.logerr("No srdf.xacro file provided")
+
+    def get_hand_srdf(self):
+        return self.srdf_xacro_xml
+
+if __name__ == '__main__':
+    rospy.init_node('hand_srdf_generator', anonymous=True)
+    srdfGenerator = SRDFHandGenerator()

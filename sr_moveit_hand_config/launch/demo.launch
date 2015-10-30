@@ -1,5 +1,6 @@
 <launch>
-
+  <arg name="planning" default="ompl"/>
+  
   <!-- By default, we do not start a database (it can be large) -->
   <arg name="db" default="false" />
 
@@ -11,9 +12,8 @@
     <arg name="load_robot_description" value="true"/>
   </include>
 
-  <!-- If needed, broadcast static tf for robot root -->
-    <node pkg="tf" type="static_transform_publisher" name="virtual_joint_broadcaster_0" args="0 0 0 0 0 0 shadow_world_frame rh_forearm 100" />
-
+  <!-- Broadcast static tf for robot root -->
+  <node name="virtual_joint_broadcaster" pkg="sr_moveit_hand_config" type="virtual_joint_broadcaster.py" output="screen" />
 
   <!-- We do not have a robot connected, so publish fake joint states -->
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
@@ -25,12 +25,13 @@
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
 
   <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
-  <include file="$(find sr_moveit_hand_config)/launch/move_group.launch">
-    <arg name="allow_trajectory_execution" value="true"/>  
-    <arg name="fake_execution" value="true"/>
-    <arg name="info" value="true"/>
-    <arg name="debug" value="$(arg debug)"/>
-  </include>
+  <node pkg="sr_moveit_hand_config" type="timed_roslaunch.sh" args="2 sr_moveit_hand_config move_group.launch 
+    allow_trajectory_execution:=true 
+    fake_execution:=true 
+    info:=true 
+    debug:=$(arg debug) 
+    publish_monitored_planning_scene:=true
+    pipeline:=$(arg planning)" name="timed_roslaunch" output="screen"/>
 
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
   <include file="$(find sr_moveit_hand_config)/launch/moveit_rviz.launch">

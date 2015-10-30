@@ -19,7 +19,7 @@ def publish_world_to_base_transform():
         while not rospy.is_shutdown():
             br = tf.TransformBroadcaster()
             br.sendTransform((0.0, 0.0, 0.0), (0.0, 0.0, 0.0, 1.0),
-                             rospy.Time.now(),  robot_root, "shadow_world_frame")
+                             rospy.Time.now(),  robot_root, "world")
             rate.sleep()
 
 if __name__ == '__main__':

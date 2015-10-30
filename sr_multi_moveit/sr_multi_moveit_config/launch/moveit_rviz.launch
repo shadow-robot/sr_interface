@@ -1,0 +1,19 @@
+<launch>
+
+  <arg name="debug" default="false" />
+  <arg unless="$(arg debug)" name="launch_prefix" value="" />
+  <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
+
+  <arg name="config" default="false" />
+  <arg unless="$(arg config)" name="command_args" value="" />
+  <arg if="$(arg config)" name="command_args" value="-d $(find sr_multi_moveit_config)/launch/moveit.rviz" />
+  
+  <!-- The name of the robot config file to load -->
+  <arg name="robot_config_file" default=""/>
+  
+  <node name="$(anon rviz)" launch-prefix="$(arg launch_prefix)" pkg="rviz" type="rviz" respawn="false" args="$(arg command_args)" output="screen"/>
+  <group ns="$(anon rviz)">
+    <node name="load_kinematics" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="kinematics $(arg robot_config_file)" />
+  </group>
+
+</launch>

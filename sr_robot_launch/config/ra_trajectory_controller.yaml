@@ -21,3 +21,4 @@ ra_trajectory_controller:
       rh_WRJ1: {trajectory: 0.9, goal: 0.4}
       rh_WRJ2: {trajectory: 0.9, goal: 0.4}
   stop_trajectory_duration: 0.5
+  allow_partial_joints_goal: true

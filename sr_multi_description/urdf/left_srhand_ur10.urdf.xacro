@@ -19,7 +19,7 @@
     <xacro:shadowhand muscletrans="false" muscle="false" bio="false" bt_sp="false" ubi="false" eli="false"
                       reflect="-1.0" prefix="lh_"/>
 
-    <joint name="arm_to_hand" type="fixed">
+    <joint name="la_arm_to_hand" type="fixed">
         <parent link="la_ee_link"/>
         <child link="lh_forearm"/>
         <origin xyz="0.012 0.0 0.0" rpy="${pi/2.0} ${pi} ${pi/2.0}"/>

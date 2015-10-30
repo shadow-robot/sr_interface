@@ -1,0 +1,7 @@
+robot:
+  name: shadowhand_motor
+  manipulators:
+    right_manipulator:
+      side: right
+      hand:
+        name: shadowhand_motor_biotac.urdf.xacro

@@ -12,7 +12,7 @@
   <param if="$(arg load_robot_description)" name="$(arg robot_description)" command="$(find xacro)/xacro.py '$(arg hand_urdf)'"/>
 
   <!-- The semantic description that corresponds to the URDF -->
-  <node name="generate_srdf" pkg="sr_moveit_hand_config" type="generate_srdf.py" respawn="false" output="screen" args="$(find sr_moveit_hand_config)/config/shadowhands.srdf.xacro --" />
+  <node name="generate_hand_srdf" pkg="sr_moveit_hand_config" type="generate_hand_srdf.py" respawn="false" output="screen" args="" />
   	  
   <!-- Load updated joint limits (override information from URDF) -->
   <group ns="$(arg robot_description)_planning">
