@@ -405,4 +405,4 @@ if __name__ == '__main__':
                               "joint_limits_template.yaml",
                               output_path="joint_limits.yaml")
     else:
-        rospy.logerr("No file SRDF provided")
+        rospy.logerr("No SRDF file provided")
