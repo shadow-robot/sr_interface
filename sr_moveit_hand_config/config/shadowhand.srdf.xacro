@@ -252,15 +252,15 @@
  
 	<disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}${link_prefix2}proximal" reason="Adjacent" />
 	<disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}${link_prefix2}middle" reason="Adjacent" />
-	<!--disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}${link_prefix2}distal" reason="Adjacent" /-->	
+	<disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}${link_prefix2}distal" reason="Adjacent" />	
 	
 	<disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}${link_prefix2}proximal" reason="Adjacent" />
 	<disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}${link_prefix2}middle" reason="Adjacent" />
-	<!--disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}${link_prefix2}distal" reason="Adjacent" /-->	
+	<disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}${link_prefix2}distal" reason="Adjacent" />	
 	
-	<!--disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}${link_prefix2}proximal" reason="Adjacent" />
+	<disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}${link_prefix2}proximal" reason="Adjacent" />
 	<disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}${link_prefix2}middle" reason="Adjacent" />
-	<disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}${link_prefix2}distal" reason="Adjacent" /-->	
+	<disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}${link_prefix2}distal" reason="Adjacent" />	
 	
     <xacro:if value="${lf}">
       <!-- Little finger special case -->
