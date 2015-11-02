@@ -130,7 +130,7 @@ class SRDFHandGenerator(object):
             OUTPUT_PATH = None
 
         if load:
-            rospy.loginfo(" Loading SRDF on parameter server")
+            rospy.loginfo("Loading SRDF on parameter server")
             robot_description_param = rospy.resolve_name('robot_description') + "_semantic"
             rospy.set_param(robot_description_param,
                             self.srdf_xacro_xml.toprettyxml(indent='  '))

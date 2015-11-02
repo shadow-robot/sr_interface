@@ -34,7 +34,7 @@
 generate_moveit_config provides:
     generate_fake_controllers : generate a fake controllers config file
     generate_real_controllers : generate a controllers config file
-    generate_ompl_planning : generate ompl_planning config file
+    generate_ompl_planning : generate ompl planning config file
     generate_kinematics : generate kinematics config file
     generate_joint_limits : generate joint limits config file
 """

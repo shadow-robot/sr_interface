@@ -78,12 +78,12 @@ class Robot(object):
                     manipulator_yaml = manipulators_yaml[manipulator_name]
                     side = manipulator_yaml["side"]
                     if side not in ["left", "right"]:
-                        raise SRDFRobotGeneratorException("robot description did not specified " +
+                        raise SRDFRobotGeneratorException("robot description did not specify " +
                                                           "a correct side for a manipulator")
                     has_arm = True if "arm" in manipulator_yaml else False
                     has_hand = True if "hand" in manipulator_yaml else False
                     if not has_hand and not has_arm:
-                        raise SRDFRobotGeneratorException("robot description did not specified " +
+                        raise SRDFRobotGeneratorException("robot description did not specify " +
                                                           "either an arm or hand for a manipulator")
                     # TODO: check that each manipulator do not have more than one arm and hand
                     manipulator = Manipulator(manipulator_name, side, has_arm, has_hand)
@@ -125,7 +125,7 @@ class Robot(object):
 
                     self.manipulators.append(manipulator)
         else:
-            raise SRDFRobotGeneratorException("robot description did not specified a robot")
+            raise SRDFRobotGeneratorException("robot description did not specify a robot")
 
 
 class SRDFRobotGenerator(object):
