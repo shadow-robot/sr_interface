@@ -44,6 +44,7 @@
     </xacro:unless>
     <joint name="${prefix}THJ2" />
     <joint name="${prefix}THJ1" />
+ 	<joint name="${prefix}thtip" />    
   </xacro:macro>
 
   <xacro:macro name="thumblinks" params="prefix" >
