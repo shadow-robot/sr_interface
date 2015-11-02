@@ -149,17 +149,15 @@ class SRDFRobotGenerator(object):
             if manipulator.has_arm:
                 # Read arm srdf
                 arm_srdf_path = manipulator.arm.moveit_path + "/" + manipulator.arm.name + ".srdf"
-                stream = open(arm_srdf_path, 'r')
-                self.arm_srdf_xml = parse(stream)
-                stream.close()
+                with open(arm_srdf_path, 'r') as stream:
+                    self.arm_srdf_xml = parse(stream)
                 xacro.process_includes(self.arm_srdf_xml, os.path.dirname(sys.argv[0]))
                 xacro.eval_self_contained(self.arm_srdf_xml)
             if manipulator.has_hand:
                 # Generate and read hand srdf
                 hand_urdf_path = self.rospack.get_path('sr_description')+"/robots/" + manipulator.hand.name
-                hand_urdf_xacro_file = open(hand_urdf_path, 'r')
-                hand_urdf_xml = parse(hand_urdf_xacro_file)
-                hand_urdf_xacro_file.close()
+                with open(hand_urdf_path, 'r') as hand_urdf_xacro_file:
+                    hand_urdf_xml = parse(hand_urdf_xacro_file)
                 xacro.process_includes(hand_urdf_xml, os.path.dirname(sys.argv[0]))
                 xacro.eval_self_contained(hand_urdf_xml)
                 hand_urdf = hand_urdf_xml.toprettyxml(indent='  ')
@@ -180,7 +178,7 @@ class SRDFRobotGenerator(object):
             self.add_comments(comment)
             if manipulator.has_hand:
                 self.parse_hand_end_effectors(manipulator)
-            else:
+            if manipulator.has_arm:
                 self.parse_arm_end_effectors(manipulator)
 
             # Add virtual joints

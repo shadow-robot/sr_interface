@@ -7,8 +7,8 @@ robot:
         name: ur10
         main_group: arm
         moveit_path: 
-          package: sr_multi_moveit_config
-          relative_path: /config/ur10
+          package: ur10_moveit_config
+          relative_path: /config
         group_states:
           - hold_bottle
           - approach_bottle
