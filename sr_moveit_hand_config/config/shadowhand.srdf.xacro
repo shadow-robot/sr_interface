@@ -44,6 +44,7 @@
     </xacro:unless>
     <joint name="${prefix}THJ2" />
     <joint name="${prefix}THJ1" />
+ 	<joint name="${prefix}thtip" />    
   </xacro:macro>
 
   <xacro:macro name="thumblinks" params="prefix" >
@@ -246,22 +247,22 @@
     <disable_collisions link1="${prefix}${link_prefix}knuckle" link2="${prefix}${link_prefix2}knuckle" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}knuckle" link2="${prefix}${link_prefix2}middle" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}knuckle" link2="${prefix}${link_prefix2}proximal" reason="Never" />
-    
+
     <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}${link_prefix2}knuckle" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}${link_prefix2}knuckle" reason="Never" />
- 
-	<disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}${link_prefix2}proximal" reason="Adjacent" />
-	<disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}${link_prefix2}middle" reason="Adjacent" />
-	<!--disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}${link_prefix2}distal" reason="Adjacent" /-->	
-	
-	<disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}${link_prefix2}proximal" reason="Adjacent" />
-	<disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}${link_prefix2}middle" reason="Adjacent" />
-	<!--disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}${link_prefix2}distal" reason="Adjacent" /-->	
-	
-	<!--disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}${link_prefix2}proximal" reason="Adjacent" />
-	<disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}${link_prefix2}middle" reason="Adjacent" />
-	<disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}${link_prefix2}distal" reason="Adjacent" /-->	
-	
+
+    <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}${link_prefix2}proximal" reason="Adjacent" />
+    <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}${link_prefix2}middle" reason="Adjacent" />
+    <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}${link_prefix2}distal" reason="Adjacent" />	
+
+    <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}${link_prefix2}proximal" reason="Adjacent" />
+    <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}${link_prefix2}middle" reason="Adjacent" />
+    <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}${link_prefix2}distal" reason="Adjacent" />	
+
+    <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}${link_prefix2}proximal" reason="Adjacent" />
+    <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}${link_prefix2}middle" reason="Adjacent" />
+    <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}${link_prefix2}distal" reason="Adjacent" />	
+
     <xacro:if value="${lf}">
       <!-- Little finger special case -->
       <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}lfmetacarpal" reason="Never" />
@@ -283,9 +284,9 @@
     <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}thbase" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}thhub" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}thproximal" reason="Never" />
-	<disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}thmiddle" reason="Never" />
-	<disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thmiddle" reason="Never" />
-	<disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thproximal" reason="Never" />     
+    <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}thmiddle" reason="Never" />
+    <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thmiddle" reason="Never" />
+    <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thproximal" reason="Never" />     
 
     <xacro:if value="${far}">
       <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thproximal" reason="Never" />
