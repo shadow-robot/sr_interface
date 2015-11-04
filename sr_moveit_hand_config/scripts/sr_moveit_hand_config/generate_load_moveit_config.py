@@ -44,6 +44,7 @@ import sys
 import time
 
 import rospy
+import rospkg
 
 from srdfdom.srdf import SRDF
 
@@ -54,7 +55,7 @@ if __name__ == '__main__':
 
     # detect the command to be executed
     if len(sys.argv) > 1:
-
+        save_file = False
         command = sys.argv[1]
         rospy.init_node('moveit_config_generator', anonymous=True)
         if command in ['fake_controllers', 'real_controllers', 'ompl_planning', 'kinematics', 'joint_limits']:
@@ -68,12 +69,18 @@ if __name__ == '__main__':
             srdf_str = rospy.get_param(full_param_name)
             # parse it
             robot = SRDF.from_xml_string(srdf_str)
-
+            output_path = None
             # generate the desired yaml and load it.
             if command == "fake_controllers":
-                generate_fake_controllers(robot, ns_=NS)
+                if save_file:
+                    output_path = (rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/" +
+                                   "fake_controllers.yaml")
+                generate_fake_controllers(robot, output_path=output_path, ns_=NS)
             elif command == "real_controllers":
-                generate_real_controllers(robot, ns_=NS)
+                if save_file:
+                    output_path = (rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/" +
+                                   "controllers.yaml")
+                generate_real_controllers(robot, output_path=output_path, ns_=NS)
             elif command == "ompl_planning":
                 # get the template file
                 if len(sys.argv) > 2:
@@ -81,7 +88,10 @@ if __name__ == '__main__':
                     # reject ROS internal parameters and detect termination
                     if (template_path.startswith("_") or template_path.startswith("--")):
                         template_path = None
-                    generate_ompl_planning(robot, template_path=template_path, ns_=NS)
+                    if save_file:
+                        output_path = (rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/" +
+                                       "ompl_planning.yaml")
+                    generate_ompl_planning(robot, template_path=template_path, output_path=output_path, ns_=NS)
                 else:
                     rospy.logerr("ompl_planning generation requires a template file, none provided")
 
@@ -91,7 +101,10 @@ if __name__ == '__main__':
                     template_path = sys.argv[2]
                     if (template_path.startswith("_") or template_path.startswith("--")):
                         template_path = None
-                    generate_kinematics(robot, template_path=template_path, ns_=NS)
+                    if save_file:
+                        output_path = (rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/" +
+                                       "kinematics.yaml")
+                    generate_kinematics(robot, template_path=template_path, output_path=output_path, ns_=NS)
                 else:
                     rospy.logerr("kinematics generation requires a template file, none provided")
                     sys.exit(1)
@@ -101,7 +114,10 @@ if __name__ == '__main__':
                     template_path = sys.argv[2]
                     if (template_path.startswith("_") or template_path.startswith("--")):
                         template_path = None
-                    generate_joint_limits(robot, template_path=template_path, ns_=NS)
+                    if save_file:
+                        output_path = (rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/" +
+                                       "joint_limits.yaml")
+                    generate_joint_limits(robot, template_path=template_path, output_path=output_path, ns_=NS)
                 else:
                     rospy.logerr("joint_limits generation requires a template file, none provided")
             else:
@@ -110,6 +126,6 @@ if __name__ == '__main__':
             rospy.loginfo("Successfully loaded " + command + " params")
         else:
             rospy.logerr("Unrecognized command " + command +
-                         ". Choose among fake_controllers, ompl_planning, kinematics joint_limits")
+                         ". Choose among fake_controllers, real_controllers, ompl_planning, kinematics, joint_limits")
     else:
-        rospy.logerr("Argument needed. Choose among fake_controllers, ompl_planning, kinematics joint_limits")
+        rospy.logerr("Argument needed. Choose among fake_controllers, ompl_planning, kinematics, joint_limits")

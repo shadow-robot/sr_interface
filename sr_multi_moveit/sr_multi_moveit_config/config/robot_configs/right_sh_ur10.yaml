@@ -1,0 +1,16 @@
+robot:
+  name: ur10srh
+  manipulators:
+    right_manipulator:
+      side: right
+      arm:
+        name: ur10
+        main_group: manipulator
+        moveit_path: 
+          package: ur10_moveit_config
+          relative_path: /config
+        group_states:
+          - home
+          - up
+      hand:
+        name: shadowhand_motor.urdf.xacro

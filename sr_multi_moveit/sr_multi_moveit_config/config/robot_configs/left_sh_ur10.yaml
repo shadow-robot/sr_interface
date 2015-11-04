@@ -1,0 +1,19 @@
+robot:
+  name: ur10srh
+  manipulators:
+    right_manipulator:
+      side: left
+      arm:
+        name: ur10
+        main_group: arm
+        moveit_path: 
+          package: ur10_moveit_config
+          relative_path: /config
+        group_states:
+          - hold_bottle
+          - approach_bottle
+          - pour_bottle
+          - victory
+          - gamma
+      hand:
+        name: shadowhand_left_motor.urdf.xacro

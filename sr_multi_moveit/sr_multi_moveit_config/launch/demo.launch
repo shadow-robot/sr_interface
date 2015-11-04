@@ -1,0 +1,50 @@
+<launch>
+  <arg name="planning" default="ompl"/>
+  <!-- By default, we are not in debug mode -->
+  <arg name="debug" default="false" />
+  <!-- By default, we do not start a database (it can be large) -->
+  <arg name="db" default="false" />
+
+  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
+  <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/>
+  
+  <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
+  <include file="$(find sr_multi_moveit_config)/launch/planning_context.launch">
+    <arg name="load_robot_description" value="true"/>
+    <arg name="robot_description" value="$(arg robot_description)"/>
+    <arg name="robot_config_file" value="$(arg robot_config_file)"/>
+  </include>
+
+  <!-- Broadcast static tf for robot root -->
+  <node name="virtual_joint_broadcaster" pkg="sr_multi_moveit_config" type="virtual_joint_broadcaster.py" output="screen" />
+
+  <!-- We do not have a robot connected, so publish fake joint states -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="/use_gui" value="false"/> 
+    <rosparam param="/source_list">[/move_group/fake_controller_joint_states]</rosparam>
+  </node>
+
+  <!-- Given the published joint states, publish tf for the robot links -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+
+  <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
+  <node pkg="sr_multi_moveit_config" type="timed_roslaunch.sh" args="5 sr_multi_moveit_config move_group.launch 
+    allow_trajectory_execution:=true 
+    fake_execution:=true 
+    info:=true 
+    debug:=$(arg debug) 
+    publish_monitored_planning_scene:=true
+    pipeline:=$(arg planning) 
+    robot_config_file:=$(arg robot_config_file)" name="timed_roslaunch" output="screen"/>
+
+  <!-- Run Rviz and load the default config to see the state of the move_group node -->
+  <include file="$(find sr_multi_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="config" value="true"/>
+    <arg name="debug" value="$(arg debug)"/>
+    <arg name="robot_config_file" value="$(arg robot_config_file)"/>
+  </include>
+
+  <!-- If database loading was enabled, start mongodb as well -->
+  <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch" if="$(arg db)"/>
+
+</launch>

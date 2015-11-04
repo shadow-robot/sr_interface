@@ -36,6 +36,9 @@ from math import radians
 
 from sr_utilities.hand_finder import HandFinder
 
+from moveit_msgs.srv import GetPositionFK
+from std_msgs.msg import Header
+
 
 class SrRobotCommander(object):
     """
@@ -75,6 +78,9 @@ class SrRobotCommander(object):
         self._joints_effort = {}
         self.__plan = None
 
+        self._forward_k = rospy.ServiceProxy(
+            'compute_fk', GetPositionFK)
+
         # prefix of the trajectory controller
         if name in self.__group_prefixes.keys():
             self._prefix = self.__group_prefixes[name]
@@ -89,6 +95,17 @@ class SrRobotCommander(object):
         self._set_up_action_client()
 
         threading.Thread(None, rospy.spin)
+
+    def get_end_effector_pose_from_named_state(self, name):
+        state = self._warehouse_name_get_srv(name, self._robot_name).state
+        return self.get_end_effector_pose_from_state(state)
+
+    def get_end_effector_pose_from_state(self, state):
+        header = Header()
+        fk_link_names = [self._move_group_commander.get_end_effector_link()]
+        header.frame_id = self._move_group_commander.get_pose_reference_frame()
+        response = self._forward_k(header, fk_link_names, state)
+        return response.pose_stamped[0]
 
     def get_planning_frame(self):
         return self._move_group_commander.get_planning_frame()
@@ -156,9 +173,16 @@ class SrRobotCommander(object):
             self._move_group_commander.set_named_target(name)
         elif (name in self._warehouse_names):
             response = self._warehouse_name_get_srv(name, self._robot_name)
-            js = response.state.joint_state
-            self._move_group_commander.set_joint_value_target(js)
 
+            active_names = self._move_group_commander._g.get_active_joints()
+            joints = response.state.joint_state.name
+            positions = response.state.joint_state.position
+            js = {}
+
+            for n, this_name in enumerate(joints):
+                if this_name in active_names:
+                    js[this_name] = positions[n]
+            self._move_group_commander.set_joint_value_target(js)
         else:
             rospy.logerr("Unknown named state '%s'..." % name)
             return False
@@ -181,6 +205,7 @@ class SrRobotCommander(object):
 
         else:
             rospy.logerr("No target named %s" % name)
+
             return None
 
         return output
@@ -197,6 +222,9 @@ class SrRobotCommander(object):
         output = {n: current[n] for n in names if n in current}
 
         return output
+
+    def get_robot_state_bounded(self):
+        return self._move_group_commander._g.get_current_state_bounded()
 
     def move_to_named_target(self, name, wait=True):
         """
@@ -283,6 +311,7 @@ class SrRobotCommander(object):
                             - pause_time -> time to wait at this wp
         """
         current = self.get_current_pose_bounded()
+
         joint_trajectory = JointTrajectory()
         joint_names = current.keys()
         joint_trajectory.joint_names = joint_names
@@ -295,12 +324,15 @@ class SrRobotCommander(object):
                 rospy.logerr("Invalid point name - can't finish trajectory")
                 return None
 
-            trajectory_point = JointTrajectoryPoint()
-            trajectory_point.positions = [
-                joint_positions[n] if n in joint_positions else current[n]
-                for n in joint_names]
+            new_positions = {}
 
-            current = joint_positions
+            for n in joint_names:
+                new_positions[n] = joint_positions[n] if n in joint_positions else current[n]
+
+            trajectory_point = JointTrajectoryPoint()
+            trajectory_point.positions = [new_positions[n] for n in joint_names]
+
+            current = new_positions
 
             time_from_start += wp['interpolate_time']
             trajectory_point.time_from_start = rospy.Duration.from_sec(time_from_start)

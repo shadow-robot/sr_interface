@@ -32,9 +32,9 @@
 
 """
 generate_moveit_config provides:
-    generate_fake_controllers : generage a fake controllers config file
-    generate_real_controllers : generage a controllers config file
-    generate_ompl_planning : generate ompl_planning config file
+    generate_fake_controllers : generate a fake controllers config file
+    generate_real_controllers : generate a controllers config file
+    generate_ompl_planning : generate ompl planning config file
     generate_kinematics : generate kinematics config file
     generate_joint_limits : generate joint limits config file
 """
@@ -77,7 +77,7 @@ def find_prefix(robot):
     return prefix
 
 
-def upload_output_params(upload_str, output_path=None, ns_=None):
+def upload_output_params(upload_str, output_path=None, upload=True, ns_=None):
     """
     Upload or output the input string on the correct param ns or file
         @param upload_str: string to be uploaded or written
@@ -88,12 +88,12 @@ def upload_output_params(upload_str, output_path=None, ns_=None):
         @param ns_: namespace to use when uploading to param server
         @type ns_:  str
     """
-    if output_path is None:
+    if upload:
         paramlist = rosparam.load_str(upload_str, "generated",
                                       default_namespace=ns_)
         for params, namespace in paramlist:
             rosparam.upload_params(namespace, params)
-    else:
+    if output_path is not None:
         file_writer = open(output_path, "wb")
         file_writer.write(upload_str)
         file_writer.close()
@@ -164,6 +164,7 @@ def generate_real_controllers(robot, output_path=None, ns_=None):
                 output_str += "      - " + joint.name + "\n"
     # load on param server or output to file
     upload_output_params(output_str, output_path, ns_)
+    return output_str
 
 
 def generate_ompl_planning(robot,

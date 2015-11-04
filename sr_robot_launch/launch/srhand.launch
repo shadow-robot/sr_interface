@@ -3,10 +3,6 @@
   <arg name="hand_id" default="rh"/>
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
   <arg name="sim" default="true"/>
-  <!-- Use xacro prefix for hand or not -->
-  <arg name="use_xacro_prefix" default="false"/>
-  <!--Left or right hand/arm  -->
-  <arg name="xacro_prefix" default="r"/>
   <!-- Set to true for debugging -->
   <arg name="debug" default="false"/>
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
@@ -18,8 +14,7 @@
   <!-- Serial number of the hand to be used-->
   <arg name="hand_serial" default="1322"/>
   <!-- Loads the robot description -->
-  <arg name="robot_description"
-       default="$(find sr_description)/robots/shadowhand_motor.urdf.xacro"/>
+  <arg name="robot_description" default="$(find sr_description)/robots/shadowhand_motor.urdf.xacro"/>
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
@@ -28,7 +23,8 @@
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <!-- the path to the mapping files -->
-  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_ethercat.yaml"/>
+  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
+
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">

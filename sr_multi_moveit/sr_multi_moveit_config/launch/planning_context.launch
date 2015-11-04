@@ -1,0 +1,30 @@
+<launch>
+  <!-- By default we do not overwrite the URDF. Change the following to true to change the default behavior -->
+  <arg name="load_robot_description" default="false"/>
+
+  <!-- The name of the parameter under which the URDF is loaded -->
+  <arg name="robot_description_name" default="robot_description"/>
+  
+  <!-- The name of the URDF file to load -->
+  <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/>
+  
+  <!-- Load universal robot description format (URDF) -->
+  <param if="$(arg load_robot_description)" name="$(arg robot_description_name)" command="$(find xacro)/xacro.py '$(arg robot_description)'"/>
+
+  <!-- The name of the robot config file to load -->
+  <arg name="robot_config_file" default=""/>
+
+  <!-- The semantic description that corresponds to the URDF -->
+  <node name="generate_robot_srdf" pkg="sr_multi_moveit_config" type="generate_robot_srdf.py" respawn="false" output="screen" args="$(arg robot_config_file)" />
+
+  <!-- Load updated joint limits (override information from URDF) -->
+  <group ns="$(arg robot_description_name)_planning">
+    <node name="load_joint_limits" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="joint_limits $(arg robot_config_file)" />    
+  </group>
+
+  <!-- Load default settings for kinematics; these settings are overridden by settings in a node's namespace -->
+  <group ns="$(arg robot_description_name)_kinematics">
+    <node name="load_kinematics" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="kinematics $(arg robot_config_file)" />
+  </group>
+
+</launch>
