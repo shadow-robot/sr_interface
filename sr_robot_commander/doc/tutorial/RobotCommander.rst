@@ -238,6 +238,30 @@ Example
     print("Arm joints position\n" + str(joints_position) + "\n")
     print("Arm joints velocity\n" + str(joints_velocity) + "\n")
 
+
+check_plan_is_valid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Description
+^^^^^^^^^^^
+
+Checks if current plan contains a valid trajectory. Only has meaing if called
+after a planning function has been attempted.
+
+Example
+^^^^^^^
+
+.. code:: python
+
+    rospy.init_node("robot_commander_examples", anonymous=True)
+
+    arm_commander = SrArmCommander(name="right_arm")
+
+    arm_commander.plan_to_named_target("target_name")
+    
+    if arm_commander.plan_is_valid():
+        arm_commander.execute()
+
 **Warning** All of above codes will crash if hand is not launched yet.
 If you are using HandFinder, you can avoid this by checking the length
 of the mapping. Otherwise you can check the parameter server directly to
