@@ -111,11 +111,10 @@ class SrArmCommander(SrRobotCommander):
         (plan, fraction) = self._move_group_commander.compute_cartesian_path(
             [start_pose, target_pose], eef_step, jump_threshold)
 
-        self._set_plan(plan)
-
         if fraction < min_fraction:
             rospy.logerr("Couldn't reach enough waypoints, only %f" % fraction)
-            self._set_plan(None)
+            self._reset_plan()
             return None
 
+        self._set_plan(plan)
         return True
