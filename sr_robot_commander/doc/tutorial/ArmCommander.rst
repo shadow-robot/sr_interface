@@ -146,7 +146,7 @@ Example
 
     arm_commander.run_joint_trajectory(joint_trajectory)
 
-get_pose_reference_frame
+get\_pose\_reference\_frame
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Description
@@ -155,7 +155,7 @@ Description
 Returns the reference frame for planning in cartesian space.
 
 
-plan_cartesian_path_to_pose
+plan\_cartesian\_path\_to\_pose
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Description
@@ -165,7 +165,7 @@ Generates a linear plan in cartesian space from current end effector pose to new
 
 Parameters:
 
--  target_pose - geometry_msgs/Pose in the frame given by get_pose_reference_frame.
--  min_fraction - Percentage of trajectory which must be calculated correctly to execute plan.
+-  *target_pose* - geometry_msgs/Pose in the frame given by get_pose_reference_frame.
+-  *min\_fraction* - Percentage of trajectory which must be calculated correctly to execute plan.
                   Defaults to 1 (i.e. whole trajectory)
--  eef_step and jump_threshold - planning args to move_group_commander
+-  *eef_step* and *jump_threshold* - planning args to move_group_commander
