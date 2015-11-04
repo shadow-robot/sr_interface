@@ -39,7 +39,7 @@ Example
 
     new_position = [0.25527, 0.36682, 0.5426]
     arm_commander.move_to_position_target(new_position)
-
+
 move\_to\_pose\_target
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -57,7 +57,7 @@ Parameters:
    list of 7 floats [x, y, z, qx, qy, qz, qw]
 -  *end\_effector\_link* name of the end effector link (default value is
    empty string)
--  *wait* indicates if method should wait for movement end or not
+-  *wait* indicates if method should wait for movement end or not
    (default value is True)
 
 Example
@@ -138,7 +138,7 @@ Example
         trajectory_point.effort = []
         for key in joint_trajectory.joint_names:
             trajectory_point.positions.append(joints_states[key])
-            trajectory_point.velocities.append(0.0)
+            trajectory_point.velocities.append(0.0)
             trajectory_point.accelerations.append(0.0)
             trajectory_point.effort.append(0.0)
 
@@ -146,3 +146,26 @@ Example
 
     arm_commander.run_joint_trajectory(joint_trajectory)
 
+get\_pose\_reference\_frame
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Description
+^^^^^^^^^^^
+
+Returns the reference frame for planning in cartesian space.
+
+
+plan\_cartesian\_path\_to\_pose
+~~~~~~~~~~~~~~~~~~~~~~
+
+Description
+^^^^^^^^^^^
+
+Generates a linear plan in cartesian space from current end effector pose to new pose specified.
+
+Parameters:
+
+-  *target_pose* - geometry_msgs/Pose in the frame given by get_pose_reference_frame.
+-  *min\_fraction* - Percentage of trajectory which must be calculated correctly to execute plan.
+                  Defaults to 1 (i.e. whole trajectory)
+-  *eef_step* and *jump_threshold* - planning args to move_group_commander
