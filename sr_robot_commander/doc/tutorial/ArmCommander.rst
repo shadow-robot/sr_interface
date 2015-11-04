@@ -39,7 +39,7 @@ Example
 
     new_position = [0.25527, 0.36682, 0.5426]
     arm_commander.move_to_position_target(new_position)
-
+
 move\_to\_pose\_target
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -138,7 +138,7 @@ Example
         trajectory_point.effort = []
         for key in joint_trajectory.joint_names:
             trajectory_point.positions.append(joints_states[key])
-            trajectory_point.velocities.append(0.0)
+            trajectory_point.velocities.append(0.0)
             trajectory_point.accelerations.append(0.0)
             trajectory_point.effort.append(0.0)
 
@@ -165,7 +165,7 @@ Generates a linear plan in cartesian space from current end effector pose to new
 
 Parameters:
 
--  *target_pose* - geometry_msgs/Pose in the frame given by get_pose_reference_frame.
--  *min_fraction* - Percentage of trajectory which must be calculated correctly to execute plan.
+-  target_pose - geometry_msgs/Pose in the frame given by get_pose_reference_frame.
+-  min_fraction - Percentage of trajectory which must be calculated correctly to execute plan.
                   Defaults to 1 (i.e. whole trajectory)
-*eef_step* and *jump_threshold* - planning args to move_group_commander
+-  eef_step and jump_threshold - planning args to move_group_commander
