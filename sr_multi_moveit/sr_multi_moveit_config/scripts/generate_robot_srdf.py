@@ -396,17 +396,17 @@ class SRDFRobotGenerator(object):
                 arm_chain = robot.get_chain("world", manipulator.hand.prefix + "forearm", joints=False, fixed=False)
 
                 newElement.getAttributeNode("link1").nodeValue = arm_chain[-2]
-                newElement.getAttributeNode("link2").nodeValue = "rh_forearm"
+                newElement.getAttributeNode("link2").nodeValue = manipulator.hand.prefix + "forearm"
                 newElement.getAttributeNode("reason").nodeValue = "Adjacent"
                 newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
 
                 newElement.getAttributeNode("link1").nodeValue = arm_chain[-3]
-                newElement.getAttributeNode("link2").nodeValue = "rh_forearm"
+                newElement.getAttributeNode("link2").nodeValue = manipulator.hand.prefix + "forearm"
                 newElement.getAttributeNode("reason").nodeValue = "Adjacent"
                 newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
 
                 newElement.getAttributeNode("link1").nodeValue = arm_chain[-4]
-                newElement.getAttributeNode("link2").nodeValue = "rh_forearm"
+                newElement.getAttributeNode("link2").nodeValue = manipulator.hand.prefix + "forearm"
                 newElement.getAttributeNode("reason").nodeValue = "Adjacent"
                 newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
 
