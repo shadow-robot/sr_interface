@@ -57,7 +57,7 @@ Parameters:
    list of 7 floats [x, y, z, qx, qy, qz, qw]
 -  *end\_effector\_link* name of the end effector link (default value is
    empty string)
--  *wait* indicates if method should wait for movement end or not
+-  *wait* indicates if method should wait for movement end or not
    (default value is True)
 
 Example
@@ -166,6 +166,6 @@ Generates a linear plan in cartesian space from current end effector pose to new
 Parameters:
 
 -  *target_pose* - geometry_msgs/Pose in the frame given by get_pose_reference_frame.
--  *min_fraction* Percentage of trajectory which must be calculated correctly to execute plan.
+-  *min_fraction* - Percentage of trajectory which must be calculated correctly to execute plan.
                   Defaults to 1 (i.e. whole trajectory)
 *eef_step* and *jump_threshold* - planning args to move_group_commander
