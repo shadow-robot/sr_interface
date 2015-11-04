@@ -165,6 +165,7 @@ Generates a linear plan in cartesian space from current end effector pose to new
 
 Parameters:
 
--  *target_pose* geometry_msgs/Pose in the frame given by get_pose_reference_frame.
--  *min_fraction* Percentage of trajectory which must be calculated correctly to execute plan. Defaults to 1 (i.e. whole trajectory)
-*eef_step* and *jump_threshold* planning args to move_group_commander
+-  *target_pose* - geometry_msgs/Pose in the frame given by get_pose_reference_frame.
+-  *min_fraction* Percentage of trajectory which must be calculated correctly to execute plan.
+                  Defaults to 1 (i.e. whole trajectory)
+*eef_step* and *jump_threshold* - planning args to move_group_commander
