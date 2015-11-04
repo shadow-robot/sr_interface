@@ -239,13 +239,76 @@ Example
     print("Arm joints velocity\n" + str(joints_velocity) + "\n")
 
 
-check_plan_is_valid
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+plan_to_named_target
+~~~~~~~~~~~~~~~~~~~
 
 Description
 ^^^^^^^^^^^
 
-Checks if current plan contains a valid trajectory. Only has meaing if called
+Generates plan to named target. Target can either be default pose defined in SRDF,
+or can be robot pose stored in the moveit warehouse.
+
+Example
+^^^^^^^
+
+.. code:: python
+
+    rospy.init_node("robot_commander_examples", anonymous=True)
+
+    arm_commander = SrArmCommander(name="right_arm")
+
+    arm_commander.plan_to_named_target("target_name")
+
+
+run_named_trajectory and run_named_trajectory_unsafe
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Description
+^^^^^^^^^^^
+
+Moves robot along a trajectory through named target poses, either from SRDF or
+warehouse as above. 
+
+Argumeent is a list of waypoints, being dictionaries containing the name of the pose, the
+time taken to reach the it from the previous one, and optionally, the time to pause
+before the next.
+
+
+Example
+^^^^^^^
+
+.. code:: python
+
+trajectory = [
+    {
+        'name': 'open',
+        'interpolate_time': 3.0
+    },
+    {
+        'name': 'pack',
+        'interpolate_time': 3.0,
+        'pause_time': 2
+    },
+    {
+        'name': 'open',
+        'interpolate_time': 3.0
+    },
+    {
+        'name': 'pack',
+        'interpolate_time': 3.0
+    }
+]
+
+hand_commander.run_named_trajectory(trajectory)
+
+
+check_plan_is_valid
+~~~~~~~~~~~~~~~~~~~
+
+Description
+^^^^^^^^^^^
+
+Checks if current plan contains a valid trajectory. Only has meaning if called
 after a planning function has been attempted.
 
 Example
