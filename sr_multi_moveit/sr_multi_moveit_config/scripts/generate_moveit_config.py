@@ -169,7 +169,7 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
             for group in robot.groups:
                 group_name = group.name
                 if group_name == manipulator.arm.internal_name:
-                    group_name = "arm"
+                    group_name = manipulator.arm.main_group
                     group_prefix = prefix
                 else:
                     group_name = group.name[len(prefix):]
@@ -190,11 +190,11 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
                                 proj_eval_new = proj_eval_new + prefix + joint + ","
                             proj_eval_new = proj_eval_new[:-1] + ")"
                             group_config["projection_evaluator"] = proj_eval_new
-                            group_dump = yaml.dump(group_config,
-                                                   default_flow_style=False,
-                                                   allow_unicode=True)
-                            output_str += yaml_reindent(group_dump, 2)
-                            output_str += "\n"
+                        group_dump = yaml.dump(group_config,
+                                               default_flow_style=False,
+                                               allow_unicode=True)
+                        output_str += yaml_reindent(group_dump, 2)
+                        output_str += "\n"
 
         if manipulator.has_hand:
             with open(hand_template_path, 'r') as stream:
@@ -256,7 +256,7 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
             for group in robot.groups:
                 group_name = group.name
                 if group_name == manipulator.arm.internal_name:
-                    group_name = "arm"
+                    group_name = manipulator.arm.main_group
                     group_prefix = prefix
                 else:
                     group_name = group.name[len(prefix):]

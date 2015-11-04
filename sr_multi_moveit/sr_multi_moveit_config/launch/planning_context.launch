@@ -16,12 +16,7 @@
 
   <!-- The semantic description that corresponds to the URDF -->
   <node name="generate_robot_srdf" pkg="sr_multi_moveit_config" type="generate_robot_srdf.py" respawn="false" output="screen" args="$(arg robot_config_file)" />
-  
-  <!-- TEST -->
-  <!--node name="load_controllers" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="real_controllers $(arg robot_config_file)"/>
-  <node name="load_fake_controllers" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="fake_controllers $(arg robot_config_file)"/>
-  <node name="load_ompl_planner" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="ompl_planning $(arg robot_config_file)" /-->
-    	  
+
   <!-- Load updated joint limits (override information from URDF) -->
   <group ns="$(arg robot_description_name)_planning">
     <node name="load_joint_limits" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="joint_limits $(arg robot_config_file)" />    
