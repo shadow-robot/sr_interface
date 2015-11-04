@@ -39,6 +39,7 @@ from sr_utilities.hand_finder import HandFinder
 from moveit_msgs.srv import GetPositionFK
 from std_msgs.msg import Header
 
+
 class SrRobotCommander(object):
     """
     Base class for hand and arm commanders
