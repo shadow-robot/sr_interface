@@ -141,7 +141,7 @@ Description
 ^^^^^^^^^^^
 
 Using this method will allow to move hand or arm to predefined pose.
-This pose can be define using MoveIt assistant.
+This pose can be define using MoveIt assistant, or as states in the moveit warehosue
 
 Parameters:
 
@@ -237,6 +237,93 @@ Example
 
     print("Arm joints position\n" + str(joints_position) + "\n")
     print("Arm joints velocity\n" + str(joints_velocity) + "\n")
+
+
+plan_to_named_target
+~~~~~~~~~~~~~~~~~~~
+
+Description
+^^^^^^^^^^^
+
+Generates plan to named target. Target can either be default pose defined in SRDF,
+or can be robot pose stored in the moveit warehouse.
+
+Example
+^^^^^^^
+
+.. code:: python
+
+    rospy.init_node("robot_commander_examples", anonymous=True)
+
+    arm_commander = SrArmCommander(name="right_arm")
+
+    arm_commander.plan_to_named_target("target_name")
+
+
+run_named_trajectory and run_named_trajectory_unsafe
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Description
+^^^^^^^^^^^
+
+Moves robot along a trajectory through named target poses, either from SRDF or
+warehouse as above. 
+
+Argumeent is a list of waypoints, being dictionaries containing the name of the pose, the
+time taken to reach the it from the previous one, and optionally, the time to pause
+before the next.
+
+
+Example
+^^^^^^^
+
+.. code:: python
+
+    trajectory = [
+      {
+          'name': 'open',
+          'interpolate_time': 3.0
+      },
+      {
+          'name': 'pack',
+          'interpolate_time': 3.0,
+          'pause_time': 2
+      },
+      {
+          'name': 'open',
+          'interpolate_time': 3.0
+      },
+      {
+          'name': 'pack',
+          'interpolate_time': 3.0
+      }
+    ]
+
+    hand_commander.run_named_trajectory(trajectory)
+
+
+check_plan_is_valid
+~~~~~~~~~~~~~~~~~~~
+
+Description
+^^^^^^^^^^^
+
+Checks if current plan contains a valid trajectory. Only has meaning if called
+after a planning function has been attempted.
+
+Example
+^^^^^^^
+
+.. code:: python
+
+    rospy.init_node("robot_commander_examples", anonymous=True)
+
+    arm_commander = SrArmCommander(name="right_arm")
+
+    arm_commander.plan_to_named_target("target_name")
+    
+    if arm_commander.plan_is_valid():
+        arm_commander.execute()
 
 **Warning** All of above codes will crash if hand is not launched yet.
 If you are using HandFinder, you can avoid this by checking the length
