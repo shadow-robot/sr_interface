@@ -265,8 +265,8 @@ class SRDFRobotGenerator(object):
                                 node_attribute.nodeValue = (manipulator.arm.prefix + attribute_name)
 
                         elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
-                    if (group_name == manipulator.arm.main_group and manipulator.has_hand and
-                        not manipulator.hand.is_lite):
+                    if group_name == manipulator.arm.main_group and (manipulator.has_hand and
+                                                                     not manipulator.hand.is_lite):
                         elt.setAttribute('name', manipulator.arm.internal_name + "_and_wrist")
                         for group_element in elt.getElementsByTagName("chain"):
                             node_attribute = group_element.getAttributeNode("tip_link")
