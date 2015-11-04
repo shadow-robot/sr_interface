@@ -16,8 +16,10 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from sr_robot_commander import SrRobotCommander
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, Pose
 from rospy import get_rostime
+import rospy
+from tf import TransformerROS
 
 
 class SrArmCommander(SrRobotCommander):
@@ -95,3 +97,24 @@ class SrArmCommander(SrRobotCommander):
         pose.header.stamp = get_rostime()
         pose.header.frame_id = self._robot_commander.get_root_link()
         self._planning_scene.add_box("ground", pose, (3, 3, 0.1))
+
+    def get_pose_reference_frame(self):
+        return self._move_group_commander.get_pose_reference_frame()
+
+    def plan_cartesian_path_to_pose(self, target_pose, min_fraction=1, eef_step=.01, jump_threshold=1000):
+        if type(target_pose) != Pose:
+            rospy.logerr("Target should be Pose.")
+            return None
+
+        start_pose = self._move_group_commander.get_current_pose().pose
+
+        (plan, fraction) = self._move_group_commander.compute_cartesian_path(
+            [start_pose, target_pose], eef_step, jump_threshold)
+
+        if fraction < min_fraction:
+            rospy.logerr("Couldn't reach enough waypoints, only %f" % fraction)
+            self._reset_plan()
+            return None
+
+        self._set_plan(plan)
+        return True

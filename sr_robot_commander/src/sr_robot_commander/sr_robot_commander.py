@@ -255,6 +255,12 @@ class SrRobotCommander(object):
             rospy.logwarn("Couldn't access warehouse: " + str(exc))
             return list()
 
+    def _reset_plan(self):
+        self.__plan = None
+
+    def _set_plan(self, plan):
+        self.__plan = plan
+
     def __get_srdf_names(self):
         return self._move_group_commander._g.get_named_targets()
 
