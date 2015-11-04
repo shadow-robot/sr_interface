@@ -141,7 +141,7 @@ Description
 ^^^^^^^^^^^
 
 Using this method will allow to move hand or arm to predefined pose.
-This pose can be define using MoveIt assistant.
+This pose can be define using MoveIt assistant, or as states in the moveit warehosue
 
 Parameters:
 
