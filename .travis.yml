@@ -1,0 +1,19 @@
+sudo: required
+
+language: cpp
+
+services:
+  - docker
+
+env:
+  global:
+    - toolset_branch: master
+    - server_type: travis
+    - used_modules: check_cache,codecov_tool
+    - remote_shell_script: 'https://raw.githubusercontent.com/shadow-robot/sr-build-tools/$toolset_branch/bin/sr-run-ci-build.sh'
+
+script:
+  - curl -s "$( echo "$remote_shell_script" | sed 's/#/%23/g' )" | bash -x /dev/stdin "$toolset_branch" $server_type $used_modules
+
+after_failure:
+  - curl -X POST --data-urlencode "payload={\"channel\":\"#bots\", \"username\":\"travis\", \"text\":\"[$TRAVIS_REPO_SLUG branch $TRAVIS_BRANCH] <https://travis-ci.org/$TRAVIS_REPO_SLUG/builds/|Build $TRAVIS_BUILD_NUMBER> failed\", \"icon_emoji\":\":squirrel:\"}" $SLACK_WEB_HOOK_URL
