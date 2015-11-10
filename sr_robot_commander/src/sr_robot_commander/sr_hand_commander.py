@@ -67,6 +67,11 @@ class SrHandCommander(SrRobotCommander):
         if self._topic_prefix and not self._topic_prefix.endswith("/"):
             self._topic_prefix += "/"
 
+        self._hand_serial = hand_serial
+
+    def get_hand_serial(self):
+            return self._hand_serial
+
     def get_joints_effort(self):
         """
         Returns joints effort
