@@ -103,6 +103,7 @@
   <group if="$(arg hand_ctrl)">
     <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py">
       <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
+      <param name="wait_for" value ="/calibrated"/>
     </node>
   </group>
 
