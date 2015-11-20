@@ -28,8 +28,6 @@ class SrCrudeGraspSaver:
         self.__hand_commander = SrHandCommander(hand_parameters=hand_parameters,
                                                 hand_serial=hand_serial)
 
-        self.__arm_commander = SrArmCommander()
-
         self.__hand_or_arm = hand_or_arm
 
     def __save_out(self):
@@ -70,5 +68,5 @@ if "__main__" == __name__:
     if len(argv) > 2:
         which = argv[2]
 
-    gs = GraspSaver(argv[1], which)
+    gs = SrCrudeGraspSaver(argv[1], which)
     gs.spin()
