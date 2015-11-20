@@ -70,3 +70,5 @@ waypoints.append(pose)
 
 hand_commander.plan_to_waypoints_target(waypoints)
 hand_commander.execute()
+
+rospy.sleep(3.0)
