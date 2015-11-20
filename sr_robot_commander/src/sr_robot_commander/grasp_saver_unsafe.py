@@ -38,7 +38,7 @@ If WHAT_TO_SAVE is omitted, it defaults to "both".
 """
 
 
-class SrGraspSaverUnsafe:
+class SrGraspSaverUnsafe(object):
     def __init__(self, name, hand_or_arm="both"):
 
         self.__save = rospy.ServiceProxy(
