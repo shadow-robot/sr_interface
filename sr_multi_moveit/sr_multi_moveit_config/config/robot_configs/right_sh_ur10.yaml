@@ -7,10 +7,11 @@ robot:
         name: ur10
         main_group: manipulator
         moveit_path: 
-          package: ur10_moveit_config
-          relative_path: /config
+          package: sr_multi_moveit_config
+          relative_path: /config/ur10
         group_states:
           - home
           - up
+        kinematic_solver: trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin
       hand:
         name: shadowhand_motor.urdf.xacro
