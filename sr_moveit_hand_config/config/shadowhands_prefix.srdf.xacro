@@ -34,7 +34,14 @@
     </xacro:unless>
     <group name="$(arg prefix)fingers" />
   </group>
-
+  
+  <xacro:unless value="$(arg is_lite)">
+    <group name="$(arg prefix)wrist">
+ 	  <joint name="$(arg prefix)WRJ2" />
+      <joint name="$(arg prefix)WRJ1" />
+    </group>
+  </xacro:unless>
+  
   <!-- single finger groups -->  
   <xacro:if value="$(arg ff)">
     <group name="$(arg prefix)first_finger">
@@ -260,7 +267,7 @@
   </xacro:if>
 
   <xacro:unless value="$(arg is_lite)">
-    <end_effector name="$(arg hand_name)_ee" parent_link="$(arg prefix)palm" group="$(arg hand_name)"/>
+    <end_effector group="$(arg prefix)wrist" name="$(arg prefix)wrist_ee" parent_link="$(arg prefix)palm" parent_group="$(arg hand_name)"/>
   </xacro:unless>  
 
   <xacro:virtual_joints prefix="$(arg prefix)" />
