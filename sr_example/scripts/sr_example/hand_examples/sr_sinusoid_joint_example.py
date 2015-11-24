@@ -26,7 +26,7 @@ w = 2 * pi * f
 ts = 20
 
 # specify 2 joints to move
-joint_names = [prefix[0] + '_FFJ3', prefix[0] + '_MFJ3']
+joint_names = [prefix[0] + '_FFJ3', prefix[0] + '_RFJ3']
 
 # set max and min joint positions
 min_pos_J3 = 0.0
