@@ -12,16 +12,17 @@ from unittest import TestCase
 #
 PKG = "sr_multi_moveit_config"
 
+
 class TestBiotacColladaName(TestCase):
 
     """
-    Test class for checking that the collada name "biotac_decimated.dae" of the urdf of the 
+    Test class for checking that the collada name "biotac_decimated.dae" of the urdf of the
     biotac hands has not been changed so they can be identified
     """
 
     def setUp(self):
         self.rospack = rospkg.RosPack()
-    
+
     def check_name(self, hand_urdf_path):
         with open(hand_urdf_path, 'r') as hand_urdf_xacro_file:
             hand_urdf_xml = parse(hand_urdf_xacro_file)
