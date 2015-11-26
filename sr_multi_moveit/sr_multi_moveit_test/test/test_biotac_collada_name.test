@@ -1,0 +1,4 @@
+<launch>
+   <test test-name = "test_biotac_collada_name" pkg = "sr_multi_moveit_test" type = "test_biotac_collada_name.py"
+        time-limit = "300.0" args = "" />
+</launch>
