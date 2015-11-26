@@ -66,11 +66,10 @@ class SRDFHandGenerator(object):
         is_lite = True
         is_biotac = False
         hand_name = "right_hand"
-        
+
         # Check if hand has the old biotac sensors
         for key in robot.link_map:
             link = robot.link_map[key]
-            #print key
             if link.visual:
                 if hasattr(link.visual.geometry, 'filename'):
                     filename = os.path.basename(link.visual.geometry.filename)
