@@ -75,8 +75,13 @@
       <joint name="${prefix}THJ5" value="0" />
   </xacro:macro>
 
-  <xacro:macro name="finger_state_pack" params="prefix joint_prefix lf">
+  <xacro:macro name="finger_state_pack" params="prefix joint_prefix lf is_biotac">
+  	<xacro:unless value="${is_biotac}">
+      <joint name="${prefix}${joint_prefix}J1" value="1.5707" />
+    </xacro:unless>      
+    <xacro:if value="${is_biotac}">      
       <joint name="${prefix}${joint_prefix}J1" value="0.35" />
+    </xacro:if>  
       <joint name="${prefix}${joint_prefix}J2" value="1.5707" />
       <joint name="${prefix}${joint_prefix}J3" value="1.5707" />
       <joint name="${prefix}${joint_prefix}J4" value="0" />
@@ -84,16 +89,26 @@
        <joint name="${prefix}${joint_prefix}J5" value="0" /> 
       </xacro:if> 
   </xacro:macro>
-  <xacro:macro name="thumb_state_pack" params="prefix">
+  <xacro:macro name="thumb_state_pack" params="prefix is_biotac">
+    <xacro:unless value="${is_biotac}">
+      <joint name="${prefix}THJ1" value="0.52" />
+      <joint name="${prefix}THJ2" value="0.61" />
+      <xacro:unless value="$(arg is_lite)">
+        <joint name="${prefix}THJ3" value="0.00" />
+      </xacro:unless>
+      <joint name="${prefix}THJ4" value="1.20" />
+      <joint name="${prefix}THJ5" value="0.22" />
+    </xacro:unless>
+    <xacro:if value="${is_biotac}">
       <joint name="${prefix}THJ1" value="0.35" />
       <joint name="${prefix}THJ2" value="0.58" />
       <xacro:unless value="$(arg is_lite)">
-        <joint name="${prefix}THJ3" value="0" />
+      <joint name="${prefix}THJ3" value="0.00" />
       </xacro:unless>
       <joint name="${prefix}THJ4" value="0.39" />
       <joint name="${prefix}THJ5" value="0.19" />
+    </xacro:if>
   </xacro:macro>
-
   <xacro:macro name="finger_thumb_state_open" params="prefix finger_name joint_prefix lf is_lite">
    <group_state name="${finger_name}_thumb_open" group="${prefix}${finger_name}_thumb">
       <joint name="${prefix}${joint_prefix}J1" value="0" />
