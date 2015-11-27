@@ -97,7 +97,7 @@
         <joint name="${prefix}THJ3" value="0.00" />
       </xacro:unless>
       <joint name="${prefix}THJ4" value="1.20" />
-      <joint name="${prefix}THJ5" value="0.30" />
+      <joint name="${prefix}THJ5" value="0.22" />
     </xacro:unless>
     <xacro:if value="${is_biotac}">
       <joint name="${prefix}THJ1" value="0.35" />
