@@ -109,9 +109,9 @@ class SrRobotCommander(object):
 
     def get_planning_frame(self):
         return self._move_group_commander.get_planning_frame()
-    
+
     def set_pose_reference_frame(self, reference_frame):
-        self._move_group_commander.set_pose_reference_frame(reference_frame) 
+        self._move_group_commander.set_pose_reference_frame(reference_frame)
 
     def get_group_name(self):
         return self._name
