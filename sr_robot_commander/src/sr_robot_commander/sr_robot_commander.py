@@ -219,9 +219,9 @@ class SrRobotCommander(object):
     def get_current_pose(self, reference_frame=None):
         """
         Get the current pose of the end effector.
-        @param reference_frame - The desired reference frame in which end effector pose should be returned. 
+        @param reference_frame - The desired reference frame in which end effector pose should be returned.
         If none is passed, it will use the planning frame as reference.
-        @return geometry_msgs.msg.Pose() - current pose of the end effector 
+        @return geometry_msgs.msg.Pose() - current pose of the end effector
         """
         if reference_frame is not None:
             listener = tf.TransformListener()
