@@ -239,7 +239,7 @@ class SrRobotCommander(object):
                           " in " + reference_frame + " reference frame")
             return None
         else:
-            return self._move_group_commander.get_current_pose()
+            return self._move_group_commander.get_current_pose().pose
 
     def get_current_state(self):
         joint_names = self._move_group_commander._g.get_active_joints()
