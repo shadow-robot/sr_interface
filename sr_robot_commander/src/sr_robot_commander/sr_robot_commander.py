@@ -25,6 +25,7 @@ from moveit_commander import MoveGroupCommander, RobotCommander, \
     PlanningSceneInterface
 from moveit_msgs.msg import RobotTrajectory
 from sensor_msgs.msg import JointState
+import geometry_msgs.msg
 from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, \
     RobotTeachModeResponse
 
@@ -38,6 +39,8 @@ from sr_utilities.hand_finder import HandFinder
 
 from moveit_msgs.srv import GetPositionFK
 from std_msgs.msg import Header
+
+import tf
 
 
 class SrRobotCommander(object):
@@ -213,13 +216,52 @@ class SrRobotCommander(object):
 
         return output
 
-    def get_current_pose(self):
+    def get_current_pose(self, reference_frame=None):
+        """
+        Get the current pose of the end effector.
+        @param reference_frame - The desired reference frame in which end effector pose should be returned.
+        If none is passed, it will use the planning frame as reference.
+        @return geometry_msgs.msg.Pose() - current pose of the end effector
+        """
+        if reference_frame is not None:
+            listener = tf.TransformListener()
+            try:
+                listener.waitForTransform(reference_frame, self._move_group_commander.get_end_effector_link(),
+                                          rospy.Time(0), rospy.Duration(5.0))
+                (trans, rot) = listener.lookupTransform(reference_frame,
+                                                        self._move_group_commander.get_end_effector_link(),
+                                                        rospy.Time(0))
+                current_pose = geometry_msgs.msg.Pose()
+                current_pose.position.x = trans[0]
+                current_pose.position.y = trans[1]
+                current_pose.position.z = trans[2]
+                current_pose.orientation.x = rot[0]
+                current_pose.orientation.y = rot[1]
+                current_pose.orientation.z = rot[2]
+                current_pose.orientation.w = rot[3]
+                return current_pose
+            except (tf.Exception, tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                rospy.logwarn("Couldn't get the pose from " + self._move_group_commander.get_end_effector_link() +
+                              " in " + reference_frame + " reference frame")
+            return None
+        else:
+            return self._move_group_commander.get_current_pose().pose
+
+    def get_current_state(self):
+        """
+        Get the current joint state of the group being used.
+        @return a dictionary with the joint names as keys and current joint values
+        """
         joint_names = self._move_group_commander._g.get_active_joints()
         joint_values = self._move_group_commander._g.get_current_joint_values()
 
         return dict(zip(joint_names, joint_values))
 
-    def get_current_pose_bounded(self):
+    def get_current_state_bounded(self):
+        """
+        Get the current joint state of the group being used, enforcing that they are within each joint limits.
+        @return a dictionary with the joint names as keys and current joint values
+        """
         current = self._move_group_commander._g.get_current_state_bounded()
         names = self._move_group_commander._g.get_active_joints()
         output = {n: current[n] for n in names if n in current}
@@ -319,7 +361,7 @@ class SrRobotCommander(object):
                             - interpolate_time -> time to move from last wp
                             - pause_time -> time to wait at this wp
         """
-        current = self.get_current_pose_bounded()
+        current = self.get_current_state_bounded()
 
         joint_trajectory = JointTrajectory()
         joint_names = current.keys()
@@ -362,7 +404,7 @@ class SrRobotCommander(object):
         This stops the robot.
         """
 
-        current = self.get_current_pose_bounded()
+        current = self.get_current_state_bounded()
 
         trajectory_point = JointTrajectoryPoint()
         trajectory_point.positions = current.values()

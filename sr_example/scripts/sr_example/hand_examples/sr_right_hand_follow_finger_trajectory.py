@@ -32,14 +32,10 @@ rospy.loginfo("\nMoving Index finger following a set of waypoints")
 
 waypoints = []
 
-# Move horizontally
-start_pose = geometry_msgs.msg.Pose()
-start_pose.position.x = 0.034
-start_pose.position.y = -0.002
-start_pose.position.z = 0.197
-start_pose.orientation.w = 1.00
+start_pose = hand_commander.get_current_pose(reference_frame=prefix + "_palm")
 waypoints.append(start_pose)
 
+# Move horizontally
 pose = geometry_msgs.msg.Pose()
 pose.position.x = 0.067
 pose.position.y = -0.010
@@ -59,26 +55,30 @@ waypoints.append(pose)
 waypoints.append(start_pose)
 
 # Move vertically
-pose = geometry_msgs.msg.Pose()
-pose.position.x = 0.033
-pose.position.y = -0.016
-pose.position.z = 0.190
-pose.orientation.w = 1.00
-waypoints.append(pose)
+pose1 = geometry_msgs.msg.Pose()
+pose1.position.x = 0.033
+pose1.position.y = -0.016
+pose1.position.z = 0.190
+pose1.orientation.w = 1.00
+waypoints.append(pose1)
 
-pose = geometry_msgs.msg.Pose()
-pose.position.x = 0.033
-pose.position.y = -0.035
-pose.position.z = 0.178
-pose.orientation.w = 1.00
-waypoints.append(pose)
+pose2 = geometry_msgs.msg.Pose()
+pose2.position.x = 0.033
+pose2.position.y = -0.035
+pose2.position.z = 0.178
+pose2.orientation.w = 1.00
+waypoints.append(pose2)
 
-pose = geometry_msgs.msg.Pose()
-pose.position.x = 0.033
-pose.position.y = -0.068
-pose.position.z = 0.151
-pose.orientation.w = 1.00
-waypoints.append(pose)
+pose3 = geometry_msgs.msg.Pose()
+pose3.position.x = 0.033
+pose3.position.y = -0.068
+pose3.position.z = 0.151
+pose3.orientation.w = 1.00
+waypoints.append(pose3)
+
+waypoints.append(pose2)
+
+waypoints.append(pose1)
 
 waypoints.append(start_pose)
 
