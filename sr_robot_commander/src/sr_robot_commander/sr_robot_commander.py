@@ -224,8 +224,8 @@ class SrRobotCommander(object):
                 listener.waitForTransform(reference_frame, self._move_group_commander.get_end_effector_link(),
                                           rospy.Time(0), rospy.Duration(5.0))
                 (trans, rot) = listener.lookupTransform(reference_frame,
-                                                       self._move_group_commander.get_end_effector_link(),
-                                                       rospy.Time(0))
+                                                        self._move_group_commander.get_end_effector_link(),
+                                                        rospy.Time(0))
                 current_pose.position.x = trans[0]
                 current_pose.position.y = trans[1]
                 current_pose.position.z = trans[2]
