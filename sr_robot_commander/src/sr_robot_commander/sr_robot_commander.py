@@ -221,9 +221,9 @@ class SrRobotCommander(object):
         if reference_frame is not None:
             listener = tf.TransformListener()
             try:
-                listener.waitForTransform(reference_frame, self._move_group_commander.get_end_effector_link(), 
+                listener.waitForTransform(reference_frame, self._move_group_commander.get_end_effector_link(),
                                           rospy.Time(0), rospy.Duration(5.0))
-                (trans,rot) = listener.lookupTransform(reference_frame, 
+                (trans, rot) = listener.lookupTransform(reference_frame,
                                                        self._move_group_commander.get_end_effector_link(),
                                                        rospy.Time(0))
                 current_pose.position.x = trans[0]
@@ -236,7 +236,7 @@ class SrRobotCommander(object):
                 return current_pose
             except (tf.Exception, tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 rospy.logwarn("Couldn't get the pose from " + self._move_group_commander.get_end_effector_link() +
-                          " in " + reference_frame + " reference frame")
+                              " in " + reference_frame + " reference frame")
             return None
         else:
             return self._move_group_commander.get_current_pose().pose
