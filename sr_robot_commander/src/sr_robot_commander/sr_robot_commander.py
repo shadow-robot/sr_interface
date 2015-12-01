@@ -110,6 +110,9 @@ class SrRobotCommander(object):
     def get_planning_frame(self):
         return self._move_group_commander.get_planning_frame()
 
+    def set_pose_reference_frame(self, reference_frame):
+        self._move_group_commander.set_pose_reference_frame(reference_frame)
+
     def get_group_name(self):
         return self._name
 
@@ -542,7 +545,7 @@ class SrRobotCommander(object):
         if not self._client.wait_for_result():
             rospy.loginfo("Trajectory not completed")
 
-    def plan_to_waypoints_target(self, waypoints, eef_step=0.01, jump_threshold=0.0):
+    def plan_to_waypoints_target(self, waypoints, reference_frame=None, eef_step=0.005, jump_threshold=0.0):
         """
         Specify a set of waypoints for the end-effector and plans.
         This is a blocking method.
@@ -550,7 +553,11 @@ class SrRobotCommander(object):
         @param eef_step - configurations are computed for every eef_step meters
         @param jump_threshold - maximum distance in configuration space between consecutive points in the resulting path
         """
+        old_frame = self._move_group_commander.get_pose_reference_frame()
+        if reference_frame is not None:
+            self.set_pose_reference_frame(reference_frame)
         (self.__plan, fraction) = self._move_group_commander.compute_cartesian_path(waypoints, eef_step, jump_threshold)
+        self.set_pose_reference_frame(old_frame)
 
     def set_teach_mode(self, teach):
         """
