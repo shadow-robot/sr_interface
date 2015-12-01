@@ -65,9 +65,9 @@ class SrGraspSaverUnsafe(object):
         if self.__hand_or_arm == "both":
             current_dict = self.__arm_commander.get_robot_state_bounded()
         elif self.__hand_or_arm == "arm":
-            current_dict = self.__arm_commander.get_current_pose_bounded()
+            current_dict = self.__arm_commander.get_current_state_bounded()
         elif self.__hand_or_arm == "hand":
-            current_dict = self.__hand_commander.get_current_pose_bounded()
+            current_dict = self.__hand_commander.get_current_state_bounded()
         else:
             rospy.logfatal("Unknown save type")
             exit(-1)
