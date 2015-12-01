@@ -259,7 +259,7 @@ class SrRobotCommander(object):
 
     def get_current_state_bounded(self):
         """
-        Get the current joint state of the group being used, checking that they are within each joint limits.
+        Get the current joint state of the group being used, enforcing that they are within each joint limits.
         @return a dictionary with the joint names as keys and current joint values
         """
         current = self._move_group_commander._g.get_current_state_bounded()
