@@ -2,16 +2,39 @@
 
 ## Shadow hand only
 
+These are the hands available:
+
+| Right                                          | Left                                    | 
+| ---------------------------------------------- |-----------------------------------------| 
+| shadowhand_motor.urdf.xacro                    | shadowhand_left_motor.urdf.xacro        | 
+| shadowhand_motor_biotac.urdf.xacro             | shadowhand_left_motor_biotac.urdf.xacro |
+| shadowhand_motor_ff_biotac.urdf.xacro          |                                         |
+| shadowhand_motor_btsp.urdf.xacro               |                                         |
+| shadowhand_motor_ellipsoid.urdf.xacro          |                                         |
+| shadowhand_motor_th_ff_rf_ellipsoid.urdf.xacro |                                         |
+| shadowhand_motor_btsp.urdf.xacro               |                                         |
+| shadowhand_lite.urdf.xacro                     |                                         |
+| shadowhand_extra_lite.urdf.xacro               |                                         |
+| shadowhand_muscle.urdf.xacro                   | shadowhand_left_muscle.urdf.xacro       |
+| shadowhand_muscle_biotac.urdf.xacro            |                                         |
+
 ### Simulation
 
 To start the simulation of a shadow hand, you can run:
 
-#### For a right hand: 
 ```bash
-roslaunch sr_robot_launch srhand.launch use_moveit:=true robot_description:=`rospack find sr_description`/robots/shadowhand_motor.urdf.xacro
+roslaunch sr_robot_launch srhand.launch use_moveit:=true robot_description:=`rospack find     sr_description`/robots/shadowhand_motor.urdf.xacro
 ```
 
-The `robot description` param can be changed to start any of the available Shadow hands:
+* The `robot description` param can be changed to start any of the available Shadow hands:
+  * shadowhand_motor.urdf.xacro
+  * shadowhand_extra_lite.urdf.xacro
+  * 
+* If it is a left hand `hand_id:=lh` should be added e.g.: 
+```bash
+roslaunch sr_robot_launch srhand.launch use_moveit:=true robot_description:=`rospack find sr_description`/robots/shadowhand_left_motor.urdf.xacro hand_id:=lh
+```
+* 
 
 
 or, for the left hand and arm
