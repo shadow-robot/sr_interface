@@ -2,6 +2,8 @@
 
 ## Shadow hand only
 
+### Simulation
+
 These are the hands available:
 
 | Right                                          | Left                                    | 
@@ -18,8 +20,6 @@ These are the hands available:
 | shadowhand_lite.urdf.xacro                     |                                         |
 | shadowhand_extra_lite.urdf.xacro               |                                         |
 
-### Simulation
-
 To start the simulation of a shadow hand, you can run:
 
 ```bash
@@ -35,7 +35,7 @@ roslaunch sr_robot_launch srhand.launch use_moveit:=true robot_description:=`ros
 
 ### Real hand
 
-To start a real hand, 
+To start a real hand, you can run:
 ```bash
 roslaunch sr_ethercat_hand_config sr_rhand.launch
 ```
