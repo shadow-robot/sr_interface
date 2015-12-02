@@ -77,7 +77,7 @@ Trying to read mapping for: /hand/mapping/1178
 
 In this case 1178 is the serial number of the hand.
 
-### Real Robots, using the normal (not limited) joint range
+#### Real Robots, using the normal (not limited) joint range
 
 By default the URDF used for the UR10 arm uses a limited range for the joints, as that helps moveit find a planning solution. But as that restricts the robot movements, the user might want to start the robots with the full joint range. To do that:
 
@@ -91,10 +91,12 @@ or, for the left hand and arm
 roslaunch sr_robot_launch left_srhand_ur10arm.launch sim:=false robot_description:=`rospack find sr_multi_description`/urdf/left_srhand_ur10.urdf.xacro hand_serial:=1178
 ```
 
-### Hand with Biotacs
+#### Hand with Biotacs
 
 If your hand has biotacs, simply append `_biotacs` to the `robot_description:=` as seen below:
 
 ```bash
 robot_description:=`rospack find sr_multi_description`/urdf/right_srhand_ur10_joint_limited_biotacs.urdf.xacro
 ``` 
+## Bimanual system
+![alt text](https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/bimanual.png)
