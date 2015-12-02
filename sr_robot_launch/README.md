@@ -39,6 +39,7 @@ To start a real hand, you can run:
 ```bash
 roslaunch sr_ethercat_hand_config sr_rhand.launch
 ```
+It has the specific configuration to launch your hand, including the ethernet port, the hand serial and robot description.
 
 ## Shadow hand with UR10 arm
 
