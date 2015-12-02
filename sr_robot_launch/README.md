@@ -1,5 +1,33 @@
 # Starting the robots (simulated / real)
 
+## Shadow hand only
+
+### Simulation
+
+To start the simulation of a shadow hand, you can run:
+
+#### For a right hand: 
+```bash
+roslaunch sr_robot_launch srhand.launch use_moveit:=true robot_description:=`rospack find sr_description`/robots/shadowhand_motor.urdf.xacro
+```
+
+The `robot description` param can be changed to start any of the available Shadow hands:
+
+
+or, for the left hand and arm
+
+```bash
+roslaunch sr_robot_launch left_srhand_ur10arm.launch
+```
+
+### Real hand
+
+## Shadow hand with UR10
+
+
+
+## Previous 
+
 Launch files for UR10 arm and SR hand.
 
 ## Starting the robots
