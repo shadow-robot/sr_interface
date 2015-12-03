@@ -9,10 +9,12 @@
   <arg name="use_moveit" default="true"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
+  <!-- Serial number of the hand to be used-->
+  <arg name="hand_serial" default="1082"/>
 
-  <arg name="robot_description" value="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/>
-  <arg name="robot_config_file" value="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
-  
+  <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/>
+  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
+
   <arg name="side" value="right"/>
   <include file="$(find sr_robot_launch)/launch/sr_ur10arm_hand.launch">
     <arg name="sim" value="$(arg sim)"/>
@@ -27,5 +29,6 @@
     <arg name="robot_name" value="ur10srh"/>
     <arg name="arm_controller" value="$(find sr_robot_launch)/config/$(arg side)_ur_arm_controller.yaml"/>
     <arg name="arm_group_name" value="$(arg side)_arm"/>
+    <arg name="hand_serial" value="$(arg hand_serial)"/>
   </include>
 </launch>
