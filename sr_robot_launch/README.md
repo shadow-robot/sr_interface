@@ -47,26 +47,26 @@ It has the specific configuration to launch your hand, including the ethernet po
 To start the simulation of the hand and arm, you can run:
 
 ```bash
-roslaunch sr_robot_launch right_srhand_ur10arm.launch
+roslaunch sr_robot_launch sr_right_ur10arm_hand.launch
 ```
 
 or, for the left hand and arm
 
 ```bash
-roslaunch sr_robot_launch left_srhand_ur10arm.launch
+roslaunch sr_robot_launch sr_left_ur10arm_hand.launch
 ```
 
 ### Real Robots
 To start the real robots, do:
 
 ```bash
-roslaunch sr_robot_launch right_srhand_ur10arm.launch sim:=false hand_serial:=1178
+roslaunch sr_robot_launch sr_right_ur10arm_hand.launch sim:=false hand_serial:=1178
 ```
 
 or, for the left hand and arm
 
 ```bash
-roslaunch sr_robot_launch left_srhand_ur10arm.launch sim:=false hand_serial:=1178
+roslaunch sr_robot_launch sr_left_ur10arm_hand.launch sim:=false hand_serial:=1178
 ```
 
 To find the hand serial you can launch the command without the hand_serial argument and then check the program output. You should see something like:
@@ -82,21 +82,21 @@ In this case 1178 is the serial number of the hand.
 By default the URDF used for the UR10 arm uses a limited range for the joints, as that helps moveit find a planning solution. But as that restricts the robot movements, the user might want to start the robots with the full joint range. To do that:
 
 ```bash
-roslaunch sr_robot_launch right_srhand_ur10arm.launch sim:=false robot_description:=`rospack find sr_multi_description`/urdf/right_srhand_ur10.urdf.xacro hand_serial:=1178
+roslaunch sr_robot_launch sr_right_ur10arm_hand.launch sim:=false robot_description:=`rospack find sr_multi_description`/urdf/right_srhand_ur10.urdf.xacro hand_serial:=1178
 ```
 
 or, for the left hand and arm
 
 ```bash
-roslaunch sr_robot_launch left_srhand_ur10arm.launch sim:=false robot_description:=`rospack find sr_multi_description`/urdf/left_srhand_ur10.urdf.xacro hand_serial:=1178
+roslaunch sr_robot_launch sr_left_ur10arm_hand.launch sim:=false robot_description:=`rospack find sr_multi_description`/urdf/left_srhand_ur10.urdf.xacro hand_serial:=1178
 ```
 
 #### Hand with Biotacs
 
-If your hand has biotacs, simply append `_biotacs` to the `robot_description:=` as seen below:
+If your hand has biotacs, simply append `_biotacs` to the `robot_description:=` and to the `robot_config_file:=` as seen below:
 
 ```bash
-robot_description:=`rospack find sr_multi_description`/urdf/right_srhand_ur10_joint_limited_biotacs.urdf.xacro
+robot_description:=`rospack find sr_multi_description`/urdf/right_srhand_ur10_joint_limited_biotacs.urdf.xacro robot_config_file:=`rospack find sr_multi_moveit_config`/config/robot_configs/right_sh_ur10_biotac.yaml
 ``` 
 ## Bimanual system
 ![alt text](https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/bimanual.png)
