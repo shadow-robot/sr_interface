@@ -20,9 +20,9 @@
 
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
   <group if="$(arg gui)">
-    <include file="$(find sr_moveit_hand_config)/launch/moveit_rviz.launch">
-      <arg name="config" value="true"/>
-      <arg name="debug" value="$(arg debug)"/>
-    </include>
+    <node pkg="sr_multi_moveit_config" type="timed_roslaunch.sh" args="2 sr_moveit_hand_config moveit_rviz.launch 
+      config:=true 
+      debug:=$(arg debug)" name="timed_roslaunch_rviz" output="screen"
+    />
   </group>
 </launch>

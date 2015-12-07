@@ -22,6 +22,11 @@
   <include ns="move_group" file="$(find sr_moveit_hand_config)/launch/planning_pipeline.launch.xml">
     <arg name="pipeline" value="$(arg pipeline)" />
   </include>
+  
+  <!-- Inverse Kinematics -->
+  <group ns="move_group">
+    <node name="load_kinematics" pkg="sr_moveit_hand_config" type="generate_load_moveit_config.py" respawn="false" args="kinematics $(find sr_moveit_hand_config)/config/kinematics_template.yaml --" />
+  </group>
 
   <!-- Trajectory Execution Functionality -->
   <include ns="move_group" file="$(find sr_moveit_hand_config)/launch/trajectory_execution.launch.xml" if="$(arg allow_trajectory_execution)">
