@@ -100,3 +100,17 @@ robot_description:=`rospack find sr_multi_description`/urdf/right_srhand_ur10_jo
 ``` 
 ## Bimanual system
 ![alt text](https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/bimanual.png)
+
+### Simulation
+To start the simulation of a bimanual system, you can run:
+
+```bash
+roslaunch sr_robot_launch sr_bimanual.launch use_moveit:=true
+```
+
+### Real Robots
+To start the real robots, do:
+
+```bash
+roslaunch sr_robot_launch sr_bimanual.launch use_moveit:=true sim:=false rh_serial:=1290 lh_serial:=1338
+```
