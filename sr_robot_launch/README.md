@@ -24,8 +24,8 @@ These are the hands available:
 |9  | shadowhand_lite.urdf.xacro                     |                                         |
 |10 | shadowhand_extra_lite.urdf.xacro               |                                         |
 
-[shadowhand_motor]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadow_motor.png 
-[shadowhand_motor_biotac]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadow_motor_biotac.png
+[shadowhand_motor]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadowhand_motor.png 
+[shadowhand_motor_biotac]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadowhand_motor_biotac.png
 [shadowhand_motor_ff_biotac]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadowhand_motor_ff_biotac.png
 [shadowhand_motor_btsp]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadowhand_motor_btsp.png
 [shadowhand_motor_ellipsoid]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadowhand_motor_ellipsoid.png
