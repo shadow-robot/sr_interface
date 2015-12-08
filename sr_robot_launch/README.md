@@ -6,9 +6,9 @@
 
 These are the hands available:
 
-|                    | Right                                          | Left                                    | 
-|--------------------| ---------------------------------------------- |-----------------------------------------| 
-|![shadowhand_motor]| shadowhand_motor.urdf.xacro  | shadowhand_left_motor.urdf.xacro        | 
+|                             | Right                                          | Left                                    | 
+|-----------------------------| ---------------------------------------------- |-----------------------------------------| 
+|![shadowhand_motor]          | shadowhand_motor.urdf.xacro                    | shadowhand_left_motor.urdf.xacro        | 
 |![shadowhand_motor_biotac]   | shadowhand_motor_biotac.urdf.xacro             | shadowhand_left_motor_biotac.urdf.xacro |
 |![shadowhand_motor_ff_biotac]| shadowhand_motor_ff_biotac.urdf.xacro          |                                         |
 |![shadowhand_motor_btsp]     | shadowhand_motor_btsp.urdf.xacro               |                                         |
