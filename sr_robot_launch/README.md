@@ -6,19 +6,24 @@
 
 These are the hands available:
 
+|![shadowhand_motor]| ![shadowhand_motor_biotac]|![shadowhand_motor_ff_biotac]|![shadowhand_motor_btsp]|![shadowhand_motor_ellipsoid]|![shadowhand_motor_th_ff_rf_ellipsoid]|![shadowhand_motor_btsp]|![shadowhand_muscle]|![shadowhand_muscle_biotac]|![shadowhand_lite]|![shadowhand_extra_lite]
+--- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
+
+
 |                             | Right                                          | Left                                    | 
-|-----------------------------| ---------------------------------------------- |-----------------------------------------| 
-|![shadowhand_motor]          | shadowhand_motor.urdf.xacro                    | shadowhand_left_motor.urdf.xacro        | 
-|![shadowhand_motor_biotac]   | shadowhand_motor_biotac.urdf.xacro             | shadowhand_left_motor_biotac.urdf.xacro |
-|![shadowhand_motor_ff_biotac]| shadowhand_motor_ff_biotac.urdf.xacro          |                                         |
-|![shadowhand_motor_btsp]     | shadowhand_motor_btsp.urdf.xacro               |                                         |
-|![shadowhand_motor_ellipsoid]| shadowhand_motor_ellipsoid.urdf.xacro          |                                         |
-|![shadowhand_motor_th_ff_rf_ellipsoid]| shadowhand_motor_th_ff_rf_ellipsoid.urdf.xacro |                                |
-|![shadowhand_motor_btsp]     | shadowhand_motor_btsp.urdf.xacro               |                                         |
-|![shadowhand_muscle]         | shadowhand_muscle.urdf.xacro                   | shadowhand_left_muscle.urdf.xacro       |
-|![shadowhand_muscle_biotac]  | shadowhand_muscle_biotac.urdf.xacro            |                                         |
-|![shadowhand_lite]           | shadowhand_lite.urdf.xacro                     |                                         |
-|![shadowhand_extra_lite]     | shadowhand_extra_lite.urdf.xacro               |                                         |
+|---| ---------------------------------------------- |-----------------------------------------| 
+|1  | shadowhand_motor.urdf.xacro                    | shadowhand_left_motor.urdf.xacro        | 
+|2  | shadowhand_motor_biotac.urdf.xacro             | shadowhand_left_motor_biotac.urdf.xacro |
+|3  | shadowhand_motor_ff_biotac.urdf.xacro          |                                         |
+|4  | shadowhand_motor_btsp.urdf.xacro               |                                         |
+|5  | shadowhand_motor_ellipsoid.urdf.xacro          |                                         |
+|6  | shadowhand_motor_th_ff_rf_ellipsoid.urdf.xacro |                                |
+|7  | shadowhand_motor_btsp.urdf.xacro               |                                         |
+|8  | shadowhand_muscle.urdf.xacro                   | shadowhand_left_muscle.urdf.xacro       |
+|9  | shadowhand_muscle_biotac.urdf.xacro            |                                         |
+|10 | shadowhand_lite.urdf.xacro                     |                                         |
+|11 | shadowhand_extra_lite.urdf.xacro               |                                         |
 
 [shadowhand_motor]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadow_motor.png 
 [shadowhand_motor_biotac]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadow_motor_biotac.png
