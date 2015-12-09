@@ -24,16 +24,16 @@ These are the hands available:
 |9  | shadowhand_lite.urdf.xacro                     |                                         |
 |10 | shadowhand_extra_lite.urdf.xacro               |                                         |
 
-[shadowhand_motor]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_motor.png 
-[shadowhand_motor_biotac]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_motor_biotac.png
-[shadowhand_motor_ff_biotac]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_motor_ff_biotac.png
-[shadowhand_motor_btsp]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_motor_btsp.png
-[shadowhand_motor_ellipsoid]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_motor_ellipsoid.png
-[shadowhand_motor_th_ff_rf_ellipsoid]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_motor_th_ff_rf_ellipsoid.png
-[shadowhand_muscle]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_muscle.png
-[shadowhand_muscle_biotac]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_muscle_biotac.png
-[shadowhand_lite]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_lite.png
-[shadowhand_extra_lite]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_extra_lite.png
+[shadowhand_motor]: https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor.png 
+[shadowhand_motor_biotac]: https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_biotac.png
+[shadowhand_motor_ff_biotac]: https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_ff_biotac.png
+[shadowhand_motor_btsp]: https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_btsp.png
+[shadowhand_motor_ellipsoid]: https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_ellipsoid.png
+[shadowhand_motor_th_ff_rf_ellipsoid]: https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_th_ff_rf_ellipsoid.png
+[shadowhand_muscle]: https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_muscle.png
+[shadowhand_muscle_biotac]: https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_muscle_biotac.png
+[shadowhand_lite]: https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_lite.png
+[shadowhand_extra_lite]: https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_extra_lite.png
 
 To start the simulation of a shadow hand, you can run:
 
@@ -57,7 +57,7 @@ roslaunch sr_ethercat_hand_config sr_rhand.launch
 It has the specific configuration to launch your hand, including the ethernet port, the hand serial and robot description.
 
 ## Shadow hand with UR10 arm
-![alt text](https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/ur10hand.png)
+![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/ur10hand.png)
 
 ### Simulation
 To start the simulation of the hand and arm, you can run:
@@ -126,7 +126,7 @@ robot_description:=`rospack find sr_multi_description`/urdf/right_srhand_ur10_jo
 ``` 
 
 ## Bimanual system
-![alt text](https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/bimanual.png)
+![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/bimanual.png)
 
 ### Simulation
 To start the simulation of a bimanual system, you can run:
