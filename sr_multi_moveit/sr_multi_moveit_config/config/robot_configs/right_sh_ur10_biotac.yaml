@@ -1,8 +1,8 @@
 robot:
   name: ur10srh
   manipulators:
-    left_manipulator:
-      side: left
+    right_manipulator:
+      side: right
       arm:
         name: ur10
         main_group: manipulator
@@ -13,4 +13,4 @@ robot:
           - home
           - up
       hand:
-        name: shadowhand_left_motor.urdf.xacro
+        name: shadowhand_motor_biotac.urdf.xacro

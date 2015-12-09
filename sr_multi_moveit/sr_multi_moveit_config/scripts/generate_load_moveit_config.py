@@ -63,7 +63,7 @@ if __name__ == '__main__':
             # parse it
             robot = SRDF.from_xml_string(srdf_str)
 
-            sh_config_path = rospkg.RosPack().get_path('sr_multi_moveit_config') + "/config/sh/"
+            sh_config_path = rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/"
 
             with open(robot_config_file, "r") as stream:
                 yamldoc = yaml.load(stream)
