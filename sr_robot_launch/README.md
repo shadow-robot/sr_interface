@@ -24,16 +24,16 @@ These are the hands available:
 |9  | shadowhand_lite.urdf.xacro                     |                                         |
 |10 | shadowhand_extra_lite.urdf.xacro               |                                         |
 
-[shadowhand_motor]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadowhand_motor.png 
-[shadowhand_motor_biotac]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadowhand_motor_biotac.png
-[shadowhand_motor_ff_biotac]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadowhand_motor_ff_biotac.png
-[shadowhand_motor_btsp]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadowhand_motor_btsp.png
-[shadowhand_motor_ellipsoid]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadowhand_motor_ellipsoid.png
-[shadowhand_motor_th_ff_rf_ellipsoid]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadowhand_motor_th_ff_rf_ellipsoid.png
-[shadowhand_muscle]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadowhand_muscle.png
-[shadowhand_muscle_biotac]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadowhand_muscle_biotac.png
-[shadowhand_lite]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadowhand_lite.png
-[shadowhand_extra_lite]: https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/shadowhand_extra_lite.png
+[shadowhand_motor]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_motor.png 
+[shadowhand_motor_biotac]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_motor_biotac.png
+[shadowhand_motor_ff_biotac]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_motor_ff_biotac.png
+[shadowhand_motor_btsp]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_motor_btsp.png
+[shadowhand_motor_ellipsoid]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_motor_ellipsoid.png
+[shadowhand_motor_th_ff_rf_ellipsoid]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_motor_th_ff_rf_ellipsoid.png
+[shadowhand_muscle]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_muscle.png
+[shadowhand_muscle_biotac]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_muscle_biotac.png
+[shadowhand_lite]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_lite.png
+[shadowhand_extra_lite]: https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/shadowhand_extra_lite.png
 
 To start the simulation of a shadow hand, you can run:
 
@@ -57,7 +57,7 @@ roslaunch sr_ethercat_hand_config sr_rhand.launch
 It has the specific configuration to launch your hand, including the ethernet port, the hand serial and robot description.
 
 ## Shadow hand with UR10 arm
-![alt text](https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/ur10hand.png)
+![alt text](https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/ur10hand.png)
 
 ### Simulation
 To start the simulation of the hand and arm, you can run:
@@ -115,7 +115,7 @@ If your hand has biotacs, simply append `_biotacs` to the `robot_description:=` 
 robot_description:=`rospack find sr_multi_description`/urdf/right_srhand_ur10_joint_limited_biotacs.urdf.xacro robot_config_file:=`rospack find sr_multi_moveit_config`/config/robot_configs/right_sh_ur10_biotac.yaml
 ``` 
 ## Bimanual system
-![alt text](https://github.com/shadow-robot/sr_interface/blob/F%23402_improve_documentation/images/bimanual.png)
+![alt text](https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/bimanual.png)
 
 ### Simulation
 To start the simulation of a bimanual system, you can run:
