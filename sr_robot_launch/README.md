@@ -85,13 +85,23 @@ or, for the left hand and arm
 roslaunch sr_robot_launch sr_left_ur10arm_hand.launch sim:=false hand_serial:=1178
 ```
 
-To find the hand serial you can launch the command without the hand_serial argument and then check the program output. You should see something like:
+To find the hand serial you can launch the command without the `hand_serial` argument and then check the program output. You should see something like:
 
 ```
 Trying to read mapping for: /hand/mapping/1178
 ```
 
 In this case 1178 is the serial number of the hand.
+
+To change the hand mapping, you can set the `mapping_path` argument. For example adding:
+```
+mapping_path:=`rospack find sr_edc_launch`/mappings/default_mappings/rh_E_v3.yaml
+```
+
+To change the ethernet port used for your hand, you can add the `eth_port` argument, such as:
+```
+eth_port:=eth6
+```
 
 #### Real Robots, using the normal (not limited) joint range
 
@@ -114,6 +124,7 @@ If your hand has biotacs sensors, simply append `_biotacs` to the `robot_descrip
 ```bash
 robot_description:=`rospack find sr_multi_description`/urdf/right_srhand_ur10_joint_limited_biotacs.urdf.xacro robot_config_file:=`rospack find sr_multi_moveit_config`/config/robot_configs/right_sh_ur10_biotac.yaml
 ``` 
+
 ## Bimanual system
 ![alt text](https://github.com/shadow-robot/sr_interface/blob/indigo-devel/images/bimanual.png)
 
