@@ -6,9 +6,9 @@
 
 These are the hands available:
 
-|![shadowhand_motor]| ![shadowhand_motor_biotac]|![shadowhand_motor_ff_biotac]|![shadowhand_motor_btsp]|![shadowhand_motor_ellipsoid]|![shadowhand_motor_th_ff_rf_ellipsoid]|![shadowhand_motor_btsp]|![shadowhand_muscle]|![shadowhand_muscle_biotac]|![shadowhand_lite]|![shadowhand_extra_lite]
+|![shadowhand_motor]| ![shadowhand_motor_biotac]|![shadowhand_motor_ff_biotac]|![shadowhand_motor_btsp]|![shadowhand_motor_ellipsoid]|![shadowhand_motor_th_ff_rf_ellipsoid]|![shadowhand_muscle]|![shadowhand_muscle_biotac]|![shadowhand_lite]|![shadowhand_extra_lite]
 --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
+1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
 
 
 |   | Right                                          | Left                                    | 
@@ -107,9 +107,9 @@ or, for the left hand and arm
 roslaunch sr_robot_launch sr_left_ur10arm_hand.launch sim:=false robot_description:=`rospack find sr_multi_description`/urdf/left_srhand_ur10.urdf.xacro hand_serial:=1178
 ```
 
-#### Hand with Biotacs
+#### Hand with tactile sensors
 
-If your hand has biotacs, simply append `_biotacs` to the `robot_description:=` and to the `robot_config_file:=` as seen below:
+If your hand has biotacs sensors, simply append `_biotacs` to the `robot_description:=` and to the `robot_config_file:=` as seen below:
 
 ```bash
 robot_description:=`rospack find sr_multi_description`/urdf/right_srhand_ur10_joint_limited_biotacs.urdf.xacro robot_config_file:=`rospack find sr_multi_moveit_config`/config/robot_configs/right_sh_ur10_biotac.yaml
