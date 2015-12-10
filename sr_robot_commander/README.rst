@@ -9,9 +9,9 @@ functionalities of those robots.
 
 Following classes can be found in this package
 
--  `SrRobotCommander <doc/tutorial/RobotCommander>`__ - base class
--  `SrArmCommander <doc/tutorial/ArmCommander>`__ - arm management
+-  `SrRobotCommander <doc/tutorial/RobotCommander.html>`__ - base class
+-  `SrArmCommander <doc/tutorial/ArmCommander.html>`__ - arm management
    class
--  `SrHandCommander <doc/tutorial/HandCommander>`__ - hand management
+-  `SrHandCommander <doc/tutorial/HandCommander.html>`__ - hand management
    class
 
