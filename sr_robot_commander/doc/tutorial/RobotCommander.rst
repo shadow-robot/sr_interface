@@ -4,18 +4,17 @@ Robot Commander
 Overview
 ~~~~~~~~
 
-Main purpose of the commander is to provide simplified access to
-`hand <HandCommander.md>`__ or `arm <ArmCommander.md>`__. It provides
-methods which can be used on both `hand <HandCommander.md>`__ and
-`arm <ArmCommander.md>`__.
+The main purpose of the commander is to provide simplified access to the
+`hand <HandCommander.html>`__ or `arm <ArmCommander.html>`__, providing
+methods which can be used on both to make the interfacing easier for non-ROS people.
 
-Examples of usage can be found in the package **sr\_example** in files
-**sr\_hand\_examples.py**, **sr\_arm\_examples.py** and
-**sr\_handfinder\_examples.py**.
+Examples of usage can be found `here <../../../sr_example/README.html>`.
 
-**Warning** RobotCommander should not direcly be used. Unless necessary
-use `Hand commander <HandCommander.md>`__ or `Arm
-commander <ArmCommander.md>`__. ### Constructor
+**Warning:** The RobotCommander should not be used directly unless necessary. 
+Use the `HandCommander <HandCommander.html>`__ or `Arm
+commander <ArmCommander.html>`__ instead. 
+
+### Constructor
 
 The constructors for ``SrArmCommander`` and ``SrHandCommander`` take a
 name parameter that should match the group name of the robot to be used.
