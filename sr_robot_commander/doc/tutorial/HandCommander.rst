@@ -9,6 +9,69 @@ execute all actions of the `robot commander <RobotCommander.md>`__. Also
 it allows to get state of tactile sensors, set max force and get joints
 effort.
 
+Setup
+~~~~~~~~
+
+Import the hand or arm commander (or both) depending of your application, along with basic rospy libraries:
+
+.. code:: python
+
+    import rospy
+    from sr_robot_commander.sr_arm_commander import SrArmCommander
+    from sr_robot_commander.sr_hand_commander import SrHandCommander
+
+The constructors for ``SrArmCommander`` and ``SrHandCommander`` take a
+name parameter that should match the group name of the robot to be used.
+
+Example
+^^^^^^^
+
+This example uses `HandFinder <../../../sr_utilities/README.md>`__ for
+finding launched hand. For a right arm:
+
+.. code:: python
+
+    arm_commander = SrArmCommander(name="right_arm", set_ground=True)
+
+For a left arm:
+
+.. code:: python
+
+    arm_commander = SrArmCommander(name="left_arm", set_ground=True)
+
+You can use HandFinder utility to find the hand launched on the system.
+
+.. code:: python
+
+    hand_finder = HandFinder()
+
+    hand_parameters = hand_finder.get_hand_parameters()
+
+    hand_serial = hand_parameters.mapping.keys()[0]
+
+    hand_id = hand_parameters.mapping[hand_serial]
+
+    prefix = hand_parameters.joint_prefix[hand_serial]
+
+    if hand_id == 'rh':
+        hand_commander = SrHandCommander(name="right_hand", prefix="rh")
+    else:
+        hand_commander = SrHandCommander(name="left_hand", prefix="lh")
+
+Alternatively you can hardcode the hand you are launching.
+
+For a right hand:
+
+.. code:: python
+
+    hand_commander = SrHandCommander(name="right_hand", prefix="rh")
+
+For a left hand:
+
+.. code:: python
+
+    hand_commander = SrHandCommander(name="left_hand", prefix="lh")
+
 get\_joints\_effort
 ~~~~~~~~~~~~~~~~~~~
 
