@@ -13,60 +13,7 @@ Examples of usage can be found `here <../../../sr_example/README.html>`__.
 **Warning:** The RobotCommander should not be used directly unless necessary. 
 Use the `HandCommander <HandCommander.html>`__ or `ArmCommander <ArmCommander.html>`__ instead. 
 
-Constructor
-~~~~~~~~
-
-The constructors for ``SrArmCommander`` and ``SrHandCommander`` take a
-name parameter that should match the group name of the robot to be used.
-
-Example
-^^^^^^^
-
-This example uses `HandFinder <../../../sr_utilities/README.md>`__ for
-finding launched hand. For a right arm:
-
-.. code:: python
-
-    arm_commander = SrArmCommander(name="right_arm", set_ground=True)
-
-For a left arm:
-
-.. code:: python
-
-    arm_commander = SrArmCommander(name="left_arm", set_ground=True)
-
-You can use HandFinder utility to find the hand launched on the system.
-
-.. code:: python
-
-    hand_finder = HandFinder()
-
-    hand_parameters = hand_finder.get_hand_parameters()
-
-    hand_serial = hand_parameters.mapping.keys()[0]
-
-    hand_id = hand_parameters.mapping[hand_serial]
-
-    prefix = hand_parameters.joint_prefix[hand_serial]
-
-    if hand_id == 'rh':
-        hand_commander = SrHandCommander(name="right_hand", prefix="rh")
-    else:
-        hand_commander = SrHandCommander(name="left_hand", prefix="lh")
-
-Alternatively you can hardcode the hand you are launching.
-
-For a right hand:
-
-.. code:: python
-
-    hand_commander = SrHandCommander(name="right_hand", prefix="rh")
-
-For a left hand:
-
-.. code:: python
-
-    hand_commander = SrHandCommander(name="left_hand", prefix="lh")
+Following you can find decriptions of the most relevant common functions available for both.
 
 move\_to\_joint\_value\_target
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
