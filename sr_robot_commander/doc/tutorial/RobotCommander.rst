@@ -8,13 +8,13 @@ The main purpose of the commander is to provide simplified access to the
 `hand <HandCommander.html>`__ or `arm <ArmCommander.html>`__, providing
 methods which can be used on both to make the interfacing easier for non-ROS people.
 
-Examples of usage can be found `here <../../../sr_example/README.html>`.
+Examples of usage can be found `here <../../../sr_example/README.html>`__.
 
 **Warning:** The RobotCommander should not be used directly unless necessary. 
-Use the `HandCommander <HandCommander.html>`__ or `Arm
-commander <ArmCommander.html>`__ instead. 
+Use the `HandCommander <HandCommander.html>`__ or `ArmCommander <ArmCommander.html>`__ instead. 
 
-### Constructor
+Constructor
+~~~~~~~~
 
 The constructors for ``SrArmCommander`` and ``SrHandCommander`` take a
 name parameter that should match the group name of the robot to be used.
