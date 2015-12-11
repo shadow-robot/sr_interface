@@ -5,10 +5,8 @@ Overview
 ~~~~~~~~
 
 The main purpose of the robot commander is to provide a base clase to the
-`hand <HandCommander.html>`__ or `arm <ArmCommander.html>`__, providing
-methods which can be used on both.
-
-**Warning:** The RobotCommander should not be used directly unless necessary. 
+hand and arm commanders, providing
+methods which can be used on both. The RobotCommander should not be used directly unless necessary. 
 Use the `HandCommander <HandCommander.html>`__ or `ArmCommander <ArmCommander.html>`__ instead. 
 
 Examples of usage can be found `here <../../../sr_example/README.html>`__.
