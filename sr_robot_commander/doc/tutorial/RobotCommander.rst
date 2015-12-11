@@ -4,16 +4,29 @@ Robot Commander
 Overview
 ~~~~~~~~
 
-The main purpose of the commander is to provide simplified access to the
+The main purpose of the robot commander is to provide a base clase to the
 `hand <HandCommander.html>`__ or `arm <ArmCommander.html>`__, providing
-methods which can be used on both to make the interfacing easier for non-ROS people.
-
-Examples of usage can be found `here <../../../sr_example/README.html>`__.
+methods which can be used on both.
 
 **Warning:** The RobotCommander should not be used directly unless necessary. 
 Use the `HandCommander <HandCommander.html>`__ or `ArmCommander <ArmCommander.html>`__ instead. 
 
+Examples of usage can be found `here <../../../sr_example/README.html>`__.
+
 Following you can find decriptions of the most relevant common functions available for both.
+
+Basic terminology
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Add picture
+
+A robot is composed by groups (basic chain) composed by an end-effector and group states that are defined positions.
+
+Here is an 
+
+Getting basic information
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 
 move\_to\_joint\_value\_target
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
