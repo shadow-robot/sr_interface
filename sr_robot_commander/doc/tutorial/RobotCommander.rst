@@ -30,6 +30,17 @@ We can get the name of the group:
 .. code:: python
 
    print "Group name: ", commander.get_group_name()
+   
+Get the joints position and velocity:
+
+.. code:: python
+
+   joints_position = commander.get_joints_position()
+   joints_velocity = commander.get_joints_velocity()
+
+   print("Arm joints position\n" + str(joints_position) + "\n")
+   print("Arm joints velocity\n" + str(joints_velocity) + "\n")
+
 
 Move to a joint-space goal
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -110,39 +121,46 @@ Parameters:
 Example
 ^^^^^^^
 
+**pack** is a predifined pose from the SRDF file:
+
+.. code:: html
+
+  <group_state group="right_hand" name="pack">
+    <joint name="rh_THJ1" value="0.52"/>
+    <joint name="rh_THJ2" value="0.61"/>
+    <joint name="rh_THJ3" value="0.00"/>
+    <joint name="rh_THJ4" value="1.20"/>
+    <joint name="rh_THJ5" value="0.17"/>
+    <joint name="rh_FFJ1" value="1.5707"/>
+    <joint name="rh_FFJ2" value="1.5707"/>
+    <joint name="rh_FFJ3" value="1.5707"/>
+    <joint name="rh_FFJ4" value="0"/>
+    <joint name="rh_MFJ1" value="1.5707"/>
+    <joint name="rh_MFJ2" value="1.5707"/>
+    <joint name="rh_MFJ3" value="1.5707"/>
+    <joint name="rh_MFJ4" value="0"/>
+    <joint name="rh_RFJ1" value="1.5707"/>
+    <joint name="rh_RFJ2" value="1.5707"/>
+    <joint name="rh_RFJ3" value="1.5707"/>
+    <joint name="rh_RFJ4" value="0"/>
+    <joint name="rh_LFJ1" value="1.5707"/>
+    <joint name="rh_LFJ2" value="1.5707"/>
+    <joint name="rh_LFJ3" value="1.5707"/>
+    <joint name="rh_LFJ4" value="0"/>
+    <joint name="rh_LFJ5" value="0"/>
+    <joint name="rh_WRJ1" value="0"/>
+    <joint name="rh_WRJ2" value="0"/>
+  </group_state>
+
+Here is how to move to it:
+
 .. code:: python
 
     rospy.init_node("robot_commander_examples", anonymous=True)
-
     hand_commander = SrHandCommander(name="right_hand")
-    
-    # pack is a predefined pose from SRDF file
     hand_commander.move_to_named_target("pack")
 
-get\_joints\_position and get\_joints\_velocity
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Description
-^^^^^^^^^^^
-
-These methods do not take any parameters and return dictionary with
-position and velocity of the robot joints
-
-Example
-^^^^^^^
-
-.. code:: python
-
-
-    rospy.init_node("robot_commander_examples", anonymous=True)
-
-    arm_commander = SrArmCommander(name="right_arm", set_ground=True)
-
-    joints_position = arm_commander.get_joints_position()
-    joints_velocity = arm_commander.get_joints_velocity()
-
-    print("Arm joints position\n" + str(joints_position) + "\n")
-    print("Arm joints velocity\n" + str(joints_velocity) + "\n")
 
 
 plan_to_named_target
