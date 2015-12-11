@@ -15,14 +15,21 @@ Following you can find decriptions of the most relevant common functions availab
 
 Basic terminology
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Add picture
+A robot is described using an `SRDF <http://wiki.ros.org/srdf>`__ file which contains the semantic description that is not available in the urdf. It mainly describe a robot as a collection of **groups** that are representations of different set of joints that are useful for planning. Each group can have specified its **end-effector** and **group states** which are specific set of joint values predifined for that group with a given name, for example *close_hand* or *folded_arm*.
 
-A robot is composed by groups (basic chain) composed by an end-effector and group states that are defined positions.
+As the robot commander is a high lever wrapper of the `moveit_commander <http://wiki.ros.org/moveit_commander>`__, its constructor takes the name of one of the robot groups for which the planning will be performed.
 
-Here is an 
+Here is an example of an UR10 arm and a shadow motor hand showing different groups and their end-effectors.
+
+(Add picture)
 
 Getting basic information
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+We can get the name of the group:
+
+.. code:: python
+
+   print "Group name: ", commander.get_group_name()
 
 
 
