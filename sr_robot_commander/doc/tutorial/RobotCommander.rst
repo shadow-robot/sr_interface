@@ -31,15 +31,9 @@ We can get the name of the group:
 
    print "Group name: ", commander.get_group_name()
 
-
-
-move\_to\_joint\_value\_target
+Move to a joint-space goal
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Description
-^^^^^^^^^^^
-
-This method sets target of the robot's links and moves to it.
+Using the method **move\_to\_joint\_value\_target** a set of the joint values can be given for the specified group to create a plan and send it for execution.
 
 Parameters:
 
@@ -51,7 +45,7 @@ Parameters:
    degrees (default value is False)
 
 *IMPORTANT:* Bear in mind that the names of the joints are different for
-the right arm/hand and for the left one.
+the right and left arm/hand.
 
 Example
 ^^^^^^^
@@ -98,52 +92,21 @@ movement to finish executing before moving on to the next command and
 the 'angle\_degrees=True' argument tells the method that the input
 angles are in degrees, so require a conversion to radians.
 
-move\_to\_named\_target
+Move to a predefined named pose
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Description
 ^^^^^^^^^^^
 
-Using this method will allow to move hand or arm to predefined pose.
-This pose can be define using MoveIt assistant, or as states in the moveit warehosue
+Using the method **move\_to\_named\_target** will allow to move the group to a predefined pose.
+This pose can be defined in the srdf or saved as a group state in the moveit warehouse.
 
 Parameters:
 
--  *name* is the unique identifier of the target pose defined in SRDF
+-  *name* is the unique identifier of the target pose
 -  *wait* indicates if method should wait for movement end or not
    (default value is True)
 
-In order to created a new named pose you can do following:
-
--  Run shell command
-
-   .. code:: bash
-
-       roslaunch ur10srh_moveit_config setup_assistant.launch
-
--  In UI wizard press "Load Files" button
--  Wait until files load successfully
--  Go to section "Robot Poses" of the wizard (select from list on the
-   left)
--  Press "Add Pose"
--  On the screen which will appear you can add your pose for at least
-   two "Planing Group" (it depends on the robot you are running right or
-   left), e.g.:
--  right\_hand
--  right\_arm
--  You should provide the unique name of the pose (which will be
-   referred in move\_to\_named\_target method) and select joints
-   position for this pose using slider and simulated image of robot
--  Press save button
--  Go to "Configurations File" section of the wizard
--  Tick checkbox with text "config/ur10srh.srdf" in the checkbox list
--  Press "Generate Package" and wait until progress is 100%
--  Exit wizard
-
-.. figure:: /sr_robot_commander/doc/tutorial/images/moveit_setup_assistant.gif
-   :alt: MoveIt Setup Assistant
-
-   MoveIt Setup Assistant
 Example
 ^^^^^^^
 
@@ -151,30 +114,9 @@ Example
 
     rospy.init_node("robot_commander_examples", anonymous=True)
 
-    hand_finder = HandFinder()
-
-    hand_parameters = hand_finder.get_hand_parameters()
-
-    hand_serial = hand_parameters.mapping.keys()[0]
-
-    hand_id = hand_parameters.mapping[hand_serial]
-
-    if hand_id == 'rh':
-        hand_commander = SrHandCommander(name="right_hand", prefix="rh")
-    else:
-        hand_commander = SrHandCommander(name="left_hand", prefix="lh")
-
-    # pack is predefined pose from SRDF file
-    hand_commander.move_to_named_target("pack")
-
-Note: you can hardcode the parameters instead of using the HandFinder utility
-
-.. code:: python
-
-    rospy.init_node("robot_commander_examples", anonymous=True)
-    hand_commander = SrHandCommander("left_hand", "lh")
-
-    # pack is predefined pose from SRDF file
+    hand_commander = SrHandCommander(name="right_hand")
+    
+    # pack is a predefined pose from SRDF file
     hand_commander.move_to_named_target("pack")
 
 get\_joints\_position and get\_joints\_velocity
