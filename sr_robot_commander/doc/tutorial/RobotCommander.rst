@@ -42,7 +42,7 @@ Get the joints position and velocity:
    print("Arm joints velocity\n" + str(joints_velocity) + "\n")
 
 
-Move to a joint-space goal
+Plan/move to a joint-space goal
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Using the method **move\_to\_joint\_value\_target** a set of the joint values can be given for the specified group to create a plan and send it for execution.
 
@@ -103,7 +103,7 @@ movement to finish executing before moving on to the next command and
 the 'angle\_degrees=True' argument tells the method that the input
 angles are in degrees, so require a conversion to radians.
 
-Move to a predefined named pose
+Plan/move to a predefined named pose
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Description
@@ -158,30 +158,12 @@ Here is how to move to it:
 
     rospy.init_node("robot_commander_examples", anonymous=True)
     hand_commander = SrHandCommander(name="right_hand")
+    
+    # Only plan
+    hand_commander.plan_to_named_target("pack")
+    
+    # Plan and execute
     hand_commander.move_to_named_target("pack")
-
-
-
-
-plan_to_named_target
-~~~~~~~~~~~~~~~~~~~
-
-Description
-^^^^^^^^^^^
-
-Generates plan to named target. Target can either be default pose defined in SRDF,
-or can be robot pose stored in the moveit warehouse.
-
-Example
-^^^^^^^
-
-.. code:: python
-
-    rospy.init_node("robot_commander_examples", anonymous=True)
-
-    arm_commander = SrArmCommander(name="right_arm")
-
-    arm_commander.plan_to_named_target("target_name")
 
 
 run_named_trajectory and run_named_trajectory_unsafe
