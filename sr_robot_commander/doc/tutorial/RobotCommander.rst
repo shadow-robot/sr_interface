@@ -108,7 +108,7 @@ You can also activate or deactivate the teach mode for the robot:
 
 Plan/move to a joint-space goal
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Using the methods **plan\_to\_joint\_value\_target** or **move\_to\_joint\_value\_target**, a set of the joint values can be given for the specified group to create a plan and send it for execution.
+Using the methods **plan\_to\_joint\_value\_target**, **move\_to\_joint\_value\_target** or **move\_to\_joint\_value\_target\_unsafe**, a set of the joint values can be given for the specified group to create a plan and send it for execution.
 
 Parameters:
 
@@ -143,6 +143,9 @@ Example
     
     # Plan and execute
     arm_commander.move_to_joint_value_target(joints_states)
+    
+   # If you want to send the joint state directly to the controller without using the planner, you can use the unsafe method:
+   arm_commander.move_to_joint_value_target_unsafe(joints_states)
 
 This example demonstrates how joint states for an arm can be sent to
 SrArmCommander, as neither the 'wait' nor 'angle\_degrees' arguments are
@@ -153,7 +156,6 @@ Example 2
 ^^^^^^^^^
 
 .. code:: python
-
 
     rospy.init_node("robot_commander_examples", anonymous=True)
 
@@ -171,105 +173,6 @@ the method is prompted by the 'wait=False' argument to not wait for the
 movement to finish executing before moving on to the next command and
 the 'angle\_degrees=True' argument tells the method that the input
 angles are in degrees, so require a conversion to radians.
-
-Plan to a trajectory of specified waypoints
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Using the method **plan\_to\_waypoints\_target**, it is posible to specify a set of waypoints for the end-effector and create a plan to follow it.
-
-Parameters:
-
--  *reference_frame* is the reference frame in which the waypoints are given
--  *waypoints* is an array of poses of the end-effector.
--  *eef\_step* indicates that the configurations are goint to be computed for every eef_step meters (0.005 by default)
--  *jump\_threshold* specify the maximum distance in configuration space between consecutive points in the resulting path (0.0 by default)
-
-Example
-^^^^^^^
-
-.. code:: python
-   
-   waypoints = []
-
-   # start with the initial position
-   initial_pose = arm_commander.get_current_pose()
-   waypoints.append(initial_pose)
-   
-   # Move following a square 
-   wpose = geometry_msgs.msg.Pose()
-   wpose.position.x = waypoints[0].position.x
-   wpose.position.y = waypoints[0].position.y - 0.20
-   wpose.position.z = waypoints[0].position.z 
-   wpose.orientation = initial_pose.orientation
-   waypoints.append(wpose)
-   
-   wpose = geometry_msgs.msg.Pose()
-   wpose.position.x = waypoints[0].position.x
-   wpose.position.y = waypoints[0].position.y - 0.20
-   wpose.position.z = waypoints[0].position.z - 0.20 
-   wpose.orientation = initial_pose.orientation
-   waypoints.append(wpose)
-   
-   wpose = geometry_msgs.msg.Pose()
-   wpose.position.x = waypoints[0].position.x
-   wpose.position.y = waypoints[0].position.y
-   wpose.position.z = waypoints[0].position.z - 0.20 
-   wpose.orientation = initial_pose.orientation
-   waypoints.append(wpose)
-   
-   waypoints.append(initial_pose)
-   
-   arm_commander.plan_to_waypoints_target(waypoints, eef_step=0.02)
-   arm_commander.execute()
-
-Move to a trajectory of specified joint states
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Using the method **run\_joint\_trajectory**, it is posible to specify a trajectory composed of a set of joint states with specified timeouts and follow it.
-
-Example
-^^^^^^^
-
-.. code:: python
-
-   joints_states_1 = {'la_shoulder_pan_joint': 0.43, 'la_elbow_joint': 2.12, 'la_wrist_1_joint': -1.71,
-                      'la_wrist_2_joint': 1.48, 'la_shoulder_lift_joint': -2.58, 'la_wrist_3_joint': 1.62,
-                      'lh_WRJ1': 0.0, 'lh_WRJ2': 0.0}
-   joints_states_2 = {'la_shoulder_pan_joint': 0.42, 'la_elbow_joint': 1.97, 'la_wrist_1_joint': -0.89,
-                      'la_wrist_2_joint': -0.92, 'la_shoulder_lift_joint': -1.93, 'la_wrist_3_joint': 0.71,
-                      'lh_WRJ1': 0.0, 'lh_WRJ2': 0.0}
-   joints_states_3 = {'la_shoulder_pan_joint': 1.61, 'la_elbow_joint': 1.15, 'la_wrist_1_joint': -0.24,
-                      'la_wrist_2_joint': 0.49, 'la_shoulder_lift_joint': -1.58, 'la_wrist_3_joint': 2.11,
-                      'lh_WRJ1': 0.0, 'lh_WRJ2': 0.0}
-                      
-   joint_trajectory = JointTrajectory()
-   joint_trajectory.header.stamp = rospy.Time.now()
-   joint_trajectory.joint_names = list(joints_states_1.keys())
-   joint_trajectory.points = []
-   time_from_start = rospy.Duration(5)
-   
-   for joints_states in [joints_states_1, joints_states_2, joints_states_3]:
-       trajectory_point = JointTrajectoryPoint()
-       trajectory_point.time_from_start = time_from_start
-       time_from_start = time_from_start + rospy.Duration(5)
-   
-       trajectory_point.positions = []
-       trajectory_point.velocities = []
-       trajectory_point.accelerations = []
-       trajectory_point.effort = []
-       for key in joint_trajectory.joint_names:
-           trajectory_point.positions.append(joints_states[key])
-           trajectory_point.velocities.append(0.0)
-           trajectory_point.accelerations.append(0.0)
-           trajectory_point.effort.append(0.0)
-       joint_trajectory.points.append(trajectory_point)
-   arm_commander.run_joint_trajectory(joint_trajectory)
-
-Move to the start of a given trajectory
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Using the method **move\_to\_trajectory\_start**, it is posible create and execute a plan from the current state to the first state of a pre-existing trajectory
-
-Example
-^^^^^^^
-(Add example)
 
 Plan/move to a predefined group state
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -329,6 +232,117 @@ Here is how to move to it:
     # Plan and execute
     hand_commander.move_to_named_target("pack")
 
+Plan to a trajectory of specified waypoints
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using the method **plan\_to\_waypoints\_target**, it is posible to specify a set of waypoints for the end-effector and create a plan to follow it.
+
+Parameters:
+
+-  *reference_frame* is the reference frame in which the waypoints are given
+-  *waypoints* is an array of poses of the end-effector.
+-  *eef\_step* indicates that the configurations are goint to be computed for every eef_step meters (0.005 by default)
+-  *jump\_threshold* specify the maximum distance in configuration space between consecutive points in the resulting path (0.0 by default)
+
+Example
+^^^^^^^
+
+.. code:: python
+   
+   waypoints = []
+
+   # start with the initial position
+   initial_pose = arm_commander.get_current_pose()
+   waypoints.append(initial_pose)
+   
+   # Move following a square 
+   wpose = geometry_msgs.msg.Pose()
+   wpose.position.x = waypoints[0].position.x
+   wpose.position.y = waypoints[0].position.y - 0.20
+   wpose.position.z = waypoints[0].position.z 
+   wpose.orientation = initial_pose.orientation
+   waypoints.append(wpose)
+   
+   wpose = geometry_msgs.msg.Pose()
+   wpose.position.x = waypoints[0].position.x
+   wpose.position.y = waypoints[0].position.y - 0.20
+   wpose.position.z = waypoints[0].position.z - 0.20 
+   wpose.orientation = initial_pose.orientation
+   waypoints.append(wpose)
+   
+   wpose = geometry_msgs.msg.Pose()
+   wpose.position.x = waypoints[0].position.x
+   wpose.position.y = waypoints[0].position.y
+   wpose.position.z = waypoints[0].position.z - 0.20 
+   wpose.orientation = initial_pose.orientation
+   waypoints.append(wpose)
+   
+   waypoints.append(initial_pose)
+   
+   arm_commander.plan_to_waypoints_target(waypoints, eef_step=0.02)
+   arm_commander.execute()
+
+Move to a trajectory of specified joint states
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using the methods **run\_joint\_trajectory** or **run\_joint\_trajectory\_unsafe**, it is posible to specify a trajectory composed of a set of joint states with specified timeouts and follow it.
+
+Example
+^^^^^^^
+
+.. code:: python
+
+   joints_states_1 = {'la_shoulder_pan_joint': 0.43, 'la_elbow_joint': 2.12, 'la_wrist_1_joint': -1.71,
+                      'la_wrist_2_joint': 1.48, 'la_shoulder_lift_joint': -2.58, 'la_wrist_3_joint': 1.62,
+                      'lh_WRJ1': 0.0, 'lh_WRJ2': 0.0}
+   joints_states_2 = {'la_shoulder_pan_joint': 0.42, 'la_elbow_joint': 1.97, 'la_wrist_1_joint': -0.89,
+                      'la_wrist_2_joint': -0.92, 'la_shoulder_lift_joint': -1.93, 'la_wrist_3_joint': 0.71,
+                      'lh_WRJ1': 0.0, 'lh_WRJ2': 0.0}
+   joints_states_3 = {'la_shoulder_pan_joint': 1.61, 'la_elbow_joint': 1.15, 'la_wrist_1_joint': -0.24,
+                      'la_wrist_2_joint': 0.49, 'la_shoulder_lift_joint': -1.58, 'la_wrist_3_joint': 2.11,
+                      'lh_WRJ1': 0.0, 'lh_WRJ2': 0.0}
+                      
+   joint_trajectory = JointTrajectory()
+   joint_trajectory.header.stamp = rospy.Time.now()
+   joint_trajectory.joint_names = list(joints_states_1.keys())
+   joint_trajectory.points = []
+   time_from_start = rospy.Duration(5)
+   
+   for joints_states in [joints_states_1, joints_states_2, joints_states_3]:
+       trajectory_point = JointTrajectoryPoint()
+       trajectory_point.time_from_start = time_from_start
+       time_from_start = time_from_start + rospy.Duration(5)
+   
+       trajectory_point.positions = []
+       trajectory_point.velocities = []
+       trajectory_point.accelerations = []
+       trajectory_point.effort = []
+       for key in joint_trajectory.joint_names:
+           trajectory_point.positions.append(joints_states[key])
+           trajectory_point.velocities.append(0.0)
+           trajectory_point.accelerations.append(0.0)
+           trajectory_point.effort.append(0.0)
+       joint_trajectory.points.append(trajectory_point)
+   arm_commander.run_joint_trajectory(joint_trajectory)
+   
+   # If you want to send the trajectory to the controller without using the planner, you can use the unsafe method:
+   arm_commander.run_joint_trajectory_unsafe(joint_trajectory)
+
+Move to the start of a given trajectory
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using the method **move\_to\_trajectory\_start**, it is posible create and execute a plan from the current state to the first state of a pre-existing trajectory
+
+Parameters:
+
+-  *trajectory* a previously defined trajectory
+-  *wait* indicates if method should wait for movement end or not
+   (default value is True)
+
+Example
+^^^^^^^
+
+.. code:: python
+
+   move_to_trajectory_start(joint_trajectory)
+
 Move through a trajectory of predefined group states
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Using the method **run\_named\_trajectory**, it is posible to specify a trajectory composed of a set of names of previously defined group states (either from SRDF or from warehouse), plan and move to follow it.
@@ -367,11 +381,10 @@ Example
 
     hand_commander.run_named_trajectory(trajectory)
     
-    # If you want to send the trajectory to the controller without using the planner, you can use:
+    # If you want to send the trajectory to the controller without using the planner, you can use the unsafe method:
     hand_commander.run_named_trajectory_unsafe(trajectory)
 
 move_to_joint_value_target_unsafe
-run_joint_trajectory_unsafe
 
 Check if a plan is valid and execute it
 ~~~~~~~~~~~~~~~~~~~
