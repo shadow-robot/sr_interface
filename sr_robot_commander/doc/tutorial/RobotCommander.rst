@@ -178,13 +178,48 @@ Using the method **plan\_to\_waypoints\_target**, it is posible to specify a set
 
 Parameters:
 
+-  *reference_frame* is the reference frame in which the waypoints are given
 -  *waypoints* is an array of poses of the end-effector.
--  *eef\_step* indicates that the configurations are goint to be computed for every eef_step meters
--  *jump\_threshold* specify the maximum distance in configuration space between consecutive points in the resulting path
+-  *eef\_step* indicates that the configurations are goint to be computed for every eef_step meters (0.005 by default)
+-  *jump\_threshold* specify the maximum distance in configuration space between consecutive points in the resulting path (0.0 by default)
 
 Example
 ^^^^^^^
-(Add example)
+
+.. code:: python
+   
+   waypoints = []
+
+   # start with the initial position
+   initial_pose = arm_commander.get_current_pose()
+   waypoints.append(initial_pose)
+   
+   # Move following a square 
+   wpose = geometry_msgs.msg.Pose()
+   wpose.position.x = waypoints[0].position.x
+   wpose.position.y = waypoints[0].position.y - 0.20
+   wpose.position.z = waypoints[0].position.z 
+   wpose.orientation = initial_pose.orientation
+   waypoints.append(wpose)
+   
+   wpose = geometry_msgs.msg.Pose()
+   wpose.position.x = waypoints[0].position.x
+   wpose.position.y = waypoints[0].position.y - 0.20
+   wpose.position.z = waypoints[0].position.z - 0.20 
+   wpose.orientation = initial_pose.orientation
+   waypoints.append(wpose)
+   
+   wpose = geometry_msgs.msg.Pose()
+   wpose.position.x = waypoints[0].position.x
+   wpose.position.y = waypoints[0].position.y
+   wpose.position.z = waypoints[0].position.z - 0.20 
+   wpose.orientation = initial_pose.orientation
+   waypoints.append(wpose)
+   
+   waypoints.append(initial_pose)
+   
+   arm_commander.plan_to_waypoints_target(waypoints, eef_step=0.02)
+   arm_commander.execute()
 
 Move to a trajectory of specified joint states
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
