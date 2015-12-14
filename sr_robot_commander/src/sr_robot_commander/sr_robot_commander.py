@@ -70,7 +70,7 @@ class SrRobotCommander(object):
                                                           GetState)
         self._planning_scene = PlanningSceneInterface()
 
-        self._move_group_commander.set_planner_id("ESTkConfigDefault")
+        #self._move_group_commander.set_planner_id("ESTkConfigDefault")
 
         self._joint_states_lock = threading.Lock()
         self._joint_states_listener = \
@@ -591,6 +591,7 @@ class SrRobotCommander(object):
         """
         Specify a set of waypoints for the end-effector and plans.
         This is a blocking method.
+        @param reference_frame - the reference frame in which the waypoints are given
         @param waypoints - an array of poses of end-effector
         @param eef_step - configurations are computed for every eef_step meters
         @param jump_threshold - maximum distance in configuration space between consecutive points in the resulting path
