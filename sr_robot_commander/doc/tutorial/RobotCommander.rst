@@ -127,23 +127,22 @@ Example
 
 .. code:: python
 
+   rospy.init_node("robot_commander_examples", anonymous=True)
 
-    rospy.init_node("robot_commander_examples", anonymous=True)
-
-    arm_commander = SrArmCommander(name="right_arm", set_ground=True)
-    joints_states = {'ra_shoulder_pan_joint': 0.5157461682721474,
-                     'ra_elbow_joint': 0.6876824920327893,
-                     'ra_wrist_1_joint': -0.7695210732233582,
-                     'ra_wrist_2_joint': 0.2298871642157314,
-                     'ra_shoulder_lift_joint': -0.9569080092786892,
-                     'ra_wrist_3_joint': -0.25991215955733704}
+   arm_commander = SrArmCommander(name="right_arm", set_ground=True)
+   joints_states = {'ra_shoulder_pan_joint': 0.5157461682721474,
+                    'ra_elbow_joint': 0.6876824920327893,
+                    'ra_wrist_1_joint': -0.7695210732233582,
+                    'ra_wrist_2_joint': 0.2298871642157314,
+                    'ra_shoulder_lift_joint': -0.9569080092786892,
+                    'ra_wrist_3_joint': -0.25991215955733704}
     
-    # Only plan
-    arm_commander.plan_to_joint_value_target(joints_states)
-    
-    # Plan and execute
-    arm_commander.move_to_joint_value_target(joints_states)
-    
+   # Only plan
+   arm_commander.plan_to_joint_value_target(joints_states)
+   
+   # Plan and execute
+   arm_commander.move_to_joint_value_target(joints_states)
+ 
    # If you want to send the joint state directly to the controller without using the planner, you can use the unsafe method:
    arm_commander.move_to_joint_value_target_unsafe(joints_states)
 
@@ -359,7 +358,7 @@ Example
 
 .. code:: python
 
-    trajectory = [
+   trajectory = [
       {
           'name': 'open',
           'interpolate_time': 3.0
@@ -377,14 +376,12 @@ Example
           'name': 'pack',
           'interpolate_time': 3.0
       }
-    ]
+   ]
 
-    hand_commander.run_named_trajectory(trajectory)
+   hand_commander.run_named_trajectory(trajectory)
     
-    # If you want to send the trajectory to the controller without using the planner, you can use the unsafe method:
-    hand_commander.run_named_trajectory_unsafe(trajectory)
-
-move_to_joint_value_target_unsafe
+   # If you want to send the trajectory to the controller without using the planner, you can use the unsafe method:
+   hand_commander.run_named_trajectory_unsafe(trajectory)
 
 Check if a plan is valid and execute it
 ~~~~~~~~~~~~~~~~~~~
@@ -396,11 +393,17 @@ Example
 
 .. code:: python
 
-    rospy.init_node("robot_commander_examples", anonymous=True)
+   rospy.init_node("robot_commander_examples", anonymous=True)
+   arm_commander = SrArmCommander(name="right_arm")
 
-    arm_commander = SrArmCommander(name="right_arm")
+   arm_commander.plan_to_named_target("target_name")
+   if arm_commander.plan_is_valid():
+      arm_commander.execute()
 
-    arm_commander.plan_to_named_target("target_name")
-    
-    if arm_commander.plan_is_valid():
-        arm_commander.execute()
+Stop the robot
+~~~~~~~~~~~~~~~~~~~
+Use the method **send_stop_trajectory_unsafe** to send a trajectory with the current joint state to stop the robot at its current position.
+
+.. code:: python
+
+   commander.send_stop_trajectory_unsafe()
