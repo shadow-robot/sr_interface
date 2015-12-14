@@ -1,12 +1,10 @@
 Arm Commander
 -------------
 
-Description
+Overview
 ~~~~~~~~~~~
 
-This commander provide commands specific to arm which allows to execute
-all actions of the `robot commander <RobotCommander.md>`__. Also it
-allows to move to certain position in Cartesian space, to joints states
+The ArmCommander inherits all methods from the `robot commander <RobotCommander.html>`__ and provides commands specific to the arm. It allows to move to certain position in cartesian space, to joints states
 values and to move using certain trajectory.
 
 move\_to\_position\_target

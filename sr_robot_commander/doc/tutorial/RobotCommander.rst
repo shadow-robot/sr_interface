@@ -5,36 +5,110 @@ Overview
 ~~~~~~~~
 
 The main purpose of the robot commander is to provide a base clase to the
-`hand <HandCommander.html>`__ or `arm <ArmCommander.html>`__, providing
-methods which can be used on both.
-
-**Warning:** The RobotCommander should not be used directly unless necessary. 
+hand and arm commanders, providing
+methods which can be used on both. The RobotCommander should not be used directly unless necessary. 
 Use the `HandCommander <HandCommander.html>`__ or `ArmCommander <ArmCommander.html>`__ instead. 
 
 Examples of usage can be found `here <../../../sr_example/README.html>`__.
 
-Following you can find decriptions of the most relevant common functions available for both.
+Following you can find decriptions of the most relevant functions available for both.
 
 Basic terminology
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Add picture
+A robot is described using an `srdf <http://wiki.ros.org/srdf>`__ file which contains the semantic description that is not available in the `urdf <http://wiki.ros.org/urdf>`__. It describes a robot as a collection of **groups** that are representations of different set of joints which are useful for planning. Each group can have specified its **end-effector** and **group states** which are specific set of joint values predifined for that group with a given name, for example *close_hand* or *folded_arm*.
 
-A robot is composed by groups (basic chain) composed by an end-effector and group states that are defined positions.
+As the robot commander is a high lever wrapper of the `moveit_commander <http://wiki.ros.org/moveit_commander>`__, its constructor takes the name of one of the robot groups for which the planning will be performed.
 
-Here is an 
+Here is an example of an UR10 arm and a shadow hand with their different groups and end-effectors.
+
+(Add picture)
 
 Getting basic information
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+We can get the name of the robot, group or planning reference frame:
 
+.. code:: python
 
+   print "Robot name: ", commander.get_robot_name()
+   print "Group name: ", commander.get_group_name()
+   print "Planning frame: ", commander.get_planning_frame()
 
-move\_to\_joint\_value\_target
+Get the list of names of the predifined group states from the srdf and warehouse for the current group:
+
+.. code:: python
+
+   # Refresh them first if they have recently changed
+   commander.refresh_named_targets()
+   
+   print "Named targets: ", commander.get_named_targets()
+   
+Get the joints position and velocity:
+
+.. code:: python
+
+   joints_position = commander.get_joints_position()
+   joints_velocity = commander.get_joints_velocity()
+
+   print("Arm joints position\n" + str(joints_position) + "\n")
+   print("Arm joints velocity\n" + str(joints_velocity) + "\n")
+   
+Get the current joint state of the group being used:
+
+.. code:: python
+   
+   current_state = commander.get_current_state()
+   
+   # To get the current state but enforcing that each joint is within its limits
+   current_state = commander.get_current_state_bounded()
+   
+
+Get the current position of the end-effector:
+
+.. code:: python
+
+   # Specify the desired reference frame if different from planning frame
+   eef_position = commander.get_current_pose("palm")
+
+Get the end-effector position from a specified joint-state:
+
+.. code:: python
+
+   joints_states = {'ra_shoulder_pan_joint': 0.5157461682721474,
+                    'ra_elbow_joint': 0.6876824920327893,
+                    'ra_wrist_1_joint': -0.7695210732233582,
+                    'ra_wrist_2_joint': 0.2298871642157314,
+                    'ra_shoulder_lift_joint': -0.9569080092786892,
+                    'ra_wrist_3_joint': -0.25991215955733704}
+   eef_position = get_end_effector_pose_from_state(joints_states)
+
+Get the end-effector position from a group state previously defined:
+
+.. code:: python
+
+   eef_position = get_end_effector_pose_from_named_state("hand_open")
+
+Setting functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You can change the reference frame to get pose information:
 
-Description
-^^^^^^^^^^^
+.. code:: python
 
-This method sets target of the robot's links and moves to it.
+   set_pose_reference_frame("palm"):
+
+You can also activate or deactivate the teach mode for the robot:
+
+.. code:: python
+
+   # Activation: stops the the trajectory controllers for the robot, and sets it to teach mode.
+   commander.set_teach_mode(True)
+   
+   # Deactivation: stops the teach mode and starts trajectory controllers for the robot.  
+   # Currently this method blocks for a few seconds when called on a hand, while the hand parameters are reloaded.
+   commander.set_teach_mode(False)
+
+Plan/move to a joint-space goal
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using the methods **plan\_to\_joint\_value\_target**, **move\_to\_joint\_value\_target** or **move\_to\_joint\_value\_target\_unsafe**, a set of the joint values can be given for the specified group to create a plan and send it for execution.
 
 Parameters:
 
@@ -46,24 +120,31 @@ Parameters:
    degrees (default value is False)
 
 *IMPORTANT:* Bear in mind that the names of the joints are different for
-the right arm/hand and for the left one.
+the right and left arm/hand.
 
 Example
 ^^^^^^^
 
 .. code:: python
 
+   rospy.init_node("robot_commander_examples", anonymous=True)
 
-    rospy.init_node("robot_commander_examples", anonymous=True)
-
-    arm_commander = SrArmCommander(name="right_arm", set_ground=True)
-    joints_states = {'ra_shoulder_pan_joint': 0.5157461682721474,
-                     'ra_elbow_joint': 0.6876824920327893,
-                     'ra_wrist_1_joint': -0.7695210732233582,
-                     'ra_wrist_2_joint': 0.2298871642157314,
-                     'ra_shoulder_lift_joint': -0.9569080092786892,
-                     'ra_wrist_3_joint': -0.25991215955733704}
-    arm_commander.move_to_joint_value_target(joints_states)
+   arm_commander = SrArmCommander(name="right_arm", set_ground=True)
+   joints_states = {'ra_shoulder_pan_joint': 0.5157461682721474,
+                    'ra_elbow_joint': 0.6876824920327893,
+                    'ra_wrist_1_joint': -0.7695210732233582,
+                    'ra_wrist_2_joint': 0.2298871642157314,
+                    'ra_shoulder_lift_joint': -0.9569080092786892,
+                    'ra_wrist_3_joint': -0.25991215955733704}
+    
+   # Only plan
+   arm_commander.plan_to_joint_value_target(joints_states)
+   
+   # Plan and execute
+   arm_commander.move_to_joint_value_target(joints_states)
+ 
+   # If you want to send the joint state directly to the controller without using the planner, you can use the unsafe method:
+   arm_commander.move_to_joint_value_target_unsafe(joints_states)
 
 This example demonstrates how joint states for an arm can be sent to
 SrArmCommander, as neither the 'wait' nor 'angle\_degrees' arguments are
@@ -74,7 +155,6 @@ Example 2
 ^^^^^^^^^
 
 .. code:: python
-
 
     rospy.init_node("robot_commander_examples", anonymous=True)
 
@@ -93,152 +173,192 @@ movement to finish executing before moving on to the next command and
 the 'angle\_degrees=True' argument tells the method that the input
 angles are in degrees, so require a conversion to radians.
 
-move\_to\_named\_target
+Plan/move to a predefined group state
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Description
-^^^^^^^^^^^
-
-Using this method will allow to move hand or arm to predefined pose.
-This pose can be define using MoveIt assistant, or as states in the moveit warehosue
+Using the methods **plan_to_named_target** or **move\_to\_named\_target** will allow to plan or move the group to a predefined pose. This pose can be defined in the srdf or saved as a group state in the moveit warehouse.
 
 Parameters:
 
--  *name* is the unique identifier of the target pose defined in SRDF
+-  *name* is the unique identifier of the target pose
 -  *wait* indicates if method should wait for movement end or not
    (default value is True)
 
-In order to created a new named pose you can do following:
-
--  Run shell command
-
-   .. code:: bash
-
-       roslaunch ur10srh_moveit_config setup_assistant.launch
-
--  In UI wizard press "Load Files" button
--  Wait until files load successfully
--  Go to section "Robot Poses" of the wizard (select from list on the
-   left)
--  Press "Add Pose"
--  On the screen which will appear you can add your pose for at least
-   two "Planing Group" (it depends on the robot you are running right or
-   left), e.g.:
--  right\_hand
--  right\_arm
--  You should provide the unique name of the pose (which will be
-   referred in move\_to\_named\_target method) and select joints
-   position for this pose using slider and simulated image of robot
--  Press save button
--  Go to "Configurations File" section of the wizard
--  Tick checkbox with text "config/ur10srh.srdf" in the checkbox list
--  Press "Generate Package" and wait until progress is 100%
--  Exit wizard
-
-.. figure:: /sr_robot_commander/doc/tutorial/images/moveit_setup_assistant.gif
-   :alt: MoveIt Setup Assistant
-
-   MoveIt Setup Assistant
 Example
 ^^^^^^^
+
+**pack** is a predifined pose defined in the SRDF file for the *right_hand* group:
+
+.. code:: html
+
+  <group_state group="right_hand" name="pack">
+    <joint name="rh_THJ1" value="0.52"/>
+    <joint name="rh_THJ2" value="0.61"/>
+    <joint name="rh_THJ3" value="0.00"/>
+    <joint name="rh_THJ4" value="1.20"/>
+    <joint name="rh_THJ5" value="0.17"/>
+    <joint name="rh_FFJ1" value="1.5707"/>
+    <joint name="rh_FFJ2" value="1.5707"/>
+    <joint name="rh_FFJ3" value="1.5707"/>
+    <joint name="rh_FFJ4" value="0"/>
+    <joint name="rh_MFJ1" value="1.5707"/>
+    <joint name="rh_MFJ2" value="1.5707"/>
+    <joint name="rh_MFJ3" value="1.5707"/>
+    <joint name="rh_MFJ4" value="0"/>
+    <joint name="rh_RFJ1" value="1.5707"/>
+    <joint name="rh_RFJ2" value="1.5707"/>
+    <joint name="rh_RFJ3" value="1.5707"/>
+    <joint name="rh_RFJ4" value="0"/>
+    <joint name="rh_LFJ1" value="1.5707"/>
+    <joint name="rh_LFJ2" value="1.5707"/>
+    <joint name="rh_LFJ3" value="1.5707"/>
+    <joint name="rh_LFJ4" value="0"/>
+    <joint name="rh_LFJ5" value="0"/>
+    <joint name="rh_WRJ1" value="0"/>
+    <joint name="rh_WRJ2" value="0"/>
+  </group_state>
+
+Here is how to move to it:
 
 .. code:: python
 
     rospy.init_node("robot_commander_examples", anonymous=True)
-
-    hand_finder = HandFinder()
-
-    hand_parameters = hand_finder.get_hand_parameters()
-
-    hand_serial = hand_parameters.mapping.keys()[0]
-
-    hand_id = hand_parameters.mapping[hand_serial]
-
-    if hand_id == 'rh':
-        hand_commander = SrHandCommander(name="right_hand", prefix="rh")
-    else:
-        hand_commander = SrHandCommander(name="left_hand", prefix="lh")
-
-    # pack is predefined pose from SRDF file
+    hand_commander = SrHandCommander(name="right_hand")
+    
+    # Only plan
+    hand_commander.plan_to_named_target("pack")
+    
+    # Plan and execute
     hand_commander.move_to_named_target("pack")
 
-Note: you can hardcode the parameters instead of using the HandFinder utility
+Plan to a trajectory of specified waypoints
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using the method **plan\_to\_waypoints\_target**, it is posible to specify a set of waypoints for the end-effector and create a plan to follow it.
+
+Parameters:
+
+-  *reference_frame* is the reference frame in which the waypoints are given
+-  *waypoints* is an array of poses of the end-effector.
+-  *eef\_step* indicates that the configurations are goint to be computed for every eef_step meters (0.005 by default)
+-  *jump\_threshold* specify the maximum distance in configuration space between consecutive points in the resulting path (0.0 by default)
+
+Example
+^^^^^^^
 
 .. code:: python
+   
+   waypoints = []
 
-    rospy.init_node("robot_commander_examples", anonymous=True)
-    hand_commander = SrHandCommander("left_hand", "lh")
+   # start with the initial position
+   initial_pose = arm_commander.get_current_pose()
+   waypoints.append(initial_pose)
+   
+   # Move following a square 
+   wpose = geometry_msgs.msg.Pose()
+   wpose.position.x = waypoints[0].position.x
+   wpose.position.y = waypoints[0].position.y - 0.20
+   wpose.position.z = waypoints[0].position.z 
+   wpose.orientation = initial_pose.orientation
+   waypoints.append(wpose)
+   
+   wpose = geometry_msgs.msg.Pose()
+   wpose.position.x = waypoints[0].position.x
+   wpose.position.y = waypoints[0].position.y - 0.20
+   wpose.position.z = waypoints[0].position.z - 0.20 
+   wpose.orientation = initial_pose.orientation
+   waypoints.append(wpose)
+   
+   wpose = geometry_msgs.msg.Pose()
+   wpose.position.x = waypoints[0].position.x
+   wpose.position.y = waypoints[0].position.y
+   wpose.position.z = waypoints[0].position.z - 0.20 
+   wpose.orientation = initial_pose.orientation
+   waypoints.append(wpose)
+   
+   waypoints.append(initial_pose)
+   
+   arm_commander.plan_to_waypoints_target(waypoints, eef_step=0.02)
+   arm_commander.execute()
 
-    # pack is predefined pose from SRDF file
-    hand_commander.move_to_named_target("pack")
-
-get\_joints\_position and get\_joints\_velocity
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Description
-^^^^^^^^^^^
-
-These methods do not take any parameters and return dictionary with
-position and velocity of the robot joints
+Move to a trajectory of specified joint states
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using the methods **run\_joint\_trajectory** or **run\_joint\_trajectory\_unsafe**, it is posible to specify a trajectory composed of a set of joint states with specified timeouts and follow it.
 
 Example
 ^^^^^^^
 
 .. code:: python
 
+   joints_states_1 = {'la_shoulder_pan_joint': 0.43, 'la_elbow_joint': 2.12, 'la_wrist_1_joint': -1.71,
+                      'la_wrist_2_joint': 1.48, 'la_shoulder_lift_joint': -2.58, 'la_wrist_3_joint': 1.62,
+                      'lh_WRJ1': 0.0, 'lh_WRJ2': 0.0}
+   joints_states_2 = {'la_shoulder_pan_joint': 0.42, 'la_elbow_joint': 1.97, 'la_wrist_1_joint': -0.89,
+                      'la_wrist_2_joint': -0.92, 'la_shoulder_lift_joint': -1.93, 'la_wrist_3_joint': 0.71,
+                      'lh_WRJ1': 0.0, 'lh_WRJ2': 0.0}
+   joints_states_3 = {'la_shoulder_pan_joint': 1.61, 'la_elbow_joint': 1.15, 'la_wrist_1_joint': -0.24,
+                      'la_wrist_2_joint': 0.49, 'la_shoulder_lift_joint': -1.58, 'la_wrist_3_joint': 2.11,
+                      'lh_WRJ1': 0.0, 'lh_WRJ2': 0.0}
+                      
+   joint_trajectory = JointTrajectory()
+   joint_trajectory.header.stamp = rospy.Time.now()
+   joint_trajectory.joint_names = list(joints_states_1.keys())
+   joint_trajectory.points = []
+   time_from_start = rospy.Duration(5)
+   
+   for joints_states in [joints_states_1, joints_states_2, joints_states_3]:
+       trajectory_point = JointTrajectoryPoint()
+       trajectory_point.time_from_start = time_from_start
+       time_from_start = time_from_start + rospy.Duration(5)
+   
+       trajectory_point.positions = []
+       trajectory_point.velocities = []
+       trajectory_point.accelerations = []
+       trajectory_point.effort = []
+       for key in joint_trajectory.joint_names:
+           trajectory_point.positions.append(joints_states[key])
+           trajectory_point.velocities.append(0.0)
+           trajectory_point.accelerations.append(0.0)
+           trajectory_point.effort.append(0.0)
+       joint_trajectory.points.append(trajectory_point)
+   arm_commander.run_joint_trajectory(joint_trajectory)
+   
+   # If you want to send the trajectory to the controller without using the planner, you can use the unsafe method:
+   arm_commander.run_joint_trajectory_unsafe(joint_trajectory)
 
-    rospy.init_node("robot_commander_examples", anonymous=True)
+Move to the start of a given trajectory
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using the method **move\_to\_trajectory\_start**, it is posible create and execute a plan from the current state to the first state of a pre-existing trajectory
 
-    arm_commander = SrArmCommander(name="right_arm", set_ground=True)
+Parameters:
 
-    joints_position = arm_commander.get_joints_position()
-    joints_velocity = arm_commander.get_joints_velocity()
-
-    print("Arm joints position\n" + str(joints_position) + "\n")
-    print("Arm joints velocity\n" + str(joints_velocity) + "\n")
-
-
-plan_to_named_target
-~~~~~~~~~~~~~~~~~~~
-
-Description
-^^^^^^^^^^^
-
-Generates plan to named target. Target can either be default pose defined in SRDF,
-or can be robot pose stored in the moveit warehouse.
+-  *trajectory* a previously defined trajectory
+-  *wait* indicates if method should wait for movement end or not
+   (default value is True)
 
 Example
 ^^^^^^^
 
 .. code:: python
 
-    rospy.init_node("robot_commander_examples", anonymous=True)
+   move_to_trajectory_start(joint_trajectory)
 
-    arm_commander = SrArmCommander(name="right_arm")
+Move through a trajectory of predefined group states
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using the method **run\_named\_trajectory**, it is posible to specify a trajectory composed of a set of names of previously defined group states (either from SRDF or from warehouse), plan and move to follow it.
 
-    arm_commander.plan_to_named_target("target_name")
+Parameters:
 
-
-run_named_trajectory and run_named_trajectory_unsafe
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Description
-^^^^^^^^^^^
-
-Moves robot along a trajectory through named target poses, either from SRDF or
-warehouse as above. 
-
-Argumeent is a list of waypoints, being dictionaries containing the name of the pose, the
-time taken to reach the it from the previous one, and optionally, the time to pause
-before the next.
-
+-  *trajectory* specify a dictionary of waypoints with the following elements:
+   -  name: the name of the way point
+   -  interpolate_time: time to move from last waypoint
+   -  pause_time: time to wait at this waypoint
 
 Example
 ^^^^^^^
 
 .. code:: python
 
-    trajectory = [
+   trajectory = [
       {
           'name': 'open',
           'interpolate_time': 3.0
@@ -256,35 +376,37 @@ Example
           'name': 'pack',
           'interpolate_time': 3.0
       }
-    ]
+   ]
 
-    hand_commander.run_named_trajectory(trajectory)
+   hand_commander.run_named_trajectory(trajectory)
+    
+   # If you want to send the trajectory to the controller without using the planner, you can use the unsafe method:
+   hand_commander.run_named_trajectory_unsafe(trajectory)
 
-
-check_plan_is_valid
+Check if a plan is valid and execute it
 ~~~~~~~~~~~~~~~~~~~
 
-Description
-^^^^^^^^^^^
-
-Checks if current plan contains a valid trajectory. Only has meaning if called
-after a planning function has been attempted.
+Use the method **check_plan_is_valid** and **execute** to check if the current plan contains a valid trajectory and execute it. Only has meaning if called after a planning function has been attempted.
 
 Example
 ^^^^^^^
 
 .. code:: python
 
-    rospy.init_node("robot_commander_examples", anonymous=True)
+   rospy.init_node("robot_commander_examples", anonymous=True)
+   arm_commander = SrArmCommander(name="right_arm")
 
-    arm_commander = SrArmCommander(name="right_arm")
+   arm_commander.plan_to_named_target("target_name")
+   if arm_commander.check_plan_is_valid():
+      arm_commander.execute()
 
-    arm_commander.plan_to_named_target("target_name")
-    
-    if arm_commander.plan_is_valid():
-        arm_commander.execute()
+Stop the robot
+~~~~~~~~~~~~~~~~~~~
+Use the method **send_stop_trajectory_unsafe** to send a trajectory with the current joint state to stop the robot at its current position.
 
-**Warning** All of above codes will crash if hand is not launched yet.
-If you are using HandFinder, you can avoid this by checking the length
-of the mapping. Otherwise you can check the parameter server directly to
-see if the hand is launched.
+Example
+^^^^^^^
+
+.. code:: python
+
+   commander.send_stop_trajectory_unsafe()
