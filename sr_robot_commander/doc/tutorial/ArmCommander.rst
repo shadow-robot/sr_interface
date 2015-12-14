@@ -1,7 +1,7 @@
 Arm Commander
 -------------
 
-Overviwe
+Overview
 ~~~~~~~~~~~
 
 The ArmCommander inherits all methods from the `robot commander <RobotCommander.html>`__ and provides commands specific to the arm. It allows to move to certain position in cartesian space, to joints states
