@@ -205,9 +205,6 @@ Example
 Plan/move to a predefined named pose
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Description
-^^^^^^^^^^^
-
 Using the methods **plan_to_named_target** or **move\_to\_named\_target** will allow to plan or move the group to a predefined pose. This pose can be defined in the srdf or saved as a group state in the moveit warehouse.
 
 Parameters:
