@@ -25,18 +25,21 @@ Here is an example of an UR10 arm and a shadow hand with their different groups 
 
 Getting basic information
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-We can get the name of the robot, group or planning frame:
+We can get the name of the robot, group or planning reference frame:
 
 .. code:: python
 
    print "Robot name: ", commander.get_robot_name()
    print "Group name: ", commander.get_group_name()
-   print "Group name: ", commander.get_planning_frame()
+   print "Planning frame: ", commander.get_planning_frame()
 
 Get the list of names of the predifined group states from the srdf and warehouse for the current group:
 
 .. code:: python
 
+   # Refresh them first if they have recently changed
+   commander.refresh_named_targets()
+   
    print "Named targets: ", commander.get_named_targets()
    
 Get the joints position and velocity:
@@ -84,8 +87,24 @@ Get the end-effector position from a group state previously defined:
 
    eef_position = get_end_effector_pose_from_named_state("hand_open")
 
+Setting functions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You can change the reference frame to get pose information:
 
+.. code:: python
 
+   set_pose_reference_frame("palm"):
+
+You can also activate or deactivate the teach mode for the robot:
+
+.. code:: python
+
+   # Activation: stops the the trajectory controllers for the robot, and sets it to teach mode.
+   commander.set_teach_mode(True)
+   
+   # Deactivation: stops the teach mode and starts trajectory controllers for the robot.  
+   # Currently this method blocks for a few seconds when called on a hand, while the hand parameters are reloaded.
+   commander.set_teach_mode(False)
 
 Plan/move to a joint-space goal
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
