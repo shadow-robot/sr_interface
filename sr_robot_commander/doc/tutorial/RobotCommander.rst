@@ -227,7 +227,41 @@ Using the method **run\_joint\_trajectory**, it is posible to specify a trajecto
 
 Example
 ^^^^^^^
-(Add example)
+
+.. code:: python
+
+   joints_states_1 = {'la_shoulder_pan_joint': 0.43, 'la_elbow_joint': 2.12, 'la_wrist_1_joint': -1.71,
+                      'la_wrist_2_joint': 1.48, 'la_shoulder_lift_joint': -2.58, 'la_wrist_3_joint': 1.62,
+                      'lh_WRJ1': 0.0, 'lh_WRJ2': 0.0}
+   joints_states_2 = {'la_shoulder_pan_joint': 0.42, 'la_elbow_joint': 1.97, 'la_wrist_1_joint': -0.89,
+                      'la_wrist_2_joint': -0.92, 'la_shoulder_lift_joint': -1.93, 'la_wrist_3_joint': 0.71,
+                      'lh_WRJ1': 0.0, 'lh_WRJ2': 0.0}
+   joints_states_3 = {'la_shoulder_pan_joint': 1.61, 'la_elbow_joint': 1.15, 'la_wrist_1_joint': -0.24,
+                      'la_wrist_2_joint': 0.49, 'la_shoulder_lift_joint': -1.58, 'la_wrist_3_joint': 2.11,
+                      'lh_WRJ1': 0.0, 'lh_WRJ2': 0.0}
+                      
+   joint_trajectory = JointTrajectory()
+   joint_trajectory.header.stamp = rospy.Time.now()
+   joint_trajectory.joint_names = list(joints_states_1.keys())
+   joint_trajectory.points = []
+   time_from_start = rospy.Duration(5)
+   
+   for joints_states in [joints_states_1, joints_states_2, joints_states_3]:
+       trajectory_point = JointTrajectoryPoint()
+       trajectory_point.time_from_start = time_from_start
+       time_from_start = time_from_start + rospy.Duration(5)
+   
+       trajectory_point.positions = []
+       trajectory_point.velocities = []
+       trajectory_point.accelerations = []
+       trajectory_point.effort = []
+       for key in joint_trajectory.joint_names:
+           trajectory_point.positions.append(joints_states[key])
+           trajectory_point.velocities.append(0.0)
+           trajectory_point.accelerations.append(0.0)
+           trajectory_point.effort.append(0.0)
+       joint_trajectory.points.append(trajectory_point)
+   arm_commander.run_joint_trajectory(joint_trajectory)
 
 Move to the start of a given trajectory
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -237,7 +271,7 @@ Example
 ^^^^^^^
 (Add example)
 
-Plan/move to a predefined named pose
+Plan/move to a predefined group state
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Using the methods **plan_to_named_target** or **move\_to\_named\_target** will allow to plan or move the group to a predefined pose. This pose can be defined in the srdf or saved as a group state in the moveit warehouse.
