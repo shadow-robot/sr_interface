@@ -11,11 +11,11 @@ Use the `HandCommander <HandCommander.html>`__ or `ArmCommander <ArmCommander.ht
 
 Examples of usage can be found `here <../../../sr_example/README.html>`__.
 
-Following you can find decriptions of the most relevant common functions available for both.
+Following you can find decriptions of the most relevant functions available for both.
 
 Basic terminology
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A robot is described using an `srdf <http://wiki.ros.org/srdf>`__ file which contains the semantic description that is not available in the `urdf <http://wiki.ros.org/urdf>`__. It mainly describe a robot as a collection of **groups** that are representations of different set of joints that are useful for planning. Each group can have specified its **end-effector** and **group states** which are specific set of joint values predifined for that group with a given name, for example *close_hand* or *folded_arm*.
+A robot is described using an `srdf <http://wiki.ros.org/srdf>`__ file which contains the semantic description that is not available in the `urdf <http://wiki.ros.org/urdf>`__. It describes a robot as a collection of **groups** that are representations of different set of joints which are useful for planning. Each group can have specified its **end-effector** and **group states** which are specific set of joint values predifined for that group with a given name, for example *close_hand* or *folded_arm*.
 
 As the robot commander is a high lever wrapper of the `moveit_commander <http://wiki.ros.org/moveit_commander>`__, its constructor takes the name of one of the robot groups for which the planning will be performed.
 
@@ -44,7 +44,7 @@ Get the joints position and velocity:
 
 Plan/move to a joint-space goal
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Using the method **move\_to\_joint\_value\_target** a set of the joint values can be given for the specified group to create a plan and send it for execution.
+Using the methods **plan\_to\_joint\_value\_target** or **move\_to\_joint\_value\_target**, a set of the joint values can be given for the specified group to create a plan and send it for execution.
 
 Parameters:
 
@@ -73,6 +73,11 @@ Example
                      'ra_wrist_2_joint': 0.2298871642157314,
                      'ra_shoulder_lift_joint': -0.9569080092786892,
                      'ra_wrist_3_joint': -0.25991215955733704}
+    
+    # Only plan
+    arm_commander.plan_to_joint_value_target(joints_states)
+    
+    # Plan and execute
     arm_commander.move_to_joint_value_target(joints_states)
 
 This example demonstrates how joint states for an arm can be sent to
@@ -109,8 +114,7 @@ Plan/move to a predefined named pose
 Description
 ^^^^^^^^^^^
 
-Using the method **move\_to\_named\_target** will allow to move the group to a predefined pose.
-This pose can be defined in the srdf or saved as a group state in the moveit warehouse.
+Using the methods **plan_to_named_target** or **move\_to\_named\_target** will allow to plan or move the group to a predefined pose. This pose can be defined in the srdf or saved as a group state in the moveit warehouse.
 
 Parameters:
 
@@ -121,7 +125,7 @@ Parameters:
 Example
 ^^^^^^^
 
-**pack** is a predifined pose from the SRDF file:
+**pack** is a predifined pose defined in the SRDF file for the *right_hand* group:
 
 .. code:: html
 
