@@ -172,6 +172,36 @@ movement to finish executing before moving on to the next command and
 the 'angle\_degrees=True' argument tells the method that the input
 angles are in degrees, so require a conversion to radians.
 
+Plan to a trajectory of specified waypoints
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using the method **plan\_to\_waypoints\_target**, it is posible to specify a set of waypoints for the end-effector and create a plan to follow it.
+
+Parameters:
+
+-  *waypoints* is an array of poses of the end-effector.
+-  *eef\_step* indicates that the configurations are goint to be computed for every eef_step meters
+-  *jump\_threshold* specify the maximum distance in configuration space between consecutive points in the resulting path
+
+Example
+^^^^^^^
+(Add example)
+
+Move to a trajectory of specified joint states
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using the method **run\_joint\_trajectory**, it is posible to specify a trajectory composed of a set of joint states with specified timeouts and follow it.
+
+Example
+^^^^^^^
+(Add example)
+
+Move to the start of a given trajectory
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using the method **move\_to\_trajectory\_start**, it is posible create and execute a plan from the current state to the first state of a pre-existing trajectory
+
+Example
+^^^^^^^
+(Add example)
+
 Plan/move to a predefined named pose
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -233,20 +263,16 @@ Here is how to move to it:
     # Plan and execute
     hand_commander.move_to_named_target("pack")
 
+Move through a trajectory of predefined group states
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using the method **run\_named\_trajectory**, it is posible to specify a trajectory composed of a set of names of previously defined group states (either from SRDF or from warehouse), plan and move to follow it.
 
-run_named_trajectory and run_named_trajectory_unsafe
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Parameters:
 
-Description
-^^^^^^^^^^^
-
-Moves robot along a trajectory through named target poses, either from SRDF or
-warehouse as above. 
-
-Argumeent is a list of waypoints, being dictionaries containing the name of the pose, the
-time taken to reach the it from the previous one, and optionally, the time to pause
-before the next.
-
+-  *trajectory* specify a dictionary of waypoints with the following elements:
+   -  name: the name of the way point
+   -  interpolate_time: time to move from last waypoint
+   -  pause_time: time to wait at this waypoint
 
 Example
 ^^^^^^^
@@ -274,16 +300,17 @@ Example
     ]
 
     hand_commander.run_named_trajectory(trajectory)
+    
+    # If you want to send the trajectory to the controller without using the planner, you can use:
+    hand_commander.run_named_trajectory_unsafe(trajectory)
 
+move_to_joint_value_target_unsafe
+run_joint_trajectory_unsafe
 
-check_plan_is_valid
+Check if a plan is valid and execute it
 ~~~~~~~~~~~~~~~~~~~
 
-Description
-^^^^^^^^^^^
-
-Checks if current plan contains a valid trajectory. Only has meaning if called
-after a planning function has been attempted.
+Use the method **check_plan_is_valid** and **execute** to check if the current plan contains a valid trajectory and execute it. Only has meaning if called after a planning function has been attempted.
 
 Example
 ^^^^^^^
@@ -298,8 +325,3 @@ Example
     
     if arm_commander.plan_is_valid():
         arm_commander.execute()
-
-**Warning** All of above codes will crash if hand is not launched yet.
-If you are using HandFinder, you can avoid this by checking the length
-of the mapping. Otherwise you can check the parameter server directly to
-see if the hand is launched.
