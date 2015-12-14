@@ -404,6 +404,9 @@ Stop the robot
 ~~~~~~~~~~~~~~~~~~~
 Use the method **send_stop_trajectory_unsafe** to send a trajectory with the current joint state to stop the robot at its current position.
 
+Example
+^^^^^^^
+
 .. code:: python
 
    commander.send_stop_trajectory_unsafe()
