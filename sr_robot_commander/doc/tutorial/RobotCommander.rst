@@ -397,7 +397,7 @@ Example
    arm_commander = SrArmCommander(name="right_arm")
 
    arm_commander.plan_to_named_target("target_name")
-   if arm_commander.plan_is_valid():
+   if arm_commander.check_plan_is_valid():
       arm_commander.execute()
 
 Stop the robot
