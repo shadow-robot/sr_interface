@@ -25,11 +25,19 @@ Here is an example of an UR10 arm and a shadow hand with their different groups 
 
 Getting basic information
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-We can get the name of the group:
+We can get the name of the robot, group or planning frame:
 
 .. code:: python
 
+   print "Robot name: ", commander.get_robot_name()
    print "Group name: ", commander.get_group_name()
+   print "Group name: ", commander.get_planning_frame()
+
+Get the list of names of the predifined group states from the srdf and warehouse for the current group:
+
+.. code:: python
+
+   print "Named targets: ", commander.get_named_targets()
    
 Get the joints position and velocity:
 
@@ -40,6 +48,43 @@ Get the joints position and velocity:
 
    print("Arm joints position\n" + str(joints_position) + "\n")
    print("Arm joints velocity\n" + str(joints_velocity) + "\n")
+   
+Get the current joint state of the group being used:
+
+.. code:: python
+   
+   current_state = commander.get_current_state()
+   
+   # To get the current state but enforcing that each joint is within its limits
+   current_state = commander.get_current_state_bounded()
+   
+
+Get the current position of the end-effector:
+
+.. code:: python
+
+   # Specify the desired reference frame if different from planning frame
+   eef_position = commander.get_current_pose("palm")
+
+Get the end-effector position from a specified joint-state:
+
+.. code:: python
+
+   joints_states = {'ra_shoulder_pan_joint': 0.5157461682721474,
+                    'ra_elbow_joint': 0.6876824920327893,
+                    'ra_wrist_1_joint': -0.7695210732233582,
+                    'ra_wrist_2_joint': 0.2298871642157314,
+                    'ra_shoulder_lift_joint': -0.9569080092786892,
+                    'ra_wrist_3_joint': -0.25991215955733704}
+   eef_position = get_end_effector_pose_from_state(joints_states)
+
+Get the end-effector position from a group state previously defined:
+
+.. code:: python
+
+   eef_position = get_end_effector_pose_from_named_state("hand_open")
+
+
 
 
 Plan/move to a joint-space goal
