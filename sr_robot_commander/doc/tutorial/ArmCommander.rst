@@ -7,6 +7,22 @@ Overview
 The ArmCommander inherits all methods from the `robot commander <RobotCommander.html>`__ and provides commands specific to the arm. It allows to move to certain position in cartesian space, to a configuration in joint space
 or move using certain trajectory.
 
+Setup
+~~~~~~~~
+
+Import the arm commander along with basic rospy libraries:
+
+.. code:: python
+
+    import rospy
+    from sr_robot_commander.sr_arm_commander import SrArmCommander
+
+The constructors for ``SrArmCommander`` take a name parameter that should match the group name of the robot to be used and has the option to add ground to the scene.
+
+.. code:: python
+
+   arm_commander = SrArmCommander(name="right_arm", set_ground=True)
+
 Getting information
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
