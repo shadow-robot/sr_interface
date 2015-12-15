@@ -1,4 +1,4 @@
-Arm Commander
+Hand Commander
 -------------
 
 Overview
@@ -35,7 +35,7 @@ Example
                                      hand_serial=hand_serial)
     
     # Alternatively you launch the hand directly
-    hand_commander = SrHandCommander(name = "right_hand", prefix = True)
+    hand_commander = SrHandCommander(name = "right_hand", prefix = "rh")
 
 get\_joints\_effort
 ~~~~~~~~~~~~~~~~~~~
