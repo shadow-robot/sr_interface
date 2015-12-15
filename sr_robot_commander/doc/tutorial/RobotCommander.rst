@@ -23,6 +23,20 @@ Here is an example of an UR10 arm and a shadow hand with their different groups 
 
 (Add picture)
 
+Setup
+~~~~~~~~
+
+Import the hand or arm commander (or both) depending of your application, along with basic rospy libraries:
+
+.. code:: python
+
+    import rospy
+    from sr_robot_commander.sr_arm_commander import SrArmCommander
+    from sr_robot_commander.sr_hand_commander import SrHandCommander
+
+The constructors for ``SrArmCommander`` and ``SrHandCommander`` take a
+name parameter that should match the group name of the robot to be used.
+
 Getting basic information
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 We can get the name of the robot, group or planning reference frame:
