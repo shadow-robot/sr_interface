@@ -6,29 +6,25 @@
 import rospy
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sr_robot_commander.sr_arm_commander import SrArmCommander
-
-from moveit_commander import RobotCommander, PlanningSceneInterface, MoveGroupCommander
-from moveit_msgs.msg import RobotState
-from moveit_msgs.msg import DisplayRobotState
 import geometry_msgs.msg
-import copy
-#
+
 
 rospy.init_node("move_arm_following_waypoitn_trajectory", anonymous=True)
 
-arm_commander = SrArmCommander(set_ground=False)
+arm_commander = SrArmCommander(set_ground=True)
 
 rospy.sleep(rospy.Duration(1))
 
 # Moving arm to initial pose
 pose_1 = [ 0.32, 0.27, 1.026, 0.0, 0.0, 0.0, 1.0]
 
+print "Moving to initial pose"
 arm_commander.plan_to_pose_target(pose_1)
 arm_commander.execute()
-print "Moving to initial pose"
 
 rospy.sleep(rospy.Duration(2))
 
+print "Moving following waypoints trajectory"
 waypoints = []
 
 # start with the initial position
@@ -60,6 +56,3 @@ waypoints.append(initial_pose)
 
 arm_commander.plan_to_waypoints_target(waypoints, eef_step=0.02)
 arm_commander.execute()
-print "moving following waypoints trajectory"
-
-rospy.sleep(rospy.Duration(3))
