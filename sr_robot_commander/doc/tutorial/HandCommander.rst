@@ -17,7 +17,7 @@ Import the hand commander along with basic rospy libraries and the hand finder:
     from sr_robot_commander.sr_hand_commander import SrHandCommander
     from sr_utilities.hand_finder import HandFinder
 
-The constructor for ``SrHandCommander`` take a name parameter that should match the group name of the robot to be used. Also it takes the hand prefix, parameters and serial number that can be retrieved using the `HandFinder <../../../sr_utilities/README.html>`__.
+The constructor for the ``HandCommander`` take a name parameter that should match the group name of the robot to be used. Also it takes the hand prefix, parameters and serial number that can be retrieved using the `HandFinder <../../../sr_utilities/README.html>`__   `HandFinder <https://github.com/shadow-robot/sr_core/blob/indigo-devel/sr_utilities/scripts/sr_utilities/hand_finder.py>`__:.
 
 Example
 ^^^^^^^
@@ -40,7 +40,7 @@ Example
 Getting information
 ~~~~~~~~
 
-Use the method **get\_joints\_effort** to get a dictionary with efforts of the group joints.
+Use the ``get_joints_effort`` method to get a dictionary with efforts of the group joints.
 
 .. code:: python
 
@@ -48,10 +48,10 @@ Use the method **get\_joints\_effort** to get a dictionary with efforts of the g
     print("Hand joints effort \n " + str(hand_joints_effort) + "\n")
 
 
-Use the *get\_tactile\_type* to get a string indicating the type of tactile
-sensors present (e.g. PST, biotac, UBI0) or *get\_tactile\_state* to get
+Use the ``get_tactile_type`` to get a string indicating the type of tactile
+sensors present (e.g. PST, biotac, UBI0) or ``get_tactile_state`` to get
 an object containing tactile data. The structure of the data is
-different for every tactile\_type .
+different for every ``tactile_type`` .
 
 .. code:: python
 
