@@ -122,7 +122,7 @@ You can also activate or deactivate the teach mode for the robot:
 
 Plan/move to a joint-space goal
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Using the methods **plan\_to\_joint\_value\_target**, **move\_to\_joint\_value\_target** or **move\_to\_joint\_value\_target\_unsafe**, a set of the joint values can be given for the specified group to create a plan and send it for execution.
+Using the methods ``plan_to_joint_value_target``, ``move_to_joint_value_target`` or ``move_to_joint_value_target_unsafe``, a set of the joint values can be given for the specified group to create a plan and send it for execution.
 
 Parameters:
 
@@ -161,8 +161,8 @@ Example
    arm_commander.move_to_joint_value_target_unsafe(joints_states)
 
 This example demonstrates how joint states for an arm can be sent to
-SrArmCommander, as neither the 'wait' nor 'angle\_degrees' arguments are
-specified, they take the default values of 'True' and 'False,
+SrArmCommander, as neither the ``wait`` nor ``angle_degrees`` arguments are
+specified, they take the default values of ``True`` and ``False``,
 respectively.
 
 Example 2
@@ -181,16 +181,16 @@ Example 2
                      'rh_WRJ1': 0.0, 'rh_WRJ2': 0.0}
     hand_commander.move_to_joint_value_target(joints_states, wait=False, angle_degrees=True))
 
-In this example, joint states for a hand are sent to SrHandCommander,
-the method is prompted by the 'wait=False' argument to not wait for the
+In this example, joint states for a hand are sent to the ``HandCommander``,
+the method is prompted by the ``wait=False`` argument to not wait for the
 movement to finish executing before moving on to the next command and
-the 'angle\_degrees=True' argument tells the method that the input
+the ``angle_degrees=True`` argument tells the method that the input
 angles are in degrees, so require a conversion to radians.
 
 Plan/move to a predefined group state
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Using the methods **plan_to_named_target** or **move\_to\_named\_target** will allow to plan or move the group to a predefined pose. This pose can be defined in the srdf or saved as a group state in the moveit warehouse.
+Using the methods ``plan_to_named_target`` or ``move_to_named_target`` will allow to plan or move the group to a predefined pose. This pose can be defined in the srdf or saved as a group state in the moveit warehouse.
 
 Parameters:
 
@@ -247,7 +247,7 @@ Here is how to move to it:
 
 Plan to a trajectory of specified waypoints
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Using the method **plan\_to\_waypoints\_target**, it is posible to specify a set of waypoints for the end-effector and create a plan to follow it.
+Using the method ``plan_to_waypoints_target``, it is posible to specify a set of waypoints for the end-effector and create a plan to follow it.
 
 Parameters:
 
@@ -296,7 +296,7 @@ Example
 
 Move to a trajectory of specified joint states
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Using the methods **run\_joint\_trajectory** or **run\_joint\_trajectory\_unsafe**, it is posible to specify a trajectory composed of a set of joint states with specified timeouts and follow it.
+Using the methods ``run_joint_trajectory`` or ``run_joint_trajectory_unsafe``, it is posible to specify a trajectory composed of a set of joint states with specified timeouts and follow it.
 
 Example
 ^^^^^^^
@@ -341,7 +341,7 @@ Example
 
 Move to the start of a given trajectory
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Using the method **move\_to\_trajectory\_start**, it is posible create and execute a plan from the current state to the first state of a pre-existing trajectory
+Using the method ``move_to_trajectory_start``, it is posible create and execute a plan from the current state to the first state of a pre-existing trajectory
 
 Parameters:
 
@@ -358,7 +358,7 @@ Example
 
 Move through a trajectory of predefined group states
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Using the method **run\_named\_trajectory**, it is posible to specify a trajectory composed of a set of names of previously defined group states (either from SRDF or from warehouse), plan and move to follow it.
+Using the method ``run_named_trajectory``, it is posible to specify a trajectory composed of a set of names of previously defined group states (either from SRDF or from warehouse), plan and move to follow it.
 
 Parameters:
 
@@ -400,7 +400,7 @@ Example
 Check if a plan is valid and execute it
 ~~~~~~~~~~~~~~~~~~~
 
-Use the method **check_plan_is_valid** and **execute** to check if the current plan contains a valid trajectory and execute it. Only has meaning if called after a planning function has been attempted.
+Use the method ``check_plan_is_valid`` and ``execute`` to check if the current plan contains a valid trajectory and execute it. Only has meaning if called after a planning function has been attempted.
 
 Example
 ^^^^^^^
@@ -416,7 +416,7 @@ Example
 
 Stop the robot
 ~~~~~~~~~~~~~~~~~~~
-Use the method **send_stop_trajectory_unsafe** to send a trajectory with the current joint state to stop the robot at its current position.
+Use the method ``send_stop_trajectory_unsafe`` to send a trajectory with the current joint state to stop the robot at its current position.
 
 Example
 ^^^^^^^
