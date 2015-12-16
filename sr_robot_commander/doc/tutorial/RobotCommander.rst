@@ -7,7 +7,7 @@ Overview
 The main purpose of the robot commander is to provide a base clase to the
 hand and arm commanders, providing
 methods which can be used on both. The RobotCommander should not be used directly unless necessary. 
-Use the `HandCommander <HandCommander.html>`__ or `ArmCommander <ArmCommander.html>`__ instead. 
+Use the `SrHandCommander <HandCommander.html>`__ or `SrArmCommander <ArmCommander.html>`__ instead. 
 
 Examples of usage can be found `here <../../../sr_example/README.html>`__.
 
@@ -34,7 +34,7 @@ Import the hand or arm commander (or both) depending of your application, along 
     from sr_robot_commander.sr_arm_commander import SrArmCommander
     from sr_robot_commander.sr_hand_commander import SrHandCommander
 
-The constructors for ``SrArmCommander`` and ``SrHandCommander`` take a
+The constructors for the `SrArmCommander`` and ``SrHandCommander`` take a
 name parameter that should match the group name of the robot to be used.
 
 Getting basic information
