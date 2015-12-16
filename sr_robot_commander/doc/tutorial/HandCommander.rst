@@ -4,7 +4,7 @@ Hand Commander
 Overview
 ~~~~~~~~~~~
 
-The HandCommander inherits all methods from the `robot commander <RobotCommander.html>`__ and provides commands specific to the hand. It allows to get state of tactile sensors, set maximum force and get joints effort.
+The SrHandCommander inherits all methods from the `robot commander <RobotCommander.html>`__ and provides commands specific to the hand. It allows to get state of tactile sensors, set maximum force and get joints effort.
 
 Setup
 ~~~~~~~~
@@ -17,7 +17,7 @@ Import the hand commander along with basic rospy libraries and the hand finder:
     from sr_robot_commander.sr_hand_commander import SrHandCommander
     from sr_utilities.hand_finder import HandFinder
 
-The constructor for the ``HandCommander`` take a name parameter that should match the group name of the robot to be used. Also it takes the hand prefix, parameters and serial number that can be retrieved using the `HandFinder <../../../sr_utilities/README.html>`__   `HandFinder <https://github.com/shadow-robot/sr_core/blob/indigo-devel/sr_utilities/scripts/sr_utilities/hand_finder.py>`__:.
+The constructor for the ``SrHandCommander`` take a name parameter that should match the group name of the robot to be used. Also it takes the hand prefix, parameters and serial number that can be retrieved using the `HandFinder <https://github.com/shadow-robot/sr_core/blob/indigo-devel/sr_utilities/scripts/sr_utilities/hand_finder.py>`__.
 
 Example
 ^^^^^^^
