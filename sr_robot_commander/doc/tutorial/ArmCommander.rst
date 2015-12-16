@@ -4,7 +4,7 @@ Arm Commander
 Overview
 ~~~~~~~~~~~
 
-The ArmCommander inherits all methods from the `robot commander <RobotCommander.html>`__ and provides commands specific to the arm. It allows to move to certain position in cartesian space, to a configuration in joint space
+The SrArmCommander inherits all methods from the `robot commander <RobotCommander.html>`__ and provides commands specific to the arm. It allows to move to certain position in cartesian space, to a configuration in joint space
 or move using certain trajectory.
 
 Setup
@@ -35,7 +35,7 @@ To return the reference frame for planning in cartesian space:
 Plan/move to a position target
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Using the method **move\_to\_position\_target**, the end effector of the arm can be moved to a certain point
+Using the method ``move_to_position_target``, the end effector of the arm can be moved to a certain point
 in space represented by (x, y, z) coordinates. The orientation of the end effector can be any.
 
 Parameters:
@@ -65,7 +65,7 @@ Example
 Plan/move to a pose target
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Using the method move\_to\_pose\_target allows to move the end effector of the arm to certain pose
+Using the method ``move_to_pose_target`` allows to move the end effector of the arm to certain pose
 (position and orientation) in the space represented by (x, y, z, rot\_x,
 rot\_y, rot\_z).
 
