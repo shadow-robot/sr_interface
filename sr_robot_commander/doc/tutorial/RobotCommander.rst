@@ -19,10 +19,6 @@ A robot is described using an `srdf <http://wiki.ros.org/srdf>`__ file which con
 
 As the robot commander is a high lever wrapper of the `moveit_commander <http://wiki.ros.org/moveit_commander>`__, its constructor takes the name of one of the robot groups for which the planning will be performed.
 
-Here is an example of an UR10 arm and a shadow hand with their different groups and end-effectors.
-
-(Add picture)
-
 Setup
 ~~~~~~~~
 
