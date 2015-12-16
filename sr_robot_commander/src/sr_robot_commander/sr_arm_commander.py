@@ -36,7 +36,7 @@ class SrArmCommander(SrRobotCommander):
         super(SrArmCommander, self).__init__(name)
 
         if set_ground:
-            self._set_ground()
+            self.set_ground()
 
     def move_to_position_target(self, xyz, end_effector_link="", wait=True):
         """
@@ -80,41 +80,24 @@ class SrArmCommander(SrRobotCommander):
         """
         self._plan_to_pose_target(pose, end_effector_link)
 
-    def _set_ground(self):
+    def set_ground(self, height=0.1, z_position=-0.1):
         """
         Sets a plane for the ground.
+        @param height - specifies the height of the plane
+        @param z_position - position in z to place the plane. Should not collide with the robot.
         """
+
         pose = PoseStamped()
         pose.pose.position.x = 0
         pose.pose.position.y = 0
-        # offset such that the box is 0.1 mm below ground
-        # (to prevent collision with the robot itself)
-        pose.pose.position.z = -0.0501
+        pose.pose.position.z = z_position - (height/2.0)
         pose.pose.orientation.x = 0
         pose.pose.orientation.y = 0
         pose.pose.orientation.z = 0
         pose.pose.orientation.w = 1
         pose.header.stamp = get_rostime()
         pose.header.frame_id = self._robot_commander.get_root_link()
-        self._planning_scene.add_box("ground", pose, (3, 3, 0.1))
+        self._planning_scene.add_box("ground", pose, (3, 3, height))
 
     def get_pose_reference_frame(self):
         return self._move_group_commander.get_pose_reference_frame()
-
-    def plan_cartesian_path_to_pose(self, target_pose, min_fraction=1, eef_step=.01, jump_threshold=1000):
-        if type(target_pose) != Pose:
-            rospy.logerr("Target should be Pose.")
-            return None
-
-        start_pose = self._move_group_commander.get_current_pose().pose
-
-        (plan, fraction) = self._move_group_commander.compute_cartesian_path(
-            [start_pose, target_pose], eef_step, jump_threshold)
-
-        if fraction < min_fraction:
-            rospy.logerr("Couldn't reach enough waypoints, only %f" % fraction)
-            self._reset_plan()
-            return None
-
-        self._set_plan(plan)
-        return True
