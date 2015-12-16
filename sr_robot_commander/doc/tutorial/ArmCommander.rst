@@ -10,18 +10,33 @@ or move using certain trajectory.
 Setup
 ~~~~~~~~
 
-Import the arm commander along with basic rospy libraries:
+Import the arm commander along with basic rospy libraries and the arm finder:
 
 .. code:: python
 
     import rospy
     from sr_robot_commander.sr_arm_commander import SrArmCommander
+    from sr_utilities.arm_finder import ArmFinder
 
 The constructors for ``SrArmCommander`` take a name parameter that should match the group name of the robot to be used and has the option to add ground to the scene.
 
 .. code:: python
 
    arm_commander = SrArmCommander(name="right_arm", set_ground=True)
+   
+Use the ArmFinder to get the parameters (such as prefix) and joint names of the arm currently running on the system:
+
+.. code:: python
+
+   arm_finder = ArmFinder()
+   
+   # To get the prefix or mapping of the arm joints. Mapping is the same as prefix but without underscore.
+   arm_finder.get_arm_parameters().joint_prefix.values()
+   arm_finder.get_arm_parameters().mapping.values()
+   
+   # To get the arm joints
+   arm_finder.get_arm_joints()
+   
 
 Getting information
 ~~~~~~~~~~~~~~~~~~~~~~~~
