@@ -4,18 +4,18 @@ Robot Commander
 Overview
 ~~~~~~~~
 
-The main purpose of the robot commander is to provide a base clase to the
+The main purpose of the robot commander is to provide a base class to the
 hand and arm commanders, providing
 methods which can be used on both. The RobotCommander should not be used directly unless necessary. 
 Use the `SrHandCommander <HandCommander.html>`__ or `SrArmCommander <ArmCommander.html>`__ instead. 
 
 Examples of usage can be found `here <../../../sr_example/README.html>`__.
 
-Following you can find decriptions of the most relevant functions available for both.
+In the following sections, you can find decriptions of the most relevant functions available for both.
 
 Basic terminology
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A robot is described using an `srdf <http://wiki.ros.org/srdf>`__ file which contains the semantic description that is not available in the `urdf <http://wiki.ros.org/urdf>`__. It describes a robot as a collection of **groups** that are representations of different set of joints which are useful for planning. Each group can have specified its **end-effector** and **group states** which are specific set of joint values predifined for that group with a given name, for example *close_hand* or *folded_arm*.
+A robot is described using an `srdf <http://wiki.ros.org/srdf>`__ file which contains the semantic description that is not available in the `urdf <http://wiki.ros.org/urdf>`__. It describes a robot as a collection of **groups** that are representations of different set of joints which are useful for planning. Each group can have its **end-effector** and **group states** specified. Group states are specific set of joint values predifined for a group with a given name, for example *close_hand* or *folded_arm*.
 
 As the robot commander is a high lever wrapper of the `moveit_commander <http://wiki.ros.org/moveit_commander>`__, its constructor takes the name of one of the robot groups for which the planning will be performed.
 
@@ -68,7 +68,7 @@ Get the current joint state of the group being used:
    
    current_state = commander.get_current_state()
    
-   # To get the current state but enforcing that each joint is within its limits
+   # To get the current state while enforcing that each joint is within its limits
    current_state = commander.get_current_state_bounded()
    
 
@@ -124,7 +124,7 @@ Parameters:
 
 -  *joint\_states* is a dictionary with joint name and value. It can
    contain joints values of which need to be changed.
--  *wait* indicates if method should wait for movement end or not
+-  *wait* indicates if the method should wait for the movement to end or not
    (default value is True)
 -  *angle\_degrees* should be set to true if the input angles are in
    degrees (default value is False)
@@ -191,7 +191,7 @@ Using the methods ``plan_to_named_target`` or ``move_to_named_target`` will allo
 Parameters:
 
 -  *name* is the unique identifier of the target pose
--  *wait* indicates if method should wait for movement end or not
+-  *wait* indicates if the method should wait for the movement to end or not
    (default value is True)
 
 Example
@@ -243,7 +243,7 @@ Here is how to move to it:
 
 Plan to a trajectory of specified waypoints
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Using the method ``plan_to_waypoints_target``, it is posible to specify a set of waypoints for the end-effector and create a plan to follow it.
+Using the method ``plan_to_waypoints_target``, it is possible to specify a set of waypoints for the end-effector and create a plan to follow it.
 
 Parameters:
 
@@ -292,7 +292,7 @@ Example
 
 Move to a trajectory of specified joint states
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Using the methods ``run_joint_trajectory`` or ``run_joint_trajectory_unsafe``, it is posible to specify a trajectory composed of a set of joint states with specified timeouts and follow it.
+Using the methods ``run_joint_trajectory`` or ``run_joint_trajectory_unsafe``, it is possible to specify a trajectory composed of a set of joint states with specified timeouts and follow it.
 
 Example
 ^^^^^^^
@@ -337,12 +337,12 @@ Example
 
 Move to the start of a given trajectory
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Using the method ``move_to_trajectory_start``, it is posible create and execute a plan from the current state to the first state of a pre-existing trajectory
+Using the method ``move_to_trajectory_start``, it is possible create and execute a plan from the current state to the first state of a pre-existing trajectory
 
 Parameters:
 
 -  *trajectory* a previously defined trajectory
--  *wait* indicates if method should wait for movement end or not
+-  *wait* indicates if the method should wait for the movement to end or not
    (default value is True)
 
 Example
@@ -354,7 +354,7 @@ Example
 
 Move through a trajectory of predefined group states
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Using the method ``run_named_trajectory``, it is posible to specify a trajectory composed of a set of names of previously defined group states (either from SRDF or from warehouse), plan and move to follow it.
+Using the method ``run_named_trajectory``, it is possible to specify a trajectory composed of a set of names of previously defined group states (either from SRDF or from warehouse), plan and move to follow it.
 
 Parameters:
 
