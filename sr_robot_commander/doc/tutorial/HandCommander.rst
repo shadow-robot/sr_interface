@@ -64,7 +64,7 @@ different for every ``tactile_type`` .
 Set the maximum force
 ~~~~~~~~~~~~~~~
 
-Use the method **set\_max\_force** to set the maximum force for a hand joint.
+Use the method ``set_max_force`` to set the maximum force for a hand joint.
 
 Parameters:
 
