@@ -4,7 +4,7 @@ Arm Commander
 Overview
 ~~~~~~~~~~~
 
-The SrArmCommander inherits all methods from the `robot commander <RobotCommander.html>`__ and provides commands specific to the arm. It allows to move to certain position in cartesian space, to a configuration in joint space
+The SrArmCommander inherits all methods from the `robot commander <RobotCommander.html>`__ and provides commands specific to the arm. It allows movement to a certain position in cartesian space, to a configuration in joint space
 or move using certain trajectory.
 
 Setup
@@ -36,14 +36,14 @@ Plan/move to a position target
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Using the method ``move_to_position_target``, the end effector of the arm can be moved to a certain point
-in space represented by (x, y, z) coordinates. The orientation of the end effector can be any.
+in space represented by (x, y, z) coordinates. The orientation of the end effector can take any value.
 
 Parameters:
 
 -  *xyz* desired position of end-effector
 -  *end\_effector\_link* name of the end effector link (default value is
    empty string)
--  *wait* indicates if method should wait for movement end or not
+-  *wait*  indicates if the method should wait for the movement to end or not
    (default value is True)
 
 Example
@@ -65,7 +65,7 @@ Example
 Plan/move to a pose target
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Using the method ``move_to_pose_target`` allows to move the end effector of the arm to certain pose
+Using the method ``move_to_pose_target`` allows the end effector of the arm to be moved to a certain pose
 (position and orientation) in the space represented by (x, y, z, rot\_x,
 rot\_y, rot\_z).
 
@@ -76,7 +76,7 @@ Parameters:
    list of 7 floats [x, y, z, qx, qy, qz, qw]
 -  *end\_effector\_link* name of the end effector link (default value is
    empty string)
--  *wait* indicates if method should wait for movement end or not
+-  *wait* indicates if the method should wait for the movement to end or not
    (default value is True)
 
 Example
