@@ -9,7 +9,7 @@ from sr_robot_commander.sr_arm_commander import SrArmCommander
 import geometry_msgs.msg
 
 
-rospy.init_node("move_arm_following_waypoitn_trajectory", anonymous=True)
+rospy.init_node("move_arm_following_waypoint_trajectory", anonymous=True)
 
 arm_commander = SrArmCommander(set_ground=True)
 
@@ -24,7 +24,7 @@ arm_commander.execute()
 
 rospy.sleep(rospy.Duration(2))
 
-print "Moving following waypoints trajectory"
+print "Following trajectory defined by waypoints"
 waypoints = []
 
 # start with the initial position
