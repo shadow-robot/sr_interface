@@ -16,7 +16,7 @@ arm_commander = SrArmCommander(set_ground=True)
 rospy.sleep(rospy.Duration(1))
 
 # Moving arm to initial pose
-pose_1 = [ 0.32, 0.27, 1.026, 0.0, 0.0, 0.0, 1.0]
+pose_1 = [0.32, 0.27, 1.026, 0.0, 0.0, 0.0, 1.0]
 
 print "Moving to initial pose"
 arm_commander.plan_to_pose_target(pose_1)
@@ -34,21 +34,21 @@ waypoints.append(initial_pose)
 wpose = geometry_msgs.msg.Pose()
 wpose.position.x = waypoints[0].position.x
 wpose.position.y = waypoints[0].position.y - 0.20
-wpose.position.z = waypoints[0].position.z 
+wpose.position.z = waypoints[0].position.z
 wpose.orientation = initial_pose.orientation
 waypoints.append(wpose)
 
 wpose = geometry_msgs.msg.Pose()
 wpose.position.x = waypoints[0].position.x
 wpose.position.y = waypoints[0].position.y - 0.20
-wpose.position.z = waypoints[0].position.z - 0.20 
+wpose.position.z = waypoints[0].position.z - 0.20
 wpose.orientation = initial_pose.orientation
 waypoints.append(wpose)
 
 wpose = geometry_msgs.msg.Pose()
 wpose.position.x = waypoints[0].position.x
 wpose.position.y = waypoints[0].position.y
-wpose.position.z = waypoints[0].position.z - 0.20 
+wpose.position.z = waypoints[0].position.z - 0.20
 wpose.orientation = initial_pose.orientation
 waypoints.append(wpose)
 

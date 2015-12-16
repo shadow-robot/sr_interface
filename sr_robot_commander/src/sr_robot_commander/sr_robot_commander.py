@@ -70,8 +70,6 @@ class SrRobotCommander(object):
                                                           GetState)
         self._planning_scene = PlanningSceneInterface()
 
-        #self._move_group_commander.set_planner_id("ESTkConfigDefault")
-
         self._joint_states_lock = threading.Lock()
         self._joint_states_listener = \
             rospy.Subscriber("joint_states", JointState,

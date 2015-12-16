@@ -80,13 +80,13 @@ class SrArmCommander(SrRobotCommander):
         """
         self._plan_to_pose_target(pose, end_effector_link)
 
-    def set_ground(self, height = 0.1, z_position = -0.1):
+    def set_ground(self, height=0.1, z_position=-0.1):
         """
         Sets a plane for the ground.
         @param height - specifies the height of the plane
         @param z_position - position in z to place the plane. Should not collide with the robot.
         """
-        
+
         pose = PoseStamped()
         pose.pose.position.x = 0
         pose.pose.position.y = 0
