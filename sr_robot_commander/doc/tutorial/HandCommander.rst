@@ -4,7 +4,7 @@ Hand Commander
 Overview
 ~~~~~~~~~~~
 
-The SrHandCommander inherits all methods from the `robot commander <RobotCommander.html>`__ and provides commands specific to the hand. It allows to get state of tactile sensors, set maximum force and get joints effort.
+The SrHandCommander inherits all methods from the `robot commander <RobotCommander.html>`__ and provides commands specific to the hand. It allows the state of the tactile sensors and joints effort to be read, and the maximum force to be set.
 
 Setup
 ~~~~~~~~
@@ -17,7 +17,7 @@ Import the hand commander along with basic rospy libraries and the hand finder:
     from sr_robot_commander.sr_hand_commander import SrHandCommander
     from sr_utilities.hand_finder import HandFinder
 
-The constructor for the ``SrHandCommander`` take a name parameter that should match the group name of the robot to be used. Also it takes the hand prefix, parameters and serial number that can be retrieved using the `HandFinder <https://github.com/shadow-robot/sr_core/blob/indigo-devel/sr_utilities/scripts/sr_utilities/hand_finder.py>`__.
+The constructor for the ``SrHandCommander`` takes a name parameter that should match the group name of the robot to be used. Also it takes the hand prefix, parameters and serial number that can be retrieved using the `HandFinder <https://github.com/shadow-robot/sr_core/blob/indigo-devel/sr_utilities/scripts/sr_utilities/hand_finder.py>`__.
 
 Example
 ^^^^^^^
@@ -29,12 +29,12 @@ Example
     hand_parameters = hand_finder.get_hand_parameters()
     hand_serial = hand_parameters.mapping.keys()[0]
 
-    # If name is not provided, it will set "right_hand" or "left_hand" by default
+    # If name is not provided, it will set "right_hand" or "left_hand" by default, depending on the hand.
     hand_commander = SrHandCommander(name = "rh_first_finger",
                                      hand_parameters=hand_parameters,
                                      hand_serial=hand_serial)
     
-    # Alternatively you launch the hand directly
+    # Alternatively you can launch the hand directly
     hand_commander = SrHandCommander(name = "right_hand", prefix = "rh")
     
 Getting information
