@@ -112,7 +112,7 @@ def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
             with open(arm_yaml_path, 'r') as stream:
                 arm_yamldoc = yaml.load(stream)
 
-            output_str += "  - name: " + manipulator.arm.prefix + arm_yamldoc["controller_list"][0]["name"] + "\n"
+            output_str += "  - name: " + manipulator.arm.prefix + "trajectory_controller\n"
             output_str += "    action_ns: follow_joint_trajectory\n"
             output_str += "    type: FollowJointTrajectory\n"
             output_str += "    default: true\n"

@@ -45,7 +45,7 @@ roslib.load_manifest('sr_example')
 
 # Joints to be linked
 parent_name = "rh_ffj3"
-child_name = "rh_mfj3"
+child_name = "rh_rfj3"
 
 # Controller that controls joint position
 controller_type = "_position_controller"

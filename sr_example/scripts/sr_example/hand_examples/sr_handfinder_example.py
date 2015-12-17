@@ -24,12 +24,7 @@ hand_mapping = hand_parameters.mapping[hand_serial]
 # Hand joints are detected
 joints = hand_finder.get_hand_joints()[hand_mapping]
 
-if len(joints) is not 24:
-    rospy.loginfo("Less than 24 joints have been detected")
-    sys.exit("No hand detected")
-
-position_values = [0.35, 0.18, 0.38, -0.04, 0.35, 0.17, 0.41, -0.04, 0.35, 0.18, 0.38, 0.04,
-                   0.35, 0.17, 0.27, 0.02, 0.03, 0.35, 0.20, -0.09, 0.02, 0.00, 0.00, 0.02]
+position_values = [0.35, 0.18, 0.38]
 
 # Moving to a target determined by the values in position_values.
 rospy.loginfo("Hand moving to script specified target")

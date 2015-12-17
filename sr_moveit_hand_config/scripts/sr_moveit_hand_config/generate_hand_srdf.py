@@ -64,7 +64,18 @@ class SRDFHandGenerator(object):
         prefix = ""
         ff = mf = rf = lf = th = False
         is_lite = True
+        is_biotac = False
         hand_name = "right_hand"
+
+        # Check if hand has the old biotac sensors
+        for key in robot.link_map:
+            link = robot.link_map[key]
+            if link.visual:
+                if hasattr(link.visual.geometry, 'filename'):
+                    filename = os.path.basename(link.visual.geometry.filename)
+                    if filename == "biotac_decimated.dae":
+                        is_biotac = True
+                        break
 
         for key in robot.joint_map:
             # any joint is supposed to have the same prefix and a joint name with 4 chars
@@ -90,6 +101,7 @@ class SRDFHandGenerator(object):
 
         rospy.logdebug("Found fingers (ff mf rf lf th)" + str(ff) + str(mf) + str(rf) + str(lf) + str(th))
         rospy.logdebug("is_lite: " + str(is_lite))
+        rospy.logdebug("is_biotac: " + str(is_biotac))
         rospy.logdebug("Hand name: " + str(hand_name))
 
         set_substitution_args_context(
@@ -101,6 +113,7 @@ class SRDFHandGenerator(object):
                            'lf:=' + str(int(lf)),
                            'th:=' + str(int(th)),
                            'is_lite:=' + str(int(is_lite)),
+                           'is_biotac:=' + str(int(is_biotac)),
                            'hand_name:=' + str(hand_name)
                            ]))
 

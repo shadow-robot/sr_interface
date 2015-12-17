@@ -13,4 +13,4 @@ robot:
           - home
           - up
       hand:
-        name: shadowhand_left_motor.urdf.xacro
+        name: shadowhand_left_motor_biotac.urdf.xacro
