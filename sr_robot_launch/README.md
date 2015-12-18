@@ -9,7 +9,7 @@ To start our hand, simply do:
 roslaunch sr_robot_launch srhand.launch
 ```
 
-This will launch by default the five finger Shadow hand. If you want to launch another hand, these are the hands available:
+This will launch the five finger hand (shadowhand_motor) by default . If you want to launch another hand, these are the hands available:
 
 |![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_biotac.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_ff_biotac.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_btsp.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_ellipsoid.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_th_ff_rf_ellipsoid.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_muscle.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_muscle_biotac.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_lite.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_extra_lite.png)|
 --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
