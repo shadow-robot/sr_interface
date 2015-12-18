@@ -30,7 +30,7 @@ Import the hand or arm commander (or both) depending of your application, along 
     from sr_robot_commander.sr_arm_commander import SrArmCommander
     from sr_robot_commander.sr_hand_commander import SrHandCommander
 
-The constructors for the `SrArmCommander`` and ``SrHandCommander`` take a
+The constructors for the ``SrArmCommander`` and ``SrHandCommander`` take a
 name parameter that should match the group name of the robot to be used.
 
 Getting basic information
