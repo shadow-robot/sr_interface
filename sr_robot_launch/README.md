@@ -2,6 +2,11 @@
 
 ## Shadow hand only
 
+To start our hand, simply do:
+```bash
+roslaunch sr_robot_launch srhand.launch
+```
+
 ### Simulation
 
 These are the hands available:
@@ -28,13 +33,13 @@ These are the hands available:
 To start the simulation of a shadow hand, you can run:
 
 ```bash
-roslaunch sr_robot_launch srhand.launch use_moveit:=true robot_description:=`rospack find sr_description`/robots/shadowhand_motor.urdf.xacro
+roslaunch sr_robot_launch srhand.launch robot_description:=`rospack find sr_description`/robots/shadowhand_motor.urdf.xacro
 ```
 
 * The `robot description` param can be changed to start any of the available Shadow hands shown in the table.
 * If it is a left hand, `hand_id:=lh` should be added. For example: 
 ```bash
-roslaunch sr_robot_launch srhand.launch use_moveit:=true robot_description:=`rospack find sr_description`/robots/shadowhand_left_motor.urdf.xacro hand_id:=lh
+roslaunch sr_robot_launch srhand.launch robot_description:=`rospack find sr_description`/robots/shadowhand_left_motor.urdf.xacro hand_id:=lh
 ```
 * Moveit will enable advanced behaviour (inverse kinematics, planning, collision detectection, etc...), but if it is not needed, you can set `use_moveit:=false`
 
@@ -129,5 +134,5 @@ roslaunch sr_robot_launch sr_bimanual.launch use_moveit:=true
 To start the real robots, do:
 
 ```bash
-roslaunch sr_robot_launch sr_bimanual.launch use_moveit:=true sim:=false rh_serial:=1290 lh_serial:=1338
+roslaunch sr_robot_launch sr_bimanual.launch sim:=false rh_serial:=1290 lh_serial:=1338
 ```
