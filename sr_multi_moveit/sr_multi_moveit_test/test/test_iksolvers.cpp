@@ -1,3 +1,11 @@
+/**
+ * @file   test_iksolvers.cpp
+ * @author Shadow Software Team <software@shadowrobot.com>, Contact <contact@shadowrobot.com>
+ *
+ *
+ * Copyright 2015 Shadow Robot Company Ltd.
+*/
+
 #include <moveit/move_group_interface/move_group.h>
 #include <ctime>
 
@@ -45,8 +53,8 @@ int main(int argc, char **argv)
   ros::AsyncSpinner spinner(1);
   spinner.start();
   int num_succeeded_positions = 0;
-  double maximum=0.0;
-  double minimum=100;
+  double maximum = 0.0;
+  double minimum = 100;
 
   double elapsed_secs;
 
@@ -60,15 +68,15 @@ int main(int argc, char **argv)
     bool succeed = testIKsolvers->TestRandomState();
     if (succeed)
     {
-      num_succeeded_positions ++;
+      num_succeeded_positions++;
     }
     clock_t end = clock();
-    elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    maximum=(elapsed_secs>maximum)?elapsed_secs:maximum;
-    minimum=(elapsed_secs<minimum)?elapsed_secs:minimum;
+    elapsed_secs = static_cast<double>(end - begin) / CLOCKS_PER_SEC;
+    maximum = (elapsed_secs > maximum)?elapsed_secs:maximum;
+    minimum = (elapsed_secs < minimum)?elapsed_secs:minimum;
   }
   clock_t global_end = clock();
-  double global_elapsed_secs = double(global_end - global_begin) / CLOCKS_PER_SEC;
+  double global_elapsed_secs = static_cast<double>(global_end - global_begin) / CLOCKS_PER_SEC;
   ROS_INFO_STREAM("Number of valid ik plans " << num_succeeded_positions << "/" << total_random_queries);
   ROS_INFO_STREAM("Total time taken " << global_elapsed_secs);
   ROS_INFO_STREAM("Average time per test " << global_elapsed_secs/total_random_queries);

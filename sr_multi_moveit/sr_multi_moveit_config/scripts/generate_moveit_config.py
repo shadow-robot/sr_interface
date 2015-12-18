@@ -279,7 +279,8 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
                     output_str += "\n"
         if manipulator.has_hand:
                 # open hand template files
-            tracik_template_path = hand_template_path[0:hand_template_path.find("_template")] + "_tracik_template.yaml"
+            tracik_template_path = (hand_template_path[0:hand_template_path.find("_template")] +
+                                    "_tracik_template.yaml")
             with open(hand_template_path, 'r') as stream:
                 hand_yamldoc = yaml.load(stream)
             with open(tracik_template_path, 'r') as stream:
