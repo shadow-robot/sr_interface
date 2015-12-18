@@ -1,10 +1,4 @@
 #include <moveit/move_group_interface/move_group.h>
-#include <moveit/planning_scene_interface/planning_scene_interface.h>
-
-#include <moveit/planning_scene/planning_scene.h>
-#include <moveit/robot_model_loader/robot_model_loader.h>
-
-#include <eigen_conversions/eigen_msg.h>
 #include <ctime>
 
 class TestIKsolvers
