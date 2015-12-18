@@ -1,9 +1,0 @@
-<launch>
-  <!--include file = "$(find sr_multi_moveit_config)/launch/demo.launch">
-    <arg name = "visualization" value = "true" />
-  </include-->
-
-  <node name="test_iksolvers" pkg="sr_multi_moveit_test" type="test_iksolvers" respawn="false" output="screen"/>
-  
-
-</launch>

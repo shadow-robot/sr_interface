@@ -12,6 +12,5 @@ robot:
         group_states:
           - home
           - up
-        kinematic_solver: trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin
       hand:
         name: shadowhand_motor.urdf.xacro

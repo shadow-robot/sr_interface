@@ -10,7 +10,6 @@ add_executable(test_iksolvers test/test_iksolvers.cpp)
 target_link_libraries(test_iksolvers ${catkin_LIBRARIES})
 install(TARGETS test_iksolvers DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
-
 if (CATKIN_ENABLE_TESTING)
     find_package(rostest REQUIRED)
     add_rostest(test/test_planners_left_arm.test)

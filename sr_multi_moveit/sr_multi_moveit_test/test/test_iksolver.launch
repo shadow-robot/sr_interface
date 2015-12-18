@@ -1,0 +1,3 @@
+<launch>
+  <node name="test_iksolvers" pkg="sr_multi_moveit_test" type="test_iksolvers" respawn="false" output="screen"/>
+</launch>

@@ -1,9 +1,0 @@
-<launch>
-    <include file = "$(find sr_multi_moveit_config)/launch/demo.launch">
-        <arg name = "visualization" value = "true" />
-    </include>
-
-    <test test-name = "test_iksolver_trackIK" pkg = "sr_multi_moveit_test" type = "test_iksolvers.py"
-        time-limit = "300.0" retry = "3" args = "right_arm trackIK" />
-
-</launch>
