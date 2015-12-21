@@ -4,9 +4,9 @@ We are providing a [high level wrapper](../sr_robot_commander/README.html) aroun
 
 Use cases are given for:
 
--  [Hand] (https://github.com/shadow-robot/sr_interface/tree/indigo-devel/sr_example/scripts/sr_example/hand_examples)
--  [Arm] (https://github.com/shadow-robot/sr_interface/tree/indigo-devel/sr_example/scripts/sr_example/arm_examples)
--  [Hand and arm] (https://github.com/shadow-robot/sr_interface/tree/indigo-devel/sr_example/scripts/sr_example/hand_and_arm_examples)
+-  [Hand](https://github.com/shadow-robot/sr_interface/tree/indigo-devel/sr_example/scripts/sr_example/hand_examples)
+-  [Arm](https://github.com/shadow-robot/sr_interface/tree/indigo-devel/sr_example/scripts/sr_example/arm_examples)
+-  [Hand and arm](https://github.com/shadow-robot/sr_interface/tree/indigo-devel/sr_example/scripts/sr_example/hand_and_arm_examples)
 
 To run these examples, the robot should be launched first (instructions for this can be found [here](../sr_robot_launch/README.html)) 
 
