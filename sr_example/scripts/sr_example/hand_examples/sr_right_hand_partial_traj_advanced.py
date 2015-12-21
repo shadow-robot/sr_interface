@@ -229,7 +229,8 @@ grasp4 = {'rh_FFJ1': 0.0, 'rh_FFJ2': 0.0, 'rh_FFJ3': 1.5, 'rh_FFJ4': 0.0,
 
 grasp5 = {'rh_FFJ1': 0.0, 'rh_FFJ2': 0.0, 'rh_FFJ3': 1.5707, 'rh_FFJ4': 0.0,
           'rh_MFJ1': 0.0, 'rh_MFJ2': 0.0, 'rh_MFJ3': 0.0, 'rh_MFJ4': 0.0,
-          'rh_RFJ1': 0.0, 'rh_RFJ2': 0.0, 'rh_RFJ3': 1.5707, 'rh_RFJ4': 0.0,          'rh_LFJ1': 0.0, 'rh_LFJ2': 0.0, 'rh_LFJ3': 0.0, 'rh_LFJ4': 0.0,
+          'rh_RFJ1': 0.0, 'rh_RFJ2': 0.0, 'rh_RFJ3': 1.5707, 'rh_RFJ4': 0.0,
+          'rh_LFJ1': 0.0, 'rh_LFJ2': 0.0, 'rh_LFJ3': 0.0, 'rh_LFJ4': 0.0,
           'rh_LFJ5': 0.0, 'rh_THJ1': 0.0, 'rh_THJ2': 0.0, 'rh_THJ3': 0.0,
           'rh_THJ4': 0.0, 'rh_THJ5': 0.0}
 
@@ -246,12 +247,12 @@ if __name__ == '__main__':
 
     hand_parameters = hand_finder.get_hand_parameters()
     hand_serial = hand_parameters.mapping.keys()[0]
-    
+
     hand_commander = SrHandCommander(hand_parameters=hand_parameters,
                                      hand_serial=hand_serial)
-    
+
     hand_mapping = hand_parameters.mapping[hand_serial]
-    
+
     # Hand joints are detected
     joints = hand_finder.get_hand_joints()[hand_mapping]
 
