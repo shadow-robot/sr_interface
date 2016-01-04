@@ -279,11 +279,12 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
                     output_str += "\n"
         if manipulator.has_hand:
                 # open hand template files
-            kdl_template_path = hand_template_path[0:hand_template_path.find("_template")] + "_kdl_template.yaml"
+            tracik_template_path = (hand_template_path[0:hand_template_path.find("_template")] +
+                                    "_tracik_template.yaml")
             with open(hand_template_path, 'r') as stream:
                 hand_yamldoc = yaml.load(stream)
-            with open(kdl_template_path, 'r') as stream:
-                hand_yamldockdl = yaml.load(stream)
+            with open(tracik_template_path, 'r') as stream:
+                hand_yamldock_tracik = yaml.load(stream)
 
             prefix = manipulator.hand.prefix
             finger_prefixes = ["FF", "MF", "RF", "LF", "TH"]
@@ -315,7 +316,7 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
 
                 if group_name in hand_yamldoc and group_prefix == prefix:
                     if is_fixed.get(group_name):
-                        kinematics_config = hand_yamldockdl[group_name]
+                        kinematics_config = hand_yamldock_tracik[group_name]
                     else:
                         kinematics_config = hand_yamldoc[group_name]
 

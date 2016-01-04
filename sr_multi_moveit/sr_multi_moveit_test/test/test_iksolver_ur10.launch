@@ -1,0 +1,8 @@
+<launch>
+  <include file = "$(find sr_multi_moveit_config)/launch/demo.launch">
+    <arg name = "visualization" value = "false" />
+    <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/>
+    <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
+  </include>
+  <node pkg="sr_multi_moveit_config" type="timed_roslaunch.sh" args="8 sr_multi_moveit_test test_iksolver.launch" name="test_iksolvers" output="screen"/>
+</launch>

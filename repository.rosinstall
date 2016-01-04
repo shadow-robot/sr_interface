@@ -42,3 +42,8 @@
     local-name: ros_controllers
     uri: https://github.com/shadow-robot/ros_controllers.git
     version: F#182_partial_trajectory_mod
+
+- git:
+    local-name: trac_ik
+    uri: https://bitbucket.org/traclabs/trac_ik.git
+    version: 'master'
