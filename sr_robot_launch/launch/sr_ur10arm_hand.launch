@@ -47,10 +47,9 @@
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
-    <arg name="world_name" value="$(arg world)"/>
     <arg name="paused" value="false"/>
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-      <arg name="world_name" default="$(arg world_name)"/>
+      <arg name="world_name" default="$(arg world)"/>
       <arg name="gui" default="$(arg gui)"/>
       <arg name="paused" value="$(arg paused)"/>
       <arg name="debug" value="$(arg debug)"/>
