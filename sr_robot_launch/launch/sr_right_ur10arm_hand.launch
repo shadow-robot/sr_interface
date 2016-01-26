@@ -11,6 +11,7 @@
   <arg name="gui" default="true"/>
   <!-- Serial number of the hand to be used-->
   <arg name="hand_serial" default="1082"/>
+  <arg name="eth_port" default="eth2"/>
 
   <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
@@ -30,5 +31,6 @@
     <arg name="arm_controller" value="$(find sr_robot_launch)/config/$(arg side)_ur_arm_controller.yaml"/>
     <arg name="arm_group_name" value="$(arg side)_arm"/>
     <arg name="hand_serial" value="$(arg hand_serial)"/>
+    <arg name="eth_port" value="$(arg eth_port)"/>
   </include>
 </launch>
