@@ -97,7 +97,7 @@
     <!-- <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"/> -->
     <group if="$(arg arm_trajectory)">
       <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen">
-        <rosparam param="controllers"> ["ra_sr_ur_controller"] </rosparam>
+        <rosparam param="controllers" subst_value="true"> ["$(arg arm_id)_sr_ur_controller"] </rosparam>
       </node>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
             args="--wait-for=/arms_ready --shutdown-timeout=1.0 $(arg arm_id)_trajectory_controller"/>
