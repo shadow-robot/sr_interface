@@ -30,7 +30,7 @@
     <node pkg="sr_multi_moveit_config" type="timed_roslaunch.sh" args="10 sr_multi_moveit_config moveit_rviz.launch 
       config:=true 
       debug:=$(arg debug)
-      robot_config_file:=$(arg robot_config_file)" name="timed_roslaunch_rviz" output="screen"
+      robot_config_file:=$(arg robot_config_file)" name="timed_roslaunch_rviz" output="screen" respawn="true"
     />
   </group>
 </launch>
