@@ -8,7 +8,7 @@ robot:
         main_group: manipulator
         moveit_path: 
           package: sr_multi_moveit_config
-          relative_path: /config/ur10
+          relative_path: /config/ur
         group_states:
           - home
           - up
