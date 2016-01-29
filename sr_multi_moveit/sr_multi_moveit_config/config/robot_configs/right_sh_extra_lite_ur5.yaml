@@ -1,10 +1,10 @@
 robot:
-  name: ur10srh
+  name: ur5srh
   manipulators:
     right_manipulator:
       side: right
       arm:
-        name: ur10
+        name: ur5
         main_group: manipulator
         moveit_path: 
           package: sr_multi_moveit_config
@@ -13,4 +13,5 @@ robot:
           - home
           - up
       hand:
-        name: shadowhand_motor_biotac.urdf.xacro
+        name: shadowhand_extra_lite.urdf.xacro
+        is_lite: true

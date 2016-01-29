@@ -1,5 +1,5 @@
 <launch>
-  <!-- This launch file is for a combination of ur10 arms and shadow hands -->
+  <!-- This launch file is for a combination of ur arms and shadow hands -->
 
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
   <arg name="sim" default="true"/>
@@ -15,11 +15,12 @@
   <arg name="hand_id" default="rh"/>
   <arg name="arm_id" default="ra"/>
   <arg name="side" default="right"/>
+  <arg name="robot_model" default="ur10"/>  
   
   <!-- Change this for another hand -->
-  <arg name="robot_description" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_ur10_joint_limited.urdf.xacro"/>
-  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_ur10.yaml"/>
-  <arg name="robot_name" default="ur10srh"/>
+  <arg name="robot_description" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model)_joint_limited.urdf.xacro"/>
+  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
+  <arg name="robot_name" default="$(arg robot_model)srh"/>
 
   <!-- ARM -->
   <arg name="arm_controller" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_controller.yaml"/>
@@ -97,7 +98,7 @@
     <!-- <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"/> -->
     <group if="$(arg arm_trajectory)">
       <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen">
-        <rosparam param="controllers" subst_value="true"> ["$(arg arm_id)_sr_ur_controller"] </rosparam>
+        <rosparam param="controllers" subst_value="True"> ["$(arg arm_id)_sr_ur_controller"] </rosparam>
       </node>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
             args="--wait-for=/arms_ready --shutdown-timeout=1.0 $(arg arm_id)_trajectory_controller"/>
