@@ -104,7 +104,7 @@ class SRDFHandGenerator(object):
         rospy.logdebug("is_biotac: " + str(is_biotac))
         rospy.logdebug("Hand name: " + str(hand_name))
 
-        xacro.substitution_args_context['args'] = (
+        xacro.substitution_args_context['arg'] = (
             load_mappings(['prefix:=' + str(prefix),
                            'robot_name:=' + robot.name,
                            'ff:=' + str(int(ff)),
@@ -131,13 +131,11 @@ class SRDFHandGenerator(object):
 
         # expand the xacro
         xacro.process_includes(self.srdf_xacro_xml, os.path.dirname(sys.argv[0]))
-        macros = xacro.grab_macros(self.srdf_xacro_xml, {})
-        table = xacro.Table()
-
-        symbols = xacro.grab_properties(self.srdf_xacro_xml, table)
-        # xacro.eval_all(self.srdf_xacro_xml.documentElement, macros, symbols)
-        xacro.handle_macro_call(self.srdf_xacro_xml.documentElement, macros, symbols)
-        # xacro.eval_self_contained(self.srdf_xacro_xml)
+        macros = {}
+        xacro.grab_macros(self.srdf_xacro_xml, macros)
+        symbols = xacro.Table()
+        xacro.grab_properties(self.srdf_xacro_xml, symbols)
+        xacro.eval_all(self.srdf_xacro_xml.documentElement, macros, symbols)
 
         if len(sys.argv) > 1:
             OUTPUT_PATH = sys.argv[1]
