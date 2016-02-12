@@ -42,7 +42,6 @@ from xml.dom.minidom import parse
 import xacro
 import rospy
 import rospkg
-# from xacro import set_substitution_args_context
 from rosgraph.names import load_mappings
 
 from sr_utilities.local_urdf_parser_py import URDF
