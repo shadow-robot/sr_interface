@@ -42,7 +42,6 @@ from xml.dom.minidom import parse
 import xacro
 import rospy
 import rospkg
-from xacro import set_substitution_args_context
 from rosgraph.names import load_mappings
 
 from sr_utilities.local_urdf_parser_py import URDF
@@ -104,7 +103,7 @@ class SRDFHandGenerator(object):
         rospy.logdebug("is_biotac: " + str(is_biotac))
         rospy.logdebug("Hand name: " + str(hand_name))
 
-        set_substitution_args_context(
+        xacro.substitution_args_context['arg'] = (
             load_mappings(['prefix:=' + str(prefix),
                            'robot_name:=' + robot.name,
                            'ff:=' + str(int(ff)),
@@ -131,7 +130,11 @@ class SRDFHandGenerator(object):
 
         # expand the xacro
         xacro.process_includes(self.srdf_xacro_xml, os.path.dirname(sys.argv[0]))
-        xacro.eval_self_contained(self.srdf_xacro_xml)
+        macros = {}
+        xacro.grab_macros(self.srdf_xacro_xml, macros)
+        symbols = xacro.Table()
+        xacro.grab_properties(self.srdf_xacro_xml, symbols)
+        xacro.eval_all(self.srdf_xacro_xml.documentElement, macros, symbols)
 
         if len(sys.argv) > 1:
             OUTPUT_PATH = sys.argv[1]
