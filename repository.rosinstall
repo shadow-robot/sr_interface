@@ -34,6 +34,11 @@
     version: shadow-indigo-latest
 
 - git:
+    local-name: moveit_core
+    uri: https://github.com/ros-planning/moveit_core.git
+    version: indigo-devel
+
+- git:
     local-name: moveit_msgs
     uri: https://github.com/ros-planning/moveit_msgs.git
     version: indigo-devel
