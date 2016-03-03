@@ -55,8 +55,7 @@ class SrGraspSaverUnsafe(object):
             hand_parameters = hand_finder.get_hand_parameters()
             hand_serial = hand_parameters.mapping.keys()[0]
 
-            self.__commander = SrHandCommander(hand_parameters=hand_parameters,
-                                                    hand_serial=hand_serial)
+            self.__commander = SrHandCommander(hand_parameters=hand_parameters, hand_serial=hand_serial)
         else:
             self.__arm_commander = SrArmCommander()
 
