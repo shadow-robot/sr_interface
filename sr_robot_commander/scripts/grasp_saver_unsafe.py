@@ -45,15 +45,27 @@ class SrGraspSaverUnsafe(object):
             'save_robot_state', SaveState)
 
         self.__name = name
-        self.__arm_commander = SrArmCommander()
 
-        hand_finder = HandFinder()
+        if hand_or_arm == "arm":
+            self.__commander = SrArmCommander()
 
-        hand_parameters = hand_finder.get_hand_parameters()
-        hand_serial = hand_parameters.mapping.keys()[0]
+        elif hand_or_arm == 'hand':
+            hand_finder = HandFinder()
 
-        self.__hand_commander = SrHandCommander(hand_parameters=hand_parameters,
-                                                hand_serial=hand_serial)
+            hand_parameters = hand_finder.get_hand_parameters()
+            hand_serial = hand_parameters.mapping.keys()[0]
+
+            self.__commander = SrHandCommander(hand_parameters=hand_parameters, hand_serial=hand_serial)
+        else:
+            self.__arm_commander = SrArmCommander()
+
+            hand_finder = HandFinder()
+
+            hand_parameters = hand_finder.get_hand_parameters()
+            hand_serial = hand_parameters.mapping.keys()[0]
+
+            self.__hand_commander = SrHandCommander(hand_parameters=hand_parameters,
+                                                    hand_serial=hand_serial)
 
         self.__hand_or_arm = hand_or_arm
 
@@ -64,15 +76,16 @@ class SrGraspSaverUnsafe(object):
 
         if self.__hand_or_arm == "both":
             current_dict = self.__arm_commander.get_robot_state_bounded()
+            robot_name = self.__arm_commander.get_robot_name()
         elif self.__hand_or_arm == "arm":
-            current_dict = self.__arm_commander.get_current_state_bounded()
+            current_dict = self.__commander.get_current_state_bounded()
+            robot_name = self.__commander.get_robot_name()
         elif self.__hand_or_arm == "hand":
-            current_dict = self.__hand_commander.get_current_state_bounded()
+            current_dict = self.__commander.get_current_state_bounded()
+            robot_name = self.__commander.get_robot_name()
         else:
             rospy.logfatal("Unknown save type")
             exit(-1)
-
-        robot_name = self.__arm_commander.get_robot_name()
 
         rospy.loginfo(current_dict)
         rs.joint_state = JointState()
