@@ -23,7 +23,7 @@ class TestPlanners(TestCase):
 
     def setUp(self):
         # sleep to wait for robot description to be loaded
-        rospy.sleep(5)
+        rospy.sleep(8)
         group_id = str(sys.argv[1])
         planner_id = str(sys.argv[2])
 
