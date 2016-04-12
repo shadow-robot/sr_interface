@@ -19,8 +19,6 @@
   <run_depend>sr_robot_commander</run_depend>
   <run_depend>sr_example</run_depend>
   <run_depend>bimanual_moveit_config</run_depend>
-  <run_depend>left_sr_ur10_moveit_config</run_depend>
-  <run_depend>right_sr_ur10_moveit_config</run_depend>
   <run_depend>sr_multi_moveit_test</run_depend>
   <run_depend>sr_multi_description</run_depend>
   <run_depend>sr_robot_launch</run_depend>
