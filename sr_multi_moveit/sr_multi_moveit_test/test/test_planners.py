@@ -12,7 +12,7 @@ from moveit_msgs.msg import DisplayRobotState
 import geometry_msgs.msg
 import copy
 #
-PKG = "right_sr_ur10_moveit_config"
+PKG = "sr_multi_moveit_config"
 
 
 class TestPlanners(TestCase):
@@ -22,6 +22,8 @@ class TestPlanners(TestCase):
     """
 
     def setUp(self):
+        # sleep to wait for robot description to be loaded
+        rospy.sleep(5)
         group_id = str(sys.argv[1])
         planner_id = str(sys.argv[2])
 
