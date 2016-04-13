@@ -172,6 +172,9 @@ class SrRobotCommander(object):
     def get_robot_name(self):
         return self._robot_name
 
+    def named_target_in_srdf(self, name):
+        return name in self._srdf_names
+
     def set_named_target(self, name):
         if name in self._srdf_names:
             self._move_group_commander.set_named_target(name)
