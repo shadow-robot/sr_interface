@@ -29,7 +29,6 @@ class WarehousePlanner(object):
         self.jump_threshold = rospy.get_param("~jump_threshold", 1000)
 
         self.group = MoveGroupCommander(group_id)
-        self._add_ground()
         self._robot_name = self.robot._r.get_robot_name()
         self._robot_link = self.group.get_end_effector_link()
         self._robot_frame = self.group.get_pose_reference_frame()
@@ -90,21 +89,6 @@ class WarehousePlanner(object):
                 rospy.logerr("Waypoint %s doesn't exist for robot %s.", name,
                              self._robot_name)
         return waypoints
-
-    def _add_ground(self):
-        p = geometry_msgs.msg.PoseStamped()
-        p.header.frame_id = self.robot.get_planning_frame()
-
-        p.pose.position.x = 0
-        p.pose.position.y = 0
-        # offset such that the box is below the dome
-        p.pose.position.z = -0.12
-        p.pose.orientation.x = 0
-        p.pose.orientation.y = 0
-        p.pose.orientation.z = 0
-        p.pose.orientation.w = 1
-        self.scene.add_box("ground", p, (3, 3, 0.1))
-        rospy.sleep(1)
 
     def plan_from_filter(self, prefix):
         waypoint_names = self.get_waypoint_names_by_prefix(prefix)
