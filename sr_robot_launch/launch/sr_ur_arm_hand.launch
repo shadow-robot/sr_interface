@@ -15,8 +15,8 @@
   <arg name="hand_id" default="rh"/>
   <arg name="arm_id" default="ra"/>
   <arg name="side" default="right"/>
-  <arg name="robot_model" default="ur10"/>  
-  
+  <arg name="robot_model" default="ur10"/>
+
   <!-- Change this for another hand -->
   <arg name="robot_description" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model)_joint_limited.urdf.xacro"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
@@ -77,7 +77,7 @@
   <!-- REAL ROBOTS -->
   <group unless="$(arg sim)">
     <!-- HAND -->
-    <include file="$(find sr_edc_launch)/sr_edc.launch"> 
+    <include file="$(find sr_edc_launch)/sr_edc.launch">
       <arg name="debug" value="$(arg debug)"/>
       <arg name="eth_port" value="$(arg eth_port)"/>
       <arg name="robot_description" value="$(arg robot_description)"/>
@@ -112,10 +112,12 @@
       <arg name="gui" default="$(arg gui)"/>
       <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
     </include>
-    <!--include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/-->
-    <!--include file="$(find sr_robot_launch)/launch/trajectory_services.launch">
-      <arg name="arm_group_name" value="$(arg arm_group_name)"/>
-    </include-->
+    <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
+
+    <node pkg="sr_multi_moveit_config" type="timed_roslaunch.sh" args="10 sr_robot_launch trajectory_services.launch
+      arm_group_name:=$(arg arm_group_name)" name="timed_trajectory_services" output="screen"
+    />
+
   </group>
 
   <!-- Trajectory controller -->
