@@ -313,7 +313,7 @@ class TestPlanners(TestCase):
             1.22262556307, -
             2.22935714353, 1.94043810556, 0.288788732588, 1.22183316693, 0.0873097240233,
             0.0, 0.0]
-        self.assertTrue(
+        self.assertFalse(
             self._plan_joints(joints), msg="Unable to plan to: " + str(joints))
 
         # Goal close to right corner
