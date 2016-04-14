@@ -113,9 +113,11 @@
       <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
     </include>
     <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
-    <include file="$(find sr_robot_launch)/launch/trajectory_services.launch">
-      <arg name="arm_group_name" value="$(arg arm_group_name)"/>
-    </include>
+
+    <node pkg="sr_multi_moveit_config" type="timed_roslaunch.sh" args="10 sr_robot_launch trajectory_services.launch
+      arm_group_name:=$(arg arm_group_name)" name="timed_trajectory_services" output="screen"
+    />
+
   </group>
 
   <!-- Trajectory controller -->
