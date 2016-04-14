@@ -11,6 +11,7 @@ from moveit_msgs.msg import RobotState
 from moveit_msgs.msg import DisplayRobotState
 import geometry_msgs.msg
 import copy
+import time
 #
 PKG = "sr_multi_moveit_config"
 
@@ -22,8 +23,6 @@ class TestPlanners(TestCase):
     """
 
     def setUp(self):
-        # sleep to wait for robot description to be loaded
-        rospy.sleep(8)
         group_id = str(sys.argv[1])
         planner_id = str(sys.argv[2])
 
@@ -327,4 +326,7 @@ class TestPlanners(TestCase):
 
 if __name__ == "__main__":
     import rostest
+    # sleep to wait for robot description to be loaded
+    while not rospy.search_param('robot_description_semantic') and not rospy.is_shutdown():
+        time.sleep(0.5)
     rostest.rosrun(PKG, "test_planners", TestPlanners)
