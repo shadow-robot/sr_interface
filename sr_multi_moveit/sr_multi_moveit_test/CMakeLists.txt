@@ -12,7 +12,5 @@ install(TARGETS test_iksolvers DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 if (CATKIN_ENABLE_TESTING)
     find_package(rostest REQUIRED)
-    add_rostest(test/test_planners_left_arm.test)
-    add_rostest(test/test_planners_right_arm.test)
     add_rostest(test/test_biotac_collada_name.test)
 endif ()
