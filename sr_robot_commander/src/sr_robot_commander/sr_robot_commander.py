@@ -41,6 +41,7 @@ from moveit_msgs.srv import GetPositionFK
 from std_msgs.msg import Header
 
 import tf
+import copy
 
 
 class SrRobotCommander(object):
@@ -140,12 +141,13 @@ class SrRobotCommander(object):
         @param wait - should method wait for movement end or not
         @param angle_degrees - are joint_states in degrees or not
         """
+        joint_states_cpy = copy.deepcopy(joint_states)
 
         if angle_degrees:
-            joint_states.update((joint, radians(i))
-                                for joint, i in joint_states.items())
+            joint_states_cpy.update((joint, radians(i))
+                                    for joint, i in joint_states_cpy.items())
         self._move_group_commander.set_start_state_to_current_state()
-        self._move_group_commander.set_joint_value_target(joint_states)
+        self._move_group_commander.set_joint_value_target(joint_states_cpy)
         self._move_group_commander.go(wait=wait)
 
     def plan_to_joint_value_target(self, joint_states, angle_degrees=False):
@@ -156,11 +158,13 @@ class SrRobotCommander(object):
         @param angle_degrees - are joint_states in degrees or not
         This is a blocking method.
         """
+        joint_states_cpy = copy.deepcopy(joint_states)
+
         if angle_degrees:
-            joint_states.update((joint, radians(i))
-                                for joint, i in joint_states.items())
+            joint_states_cpy.update((joint, radians(i))
+                                    for joint, i in joint_states_cpy.items())
         self._move_group_commander.set_start_state_to_current_state()
-        self._move_group_commander.set_joint_value_target(joint_states)
+        self._move_group_commander.set_joint_value_target(joint_states_cpy)
         self.__plan = self._move_group_commander.plan()
 
     def check_plan_is_valid(self):
@@ -539,15 +543,18 @@ class SrRobotCommander(object):
         """
         # self._update_default_trajectory()
         # self._set_targets_to_default_trajectory(joint_states)
+        joint_states_cpy = copy.deepcopy(joint_states)
+
         if angle_degrees:
-            joint_states.update((joint, radians(i))
-                                for joint, i in joint_states.items())
+            joint_states_cpy.update((joint, radians(i))
+                                    for joint, i in joint_states_cpy.items())
+
         goal = FollowJointTrajectoryGoal()
-        goal.trajectory.joint_names = list(joint_states.keys())
+        goal.trajectory.joint_names = list(joint_states_cpy.keys())
         point = JointTrajectoryPoint()
         point.time_from_start = rospy.Duration.from_sec(time)
         for key in goal.trajectory.joint_names:
-            point.positions.append(joint_states[key])
+            point.positions.append(joint_states_cpy[key])
 
         goal.trajectory.points = []
         goal.trajectory.points.append(point)
