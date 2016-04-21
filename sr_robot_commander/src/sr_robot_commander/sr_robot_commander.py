@@ -145,7 +145,7 @@ class SrRobotCommander(object):
 
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
-                                for joint, i in joint_states_cpy.items())
+                                    for joint, i in joint_states_cpy.items())
         self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
         self._move_group_commander.go(wait=wait)
@@ -162,7 +162,7 @@ class SrRobotCommander(object):
 
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
-                                for joint, i in joint_states_cpy.items())
+                                    for joint, i in joint_states_cpy.items())
         self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
         self.__plan = self._move_group_commander.plan()
@@ -547,7 +547,7 @@ class SrRobotCommander(object):
 
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
-                                for joint, i in joint_states_cpy.items())
+                                    for joint, i in joint_states_cpy.items())
 
         goal = FollowJointTrajectoryGoal()
         goal.trajectory.joint_names = list(joint_states_cpy.keys())
