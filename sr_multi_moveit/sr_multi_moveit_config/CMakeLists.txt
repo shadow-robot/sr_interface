@@ -12,4 +12,4 @@ install(PROGRAMS scripts/generate_load_moveit_config.py
                  scripts/generate_robot_srdf.py
                  scripts/timed_roslaunch.sh
                  scripts/virtual_joint_broadcaster.py
-       DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
