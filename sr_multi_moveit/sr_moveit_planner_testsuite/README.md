@@ -11,6 +11,8 @@ roslaunch sr_moveit_planner_testsuite test_ompl_planning.launch complex:=true
 ```
 To select either sbpl or stomp, test_sbpl_planning.launch or test_stomp_planning.launch should be selected. To run the test with the simple scene, remove the 'complex' parameter, this defaults to false.
 
+When each planning request is made, a small red sphere is dispayed to represent the goal EE position and the path of the end effector plan is displayed.
+
 # Configuration
 
 Currently the configurations for SBPL and STOMP are not generated automatically as OMPL is. The argument 
@@ -22,3 +24,4 @@ The point cloud for collision_scene_2 is generated from two rosbags of pointclou
 office_scene.bag and office_scene_2.bag, [here](pointclouds/). These bags are played during launch and have a duration 
 of 1s. To synchronise the time of the rosbags with the simulated time in Gazebo, a 
 [simple script](scripts/header_time_adjust.py) is run. The start of the rosbag 'play' is delayed for 25s to allow everything to load.
+
