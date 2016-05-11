@@ -1,0 +1,26 @@
+<launch>
+  <arg name="path" default="$(find sr_moveit_planner_testsuite)/point_clouds"/>
+  <arg name="complex" default="false"/>
+  <arg name="planning" default="ompl"/>
+  <arg name="visualization" default="true"/>
+  <!--Should the planner yaml be automatically generated? -->
+  <arg name="generate_planning_config" default="True"/>
+
+  <include file = "$(find sr_multi_moveit_config)/launch/demo.launch">
+    <arg name="planning" value="$(arg planning)"/>
+    <arg name="visualization" value="$(arg visualization)"/>
+    <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
+  </include>
+
+  <group if="$(arg complex)">
+    <node name="collision_scene_2" type="collision_scene_2.py" pkg="sr_moveit_planner_testsuite" />
+    <node pkg="rosbag" type="play" name="player" output="screen"
+      args="-d 25 -q $(arg path)/office_scene.bag camera/depth_registered/points_transformed:=/camera/depth_registered/points_old $(arg path)/office_scene_2.bag /camera/depth_registered/points_transformed:=/camera/depth_registered/points_old" />
+      <node name="header_time_adjust" type="header_time_adjust.py" pkg="sr_moveit_planner_testsuite"/>
+  </group>
+
+  <group unless="$(arg complex)">
+    <node name="collision_scene_1" type="collision_scene_1.py" pkg="sr_moveit_planner_testsuite" />
+  </group>
+
+</launch>

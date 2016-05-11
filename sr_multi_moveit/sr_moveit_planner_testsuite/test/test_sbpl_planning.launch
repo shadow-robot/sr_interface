@@ -1,0 +1,15 @@
+<launch>
+  <arg name="complex" default="false" />
+  <include file = "$(find sr_moveit_planner_testsuite)/launch/testsuite.launch">
+    <arg name="planning" value="sbpl"/>
+    <arg name="generate_planning_config" default="False"/>
+    <arg name="complex" value="$(arg complex)"/>
+  </include>
+
+  <node if="$(arg complex)" name = "test_planner_complex" pkg = "sr_moveit_planner_testsuite" type = "test_planners_complex.py"
+    args = "1 sbpl"
+    output="screen"/>
+  <node unless="$(arg complex)" name = "test_planner_simple" pkg = "sr_moveit_planner_testsuite" type = "test_planners.py"
+    args = "1 sbpl"
+    output="screen"/>
+</launch>
