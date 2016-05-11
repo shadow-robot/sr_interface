@@ -174,7 +174,7 @@ def main(num, list):
     if list == "stomp":
         planner_list = ["STOMP"]
     elif list == "sbpl":
-        planner_list = [""]
+        planner_list = ["AnytimeD*"]
     else:
         planner_list = ["BKPIECEkConfigDefault", "ESTkConfigDefault", "KPIECEkConfigDefault", "LBKPIECEkConfigDefault",
                         "PRMkConfigDefault", "RRTkConfigDefault", "SBLkConfigDefault", "PRMstarkConfigDefault",

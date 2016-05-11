@@ -24,6 +24,7 @@ Currently the configurations for SBPL and STOMP are not generated automatically 
 In each of the launch files, a script is launched as a node, test_planners.py or test_planners_complex.py. 2 arguments are set, the first being the number of planning attempts for each goal and the second being the planning library name. ompl is currently set to 10, sbpl is set to 1 because of the way that search based planning works, all possible paths are explored for each planning request. Stomp has also been set to 1, currently it takes far longer to search for a plan, the config file has been edited to meet sugestions [here](https://groups.google.com/forum/#!msg/swri-ros-pkg-dev/sNvFmkQsMtg/mGPrXDy8EwAJ), but probably needs more tweaks.
 
 # Notes
+ARA* planner in sbpl currently causes movegroup to crash during the 2nd planning request.
 The point cloud for collision_scene_2 is generated from two rosbags of pointcloud data, 
 office_scene.bag and office_scene_2.bag, [here](pointclouds/). These bags are played during launch and have a duration 
 of 1s. To synchronise the time of the rosbags with the simulated time in Gazebo, a 
