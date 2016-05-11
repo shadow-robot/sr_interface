@@ -2,7 +2,11 @@
 
 A package to test the different MoveIt planners. Planners currently configured are OMPL, SBPL and STOMP.
 There are two test scenes, 'collision_scene_1' and 'collision_scene_2'; with the first being a simple scene with box 
-obstacles and the second being more complex with an octomap generated from a kinect2 point cloud. The scpl repository can be found [here](https://github.com/shadow-robot/sandbox) and stomp [here](https://github.com/ros-industrial/industrial_moveit).
+obstacles and the second being more complex with an octomap generated from a kinect2 point cloud. The scpl repository can be found [here](https://github.com/shadow-robot/sandbox) and stomp [here](https://github.com/ros-industrial/industrial_moveit). Before launching any of the tests, the point cloud bag files need to be decompressed. The pointclouds reside [here](pointclouds/), and should be decompressed by running:
+```
+rosbag decompress *.bag
+```
+
 # Launch
 
 For east scene there are a series of tests, moving the robot around the scene to different joint goals; stomp does not accept pose goals. Metrics for the success of each test are generated and displayed at the end of the test in a table. The test can be launched with any of the three planning libraries; ompl, stomp or sbpl and all tests will be run for each of the planners in the library. To launch the UR10 arm and shadowhand in simulation with complex collision scene and run a test for ompl planners, run:
