@@ -22,6 +22,7 @@ class TestPlanners(object):
         self.scene = PlanningSceneInterface()
         self.robot = RobotCommander()
         self.group = MoveGroupCommander(group_id)
+        self._marker_pub = rospy.Publisher('/visualization_marker', Marker, queue_size=10, latch=True)
         rospy.sleep(1)
 
         self.group.set_planner_id(self.planner_id)
@@ -32,33 +33,68 @@ class TestPlanners(object):
         group_start_joints = self.group.get_current_joint_values()
         group_start_joints[0:6] = self.joints[0:6]
         self.group.set_joint_value_target(group_start_joints)
+        self._add_marker_label([1.25, 0, 0.3], "start")
         self.planner_data = []
 
-        self._marker_pub = rospy.Publisher('/visualization_marker', Marker, queue_size=1, latch=True)
-        self.id = 0
         self.test_goal_1()
         self.test_goal_2()
         self.test_goal_3()
 
-    def _add_marker(self, point):
-        self.id += 1
+    def _add_marker(self, point, point_type):
         goal_marker = Marker()
         goal_marker.header.frame_id = "world"
-        goal_marker.id = self.id
         goal_marker.type = Marker.SPHERE
+
         goal_marker.pose.position.x = point[0]
         goal_marker.pose.position.y = point[1]
         goal_marker.pose.position.z = point[2]
-        goal_marker.scale.x = 0.05
-        goal_marker.scale.y = 0.05
-        goal_marker.scale.z = 0.05
-        goal_marker.color.r = 0.5
-        goal_marker.color.g = 0.0
-        goal_marker.color.b = 0.0
-        goal_marker.color.a = 1.0
+        goal_marker.scale.x = 0.04
+        goal_marker.scale.y = 0.04
+        goal_marker.scale.z = 0.04
+
+        if point_type == "goal":
+            goal_marker.id = 0
+            goal_marker.color.r = 0.5
+            goal_marker.color.g = 0.0
+            goal_marker.color.b = 0.0
+            goal_marker.color.a = 1.0
+
+        else:
+            goal_marker.id = 2
+            goal_marker.color.r = 0.0
+            goal_marker.color.g = 0.5
+            goal_marker.color.b = 0.0
+            goal_marker.color.a = 1.0
+
         goal_marker.lifetime = rospy.Duration()
+
         self._marker_pub.publish(goal_marker)
-        rospy.sleep(2)
+        rospy.sleep(0.25)
+        self._add_marker_label(point, point_type)
+
+    def _add_marker_label(self, point, point_type):
+        goal_marker_label = Marker()
+        goal_marker_label.header.frame_id = "world"
+        goal_marker_label.type = Marker.TEXT_VIEW_FACING
+        goal_marker_label.pose.position.x = point[0]
+        goal_marker_label.pose.position.y = point[1]
+        goal_marker_label.pose.position.z = point[2] + 0.15
+        goal_marker_label.color.r = 0.5
+        goal_marker_label.color.g = 0.0
+        goal_marker_label.color.b = 0.0
+        goal_marker_label.color.a = 1.0
+        goal_marker_label.scale.z = 0.15
+        if point_type == "goal":
+            goal_marker_label.text = "Goal"
+            goal_marker_label.id = 1
+        else:
+            goal_marker_label.text = "Start"
+            goal_marker_label.id = 3
+
+        goal_marker_label.lifetime = rospy.Duration()
+        self._marker_pub.publish(goal_marker_label)
+
+        rospy.sleep(1)
 
     def _plan_joints(self, joints, test_name):
         self.group.clear_pose_targets()
@@ -98,15 +134,17 @@ class TestPlanners(object):
         return total_angle_change
 
     def _check_computation_time(self, plan):
+        # not yet implemented
         return
 
     def _check_path_length(self, plan):
+        # not yet implemented
         return
 
     def test_goal_1(self):
         joints = [1.55, -1.15, 2.01, 2.39, -1.55, -1.58]
         marker_position = [-0.15, 0.73, 0.36]
-        self._add_marker(marker_position)
+        self._add_marker(marker_position, "goal")
         self._plan_joints(joints, "Test 1")
 
     def test_goal_2(self):
@@ -125,14 +163,13 @@ class TestPlanners(object):
 
         marker_position_1 = [-0.51, 0.65, 0.07]
 
-        self._add_marker(marker_position_1)
-
-        marker_position_2 = [-0.99, 0.33, 0.50]
-
-        self._add_marker(marker_position_2)
+        self._add_marker(marker_position_1, "start")
 
         joints = [2.6752085499210883, -0.8522038622523826, 1.201729214706459, 2.821729335878766,
                   -1.7238947911545262, -1.6146325266562542]
+
+        marker_position_2 = [-0.99, 0.33, 0.50]
+        self._add_marker(marker_position_2, "goal")
 
         self._plan_joints(joints, "Test 2")
 
@@ -152,14 +189,13 @@ class TestPlanners(object):
 
         marker_position_1 = [0.20, -0.41, 0.72]
 
-        self._add_marker(marker_position_1)
-
-        marker_position_2 = [0.70, -0.19, 0.65]
-
-        self._add_marker(marker_position_2)
+        self._add_marker(marker_position_1, "start")
 
         joints = [-0.3873561657737919, -1.4454237975422544, 1.7388717638919942, -3.0023296843235188,
                   -2.5803362501170866, -2.7518032611540217]
+
+        marker_position_2 = [0.70, -0.19, 0.65]
+        self._add_marker(marker_position_2, "goal")
 
         self._plan_joints(joints, "Test 3")
 
