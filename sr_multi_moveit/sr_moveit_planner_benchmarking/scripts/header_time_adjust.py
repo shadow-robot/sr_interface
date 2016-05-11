@@ -16,11 +16,11 @@ def msg_cb(msg):
 rospy.init_node('header_time_adjust')
 first_stamp = None
 
-time.sleep(20)
+time.sleep(2)
 now = rospy.Time.now()
 
 
-cloud_pub = rospy.Publisher('/camera/depth_registered/points', PointCloud2, queue_size=1)
+cloud_pub = rospy.Publisher('/camera/depth_registered/points', PointCloud2, queue_size=2, latch=True)
 
 cloud_sub = rospy.Subscriber('/camera/depth_registered/points_old', PointCloud2, msg_cb)
 

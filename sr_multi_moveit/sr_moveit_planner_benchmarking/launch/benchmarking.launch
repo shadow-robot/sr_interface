@@ -1,5 +1,5 @@
 <launch>
-  <arg name="path" default="$(find sr_moveit_planner_testsuite)/point_clouds"/>
+  <arg name="path" default="$(find sr_moveit_planner_benchmarking)/point_clouds"/>
   <arg name="complex" default="false"/>
   <arg name="planning" default="ompl"/>
   <arg name="visualization" default="true"/>
@@ -13,14 +13,14 @@
   </include>
 
   <group if="$(arg complex)">
-    <node name="collision_scene_2" type="collision_scene_2.py" pkg="sr_moveit_planner_testsuite" />
+    <node name="collision_scene_2" type="collision_scene_2.py" pkg="sr_moveit_planner_benchmarking" />
     <node pkg="rosbag" type="play" name="player" output="screen"
-      args="-d 25 -q $(arg path)/office_scene.bag camera/depth_registered/points_transformed:=/camera/depth_registered/points_old $(arg path)/office_scene_2.bag /camera/depth_registered/points_transformed:=/camera/depth_registered/points_old" />
-      <node name="header_time_adjust" type="header_time_adjust.py" pkg="sr_moveit_planner_testsuite"/>
+      args="-d 15 -q $(arg path)/office_scene.bag camera/depth_registered/points_transformed:=/camera/depth_registered/points_old $(arg path)/office_scene_2.bag /camera/depth_registered/points_transformed:=/camera/depth_registered/points_old" />
+      <node name="header_time_adjust" type="header_time_adjust.py" pkg="sr_moveit_planner_benchmarking"/>
   </group>
 
   <group unless="$(arg complex)">
-    <node name="collision_scene_1" type="collision_scene_1.py" pkg="sr_moveit_planner_testsuite" />
+    <node name="collision_scene_1" type="collision_scene_1.py" pkg="sr_moveit_planner_benchmarking" />
   </group>
 
 </launch>

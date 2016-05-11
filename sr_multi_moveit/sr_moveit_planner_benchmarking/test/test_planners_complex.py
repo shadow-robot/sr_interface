@@ -8,16 +8,13 @@ from visualization_msgs.msg import Marker
 from tabulate import tabulate
 from test_planners import TestPlanners
 import time
-from unittest import TestCase
 
-PKG = "sr_moveit_planner_testsuite"
+PKG = "sr_moveit_planner_benchmarking"
 
 
 class TestPlannersComplex(TestPlanners):
 
     def __init__(self, planning_attempts, planner_id):
-        # self.planner_id = str(sys.argv[1])
-        # planning_attempts = int(sys.argv[2])
         group_id = "right_arm"
         rospy.init_node('moveit_test_planners', anonymous=True)
         self.planner_id = planner_id
@@ -44,11 +41,11 @@ class TestPlannersComplex(TestPlanners):
 
         self._marker_pub = rospy.Publisher('/visualization_marker', Marker, queue_size=10, latch=True)
         self.test_goal_complex_1()
-        rospy.sleep(2)
+        rospy.sleep(3)
         self.test_goal_complex_2()
-        rospy.sleep(2)
+        rospy.sleep(3)
         self.test_goal_complex_3()
-        rospy.sleep(2)
+        rospy.sleep(3)
         self.test_goal_complex_4()
 
     def test_goal_complex_1(self):
@@ -132,7 +129,7 @@ def main(num, list):
     if list == "stomp":
         planner_list = ["STOMP"]
     elif list == "sbpl":
-        planner_list = [""]
+        planner_list = ["AnytimeD*"]
     else:
         planner_list = ["BKPIECEkConfigDefault", "ESTkConfigDefault", "KPIECEkConfigDefault", "LBKPIECEkConfigDefault",
                         "PRMkConfigDefault", "RRTkConfigDefault", "SBLkConfigDefault", "PRMstarkConfigDefault",
@@ -150,9 +147,6 @@ if __name__ == "__main__":
     planner = sys.argv[2]
     # sleep to wait for point cloud
     time.sleep(30)
-    # import rostest
-    # while not rospy.search_param('robot_description_semantic') and not rospy.is_shutdown():
-    #     time.sleep(0.5)
-    # rostest.rosrun(PKG, "test_planners", TestPlanners)
+
     main(replanning, planner)
     rospy.spin()

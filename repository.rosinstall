@@ -52,3 +52,12 @@
     local-name: trac_ik
     uri: https://bitbucket.org/traclabs/trac_ik.git
     version: 'master'
+- git:
+    local-name: sandbox
+    uri: https://github.com/shadow-robot/sandbox.git
+    version: hydro-devel
+
+- git:
+    local-name: industrial_moveit
+    uri: https://github.com/ros-industrial/industrial_moveit.git
+    version: indigo-devel

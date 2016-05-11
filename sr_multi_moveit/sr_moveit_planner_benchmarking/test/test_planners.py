@@ -7,15 +7,12 @@ from moveit_msgs.msg import RobotState
 from visualization_msgs.msg import Marker
 from tabulate import tabulate
 import time
-from unittest import TestCase
 
-PKG = "sr_moveit_planner_testsuite"
+PKG = "sr_moveit_planner_benchmarking"
 
 
 class TestPlanners(object):
     def __init__(self, planning_attempts, planner_id):
-        # self.planner_id = str(sys.argv[1])
-        # planning_attempts = int(sys.argv[2])
         group_id = "right_arm"
         rospy.init_node('moveit_test_planners', anonymous=True)
         self.planner_id = planner_id
@@ -79,17 +76,17 @@ class TestPlanners(object):
         goal_marker_label.pose.position.x = point[0]
         goal_marker_label.pose.position.y = point[1]
         goal_marker_label.pose.position.z = point[2] + 0.15
-        goal_marker_label.color.r = 0.5
-        goal_marker_label.color.g = 0.0
-        goal_marker_label.color.b = 0.0
+
         goal_marker_label.color.a = 1.0
         goal_marker_label.scale.z = 0.15
         if point_type == "goal":
             goal_marker_label.text = "Goal"
             goal_marker_label.id = 1
+            goal_marker_label.color.r = 0.5
         else:
             goal_marker_label.text = "Start"
             goal_marker_label.id = 3
+            goal_marker_label.color.g = 0.5
 
         goal_marker_label.lifetime = rospy.Duration()
         self._marker_pub.publish(goal_marker_label)
@@ -228,9 +225,6 @@ if __name__ == "__main__":
     planner = sys.argv[2]
     while not rospy.search_param('robot_description_semantic') and not rospy.is_shutdown():
         time.sleep(0.5)
-    # import rostest
-    # while not rospy.search_param('robot_description_semantic') and not rospy.is_shutdown():
-    #     time.sleep(0.5)
-    # rostest.rosrun(PKG, "test_planners", TestPlanners)
+
     main(replanning, planner)
     rospy.spin()

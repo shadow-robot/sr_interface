@@ -1,4 +1,4 @@
-# sr_moveit_planner_testsuite
+# sr_moveit_planner_benchmarking
 
 A package to test the different MoveIt planners. Planners currently configured are OMPL, SBPL and STOMP.
 There are two test scenes, 'collision_scene_1' and 'collision_scene_2'; with the first being a simple scene with box 
@@ -11,7 +11,7 @@ rosbag decompress *.bag
 
 For east scene there are a series of tests, moving the robot around the scene to different joint goals; stomp does not accept pose goals. Metrics for the success of each test are generated and displayed at the end of the test in a table. The test can be launched with any of the three planning libraries; ompl, stomp or sbpl and all tests will be run for each of the planners in the library. To launch the UR10 arm and shadowhand in simulation with complex collision scene and run a test for ompl planners, run:
 ```
-roslaunch sr_moveit_planner_testsuite test_ompl_planning.launch complex:=true
+roslaunch sr_moveit_planner_benchmarking test_ompl_planning.launch complex:=true
 ```
 To select either sbpl or stomp, test_sbpl_planning.launch or test_stomp_planning.launch should be selected. To run the test with the simple scene, remove the 'complex' parameter, this defaults to false.
 

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(sr_moveit_planner_testsuite)
+project(sr_moveit_planner_benchmarking)
 
 find_package(catkin REQUIRED)
 

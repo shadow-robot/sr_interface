@@ -1,6 +1,6 @@
 <package>
 
-  <name>sr_moveit_planner_testsuite</name>
+  <name>sr_moveit_planner_benchmarking</name>
   <version>0.0.1</version>
   <description>
     A package to test moveit planners with the UR10 arm and Shadow hand.
