@@ -3,9 +3,6 @@
 A package to test the different MoveIt planners. Planners currently configured are OMPL, SBPL and STOMP.
 There are two test scenes, 'collision_scene_1' and 'collision_scene_2'; with the first being a simple scene with box 
 obstacles and the second being more complex with an octomap generated from a kinect2 point cloud. The scpl repository can be found [here](https://github.com/shadow-robot/sandbox) and stomp [here](https://github.com/ros-industrial/industrial_moveit).
-```
-rosbag decompress *.bag
-```
 
 # Launch
 
