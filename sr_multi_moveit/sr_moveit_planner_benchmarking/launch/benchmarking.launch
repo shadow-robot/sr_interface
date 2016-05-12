@@ -15,8 +15,10 @@
   <group if="$(arg complex)">
     <node name="collision_scene_2" type="collision_scene_2.py" pkg="sr_moveit_planner_benchmarking" />
     <node pkg="rosbag" type="play" name="player" output="screen"
-      args="-d 15 -q $(arg path)/office_scene.bag camera/depth_registered/points_transformed:=/camera/depth_registered/points_old $(arg path)/office_scene_2.bag /camera/depth_registered/points_transformed:=/camera/depth_registered/points_old" />
-      <node name="header_time_adjust" type="header_time_adjust.py" pkg="sr_moveit_planner_benchmarking"/>
+      args="-d 15 -q $(arg path)/office_scene.bag camera/depth_registered/points_transformed:=/camera/depth_registered/points_old" />
+    <node pkg="rosbag" type="play" name="player_2" output="screen"
+      args="-d 18 -q $(arg path)/office_scene_2.bag /camera/depth_registered/points_transformed:=/camera/depth_registered/points_old" />
+    <node name="header_time_adjust" type="header_time_adjust.py" pkg="sr_moveit_planner_benchmarking" output="screen"/>
   </group>
 
   <group unless="$(arg complex)">

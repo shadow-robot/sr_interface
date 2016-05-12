@@ -4,9 +4,10 @@ import rospy
 import sys
 from moveit_commander import RobotCommander, PlanningSceneInterface, MoveGroupCommander
 from moveit_msgs.msg import RobotState, MoveGroupActionResult
-from visualization_msgs.msg import Marker
+from visualization_msgs.msg import Marker, MarkerArray
 from tabulate import tabulate
 import time
+from copy import deepcopy
 
 PKG = "sr_moveit_planner_benchmarking"
 
@@ -19,7 +20,7 @@ class TestPlanners(object):
         self.scene = PlanningSceneInterface()
         self.robot = RobotCommander()
         self.group = MoveGroupCommander(group_id)
-        self._marker_pub = rospy.Publisher('/visualization_marker', Marker, queue_size=10, latch=True)
+        self._marker_pub = rospy.Publisher('/visualization_marker_array', MarkerArray, queue_size=10, latch=True)
         self._planning_time_sub = rospy.Subscriber('/move_group/result', MoveGroupActionResult,
                                                    self._check_computation_time)
         rospy.sleep(1)
@@ -37,60 +38,60 @@ class TestPlanners(object):
         self.test_goal_3()
         rospy.sleep(3)
 
-    def _add_marker(self, point, point_type, text):
+    def _add_markers(self, point, text1, point_2, text2):
         # add marker for start and goal pose of EE
-        goal_marker = Marker()
-        goal_marker.header.frame_id = "world"
-        goal_marker.type = Marker.SPHERE
+        marker_array = MarkerArray()
+        marker_1 = Marker()
+        marker_1.header.frame_id = "world"
+        marker_1.header.stamp = rospy.Time.now()
+        marker_1.type = Marker.SPHERE
+        marker_1.scale.x = 0.04
+        marker_1.scale.y = 0.04
+        marker_1.scale.z = 0.04
+        marker_1.lifetime = rospy.Duration()
 
-        goal_marker.pose.position.x = point[0]
-        goal_marker.pose.position.y = point[1]
-        goal_marker.pose.position.z = point[2]
-        goal_marker.scale.x = 0.04
-        goal_marker.scale.y = 0.04
-        goal_marker.scale.z = 0.04
+        marker_2 = deepcopy(marker_1)
 
-        if point_type == "goal":
-            goal_marker.id = 0
-            goal_marker.color.r = 0.5
-            goal_marker.color.g = 0.0
-            goal_marker.color.b = 0.0
-            goal_marker.color.a = 1.0
-        else:
-            goal_marker.id = 2
-            goal_marker.color.r = 0.0
-            goal_marker.color.g = 0.5
-            goal_marker.color.b = 0.0
-            goal_marker.color.a = 1.0
+        marker_1.color.g = 0.5
+        marker_1.color.a = 1.0
+        marker_1.id = 0
+        marker_1.pose.position.x = point[0]
+        marker_1.pose.position.y = point[1]
+        marker_1.pose.position.z = point[2]
+        marker_2.color.r = 0.5
+        marker_2.color.a = 1.0
+        marker_2.id = 1
+        marker_2.pose.position.x = point_2[0]
+        marker_2.pose.position.y = point_2[1]
+        marker_2.pose.position.z = point_2[2]
 
-        goal_marker.lifetime = rospy.Duration()
+        marker_3 = Marker()
+        marker_3.header.frame_id = "world"
+        marker_3.header.stamp = rospy.Time.now()
+        marker_3.type = Marker.TEXT_VIEW_FACING
+        marker_3.scale.z = 0.10
+        marker_3.lifetime = rospy.Duration()
 
-        self._marker_pub.publish(goal_marker)
-        rospy.sleep(0.25)
-        self._add_marker_label(point, point_type, text)
+        marker_4 = deepcopy(marker_3)
 
-    def _add_marker_label(self, point, point_type, text):
-        # text label for marker
-        goal_marker_label = Marker()
-        goal_marker_label.header.frame_id = "world"
-        goal_marker_label.type = Marker.TEXT_VIEW_FACING
-        goal_marker_label.pose.position.x = point[0]
-        goal_marker_label.pose.position.y = point[1]
-        goal_marker_label.pose.position.z = point[2] + 0.15
+        marker_3.text = text1
+        marker_3.id = 2
+        marker_3.color.g = 0.5
+        marker_3.color.a = 1.0
+        marker_3.pose.position.x = point[0]
+        marker_3.pose.position.y = point[1]
+        marker_3.pose.position.z = point[2] + 0.15
+        marker_4.text = text2
+        marker_4.id = 3
+        marker_4.color.r = 0.5
+        marker_4.color.a = 1.0
+        marker_4.pose.position.x = point_2[0]
+        marker_4.pose.position.y = point_2[1]
+        marker_4.pose.position.z = point_2[2] + 0.15
 
-        goal_marker_label.color.a = 1.0
-        goal_marker_label.scale.z = 0.10
-        if point_type == "goal":
-            goal_marker_label.id = 1
-            goal_marker_label.color.r = 0.5
-        else:
-            goal_marker_label.id = 3
-            goal_marker_label.color.g = 0.5
+        marker_array.markers = [marker_1, marker_2, marker_3, marker_4]
 
-        goal_marker_label.text = text
-        goal_marker_label.lifetime = rospy.Duration()
-        self._marker_pub.publish(goal_marker_label)
-
+        self._marker_pub.publish(marker_array)
         rospy.sleep(1)
 
     def _plan_joints(self, joints, test_name):
@@ -154,7 +155,8 @@ class TestPlanners(object):
 
     def test_goal_1(self):
         marker_position_1 = [1.25, 0, 0.3]
-        self._add_marker_label(marker_position_1, "start", "Start test \n sequence")
+        marker_position_2 = [-0.15, 0.73, 0.36]
+        self._add_markers(marker_position_1, "Start test \n sequence", marker_position_2, "Goal")
 
         # Start planning in a given joint position
         joints = [0.11, 0.00, -0.93, -2.22, -1.71, -1.68]
@@ -168,9 +170,6 @@ class TestPlanners(object):
         self.group.set_start_state(current)
         joints = [1.55, -1.15, 2.01, 2.39, -1.55, -1.58]
         self._plan_joints(joints, "Test 1")
-
-        marker_position_2 = [-0.15, 0.73, 0.36]
-        self._add_marker(marker_position_2, "goal", "Goal")
 
     def test_goal_2(self):
         self.group.clear_pose_targets()
@@ -190,9 +189,8 @@ class TestPlanners(object):
         self._plan_joints(joints, "Test 2")
 
         marker_position_1 = [-0.51, 0.65, 0.07]
-        self._add_marker(marker_position_1, "start", "Start")
         marker_position_2 = [-0.99, 0.33, 0.50]
-        self._add_marker(marker_position_2, "goal", "Goal")
+        self._add_markers(marker_position_1, "Start", marker_position_2, "Goal")
 
     def test_goal_3(self):
         self.group.clear_pose_targets()
@@ -212,9 +210,8 @@ class TestPlanners(object):
         self._plan_joints(joints, "Test 3")
 
         marker_position_1 = [0.20, -0.41, 0.72]
-        self._add_marker(marker_position_1, "start", "Start")
         marker_position_2 = [0.70, -0.19, 0.65]
-        self._add_marker(marker_position_2, "goal", "Goal")
+        self._add_markers(marker_position_1, "Start", marker_position_2, "Goal")
 
 
 def table_output(plan_data):

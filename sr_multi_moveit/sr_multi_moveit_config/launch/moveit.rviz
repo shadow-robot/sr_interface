@@ -5,12 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /MotionPlanning1
-        - /MotionPlanning1/Scene Robot1
         - /MotionPlanning1/Planning Request1
-        - /MotionPlanning1/Planned Path1
-        - /Marker1
-        - /Trajectory1
-        - /Trajectory1/Links1
         - /Trajectory1/Links1/ra_base1
         - /Trajectory1/Links1/ra_base_link1
         - /Trajectory1/Links1/ra_ee_link1
@@ -550,14 +545,6 @@ Visualization Manager:
         Show Robot Collision: false
         Show Robot Visual: true
       Value: true
-    - Class: rviz/Marker
-      Enabled: true
-      Marker Topic: visualization_marker
-      Name: Marker
-      Namespaces:
-        "": true
-      Queue Size: 100
-      Value: true
     - Class: moveit_rviz_plugin/Trajectory
       Enabled: true
       Interrupt Display: false
@@ -773,6 +760,14 @@ Visualization Manager:
       Show Trail: false
       State Display Time: 0.1s
       Trajectory Topic: /move_group/display_planned_path
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: visualization_marker_array
+      Name: MarkerArray
+      Namespaces:
+        "": true
+      Queue Size: 100
       Value: true
   Enabled: true
   Global Options:

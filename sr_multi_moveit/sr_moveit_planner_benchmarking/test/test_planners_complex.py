@@ -4,7 +4,7 @@ import rospy
 import sys
 from moveit_commander import RobotCommander, PlanningSceneInterface, MoveGroupCommander
 from moveit_msgs.msg import RobotState, MoveGroupActionResult
-from visualization_msgs.msg import Marker
+from visualization_msgs.msg import Marker, MarkerArray
 from tabulate import tabulate
 from test_planners import TestPlanners
 import time
@@ -21,7 +21,7 @@ class TestPlannersComplex(TestPlanners):
         self.scene = PlanningSceneInterface()
         self.robot = RobotCommander()
         self.group = MoveGroupCommander(group_id)
-        self._marker_pub = rospy.Publisher('/visualization_marker', Marker, queue_size=10, latch=True)
+        self._marker_pub = rospy.Publisher('/visualization_marker_array', MarkerArray, queue_size=10, latch=True)
         self._planning_time_sub = rospy.Subscriber('/move_group/result', MoveGroupActionResult,
                                                    self._check_computation_time)
         rospy.sleep(1)
@@ -39,11 +39,13 @@ class TestPlannersComplex(TestPlanners):
         self.test_goal_complex_3()
         rospy.sleep(3)
         self.test_goal_complex_4()
-        rospy.sleep(3)
+        rospy.sleep(5)
 
     def test_goal_complex_1(self):
         marker_position_1 = [1.25, 0, 0.3]
-        self._add_marker_label(marker_position_1, "start", "Start test sequence")
+        marker_position_2 = [0.15, 0.51, 0.80]
+        self._add_markers(marker_position_1, "Start test \n sequence", marker_position_2, "Goal")
+
         # Start planning in a given joint position
         joints = [0.11, 0.00, -0.93, -2.22, -1.71, -1.68]
         current = RobotState()
@@ -58,9 +60,6 @@ class TestPlannersComplex(TestPlanners):
         joints = [-1.5239292524704837, -1.2894845382670848, -1.8913257438952191, -0.069273532016395,
                   1.466564282765517, 1.5430552349500921]
         self._plan_joints(joints, "Test 1")
-
-        marker_position_2 = [0.15, 0.51, 0.80]
-        self._add_marker(marker_position_2, "goal", "Goal")
 
     def test_goal_complex_2(self):
         # Start planning in a given joint position
@@ -80,8 +79,10 @@ class TestPlannersComplex(TestPlanners):
                     1.135619842704714, -2.8441037408209464]
         self._plan_joints(joints_2, "Test 2")
 
-        marker_position = [-0.04, 0.42, 0.41]
-        self._add_marker(marker_position, "goal", "Goal")
+        rospy.sleep(2)
+        marker_position_1 = [0.15, 0.51, 0.80]
+        marker_position_2 = [-0.04, 0.42, 0.41]
+        self._add_markers(marker_position_1, "Start", marker_position_2, "Goal")
 
     def test_goal_complex_3(self):
         # Start planning in a given joint position
@@ -101,8 +102,10 @@ class TestPlannersComplex(TestPlanners):
                     -1.6351170449654888, 0.2930372395567313]
         self._plan_joints(joints_2, "Test 3")
 
-        marker_position = [-0.23, -0.09, 0.28]
-        self._add_marker(marker_position, "goal", "Goal")
+        rospy.sleep(2)
+        marker_position_1 = [-0.04, 0.42, 0.41]
+        marker_position_2 = [-0.23, -0.09, 0.28]
+        self._add_markers(marker_position_1, "Start", marker_position_2, "Goal")
 
     def test_goal_complex_4(self):
         # Start planning in a given joint position
@@ -121,8 +124,10 @@ class TestPlannersComplex(TestPlanners):
                     -1.4912172680615894, -2.815605633361361]
         self._plan_joints(joints_2, "Test 4")
 
-        marker_position = [0.34, -0.98, 0.59]
-        self._add_marker(marker_position, "goal", "Goal")
+        rospy.sleep(2)
+        marker_position_1 = [-0.23, -0.09, 0.28]
+        marker_position_2 = [0.34, -0.98, 0.59]
+        self._add_markers(marker_position_1, "Start", marker_position_2, "Goal")
 
 
 def table_output(plan_data):
