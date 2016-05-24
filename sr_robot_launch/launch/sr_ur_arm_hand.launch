@@ -7,6 +7,8 @@
   <arg name="debug" default="false"/>
   <!-- Set to true to allow planning trajectories-->
   <arg name="use_moveit" default="true"/>
+  <!--Choose planner library, options are ompl, stomp or sbpl-->
+  <arg name="planning" default="ompl"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <arg name="world" default="$(find sr_description)/other/worlds/shadowhand.world"/>
@@ -111,6 +113,7 @@
       <arg name="load_robot_description" value="false"/>
       <arg name="gui" default="$(arg gui)"/>
       <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
+      <arg name="planning" value="$(arg planning)"/>
     </include>
     <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
 
