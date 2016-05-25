@@ -136,6 +136,9 @@ def table_output(plan_data):
 
     print(tabulate(plan_data, headers=row_titles, tablefmt='orgtbl'))
 
+    #TODO save to xml file for jenkins
+    print(tabulate(plan_data, headers=row_titles, tablefmt='html'))
+
 
 def main(num, list):
     if list == "stomp":
