@@ -4,7 +4,7 @@ import rospy
 import sys
 from moveit_commander import RobotCommander, PlanningSceneInterface, MoveGroupCommander
 from moveit_msgs.msg import RobotState, MoveGroupActionResult
-from visualization_msgs.msg import Marker, MarkerArray
+from visualization_msgs.msg import MarkerArray
 from tabulate import tabulate
 from test_planners import TestPlanners
 import time
@@ -136,7 +136,7 @@ def table_output(plan_data):
 
     print(tabulate(plan_data, headers=row_titles, tablefmt='orgtbl'))
 
-    #TODO save to xml file for jenkins
+    # TODO save to xml file for jenkins
     print(tabulate(plan_data, headers=row_titles, tablefmt='html'))
 
 
