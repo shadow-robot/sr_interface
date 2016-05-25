@@ -128,7 +128,7 @@ int main(int argc, char** argv)
   }
 
   // 5. Translate the result into a type that ROS understands
-  // Get Joint Names
+  // Define joint names
   std::vector<std::string> names = {"ra_shoulder_pan_joint", "ra_shoulder_lift_joint", "ra_elbow_joint",
   "ra_wrist_1_joint", "ra_wrist_2_joint", "ra_wrist_3_joint", "rh_WRJ1", "rh_WRJ2"};
   // Generate a ROS joint trajectory with the result path, robot model, given joint names,
@@ -166,7 +166,6 @@ toROSJointTrajectory(const TrajectoryVec& trajectory,
   result.header.stamp = ros::Time::now();
   result.header.frame_id = "/world";
   result.joint_names = joint_names;
-  ROS_INFO_STREAM("names: " << joint_names[0]);
 
   // For keeping track of time-so-far in the trajectory
   double time_offset = 0.0;
