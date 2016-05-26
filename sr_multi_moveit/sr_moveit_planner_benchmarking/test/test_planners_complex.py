@@ -28,6 +28,11 @@ class TestPlannersComplex(TestPlanners):
 
         self.group.set_planner_id(self.planner_id)
         self.group.set_num_planning_attempts(planning_attempts)
+
+        self.group.set_goal_tolerance(0.05)
+        self.group.set_planning_time(3600)
+        self.group.allow_replanning(True)
+
         self._comp_time = []
 
         self.planner_data = []
