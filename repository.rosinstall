@@ -52,6 +52,7 @@
     local-name: trac_ik
     uri: https://bitbucket.org/traclabs/trac_ik.git
     version: 'master'
+
 - git:
     local-name: sandbox
     uri: https://github.com/shadow-robot/sandbox.git
@@ -60,4 +61,9 @@
 - git:
     local-name: industrial_moveit
     uri: https://github.com/ros-industrial/industrial_moveit.git
+    version: indigo-devel
+
+- git:
+    local-name: descartes
+    uri: https://github.com/ros-industrial-consortium/descartes.git
     version: indigo-devel
