@@ -19,7 +19,7 @@ RUN cd /workspace/shadow_robot/base_deps/src && \
     rosdep install --from-paths src --ignore-src --rosdistro indigo -y && \
     catkin_make && \
     cd /workspace/shadow_robot/base/src && \
-    wstool set -y sr_interface --version-new "F#64_planner_test_suite" && \
+    wstool set -y sr_interface --version-new "F#64_planner_test_suite_ugo" && \
     wstool up sr_interface && \
     source /workspace/shadow_robot/base_deps/devel/setup.bash && \
     cd .. && \

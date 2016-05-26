@@ -31,7 +31,7 @@ class TestPlannersComplex(TestPlanners):
 
         self.group.set_goal_tolerance(0.05)
         self.group.set_planning_time(3600)
-        self.group.allow_replanning(True)
+        self.group.allow_replanning(False)
 
         self._comp_time = []
 
