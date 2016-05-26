@@ -46,7 +46,8 @@ bool displayTrajectory(const trajectory_msgs::JointTrajectory &trajectory);
  */
 bool executeTrajectory(const trajectory_msgs::JointTrajectory &trajectory);
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     ros::init(argc, argv, "descartes_example");
     ros::NodeHandle nh;
     pub = nh.advertise<moveit_msgs::DisplayTrajectory>("/move_group/display_planned_path", 100);
@@ -100,7 +101,8 @@ int main(int argc, char **argv) {
     // tool center point frame (name of link associated with tool)
     const std::string tcp_frame = "ra_ee_link";
 
-    if (!model->initialize(robot_description, group_name, world_frame, tcp_frame)) {
+    if (!model->initialize(robot_description, group_name, world_frame, tcp_frame))
+    {
         ROS_INFO("Could not initialize robot model");
         return -1;
     }
@@ -114,13 +116,15 @@ int main(int argc, char **argv) {
     planner.initialize(model);
 
     // 4. Feed the trajectory to the planner
-    if (!planner.planPath(points)) {
+    if (!planner.planPath(points))
+    {
         ROS_ERROR("Could not solve for a valid path");
         return -2;
     }
 
     TrajectoryVec result;
-    if (!planner.getPath(result)) {
+    if (!planner.getPath(result))
+    {
         ROS_ERROR("Could not retrieve path");
         return -3;
     }
@@ -140,85 +144,94 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-descartes_core::TrajectoryPtPtr makeCartesianPoint(const Eigen::Affine3d &pose) {
-    using descartes_core::TrajectoryPtPtr;
-    using descartes_trajectory::CartTrajectoryPt;
-    using descartes_trajectory::TolerancedFrame;
+descartes_core::TrajectoryPtPtr makeCartesianPoint(const Eigen::Affine3d &pose)
+{
+  using descartes_core::TrajectoryPtPtr;
+  using descartes_trajectory::CartTrajectoryPt;
+  using descartes_trajectory::TolerancedFrame;
 
-    return TrajectoryPtPtr(new CartTrajectoryPt(TolerancedFrame(pose)));
+  return TrajectoryPtPtr(new CartTrajectoryPt(TolerancedFrame(pose)));
 }
 
-descartes_core::TrajectoryPtPtr makeTolerancedCartesianPoint(const Eigen::Affine3d &pose) {
-    using descartes_core::TrajectoryPtPtr;
-    using descartes_trajectory::AxialSymmetricPt;
-    return TrajectoryPtPtr(new AxialSymmetricPt(pose, M_PI / 2.0 - 0.0001, AxialSymmetricPt::Z_AXIS));
+descartes_core::TrajectoryPtPtr makeTolerancedCartesianPoint(const Eigen::Affine3d &pose)
+{
+  using descartes_core::TrajectoryPtPtr;
+  using descartes_trajectory::AxialSymmetricPt;
+  return TrajectoryPtPtr(new AxialSymmetricPt(pose, M_PI / 2.0 - 0.0001, AxialSymmetricPt::Z_AXIS));
 }
 
 trajectory_msgs::JointTrajectory
 toROSJointTrajectory(const TrajectoryVec &trajectory,
                      const descartes_core::RobotModel &model,
                      const std::vector <std::string> &joint_names,
-                     double time_delay) {
-    trajectory_msgs::JointTrajectory result;
-    result.header.stamp = ros::Time::now();
-    result.header.frame_id = "/world";
-    result.joint_names = joint_names;
+                     double time_delay)
+{
+  trajectory_msgs::JointTrajectory result;
+  result.header.stamp = ros::Time::now();
+  result.header.frame_id = "/world";
+  result.joint_names = joint_names;
 
-    // For keeping track of time-so-far in the trajectory
-    double time_offset = 0.0;
-    for (TrajectoryIter it = trajectory.begin(); it != trajectory.end(); ++it) {
-        // Find nominal joint solution at this point
-        std::vector<double> joints;
-        it->get()->getNominalJointPose(std::vector<double>(), model, joints);
-        // Adding zeros for the hand wrist angles
-        joints.push_back(0);
-        joints.push_back(0);
+  // For keeping track of time-so-far in the trajectory
+  double time_offset = 0.0;
+  for (TrajectoryIter it = trajectory.begin(); it != trajectory.end(); ++it)
+  {
+    // Find nominal joint solution at this point
+    std::vector<double> joints;
+    it->get()->getNominalJointPose(std::vector<double>(), model, joints);
+    // Adding zeros for the hand wrist angles
+    joints.push_back(0);
+    joints.push_back(0);
 
-        trajectory_msgs::JointTrajectoryPoint pt;
-        pt.positions = joints;
-        pt.velocities.resize(joints.size(), 0.0);
-        pt.accelerations.resize(joints.size(), 0.0);
-        pt.effort.resize(joints.size(), 0.0);
-        pt.time_from_start = ros::Duration(time_offset);
-        time_offset += time_delay;
+    trajectory_msgs::JointTrajectoryPoint pt;
+    pt.positions = joints;
+    pt.velocities.resize(joints.size(), 0.0);
+    pt.accelerations.resize(joints.size(), 0.0);
+    pt.effort.resize(joints.size(), 0.0);
+    pt.time_from_start = ros::Duration(time_offset);
+    time_offset += time_delay;
 
-        result.points.push_back(pt);
+    result.points.push_back(pt);
     }
 
     return result;
 }
 
-bool displayTrajectory(const trajectory_msgs::JointTrajectory &trajectory) {
-    // display the planned trajectory in rviz
-    moveit_msgs::DisplayTrajectory display_trajectory;
-    moveit_msgs::RobotTrajectory robot_trajectory;
-    trajectory_msgs::JointTrajectoryPoint pt;
-    robot_trajectory.joint_trajectory = trajectory;
-    display_trajectory.trajectory.push_back(robot_trajectory);
-    pub.publish(display_trajectory);
+bool displayTrajectory(const trajectory_msgs::JointTrajectory &trajectory)
+{
+  // display the planned trajectory in rviz
+  moveit_msgs::DisplayTrajectory display_trajectory;
+  moveit_msgs::RobotTrajectory robot_trajectory;
+  trajectory_msgs::JointTrajectoryPoint pt;
+  robot_trajectory.joint_trajectory = trajectory;
+  display_trajectory.trajectory.push_back(robot_trajectory);
+  pub.publish(display_trajectory);
 }
 
-bool executeTrajectory(const trajectory_msgs::JointTrajectory &trajectory) {
-    // Create a Follow Joint Trajectory Action Client
-    actionlib::SimpleActionClient <control_msgs::FollowJointTrajectoryAction>
-            ac("/ra_trajectory_controller/follow_joint_trajectory", true);
-    if (!ac.waitForServer(ros::Duration(2.0))) {
-        ROS_ERROR("Could not connect to action server");
-        return false;
-    }
+bool executeTrajectory(const trajectory_msgs::JointTrajectory &trajectory)
+{
+  // Create a Follow Joint Trajectory Action Client
+  actionlib::SimpleActionClient <control_msgs::FollowJointTrajectoryAction>
+          ac("/ra_trajectory_controller/follow_joint_trajectory", true);
+  if (!ac.waitForServer(ros::Duration(2.0)))
+  {
+    ROS_ERROR("Could not connect to action server");
+    return false;
+  }
 
-    control_msgs::FollowJointTrajectoryGoal goal;
-    goal.trajectory = trajectory;
-    goal.goal_time_tolerance = ros::Duration(1.0);
+  control_msgs::FollowJointTrajectoryGoal goal;
+  goal.trajectory = trajectory;
+  goal.goal_time_tolerance = ros::Duration(1.0);
 
-    ac.sendGoal(goal);
+  ac.sendGoal(goal);
 
-    if (ac.waitForResult(
-            goal.trajectory.points[goal.trajectory.points.size() - 1].time_from_start + ros::Duration(5))) {
-        ROS_INFO("Action server reported successful execution");
-        return true;
-    } else {
-        ROS_WARN("Action server could not execute trajectory");
-        return false;
+  if (ac.waitForResult(
+          goal.trajectory.points[goal.trajectory.points.size() - 1].time_from_start + ros::Duration(5)))
+  {
+      ROS_INFO("Action server reported successful execution");
+      return true;
+  } else
+    {
+      ROS_WARN("Action server could not execute trajectory");
+      return false;
     }
 }
