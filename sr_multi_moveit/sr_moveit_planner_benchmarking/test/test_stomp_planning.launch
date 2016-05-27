@@ -7,9 +7,9 @@
   </include>
 
   <node if="$(arg complex)" name = "test_planner_complex" pkg = "sr_moveit_planner_benchmarking" type = "test_planners_complex.py"
-    args = "1 stomp"
+    args = "10 stomp"
     output="screen"/>
   <node unless="$(arg complex)" name = "test_planner_simple" pkg = "sr_moveit_planner_benchmarking" type = "test_planners.py"
-    args = "1 stomp"
+    args = "10 stomp"
     output="screen"/>
 </launch>

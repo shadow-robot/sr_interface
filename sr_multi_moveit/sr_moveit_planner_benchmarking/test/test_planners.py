@@ -27,6 +27,11 @@ class TestPlanners(object):
 
         self.group.set_planner_id(self.planner_id)
         self.group.set_num_planning_attempts(planning_attempts)
+
+        self.group.set_goal_tolerance(0.005)
+        self.group.set_planning_time(600)
+        self.group.allow_replanning(False)
+
         self._comp_time = []
 
         self.planner_data = []

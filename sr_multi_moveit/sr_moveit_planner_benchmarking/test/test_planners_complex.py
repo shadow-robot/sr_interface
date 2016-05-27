@@ -29,8 +29,8 @@ class TestPlannersComplex(TestPlanners):
         self.group.set_planner_id(self.planner_id)
         self.group.set_num_planning_attempts(planning_attempts)
 
-        self.group.set_goal_tolerance(0.05)
-        self.group.set_planning_time(3600)
+        self.group.set_goal_tolerance(0.005)
+        self.group.set_planning_time(500)
         self.group.allow_replanning(False)
 
         self._comp_time = []
@@ -154,6 +154,7 @@ def main(num, list):
         planner_list = ["BKPIECEkConfigDefault", "ESTkConfigDefault", "KPIECEkConfigDefault", "LBKPIECEkConfigDefault",
                         "PRMkConfigDefault", "RRTkConfigDefault", "SBLkConfigDefault", "PRMstarkConfigDefault",
                         "RRTstarkConfigDefault"]
+
     test_data = []
 
     for plan in planner_list:

@@ -5,7 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /MotionPlanning1
-        - /MotionPlanning1/Planning Request1
+        - /MotionPlanning1/Scene Geometry1
         - /Trajectory1/Links1/ra_base1
         - /Trajectory1/Links1/ra_base_link1
         - /Trajectory1/Links1/ra_ee_link1
@@ -48,7 +48,7 @@ Panels:
         - /Trajectory1/Links1/rh_wrist1
         - /Trajectory1/Links1/world1
       Splitter Ratio: 0.74256
-    Tree Height: 311
+    Tree Height: 508
   - Class: rviz/Help
     Name: Help
   - Class: rviz/Views
@@ -322,7 +322,7 @@ Visualization Manager:
         Interactive Marker Size: 0.3
         Joint Violation Color: 255; 0; 255
         Planning Group: right_arm
-        Query Goal State: true
+        Query Goal State: false
         Query Start State: false
         Show Workspace: false
         Start State Alpha: 1
@@ -331,7 +331,7 @@ Visualization Manager:
       Robot Description: robot_description
       Scene Geometry:
         Scene Alpha: 1
-        Scene Color: 50; 230; 50
+        Scene Color: 170; 170; 255
         Scene Display Time: 0.2
         Show Scene Geometry: true
         Voxel Coloring: Z-Axis
@@ -543,7 +543,7 @@ Visualization Manager:
             Show Trail: false
         Robot Alpha: 0.5
         Show Robot Collision: false
-        Show Robot Visual: true
+        Show Robot Visual: false
       Value: true
     - Class: moveit_rviz_plugin/Trajectory
       Enabled: true
@@ -796,24 +796,24 @@ Visualization Manager:
         Z: -4.99416e-07
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.214798
+      Pitch: 0.669799
       Target Frame: forearm
       Value: XYOrbit (rviz)
-      Yaw: 0.483572
+      Yaw: 6.16676
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 1056
+  Height: 757
   Help:
     collapsed: false
   Hide Left Dock: false
   Hide Right Dock: false
   Motion Planning:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000002b1000003dafc0200000006fb000000100044006900730070006c0061007900730100000028000001cc000000dd00fffffffb0000000800480065006c00700000000342000000bb0000007600fffffffb0000000a0056006900650077007300000003b0000000b0000000b000fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e006701000001fa00000208000001cc00fffffffb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e006700000002dd000001d7000000000000000000000488000003da00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000002b1000002affc0200000005fb0000000800480065006c00700000000342000000bb0000007600fffffffb0000000a0056006900650077007300000003b0000000b0000000b000fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fc00000028000002af000001ea0100001dfa000000000100000002fb000000100044006900730070006c0061007900730100000000ffffffff0000016a00fffffffb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000000000002b1000002a200fffffffb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e006700000002dd000001d700000000000000000000029f000002af00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
-  Width: 1855
-  X: 65
+  Width: 1366
+  X: 0
   Y: 24
