@@ -55,7 +55,7 @@ class PlannerAnnotationParser(AnnotationParserBase):
         """
 
         self.group_id = self._annotations["group_id"]
-        self.planner_id = self._annotations["planner_id"]
+        self.planners = self._annotations["planners"]
         self.scene = PlanningSceneInterface()
         self.robot = RobotCommander()
         self.group = MoveGroupCommander(self.group_id)
@@ -64,7 +64,6 @@ class PlannerAnnotationParser(AnnotationParserBase):
                                                    self._check_computation_time)
         rospy.sleep(1)
 
-        self.group.set_planner_id(self.planner_id)
         self.group.set_num_planning_attempts(self._annotations["planning_attempts"])
 
         self.group.set_goal_tolerance(self._annotations["goal_tolerance"])
@@ -91,7 +90,15 @@ class PlannerAnnotationParser(AnnotationParserBase):
 
         self.group.set_start_state(current)
         joints = self._annotations["goal_joints"]
-        self._plan_joints(joints, "Test 1")
+
+        for planner in self.planners:
+            if planner == "stomp":
+                planner = "STOMP"
+            elif planner == "sbpl":
+                    planner = "AnytimeD*"
+            self.planner_id = planner
+            self.group.set_planner_id(planner)
+            self._plan_joints(joints, "Test 1")
 
         return self.planner_data
 
