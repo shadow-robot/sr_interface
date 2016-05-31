@@ -9,6 +9,10 @@ import time
 class CreateScene1(object):
     def __init__(self):
         self._scene = PlanningSceneInterface()
+
+        # clear the scene
+        self._scene.remove_world_object()
+
         self.robot = RobotCommander()
 
         # pause to wait for rviz to load
