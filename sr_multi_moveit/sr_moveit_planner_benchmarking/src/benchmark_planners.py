@@ -285,6 +285,7 @@ if __name__ == '__main__':
     process = psutil.Process(roslaunch_proc.pid)
     for sub_process in process.get_children(recursive=True):
         sub_process.send_signal(signal.SIGINT)
+        sub_process.send_signal(signal.SIGTERM)
     roslaunch_proc.wait()  # we wait for children to terminate
     try:
         roslaunch_proc.terminate()
