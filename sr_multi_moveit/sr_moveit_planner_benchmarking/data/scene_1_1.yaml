@@ -1,0 +1,40 @@
+name: simplified_1_case_1
+
+scene:
+  - type: python
+    name: simplified_1
+
+group_id: right_arm
+planners:
+  - PRMkConfigDefault
+planning_attempts: 50
+goal_tolerance: 0.005
+planning_time: 600
+allow_replanning: False
+
+
+start_joints:
+  - 0.11
+  - 0.00
+  - -0.93
+  - -2.22
+  - -1.71
+  - -1.68
+
+goal_joints:
+  - 1.55
+  - -1.15
+  - 2.01
+  - 2.39
+  - -1.55
+  - -1.58
+
+start_xyz:
+  - 1.25
+  - 0
+  - 0.3
+
+goal_xyz:
+  - -0.15
+  - 0.73
+  - 0.36
