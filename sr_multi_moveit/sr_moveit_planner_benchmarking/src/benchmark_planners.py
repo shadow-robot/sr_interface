@@ -10,6 +10,7 @@ from moveit_commander import (MoveGroupCommander, PlanningSceneInterface,
 from moveit_msgs.msg import MoveGroupActionResult, RobotState
 from sr_benchmarking.sr_benchmarking import (AnnotationParserBase,
                                              BenchmarkingBase)
+from tabulate import tabulate
 from visualization_msgs.msg import Marker, MarkerArray
 
 
@@ -36,11 +37,12 @@ class PlannerAnnotationParser(AnnotationParserBase):
         self._load_scene()
         self.benchmark()
 
-    def to_xml(self, results):
+    def check_results(self, results):
         """
-        Saves the results as a Jenkins parsable xml file for display.
+        Returns the results from the planner, checking them against any eventual validation data
+        (no validation data in our case).
         """
-        print self.planner_data
+        return self.planner_data
 
     def _load_scene(self):
         """
@@ -54,7 +56,7 @@ class PlannerAnnotationParser(AnnotationParserBase):
                 BenchmarkingScene(element["name"])
             elif element["type"] == "bag":
                 self.play_bag(element["name"])
-                for _ in range(10):
+                for _ in range(20):
                     rospy.sleep(0.3)
 
         # wait for the scene to be spawned properly
@@ -244,10 +246,21 @@ class PlannerBenchmarking(BenchmarkingBase):
     def __init__(self, path_to_data):
         super(PlannerBenchmarking, self).__init__(path_to_data)
 
+        results = []
         # iterate through all annotation files to run the benchmarks
         for annotation_file in self.load_files(path_to_data):
             parser = PlannerAnnotationParser(annotation_file, path_to_data)
-            parser.to_xml(None)
+            results.append(parser.check_results(None)[0])
+
+        self.pretty_results(results)
+
+    def pretty_results(self, results):
+        """
+        Outputs the results in a pretty format (human readable, jenkins parsable)
+        """
+        # TODO sort first
+        row_titles = ["Planner", "Plan name", "Plan succeeded", "Time of plan", "Total angle change", "Computation time"]
+        print(tabulate(results, headers=row_titles, tablefmt='orgtbl'))
 
 
 if __name__ == '__main__':
@@ -256,4 +269,4 @@ if __name__ == '__main__':
     while not rospy.search_param('robot_description_semantic') and not rospy.is_shutdown():
         rospy.sleep(0.5)
 
-    PlannerBenchmarking("/projects/data/planners_benchmarks")
+    PlannerBenchmarking("/projects/data/planners_benchmark")
