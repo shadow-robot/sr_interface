@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 
+from copy import deepcopy
+
 import rospy
-from sr_benchmarking.sr_benchmarking import AnnotationParserBase
-from sr_benchmarking.sr_benchmarking import BenchmarkingBase
 from collision_scene_1 import CreateScene1
 from collision_scene_2 import CreateScene2
-from moveit_commander import RobotCommander, PlanningSceneInterface, MoveGroupCommander
-from moveit_msgs.msg import RobotState, MoveGroupActionResult
+from moveit_commander import (MoveGroupCommander, PlanningSceneInterface,
+                              RobotCommander)
+from moveit_msgs.msg import MoveGroupActionResult, RobotState
+from sr_benchmarking.sr_benchmarking import (AnnotationParserBase,
+                                             BenchmarkingBase)
 from visualization_msgs.msg import Marker, MarkerArray
-from copy import deepcopy
 
 
 class BenchmarkingScene(object):
@@ -52,7 +54,7 @@ class PlannerAnnotationParser(AnnotationParserBase):
                 BenchmarkingScene(element["name"])
             elif element["type"] == "bag":
                 self.play_bag(element["name"])
-                for _ in range(100):
+                for _ in range(10):
                     rospy.sleep(0.3)
 
         # wait for the scene to be spawned properly

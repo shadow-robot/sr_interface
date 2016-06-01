@@ -21,7 +21,6 @@ class CreateScene2(object):
         self.cloud_pub = rospy.Publisher('/camera/depth_registered/points', PointCloud2, queue_size=20, latch=True)
         self.cloud_sub = rospy.Subscriber('/camera/depth_registered/points_old', PointCloud2, self.msg_cb)
 
-
         # clear the scene
         self._scene.remove_world_object()
 
