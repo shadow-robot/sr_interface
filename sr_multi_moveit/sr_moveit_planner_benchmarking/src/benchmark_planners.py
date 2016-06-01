@@ -46,8 +46,17 @@ class PlannerAnnotationParser(AnnotationParserBase):
         It can be either a python static scene or bag containing an occupancy map.
         """
         scene = self._annotations["scene"]
-        if scene["type"] == "python":
-            BenchmarkingScene(scene["name"])
+
+        for element in scene:
+            if element["type"] == "python":
+                BenchmarkingScene(element["name"])
+            elif element["type"] == "bag":
+                self.play_bag(element["name"])
+            for _ in range(10):
+                rospy.sleep(0.5)
+
+        # wait for the scene to be spawned properly
+        rospy.sleep(0.5)
 
     def _init_planning(self):
         """
@@ -77,6 +86,9 @@ class PlannerAnnotationParser(AnnotationParserBase):
     def benchmark(self):
         marker_position_1 = self._annotations["start_xyz"]
         marker_position_2 = self._annotations["goal_xyz"]
+
+        print "planning from ", marker_position_1, " to: ", marker_position_2
+
         self._add_markers(marker_position_1, "Start test \n sequence", marker_position_2, "Goal")
 
         # Start planning in a given joint position
@@ -91,6 +103,8 @@ class PlannerAnnotationParser(AnnotationParserBase):
         self.group.set_start_state(current)
         joints = self._annotations["goal_joints"]
 
+        print "joints: ", self._annotations["start_joints"], " -> ", self._annotations["goal_joints"]
+
         for planner in self.planners:
             if planner == "stomp":
                 planner = "STOMP"
@@ -98,7 +112,10 @@ class PlannerAnnotationParser(AnnotationParserBase):
                     planner = "AnytimeD*"
             self.planner_id = planner
             self.group.set_planner_id(planner)
-            self._plan_joints(joints, "Test 1")
+
+            print "planning with ", planner
+
+            self._plan_joints(joints, self._annotations["name"])
 
         return self.planner_data
 
