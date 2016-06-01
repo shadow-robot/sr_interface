@@ -13,7 +13,8 @@ RUN apt-get update && \
 RUN cd /workspace/shadow_robot/base_deps/src && \
     wstool set sandbox -y --git https://github.com/shadow-robot/sandbox.git --version="hydro-devel" && \
     wstool set industrial_moveit -y --git https://github.com/ros-industrial/industrial_moveit.git --version="indigo-devel" && \
-    wstool up -j 2 industrial_moveit sandbox && \
+    wstool set sr_benchmarking -y --git https://github.com/shadow-robot/sr_benchmarking && \
+    wstool up -j 3 industrial_moveit sandbox sr_benchmarking && \
     source /opt/ros/indigo/setup.bash && \
     cd .. && \
     rosdep install --from-paths src --ignore-src --rosdistro indigo -y && \
