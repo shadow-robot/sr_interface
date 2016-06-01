@@ -52,8 +52,8 @@ class PlannerAnnotationParser(AnnotationParserBase):
                 BenchmarkingScene(element["name"])
             elif element["type"] == "bag":
                 self.play_bag(element["name"])
-            for _ in range(10):
-                rospy.sleep(0.5)
+                for _ in range(100):
+                    rospy.sleep(0.3)
 
         # wait for the scene to be spawned properly
         rospy.sleep(0.5)

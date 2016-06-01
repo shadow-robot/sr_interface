@@ -2,22 +2,28 @@
 
 import rospy
 from moveit_commander import RobotCommander, PlanningSceneInterface
+from sensor_msgs.msg import PointCloud2
 import geometry_msgs.msg
 import tf
 import time
+import thread
 
 
 class CreateScene2(object):
     def __init__(self):
         self._scene = PlanningSceneInterface()
-
-        # clear the scene
-        self._scene.remove_world_object()
-
         self.robot = RobotCommander()
 
         # pause to wait for rviz to load
         rospy.sleep(4)
+
+        self.first_stamp = None
+        self.cloud_pub = rospy.Publisher('/camera/depth_registered/points', PointCloud2, queue_size=20, latch=True)
+        self.cloud_sub = rospy.Subscriber('/camera/depth_registered/points_old', PointCloud2, self.msg_cb)
+
+
+        # clear the scene
+        self._scene.remove_world_object()
 
         # add floor object
         floor_pose = [0, 0, -0.12, 0, 0, 0, 1]
@@ -25,8 +31,21 @@ class CreateScene2(object):
         self.add_box_object("floor", floor_dimensions, floor_pose)
 
         # add collision objects
-
         self._kinect_pose_1 = [0.0, 0.815, 0.665, 0, -0.707, 0.707, 0]
+
+        # stream the kinect tf
+        kinect_cloud_topic = "kinect2_rgb_optical_frame"
+        thread.start_new_thread(self.spin, (kinect_cloud_topic, ))
+
+    def msg_cb(self, msg):
+        global first_stamp, now
+        if self.first_stamp is None:
+            now = rospy.Time.now()
+            first_stamp = msg.header.stamp
+        msg.header.stamp -= first_stamp
+        msg.header.stamp += now
+        for i in range(3):
+            self.cloud_pub.publish(msg)
 
     def add_box_object(self, name, dimensions, pose):
         p = geometry_msgs.msg.PoseStamped()
@@ -40,6 +59,7 @@ class CreateScene2(object):
         p.pose.orientation.z = pose[5]
         p.pose.orientation.w = pose[6]
         self._scene.add_box(name, p, (dimensions[0], dimensions[1], dimensions[2]))
+        rospy.sleep(0.2)
 
     def spin(self, cloud_topic):
         tf_broadcaster = tf.TransformBroadcaster()
@@ -56,9 +76,8 @@ def main():
     while not rospy.search_param('robot_description_semantic') and not rospy.is_shutdown():
         time.sleep(0.5)
 
-    load_collision_objects = CreateScene2()
-    kinect_cloud_topic = "kinect2_rgb_optical_frame"
-    load_collision_objects.spin(kinect_cloud_topic)
+    CreateScene2()
+    rospy.spin()
 
 if __name__ == "__main__":
     main()

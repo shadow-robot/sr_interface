@@ -51,6 +51,7 @@ class CreateScene1(object):
         p.pose.orientation.z = pose[5]
         p.pose.orientation.w = pose[6]
         self._scene.add_box(name, p, (dimensions[0], dimensions[1], dimensions[2]))
+        rospy.sleep(0.2)
 
 
 if __name__ == "__main__":

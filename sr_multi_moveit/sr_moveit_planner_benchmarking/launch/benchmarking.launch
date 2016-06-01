@@ -11,18 +11,4 @@
     <arg name="visualization" value="$(arg visualization)"/>
     <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
   </include>
-
-  <group if="$(arg complex)">
-    <node name="collision_scene_2" type="collision_scene_2.py" pkg="sr_moveit_planner_benchmarking" />
-    <node pkg="rosbag" type="play" name="player" output="screen"
-      args="-d 30 -q $(arg path)/office_scene.bag camera/depth_registered/points_transformed:=/camera/depth_registered/points_old" />
-    <node pkg="rosbag" type="play" name="player_2" output="screen"
-      args="-d 35 -q $(arg path)/office_scene_2.bag /camera/depth_registered/points_transformed:=/camera/depth_registered/points_old" />
-    <node name="header_time_adjust" type="header_time_adjust.py" pkg="sr_moveit_planner_benchmarking" output="screen"/>
-  </group>
-
-  <group unless="$(arg complex)">
-    <node name="collision_scene_1" type="collision_scene_1.py" pkg="sr_moveit_planner_benchmarking" />
-  </group>
-
 </launch>
