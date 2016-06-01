@@ -12,6 +12,10 @@ from sr_benchmarking.sr_benchmarking import (AnnotationParserBase,
                                              BenchmarkingBase)
 from tabulate import tabulate
 from visualization_msgs.msg import Marker, MarkerArray
+import subprocess
+import signal
+import psutil
+import time
 
 
 class BenchmarkingScene(object):
@@ -264,9 +268,25 @@ class PlannerBenchmarking(BenchmarkingBase):
 
 
 if __name__ == '__main__':
+    # first launching the main launch file
+    roslaunch_proc = subprocess.Popen("roslaunch sr_moveit_planner_benchmarking benchmarking.launch",
+                                      stdin=subprocess.PIPE, shell=True)
+    # wait for the launch file to be all spawned
+    time.sleep(40)
+
     rospy.init_node("planner_benchmark")
 
     while not rospy.search_param('robot_description_semantic') and not rospy.is_shutdown():
         rospy.sleep(0.5)
 
-    PlannerBenchmarking("/projects/data/planners_benchmark")
+    PlannerBenchmarking("/data/planners_benchmark")
+
+    # kill the launch file
+    process = psutil.Process(roslaunch_proc.pid)
+    for sub_process in process.get_children(recursive=True):
+        sub_process.send_signal(signal.SIGINT)
+    roslaunch_proc.wait()  # we wait for children to terminate
+    try:
+        roslaunch_proc.terminate()
+    except:
+        pass

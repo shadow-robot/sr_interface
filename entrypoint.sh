@@ -3,4 +3,4 @@ set -e
 
 # setup ros environment
 source "/workspace/shadow_robot/base/devel/setup.bash"
-roslaunch sr_moveit_planner_benchmarking test_ompl_planning.launch complex:=true visualization:=false
+python /workspace/shadow_robot/base/src/sr_interface/sr_multi_moveit/sr_moveit_planner_benchmarking/src/benchmark_planners.py

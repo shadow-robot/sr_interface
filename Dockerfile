@@ -18,14 +18,16 @@ RUN cd /workspace/shadow_robot/base_deps/src && \
     cd .. && \
     rosdep install --from-paths src --ignore-src --rosdistro indigo -y && \
     catkin_make && \
-    cd /workspace/shadow_robot/base/src && \
+    pip install tabulate
+
+RUN cd /workspace/shadow_robot/base/src && \
     wstool set -y sr_interface --version-new "F#64_planner_test_suite_ugo" && \
     wstool up sr_interface && \
     source /workspace/shadow_robot/base_deps/devel/setup.bash && \
     cd .. && \
     rosdep install --from-paths src --ignore-src --rosdistro indigo -y && \
     catkin_make && \
-    pip install tabulate
+    ln -s /workspace/shadow_robot/base/src/sr_interface/sr_multi_moveit/sr_moveit_planner_benchmarking/data /data/planners_benchmark
 
 # setup entrypoint
 COPY ./entrypoint.sh /
