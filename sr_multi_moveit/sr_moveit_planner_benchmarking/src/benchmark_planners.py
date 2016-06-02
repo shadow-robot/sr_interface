@@ -52,11 +52,8 @@ class PlannerAnnotationParser(AnnotationParserBase):
         """
         scene = self._annotations["scene"]
 
-        print "SCENE: ", scene
-
         for element in scene:
             if element["type"] == "launch":
-                print "loading launch: ", element["name"]
                 self.play_launch(element["name"])
             elif element["type"] == "python":
                 BenchmarkingScene(element["name"])
@@ -94,11 +91,9 @@ class PlannerAnnotationParser(AnnotationParserBase):
         self.planner_data = []
 
     def benchmark(self):
-        for test in self._annotations["tests"]:
+        for test_id, test in enumerate(self._annotations["tests"]):
             marker_position_1 = test["start_xyz"]
             marker_position_2 = test["goal_xyz"]
-
-            print "planning from ", marker_position_1, " to: ", marker_position_2
 
             self._add_markers(marker_position_1, "Start test \n sequence", marker_position_2, "Goal")
 
@@ -114,8 +109,6 @@ class PlannerAnnotationParser(AnnotationParserBase):
             self.group.set_start_state(current)
             joints = test["goal_joints"]
 
-            print "joints: ", test["start_joints"], " -> ", test["goal_joints"]
-
             for planner in self.planners:
                 if planner == "stomp":
                     planner = "STOMP"
@@ -123,10 +116,7 @@ class PlannerAnnotationParser(AnnotationParserBase):
                     planner = "AnytimeD*"
                 self.planner_id = planner
                 self.group.set_planner_id(planner)
-
-                print "planning with ", planner
-
-                self._plan_joints(joints, self._annotations["name"])
+                self._plan_joints(joints, self._annotations["name"]+"-test_"+str(test_id))
 
         return self.planner_data
 
@@ -256,9 +246,8 @@ class PlannerBenchmarking(BenchmarkingBase):
         results = []
         # iterate through all annotation files to run the benchmarks
         for annotation_file in self.load_files(path_to_data):
-            print "Parsing file: ", annotation_file
             with PlannerAnnotationParser(annotation_file, path_to_data) as parser:
-                results.append(parser.check_results(None)[0])
+                results.append(parser.check_results(None))
 
         self.pretty_results(results)
 
@@ -267,6 +256,9 @@ class PlannerBenchmarking(BenchmarkingBase):
         Outputs the results in a pretty format (human readable, jenkins parsable)
         """
         # TODO sort first
+        # reformatting the results
+        results = [item for sublist in results for item in sublist]
+
         row_titles = ["Planner", "Plan name", "Plan succeeded", "Time of plan", "Total angle change", "Computation time"]
         print(tabulate(results, headers=row_titles, tablefmt='orgtbl'))
 
