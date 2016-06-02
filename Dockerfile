@@ -27,7 +27,9 @@ RUN cd /workspace/shadow_robot/base/src && \
     source /workspace/shadow_robot/base_deps/devel/setup.bash && \
     cd .. && \
     rosdep install --from-paths src --ignore-src --rosdistro indigo -y && \
-    catkin_make && \
+    catkin_make
+
+RUN mkdir -p {/data,/results} && \
     ln -s /workspace/shadow_robot/base/src/sr_interface/sr_multi_moveit/sr_moveit_planner_benchmarking/data /data/planners_benchmark
 
 # setup entrypoint
