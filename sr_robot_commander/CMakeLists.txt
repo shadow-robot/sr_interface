@@ -152,10 +152,14 @@ catkin_package(
 # )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
-install(DIRECTORY
-        src
-        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+install(PROGRAMS src/sr_robot_commander/follow_warehouse_trajectory.py
+                 src/sr_robot_commander/named_trajectory_services.py
+                 src/sr_robot_commander/sr_arm_commander.py
+                 src/sr_robot_commander/sr_hand_commander.py
+                 src/sr_robot_commander/sr_robot_commander.py
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+
 
 #############
 ## Testing ##
