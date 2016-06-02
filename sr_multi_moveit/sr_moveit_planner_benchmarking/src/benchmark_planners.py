@@ -266,7 +266,7 @@ class PlannerBenchmarking(BenchmarkingBase):
         row_titles = ["Planner", "Plan name", "Plan succeeded", "Time of plan", "Total angle change", "Computation time"]
         print(tabulate(results, headers=row_titles, tablefmt='orgtbl'))
 
-        file_path = "/projects/results/"
+        file_path = "/results/"
         file_path += time.strftime("%Y_%m_%d-%H_%M_%S")
         file_path += "-planner_benchmark.xml"
         with open(file_path, 'w') as f:
@@ -275,7 +275,7 @@ class PlannerBenchmarking(BenchmarkingBase):
 
 if __name__ == '__main__':
     # first launching the main launch file
-    roslaunch_proc = subprocess.Popen("roslaunch sr_moveit_planner_benchmarking benchmarking.launch visualization:=true",
+    roslaunch_proc = subprocess.Popen("roslaunch sr_moveit_planner_benchmarking benchmarking.launch",
                                       stdin=subprocess.PIPE, shell=True)
     # wait for the launch file to be all spawned
     time.sleep(40)
@@ -285,7 +285,7 @@ if __name__ == '__main__':
     while not rospy.search_param('robot_description_semantic') and not rospy.is_shutdown():
         rospy.sleep(0.5)
 
-    PlannerBenchmarking("/projects/data/planners_benchmark")
+    PlannerBenchmarking("/data/planners_benchmark")
 
     # kill the launch file
     process = psutil.Process(roslaunch_proc.pid)
