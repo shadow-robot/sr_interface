@@ -12,9 +12,6 @@ from sr_benchmarking.sr_benchmarking import (AnnotationParserBase,
                                              BenchmarkingBase)
 from tabulate import tabulate
 from visualization_msgs.msg import Marker, MarkerArray
-import subprocess
-import signal
-import psutil
 import time
 
 
@@ -37,8 +34,8 @@ class PlannerAnnotationParser(AnnotationParserBase):
         super(PlannerAnnotationParser, self).__init__(path_to_annotation, path_to_data)
         self.parse()
 
-        self._init_planning()
         self._load_scene()
+        self._init_planning()
         self.benchmark()
 
     def check_results(self, results):
@@ -55,8 +52,13 @@ class PlannerAnnotationParser(AnnotationParserBase):
         """
         scene = self._annotations["scene"]
 
+        print "SCENE: ", scene
+
         for element in scene:
-            if element["type"] == "python":
+            if element["type"] == "launch":
+                print "loading launch: ", element["name"]
+                self.play_launch(element["name"])
+            elif element["type"] == "python":
                 BenchmarkingScene(element["name"])
             elif element["type"] == "bag":
                 self.play_bag(element["name"])
@@ -92,38 +94,39 @@ class PlannerAnnotationParser(AnnotationParserBase):
         self.planner_data = []
 
     def benchmark(self):
-        marker_position_1 = self._annotations["start_xyz"]
-        marker_position_2 = self._annotations["goal_xyz"]
+        for test in self._annotations["tests"]:
+            marker_position_1 = test["start_xyz"]
+            marker_position_2 = test["goal_xyz"]
 
-        print "planning from ", marker_position_1, " to: ", marker_position_2
+            print "planning from ", marker_position_1, " to: ", marker_position_2
 
-        self._add_markers(marker_position_1, "Start test \n sequence", marker_position_2, "Goal")
+            self._add_markers(marker_position_1, "Start test \n sequence", marker_position_2, "Goal")
 
-        # Start planning in a given joint position
-        joints = self._annotations["start_joints"]
-        current = RobotState()
-        current.joint_state.name = self.robot.get_current_state().joint_state.name
-        current_joints = list(
-            self.robot.get_current_state().joint_state.position)
-        current_joints[0:6] = joints
-        current.joint_state.position = current_joints
+            # Start planning in a given joint position
+            joints = test["start_joints"]
+            current = RobotState()
+            current.joint_state.name = self.robot.get_current_state().joint_state.name
+            current_joints = list(
+                self.robot.get_current_state().joint_state.position)
+            current_joints[0:6] = joints
+            current.joint_state.position = current_joints
 
-        self.group.set_start_state(current)
-        joints = self._annotations["goal_joints"]
+            self.group.set_start_state(current)
+            joints = test["goal_joints"]
 
-        print "joints: ", self._annotations["start_joints"], " -> ", self._annotations["goal_joints"]
+            print "joints: ", test["start_joints"], " -> ", test["goal_joints"]
 
-        for planner in self.planners:
-            if planner == "stomp":
-                planner = "STOMP"
-            elif planner == "sbpl":
+            for planner in self.planners:
+                if planner == "stomp":
+                    planner = "STOMP"
+                elif planner == "sbpl":
                     planner = "AnytimeD*"
-            self.planner_id = planner
-            self.group.set_planner_id(planner)
+                self.planner_id = planner
+                self.group.set_planner_id(planner)
 
-            print "planning with ", planner
+                print "planning with ", planner
 
-            self._plan_joints(joints, self._annotations["name"])
+                self._plan_joints(joints, self._annotations["name"])
 
         return self.planner_data
 
@@ -253,8 +256,9 @@ class PlannerBenchmarking(BenchmarkingBase):
         results = []
         # iterate through all annotation files to run the benchmarks
         for annotation_file in self.load_files(path_to_data):
-            parser = PlannerAnnotationParser(annotation_file, path_to_data)
-            results.append(parser.check_results(None)[0])
+            print "Parsing file: ", annotation_file
+            with PlannerAnnotationParser(annotation_file, path_to_data) as parser:
+                results.append(parser.check_results(None)[0])
 
         self.pretty_results(results)
 
@@ -266,7 +270,7 @@ class PlannerBenchmarking(BenchmarkingBase):
         row_titles = ["Planner", "Plan name", "Plan succeeded", "Time of plan", "Total angle change", "Computation time"]
         print(tabulate(results, headers=row_titles, tablefmt='orgtbl'))
 
-        file_path = "/results/"
+        file_path = "/projects/results/"
         file_path += time.strftime("%Y_%m_%d-%H_%M_%S")
         file_path += "-planner_benchmark.xml"
         with open(file_path, 'w') as f:
@@ -274,26 +278,6 @@ class PlannerBenchmarking(BenchmarkingBase):
 
 
 if __name__ == '__main__':
-    # first launching the main launch file
-    roslaunch_proc = subprocess.Popen("roslaunch sr_moveit_planner_benchmarking benchmarking.launch",
-                                      stdin=subprocess.PIPE, shell=True)
-    # wait for the launch file to be all spawned
-    time.sleep(40)
-
     rospy.init_node("planner_benchmark")
 
-    while not rospy.search_param('robot_description_semantic') and not rospy.is_shutdown():
-        rospy.sleep(0.5)
-
-    PlannerBenchmarking("/data/planners_benchmark")
-
-    # kill the launch file
-    process = psutil.Process(roslaunch_proc.pid)
-    for sub_process in process.get_children(recursive=True):
-        sub_process.send_signal(signal.SIGINT)
-        sub_process.send_signal(signal.SIGTERM)
-    roslaunch_proc.wait()  # we wait for children to terminate
-    try:
-        roslaunch_proc.terminate()
-    except:
-        pass
+    PlannerBenchmarking("/projects/data/planners_benchmark")
