@@ -262,7 +262,7 @@ class PlannerBenchmarking(BenchmarkingBase):
         row_titles = ["Planner", "Plan name", "Plan succeeded", "Time of plan", "Total angle change", "Computation time"]
         print(tabulate(results, headers=row_titles, tablefmt='orgtbl'))
 
-        file_path = "/projects/results/"
+        file_path = "/results/"
         file_path += time.strftime("%Y_%m_%d-%H_%M_%S")
         file_path += "-planner_benchmark.xml"
         with open(file_path, 'w') as f:
@@ -272,4 +272,4 @@ class PlannerBenchmarking(BenchmarkingBase):
 if __name__ == '__main__':
     rospy.init_node("planner_benchmark")
 
-    PlannerBenchmarking("/projects/data/planners_benchmark")
+    PlannerBenchmarking("/data/planners_benchmark")
