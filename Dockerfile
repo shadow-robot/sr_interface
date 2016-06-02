@@ -24,8 +24,10 @@ RUN cd /workspace/shadow_robot/base_deps/src && \
 RUN cd /workspace/shadow_robot/base/src && \
     wstool set -y sr_interface --version-new "F#64_planner_test_suite_ugo" && \
     wstool up sr_interface && \
+    cd ../../base_deps/src && \
+    wstool up sr_benchmarking && \
     source /workspace/shadow_robot/base_deps/devel/setup.bash && \
-    cd .. && \
+    cd /workspace/shadow_robot/base && \
     rosdep install --from-paths src --ignore-src --rosdistro indigo -y && \
     catkin_make
 
