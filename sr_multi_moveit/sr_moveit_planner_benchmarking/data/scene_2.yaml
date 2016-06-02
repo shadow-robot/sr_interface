@@ -2,7 +2,7 @@ name: office_scene
 
 scene:
   - type: launch
-    name: roslaunch sr_moveit_planner_benchmarking benchmarking.launch visualization:=true
+    name: roslaunch sr_moveit_planner_benchmarking benchmarking.launch
   - type: python
     name: simplified_2
   - type: bag
