@@ -1,4 +1,4 @@
-name: simplified_1
+name: simplified_1_2
 
 scene:
   - type: launch
@@ -18,7 +18,7 @@ planners:
   - PRMstarkConfigDefault
   - RRTstarkConfigDefault
 
-planning_attempts: 10
+planning_attempts: 100
 goal_tolerance: 0.005
 planning_time: 10
 allow_replanning: False
