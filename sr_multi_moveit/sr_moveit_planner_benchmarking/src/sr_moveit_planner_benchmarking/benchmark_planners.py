@@ -249,7 +249,8 @@ class PlannerBenchmarking(BenchmarkingBase):
         # reformatting the results
         results = [item for sublist in results for item in sublist]
 
-        row_titles = ["Planner", "Plan name", "Plan succeeded", "Time of plan", "Total angle change", "Computation time"]
+        row_titles = ["Planner", "Plan name", "Plan succeeded", "Time of plan",
+                      "Total angle change", "Computation time"]
         print(tabulate(results, headers=row_titles, tablefmt='orgtbl'))
 
         file_path = self._path_to_results
