@@ -1,11 +1,11 @@
 # sr_moveit_planner_benchmarking
 
 A package to test the different MoveIt planners. Planners currently configured are OMPL, SBPL and STOMP.
-Different scenes can be found in the **data** folder. The scpl repository can be found [here](https://github.com/shadow-robot/sandbox) and stomp [here](https://github.com/ros-industrial/industrial_moveit).
+Different scenes can be found in the **data** folder. The scpl repository can be found [here](https://github.com/shadow-robot/sandbox) and stomp [here](https://github.com/ros-industrial/industrial_moveit). You'll need to include them in your workspace.
 
 # Launch
 
-To run all the benchmarkings, simply run: `python src/benchmark_planners.py`
+To run all the benchmarkings, simply run: `rosrun sr_moveit_planner_benchmarking benchmark_planners.py`
 
 # Configuration
 
