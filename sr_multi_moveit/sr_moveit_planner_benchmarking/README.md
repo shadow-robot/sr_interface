@@ -5,7 +5,11 @@ Different scenes can be found in the **data** folder. The scpl repository can be
 
 # Launch
 
-To run all the benchmarkings, simply run: `rosrun sr_moveit_planner_benchmarking benchmark_planners.py`
+To run all the benchmarkings, simply run:
+
+```
+rosrun sr_moveit_planner_benchmarking benchmark_planners.py _data:=`rospack find sr_moveit_planner_benchmarking`/data _results:=/tmp
+```
 
 # Configuration
 

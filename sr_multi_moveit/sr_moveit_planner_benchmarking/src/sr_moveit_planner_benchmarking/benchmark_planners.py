@@ -227,13 +227,16 @@ class PlannerBenchmarking(BenchmarkingBase):
     """
     Runs the benchmarking for the planners.
     """
-    def __init__(self, path_to_data):
-        super(PlannerBenchmarking, self).__init__(path_to_data)
+    def __init__(self):
+        self._path_to_results = rospy.get_param("~results", "/results")
+        self._path_to_data = rospy.get_param("~data", "/data")
+
+        super(PlannerBenchmarking, self).__init__(self._path_to_data)
 
         results = []
         # iterate through all annotation files to run the benchmarks
-        for annotation_file in self.load_files(path_to_data):
-            with PlannerAnnotationParser(annotation_file, path_to_data) as parser:
+        for annotation_file in self.load_files(self._path_to_data):
+            with PlannerAnnotationParser(annotation_file, self._path_to_data) as parser:
                 results.append(parser.check_results(None))
 
         self.pretty_results(results)
@@ -249,7 +252,7 @@ class PlannerBenchmarking(BenchmarkingBase):
         row_titles = ["Planner", "Plan name", "Plan succeeded", "Time of plan", "Total angle change", "Computation time"]
         print(tabulate(results, headers=row_titles, tablefmt='orgtbl'))
 
-        file_path = "/projects/results/"
+        file_path = self._path_to_results
         file_path += time.strftime("%Y_%m_%d-%H_%M_%S")
         file_path += "-planner_benchmark.xml"
         with open(file_path, 'w') as f:
@@ -259,4 +262,4 @@ class PlannerBenchmarking(BenchmarkingBase):
 if __name__ == '__main__':
     rospy.init_node("planner_benchmark")
 
-    PlannerBenchmarking("/projects/data/planners_benchmark")
+    PlannerBenchmarking()
