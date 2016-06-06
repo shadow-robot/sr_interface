@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 
 from copy import deepcopy
-
 import rospy
-from collision_scene_1 import CreateScene1
-from collision_scene_2 import CreateScene2
 from moveit_commander import (MoveGroupCommander, PlanningSceneInterface,
                               RobotCommander)
 from moveit_msgs.msg import MoveGroupActionResult, RobotState
@@ -13,16 +10,6 @@ from sr_benchmarking.sr_benchmarking import (AnnotationParserBase,
 from tabulate import tabulate
 from visualization_msgs.msg import Marker, MarkerArray
 import time
-
-
-class BenchmarkingScene(object):
-    """
-    Static python scenes for the benchmarking.
-    """
-    def __init__(self, scene_name):
-        scenes_dict = {"simplified_1": CreateScene1,
-                       "simplified_2": CreateScene2}
-        scenes_dict[scene_name]()
 
 
 class PlannerAnnotationParser(AnnotationParserBase):
@@ -56,7 +43,7 @@ class PlannerAnnotationParser(AnnotationParserBase):
             if element["type"] == "launch":
                 self.play_launch(element["name"])
             elif element["type"] == "python":
-                BenchmarkingScene(element["name"])
+                self.load_python(element["name"])
             elif element["type"] == "bag":
                 self.play_bag(element["name"])
                 for _ in range(150):
@@ -262,7 +249,7 @@ class PlannerBenchmarking(BenchmarkingBase):
         row_titles = ["Planner", "Plan name", "Plan succeeded", "Time of plan", "Total angle change", "Computation time"]
         print(tabulate(results, headers=row_titles, tablefmt='orgtbl'))
 
-        file_path = "/results/"
+        file_path = "/projects/results/"
         file_path += time.strftime("%Y_%m_%d-%H_%M_%S")
         file_path += "-planner_benchmark.xml"
         with open(file_path, 'w') as f:
@@ -272,4 +259,4 @@ class PlannerBenchmarking(BenchmarkingBase):
 if __name__ == '__main__':
     rospy.init_node("planner_benchmark")
 
-    PlannerBenchmarking("/data/planners_benchmark")
+    PlannerBenchmarking("/projects/data/planners_benchmark")
