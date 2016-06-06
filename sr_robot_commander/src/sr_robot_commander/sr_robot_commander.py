@@ -377,16 +377,16 @@ class SrRobotCommander(object):
         time_from_start = 0.0
 
         for wp in trajectory:
-            
+
             joint_positions = None
             if 'name' in wp.keys():
                 joint_positions = self.get_named_target_joint_values(wp['name'])
             elif 'joint_angles' in wp.keys():
-                joint_positions = wp['joint_angles']
+                joint_positions = copy.deepcopy(wp['joint_angles'])
                 if 'degrees' in wp.keys() and wp['degrees']:
                     for joint, angle in joint_positions.iteritems():
                         joint_positions[joint] = radians(angle)
-                
+
             if joint_positions is None:
                 rospy.logerr("Invalid waypoint. Must containr valid name for named target or dict of joint angles.")
                 return None
@@ -538,7 +538,7 @@ class SrRobotCommander(object):
 
         if self._client.wait_for_server(timeout=rospy.Duration(4)) is False:
             rospy.logfatal("Failed to connect to action server in 4 sec")
-            raise
+            raise Exception("Failed to connect to action server in 4 sec")
 
     def move_to_joint_value_target_unsafe(self, joint_states, time=0.002,
                                           wait=True, angle_degrees=False):
