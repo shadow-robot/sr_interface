@@ -4,6 +4,6 @@ set -e
 # setup ros environment
 source "/workspace/shadow_robot/base/devel/setup.bash"
 
-roscore & 
+roscore &
 
-python /workspace/shadow_robot/base/src/sr_interface/sr_multi_moveit/sr_moveit_planner_benchmarking/src/benchmark_planners.py
+rosrun sr_moveit_planner_benchmarking benchmark_planners.py _data:=`rospack find sr_moveit_planner_benchmarking`/data _results:=/results
