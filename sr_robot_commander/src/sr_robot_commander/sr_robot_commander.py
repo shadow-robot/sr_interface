@@ -388,7 +388,7 @@ class SrRobotCommander(object):
                         joint_positions[joint] = radians(angle)
 
             if joint_positions is None:
-                rospy.logerr("Invalid waypoint. Must containr valid name for named target or dict of joint angles.")
+                rospy.logerr("Invalid waypoint. Must contain valid name for named target or dict of joint angles.")
                 return None
 
             new_positions = {}
