@@ -25,7 +25,6 @@ parser.add_argument(dest='angle_type', help="Should be either degrees or radians
 parser.parse_args()
 
 angle_type = str(sys.argv[1])
-rospy.logwarn(angle_type)
 
 # Use the hand finder to get the hand prefix, to allow this script to be used with either left or right hands
 hand_finder = HandFinder()
