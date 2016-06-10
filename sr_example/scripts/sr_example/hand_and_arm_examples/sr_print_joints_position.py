@@ -4,12 +4,11 @@
 # Useful when used in conjunction with 'teach mode', as new motion sequences can
 # be quickly produced from physically moving the robot into position and then
 # recording those positions with this script. Angles can be printed in radians or degrees, an argument should be added
-# when the script is called of either 'radians' or 'degrees'
+# when the script is called of either 'radians' or 'degrees', default is radians
 
 import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
-import sys
 from math import pi
 import argparse
 
@@ -17,13 +16,13 @@ import argparse
 rospy.init_node("print_joints_position", anonymous=True)
 
 parser = argparse.ArgumentParser(description='A script to print hand and arm joint positions. ',
-                                 add_help=True, usage='%(prog)s [angle_type]',
+                                 add_help=True, usage='%(prog)s [-h] --angle_type ANGLE_TYPE',
                                  formatter_class=argparse.RawTextHelpFormatter)
 
-parser.add_argument(dest='angle_type', help="Should be either degrees or radians")
-parser.parse_args()
+parser.add_argument(dest='--angle_type', help="ANGLE_TYPE should be either degrees or radians")
+args = parser.parse_args()
 
-angle_type = str(sys.argv[1])
+angle_type = args.angle_type
 
 # Use the hand finder to get the hand prefix, to allow this script to be used with either left or right hands
 hand_finder = HandFinder()
