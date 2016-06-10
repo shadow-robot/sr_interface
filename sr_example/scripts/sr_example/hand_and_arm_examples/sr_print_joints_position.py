@@ -42,11 +42,11 @@ all_joints_state = hand_commander.get_joints_position()
 
 
 hand_joints_state = {
-    k: (v * scale) for k, v in all_joints_state.items() if k.startswith(prefix + "_")
-    and not k.startswith(prefix + "_W")}
+    k: (v * scale) for k, v in all_joints_state.items()
+    if k.startswith(prefix + "_")and not k.startswith(prefix + "_W")}
 arm_joints_state = {
-    k: (v * scale) for k, v in all_joints_state.items() if k.startswith(prefix[0] + "a_")
-    or k.startswith(prefix + "_W")}
+    k: (v * scale) for k, v in all_joints_state.items()
+    if k.startswith(prefix[0] + "a_") or k.startswith(prefix + "_W")}
 
 
 print("Hand joints position \n " + str(hand_joints_state) + "\n")
