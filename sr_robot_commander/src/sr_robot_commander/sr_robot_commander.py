@@ -99,10 +99,10 @@ class SrRobotCommander(object):
         threading.Thread(None, rospy.spin)
 
     def set_num_planning_attempts(self, num_planning_attempts):
-        return self._move_group_commander.set_num_planning_attempts(num_planning_attempts)
+        self._move_group_commander.set_num_planning_attempts(num_planning_attempts)
 
     def set_planning_time(self, seconds):
-        return self._move_group_commander.set_planning_time(seconds)
+        self._move_group_commander.set_planning_time(seconds)
 
     def get_end_effector_pose_from_named_state(self, name):
         state = self._warehouse_name_get_srv(name, self._robot_name).state
