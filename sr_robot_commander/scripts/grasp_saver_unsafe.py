@@ -103,7 +103,7 @@ if "__main__" == __name__:
         rospy.logerr("You didn't enter a name.")
         exit(-1)
 
-    which = 'both'
+    which = 'all'
 
     if len(argv) > 2:
         which = argv[2]
@@ -116,5 +116,5 @@ if "__main__" == __name__:
         gs = SrGraspSaverUnsafe(argv[1]+"_both", "both")
         gs.spin()
     else:
-        gs = SrGraspSaverUnsafe(argv[1], which)
+        gs = SrGraspSaverUnsafe(argv[1]+"_"+which, which)
         gs.spin()
