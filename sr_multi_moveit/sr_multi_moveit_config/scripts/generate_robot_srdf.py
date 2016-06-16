@@ -281,6 +281,17 @@ class SRDFRobotGenerator(object):
                             node_attribute.nodeValue = (manipulator.hand.prefix + "WRJ1")
                             newatt = elt.appendChild(node)
                         elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
+                    if group_name == manipulator.arm.main_group and (manipulator.has_hand):
+                        new_group = xml.dom.minidom.Document().createElement('group')
+                        new_group.setAttribute("name", manipulator.arm.internal_name + "_and_hand")
+                        if manipulator.hand.is_lite:
+                            arm_group = xml.dom.minidom.Document().createElement('group name="'+ manipulator.arm.internal_name +'"')
+                        else:
+                            arm_group = xml.dom.minidom.Document().createElement('group name="'+ manipulator.arm.internal_name + '_and_wrist' +'"')
+                        new_group.appendChild(arm_group)
+                        hand_group = xml.dom.minidom.Document().createElement('group name="'+ manipulator.hand.internal_name +'"')
+                        new_group.appendChild(hand_group)  
+                        new_group.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
             elif elt.tagName == 'group_state':
                 group_state_name = elt.getAttribute('name')
                 group_name = elt.getAttribute('group')
