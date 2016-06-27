@@ -44,7 +44,7 @@ class SrGraspSaverUnsafe(object):
         self.__save = rospy.ServiceProxy(
             'save_robot_state', SaveState)
 
-        self.__name = name
+        self.__name = name + "_" + hand_or_arm
 
         if hand_or_arm == "arm":
             self.__commander = SrArmCommander()
@@ -103,10 +103,18 @@ if "__main__" == __name__:
         rospy.logerr("You didn't enter a name.")
         exit(-1)
 
-    which = 'both'
+    which = 'all'
 
     if len(argv) > 2:
         which = argv[2]
 
-    gs = SrGraspSaverUnsafe(argv[1], which)
-    gs.spin()
+    if which == "all":
+        gs = SrGraspSaverUnsafe(argv[1], "hand")
+        gs.spin()
+        gs = SrGraspSaverUnsafe(argv[1], "arm")
+        gs.spin()
+        gs = SrGraspSaverUnsafe(argv[1], "both")
+        gs.spin()
+    else:
+        gs = SrGraspSaverUnsafe(argv[1], which)
+        gs.spin()
