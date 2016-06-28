@@ -16,7 +16,7 @@
 - git:
     local-name: sr_benchmarking
     uri: https://github.com/shadow-robot/sr_benchmarking
-    version: 'master'
+    version: 'indigo-devel'
 
 - git:
     local-name: universal_robot
