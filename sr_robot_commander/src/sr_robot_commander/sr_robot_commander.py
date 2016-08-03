@@ -98,6 +98,12 @@ class SrRobotCommander(object):
 
         threading.Thread(None, rospy.spin)
 
+    def set_num_planning_attempts(self, num_planning_attempts):
+        self._move_group_commander.set_num_planning_attempts(num_planning_attempts)
+
+    def set_planning_time(self, seconds):
+        self._move_group_commander.set_planning_time(seconds)
+
     def get_end_effector_pose_from_named_state(self, name):
         state = self._warehouse_name_get_srv(name, self._robot_name).state
         return self.get_end_effector_pose_from_state(state)
@@ -361,10 +367,12 @@ class SrRobotCommander(object):
         Makes joint value trajectory from specified by named poses (either from
         SRDF or from warehouse)
         @param trajectory - list of waypoints, each waypoint is a dict with
-                            the following elements:
+                            the following elements (n.b either name or joint_angles is required)
                             - name -> the name of the way point
+                            - joint_angles -> a dict of joint names and angles
                             - interpolate_time -> time to move from last wp
                             - pause_time -> time to wait at this wp
+                            - degrees -> set to true if joint_angles is specified in degrees. Assumed false if absent.
         """
         current = self.get_current_state_bounded()
 
@@ -375,9 +383,18 @@ class SrRobotCommander(object):
         time_from_start = 0.0
 
         for wp in trajectory:
-            joint_positions = self.get_named_target_joint_values(wp['name'])
+
+            joint_positions = None
+            if 'name' in wp.keys():
+                joint_positions = self.get_named_target_joint_values(wp['name'])
+            elif 'joint_angles' in wp.keys():
+                joint_positions = copy.deepcopy(wp['joint_angles'])
+                if 'degrees' in wp.keys() and wp['degrees']:
+                    for joint, angle in joint_positions.iteritems():
+                        joint_positions[joint] = radians(angle)
+
             if joint_positions is None:
-                rospy.logerr("Invalid point name - can't finish trajectory")
+                rospy.logerr("Invalid waypoint. Must contain valid name for named target or dict of joint angles.")
                 return None
 
             new_positions = {}
@@ -527,7 +544,7 @@ class SrRobotCommander(object):
 
         if self._client.wait_for_server(timeout=rospy.Duration(4)) is False:
             rospy.logfatal("Failed to connect to action server in 4 sec")
-            raise
+            raise Exception("Failed to connect to action server in 4 sec")
 
     def move_to_joint_value_target_unsafe(self, joint_states, time=0.002,
                                           wait=True, angle_degrees=False):

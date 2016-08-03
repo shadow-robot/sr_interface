@@ -14,6 +14,11 @@
     version: 'indigo-devel'
 
 - git:
+    local-name: sr_benchmarking
+    uri: https://github.com/shadow-robot/sr_benchmarking
+    version: 'indigo-devel'
+
+- git:
     local-name: universal_robot
     uri: 'https://github.com/ros-industrial/universal_robot.git'
     version: indigo-devel
