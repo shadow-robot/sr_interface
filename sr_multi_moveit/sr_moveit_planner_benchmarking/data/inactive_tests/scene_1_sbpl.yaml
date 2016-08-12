@@ -11,7 +11,7 @@ planners:
   - sbpl
 planning_attempts: 1
 goal_tolerance: 0.005
-planning_time: 600
+planning_time: 100
 allow_replanning: False
 
 tests:
