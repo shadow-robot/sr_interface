@@ -18,10 +18,10 @@ class SrStateSaverUnsafe(object):
 
         self.__name = name
 
-        if hand_or_arm == "arm" or hand_or_arm == "both":
+        if hand_or_arm == "arm":
             self.__commander = SrArmCommander()
 
-        elif hand_or_arm == 'hand' or hand_or_arm == "both":
+        elif hand_or_arm == 'hand':
             hand_finder = HandFinder()
 
             hand_parameters = hand_finder.get_hand_parameters()
