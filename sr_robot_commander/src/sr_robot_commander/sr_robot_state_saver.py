@@ -18,10 +18,10 @@ class SrStateSaverUnsafe(object):
 
         self.__name = name
 
-        if hand_or_arm == "arm":
+        if hand_or_arm == "arm" or hand_or_arm == "both":
             self.__commander = SrArmCommander()
 
-        elif hand_or_arm == 'hand':
+        elif hand_or_arm == 'hand' or hand_or_arm == "both":
             hand_finder = HandFinder()
 
             hand_parameters = hand_finder.get_hand_parameters()
@@ -38,10 +38,9 @@ class SrStateSaverUnsafe(object):
 
             self.__hand_commander = SrHandCommander(hand_parameters=hand_parameters,
                                                     hand_serial=hand_serial)
-
+            
         self.__hand_or_arm = hand_or_arm
 
-    def __save_out(self):
         rs = RobotState()
 
         current_dict = {}
@@ -65,6 +64,4 @@ class SrStateSaverUnsafe(object):
         rs.joint_state.position = current_dict.values()
         self.__save(self.__name, robot_name, rs)
 
-    def spin(self):
-        self.__save_out()
 

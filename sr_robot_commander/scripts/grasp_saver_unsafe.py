@@ -35,7 +35,7 @@ If WHAT_TO_SAVE is omitted, it defaults to "both".
 """
 
 if "__main__" == __name__:
-    rospy.init_node("grasp_saver")
+    rospy.init_node("state_saver")
     if len(argv) <= 1 or "" == argv[1]:
         rospy.logerr("You didn't enter a name.")
         exit(-1)
@@ -46,12 +46,8 @@ if "__main__" == __name__:
         which = argv[2]
 
     if which == "all":
-        gs = SrGraspSaverUnsafe(argv[1] + "_hand", "hand")
-        gs.spin()
-        gs = SrGraspSaverUnsafe(argv[1] + "_arm", "arm")
-        gs.spin()
-        gs = SrGraspSaverUnsafe(argv[1] + "_both", "both")
-        gs.spin()
+        gs = SrStateSaverUnsafe(argv[1] + "_hand", "hand")
+        gs = SrStateSaverUnsafe(argv[1] + "_arm", "arm")
+        gs = SrStateSaverUnsafe(argv[1] + "_both", "both")
     else:
-        gs = SrGraspSaverUnsafe(argv[1] + "_" + which, which)
-        gs.spin()
+        gs = SrStateSaverUnsafe(argv[1] + "_" + which, which)
