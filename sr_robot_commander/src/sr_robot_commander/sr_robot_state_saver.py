@@ -10,6 +10,7 @@ from sr_arm_commander import SrArmCommander
 from sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
 
+
 class SrStateSaverUnsafe(object):
     def __init__(self, name, hand_or_arm="both"):
 
@@ -38,7 +39,6 @@ class SrStateSaverUnsafe(object):
 
             self.__hand_commander = SrHandCommander(hand_parameters=hand_parameters,
                                                     hand_serial=hand_serial)
-            
         self.__hand_or_arm = hand_or_arm
 
         rs = RobotState()
@@ -63,5 +63,3 @@ class SrStateSaverUnsafe(object):
         rs.joint_state.name = current_dict.keys()
         rs.joint_state.position = current_dict.values()
         self.__save(self.__name, robot_name, rs)
-
-
