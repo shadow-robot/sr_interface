@@ -83,7 +83,7 @@
     <group if="$(arg arm_ctrl)">
       <rosparam>
         robot_hardware:
-          - rh_sr_hand_robot_hw
+          - unique_robot_hw
           - ra_sr_ur_robot_hw
       </rosparam>
       <rosparam command="load" file="$(arg arm_robot_hw)"/>
@@ -92,13 +92,13 @@
 
     <rosparam unless="$(arg arm_ctrl)">
       robot_hardware:
-        - rh_sr_hand_robot_hw
+        - unique_robot_hw
     </rosparam>
 
     <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
     <include file="$(find sr_edc_launch)/sr_edc_ros_control.launch">
       <arg name="define_robot_hardware" value="false"/>
-      <arg name="hand_robot_hardware_name" value="rh_sr_hand_robot_hw"/>
+      <arg name="hand_robot_hardware_name" value="unique_robot_hw"/>
       <arg name="debug" value="$(arg debug)"/>
       <arg name="eth_port" value="$(arg eth_port)"/>
       <arg name="robot_description" value="$(arg robot_description)"/>
