@@ -123,7 +123,7 @@
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
     <include file="$(find sr_multi_moveit_config)/launch/moveit_planning_and_execution.launch">
-      <arg name="load_robot_description" value="false"/>
+      <arg name="load_robot_description" value="true"/>
       <arg name="gui" default="$(arg gui)"/>
       <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
       <arg name="planning" value="$(arg planning)"/>
