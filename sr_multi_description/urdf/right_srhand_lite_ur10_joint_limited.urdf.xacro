@@ -1,0 +1,29 @@
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="ur10srh">
+
+    <!--<xacro:include filename="$(find ur_description)/urdf/gazebo.urdf.xacro" />-->
+    <xacro:include filename="$(find ur_description)/urdf/ur10.urdf.xacro"/>
+
+    <link name="world"/>
+
+    <joint name="world_joint" type="fixed">
+        <parent link="world"/>
+        <child link="ra_base_link"/>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+    </joint>
+
+    <xacro:ur10_robot prefix="ra_" joint_limited="true"/>
+
+    <xacro:include filename="$(find sr_description)/materials.urdf.xacro"/>
+    <xacro:include filename="$(find sr_description)/hand/xacro/hand_lite.urdf.xacro"/>
+    <xacro:include filename="$(find sr_description)/other/xacro/gazebo/gazebo.urdf.xacro"/>
+
+    <xacro:shadowhand muscletrans="false" muscle="false" bio="false" bt_sp="false" ubi="false" eli="false" 
+                      reflect="1.0" prefix="rh_" extra_lite="false"/>
+
+    <joint name="ra_arm_to_hand" type="fixed">
+        <parent link="ra_ee_link"/>
+        <child link="rh_forearm"/>
+        <origin xyz="0.012 0.0 0.0" rpy="${pi/2.0} ${pi} ${pi/2.0}"/>
+    </joint>
+
+</robot>
