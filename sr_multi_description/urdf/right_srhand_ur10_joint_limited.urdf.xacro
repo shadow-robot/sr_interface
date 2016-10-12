@@ -8,7 +8,12 @@
     <joint name="world_joint" type="fixed">
         <parent link="world"/>
         <child link="ra_base_link"/>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <xacro:if value="$(arg initial_z)">
+        	<origin xyz="0.0 0.0 $(arg initial_z)" rpy="0.0 0.0 0.0"/>
+		</xacro:if>
+        <xacro:if value="$(arg initial_z)">
+        	<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+		</xacro:if>
     </joint>
 
     <xacro:ur10_robot prefix="ra_" joint_limited="true"/>

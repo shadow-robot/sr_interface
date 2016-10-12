@@ -18,7 +18,7 @@
   <arg name="arm_id" default="ra"/>
   <arg name="side" default="right"/>
   <arg name="robot_model" default="ur10"/>
-  <arg name="gazebo_z" default="0.1"/>
+  <arg name="initial_z" default="0.1"/>
 
   <!-- Change this for another hand -->
   <arg name="robot_description" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model)_joint_limited.urdf.xacro"/>
@@ -58,11 +58,11 @@
       <arg name="paused" value="$(arg paused)"/>
       <arg name="debug" value="$(arg debug)"/>
     </include>
-    <param name="robot_description" command="$(find xacro)/xacro.py '$(arg robot_description)'"/>
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(arg robot_description)' initial_z:=$(arg initial_z)"/>
     <!-- HAND -->
     <param name="/hand/mapping/$(arg hand_serial)" value="$(arg hand_id)"/>
     <param name="/hand/joint_prefix/$(arg hand_serial)" value="$(arg hand_id)_"/>
-    <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name) -z $(arg gazebo_z)" respawn="false" output="screen"/>
+    <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name)" respawn="false" output="screen"/>
     <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
     <!-- ARM -->
