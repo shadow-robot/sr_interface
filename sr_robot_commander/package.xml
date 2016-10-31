@@ -42,4 +42,5 @@
 
 
   <test_depend>rostest</test_depend>
+  <test_depend>sr_edc_launch</test_depend>
 </package>
