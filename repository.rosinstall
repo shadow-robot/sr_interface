@@ -29,21 +29,6 @@
     version: indigo-devel
 
 - git:
-    local-name: lma_kinematics_plugin
-    uri: 'https://github.com/shadow-robot/lma_kinematics_plugin'
-    version: F_ik_with_joint_limits
-
-- git:
-    local-name: moveit_ros
-    uri: https://github.com/shadow-robot/moveit_ros.git
-    version: shadow-indigo-latest
-
-- git:
-    local-name: moveit_core
-    uri: https://github.com/ros-planning/moveit_core.git
-    version: indigo-devel
-
-- git:
     local-name: moveit_msgs
     uri: https://github.com/ros-planning/moveit_msgs.git
     version: indigo-devel
@@ -62,4 +47,8 @@
     local-name: shadow_robot_ethercat
     uri: https://github.com/shadow-robot/sr-ros-interface-ethercat.git
     version: indigo-devel
-
+    
+- git:
+    local-name: moveit
+    uri: https://github.com/ros-planning/moveit.git
+    version: indigo-devel
