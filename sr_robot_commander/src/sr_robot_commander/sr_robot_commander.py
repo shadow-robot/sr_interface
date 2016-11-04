@@ -105,7 +105,7 @@ class SrRobotCommander(object):
 
     def set_planner_id(self, planner_id):
         self._move_group_commander.set_planner_id(planner_id)
-    
+
     def set_planning_time(self, seconds):
         self._move_group_commander.set_planning_time(seconds)
 
