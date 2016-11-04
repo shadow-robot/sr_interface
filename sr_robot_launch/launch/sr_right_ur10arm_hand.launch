@@ -9,6 +9,8 @@
   <arg name="use_moveit" default="true"/>
   <!--Choose planner library, options are ompl, stomp or sbpl-->
   <arg name="planning" default="ompl"/>
+  <!--Should the planner yaml be automatically generated? -->
+  <arg name="generate_planning_config" default="True"/> 
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <!-- Serial number of the hand to be used-->
@@ -31,6 +33,7 @@
     <arg name="debug" default="$(arg debug)"/>
     <arg name="use_moveit" default="$(arg use_moveit)"/>
     <arg name="planning" default="$(arg planning)"/>
+    <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
     <arg name="gui" default="$(arg gui)"/>
     <arg name="world" value="$(arg world)"/>
     <arg name="initial_z" value="$(arg initial_z)"/>

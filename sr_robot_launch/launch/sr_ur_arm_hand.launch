@@ -9,6 +9,8 @@
   <arg name="use_moveit" default="true"/>
   <!--Choose planner library, options are ompl, stomp or sbpl-->
   <arg name="planning" default="ompl"/>
+  <!--Should the planner yaml be automatically generated? -->
+  <arg name="generate_planning_config" default="True"/>  
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <arg name="world" default="$(find sr_description)/other/worlds/shadowhand.world"/>
@@ -115,6 +117,7 @@
       <arg name="gui" default="$(arg gui)"/>
       <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
       <arg name="planning" value="$(arg planning)"/>
+      <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
     </include>
     <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
 
