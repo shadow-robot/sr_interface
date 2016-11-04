@@ -100,14 +100,8 @@ class SrRobotCommander(object):
 
         threading.Thread(None, rospy.spin)
 
-    def set_planner_id(self, planner_id):
-        self._move_group_commander.set_planner_id(planner_id)
-
     def set_num_planning_attempts(self, num_planning_attempts):
         self._move_group_commander.set_num_planning_attempts(num_planning_attempts)
-
-    def set_planner_id(self, planner_id):
-        self._move_group_commander.set_planner_id(planner_id)
 
     def set_planning_time(self, seconds):
         self._move_group_commander.set_planning_time(seconds)
