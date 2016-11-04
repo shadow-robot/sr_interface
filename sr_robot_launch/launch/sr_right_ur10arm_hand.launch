@@ -24,7 +24,7 @@
   <arg name="world" default="$(find sr_description)/other/worlds/shadowhand.world"/>
   <arg name="initial_z" default="0.1"/>  
 
-  <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/>
+  <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur10.urdf.xacro"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
 
   <arg name="side" value="right"/>
