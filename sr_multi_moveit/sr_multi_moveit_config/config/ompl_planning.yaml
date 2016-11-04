@@ -53,6 +53,20 @@ planner_configs:
     range: 0.0
     temp_change_factor: 2.0
     type: geometric::TRRT
+right_arm_and_wrist:
+  longest_valid_segment_fraction: 0.03
+  planner_configs:
+  - SBLkConfigDefault
+  - ESTkConfigDefault
+  - LBKPIECEkConfigDefault
+  - BKPIECEkConfigDefault
+  - KPIECEkConfigDefault
+  - RRTkConfigDefault
+  - RRTConnectkConfigDefault
+  - RRTstarkConfigDefault
+  - TRRTkConfigDefault
+  - PRMkConfigDefault
+  - PRMstarkConfigDefault  
 right_arm_and_hand:
   longest_valid_segment_fraction: 0.03
   planner_configs:
