@@ -13,6 +13,12 @@ joint_limits:
     has_acceleration_limits: true
     max_acceleration: 2.16
   elbow_joint:
+<<<<<<< Updated upstream
+=======
+    has_position_limits: true
+    max_position: 2
+    min_position: -1.57
+>>>>>>> Stashed changes
     has_velocity_limits: true
     max_velocity: 3.15
     has_acceleration_limits: true
