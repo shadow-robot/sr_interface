@@ -20,6 +20,6 @@
   <!-- The name of the robot config file to load -->
   <arg name="robot_config_file" default=""/>
 
-  <node name="load_ompl_planning" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="ompl_planning $(arg robot_config_file)" />
-
+  <!-- <node name="load_ompl_planning" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="ompl_planning $(arg robot_config_file)" -->
+  <rosparam command="load" file="$(find sr_multi_moveit_config)/config/ompl_planning.yaml"/>
 </launch>
