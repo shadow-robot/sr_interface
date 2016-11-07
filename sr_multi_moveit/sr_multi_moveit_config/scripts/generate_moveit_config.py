@@ -180,7 +180,7 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
                     group_prefix = prefix  
                 else:
                     group_name = group.name[len(prefix):]
-                    group_prefix = group.name[:len(prefix)]                   
+                    group_prefix = group.name[:len(prefix)]
 
                 if group_name in arm_yamldoc and group_prefix == prefix:
                     output_str += group.name + ":\n"
