@@ -9,6 +9,7 @@ robot:
         moveit_path: 
           package: sr_multi_moveit_config
           relative_path: /config/ur
+        extra_groups_config_path: /config
         group_states:
           - home
           - up
