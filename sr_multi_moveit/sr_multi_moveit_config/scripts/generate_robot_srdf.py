@@ -100,6 +100,9 @@ class Robot(object):
                             package_name = arm_yaml["moveit_path"]["package"]
                             relative_path = arm_yaml["moveit_path"]["relative_path"]
                             manipulator.arm.moveit_path = rospkg.RosPack().get_path(package_name) + relative_path
+                        if "extra_groups_config_path" in arm_yaml:
+                            relative_path = arm_yaml["extra_groups_config_path"]
+                            manipulator.arm.extra_groups_config_path = rospkg.RosPack().get_path("sr_multi_moveit_config") + relative_path
                         if "main_group" in arm_yaml:
                             manipulator.arm.main_group = arm_yaml["main_group"]
                         else:
@@ -359,6 +362,16 @@ class SRDFRobotGenerator(object):
                                                                  elt.getAttribute("parent_link"))
                 elt.getAttributeNode("group").nodeValue = manipulator.arm.internal_name
                 elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
+                newElement = deepcopy(elt)
+                newElement.getAttributeNode("name").nodeValue = manipulator.arm.internal_name+"_and_wrist_ee"
+                newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "palm"
+                newElement.getAttributeNode("group").nodeValue = manipulator.arm.internal_name+"_and_wrist"
+                newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
+                newElement = deepcopy(elt)
+                newElement.getAttributeNode("name").nodeValue = manipulator.arm.internal_name+"_and_hand_ee"
+                newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "palm"
+                newElement.getAttributeNode("group").nodeValue = manipulator.arm.internal_name+"_and_hand"
+                newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
             previous = elt
             elt = xacro.next_element(previous)
 
