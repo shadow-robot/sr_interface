@@ -102,9 +102,8 @@ class Robot(object):
                             manipulator.arm.moveit_path = rospkg.RosPack().get_path(package_name) + relative_path
                         if "extra_groups_config_path" in arm_yaml:
                             relative_path = arm_yaml["extra_groups_config_path"]
-                            manipulator.arm.extra_groups_config_path = (
-                            rospkg.RosPack().get_path("sr_multi_moveit_config") +
-                            relative_path)
+                            manipulator.arm.extra_groups_config_path = \
+                                rospkg.RosPack().get_path("sr_multi_moveit_config") + relative_path
                         if "main_group" in arm_yaml:
                             manipulator.arm.main_group = arm_yaml["main_group"]
                         else:
