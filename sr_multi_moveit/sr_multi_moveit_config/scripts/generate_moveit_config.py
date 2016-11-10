@@ -166,7 +166,8 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
             with open(arm_yaml_path, 'r') as stream:
                 arm_yamldoc = yaml.load(stream)
             if manipulator.arm.extra_groups_config_path:
-                arm_yaml_extra_groups_path = manipulator.arm.extra_groups_config_path + "/" + "ompl_planning_extra_groups.yaml"
+                arm_yaml_extra_groups_path = (manipulator.arm.extra_groups_config_path + "/" +
+                                              "ompl_planning_extra_groups.yaml")
                 with open(arm_yaml_extra_groups_path, 'r') as stream:
                     arm_yamldoc_extra_groups = yaml.load(stream)
             prefix = manipulator.arm.prefix
@@ -177,7 +178,7 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
                     group_prefix = prefix
                 elif manipulator.arm.internal_name in group_name:
                     group_prefix, group_name = group_name.split("_", 1)
-                    group_prefix = prefix  
+                    group_prefix = prefix
                 else:
                     group_name = group.name[len(prefix):]
                     group_prefix = group.name[:len(prefix)]
@@ -222,7 +223,6 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
                                                allow_unicode=True)
                         output_str += yaml_reindent(group_dump, 2)
                         output_str += "\n"
-
 
         if manipulator.has_hand:
             with open(hand_template_path, 'r') as stream:
