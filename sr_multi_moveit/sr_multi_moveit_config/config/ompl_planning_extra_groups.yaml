@@ -13,7 +13,7 @@ arm_and_wrist:
   - TRRTkConfigDefault
   - PRMkConfigDefault
   - PRMstarkConfigDefault
-  projection_evaluator: joints(shoulder_pan_joint,shoulder_lift_joint)
+  # projection_evaluator: joints(shoulder_pan_joint,shoulder_lift_joint)
 arm_and_hand:
   default_planner_config: RRTConnectkConfigDefault
   longest_valid_segment_fraction: 0.005
@@ -29,4 +29,4 @@ arm_and_hand:
   - TRRTkConfigDefault
   - PRMkConfigDefault
   - PRMstarkConfigDefault
-  projection_evaluator: joints(shoulder_pan_joint,shoulder_lift_joint)
+  # projection_evaluator: joints(shoulder_pan_joint,shoulder_lift_joint)
