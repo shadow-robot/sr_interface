@@ -292,7 +292,7 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
                     group_name = manipulator.arm.main_group
                     group_prefix = prefix
                 elif manipulator.arm.internal_name in group_name:
-                    group_prefix, group_name = group_name.split("_",1)
+                    group_prefix, group_name = group_name.split("_", 1)
                     group_prefix = prefix
                 else:
                     group_name = group.name[len(prefix):]
@@ -321,7 +321,7 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
                             kinematics_config["tip_name"] = prefix + tip_name
                         if "root_name" in kinematics_config:
                             root_name = kinematics_config["root_name"]
-                            kinematics_config["root_name"] = prefix + root_name  
+                            kinematics_config["root_name"] = prefix + root_name
 
                     output_str += group.name + ":\n"
                     output_str += yaml_reindent(yaml.dump(kinematics_config,
