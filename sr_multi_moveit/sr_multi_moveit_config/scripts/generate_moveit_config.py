@@ -280,11 +280,19 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
             arm_yaml_path = manipulator.arm.moveit_path + "/" + "kinematics.yaml"
             with open(arm_yaml_path, 'r') as stream:
                 arm_yamldoc = yaml.load(stream)
+            if manipulator.arm.extra_groups_config_path:
+                arm_yaml_extra_groups_path = (manipulator.arm.extra_groups_config_path + "/" +
+                                              "kinematics_extra_groups.yaml")
+                with open(arm_yaml_extra_groups_path, 'r') as stream:
+                    arm_yamldoc_extra_groups = yaml.load(stream)
             prefix = manipulator.arm.prefix
             for group in robot.groups:
                 group_name = group.name
                 if group_name == manipulator.arm.internal_name:
                     group_name = manipulator.arm.main_group
+                    group_prefix = prefix
+                elif manipulator.arm.internal_name in group_name:
+                    group_prefix, group_name = group_name.split("_", 1)
                     group_prefix = prefix
                 else:
                     group_name = group.name[len(prefix):]
@@ -305,6 +313,22 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
                                                           default_flow_style=False,
                                                           allow_unicode=True), 2)
                     output_str += "\n"
+                elif group_name in arm_yamldoc_extra_groups:
+                    kinematics_config = arm_yamldoc_extra_groups[group_name]
+                    if prefix:
+                        if "tip_name" in kinematics_config:
+                            tip_name = kinematics_config["tip_name"]
+                            kinematics_config["tip_name"] = prefix + tip_name
+                        if "root_name" in kinematics_config:
+                            root_name = kinematics_config["root_name"]
+                            kinematics_config["root_name"] = prefix + root_name
+
+                    output_str += group.name + ":\n"
+                    output_str += yaml_reindent(yaml.dump(kinematics_config,
+                                                          default_flow_style=False,
+                                                          allow_unicode=True), 2)
+                    output_str += "\n"
+
         if manipulator.has_hand:
                 # open hand template files
             tracik_template_path = (hand_template_path[0:hand_template_path.find("_template")] +
