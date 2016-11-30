@@ -1,0 +1,32 @@
+arm_and_wrist:
+  default_planner_config: RRTConnectkConfigDefault
+  longest_valid_segment_fraction: 0.005
+  planner_configs:
+  - SBLkConfigDefault
+  - ESTkConfigDefault
+  - LBKPIECEkConfigDefault
+  - BKPIECEkConfigDefault
+  - KPIECEkConfigDefault
+  - RRTkConfigDefault
+  - RRTConnectkConfigDefault
+  - RRTstarkConfigDefault
+  - TRRTkConfigDefault
+  - PRMkConfigDefault
+  - PRMstarkConfigDefault
+  # projection_evaluator: joints(shoulder_pan_joint,shoulder_lift_joint)
+arm_and_hand:
+  default_planner_config: RRTConnectkConfigDefault
+  longest_valid_segment_fraction: 0.005
+  planner_configs:
+  - SBLkConfigDefault
+  - ESTkConfigDefault
+  - LBKPIECEkConfigDefault
+  - BKPIECEkConfigDefault
+  - KPIECEkConfigDefault
+  - RRTkConfigDefault
+  - RRTConnectkConfigDefault
+  - RRTstarkConfigDefault
+  - TRRTkConfigDefault
+  - PRMkConfigDefault
+  - PRMstarkConfigDefault
+  # projection_evaluator: joints(shoulder_pan_joint,shoulder_lift_joint)

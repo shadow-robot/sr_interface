@@ -53,7 +53,7 @@ class SrRobotCommander(object):
                         "right_hand": "rh_",
                         "left_hand": "lh_"}
 
-    def __init__(self, name):
+    def __init__(self, name, prefix=None):
         """
         Initialize MoveGroupCommander object
         @param name - name of the MoveIt group
@@ -84,7 +84,9 @@ class SrRobotCommander(object):
             'compute_fk', GetPositionFK)
 
         # prefix of the trajectory controller
-        if name in self.__group_prefixes.keys():
+        if prefix is not None:
+            self._prefix = prefix
+        elif name in self.__group_prefixes.keys():
             self._prefix = self.__group_prefixes[name]
         else:
             # Group name is one of the ones to plan for specific fingers.
@@ -97,6 +99,9 @@ class SrRobotCommander(object):
         self._set_up_action_client()
 
         threading.Thread(None, rospy.spin)
+
+    def set_planner_id(self, planner_id):
+        self._move_group_commander.set_planner_id(planner_id)
 
     def set_num_planning_attempts(self, num_planning_attempts):
         self._move_group_commander.set_num_planning_attempts(num_planning_attempts)

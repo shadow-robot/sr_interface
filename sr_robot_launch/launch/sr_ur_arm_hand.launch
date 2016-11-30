@@ -9,6 +9,8 @@
   <arg name="use_moveit" default="true"/>
   <!--Choose planner library, options are ompl, stomp or sbpl-->
   <arg name="planning" default="ompl"/>
+  <!--Should the planner yaml be automatically generated? -->
+  <arg name="generate_planning_config" default="True"/>  
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <arg name="world" default="$(find sr_description)/other/worlds/shadowhand.world"/>
@@ -18,6 +20,7 @@
   <arg name="arm_id" default="ra"/>
   <arg name="side" default="right"/>
   <arg name="robot_model" default="ur10"/>
+  <arg name="initial_z" default="0.1"/>
 
   <!-- Change this for another hand -->
   <arg name="robot_description" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model)_joint_limited.urdf.xacro"/>
@@ -57,11 +60,11 @@
       <arg name="paused" value="$(arg paused)"/>
       <arg name="debug" value="$(arg debug)"/>
     </include>
-    <param name="robot_description" command="$(find xacro)/xacro.py '$(arg robot_description)'"/>
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(arg robot_description)' initial_z:=$(arg initial_z)"/>
     <!-- HAND -->
     <param name="/hand/mapping/$(arg hand_serial)" value="$(arg hand_id)"/>
     <param name="/hand/joint_prefix/$(arg hand_serial)" value="$(arg hand_id)_"/>
-    <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name) -z 0.1 " respawn="false" output="screen"/>
+    <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name)" respawn="false" output="screen"/>
     <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
     <!-- ARM -->
@@ -87,6 +90,7 @@
       <arg name="hand_serial" value="$(arg hand_serial)"/>
       <arg name="hand_id" value="$(arg hand_id)"/>
       <arg name="mapping_path" value="$(arg mapping_path)"/>
+      <arg name="initial_z" value="$(arg initial_z)"/>
     </include>
     <!-- ARM -->
     <rosparam command="load" file="$(arg arm_controller)"/>
@@ -114,6 +118,7 @@
       <arg name="gui" default="$(arg gui)"/>
       <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
       <arg name="planning" value="$(arg planning)"/>
+      <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
     </include>
     <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
 

@@ -100,6 +100,10 @@ class Robot(object):
                             package_name = arm_yaml["moveit_path"]["package"]
                             relative_path = arm_yaml["moveit_path"]["relative_path"]
                             manipulator.arm.moveit_path = rospkg.RosPack().get_path(package_name) + relative_path
+                        if "extra_groups_config_path" in arm_yaml:
+                            relative_path = arm_yaml["extra_groups_config_path"]
+                            manipulator.arm.extra_groups_config_path = \
+                                rospkg.RosPack().get_path("sr_multi_moveit_config") + relative_path
                         if "main_group" in arm_yaml:
                             manipulator.arm.main_group = arm_yaml["main_group"]
                         else:
@@ -158,7 +162,7 @@ class SRDFRobotGenerator(object):
                 xacro.eval_self_contained(self.arm_srdf_xml)
             if manipulator.has_hand:
                 # Generate and read hand srdf
-                hand_urdf_path = self.rospack.get_path('sr_description')+"/robots/" + manipulator.hand.name
+                hand_urdf_path = self.rospack.get_path('sr_description') + "/robots/" + manipulator.hand.name
                 with open(hand_urdf_path, 'r') as hand_urdf_xacro_file:
                     hand_urdf_xml = parse(hand_urdf_xacro_file)
                 xacro.process_includes(hand_urdf_xml, os.path.dirname(sys.argv[0]))
@@ -359,6 +363,16 @@ class SRDFRobotGenerator(object):
                                                                  elt.getAttribute("parent_link"))
                 elt.getAttributeNode("group").nodeValue = manipulator.arm.internal_name
                 elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
+                newElement = deepcopy(elt)
+                newElement.getAttributeNode("name").nodeValue = manipulator.arm.internal_name + "_and_wrist_ee"
+                newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "palm"
+                newElement.getAttributeNode("group").nodeValue = manipulator.arm.internal_name + "_and_wrist"
+                newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
+                newElement = deepcopy(elt)
+                newElement.getAttributeNode("name").nodeValue = manipulator.arm.internal_name + "_and_hand_ee"
+                newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "palm"
+                newElement.getAttributeNode("group").nodeValue = manipulator.arm.internal_name + "_and_hand"
+                newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
             previous = elt
             elt = xacro.next_element(previous)
 
@@ -442,7 +456,7 @@ class SRDFRobotGenerator(object):
         for comment in xml_comments:
             comment.writexml(self.new_robot_srdf, indent=addindent, addindent=addindent, newl="\n")
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     rospy.init_node('robot_srdf_generator', anonymous=True)
     robot_generator = SRDFRobotGenerator()
