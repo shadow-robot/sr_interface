@@ -6,7 +6,7 @@
 - git:
     local-name: sr_core
     uri: https://github.com/shadow-robot/sr_core
-    version: 'indigo-devel'
+    version: 'kinetic-devel'
 
 - git:
     local-name: sr_common
@@ -34,26 +34,6 @@
     version: F_ik_with_joint_limits
 
 - git:
-    local-name: moveit_ros
-    uri: https://github.com/shadow-robot/moveit_ros.git
-    version: shadow-indigo-latest
-
-- git:
-    local-name: moveit_core
-    uri: https://github.com/ros-planning/moveit_core.git
-    version: indigo-devel
-
-- git:
-    local-name: moveit_msgs
-    uri: https://github.com/ros-planning/moveit_msgs.git
-    version: indigo-devel
-
-- git:
-    local-name: ros_controllers
-    uri: https://github.com/shadow-robot/ros_controllers.git
-    version: F#182_partial_trajectory_mod
-
-- git:
     local-name: trac_ik
     uri: https://bitbucket.org/traclabs/trac_ik.git
     version: 'master'
@@ -61,5 +41,5 @@
 - git:
     local-name: shadow_robot_ethercat
     uri: https://github.com/shadow-robot/sr-ros-interface-ethercat.git
-    version: indigo-devel
+    version: kinetic-devel
 
