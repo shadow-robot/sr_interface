@@ -536,6 +536,9 @@ class SrRobotCommander(object):
             self._joints_effort = {n: v for n, v in
                                    zip(joint_state.name, joint_state.effort)}
 
+    def _get_trajectory_controller_name(self):
+        return self._prefix + "trajectory_controller"
+
     def _set_up_action_client(self):
         """
         Sets up an action client to communicate with the trajectory controller
@@ -543,7 +546,7 @@ class SrRobotCommander(object):
         self._action_running = False
 
         self._client = SimpleActionClient(
-            self._prefix + "trajectory_controller/follow_joint_trajectory",
+            self._get_trajectory_controller_name() + "/follow_joint_trajectory",
             FollowJointTrajectoryAction
         )
 
