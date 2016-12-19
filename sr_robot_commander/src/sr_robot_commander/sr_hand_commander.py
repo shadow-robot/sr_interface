@@ -147,3 +147,9 @@ class SrHandCommander(SrRobotCommander):
         @return stripped joint name
         """
         return joint_name[-4:]
+
+    def attach_object(self, object_name):
+        self._move_group_commander.attach_object(object_name)
+
+    def detach_object(self, object_name):
+        self._move_group_commander.detach_object(object_name)
