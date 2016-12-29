@@ -703,9 +703,9 @@ class SrRobotCommander(object):
         service_request.pose_stamped = target_pose
         service_request.timeout.secs = 0.005
         service_request.avoid_collisions = avoid_collisions
-    
+
         try:
-            resp = self._compute_ik(ik_request = service_request)
+            resp = self._compute_ik(ik_request=service_request)
             # Check if error_code.val is SUCCESS=1
             if resp.error_code.val != 1:
                 if resp.error_code.val == -10:
@@ -719,9 +719,9 @@ class SrRobotCommander(object):
                 return
             else:
                 return resp.solution.joint_state
-                
+
         except rospy.ServiceException, e:
-            rospy.logerr("Service call failed: %s"%e)
+            rospy.logerr("Service call failed: %s" % e)
 
     def move_to_pose_value_target_unsafe(self, target_pose,  avoid_collisions=False, time=0.002, wait=True):
         joint_state = self.get_ik(target_pose, avoid_collisions)
