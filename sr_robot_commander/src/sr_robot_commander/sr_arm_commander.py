@@ -53,7 +53,7 @@ class SrArmCommander(SrRobotCommander):
         @param end_effector_link - name of the end effector link
         @param wait - should method wait for movement end or not
         """
-        self._move_to_position_target(xyz, end_effector_link, wait=wait)
+        self.move_to_position_target(xyz, end_effector_link, wait=wait)
 
     def plan_to_position_target(self, xyz, end_effector_link=""):
         """
@@ -62,7 +62,7 @@ class SrArmCommander(SrRobotCommander):
         @param xyz - new position of end-effector
         @param end_effector_link - name of the end effector link
         """
-        self._plan_to_position_target(xyz, end_effector_link)
+        self.plan_to_position_target(xyz, end_effector_link)
 
     def move_to_pose_target(self, pose, end_effector_link="", wait=True):
         """
@@ -74,7 +74,7 @@ class SrArmCommander(SrRobotCommander):
         @param end_effector_link - name of the end effector link
         @param wait - should method wait for movement end or not
         """
-        self._move_to_pose_target(pose, end_effector_link, wait=wait)
+        self.move_to_pose_target(pose, end_effector_link, wait=wait)
 
     def plan_to_pose_target(self, pose, end_effector_link=""):
         """
@@ -86,7 +86,7 @@ class SrArmCommander(SrRobotCommander):
 
         @param end_effector_link - name of the end effector link
         """
-        self._plan_to_pose_target(pose, end_effector_link)
+        self.plan_to_pose_target(pose, end_effector_link)
 
     def set_ground(self, height=0.1, z_position=-0.1):
         """
