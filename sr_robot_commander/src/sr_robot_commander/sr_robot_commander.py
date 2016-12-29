@@ -691,7 +691,7 @@ class SrRobotCommander(object):
         except rospy.ServiceException:
             rospy.logerr("Failed to call service teach_mode")
 
-    def get_ik(self, target_pose, avoid_collisions = False):
+    def get_ik(self, target_pose, avoid_collisions=False):
         """
         Computes the inverse kinematics for a given pose. It returns a JointState
         @param target_pose - A given pose of type PoseStamped
@@ -701,7 +701,7 @@ class SrRobotCommander(object):
         service_request.group_name = self._name
         service_request.ik_link_name = self._move_group_commander.get_end_effector_link()
         service_request.pose_stamped = target_pose
-        service_request.timeout.secs= 0.005
+        service_request.timeout.secs = 0.005
         service_request.avoid_collisions = avoid_collisions
     
         try:
@@ -723,7 +723,7 @@ class SrRobotCommander(object):
         except rospy.ServiceException, e:
             rospy.logerr("Service call failed: %s"%e)
 
-    def move_to_pose_value_target_unsafe(self, target_pose,  avoid_collisions = False, time=0.002, wait=True):
+    def move_to_pose_value_target_unsafe(self, target_pose,  avoid_collisions=False, time=0.002, wait=True):
         joint_state = self.get_ik(target_pose, avoid_collisions)
         if joint_state is not None:
             state_as_dict = dict(zip(joint_state.name, joint_state.position))
