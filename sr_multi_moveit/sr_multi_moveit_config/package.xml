@@ -23,9 +23,10 @@
   <run_depend>xacro</run_depend>
   <build_depend>sr_multi_description</build_depend>
   <run_depend>sr_multi_description</run_depend>
-  <build_depend>trac_ik</build_depend>
-  <run_depend>trac_ik</run_depend>
-  
+  <build_depend>trac_ik_kinematics_plugin</build_depend>
+  <run_depend>trac_ik_kinematics_plugin</run_depend>
+  <build_depend>trac_ik_lib</build_depend>
+  <run_depend>trac_ik_lib</run_depend>
 
   <buildtool_depend>catkin</buildtool_depend>
 
