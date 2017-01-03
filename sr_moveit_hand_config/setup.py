@@ -6,5 +6,4 @@ setup_args = generate_distutils_setup(
     packages=['sr_moveit_hand_config'],
     package_dir={'': 'scripts'})
 
-
 setup(**setup_args)
