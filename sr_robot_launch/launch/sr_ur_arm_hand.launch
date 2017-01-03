@@ -90,6 +90,7 @@
       <arg name="hand_serial" value="$(arg hand_serial)"/>
       <arg name="hand_id" value="$(arg hand_id)"/>
       <arg name="mapping_path" value="$(arg mapping_path)"/>
+      <arg name="initial_z" value="$(arg initial_z)"/>
     </include>
     <!-- ARM -->
     <rosparam command="load" file="$(arg arm_controller)"/>

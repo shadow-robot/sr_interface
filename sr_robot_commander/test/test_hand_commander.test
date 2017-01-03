@@ -2,5 +2,5 @@
     <include file="$(find sr_robot_launch)/launch/sr_right_ur10arm_hand.launch">
         <arg name="gui" value="false"/>
     </include>
-    <node pkg="sr_multi_moveit_config" type="timed_roslaunch.sh" args="8 sr_robot_commander test_hand_commander_launch.launch" name="test_iksolvers" output="screen"/>
+    <test test-name="test_hand_commander" pkg="sr_robot_commander" type="test_hand_commander.py" time-limit="300"/>
 </launch>

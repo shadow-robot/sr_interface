@@ -23,12 +23,13 @@ from control_msgs.msg import FollowJointTrajectoryAction, \
     FollowJointTrajectoryGoal
 from moveit_commander import MoveGroupCommander, RobotCommander, \
     PlanningSceneInterface
-from moveit_msgs.msg import RobotTrajectory
+from moveit_msgs.msg import RobotTrajectory, PositionIKRequest
 from sensor_msgs.msg import JointState
 import geometry_msgs.msg
 from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, \
     RobotTeachModeResponse
 
+from moveit_msgs.srv import GetPositionIK
 from moveit_msgs.srv import ListRobotStatesInWarehouse as ListStates
 from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
 
@@ -80,8 +81,9 @@ class SrRobotCommander(object):
         self._joints_effort = {}
         self.__plan = None
 
-        self._forward_k = rospy.ServiceProxy(
-            'compute_fk', GetPositionFK)
+        rospy.wait_for_service('compute_ik')
+        self._compute_ik = rospy.ServiceProxy('compute_ik', GetPositionIK)
+        self._forward_k = rospy.ServiceProxy('compute_fk', GetPositionFK)
 
         # prefix of the trajectory controller
         if prefix is not None:
@@ -231,6 +233,9 @@ class SrRobotCommander(object):
             return None
 
         return output
+
+    def get_end_effector_link(self):
+        return self._move_group_commander.get_end_effector_link()
 
     def get_current_pose(self, reference_frame=None):
         """
@@ -471,7 +476,7 @@ class SrRobotCommander(object):
         if joint_trajectory is not None:
             self.run_joint_trajectory(joint_trajectory)
 
-    def _move_to_position_target(self, xyz, end_effector_link="", wait=True):
+    def move_to_position_target(self, xyz, end_effector_link="", wait=True):
         """
         Specify a target position for the end-effector and moves to it
         @param xyz - new position of end-effector
@@ -482,7 +487,7 @@ class SrRobotCommander(object):
         self._move_group_commander.set_position_target(xyz, end_effector_link)
         self._move_group_commander.go(wait=wait)
 
-    def _plan_to_position_target(self, xyz, end_effector_link=""):
+    def plan_to_position_target(self, xyz, end_effector_link=""):
         """
         Specify a target position for the end-effector and plans.
         This is a blocking method.
@@ -493,7 +498,7 @@ class SrRobotCommander(object):
         self._move_group_commander.set_position_target(xyz, end_effector_link)
         self.__plan = self._move_group_commander.plan()
 
-    def _move_to_pose_target(self, pose, end_effector_link="", wait=True):
+    def move_to_pose_target(self, pose, end_effector_link="", wait=True):
         """
         Specify a target pose for the end-effector and moves to it
         @param pose - new pose of end-effector: a Pose message, a PoseStamped
@@ -506,7 +511,7 @@ class SrRobotCommander(object):
         self._move_group_commander.set_pose_target(pose, end_effector_link)
         self._move_group_commander.go(wait=wait)
 
-    def _plan_to_pose_target(self, pose, end_effector_link=""):
+    def plan_to_pose_target(self, pose, end_effector_link=""):
         """
         Specify a target pose for the end-effector and plans.
         This is a blocking method.
@@ -536,6 +541,9 @@ class SrRobotCommander(object):
             self._joints_effort = {n: v for n, v in
                                    zip(joint_state.name, joint_state.effort)}
 
+    def _get_trajectory_controller_name(self):
+        return self._prefix + "trajectory_controller"
+
     def _set_up_action_client(self):
         """
         Sets up an action client to communicate with the trajectory controller
@@ -543,7 +551,7 @@ class SrRobotCommander(object):
         self._action_running = False
 
         self._client = SimpleActionClient(
-            self._prefix + "trajectory_controller/follow_joint_trajectory",
+            self._get_trajectory_controller_name() + "/follow_joint_trajectory",
             FollowJointTrajectoryAction
         )
 
@@ -682,3 +690,43 @@ class SrRobotCommander(object):
                               mode, resp.result)
         except rospy.ServiceException:
             rospy.logerr("Failed to call service teach_mode")
+
+    def get_ik(self, target_pose, avoid_collisions=False):
+        """
+        Computes the inverse kinematics for a given pose. It returns a JointState
+        @param target_pose - A given pose of type PoseStamped
+        @param avoid_collisions - Find an IK solution that avoids collisions. By default, this is false
+        """
+        service_request = PositionIKRequest()
+        service_request.group_name = self._name
+        service_request.ik_link_name = self._move_group_commander.get_end_effector_link()
+        service_request.pose_stamped = target_pose
+        service_request.timeout.secs = 0.005
+        service_request.avoid_collisions = avoid_collisions
+
+        try:
+            resp = self._compute_ik(ik_request=service_request)
+            # Check if error_code.val is SUCCESS=1
+            if resp.error_code.val != 1:
+                if resp.error_code.val == -10:
+                    rospy.logerr("Unreachable point: Start state in collision")
+                elif resp.error_code.val == -12:
+                    rospy.logerr("Unreachable point: Goal state in collision")
+                elif resp.error_code.val == -31:
+                    rospy.logerr("Unreachable point: No IK solution")
+                else:
+                    rospy.logerr("Unreachable point (error: %s)" % resp.error_code)
+                return
+            else:
+                return resp.solution.joint_state
+
+        except rospy.ServiceException, e:
+            rospy.logerr("Service call failed: %s" % e)
+
+    def move_to_pose_value_target_unsafe(self, target_pose,  avoid_collisions=False, time=0.002, wait=True):
+        joint_state = self.get_ik(target_pose, avoid_collisions)
+        if joint_state is not None:
+            state_as_dict = dict(zip(joint_state.name, joint_state.position))
+            self.move_to_joint_value_target_unsafe(state_as_dict,
+                                                   time=time,
+                                                   wait=wait)
