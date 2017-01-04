@@ -32,7 +32,7 @@ class TestSrHandCommander(TestCase):
         rospy.init_node('test_hand_commander', anonymous=True)
         # Waiting for rviz and moveit to start
         rospy.wait_for_service('/move_group/set_logger_level')
-        rospy.sleep(30)
+        rospy.sleep(200)
 
     def test_strip_prefix(self):
         hand_commander = SrHandCommander()
