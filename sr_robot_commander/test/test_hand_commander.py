@@ -32,7 +32,7 @@ class TestSrHandCommander(TestCase):
         rospy.init_node('test_hand_commander', anonymous=True)
         # Waiting for rviz and moveit to start
         rospy.wait_for_service('/move_group/set_logger_level')
-        rospy.sleep(200)
+        rospy.sleep(2)
 
     def test_strip_prefix(self):
         hand_commander = SrHandCommander()
@@ -41,10 +41,18 @@ class TestSrHandCommander(TestCase):
         self.assertEqual(hand_commander._strip_prefix("ffj3"), "ffj3", msg="Strip failed")
 
     def test_hand_finder_init(self):
+        rospy.sleep(20)
+
         hand_finder = HandFinder()
         hand_parameters = hand_finder.get_hand_parameters()
-        hand_commander = SrHandCommander(hand_parameters=hand_parameters,
-                                         hand_serial=hand_parameters.mapping.keys()[0])
+        hand_serial = hand_parameters.mapping.keys()[0]
+        
+        self.assertEqual(hand_parameters.mapping[hand_serial], "rh", msg="Hand mapping wrong")
+        self.assertEqual(hand_parameters.joint_prefix[hand_serial], "rh_", msg="Prefix wrong")
+        
+        rospy.sleep(10)
+        hand_commander = SrHandCommander(hand_parameters=hand_parameters, hand_serial=hand_serial)
+        
         self.assertGreater(len(hand_commander.get_joints_position()), 0, "No joints found, init must have failed.")
 
 if __name__ == "__main__":
