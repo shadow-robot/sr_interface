@@ -1,5 +1,5 @@
 <launch>
-    <include file="$(find sr_robot_launch)/launch/sr_right_ur10arm_hand.launch">
+    <include file="$(find sr_robot_launch)/launch/srhand.launch">
         <arg name="gui" value="false"/>
     </include>
     <test test-name="test_hand_commander" pkg="sr_robot_commander" type="test_hand_commander.py" time-limit="500"/>
