@@ -46,10 +46,10 @@ class TestSrHandCommander(TestCase):
 
         self.assertEqual(hand_parameters.mapping[hand_serial], "rh", msg="Hand mapping wrong")
         self.assertEqual(hand_parameters.joint_prefix[hand_serial], "rh_", msg="Prefix wrong")
-        
-        rospy.sleep(50)
+    
+        rospy.sleep(300)
         hand_commander = SrHandCommander(hand_parameters=hand_parameters, hand_serial=hand_serial)
-        rospy.sleep(1000)
+        rospy.sleep(300)
         self.assertGreater(len(hand_commander.get_joints_position()), 0, "No joints found, init must have failed.")
 
 if __name__ == "__main__":
