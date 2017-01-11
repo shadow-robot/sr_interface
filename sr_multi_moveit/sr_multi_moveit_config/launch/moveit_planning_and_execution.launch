@@ -17,7 +17,7 @@
   <!-- Broadcast static tf for robot root -->
   <!--node name="virtual_joint_broadcaster" pkg="sr_multi_moveit_config" type="virtual_joint_broadcaster.py" output="screen" /-->
 
-  <node pkg="sr_multi_moveit_config" type="timed_roslaunch.sh" args="10 sr_multi_moveit_config move_group.launch 
+  <node pkg="sr_multi_moveit_config" type="timed_roslaunch.sh" args="7 sr_multi_moveit_config move_group.launch 
     allow_trajectory_execution:=true 
     fake_execution:=false 
     info:=true 
@@ -30,7 +30,7 @@
 
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
   <group if="$(arg gui)">
-    <node pkg="sr_multi_moveit_config" type="timed_roslaunch.sh" args="13 sr_multi_moveit_config moveit_rviz.launch 
+    <node pkg="sr_multi_moveit_config" type="timed_roslaunch.sh" args="10 sr_multi_moveit_config moveit_rviz.launch 
       config:=true 
       debug:=$(arg debug)
       robot_config_file:=$(arg robot_config_file)" name="timed_roslaunch_rviz" output="screen" respawn="true"
