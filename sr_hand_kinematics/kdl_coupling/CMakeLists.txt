@@ -11,7 +11,6 @@ catkin_package(
         LIBRARIES kdl_coupling
 )
 
-#add_definitions(-DEIGEN2_SUPPORT)
 add_library(kdl_coupling src/chain_coupling.cpp src/chainjnttojacsolver_coupling.cpp src/chainiksolvervel_wdls_coupling.cpp src/chainiksolverpos_nr_jl_coupling.cpp)
 add_dependencies(kdl_coupling ${catkin_EXPORTED_TARGETS})
 target_link_libraries(kdl_coupling ${catkin_LIBRARIES} ${orocos_kdl_LIBRARIES})
