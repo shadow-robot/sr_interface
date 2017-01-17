@@ -6,7 +6,7 @@
 - git:
     local-name: sr_core
     uri: https://github.com/shadow-robot/sr_core
-    version: 'kinetic-devel'
+    version: 'F_fix_kinetic_warnings'
 
 - git:
     local-name: sr_common
