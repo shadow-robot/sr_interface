@@ -1,10 +1,10 @@
-name: office_scene_4
+name: office_scene_2_stomp
 
 scene:
   - type: launch
-    name: roslaunch sr_moveit_planner_benchmarking benchmarking.launch
+    name: roslaunch sr_moveit_planner_benchmarking benchmarking.launch generate_planning_config:=False planning:=stomp
   - type: python
-    name: sr_moveit_planner_benchmarking.collision_scene_1.CreateScene2
+    name: sr_moveit_planner_benchmarking.collision_scene_2.CreateScene2
   - type: bag
     name: office_scene_1.bag
   - type: bag
@@ -12,19 +12,10 @@ scene:
 
 group_id: right_arm
 planners:
-  - BKPIECEkConfigDefault
-  - ESTkConfigDefault
-  - KPIECEkConfigDefault
-  - LBKPIECEkConfigDefault
-  - PRMkConfigDefault
-  - RRTkConfigDefault
-  - SBLkConfigDefault
-  - PRMstarkConfigDefault
-  - RRTstarkConfigDefault
-
-planning_attempts: 100
+  - stomp
+planning_attempts: 1
 goal_tolerance: 0.005
-planning_time: 1000
+planning_time: 600
 allow_replanning: False
 
 tests:

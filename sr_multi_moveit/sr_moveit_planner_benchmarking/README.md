@@ -1,15 +1,16 @@
 # sr_moveit_planner_benchmarking
 
 A package to test the different MoveIt planners. Planners currently configured are OMPL, SBPL and STOMP.
-Different scenes can be found in the **data** folder. The scpl repository can be found [here](https://github.com/shadow-robot/sandbox) and stomp [here](https://github.com/ros-industrial/industrial_moveit). You'll need to include them in your workspace.
+Different scenes can be found in the **data/inactive_tests** folder. To include the scene in the benchmarking tests, move the yaml file up a directory level into **data**. The sbpl repository can be found [here](https://github.com/shadow-robot/sandbox) and stomp [here](https://github.com/ros-industrial/industrial_moveit). You'll need to include them in your workspace.
 
 # Launch
 
-To run all the benchmarkings, simply run:
+To run all the benchmarkings, simply launch a roscore and run:
 
 ```
 rosrun sr_moveit_planner_benchmarking benchmark_planners.py _data:=`rospack find sr_moveit_planner_benchmarking`/data _results:=/tmp
 ```
+To visualise the tests in Rviz, set the visualisation argument in launch/benchmarking.launch to 'True'.
 
 # Configuration
 
@@ -21,6 +22,4 @@ Different tweaks can be made in the scene yaml files. The first is the number of
 # Notes
 ARA* planner in sbpl currently causes movegroup to crash during the 2nd planning request.
 The point cloud for collision_scene_2 is generated from two rosbags of pointcloud data,
-office_scene.bag and office_scene_2.bag, [here](data/). These bags are played when launching a scene loading them and have a duration
-of 1s. To synchronise the time of the rosbags with the simulated time in Gazebo, a
-[simple script](scripts/header_time_adjust.py) is run.
+office_scene.bag and office_scene_2.bag, [here](data/).

@@ -10,6 +10,7 @@ from sr_benchmarking.sr_benchmarking import (AnnotationParserBase,
 from tabulate import tabulate
 from visualization_msgs.msg import Marker, MarkerArray
 import time
+import os
 
 
 class PlannerAnnotationParser(AnnotationParserBase):
@@ -253,7 +254,7 @@ class PlannerBenchmarking(BenchmarkingBase):
                       "Total angle change", "Computation time"]
         print(tabulate(results, headers=row_titles, tablefmt='orgtbl'))
 
-        file_path = self._path_to_results
+        file_path = os.path.join(self._path_to_results, '')
         file_path += time.strftime("%Y_%m_%d-%H_%M_%S")
         file_path += "-planner_benchmark.xml"
         with open(file_path, 'w') as f:

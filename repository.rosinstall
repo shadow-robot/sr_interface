@@ -57,3 +57,9 @@
     local-name: trac_ik
     uri: https://bitbucket.org/traclabs/trac_ik.git
     version: 'master'
+
+- git:
+    local-name: shadow_robot_ethercat
+    uri: https://github.com/shadow-robot/sr-ros-interface-ethercat.git
+    version: indigo-devel
+
