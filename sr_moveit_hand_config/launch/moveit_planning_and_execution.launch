@@ -10,7 +10,7 @@
   
   <include file="$(find sr_moveit_hand_config)/launch/planning_context.launch" />
   
-  <node pkg="sr_moveit_hand_config" type="timed_roslaunch.sh" args="2000 sr_moveit_hand_config move_group.launch 
+  <node pkg="sr_moveit_hand_config" type="timed_roslaunch.sh" args="200 sr_moveit_hand_config move_group.launch 
     allow_trajectory_execution:=true 
     fake_execution:=false 
     info:=true 
