@@ -65,6 +65,19 @@ class Manipulator(object):
                 self.hand.internal_name = "left_hand"
 
 
+def next_element(elt):
+    child = xacro.first_child_element(elt)
+    if child:
+        return child
+    while elt and elt.nodeType == xml.dom.Node.ELEMENT_NODE:
+        next = xacro.next_sibling_element(elt)
+        if next:
+            return next
+        elt = elt.parentNode
+    return None
+
+
+
 class Robot(object):
     def __init__(self):
         self.name = ""
@@ -100,10 +113,6 @@ class Robot(object):
                             package_name = arm_yaml["moveit_path"]["package"]
                             relative_path = arm_yaml["moveit_path"]["relative_path"]
                             manipulator.arm.moveit_path = rospkg.RosPack().get_path(package_name) + relative_path
-                        if "extra_groups_config_path" in arm_yaml:
-                            relative_path = arm_yaml["extra_groups_config_path"]
-                            manipulator.arm.extra_groups_config_path = \
-                                rospkg.RosPack().get_path("sr_multi_moveit_config") + relative_path
                         if "main_group" in arm_yaml:
                             manipulator.arm.main_group = arm_yaml["main_group"]
                         else:
@@ -148,10 +157,13 @@ class SRDFRobotGenerator(object):
         with open(description_file, "r") as stream:
             yamldoc = yaml.load(stream)
 
+        rospy.logwarn("-----------loading file " + str(description_file))
+
         self.robot.set_parameters(yamldoc)
 
         new_srdf_file_name = "generated_robot.srdf"
         self.start_new_srdf(new_srdf_file_name)
+
         for manipulator in self.robot.manipulators:
             if manipulator.has_arm:
                 # Read arm srdf
@@ -159,14 +171,27 @@ class SRDFRobotGenerator(object):
                 with open(arm_srdf_path, 'r') as stream:
                     self.arm_srdf_xml = parse(stream)
                 xacro.process_includes(self.arm_srdf_xml, os.path.dirname(sys.argv[0]))
-                xacro.eval_self_contained(self.arm_srdf_xml)
+
+                macros = {}
+                xacro.grab_macros(self.arm_srdf_xml, macros)
+                symbols = xacro.Table()
+                xacro.grab_properties(self.arm_srdf_xml, symbols)
+                xacro.eval_all(self.arm_srdf_xml.documentElement, macros, symbols)
+
             if manipulator.has_hand:
                 # Generate and read hand srdf
-                hand_urdf_path = self.rospack.get_path('sr_description') + "/robots/" + manipulator.hand.name
+                hand_urdf_path = self.rospack.get_path('sr_description')+"/robots/" + manipulator.hand.name
                 with open(hand_urdf_path, 'r') as hand_urdf_xacro_file:
                     hand_urdf_xml = parse(hand_urdf_xacro_file)
                 xacro.process_includes(hand_urdf_xml, os.path.dirname(sys.argv[0]))
-                xacro.eval_self_contained(hand_urdf_xml)
+
+                macros = {}
+                xacro.grab_macros(hand_urdf_xml, macros)
+                symbols = xacro.Table()
+                xacro.grab_properties(hand_urdf_xml, symbols)
+                xacro.eval_all(hand_urdf_xml.documentElement, macros, symbols)
+
+
                 hand_urdf = hand_urdf_xml.toprettyxml(indent='  ')
                 srdfHandGenerator = SRDFHandGenerator(hand_urdf, load=False, save=False)
                 self.hand_srdf_xml = srdfHandGenerator.get_hand_srdf()
@@ -179,7 +204,6 @@ class SRDFRobotGenerator(object):
                 self.parse_arm_groups(manipulator)
             if manipulator.has_hand:
                 self.parse_hand_groups(manipulator)
-
             # Add end effectors
             comment = ["END EFFECTOR: Purpose: Represent information about an end effector."]
             self.add_comments(comment)
@@ -205,6 +229,7 @@ class SRDFRobotGenerator(object):
             if manipulator.has_hand:
                 self.parse_hand_collisions(manipulator)
 
+
         # Finish and close file
         self.new_robot_srdf.write('</robot>\n')
         self.new_robot_srdf.close()
@@ -216,6 +241,7 @@ class SRDFRobotGenerator(object):
             robot_description_param = rospy.resolve_name('robot_description') + "_semantic"
             rospy.set_param(robot_description_param,
                             srdf.toprettyxml(indent='  '))
+
 
         rospy.loginfo("generated_robot.srdf has been generated and saved.")
 
@@ -245,7 +271,7 @@ class SRDFRobotGenerator(object):
 
     def parse_arm_groups(self, manipulator):
         previous = self.arm_srdf_xml.documentElement
-        elt = xacro.next_element(previous)
+        elt = next_element(previous)
         while elt:
             if elt.tagName == 'group':
                 # Check it is not a subgroup
@@ -324,11 +350,11 @@ class SRDFRobotGenerator(object):
                             node_attribute.nodeValue = (manipulator.arm.prefix + attribute_name)
                     elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
             previous = elt
-            elt = xacro.next_element(previous)
+            elt = next_element(previous)
 
     def parse_hand_groups(self, manipulator):
         previous = self.hand_srdf_xml.documentElement
-        elt = xacro.next_element(previous)
+        elt = next_element(previous)
         while elt:
             if elt.tagName == 'group':
                 # Check it is not a subgroup
@@ -342,20 +368,20 @@ class SRDFRobotGenerator(object):
                         group_element.parentNode.removeChild(group_element)
                 elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
             previous = elt
-            elt = xacro.next_element(previous)
+            elt = next_element(previous)
 
     def parse_hand_end_effectors(self, manipulator):
         previous = self.hand_srdf_xml.documentElement
-        elt = xacro.next_element(previous)
+        elt = next_element(previous)
         while elt:
             if elt.tagName == 'end_effector':
                 elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
             previous = elt
-            elt = xacro.next_element(previous)
+            elt = next_element(previous)
 
     def parse_arm_end_effectors(self, manipulator):
         previous = self.arm_srdf_xml.documentElement
-        elt = xacro.next_element(previous)
+        elt = next_element(previous)
         while elt:
             if elt.tagName == 'end_effector':
                 elt.getAttributeNode("name").nodeValue = manipulator.arm.prefix + elt.getAttribute("name")
@@ -363,50 +389,41 @@ class SRDFRobotGenerator(object):
                                                                  elt.getAttribute("parent_link"))
                 elt.getAttributeNode("group").nodeValue = manipulator.arm.internal_name
                 elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
-                newElement = deepcopy(elt)
-                newElement.getAttributeNode("name").nodeValue = manipulator.arm.internal_name + "_and_wrist_ee"
-                newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "palm"
-                newElement.getAttributeNode("group").nodeValue = manipulator.arm.internal_name + "_and_wrist"
-                newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
-                newElement = deepcopy(elt)
-                newElement.getAttributeNode("name").nodeValue = manipulator.arm.internal_name + "_and_hand_ee"
-                newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "palm"
-                newElement.getAttributeNode("group").nodeValue = manipulator.arm.internal_name + "_and_hand"
-                newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
             previous = elt
-            elt = xacro.next_element(previous)
+            elt = next_element(previous)
 
     def parse_arm_virtual_joint(self, manipulator):
         comment = ["VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an " +
                    "external frame of reference (considered fixed with respect to the robot)"]
         self.add_comments(comment)
         previous = self.arm_srdf_xml.documentElement
-        elt = xacro.next_element(previous)
+        elt = next_element(previous)
         while elt:
             if elt.tagName == 'virtual_joint':
                 elt.getAttributeNode("name").nodeValue = "world_to_" + manipulator.arm.internal_name
                 elt.getAttributeNode("child_link").nodeValue = manipulator.arm.prefix + elt.getAttribute("child_link")
                 elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
             previous = elt
-            elt = xacro.next_element(previous)
+            elt = next_element(previous)
 
     def parse_hand_virtual_joint(self, manipulator):
         comment = ["VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an " +
                    "external frame of reference (considered fixed with respect to the robot)"]
         self.add_comments(comment)
         previous = self.hand_srdf_xml.documentElement
-        elt = xacro.next_element(previous)
+        elt = next_element(previous)
         while elt:
             if elt.tagName == 'virtual_joint':
                 elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
             previous = elt
-            elt = xacro.next_element(previous)
+            elt = next_element(previous)
 
     def parse_arm_collisions(self, manipulator):
         comment = [manipulator.arm.internal_name + " collisions"]
         self.add_comments(comment)
         previous = self.arm_srdf_xml.documentElement
-        elt = xacro.next_element(previous)
+        elt = next_element(previous)
+
         while elt:
             if elt.tagName == 'disable_collisions':
                 elt.getAttributeNode("link1").nodeValue = (manipulator.arm.prefix + elt.getAttribute("link1"))
@@ -415,7 +432,7 @@ class SRDFRobotGenerator(object):
                 newElement = deepcopy(elt)
 
             previous = elt
-            elt = xacro.next_element(previous)
+            elt = next_element(previous)
         # Add collisions between arm and hand
         if manipulator.has_hand:
             if rospy.has_param('/robot_description'):
@@ -443,20 +460,20 @@ class SRDFRobotGenerator(object):
         comment = [manipulator.hand.internal_name + " collisions"]
         self.add_comments(comment)
         previous = self.hand_srdf_xml.documentElement
-        elt = xacro.next_element(previous)
+        elt = next_element(previous)
         while elt:
             if elt.tagName == 'disable_collisions':
                 elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
 
             previous = elt
-            elt = xacro.next_element(previous)
+            elt = next_element(previous)
 
     def add_comments(self, comments, addindent="  "):
         xml_comments = [xml.dom.minidom.Comment(c) for c in comments]
         for comment in xml_comments:
             comment.writexml(self.new_robot_srdf, indent=addindent, addindent=addindent, newl="\n")
 
-
 if __name__ == '__main__':
+
     rospy.init_node('robot_srdf_generator', anonymous=True)
     robot_generator = SRDFRobotGenerator()
