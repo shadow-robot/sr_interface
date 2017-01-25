@@ -77,7 +77,6 @@ def next_element(elt):
     return None
 
 
-
 class Robot(object):
     def __init__(self):
         self.name = ""
@@ -191,7 +190,6 @@ class SRDFRobotGenerator(object):
                 xacro.grab_properties(hand_urdf_xml, symbols)
                 xacro.eval_all(hand_urdf_xml.documentElement, macros, symbols)
 
-
                 hand_urdf = hand_urdf_xml.toprettyxml(indent='  ')
                 srdfHandGenerator = SRDFHandGenerator(hand_urdf, load=False, save=False)
                 self.hand_srdf_xml = srdfHandGenerator.get_hand_srdf()
@@ -229,7 +227,6 @@ class SRDFRobotGenerator(object):
             if manipulator.has_hand:
                 self.parse_hand_collisions(manipulator)
 
-
         # Finish and close file
         self.new_robot_srdf.write('</robot>\n')
         self.new_robot_srdf.close()
@@ -241,8 +238,6 @@ class SRDFRobotGenerator(object):
             robot_description_param = rospy.resolve_name('robot_description') + "_semantic"
             rospy.set_param(robot_description_param,
                             srdf.toprettyxml(indent='  '))
-
-
         rospy.loginfo("generated_robot.srdf has been generated and saved.")
 
     def start_new_srdf(self, file_name):
