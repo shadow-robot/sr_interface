@@ -1,3 +1,0 @@
-<launch>
-  <test test-name="test_hand_commander" pkg="sr_robot_commander" type="test_hand_commander.py" time-limit="300.0"/>
-</launch>
