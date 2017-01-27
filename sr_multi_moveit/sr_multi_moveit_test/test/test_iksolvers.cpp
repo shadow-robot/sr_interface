@@ -6,13 +6,13 @@
  * Copyright 2015 Shadow Robot Company Ltd.
 */
 
-#include <moveit/move_group_interface/move_group.h>
+#include <moveit/move_group_interface/move_group_interface.h>
 #include <ctime>
 
 class TestIKsolvers
 {
   bool found_ik;
-  moveit::planning_interface::MoveGroup group;
+  moveit::planning_interface::MoveGroupInterface group;
 
   public:
   TestIKsolvers();

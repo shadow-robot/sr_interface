@@ -38,7 +38,7 @@
     </include>
     <param name="/hand/mapping/$(arg hand_serial)" value="$(arg hand_id)"/>
     <param name="/hand/joint_prefix/$(arg hand_serial)" value="$(arg hand_id)_"/>
-    <param name="robot_description" command="$(find xacro)/xacro.py '$(arg robot_description)'"/>
+    <param name="robot_description" command="xacro --inorder '$(arg robot_description)'"/>
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model usrh -z 0.0 "
           respawn="false" output="screen"/>
     <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
