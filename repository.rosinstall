@@ -20,17 +20,17 @@
 
 - git:
     local-name: universal_robot
-    uri: 'https://github.com/ros-industrial/universal_robot.git'
+    uri: https://github.com/ros-industrial/universal_robot.git
     version: kinetic-devel
     
 - git:
     local-name: sr_ur_arm
-    uri: 'https://github.com/shadow-robot/sr_ur_arm.git'
+    uri: https://github.com/shadow-robot/sr_ur_arm.git
     version: kinetic-devel
 
 - git:
     local-name: lma_kinematics_plugin
-    uri: 'https://github.com/shadow-robot/lma_kinematics_plugin'
+    uri: https://github.com/shadow-robot/lma_kinematics_plugin
     version: F_fixing_kinetic_build
 
 - git:
