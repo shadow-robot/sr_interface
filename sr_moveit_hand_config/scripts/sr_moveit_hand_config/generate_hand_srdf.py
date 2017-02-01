@@ -104,16 +104,16 @@ class SRDFHandGenerator(object):
         rospy.logdebug("Hand name: " + str(hand_name))
 
         mappings = load_mappings(['prefix:=' + str(prefix),
-                                                          'robot_name:=' + robot.name,
-                                                          'ff:=' + str(int(ff)),
-                                                          'mf:=' + str(int(mf)),
-                                                          'rf:=' + str(int(rf)),
-                                                          'lf:=' + str(int(lf)),
-                                                          'th:=' + str(int(th)),
-                                                          'is_lite:=' + str(int(is_lite)),
-                                                          'is_biotac:=' + str(int(is_biotac)),
-                                                          'hand_name:=' + str(hand_name)
-                                                          ])
+                                  'robot_name:=' + robot.name,
+                                  'ff:=' + str(int(ff)),
+                                  'mf:=' + str(int(mf)),
+                                  'rf:=' + str(int(rf)),
+                                  'lf:=' + str(int(lf)),
+                                  'th:=' + str(int(th)),
+                                  'is_lite:=' + str(int(is_lite)),
+                                  'is_biotac:=' + str(int(is_biotac)),
+                                  'hand_name:=' + str(hand_name)
+                                  ])
 
         # the prefix version of the srdf_xacro must be loaded
         rospack = rospkg.RosPack()
