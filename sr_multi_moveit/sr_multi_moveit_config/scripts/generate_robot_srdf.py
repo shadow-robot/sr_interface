@@ -175,7 +175,7 @@ class SRDFRobotGenerator(object):
 
             if manipulator.has_hand:
                 # Generate and read hand srdf
-                hand_urdf_path = self.rospack.get_path('sr_description')+"/robots/" + manipulator.hand.name
+                hand_urdf_path = self.rospack.get_path('sr_description') + "/robots/" + manipulator.hand.name
                 with open(hand_urdf_path, 'r') as hand_urdf_xacro_file:
                     hand_urdf_xml = parse(hand_urdf_xacro_file)
                 xacro.process_includes(hand_urdf_xml, os.path.dirname(sys.argv[0]))
