@@ -127,7 +127,7 @@ class SRDFHandGenerator(object):
 
         # expand the xacro
         xacro.process_includes(self.srdf_xacro_xml, os.path.dirname(sys.argv[0]))
-        xacro.process_doc(self.srdf_xacro_xml, mappings = mappings)
+        xacro.process_doc(self.srdf_xacro_xml, mappings=mappings)
 
         if len(sys.argv) > 1:
             OUTPUT_PATH = sys.argv[1]
