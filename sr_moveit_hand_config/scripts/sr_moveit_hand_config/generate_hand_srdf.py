@@ -42,7 +42,6 @@ from xml.dom.minidom import parse
 import xacro
 import rospy
 import rospkg
-from xacro import set_substitution_args_context
 from rosgraph.names import load_mappings
 
 from sr_utilities.local_urdf_parser_py import URDF
@@ -104,25 +103,22 @@ class SRDFHandGenerator(object):
         rospy.logdebug("is_biotac: " + str(is_biotac))
         rospy.logdebug("Hand name: " + str(hand_name))
 
-        set_substitution_args_context(
-            load_mappings(['prefix:=' + str(prefix),
-                           'robot_name:=' + robot.name,
-                           'ff:=' + str(int(ff)),
-                           'mf:=' + str(int(mf)),
-                           'rf:=' + str(int(rf)),
-                           'lf:=' + str(int(lf)),
-                           'th:=' + str(int(th)),
-                           'is_lite:=' + str(int(is_lite)),
-                           'is_biotac:=' + str(int(is_biotac)),
-                           'hand_name:=' + str(hand_name)
-                           ]))
+        mappings = load_mappings(['prefix:=' + str(prefix),
+                                                          'robot_name:=' + robot.name,
+                                                          'ff:=' + str(int(ff)),
+                                                          'mf:=' + str(int(mf)),
+                                                          'rf:=' + str(int(rf)),
+                                                          'lf:=' + str(int(lf)),
+                                                          'th:=' + str(int(th)),
+                                                          'is_lite:=' + str(int(is_lite)),
+                                                          'is_biotac:=' + str(int(is_biotac)),
+                                                          'hand_name:=' + str(hand_name)
+                                                          ])
 
         # the prefix version of the srdf_xacro must be loaded
         rospack = rospkg.RosPack()
         package_path = rospack.get_path('sr_moveit_hand_config')
-        srdf_xacro_filename = package_path + "/config/shadowhands.srdf.xacro"
-
-        srdf_xacro_filename = srdf_xacro_filename.replace(".srdf.xacro", "_prefix.srdf.xacro")
+        srdf_xacro_filename = package_path + "/config/shadowhands_prefix.srdf.xacro"
         rospy.loginfo("File loaded " + srdf_xacro_filename)
 
         # open and parse the xacro.srdf file
@@ -130,8 +126,7 @@ class SRDFHandGenerator(object):
         self.srdf_xacro_xml = parse(srdf_xacro_file)
 
         # expand the xacro
-        xacro.process_includes(self.srdf_xacro_xml, os.path.dirname(sys.argv[0]))
-        xacro.eval_self_contained(self.srdf_xacro_xml)
+        xacro.process_doc(self.srdf_xacro_xml, mappings = mappings)
 
         if len(sys.argv) > 1:
             OUTPUT_PATH = sys.argv[1]

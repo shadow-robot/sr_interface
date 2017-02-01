@@ -310,9 +310,7 @@
 
   <xacro:unless value="$(arg is_lite)">
     <end_effector group="$(arg prefix)wrist" name="$(arg prefix)wrist_ee" parent_link="$(arg prefix)palm" parent_group="$(arg hand_name)"/>
-  </xacro:unless>  
-
-  <xacro:virtual_joints prefix="$(arg prefix)" />
+  </xacro:unless>
 
   <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
 
