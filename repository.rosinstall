@@ -47,3 +47,13 @@
     local-name: shadow_robot_ethercat
     uri: https://github.com/shadow-robot/sr-ros-interface-ethercat.git
     version: kinetic-devel
+
+- git:
+    local-name: warehouse_ros_mongo
+    uri: https://github.com/ros-planning/warehouse_ros_mongo.git
+    version: jade-devel
+
+- git:
+    local-name: mongo-cxx-driver
+    uri: https://github.com/mongodb/mongo-cxx-driver.git
+    version: 26compat
