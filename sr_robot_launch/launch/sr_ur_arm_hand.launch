@@ -119,7 +119,7 @@
     <group if="$(arg arm_trajectory)">
       <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/>
       <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen">
-        <rosparam param="controllers" subst_value="True"> ["$(arg arm_id)_sr_ur_controller"] </rosparam>
+        <rosparam param="controllers" subst_value="True"> ["$(arg arm_id)_sr_ur_robot_hw"] </rosparam>
       </node>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
             args="--wait-for=/arms_ready --shutdown-timeout=1.0 $(arg arm_id)_trajectory_controller"/>
