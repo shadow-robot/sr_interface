@@ -11,7 +11,7 @@ ra_trajectory_controller:
     - rh_WRJ2
   constraints:
       goal_time: 0.6
-      stopped_velocity_tolerance: 0.05
+      stopped_velocity_tolerance: 1.0
       ra_shoulder_pan_joint: {trajectory: 0.3, goal: 0.1}
       ra_shoulder_lift_joint: {trajectory: 0.3, goal: 0.1}
       ra_elbow_joint: {trajectory: 0.3, goal: 0.1}

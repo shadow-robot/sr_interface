@@ -1,8 +1,6 @@
 <launch>
-  <arg name="path" default="$(find sr_moveit_planner_benchmarking)/point_clouds"/>
-  <arg name="complex" default="false"/>
   <arg name="planning" default="ompl"/>
-  <arg name="visualization" default="false"/>
+  <arg name="visualization" default="False"/>
   <!--Should the planner yaml be automatically generated? -->
   <arg name="generate_planning_config" default="True"/>
 

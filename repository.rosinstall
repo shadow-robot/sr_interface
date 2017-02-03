@@ -1,59 +1,49 @@
 - git:
     local-name: sr_config
     uri: https://github.com/shadow-robot/sr-config
-    version: 'indigo-devel'
+    version: kinetic-devel
 
 - git:
     local-name: sr_core
     uri: https://github.com/shadow-robot/sr_core
-    version: 'indigo-devel'
+    version: kinetic-devel
 
 - git:
     local-name: sr_common
     uri: https://github.com/shadow-robot/sr_common
-    version: 'indigo-devel'
+    version: kinetic-devel
 
 - git:
     local-name: sr_benchmarking
     uri: https://github.com/shadow-robot/sr_benchmarking
-    version: 'indigo-devel'
+    version: kinetic-devel
 
 - git:
     local-name: universal_robot
-    uri: 'https://github.com/ros-industrial/universal_robot.git'
-    version: indigo-devel
-
+    uri: https://github.com/ros-industrial/universal_robot.git
+    version: kinetic-devel
+    
 - git:
     local-name: sr_ur_arm
-    uri: 'https://github.com/shadow-robot/sr_ur_arm.git'
-    version: indigo-devel
+    uri: https://github.com/shadow-robot/sr_ur_arm.git
+    version: kinetic-devel
 
 - git:
     local-name: lma_kinematics_plugin
-    uri: 'https://github.com/shadow-robot/lma_kinematics_plugin'
-    version: F_ik_with_joint_limits
-
-- git:
-    local-name: moveit_ros
-    uri: https://github.com/shadow-robot/moveit_ros.git
-    version: shadow-indigo-latest
-
-- git:
-    local-name: moveit_core
-    uri: https://github.com/ros-planning/moveit_core.git
-    version: indigo-devel
-
-- git:
-    local-name: moveit_msgs
-    uri: https://github.com/ros-planning/moveit_msgs.git
-    version: indigo-devel
+    uri: https://github.com/shadow-robot/lma_kinematics_plugin
+    version: F_fixing_kinetic_build
 
 - git:
     local-name: ros_controllers
-    uri: https://github.com/shadow-robot/ros_controllers.git
-    version: F#182_partial_trajectory_mod
+    uri: https://github.com/ros-controls/ros_controllers.git
+    version: kinetic-devel
 
 - git:
     local-name: trac_ik
     uri: https://bitbucket.org/traclabs/trac_ik.git
-    version: 'master'
+    version: kinetic-devel
+
+- git:
+    local-name: shadow_robot_ethercat
+    uri: https://github.com/shadow-robot/sr-ros-interface-ethercat.git
+    version: kinetic-devel

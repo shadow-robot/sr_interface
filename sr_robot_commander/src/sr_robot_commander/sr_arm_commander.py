@@ -33,10 +33,18 @@ class SrArmCommander(SrRobotCommander):
         @param name - name of the MoveIt group
         @param set_ground - sets the ground plane in moveit for planning
         """
-        super(SrArmCommander, self).__init__(name)
+        try:
+            super(SrArmCommander, self).__init__(name)
+        except Exception as e:
+            rospy.logerr("Couldn't initialise robot commander - is there an arm running?: " + str(e))
+            self._move_group_commander = None
+            return
 
         if set_ground:
             self.set_ground()
+
+    def arm_found(self):
+        return self._move_group_commander is not None
 
     def move_to_position_target(self, xyz, end_effector_link="", wait=True):
         """
@@ -45,7 +53,7 @@ class SrArmCommander(SrRobotCommander):
         @param end_effector_link - name of the end effector link
         @param wait - should method wait for movement end or not
         """
-        self._move_to_position_target(xyz, end_effector_link, wait=wait)
+        self.move_to_position_target(xyz, end_effector_link, wait=wait)
 
     def plan_to_position_target(self, xyz, end_effector_link=""):
         """
@@ -54,7 +62,7 @@ class SrArmCommander(SrRobotCommander):
         @param xyz - new position of end-effector
         @param end_effector_link - name of the end effector link
         """
-        self._plan_to_position_target(xyz, end_effector_link)
+        self.plan_to_position_target(xyz, end_effector_link)
 
     def move_to_pose_target(self, pose, end_effector_link="", wait=True):
         """
@@ -66,7 +74,7 @@ class SrArmCommander(SrRobotCommander):
         @param end_effector_link - name of the end effector link
         @param wait - should method wait for movement end or not
         """
-        self._move_to_pose_target(pose, end_effector_link, wait=wait)
+        self.move_to_pose_target(pose, end_effector_link, wait=wait)
 
     def plan_to_pose_target(self, pose, end_effector_link=""):
         """
@@ -78,7 +86,7 @@ class SrArmCommander(SrRobotCommander):
 
         @param end_effector_link - name of the end effector link
         """
-        self._plan_to_pose_target(pose, end_effector_link)
+        self.plan_to_pose_target(pose, end_effector_link)
 
     def set_ground(self, height=0.1, z_position=-0.1):
         """

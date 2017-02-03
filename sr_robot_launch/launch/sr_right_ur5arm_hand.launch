@@ -20,6 +20,7 @@
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
 
   <arg name="world" default="$(find sr_description)/other/worlds/shadowhand.world"/>
+  <arg name="initial_z" default="0.1"/>  
 
   <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur5_joint_limited.urdf.xacro"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur5.yaml"/>
@@ -32,6 +33,7 @@
     <arg name="planning" default="$(arg planning)"/>
     <arg name="gui" default="$(arg gui)"/>
     <arg name="world" value="$(arg world)"/>
+    <arg name="initial_z" value="$(arg initial_z)"/>    
     <arg name="robot_description" value="$(arg robot_description)"/>
     <arg name="robot_config_file" value="$(arg robot_config_file)"/>
     <arg name="hand_id" value="rh"/>
