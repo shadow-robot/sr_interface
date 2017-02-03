@@ -55,7 +55,6 @@ if "__main__" == __name__:
             hand_h = True
             which = "all"
 
-
     if which == "all":
         gs = SrStateSaverUnsafe(argv[1] + "_hand", "hand", hand_h=hand_h)
         gs = SrStateSaverUnsafe(argv[1] + "_arm", "arm", hand_h=hand_h)
