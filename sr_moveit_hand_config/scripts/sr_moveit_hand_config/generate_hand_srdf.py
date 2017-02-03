@@ -103,25 +103,22 @@ class SRDFHandGenerator(object):
         rospy.logdebug("is_biotac: " + str(is_biotac))
         rospy.logdebug("Hand name: " + str(hand_name))
 
-        xacro.substitution_args_context['arg'] = (
-            load_mappings(['prefix:=' + str(prefix),
-                           'robot_name:=' + robot.name,
-                           'ff:=' + str(int(ff)),
-                           'mf:=' + str(int(mf)),
-                           'rf:=' + str(int(rf)),
-                           'lf:=' + str(int(lf)),
-                           'th:=' + str(int(th)),
-                           'is_lite:=' + str(int(is_lite)),
-                           'is_biotac:=' + str(int(is_biotac)),
-                           'hand_name:=' + str(hand_name)
-                           ]))
+        mappings = load_mappings(['prefix:=' + str(prefix),
+                                  'robot_name:=' + robot.name,
+                                  'ff:=' + str(int(ff)),
+                                  'mf:=' + str(int(mf)),
+                                  'rf:=' + str(int(rf)),
+                                  'lf:=' + str(int(lf)),
+                                  'th:=' + str(int(th)),
+                                  'is_lite:=' + str(int(is_lite)),
+                                  'is_biotac:=' + str(int(is_biotac)),
+                                  'hand_name:=' + str(hand_name)
+                                  ])
 
         # the prefix version of the srdf_xacro must be loaded
         rospack = rospkg.RosPack()
         package_path = rospack.get_path('sr_moveit_hand_config')
-        srdf_xacro_filename = package_path + "/config/shadowhands.srdf.xacro"
-
-        srdf_xacro_filename = srdf_xacro_filename.replace(".srdf.xacro", "_prefix.srdf.xacro")
+        srdf_xacro_filename = package_path + "/config/shadowhands_prefix.srdf.xacro"
         rospy.loginfo("File loaded " + srdf_xacro_filename)
 
         # open and parse the xacro.srdf file
@@ -130,11 +127,7 @@ class SRDFHandGenerator(object):
 
         # expand the xacro
         xacro.process_includes(self.srdf_xacro_xml, os.path.dirname(sys.argv[0]))
-        macros = {}
-        xacro.grab_macros(self.srdf_xacro_xml, macros)
-        symbols = xacro.Table()
-        xacro.grab_properties(self.srdf_xacro_xml, symbols)
-        xacro.eval_all(self.srdf_xacro_xml.documentElement, macros, symbols)
+        xacro.process_doc(self.srdf_xacro_xml, mappings=mappings)
 
         if len(sys.argv) > 1:
             OUTPUT_PATH = sys.argv[1]
