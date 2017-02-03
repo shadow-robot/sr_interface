@@ -14,11 +14,8 @@ def callback(data):
 def listener():
     num_sensors = 5
     rospy.init_node("optoforce_tactile_reader", anonymous=True)
-    
     for sensor_num in range(num_sensors):
         rospy.Subscriber("optoforce_" + str(sensor_num), WrenchStamped, callback)
-
-    # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
 
 if __name__ == '__main__':
