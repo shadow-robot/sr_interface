@@ -38,14 +38,15 @@ class SrStateSaverUnsafe(object):
         if save_target:
             rospy.loginfo("Saving targets instead of current values")
             self.__mutex = Lock()
-            self.__target_values = dict()
+            self.__hand_target_values = dict()
+            self.__arm_target_values = dict()
             if self.__save_hand:
                 prefix = "H1" if hand_h else "rh"
                 self.__hand_subscriber = rospy.Subscriber ("/" + prefix + "_trajectory_controller/state",
-                                                           JointTrajectoryControllerState, self.__target_cb)
+                                                           JointTrajectoryControllerState, self.__hand_target_cb)
             if self.__save_arm:
                 self.__arm_subscriber = rospy.Subscriber("/ra_trajectory_controller/state",
-                                                         JointTrajectoryControllerState, self.__target_cb)
+                                                         JointTrajectoryControllerState, self.__arm_target_cb)
 
         rospy.loginfo("Creating commanders")
         if hand_or_arm == 'hand':
@@ -59,7 +60,10 @@ class SrStateSaverUnsafe(object):
 
                 self.__commander = SrHandCommander(hand_parameters=hand_parameters, hand_serial=hand_serial)
         else:
-            self.__commander = SrArmCommander()
+            if hand_h:
+                self.__commander = SrRobotCommander("hand_h", prefix="H1_")
+            else:
+                self.__commander = SrArmCommander()
 
         self.__hand_or_arm = hand_or_arm
 
@@ -82,30 +86,42 @@ class SrStateSaverUnsafe(object):
         if self.__save_target:
             rospy.loginfo("Getting targets")
             waiting_for_targets = True
-            while waiting_for_targets:
+            while waiting_for_targets and not rospy.is_shutdown():
                 self.__mutex.acquire()
                 waiting_for_targets = False
                 for joint in current_dict:
-                    if joint in self.__target_values:
-                        current_dict[joint] = self.__target_values[joint]
+                    if joint in self.__arm_target_values:
+                        current_dict[joint] = self.__arm_target_values[joint]
+                    elif joint in self.__hand_target_values:
+                        current_dict[joint] = self.__hand_target_values[joint]
                     else:
                         waiting_for_targets = True
                         rospy.loginfo("Still waiting for %s target" % joint)
                 self.__mutex.release()
-            if waiting_for_targets:
-                rospy.sleep(1)
-
+                if waiting_for_targets:
+                    rospy.loginfo(self.__hand_target_values)
+                    rospy.loginfo(self.__arm_target_values)
+                    rospy.sleep(1)
+        if rospy.is_shutdown():
+            exit(0)
 
         rospy.loginfo(current_dict)
         rs.joint_state = JointState()
         rs.joint_state.name = current_dict.keys()
         rs.joint_state.position = current_dict.values()
         rospy.logwarn(rs)
-        # self.__save(self.__name, robot_name, rs) #
+        self.__save(self.__name, robot_name, rs)
 
 
-    def __target_cb(self, data):
+    def __hand_target_cb(self, data):
         self.__mutex.acquire()
         for n, joint in enumerate(data.joint_names):
-            self.__target_values[joint] = data.desired.positions[n]
-        self._mutex.release()
+            self.__hand_target_values[joint] = data.desired.positions[n]
+        self.__mutex.release()
+        rospy.logwarn(self.__hand_target_values)
+
+    def __arm_target_cb(self, data):
+        self.__mutex.acquire()
+        for n, joint in enumerate(data.joint_names):
+            self.__arm_target_values[joint] = data.desired.positions[n]
+        self.__mutex.release()
