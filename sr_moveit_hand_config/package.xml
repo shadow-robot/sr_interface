@@ -30,6 +30,8 @@
   <run_depend>sr_description</run_depend>
   <build_depend>trac_ik</build_depend>
   <run_depend>trac_ik</run_depend>
+  <run_depend>mongodb</run_depend>
+  <build_depend>scons</build_depend>
 
 
   <buildtool_depend>catkin</buildtool_depend>
