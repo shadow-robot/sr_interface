@@ -42,7 +42,7 @@ class SrStateSaverUnsafe(object):
             if self.__save_hand:
                 prefix = "H1" if hand_h else "rh"
                 self.__hand_subscriber = rospy.Subscriber("/" + prefix + "_trajectory_controller/state",
-                                                           JointTrajectoryControllerState, self.__target_cb)
+                                                          JointTrajectoryControllerState, self.__target_cb)
             if self.__save_arm:
                 self.__arm_subscriber = rospy.Subscriber("/ra_trajectory_controller/state",
                                                          JointTrajectoryControllerState, self.__target_cb)
