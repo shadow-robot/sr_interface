@@ -36,29 +36,15 @@ If WHAT_TO_SAVE is omitted, it defaults to "both".
 
 if "__main__" == __name__:
     rospy.init_node("state_saver")
-    if len(argv) <= 1 or "" == argv[1]:
-        rospy.logerr("You didn't enter a name.")
-        exit(-1)
-
-    which = 'all'
-
-    hand_h = False
-
-    if len(argv) > 3:
-        if argv[2] == "hand_h":
-            hand_h = True
-        which = argv[3]
-
-    elif len(argv) > 2:
-        which = argv[2]
-        if which == "hand_h":
-            hand_h = True
-            which = "all"
+    name = rospy.getparam("~name")
+    which = rospy.getparam("~which", "all")
+    hand_h = rospy.getparam("~hand_h", False)
+    save_target = rospy.getparam("~save_target", False)
 
 
     if which == "all":
-        gs = SrStateSaverUnsafe(argv[1] + "_hand", "hand", hand_h=hand_h)
-        gs = SrStateSaverUnsafe(argv[1] + "_arm", "arm", hand_h=hand_h)
-        gs = SrStateSaverUnsafe(argv[1] + "_both", "both", hand_h=hand_h)
+        gs = SrStateSaverUnsafe(argv[1] + "_hand", "hand", hand_h=hand_h, save_target=save_target)
+        gs = SrStateSaverUnsafe(argv[1] + "_arm", "arm", hand_h=hand_h, save_target=save_target)
+        gs = SrStateSaverUnsafe(argv[1] + "_both", "both", hand_h=hand_h, save_target=save_target)
     else:
-        gs = SrStateSaverUnsafe(argv[1] + "_" + which, which, hand_h=hand_h)
+        gs = SrStateSaverUnsafe(argv[1] + "_" + which, which, hand_h=hand_h, save_target=save_target)
