@@ -47,9 +47,6 @@ class SrStateSaverUnsafe(object):
                 self.__arm_subscriber = rospy.Subscriber("/ra_trajectory_controller/state",
                                                          JointTrajectoryControllerState, self.__target_cb)
 
-        rospy.sleep(1)
-        rospy.logwarn(self.__target_values)
-
 
         rospy.loginfo("Creating commanders")
         if hand_or_arm == 'hand':
@@ -64,7 +61,7 @@ class SrStateSaverUnsafe(object):
                 self.__commander = SrHandCommander(hand_parameters=hand_parameters, hand_serial=hand_serial)
         else:
             if hand_h:
-                self.__commander = SrRobotCommander("hand_h", prefix="H1_")
+                self.__commander = SrRobotCommander("right_arm", prefix="ra_")
             else:
                 self.__commander = SrArmCommander()
 
@@ -110,7 +107,7 @@ class SrStateSaverUnsafe(object):
         rs.joint_state.name = current_dict.keys()
         rs.joint_state.position = current_dict.values()
         rospy.logwarn(rs)
-        #self.__save(self.__name, robot_name, rs)
+        self.__save(self.__name, robot_name, rs)
 
 
     def __target_cb(self, data):
