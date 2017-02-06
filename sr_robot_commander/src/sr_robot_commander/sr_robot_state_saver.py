@@ -14,6 +14,7 @@ from controller_manager_msgs.srv import ListControllers
 from control_msgs.msg import JointTrajectoryControllerState
 from threading import Lock
 
+
 class SrStateSaverUnsafe(object):
     def __init__(self, name, hand_or_arm="both", hand_h=False, save_target=False):
 
@@ -25,7 +26,7 @@ class SrStateSaverUnsafe(object):
         self.__save_target = save_target
 
         self.__save_hand = (hand_or_arm == "hand" or hand_or_arm == "both")
-        self.__save_arm =  (hand_or_arm == "arm" or hand_or_arm == "both")
+        self.__save_arm = (hand_or_arm == "arm" or hand_or_arm == "both")
 
         if self.__save_hand:
             rospy.loginfo("Saving hand data")
@@ -34,19 +35,17 @@ class SrStateSaverUnsafe(object):
 
         rospy.loginfo("Saving for hand %s" % "h" if self.__hand_h else "e")
 
-
         if save_target:
             rospy.loginfo("Saving targets instead of current values")
             self.__mutex = Lock()
             self.__target_values = dict()
             if self.__save_hand:
                 prefix = "H1" if hand_h else "rh"
-                self.__hand_subscriber = rospy.Subscriber ("/" + prefix + "_trajectory_controller/state",
+                self.__hand_subscriber = rospy.Subscriber("/" + prefix + "_trajectory_controller/state",
                                                            JointTrajectoryControllerState, self.__target_cb)
             if self.__save_arm:
                 self.__arm_subscriber = rospy.Subscriber("/ra_trajectory_controller/state",
                                                          JointTrajectoryControllerState, self.__target_cb)
-
 
         rospy.loginfo("Creating commanders")
         if hand_or_arm == 'hand':
@@ -108,7 +107,6 @@ class SrStateSaverUnsafe(object):
         rs.joint_state.position = current_dict.values()
         rospy.logwarn(rs)
         self.__save(self.__name, robot_name, rs)
-
 
     def __target_cb(self, data):
         self.__mutex.acquire()

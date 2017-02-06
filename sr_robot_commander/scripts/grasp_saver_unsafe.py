@@ -41,7 +41,6 @@ if "__main__" == __name__:
     hand_h = rospy.get_param("~hand_h", False)
     save_target = rospy.get_param("~save_target", False)
 
-
     if which == "all":
         gs = SrStateSaverUnsafe(name + "_hand", "hand", hand_h=hand_h, save_target=save_target)
         gs = SrStateSaverUnsafe(name + "_arm", "arm", hand_h=hand_h, save_target=save_target)
