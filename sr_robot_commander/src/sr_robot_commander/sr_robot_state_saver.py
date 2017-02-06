@@ -37,7 +37,8 @@ class SrStateSaverUnsafe(object):
 
         if save_target:
             rospy.loginfo("Saving targets instead of current values")
-            self.__mutex = Lock()
+            self.__hand_mutex = Lock()
+            self.__arm_mutex = Lock()
             self.__hand_target_values = dict()
             self.__arm_target_values = dict()
             if self.__save_hand:
@@ -47,6 +48,10 @@ class SrStateSaverUnsafe(object):
             if self.__save_arm:
                 self.__arm_subscriber = rospy.Subscriber("/ra_trajectory_controller/state",
                                                          JointTrajectoryControllerState, self.__arm_target_cb)
+
+        rospy.sleep(1)
+        rospy.logwarn(self.__hand_target_values)
+        rospy.logwarn(self.__arm_target_values)
 
         rospy.loginfo("Creating commanders")
         if hand_or_arm == 'hand':
@@ -110,18 +115,18 @@ class SrStateSaverUnsafe(object):
         rs.joint_state.name = current_dict.keys()
         rs.joint_state.position = current_dict.values()
         rospy.logwarn(rs)
-        self.__save(self.__name, robot_name, rs)
+        #self.__save(self.__name, robot_name, rs)
 
 
     def __hand_target_cb(self, data):
-        self.__mutex.acquire()
+        self.__hand_mutex.acquire()
         for n, joint in enumerate(data.joint_names):
             self.__hand_target_values[joint] = data.desired.positions[n]
-        self.__mutex.release()
-        rospy.logwarn(self.__hand_target_values)
+        self.__hand_mutex.release()
+
 
     def __arm_target_cb(self, data):
-        self.__mutex.acquire()
+        self.__arm_mutex.acquire()
         for n, joint in enumerate(data.joint_names):
             self.__arm_target_values[joint] = data.desired.positions[n]
-        self.__mutex.release()
+        self.__arm_mutex.release()
