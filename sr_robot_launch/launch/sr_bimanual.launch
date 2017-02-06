@@ -9,6 +9,7 @@
   <arg name="use_moveit" default="true"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
+  <arg name="verbose" default="true" />
 
   <!-- Xacro file containing the robot description we want to load -->
   <arg name="robot_description" default="$(find sr_description)/robots/bimanual_shadowhand_motor.urdf.xacro"/>
@@ -45,6 +46,7 @@
       <arg name="gui" default="$(arg gui)"/>
       <arg name="paused" value="$(arg paused)"/>
       <arg name="debug" value="$(arg debug)"/>
+      <arg name="verbose" value="$(arg verbose)" />
     </include>
     <param name="robot_description" command="xacro --inorder '$(arg robot_description)'"/>
     <param name="/hand/mapping/$(arg rh_serial)" value="$(arg rh_id)"/>

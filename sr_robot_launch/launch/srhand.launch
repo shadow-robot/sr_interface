@@ -5,6 +5,7 @@
   <arg name="sim" default="true"/>
   <!-- Set to true for debugging -->
   <arg name="debug" default="false"/>
+  <arg name="verbose" default="true" />
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="hand_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the hands-->
@@ -35,6 +36,7 @@
       <arg name="gui" default="$(arg gui)"/>
       <arg name="paused" value="$(arg paused)"/>
       <arg name="debug" value="$(arg debug)"/>
+      <arg name="verbose" value="$(arg verbose)" />
     </include>
     <param name="/hand/mapping/$(arg hand_serial)" value="$(arg hand_id)"/>
     <param name="/hand/joint_prefix/$(arg hand_serial)" value="$(arg hand_id)_"/>

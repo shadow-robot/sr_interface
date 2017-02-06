@@ -33,6 +33,12 @@
     uri: https://github.com/shadow-robot/lma_kinematics_plugin
     version: F_fixing_kinetic_build
 
+# Only needed for version 0.11.2. It can be removed for higher versions which will allow the use of partial trajectories
+- git:
+    local-name: ros_controllers
+    uri: https://github.com/ros-controls/ros_controllers.git
+    version: kinetic-devel
+
 - git:
     local-name: trac_ik
     uri: https://bitbucket.org/traclabs/trac_ik.git
