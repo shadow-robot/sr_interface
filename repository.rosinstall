@@ -58,8 +58,3 @@
     local-name: warehouse_ros
     uri: https://github.com/ros-planning/warehouse_ros.git
     version: jade-devel
-
-- git:
-    local-name: mongo-cxx-driver
-    uri: https://github.com/mongodb/mongo-cxx-driver.git
-    version: 26compat
