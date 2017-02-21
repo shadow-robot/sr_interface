@@ -140,8 +140,8 @@ private:
   KDL::ChainIkSolverPos_NR_JL_coupling *ik_solver_pos;
   KDL::ChainIkSolverVel_wdls_coupling *ik_solver_vel;
 
-  ros::ServiceServer ik_service;
-  ros::ServiceServer fk_service;
+  ros::ServiceServer ik_service, ik_solver_info_service;
+  ros::ServiceServer fk_service, fk_solver_info_service;
 
   tf::TransformListener tf_listener;
 
@@ -162,6 +162,24 @@ private:
    */
   bool getPositionIK(moveit_msgs::GetPositionIK::Request &request,
                      moveit_msgs::GetPositionIK::Response &response);
+
+  /**
+   * @brief This is the basic kinematics info service that will return information about the kinematics node.
+   * @param A request message. See service definition for KinematicSolverInfo for more information on this message.
+   * @param The response message. See service definition for KinematicSolverInfo for more
+   *        information on this message.
+   */
+  bool getIKSolverInfo(moveit_msgs::KinematicSolverInfo::Request &request,
+                       moveit_msgs::KinematicSolverInfo::Response &response);
+
+  /**
+   * @brief This is the basic kinematics info service that will return information about the kinematics node.
+   * @param A request message. See service definition for KinematicSolverInfo for more information on this message.
+   * @param The response message. See service definition for KinematicSolverInfo for more
+   *        information on this message.
+   */
+  bool getFKSolverInfo(moveit_msgs::KinematicSolverInfo::Request &request,
+                       moveit_msgs::KinematicSolverInfo::Response &response);
 
   /**
    * @brief This method generates a random joint array vector between the joint limits so that local minima in IK
@@ -319,6 +337,8 @@ bool Kinematics::init()
   ROS_INFO("Advertising services");
   fk_service = nh_private.advertiseService(FK_SERVICE, &Kinematics::getPositionFK, this);
   ik_service = nh_private.advertiseService(IK_SERVICE, &Kinematics::getPositionIK, this);
+  ik_solver_info_service = nh_private.advertiseService(IK_INFO_SERVICE, &Kinematics::getIKSolverInfo, this);
+  fk_solver_info_service = nh_private.advertiseService(FK_INFO_SERVICE, &Kinematics::getFKSolverInfo, this);
 
   return true;
 }
@@ -549,6 +569,20 @@ bool Kinematics::getPositionIK(moveit_msgs::GetPositionIK::Request &request,
     response.error_code.val = response.error_code.NO_IK_SOLUTION;
     return true;
   }
+}
+
+bool Kinematics::getIKSolverInfo(moveit_msgs::KinematicSolverInfo::Request &request,
+                                 moveit_msgs::KinematicSolverInfo::Response &response)
+{
+  response.kinematic_solver_info = info;
+  return true;
+}
+
+bool Kinematics::getFKSolverInfo(moveit_msgs::KinematicSolverInfo::Request &request,
+                                 moveit_msgs::KinematicSolverInfo::Response &response)
+{
+  response.kinematic_solver_info = info;
+  return true;
 }
 
 bool Kinematics::getPositionFK(moveit_msgs::GetPositionFK::Request &request,
