@@ -33,8 +33,6 @@ using std::string;
 static const std::string IK_WITH_COLLISION_SERVICE = "get_constraint_aware_ik";
 static const std::string IK_SERVICE = "get_ik";
 static const std::string FK_SERVICE = "get_fk";
-static const std::string IK_INFO_SERVICE = "get_ik_solver_info";
-static const std::string FK_INFO_SERVICE = "get_fk_solver_info";
 
 #define IK_EPS  1e-5
 
