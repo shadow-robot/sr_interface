@@ -140,8 +140,8 @@ private:
   KDL::ChainIkSolverPos_NR_JL_coupling *ik_solver_pos;
   KDL::ChainIkSolverVel_wdls_coupling *ik_solver_vel;
 
-  ros::ServiceServer ik_service, ik_solver_info_service;
-  ros::ServiceServer fk_service, fk_solver_info_service;
+  ros::ServiceServer ik_service;
+  ros::ServiceServer fk_service;
 
   tf::TransformListener tf_listener;
 
