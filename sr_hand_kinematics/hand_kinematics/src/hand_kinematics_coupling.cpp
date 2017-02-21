@@ -574,14 +574,14 @@ bool Kinematics::getPositionIK(moveit_msgs::GetPositionIK::Request &request,
 bool Kinematics::getIKSolverInfo(moveit_msgs::KinematicSolverInfo &request,
                                  moveit_msgs::KinematicSolverInfo &response)
 {
-  response.kinematic_solver_info = info;
+  response = info;
   return true;
 }
 
 bool Kinematics::getFKSolverInfo(moveit_msgs::KinematicSolverInfo &request,
                                  moveit_msgs::KinematicSolverInfo &response)
 {
-  response.kinematic_solver_info = info;
+  response = info;
   return true;
 }
 
