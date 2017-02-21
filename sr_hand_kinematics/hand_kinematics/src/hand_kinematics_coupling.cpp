@@ -169,8 +169,7 @@ private:
    * @param The response message. See service definition for KinematicSolverInfo for more
    *        information on this message.
    */
-  bool getIKSolverInfo(moveit_msgs::KinematicSolverInfo::Request &request,
-                       moveit_msgs::KinematicSolverInfo::Response &response);
+  bool getIKSolverInfo(moveit_msgs::KinematicSolverInfo &response);
 
   /**
    * @brief This is the basic kinematics info service that will return information about the kinematics node.
@@ -178,8 +177,7 @@ private:
    * @param The response message. See service definition for KinematicSolverInfo for more
    *        information on this message.
    */
-  bool getFKSolverInfo(moveit_msgs::KinematicSolverInfo::Request &request,
-                       moveit_msgs::KinematicSolverInfo::Response &response);
+  bool getFKSolverInfo(moveit_msgs::KinematicSolverInfo &response);
 
   /**
    * @brief This method generates a random joint array vector between the joint limits so that local minima in IK
@@ -571,15 +569,13 @@ bool Kinematics::getPositionIK(moveit_msgs::GetPositionIK::Request &request,
   }
 }
 
-bool Kinematics::getIKSolverInfo(moveit_msgs::KinematicSolverInfo::Request &request,
-                                 moveit_msgs::KinematicSolverInfo::Response &response)
+bool Kinematics::getIKSolverInfo(moveit_msgs::KinematicSolverInfo &response)
 {
   response.kinematic_solver_info = info;
   return true;
 }
 
-bool Kinematics::getFKSolverInfo(moveit_msgs::KinematicSolverInfo::Request &request,
-                                 moveit_msgs::KinematicSolverInfo::Response &response)
+bool Kinematics::getFKSolverInfo(moveit_msgs::KinematicSolverInfo &response)
 {
   response.kinematic_solver_info = info;
   return true;
