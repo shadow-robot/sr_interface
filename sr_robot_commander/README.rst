@@ -10,10 +10,10 @@ supported by Shadow Robot. They encapsulate the functionality provided by differ
 
 The following classes can be found in this package
 
--  `SrRobotCommander <doc/tutorial/RobotCommander.html>`__ - base class
--  `SrArmCommander <doc/tutorial/ArmCommander.html>`__ - arm management
+-  `SrRobotCommander <doc/tutorial/RobotCommander.rst>`__ - base class
+-  `SrArmCommander <doc/tutorial/ArmCommander.rst>`__ - arm management
    class
--  `SrHandCommander <doc/tutorial/HandCommander.html>`__ - hand management
+-  `SrHandCommander <doc/tutorial/HandCommander.rst>`__ - hand management
    class
 
 In order to access the full functionality of the hand, you can also interface with it directly through the ROS interface.
