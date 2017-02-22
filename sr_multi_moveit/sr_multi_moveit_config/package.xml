@@ -27,8 +27,8 @@
   <run_depend>trac_ik_kinematics_plugin</run_depend>
   <build_depend>trac_ik_lib</build_depend>
   <run_depend>trac_ik_lib</run_depend>
-  
-
+  <build_depend>mongodb</build_depend>
+  <run_depend>mongodb</run_depend>
   <buildtool_depend>catkin</buildtool_depend>
 
 </package>
