@@ -24,7 +24,6 @@
 #include <kdl_coupling/chainiksolvervel_wdls_coupling.hpp>
 #include <moveit_msgs/GetPositionFK.h>
 #include <moveit_msgs/GetPositionIK.h>
-#include <moveit_msgs/GetKinematicSolverInfo.h>
 #include <moveit_msgs/KinematicSolverInfo.h>
 #include <sr_utilities/sr_math_utils.hpp>
 #include <urdf/model.h>
@@ -35,8 +34,6 @@ using std::string;
 
 static const std::string IK_SERVICE = "get_ik";
 static const std::string FK_SERVICE = "get_fk";
-static const std::string IK_INFO_SERVICE = "get_ik_solver_info";
-static const std::string FK_INFO_SERVICE = "get_fk_solver_info";
 
 #define IK_EPS  1e-5
 
@@ -141,8 +138,8 @@ private:
   KDL::ChainIkSolverPos_NR_JL_coupling *ik_solver_pos;
   KDL::ChainIkSolverVel_wdls_coupling *ik_solver_vel;
 
-  ros::ServiceServer ik_service, ik_solver_info_service;
-  ros::ServiceServer fk_service, fk_solver_info_service;
+  ros::ServiceServer ik_service;
+  ros::ServiceServer fk_service;
 
   tf::TransformListener tf_listener;
 
@@ -163,24 +160,6 @@ private:
    */
   bool getPositionIK(moveit_msgs::GetPositionIK::Request &request,
                      moveit_msgs::GetPositionIK::Response &response);
-
-  /**
-   * @brief This is the basic kinematics info service that will return information about the kinematics node.
-   * @param A request message. See service definition for GetKinematicSolverInfo for more information on this message.
-   * @param The response message. See service definition for GetKinematicSolverInfo for more
-   *        information on this message.
-   */
-  bool getIKSolverInfo(moveit_msgs::GetKinematicSolverInfo::Request &request,
-                       moveit_msgs::GetKinematicSolverInfo::Response &response);
-
-  /**
-   * @brief This is the basic kinematics info service that will return information about the kinematics node.
-   * @param A request message. See service definition for GetKinematicSolverInfo for more information on this message.
-   * @param The response message. See service definition for GetKinematicSolverInfo for more
-   *        information on this message.
-   */
-  bool getFKSolverInfo(moveit_msgs::GetKinematicSolverInfo::Request &request,
-                       moveit_msgs::GetKinematicSolverInfo::Response &response);
 
   /**
    * @brief This method generates a random joint array vector between the joint limits so that local minima in IK
@@ -338,8 +317,6 @@ bool Kinematics::init()
   ROS_INFO("Advertising services");
   fk_service = nh_private.advertiseService(FK_SERVICE, &Kinematics::getPositionFK, this);
   ik_service = nh_private.advertiseService(IK_SERVICE, &Kinematics::getPositionIK, this);
-  ik_solver_info_service = nh_private.advertiseService(IK_INFO_SERVICE, &Kinematics::getIKSolverInfo, this);
-  fk_solver_info_service = nh_private.advertiseService(FK_INFO_SERVICE, &Kinematics::getFKSolverInfo, this);
 
   return true;
 }
@@ -570,20 +547,6 @@ bool Kinematics::getPositionIK(moveit_msgs::GetPositionIK::Request &request,
     response.error_code.val = response.error_code.NO_IK_SOLUTION;
     return true;
   }
-}
-
-bool Kinematics::getIKSolverInfo(moveit_msgs::GetKinematicSolverInfo::Request &request,
-                                 moveit_msgs::GetKinematicSolverInfo::Response &response)
-{
-  response.kinematic_solver_info = info;
-  return true;
-}
-
-bool Kinematics::getFKSolverInfo(moveit_msgs::GetKinematicSolverInfo::Request &request,
-                                 moveit_msgs::GetKinematicSolverInfo::Response &response)
-{
-  response.kinematic_solver_info = info;
-  return true;
 }
 
 bool Kinematics::getPositionFK(moveit_msgs::GetPositionFK::Request &request,
