@@ -132,7 +132,7 @@
   </xacro:macro>
    <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
    <xacro:macro name="finger_ee" params="prefix link_prefix finger_name hand_name" >
-    <end_effector name="${prefix}${link_prefix}tip_ee" parent_link="${prefix}${link_prefix}tip" group="${prefix}${finger_name}" parent_group="${hand_name}" />
+    <end_effector name="${prefix}${link_prefix}tip_ee" parent_link="${prefix}palm" group="${prefix}${finger_name}" parent_group="${prefix}palm" />
    </xacro:macro>  
   <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
   <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->

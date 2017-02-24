@@ -120,9 +120,8 @@ class SRDFHandGenerator(object):
         # the prefix version of the srdf_xacro must be loaded
         rospack = rospkg.RosPack()
         package_path = rospack.get_path('sr_moveit_hand_config')
-        srdf_xacro_filename = package_path + "/config/shadowhands.srdf.xacro"
+        srdf_xacro_filename = package_path + "/config/shadowhands_prefix.srdf.xacro"
 
-        srdf_xacro_filename = srdf_xacro_filename.replace(".srdf.xacro", "_prefix.srdf.xacro")
         rospy.loginfo("File loaded " + srdf_xacro_filename)
 
         # open and parse the xacro.srdf file

@@ -42,38 +42,41 @@
       <joint name="$(arg prefix)WRJ1" />
     </group>
   </xacro:unless>
+
+  <group name="$(arg prefix)palm">
+    <chain base_link="$(arg prefix)forearm" tip_link="$(arg prefix)palm" />
+  </group>
+
+  <group name="$(arg prefix)forearm">
+    <chain base_link="$(arg prefix)forearm" tip_link="$(arg prefix)wrist" />
+  </group>
   
   <!-- single finger groups -->  
   <xacro:if value="$(arg ff)">
     <group name="$(arg prefix)first_finger">
       <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="FF" lf="0"/>
-      <chain base_link="$(arg prefix)palm" tip_link="$(arg prefix)fftip" />
     </group>
   </xacro:if>
   <xacro:if value="$(arg mf)">
     <group name="$(arg prefix)middle_finger">
       <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="MF" lf="0"/>
-      <chain base_link="$(arg prefix)palm" tip_link="$(arg prefix)mftip" />
     </group>
   </xacro:if>
   <xacro:if value="$(arg rf)">
     <group name="$(arg prefix)ring_finger">
       <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="RF" lf="0"/>
-      <chain base_link="$(arg prefix)palm" tip_link="$(arg prefix)rftip" />
     </group>
   </xacro:if>
   <xacro:unless value="$(arg is_lite)">
     <xacro:if value="$(arg lf)">
       <group name="$(arg prefix)little_finger">
         <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="LF" lf="1"/>
-        <chain base_link="$(arg prefix)palm" tip_link="$(arg prefix)lftip" />
       </group>
     </xacro:if>
   </xacro:unless>
   <xacro:if value="$(arg th)">
     <group name="$(arg prefix)thumb">
       <xacro:thumbjoints prefix="$(arg prefix)"/>
-      <chain base_link="$(arg prefix)palm" tip_link="$(arg prefix)thtip" />
     </group>
   </xacro:if>
 
@@ -309,8 +312,10 @@
   </xacro:if>
 
   <xacro:unless value="$(arg is_lite)">
-    <end_effector group="$(arg prefix)wrist" name="$(arg prefix)wrist_ee" parent_link="$(arg prefix)palm" parent_group="$(arg hand_name)"/>
-  </xacro:unless>  
+    <end_effector group="$(arg prefix)wrist" name="$(arg prefix)wrist_ee" parent_link="$(arg prefix)forearm" parent_group="$(arg prefix)forearm"/>
+  </xacro:unless>
+
+  <end_effector group="$(arg prefix)fingers" name="$(arg prefix)palm_ee" parent_group="$(arg prefix)palm" parent_link="$(arg prefix)palm"/>
 
   <xacro:virtual_joints prefix="$(arg prefix)" />
 
