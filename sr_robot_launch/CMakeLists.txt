@@ -78,7 +78,7 @@ find_package(catkin REQUIRED)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES sr_robot_launch
-        CATKIN_DEPENDS controller_manager_msgs joint_state_publisher robot_state_publisher rospy sr_multi_description sr_robot_msgs sr_ur_msgs ur_gazebo
+        CATKIN_DEPENDS controller_manager_msgs joint_state_publisher robot_state_publisher rospy sr_multi_description sr_robot_msgs ur_gazebo
 #  DEPENDS system_lib
 )
 

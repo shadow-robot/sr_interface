@@ -21,7 +21,7 @@
   <run_depend>rospy</run_depend>
   <run_depend>sr_multi_description</run_depend>
   <run_depend>sr_robot_msgs</run_depend>
-  <run_depend>sr_ur_msgs</run_depend>
   <run_depend>ur_gazebo</run_depend>
+  <run_depend>sr_ur_bringup</run_depend>
 
 </package>
