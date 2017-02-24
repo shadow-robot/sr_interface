@@ -41,5 +41,5 @@
 
 - git:
     local-name: sr_ur_bringup
-    uri: https://github.com/shadow-robot/sr_ur_arm/sr_ur_bringup
+    uri: https://github.com/shadow-robot/sr_ur_arm/tree/kinetic-devel/sr_ur_bringup
     version: kinetic-devel
