@@ -224,10 +224,11 @@ class SRDFRobotGenerator(object):
                             srdf.toprettyxml(indent='  '))
 
         if self._save_files:
-            rospy.loginfo("Robot urdf and srdf have been saved to %s"% self._path_to_save_files)
+            rospy.loginfo("Robot urdf and srdf have been saved to %s" % self._path_to_save_files)
 
             # srdf: File is already generated so just need to be copied to specified location
-            copy2(self.package_path + "/config/" + new_srdf_file_name, self._path_to_save_files + "/" + self._file_name + ".srdf")
+            copy2(self.package_path + "/config/" + new_srdf_file_name, self._path_to_save_files +
+                  "/" + self._file_name + ".srdf")
 
             # urdf: File can be copied from rosparam
             if rospy.has_param('/robot_description'):
