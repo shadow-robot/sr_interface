@@ -317,8 +317,6 @@
 
   <end_effector group="$(arg prefix)fingers" name="$(arg prefix)palm_ee" parent_group="$(arg prefix)palm" parent_link="$(arg prefix)palm"/>
 
-  <xacro:virtual_joints prefix="$(arg prefix)" />
-
   <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
 
   <xacro:hand_collisions prefix="$(arg prefix)" />

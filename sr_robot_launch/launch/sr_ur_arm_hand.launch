@@ -14,6 +14,7 @@
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <arg name="world" default="$(find sr_description)/other/worlds/shadowhand.world"/>
+  <arg name="verbose" default="true" />
 
   <!-- Change this for the left hand and arm -->
   <arg name="hand_id" default="rh"/>
@@ -59,8 +60,9 @@
       <arg name="gui" default="$(arg gui)"/>
       <arg name="paused" value="$(arg paused)"/>
       <arg name="debug" value="$(arg debug)"/>
+      <arg name="verbose" value="$(arg verbose)" />
     </include>
-    <param name="robot_description" command="$(find xacro)/xacro.py '$(arg robot_description)' initial_z:=$(arg initial_z)"/>
+    <param name="robot_description" command="xacro --inorder '$(arg robot_description)' initial_z:=$(arg initial_z)"/>
     <!-- HAND -->
     <param name="/hand/mapping/$(arg hand_serial)" value="$(arg hand_id)"/>
     <param name="/hand/joint_prefix/$(arg hand_serial)" value="$(arg hand_id)_"/>

@@ -5,8 +5,7 @@ from controller_manager_msgs.srv import (ListControllers, LoadController,
 import rospy
 from sr_robot_msgs.msg import ControlType
 from sr_robot_msgs.srv import (ChangeControlType, RobotTeachMode,
-                               RobotTeachModeRequest, RobotTeachModeResponse)
-from sr_ur_msgs.srv import SetTeachMode
+                               RobotTeachModeRequest, RobotTeachModeResponse, SetTeachMode)
 
 
 class ControllerHelper(object):
