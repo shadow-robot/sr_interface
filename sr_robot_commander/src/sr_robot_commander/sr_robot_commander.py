@@ -135,6 +135,12 @@ class SrRobotCommander(object):
         self._srdf_names = self.__get_srdf_names()
         self._warehouse_names = self.__get_warehouse_names()
 
+    def allow_looking(self, value):
+        self._move_group_commander.allow_looking(value)
+
+    def allow_replanning(self, value):
+        self._move_group_commander.allow_replanning(value)
+
     def execute(self):
         """
         Executes the last plan made.
