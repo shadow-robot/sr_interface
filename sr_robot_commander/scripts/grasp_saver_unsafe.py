@@ -42,12 +42,22 @@ if "__main__" == __name__:
 
     which = 'all'
 
-    if len(argv) > 2:
+    hand_h = False
+
+    if len(argv) > 3:
+        if argv[2] == "hand_h":
+            hand_h = True
+        which = argv[3]
+
+    elif len(argv) > 2:
         which = argv[2]
+        if which == "hand_h":
+            hand_h = True
+            which = "all"
 
     if which == "all":
-        gs = SrStateSaverUnsafe(argv[1] + "_hand", "hand")
-        gs = SrStateSaverUnsafe(argv[1] + "_arm", "arm")
-        gs = SrStateSaverUnsafe(argv[1] + "_both", "both")
+        gs = SrStateSaverUnsafe(argv[1] + "_hand", "hand", hand_h=hand_h)
+        gs = SrStateSaverUnsafe(argv[1] + "_arm", "arm", hand_h=hand_h)
+        gs = SrStateSaverUnsafe(argv[1] + "_both", "both", hand_h=hand_h)
     else:
-        gs = SrStateSaverUnsafe(argv[1] + "_" + which, which)
+        gs = SrStateSaverUnsafe(argv[1] + "_" + which, which, hand_h=hand_h)
