@@ -38,10 +38,14 @@
   
   <xacro:unless value="$(arg is_lite)">
     <group name="$(arg prefix)wrist">
- 	  <joint name="$(arg prefix)WRJ2" />
-      <joint name="$(arg prefix)WRJ1" />
+ 	  <chain base_link="$(arg prefix)forearm" tip_link="$(arg prefix)palm" />
     </group>
   </xacro:unless>
+  <xacro:if value="$(arg is_lite)">
+    <group name="$(arg prefix)wrist_lite">
+      <chain base_link="$(arg prefix)forearm" tip_link="$(arg prefix)palm" />
+    </group>
+  </xacro:if>
 
   <group name="$(arg prefix)forearm">
     <link name="$(arg prefix)forearm" />
@@ -313,9 +317,12 @@
 
   <xacro:unless value="$(arg is_lite)">
     <end_effector group="$(arg prefix)wrist" name="$(arg prefix)wrist_ee" parent_link="$(arg prefix)forearm" parent_group="$(arg prefix)forearm"/>
+    <end_effector group="$(arg prefix)fingers" name="$(arg prefix)palm_ee" parent_group="$(arg prefix)wrist" parent_link="$(arg prefix)palm"/>
   </xacro:unless>
+  <xacro:if value="$(arg is_lite)">
+    <end_effector group="$(arg prefix)fingers" name="$(arg prefix)palm_ee" parent_group="$(arg prefix)wrist_lite" parent_link="$(arg prefix)palm"/>
+  </xacro:if>
 
-  <end_effector group="$(arg prefix)fingers" name="$(arg prefix)palm_ee" parent_group="$(arg prefix)wrist" parent_link="$(arg prefix)palm"/>
   <end_effector group="$(arg prefix)fingers" name="$(arg prefix)manipulator_ee" parent_group="$(arg prefix)manipulator" parent_link="$(arg prefix)manipulator"/>
 
   <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
