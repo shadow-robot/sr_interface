@@ -43,6 +43,9 @@ from std_msgs.msg import Header
 
 import tf
 import copy
+import yaml
+import rospkg
+import os
 
 
 class SrRobotCommander(object):
@@ -54,7 +57,7 @@ class SrRobotCommander(object):
                         "right_hand": "rh_",
                         "left_hand": "lh_"}
 
-    def __init__(self, name, prefix=None):
+    def __init__(self, name, prefix=None, file_name=None, package_name=None):
         """
         Initialize MoveGroupCommander object
         @param name - name of the MoveIt group
@@ -79,28 +82,46 @@ class SrRobotCommander(object):
         self._joints_position = {}
         self._joints_velocity = {}
         self._joints_effort = {}
+        self._clients = {}
         self.__plan = None
+
+        self._controller_names_list = []
 
         rospy.wait_for_service('compute_ik')
         self._compute_ik = rospy.ServiceProxy('compute_ik', GetPositionIK)
         self._forward_k = rospy.ServiceProxy('compute_fk', GetPositionFK)
 
-        # prefix of the trajectory controller
-        if prefix is not None:
-            self._prefix = prefix
-        elif name in self.__group_prefixes.keys():
-            self._prefix = self.__group_prefixes[name]
+        if file_name is not None:
+            path = rospkg.RosPack().get_path('%s' % package_name) #"/home/user/workspace/chiron/base/src/chiron/chiron_moveit_config/config"
+            file = self.find_file_path(file_name, path)
+            with open(file, 'r') as f:
+                controller_list = yaml.load(f)
+            for values in controller_list.values():
+                for fields in values:
+                    self._controller_names_list.append(fields.get('name'))
         else:
-            # Group name is one of the ones to plan for specific fingers.
-            # We need to find the hand prefix using the hand finder
-            hand_finder = HandFinder()
-            hand_parameters = hand_finder.get_hand_parameters()
-            hand_serial = hand_parameters.mapping.keys()[0]
-            self._prefix = hand_parameters.joint_prefix[hand_serial]
+            print("No file name specified will use prefixes")
+            # prefix of the trajectory controller
+            if prefix is not None:
+                self._prefix = prefix
+            elif name in self.__group_prefixes.keys():
+                self._prefix = self.__group_prefixes[name]
+            else:
+                # Group name is one of the ones to plan for specific fingers.
+                # We need to find the hand prefix using the hand finder
+                hand_finder = HandFinder()
+                hand_parameters = hand_finder.get_hand_parameters()
+                hand_serial = hand_parameters.mapping.keys()[0]
+                self._prefix = hand_parameters.joint_prefix[hand_serial]
 
-        self._set_up_action_client()
+        self._set_up_action_client(self._controller_names_list)
 
         threading.Thread(None, rospy.spin)
+
+    def find_file_path(self, name, path):
+        for root, dirs, files in os.walk(path):
+            if name in files:
+                return os.path.join(root, name)
 
     def set_planner_id(self, planner_id):
         self._move_group_commander.set_planner_id(planner_id)
@@ -550,20 +571,28 @@ class SrRobotCommander(object):
     def _get_trajectory_controller_name(self):
         return self._prefix + "trajectory_controller"
 
-    def _set_up_action_client(self):
+    def _set_up_action_client(self, controller_list):
         """
         Sets up an action client to communicate with the trajectory controller
         """
         self._action_running = False
 
-        self._client = SimpleActionClient(
-            self._get_trajectory_controller_name() + "/follow_joint_trajectory",
-            FollowJointTrajectoryAction
-        )
+        if not controller_list:
+            self._client = SimpleActionClient(
+                self._get_trajectory_controller_name() + "/follow_joint_trajectory",
+                FollowJointTrajectoryAction
+            )
 
-        if self._client.wait_for_server(timeout=rospy.Duration(4)) is False:
-            rospy.logfatal("Failed to connect to action server in 4 sec")
-            raise Exception("Failed to connect to action server in 4 sec")
+            if self._client.wait_for_server(timeout=rospy.Duration(4)) is False:
+                rospy.logfatal("Failed to connect to action server in 4 sec")
+                raise Exception("Failed to connect to action server in 4 sec")
+        else:
+            for controller_name in controller_list:
+                self._clients["client_"+controller_name] = SimpleActionClient(controller_name+"/follow_joint_trajectory", FollowJointTrajectoryAction)
+                #for i in self._clients.keys():
+                if self._clients["client_"+controller_name].wait_for_server(timeout=rospy.Duration(4)) is False:
+                    rospy.logfatal("Failed to connect to action server in 4 sec")
+                    raise Exception("Failed to connect to action server in 4 sec")
 
     def move_to_joint_value_target_unsafe(self, joint_states, time=0.002,
                                           wait=True, angle_degrees=False):
@@ -610,9 +639,10 @@ class SrRobotCommander(object):
         self._action_running = False
 
     def _call_action(self, goal):
-        self._set_up_action_client()
+        self._set_up_action_client(self._controller_names_list)
         self._action_running = True
-        self._client.send_goal(goal, self._action_done_cb)
+        for i in self._clients.keys():
+            self._clients[i].send_goal(goal, self._action_done_cb)
 
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
         """
