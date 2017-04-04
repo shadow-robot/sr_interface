@@ -47,7 +47,6 @@ import yaml
 import rospkg
 import os
 
-
 class SrRobotCommander(object):
     """
     Base class for hand and arm commanders
@@ -57,7 +56,7 @@ class SrRobotCommander(object):
                         "right_hand": "rh_",
                         "left_hand": "lh_"}
 
-    def __init__(self, name, prefix=None, file_name=None, package_name=None):
+    def __init__(self, name, prefix=None):
         """
         Initialize MoveGroupCommander object
         @param name - name of the MoveIt group
@@ -85,43 +84,18 @@ class SrRobotCommander(object):
         self._clients = {}
         self.__plan = None
 
-        self._controller_names_list = []
+        self._controllers = {}
 
         rospy.wait_for_service('compute_ik')
         self._compute_ik = rospy.ServiceProxy('compute_ik', GetPositionIK)
         self._forward_k = rospy.ServiceProxy('compute_fk', GetPositionFK)
 
-        if file_name is not None:
-            path = rospkg.RosPack().get_path('%s' % package_name) #"/home/user/workspace/chiron/base/src/chiron/chiron_moveit_config/config"
-            file = self.find_file_path(file_name, path)
-            with open(file, 'r') as f:
-                controller_list = yaml.load(f)
-            for values in controller_list.values():
-                for fields in values:
-                    self._controller_names_list.append(fields.get('name'))
-        else:
-            print("No file name specified will use prefixes")
-            # prefix of the trajectory controller
-            if prefix is not None:
-                self._prefix = prefix
-            elif name in self.__group_prefixes.keys():
-                self._prefix = self.__group_prefixes[name]
-            else:
-                # Group name is one of the ones to plan for specific fingers.
-                # We need to find the hand prefix using the hand finder
-                hand_finder = HandFinder()
-                hand_parameters = hand_finder.get_hand_parameters()
-                hand_serial = hand_parameters.mapping.keys()[0]
-                self._prefix = hand_parameters.joint_prefix[hand_serial]
+        controller_list_param = rospy.get_param("/move_group/controller_list")
 
-        self._set_up_action_client(self._controller_names_list)
+        # create dictionary with name of controllers and corresponding joints
+        self._controllers = {item["name"]:item["joints"] for item in controller_list_param}
 
-        threading.Thread(None, rospy.spin)
-
-    def find_file_path(self, name, path):
-        for root, dirs, files in os.walk(path):
-            if name in files:
-                return os.path.join(root, name)
+        self._set_up_action_client(self._controllers)
 
     def set_planner_id(self, planner_id):
         self._move_group_commander.set_planner_id(planner_id)
@@ -568,31 +542,17 @@ class SrRobotCommander(object):
             self._joints_effort = {n: v for n, v in
                                    zip(joint_state.name, joint_state.effort)}
 
-    def _get_trajectory_controller_name(self):
-        return self._prefix + "trajectory_controller"
-
     def _set_up_action_client(self, controller_list):
         """
         Sets up an action client to communicate with the trajectory controller
         """
         self._action_running = False
 
-        if not controller_list:
-            self._client = SimpleActionClient(
-                self._get_trajectory_controller_name() + "/follow_joint_trajectory",
-                FollowJointTrajectoryAction
-            )
-
-            if self._client.wait_for_server(timeout=rospy.Duration(4)) is False:
+        for controller_name in controller_list.keys():
+            self._clients["client_"+controller_name] = SimpleActionClient(controller_name+"/follow_joint_trajectory", FollowJointTrajectoryAction)
+            if self._clients["client_"+controller_name].wait_for_server(timeout=rospy.Duration(4)) is False:
                 rospy.logfatal("Failed to connect to action server in 4 sec")
                 raise Exception("Failed to connect to action server in 4 sec")
-        else:
-            for controller_name in controller_list:
-                self._clients["client_"+controller_name] = SimpleActionClient(controller_name+"/follow_joint_trajectory", FollowJointTrajectoryAction)
-                #for i in self._clients.keys():
-                if self._clients["client_"+controller_name].wait_for_server(timeout=rospy.Duration(4)) is False:
-                    rospy.logfatal("Failed to connect to action server in 4 sec")
-                    raise Exception("Failed to connect to action server in 4 sec")
 
     def move_to_joint_value_target_unsafe(self, joint_states, time=0.002,
                                           wait=True, angle_degrees=False):
@@ -608,29 +568,33 @@ class SrRobotCommander(object):
         """
         # self._update_default_trajectory()
         # self._set_targets_to_default_trajectory(joint_states)
+        goals = {}
         joint_states_cpy = copy.deepcopy(joint_states)
 
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
                                     for joint, i in joint_states_cpy.items())
 
-        goal = FollowJointTrajectoryGoal()
-        goal.trajectory.joint_names = list(joint_states_cpy.keys())
-        point = JointTrajectoryPoint()
-        point.time_from_start = rospy.Duration.from_sec(time)
-        for key in goal.trajectory.joint_names:
-            point.positions.append(joint_states_cpy[key])
+        for i, value in enumerate(self._controllers.values()):
+            goal = FollowJointTrajectoryGoal()
+            goal.trajectory.joint_names = list(value)
+            point = JointTrajectoryPoint()
+            point.time_from_start = rospy.Duration.from_sec(time)
+            for key in goal.trajectory.joint_names:
+                point.positions.append(joint_states_cpy[key])
 
-        goal.trajectory.points = []
-        goal.trajectory.points.append(point)
+            goal.trajectory.points = []
+            goal.trajectory.points.append(point)
+            goals.update({i:goal})
 
-        self._call_action(goal)
+        self._call_action(goals)
 
         if not wait:
             return
 
-        if not self._client.wait_for_result():
-            rospy.loginfo("Trajectory not completed")
+        for i in self._clients.keys():
+            if not self._clients[i].wait_for_result():
+                rospy.loginfo("Trajectory not completed")
 
     def action_is_running(self):
         return self._action_running
@@ -638,11 +602,12 @@ class SrRobotCommander(object):
     def _action_done_cb(self, terminal_state, result):
         self._action_running = False
 
-    def _call_action(self, goal):
-        self._set_up_action_client(self._controller_names_list)
+    def _call_action(self, goals):
+        self._set_up_action_client(self._controllers)
         self._action_running = True
-        for i in self._clients.keys():
-            self._clients[i].send_goal(goal, self._action_done_cb)
+
+        for i, client in enumerate(self._clients.keys()):
+            self._clients[client].send_goal(goals[i], self._action_done_cb)
 
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
         """
@@ -658,8 +623,9 @@ class SrRobotCommander(object):
         if not wait:
             return
 
-        if not self._client.wait_for_result():
-            rospy.loginfo("Trajectory not completed")
+        for i in self._clients.keys():
+            if not self._clients[i].wait_for_result():
+                rospy.loginfo("Trajectory not completed")
 
     def plan_to_waypoints_target(self, waypoints, reference_frame=None, eef_step=0.005, jump_threshold=0.0):
         """
