@@ -404,17 +404,17 @@ class SRDFRobotGenerator(object):
                 elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
                 newElement = deepcopy(elt)
                 newElement.getAttributeNode("name").nodeValue = manipulator.arm.internal_name + "_and_wrist_ee"
-                newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "palm"
+                newElement.getAttributeNode("parent_link").nodeValue = manipulator.arm.prefix + "base_link"
                 newElement.getAttributeNode("group").nodeValue = manipulator.arm.internal_name + "_and_wrist"
                 newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
                 newElement = deepcopy(elt)
                 newElement.getAttributeNode("name").nodeValue = manipulator.arm.internal_name + "_and_manipulator_ee"
-                newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "manipulator"
+                newElement.getAttributeNode("parent_link").nodeValue = manipulator.arm.prefix + "base_link"
                 newElement.getAttributeNode("group").nodeValue = manipulator.arm.internal_name + "_and_manipulator"
                 newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
                 newElement = deepcopy(elt)
                 newElement.getAttributeNode("name").nodeValue = manipulator.arm.internal_name + "_and_hand_ee"
-                newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "palm"
+                newElement.getAttributeNode("parent_link").nodeValue = manipulator.arm.prefix + "base_link"
                 newElement.getAttributeNode("group").nodeValue = manipulator.arm.internal_name + "_and_hand"
                 newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
             previous = elt
