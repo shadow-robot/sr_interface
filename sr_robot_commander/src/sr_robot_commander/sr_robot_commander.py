@@ -43,20 +43,15 @@ from std_msgs.msg import Header
 
 import tf
 import copy
-import yaml
 import rospkg
-import os
+
 
 class SrRobotCommander(object):
     """
     Base class for hand and arm commanders
     """
-    __group_prefixes = {"right_arm": "ra_",
-                        "left_arm": "la_",
-                        "right_hand": "rh_",
-                        "left_hand": "lh_"}
 
-    def __init__(self, name, prefix=None):
+    def __init__(self, name):
         """
         Initialize MoveGroupCommander object
         @param name - name of the MoveIt group
