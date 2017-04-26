@@ -135,6 +135,12 @@ class SrRobotCommander(object):
         self._srdf_names = self.__get_srdf_names()
         self._warehouse_names = self.__get_warehouse_names()
 
+    def setMaxVelocityScalingFactor(self, value):
+        self._move_group_commander.setMaxVelocityScalingFactor(self, value)
+
+    def setMaxAccelerationScalingFactor(self, value):
+        self._move_group_commander.setMaxAccelerationScalingFactor(self, value)
+
     def allow_looking(self, value):
         self._move_group_commander.allow_looking(value)
 
