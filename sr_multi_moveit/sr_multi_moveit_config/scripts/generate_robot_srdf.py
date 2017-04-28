@@ -11,6 +11,7 @@ import rospkg
 import xml
 import yaml
 from copy import deepcopy
+from shutil import copy2
 
 import xacro
 import rospy
@@ -151,6 +152,11 @@ class SRDFRobotGenerator(object):
     def __init__(self, description_file=None, load=True):
         if description_file is None and len(sys.argv) > 1:
             description_file = sys.argv[1]
+
+        self._save_files = rospy.get_param('~save_files', False)
+        self._path_to_save_files = rospy.get_param('~path_to_save_files', "/tmp/")
+        self._file_name = rospy.get_param('~file_name', "generated_robot")
+
         # ARM
         self.rospack = rospkg.RosPack()
         self.package_path = self.rospack.get_path('sr_multi_moveit_config')
@@ -231,6 +237,20 @@ class SRDFRobotGenerator(object):
             rospy.set_param(robot_description_param,
                             srdf.toprettyxml(indent='  '))
 
+        if self._save_files:
+            rospy.loginfo("Robot urdf and srdf have been saved to %s" % self._path_to_save_files)
+
+            # srdf: File is already generated so just need to be copied to specified location
+            copy2(self.package_path + "/config/" + new_srdf_file_name, self._path_to_save_files +
+                  "/" + self._file_name + ".srdf")
+
+            # urdf: File can be copied from rosparam
+            if rospy.has_param('/robot_description'):
+                urdf_str = rospy.get_param('/robot_description')
+                urdf_file = open(self._path_to_save_files + "/" + self._file_name + ".urdf", "wb")
+                urdf_file.write(urdf_str)
+                urdf_file.close()
+
         rospy.loginfo("generated_robot.srdf has been generated and saved.")
 
     def start_new_srdf(self, file_name):
@@ -298,6 +318,11 @@ class SRDFRobotGenerator(object):
                             node_attribute = node.getAttributeNode("name")
                             node_attribute.nodeValue = (manipulator.hand.prefix + "WRJ1")
                             newatt = elt.appendChild(node)
+                        elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
+                        elt.setAttribute('name', manipulator.arm.internal_name + "_and_manipulator")
+                        for group_element in elt.getElementsByTagName("chain"):
+                            node_attribute = group_element.getAttributeNode("tip_link")
+                            node_attribute.nodeValue = (manipulator.hand.prefix + "manipulator")
                         elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
                     if group_name == manipulator.arm.main_group and (manipulator.has_hand):
                         new_group = xml.dom.minidom.Document().createElement('group')
@@ -379,12 +404,17 @@ class SRDFRobotGenerator(object):
                 elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
                 newElement = deepcopy(elt)
                 newElement.getAttributeNode("name").nodeValue = manipulator.arm.internal_name + "_and_wrist_ee"
-                newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "palm"
+                newElement.getAttributeNode("parent_link").nodeValue = manipulator.arm.prefix + "base_link"
                 newElement.getAttributeNode("group").nodeValue = manipulator.arm.internal_name + "_and_wrist"
                 newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
                 newElement = deepcopy(elt)
+                newElement.getAttributeNode("name").nodeValue = manipulator.arm.internal_name + "_and_manipulator_ee"
+                newElement.getAttributeNode("parent_link").nodeValue = manipulator.arm.prefix + "base_link"
+                newElement.getAttributeNode("group").nodeValue = manipulator.arm.internal_name + "_and_manipulator"
+                newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
+                newElement = deepcopy(elt)
                 newElement.getAttributeNode("name").nodeValue = manipulator.arm.internal_name + "_and_hand_ee"
-                newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "palm"
+                newElement.getAttributeNode("parent_link").nodeValue = manipulator.arm.prefix + "base_link"
                 newElement.getAttributeNode("group").nodeValue = manipulator.arm.internal_name + "_and_hand"
                 newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
             previous = elt
@@ -435,7 +465,6 @@ class SRDFRobotGenerator(object):
         if manipulator.has_hand:
             if rospy.has_param('/robot_description'):
                 urdf_str = rospy.get_param('/robot_description')
-                robot_urdf = URDF.from_xml_string(urdf_str)
                 robot = URDF.from_xml_string(urdf_str)
                 arm_chain = robot.get_chain("world", manipulator.hand.prefix + "forearm", joints=False, fixed=False)
 
