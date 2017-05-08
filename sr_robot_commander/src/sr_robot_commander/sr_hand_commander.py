@@ -20,6 +20,7 @@ import rospy
 from sr_robot_commander import SrRobotCommander
 from sr_robot_msgs.srv import ForceController
 from sr_hand.tactile_receiver import TactileReceiver
+from sr_utilities.hand_finder import HandFinder
 from sys import exit
 
 
@@ -39,7 +40,18 @@ class SrHandCommander(SrRobotCommander):
         @param hand_serial - which hand are you using
         """
         # extracting the name and prefix from the hand finder parameters
-        if hand_parameters is not None:
+        self._hand_h = False
+        if name is None and prefix is None and hand_parameters is None and hand_serial is None:
+            hand_finder = HandFinder()
+            if hand_finder.hand_e_available():
+                name, prefix, hand_serial = hand_finder.get_first_hand_e()
+            elif hand_finder.hand_h_available():
+                self._hand_h = True
+                name, prefix, hand_serial = hand_finder.get_first_hand_h()
+            else:
+                rospy.log_fatal("No way to define hand commander. Throw me a frickin' bone here people...")
+
+        elif hand_parameters is not None:
             if len(hand_parameters.mapping) is 0:
                 rospy.logerr("No hand detected")
                 exit("no hand detected")
@@ -58,9 +70,10 @@ class SrHandCommander(SrRobotCommander):
             if prefix is None:
                 prefix = "rh_"
 
-        super(SrHandCommander, self).__init__(name)
+        super(SrHandCommander, self).__init__(name, prefix)
 
-        self._tactiles = TactileReceiver(prefix)
+        if not self._hand_h:
+            self._tactiles = TactileReceiver(prefix)
 
         # appends trailing slash if necessary
         self._topic_prefix = prefix
