@@ -1,0 +1,12 @@
+<launch>
+  <arg name="name"/>
+  <arg name="hand_h" default="false"/>
+  <arg name="which" default="all"/>
+  <arg name="save_target" default="false"/>
+  <node name="save_state" pkg="sr_robot_commander" type="grasp_saver_unsafe.py" output="screen">
+    <param name="name" value="$(arg name)"/>
+    <param name="hand_h" value="$(arg hand_h)"/>
+    <param name="which" value="$(arg which)"/>
+    <param name="save_target" value="$(arg save_target)"/>
+  </node>
+</launch>
