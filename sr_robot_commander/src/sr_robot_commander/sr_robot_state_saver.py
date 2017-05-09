@@ -20,8 +20,6 @@ class SrStateSaverUnsafe(object):
 
         self.__name = name
 
-        self.__hand_h = hand_h
-
         if hand_or_arm == "arm":
             self.__commander = SrArmCommander()
 
