@@ -93,7 +93,7 @@ class SrRobotCommander(object):
         else:
             # Group name is one of the ones to plan for specific fingers.
             # We need to find the hand prefix using the hand finder
-            self._prefix = HandFinder().get_first_available_prefix()
+            self._prefix = HandFinder().get_available_prefix()
 
         self._set_up_action_client()
 

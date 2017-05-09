@@ -31,27 +31,29 @@ class SrHandCommander(SrRobotCommander):
 
     __set_force_srv = {}
 
-    def __init__(self, name=None, prefix=None, hand_parameters=None, hand_serial=None):
+    def __init__(self, name=None, prefix=None, hand_parameters=None, hand_serial=None, hand_number=0):
         """
         Initialize the hand commander, using either a name + prefix, or the parameters returned by the hand finder.
         @param name - name of the MoveIt group
         @param prefix - prefix used for the tactiles and max_force
         @param hand_parameters - from hand_finder.get_hand_parameters(). Will overwrite the name and prefix
         @param hand_serial - which hand are you using
+        @param hand_number - which hand in a multi-hand system to use (starting at 0 and sorted by name/serial).
         """
-        # extracting the name and prefix from the hand finder parameters
+
         self._hand_h = False
         if name is None and prefix is None and hand_parameters is None and hand_serial is None:
             hand_finder = HandFinder()
             if hand_finder.hand_e_available():
-                name, prefix, hand_serial = hand_finder.get_first_hand_e()
+                name, prefix, hand_serial = hand_finder.get_hand_e(number=hand_number)
             elif hand_finder.hand_h_available():
                 self._hand_h = True
-                name, prefix, hand_serial = hand_finder.get_first_hand_h()
+                name, prefix, hand_serial = hand_finder.get_hand_h(number=hand_number)
             else:
-                rospy.log_fatal("No way to define hand commander. Throw me a frickin' bone here people...")
+                rospy.log_fatal("No hands found and no information given to define hand commander.")
 
         elif hand_parameters is not None:
+            # extracting the name and prefix from the hand finder parameters
             if len(hand_parameters.mapping) is 0:
                 rospy.logerr("No hand detected")
                 exit("no hand detected")
