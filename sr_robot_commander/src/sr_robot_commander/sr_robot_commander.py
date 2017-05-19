@@ -88,9 +88,11 @@ class SrRobotCommander(object):
         controller_list_param = rospy.get_param("/move_group/controller_list")
 
         # create dictionary with name of controllers and corresponding joints
-        self._controllers = {item["name"]:item["joints"] for item in controller_list_param}
+        self._controllers = {item["name"]: item["joints"] for item in controller_list_param}
 
         self._set_up_action_client(self._controllers)
+
+        threading.Thread(None, rospy.spin)
 
     def set_planner_id(self, planner_id):
         self._move_group_commander.set_planner_id(planner_id)
@@ -544,7 +546,8 @@ class SrRobotCommander(object):
         self._action_running = False
 
         for controller_name in controller_list.keys():
-            self._clients["client_"+controller_name] = SimpleActionClient(controller_name+"/follow_joint_trajectory", FollowJointTrajectoryAction)
+            self._clients["client_"+controller_name] = SimpleActionClient(controller_name+"/follow_joint_trajectory",
+                                                                          FollowJointTrajectoryAction)
             if self._clients["client_"+controller_name].wait_for_server(timeout=rospy.Duration(4)) is False:
                 rospy.logfatal("Failed to connect to action server in 4 sec")
                 raise Exception("Failed to connect to action server in 4 sec")
@@ -580,7 +583,7 @@ class SrRobotCommander(object):
 
             goal.trajectory.points = []
             goal.trajectory.points.append(point)
-            goals.update({i:goal})
+            goals.update({i: goal})
 
         self._call_action(goals)
 
@@ -598,7 +601,6 @@ class SrRobotCommander(object):
         self._action_running = False
 
     def _call_action(self, goals):
-        self._set_up_action_client(self._controllers)
         self._action_running = True
 
         for i, client in enumerate(self._clients.keys()):
