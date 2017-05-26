@@ -33,8 +33,3 @@
     uri: https://github.com/shadow-robot/sr-ros-interface-ethercat.git
     version: kinetic-devel
 
-# Moveit sources are needed until 0.9.6 of ros-kinetic-moveit is released. It contains fixes for warehouse services
-- git:
-    local-name: moveit
-    uri: https://github.com/ros-planning/moveit.git
-    version: kinetic-devel
