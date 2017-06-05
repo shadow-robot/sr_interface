@@ -15,7 +15,7 @@
   <arg name="gui" default="true"/>
   <!-- Serial number of the hand to be used-->
   <arg name="hand_serial" default="1082"/>
-    <!-- the path to the mapping files -->
+  <!-- the path to the mapping files -->
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
