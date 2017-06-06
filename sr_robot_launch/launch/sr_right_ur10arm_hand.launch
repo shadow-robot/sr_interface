@@ -27,6 +27,10 @@
   <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
 
+  <!-- When true, robot_state_publisher publishes static frames to /tf_static. This can cause problems with the current rospy tf API,
+       which can't see /tf_static due to a bug (that will be fixed by https://github.com/ros/geometry/pull/134 once merged). -->
+  <arg name="use_tf_static" default="true"/>
+
   <arg name="side" value="right"/>
   <include file="$(find sr_robot_launch)/launch/sr_ur_arm_hand.launch">
     <arg name="sim" value="$(arg sim)"/>
@@ -49,5 +53,6 @@
     <arg name="hand_serial" value="$(arg hand_serial)"/>
     <arg name="mapping_path" value="$(arg mapping_path)"/>
     <arg name="eth_port" value="$(arg eth_port)"/>
+    <arg name="use_tf_static" value="$(arg use_tf_static)"/>
   </include>
 </launch>
