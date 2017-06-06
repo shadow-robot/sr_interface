@@ -52,6 +52,10 @@
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
 
+  <!-- When true, robot_state_publisher publishes static frames to /tf_static. This can cause problems with the current rospy tf API,
+       which can't see /tf_static due to a bug (that will be fixed by https://github.com/ros/geometry/pull/134 once merged). -->
+  <arg name="use_tf_static" default="true"/>
+
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
     <arg name="paused" value="false"/>
@@ -78,6 +82,7 @@
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
       <param name="publish_frequency" type="double" value="50.0" />
       <param name="tf_prefix" type="string" value="" />
+      <param name="use_tf_static" type="bool" value="$(arg use_tf_static)"/>
     </node>
   </group>
 
