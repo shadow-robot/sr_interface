@@ -143,10 +143,10 @@
     </include>
     <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
 
-    <node pkg="sr_multi_moveit_config" type="timed_roslaunch.sh" args="10 sr_robot_launch trajectory_services.launch
-      arm_group_name:=$(arg arm_group_name)" name="timed_trajectory_services" output="screen"
-    />
-
+    <!-- Set scene for robot after delay to start after moveit - restrains movement -->
+    <node if="$(arg scene)" pkg="fh_robot_launch" type="timed_roslaunch.sh" args="8 sr_moveit_hand_config scene.launch 
+      scene_file:=$(arg scene_file)" name="timed_publish_moveit_scene" output="screen"/>
+       
   </group>
 
   <!-- Trajectory controller -->
