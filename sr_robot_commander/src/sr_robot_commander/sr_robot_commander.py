@@ -215,7 +215,6 @@ class SrRobotCommander(object):
             for n, this_name in enumerate(joints):
                 if this_name in active_names:
                     js[this_name] = positions[n]
-            print "home state", js
             self._move_group_commander.set_joint_value_target(js)
         else:
             rospy.logerr("Unknown named state '%s'..." % name)
