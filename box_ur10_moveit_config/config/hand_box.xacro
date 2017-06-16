@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <material name="light_grey_transparent">
+      <color rgba="0.75 0.75 0.75 0.5" />
+    </material>
+
+    <xacro:macro name="box_geometry" params="name width depth height">
+      </xacro:macro>
+
+    <xacro:macro name="hand_box" params="name width depth height">
+      <link name="hand_base_attach">
+        <visual>
+          <origin xyz="0.0 0.0 ${height / 2}" rpy="0.0 0.0 0.0" />
+          <geometry name="${name}">
+            <box size="${width} ${depth} ${height}"/>
+          </geometry>
+          <material name="light_grey_transparent"/>
+        </visual>
+        <collision>
+          <origin xyz="0.0 0.0 ${height / 2}" rpy="0.0 0.0 0.0" />
+          <geometry name="${name}">
+            <box size="${width} ${depth} ${height}"/>
+          </geometry>
+        </collision>
+      </link>
+    </xacro:macro>
+
+    <joint name="hand_ee_fixed_joint" type="fixed">
+      <parent link="hand_base_attach" />
+      <child link = "hand_manipulator" />
+      <origin xyz="0.0 0.0 0.10" rpy="0.0 0.0 0.0" />
+    </joint>
+    <link name="hand_manipulator" />
+
+</robot>
