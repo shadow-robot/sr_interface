@@ -45,7 +45,6 @@ class ArmChecker(object):
             if self.arms_ready:
                 self.pub.publish(True)
             else:
-#                if self.check_controllers_running(self.controllers):
                 self.arms_ready = True
                 rospy.sleep(self.safety_time)
             rospy.sleep(self.loop_time)

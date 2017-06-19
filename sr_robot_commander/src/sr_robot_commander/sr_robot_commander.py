@@ -93,10 +93,7 @@ class SrRobotCommander(object):
         else:
             # Group name is one of the ones to plan for specific fingers.
             # We need to find the hand prefix using the hand finder
-            hand_finder = HandFinder()
-            hand_parameters = hand_finder.get_hand_parameters()
-            hand_serial = hand_parameters.mapping.keys()[0]
-            self._prefix = hand_parameters.joint_prefix[hand_serial]
+            self._prefix = HandFinder().get_available_prefix()
 
         self._set_up_action_client()
 
@@ -134,6 +131,18 @@ class SrRobotCommander(object):
     def refresh_named_targets(self):
         self._srdf_names = self.__get_srdf_names()
         self._warehouse_names = self.__get_warehouse_names()
+
+    def set_max_velocity_scaling_factor(self, value):
+        self._move_group_commander.set_max_velocity_scaling_factor(value)
+
+    def set_max_acceleration_scaling_factor(self, value):
+        self._move_group_commander.set_max_acceleration_scaling_factor(value)
+
+    def allow_looking(self, value):
+        self._move_group_commander.allow_looking(value)
+
+    def allow_replanning(self, value):
+        self._move_group_commander.allow_replanning(value)
 
     def execute(self):
         """
@@ -725,8 +734,12 @@ class SrRobotCommander(object):
 
     def move_to_pose_value_target_unsafe(self, target_pose,  avoid_collisions=False, time=0.002, wait=True):
         joint_state = self.get_ik(target_pose, avoid_collisions)
+        active_joints = self._move_group_commander.get_active_joints()
+        current_indices = [i for i, x in enumerate(joint_state.name) if any(thing in x for thing in active_joints)]
         if joint_state is not None:
-            state_as_dict = dict(zip(joint_state.name, joint_state.position))
+            current_names = [joint_state.name[i] for i in current_indices]
+            current_positions = [joint_state.position[i] for i in current_indices]
+            state_as_dict = dict(zip(current_names, current_positions))
             self.move_to_joint_value_target_unsafe(state_as_dict,
                                                    time=time,
                                                    wait=wait)
