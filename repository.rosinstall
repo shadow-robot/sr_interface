@@ -34,6 +34,6 @@
     version: kinetic-devel
 
 - git:
-    local-name: ros_robot_control
+    local-name: ros_control_robot
     uri: https://github.com/shadow-robot/ros_control_robot/
     version: kinetic-devel
