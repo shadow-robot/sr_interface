@@ -20,8 +20,8 @@
 
 - git:
     local-name: universal_robot
-    uri: https://github.com/ros-industrial/universal_robot.git
-    version: kinetic-devel
+    uri: https://github.com/shadow-robot/universal_robot
+    version: F_elbow_limit
     
 - git:
     local-name: sr_ur_arm
