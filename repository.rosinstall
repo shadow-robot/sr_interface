@@ -26,7 +26,7 @@
 - git:
     local-name: sr_ur_arm
     uri: https://github.com/shadow-robot/sr_ur_arm.git
-    version: kinetic-devel
+    version: B_add_robot_control_dep
 
 - git:
     local-name: shadow_robot_ethercat
