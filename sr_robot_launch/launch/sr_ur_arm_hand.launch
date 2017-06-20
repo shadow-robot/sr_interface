@@ -37,7 +37,7 @@
   <arg name="robot_name" default="$(arg robot_model)srh"/>
 
   <!-- ARM -->
-  <arg name="arm_controller" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_controller.yaml"/>
+  <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   <arg name="arm_group_name" default="$(arg side)_arm"/>
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
@@ -95,10 +95,29 @@
     </group>
   </group>
 
+
   <!-- REAL ROBOTS -->
   <group unless="$(arg sim)">
-    <!-- HAND -->
-    <include file="$(find sr_edc_launch)/sr_edc.launch">
+
+    <group if="$(arg arm_ctrl)">
+      <rosparam>
+        robot_hardware:
+          - unique_robot_hw
+          - ra_sr_ur_robot_hw
+      </rosparam>
+      <rosparam command="load" file="$(arg arm_robot_hw)"/>
+      <param name="$(arg arm_id)_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
+    </group>
+
+    <rosparam unless="$(arg arm_ctrl)">
+      robot_hardware:
+        - unique_robot_hw
+    </rosparam>
+
+    <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
+    <include file="$(find sr_edc_launch)/sr_edc_ros_control.launch">
+      <arg name="define_robot_hardware" value="false"/>
+      <arg name="hand_robot_hardware_name" value="unique_robot_hw"/>
       <arg name="debug" value="$(arg debug)"/>
       <arg name="eth_port" value="$(arg eth_port)"/>
       <arg name="robot_description" value="$(arg robot_description)"/>
@@ -108,19 +127,13 @@
       <arg name="mapping_path" value="$(arg mapping_path)"/>
       <arg name="initial_z" value="$(arg initial_z)"/>
     </include>
-    <!-- ARM -->
-    <rosparam command="load" file="$(arg arm_controller)"/>
-    <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/>
-    <!-- real time control loop -->
-    <group if="$(arg arm_ctrl)">
-      <param name="$(arg arm_id)_sr_ur_controller/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
-      <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_id)_sr_ur_controller"/>
-    </group>
+
     <!-- Should only be used when testing arm alone, as hand launch includes joint state publisher -->
     <!-- <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"/> -->
     <group if="$(arg arm_trajectory)">
+      <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/>
       <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen">
-        <rosparam param="controllers" subst_value="True"> ["$(arg arm_id)_sr_ur_controller"] </rosparam>
+        <rosparam param="controllers" subst_value="True"> ["$(arg arm_id)_sr_ur_robot_hw"] </rosparam>
       </node>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
             args="--wait-for=/arms_ready --shutdown-timeout=1.0 $(arg arm_id)_trajectory_controller"/>
@@ -135,7 +148,7 @@
   <group if="$(arg use_moveit)">
     <rosparam file="$(arg robot_config_file)"/>
     <include file="$(find sr_multi_moveit_config)/launch/moveit_planning_and_execution.launch">
-      <arg name="load_robot_description" value="false"/>
+      <arg name="load_robot_description" value="true"/>
       <arg name="gui" default="$(arg gui)"/>
       <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
       <arg name="planning" value="$(arg planning)"/>
