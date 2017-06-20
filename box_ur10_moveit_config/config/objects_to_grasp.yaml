@@ -1,0 +1,6 @@
+objects_to_grasp:
+    - 
+      object_id: ketchup_single_2opt
+      grasp_id: handH_grasp_1
+      grasp_position: [0, 0, 0.4]
+      grasp_orientation: [0, 1, 0, 0]

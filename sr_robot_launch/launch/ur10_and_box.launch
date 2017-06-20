@@ -135,5 +135,5 @@
   <!-- Launch moveit configuration after delay to wait for robot discription to be avalible -->
   <node if="$(arg use_moveit)" pkg="sr_robot_launch" type="timed_roslaunch.sh" args="5 box_ur10_moveit_config planning_and_execution.launch
     use_gui:=$(arg gui)" name="timed_roslaunch" output="screen"/>
-
+  <rosparam command="load" file="$(find box_ur10_moveit_config)/config/objects_to_grasp.yaml"/>
 </launch>
