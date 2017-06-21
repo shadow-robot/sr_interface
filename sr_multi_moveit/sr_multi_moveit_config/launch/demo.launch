@@ -4,6 +4,9 @@
   <arg name="debug" default="false" />
   <!-- By default, we do not start a database (it can be large) -->
   <arg name="db" default="false" />
+  <!-- Allow user to specify database location -->
+  <arg name="db_path" default="$(find sr_multi_moveit_config)/default_warehouse_mongo_db" />
+
   <!-- Do not open Rviz if running tests -->
   <arg name="visualization" default="true"/>
   <!--Should the planner yaml be automatically generated? -->
@@ -24,7 +27,7 @@
 
   <!-- We do not have a robot connected, so publish fake joint states -->
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-    <param name="/use_gui" value="false"/> 
+    <param name="/use_gui" value="false"/>
     <rosparam param="/source_list">[/move_group/fake_controller_joint_states]</rosparam>
   </node>
 
@@ -50,6 +53,8 @@
   </include>
 
   <!-- If database loading was enabled, start mongodb as well -->
-  <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch" if="$(arg db)"/>
+  <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch" if="$(arg db)">
+    <arg name="moveit_warehouse_database_path" value="$(arg db_path)"/>
+  </include>
 
 </launch>

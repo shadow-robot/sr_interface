@@ -4,6 +4,7 @@ project(sr_multi_moveit_test)
 find_package(catkin REQUIRED COMPONENTS moveit_core moveit_ros_planning_interface)
 
 catkin_package()
+add_compile_options(-std=c++11)
 
 include_directories(${catkin_INCLUDE_DIRS})
 add_executable(test_iksolvers test/test_iksolvers.cpp)

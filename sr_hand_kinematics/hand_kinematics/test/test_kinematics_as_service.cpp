@@ -69,9 +69,7 @@ void random_test_finger_fkik(std::string PREFIX, std::string prefix, int n_tests
 
   // check that the FK/IK services are available for the finger
   ROS_INFO("waiting for FK/IK service for finger %s", prefix.c_str());
-  ros::service::waitForService(prefix + "_kinematics/get_fk_solver_info");
   ros::service::waitForService(prefix + "_kinematics/get_fk");
-  ros::service::waitForService(prefix + "_kinematics/get_ik_solver_info");
   ros::service::waitForService(prefix + "_kinematics/get_ik");
 
   // create the service clients; note that we reuse them throughout

@@ -24,4 +24,4 @@ trunks:
         tag: xenial-kinetic
 
 branch:
-  parent: indigo-devel
+  parent: kinetic-devel
