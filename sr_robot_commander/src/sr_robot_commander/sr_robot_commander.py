@@ -41,7 +41,7 @@ from sr_utilities.hand_finder import HandFinder
 from moveit_msgs.srv import GetPositionFK
 from std_msgs.msg import Header
 
-import tf
+import tf2_ros
 import copy
 
 
@@ -96,6 +96,9 @@ class SrRobotCommander(object):
             self._prefix = HandFinder().get_available_prefix()
 
         self._set_up_action_client()
+
+        self.tf_buffer = tf2_ros.Buffer()
+        self.listener = tf2_ros.TransformListener(self.tf_buffer)
 
         threading.Thread(None, rospy.spin)
 
@@ -254,23 +257,18 @@ class SrRobotCommander(object):
         @return geometry_msgs.msg.Pose() - current pose of the end effector
         """
         if reference_frame is not None:
-            listener = tf.TransformListener()
             try:
-                listener.waitForTransform(reference_frame, self._move_group_commander.get_end_effector_link(),
-                                          rospy.Time(0), rospy.Duration(5.0))
-                (trans, rot) = listener.lookupTransform(reference_frame,
-                                                        self._move_group_commander.get_end_effector_link(),
-                                                        rospy.Time(0))
+                trans = self.tf_buffer.lookup_transform(reference_frame, self._move_group_commander.get_end_effector_link(), rospy.Time(0), rospy.Duration(5.0))
                 current_pose = geometry_msgs.msg.Pose()
-                current_pose.position.x = trans[0]
-                current_pose.position.y = trans[1]
-                current_pose.position.z = trans[2]
-                current_pose.orientation.x = rot[0]
-                current_pose.orientation.y = rot[1]
-                current_pose.orientation.z = rot[2]
-                current_pose.orientation.w = rot[3]
+                current_pose.position.x = trans.transform.translation.x
+                current_pose.position.y = trans.transform.translation.y
+                current_pose.position.z = trans.transform.translation.z
+                current_pose.orientation.x = trans.transform.rotation.x
+                current_pose.orientation.y = trans.transform.rotation.y
+                current_pose.orientation.z = trans.transform.rotation.z
+                current_pose.orientation.w = trans.transform.rotation.w
                 return current_pose
-            except (tf.Exception, tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
                 rospy.logwarn("Couldn't get the pose from " + self._move_group_commander.get_end_effector_link() +
                               " in " + reference_frame + " reference frame")
             return None
