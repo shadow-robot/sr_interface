@@ -258,7 +258,10 @@ class SrRobotCommander(object):
         """
         if reference_frame is not None:
             try:
-                trans = self.tf_buffer.lookup_transform(reference_frame, self._move_group_commander.get_end_effector_link(), rospy.Time(0), rospy.Duration(5.0))
+                trans = self.tf_buffer.lookup_transform(reference_frame,
+                                                        self._move_group_commander.get_end_effector_link(),
+                                                        rospy.Time(0),
+                                                        rospy.Duration(5.0))
                 current_pose = geometry_msgs.msg.Pose()
                 current_pose.position.x = trans.transform.translation.x
                 current_pose.position.y = trans.transform.translation.y
