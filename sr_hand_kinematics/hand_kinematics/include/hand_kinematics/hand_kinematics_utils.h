@@ -52,8 +52,7 @@
 
 #include <moveit_msgs/GetPositionFK.h>
 #include <moveit_msgs/GetPositionIK.h>
-#include <moveit_msgs/GetConstraintAwarePositionIK.h>
-#include <moveit_msgs/GetKinematicSolverInfo.h>
+#include <moveit_msgs/KinematicSolverInfo.h>
 
 namespace hand_kinematics
 {

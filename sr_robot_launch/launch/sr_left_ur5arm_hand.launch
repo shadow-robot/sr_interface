@@ -22,7 +22,7 @@
   <arg name="world" default="$(find sr_description)/other/worlds/shadowhand.world"/>
   <arg name="initial_z" default="0.1"/>  
 
-  <arg name="robot_description" default="$(find sr_multi_description)/urdf/left_srhand_ur5_joint_limited.urdf.xacro"/>
+  <arg name="robot_description" default="$(find sr_multi_description)/urdf/left_srhand_ur5.urdf.xacro"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/left_sh_ur5.yaml"/>
 
   <arg name="side" value="left"/>
@@ -41,7 +41,7 @@
     <arg name="side" value="$(arg side)"/>
     <arg name="robot_model" value="ur5"/>
     <arg name="robot_name" value="ur5slh"/>
-    <arg name="arm_controller" value="$(find sr_robot_launch)/config/$(arg side)_ur_arm_controller.yaml"/>
+    <arg name="arm_robot_hw" value="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
     <arg name="arm_group_name" value="$(arg side)_arm"/>
     <arg name="hand_serial" value="$(arg hand_serial)"/>
     <arg name="mapping_path" value="$(arg mapping_path)"/>
