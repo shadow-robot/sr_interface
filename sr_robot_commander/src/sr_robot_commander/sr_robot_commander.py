@@ -399,6 +399,11 @@ class SrRobotCommander(object):
         joint_names = current.keys()
         joint_trajectory.joint_names = joint_names
 
+        start = JointTrajectoryPoint()
+        start.positions = current.values()
+        start.time_from_start = rospy.Duration.from_sec(0.001)
+        joint_trajectory.points.append(start)
+
         time_from_start = 0.0
 
         for wp in trajectory:

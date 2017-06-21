@@ -136,7 +136,7 @@ class ControllerHelper(object):
             rospy.loginfo(
                 "Calling service %s", arm_id + '_sr_ur_controller/set_teach_mode')
             change_teach_mode = rospy.ServiceProxy(
-                arm_id + '_sr_ur_controller/set_teach_mode', SetTeachMode)
+                arm_id + '_sr_ur_robot_hw/set_teach_mode', SetTeachMode)
             try:
                 resp = change_teach_mode(teach_mode)
                 success = resp.success
