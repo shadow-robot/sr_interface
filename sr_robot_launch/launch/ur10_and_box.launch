@@ -27,10 +27,10 @@
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world" unless="$(arg scene)"/>
   <arg name="world" default="$(find sr_description_common)/worlds/sr_lab.world" if="$(arg scene)"/>
   <!-- Set the scene file -->
-  <arg name="scene_file" default="$(find sr_description)/scenes/lab.scene"/>
+  <arg name="scene_file" default="$(find sr_description_common)/scenes/lab.scene"/>
   
   <!-- Set initial_z value dependant on scene -->
-  <arg name="initial_z" default="0.687" if="$(arg scene)"/>
+  <arg name="initial_z" default="1.0" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
 
   <!-- Change this for another hand -->
