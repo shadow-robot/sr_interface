@@ -23,11 +23,10 @@
     uri: https://github.com/shadow-robot/common_resources.git
     version: kinetic-devel
 
-- git:
     local-name: universal_robot
     uri: https://github.com/shadow-robot/universal_robot.git
-    version: F_fix_elbow_joint_limits
-    
+    version: F_elbow_limits
+
 - git:
     local-name: sr_ur_arm
     uri: https://github.com/shadow-robot/sr_ur_arm.git
@@ -38,3 +37,7 @@
     uri: https://github.com/shadow-robot/sr-ros-interface-ethercat.git
     version: kinetic-devel
 
+- git:
+    local-name: ros_control_robot
+    uri: https://github.com/shadow-robot/ros_control_robot/
+    version: kinetic-devel

@@ -33,7 +33,7 @@
   <arg name="initial_z" default="1.0" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
 
-  <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/>
+  <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur10.urdf.xacro"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
 
   <arg name="side" value="right"/>
@@ -53,7 +53,7 @@
     <arg name="side" value="$(arg side)"/>
     <arg name="robot_model" value="ur10"/>
     <arg name="robot_name" value="ur10srh"/>
-    <arg name="arm_controller" value="$(find sr_robot_launch)/config/$(arg side)_ur_arm_controller.yaml"/>
+    <arg name="arm_robot_hw" value="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
     <arg name="arm_group_name" value="$(arg side)_arm"/>
     <arg name="hand_serial" value="$(arg hand_serial)"/>
     <arg name="mapping_path" value="$(arg mapping_path)"/>

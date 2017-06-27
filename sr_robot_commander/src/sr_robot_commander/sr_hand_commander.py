@@ -104,7 +104,7 @@ class SrHandCommander(SrRobotCommander):
         # This is for a beta version of our firmware.
         # It uses the motor I and Imax to set a max effort.
         if not self.__set_force_srv.get(joint_name):
-            service_name = "realtime_loop/" + self._topic_prefix + \
+            service_name = "sr_hand_robot/" + self._topic_prefix + \
                            "change_force_PID_"+joint_name.upper()
             self.__set_force_srv[joint_name] = \
                 rospy.ServiceProxy(service_name,
