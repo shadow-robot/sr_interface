@@ -85,16 +85,11 @@ class SrRobotCommander(object):
         self._compute_ik = rospy.ServiceProxy('compute_ik', GetPositionIK)
         self._forward_k = rospy.ServiceProxy('compute_fk', GetPositionFK)
 
-        print [s for s in self.__group_prefixes if s in name]
-
         # prefix of the trajectory controller
         if prefix is not None:
             self._prefix = prefix
-        elif [s for s in self.__group_prefixes if s in name]:
-            group_from_list = [s for s in self.__group_prefixes if s in name][0]
-            self._prefix = self.__group_prefixes[group_from_list]
-            print group_from_list
-            print self._prefix
+        elif name in self.__group_prefixes.keys():
+            self._prefix = self.__group_prefixes[name]
         else:
             # Group name is one of the ones to plan for specific fingers.
             # We need to find the hand prefix using the hand finder
