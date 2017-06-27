@@ -1,6 +1,11 @@
 objects_to_grasp:
     - 
-      object_id: ketchup_single_2opt
+      object_id: pringles_single_2opt
+      grasp_id: handH_grasp_1
+      grasp_position: [0, 0, 0.3]
+      grasp_orientation: [0, 1, 0, 0]
+    - 
+      object_id: pringles_red
       grasp_id: handH_grasp_1
       grasp_position: [0, 0, 0.3]
       grasp_orientation: [0, 1, 0, 0]
