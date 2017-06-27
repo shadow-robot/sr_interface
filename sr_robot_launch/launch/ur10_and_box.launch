@@ -47,9 +47,6 @@
   <!-- Set to true to spawn the position controllers for the arm -->
   <arg name="arm_ctrl" default="false"/>
 
-
-  <param name="description_read_repetitions" value="50"/>
-
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
