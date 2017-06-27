@@ -5,10 +5,10 @@
   <arg name="repair" default="false"/>
 
   <!-- If not specified, we'll use a default database location -->
-  <arg name="moveit_warehouse_database_path" default="$(find box_ur10_moveit_config)/default_warehouse_mongo_db" />
+  <arg name="moveit_warehouse_database_path" default="$(find sr_box_ur10_moveit_config)/default_warehouse_mongo_db" />
 
   <!-- Launch the warehouse with the configured database location -->
-  <include file="$(find box_ur10_moveit_config)/launch/warehouse.launch">
+  <include file="$(find sr_box_ur10_moveit_config)/launch/warehouse.launch">
     <arg name="moveit_warehouse_database_path" value="$(arg moveit_warehouse_database_path)" />
     <arg name="run_services" value="$(arg run_services)"/>
     <arg name="repair" value="$(arg repair)"/>

@@ -1,6 +1,6 @@
 <package>
 
-  <name>box_ur10_moveit_config</name>
+  <name>sr_box_ur10_moveit_config</name>
   <version>0.3.0</version>
   <description>
      A package with all the configuration and launch files for using the ur10 with a box hand with the MoveIt! Motion Planning Framework

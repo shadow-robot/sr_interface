@@ -1,0 +1,12 @@
+<launch>
+  <arg name="use_gui" default="true"/>
+  <arg name="warehouse" default="true"/>
+
+  <include file="$(find sr_box_ur10_moveit_config)/launch/planning_context.launch" />
+
+  <include file="$(find sr_box_ur10_moveit_config)/launch/move_group.launch"/>
+  <include if="$(arg use_gui)" file="$(find sr_box_ur10_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="config" value="true"/>
+  </include>
+  <include if="$(arg warehouse)" file="$(find sr_box_ur10_moveit_config)/launch/default_warehouse_db.launch"/>
+</launch>

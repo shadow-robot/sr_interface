@@ -24,7 +24,7 @@
   </joint>
 
   <!-- Box representation of hand -->
-  <xacro:include filename="$(find box_ur10_moveit_config)/config/hand_box.xacro" />
+  <xacro:include filename="$(find sr_box_ur10_moveit_config)/config/hand_box.xacro" />
   <xacro:hand_box name="hand_box" width="0.22" depth="0.17" height="0.24"/>
 
   <!-- Join arm and hand -->

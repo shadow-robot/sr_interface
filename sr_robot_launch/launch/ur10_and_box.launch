@@ -34,8 +34,8 @@
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
 
   <!-- Change this for another hand -->
-  <arg name="robot_description" default="$(find box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro"/>
-  <arg name="robot_config_file" default="$(find box_ur10_moveit_config)/config/robot_configs/$(arg side)_$(arg arm_model).yaml"/>
+  <arg name="robot_description" default="$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro"/>
+  <arg name="robot_config_file" default="$(find sr_box_ur10_moveit_config)/config/robot_configs/$(arg side)_$(arg arm_model).yaml"/>
   <arg name="robot_name" default="ursrbox"/>
 
   <!-- ARM -->
@@ -64,7 +64,7 @@
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name)" respawn="false" output="screen"/>
 
     <!-- ARM -->
-    <rosparam file="$(find box_ur10_moveit_config)/config/gazebo/$(arg arm_id)_trajectory_controller.yaml" command="load"/>
+    <rosparam file="$(find sr_box_ur10_moveit_config)/config/gazebo/$(arg arm_id)_trajectory_controller.yaml" command="load"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
 
     <group if="$(arg arm_trajectory)">
@@ -106,7 +106,7 @@
       <param name="tf_prefix" type="string" value="" />
     </node>
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->
-    <node if="$(arg scene)" pkg="sr_robot_launch" type="timed_roslaunch.sh" args="8 box_ur10_moveit_config scene.launch
+    <node if="$(arg scene)" pkg="sr_robot_launch" type="timed_roslaunch.sh" args="8 sr_box_ur10_moveit_config scene.launch
       scene_file:=$(arg scene_file)" name="timed_publish_moveit_scene" output="screen"/>
 
   </group>
@@ -114,7 +114,7 @@
   <rosparam file="$(arg robot_config_file)"/>
     
   <!-- Launch moveit configuration after delay to wait for robot description to be avalible -->
-  <node if="$(arg use_moveit)" pkg="sr_robot_launch" type="timed_roslaunch.sh" args="5 box_ur10_moveit_config planning_and_execution.launch
+  <node if="$(arg use_moveit)" pkg="sr_robot_launch" type="timed_roslaunch.sh" args="5 sr_box_ur10_moveit_config planning_and_execution.launch
     use_gui:=$(arg gui)" name="timed_roslaunch" output="screen"/>
-  <rosparam command="load" file="$(find box_ur10_moveit_config)/config/objects_to_grasp.yaml"/>
+  <rosparam command="load" file="$(find sr_box_ur10_moveit_config)/config/objects_to_grasp.yaml"/>
 </launch>
