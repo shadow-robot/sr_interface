@@ -5,53 +5,12 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /MotionPlanning1
+        - /MotionPlanning1/Scene Geometry1
         - /MotionPlanning1/Scene Robot1
         - /MotionPlanning1/Planning Request1
         - /MotionPlanning1/Planned Path1
-        - /MotionPlanning1/Scene Geometry1
-        - /Trajectory1/Links1/ra_base1
-        - /Trajectory1/Links1/ra_base_link1
-        - /Trajectory1/Links1/ra_ee_link1
-        - /Trajectory1/Links1/ra_forearm_link1
-        - /Trajectory1/Links1/ra_shoulder_link1
-        - /Trajectory1/Links1/ra_tool01
-        - /Trajectory1/Links1/ra_upper_arm_link1
-        - /Trajectory1/Links1/ra_wrist_1_link1
-        - /Trajectory1/Links1/ra_wrist_2_link1
-        - /Trajectory1/Links1/ra_wrist_3_link1
-        - /Trajectory1/Links1/rh_ffdistal1
-        - /Trajectory1/Links1/rh_ffknuckle1
-        - /Trajectory1/Links1/rh_ffmiddle1
-        - /Trajectory1/Links1/rh_ffproximal1
-        - /Trajectory1/Links1/rh_fftip1
-        - /Trajectory1/Links1/rh_forearm1
-        - /Trajectory1/Links1/rh_lfdistal1
-        - /Trajectory1/Links1/rh_lfknuckle1
-        - /Trajectory1/Links1/rh_lfmetacarpal1
-        - /Trajectory1/Links1/rh_lfmiddle1
-        - /Trajectory1/Links1/rh_lfproximal1
-        - /Trajectory1/Links1/rh_lftip1
-        - /Trajectory1/Links1/rh_mfdistal1
-        - /Trajectory1/Links1/rh_mfknuckle1
-        - /Trajectory1/Links1/rh_mfmiddle1
-        - /Trajectory1/Links1/rh_mfproximal1
-        - /Trajectory1/Links1/rh_mftip1
-        - /Trajectory1/Links1/rh_palm1
-        - /Trajectory1/Links1/rh_rfdistal1
-        - /Trajectory1/Links1/rh_rfknuckle1
-        - /Trajectory1/Links1/rh_rfmiddle1
-        - /Trajectory1/Links1/rh_rfproximal1
-        - /Trajectory1/Links1/rh_rftip1
-        - /Trajectory1/Links1/rh_thbase1
-        - /Trajectory1/Links1/rh_thdistal1
-        - /Trajectory1/Links1/rh_thhub1
-        - /Trajectory1/Links1/rh_thmiddle1
-        - /Trajectory1/Links1/rh_thproximal1
-        - /Trajectory1/Links1/rh_thtip1
-        - /Trajectory1/Links1/rh_wrist1
-        - /Trajectory1/Links1/world1
-      Splitter Ratio: 0.74256
-    Tree Height: 508
+      Splitter Ratio: 0.742560029
+    Tree Height: 505
   - Class: rviz/Help
     Name: Help
   - Class: rviz/Views
@@ -210,6 +169,10 @@ Visualization Manager:
             Show Trail: false
             Value: true
           rh_lftip:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          rh_manipulator:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -453,6 +416,10 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
+          rh_manipulator:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
           rh_mfdistal:
             Alpha: 1
             Show Axes: false
@@ -663,6 +630,10 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        rh_manipulator:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         rh_mfdistal:
           Alpha: 1
           Show Axes: false
@@ -787,22 +758,24 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 3.81283
+      Distance: 4.25881815
       Enable Stereo Rendering:
-        Stereo Eye Separation: 0.06
+        Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.880822
-        Y: 0.539839
-        Z: -4.99416e-07
+        X: 0.241227984
+        Y: 0.855306864
+        Z: -1.57229965e-06
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.0500000007
       Name: Current View
-      Near Clip Distance: 0.01
-      Pitch: 0.669799
+      Near Clip Distance: 0.00999999978
+      Pitch: 0.134799406
       Target Frame: forearm
       Value: XYOrbit (rviz)
-      Yaw: 6.16676
+      Yaw: 1.25357664
     Saved: ~
 Window Geometry:
   Displays:
@@ -814,9 +787,9 @@ Window Geometry:
   Hide Right Dock: false
   Motion Planning:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000002b1000002affc0200000005fb0000000800480065006c00700000000342000000bb0000007600fffffffb0000000a0056006900650077007300000003b0000000b0000000b000fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fc00000028000002af000001ea0100001dfa000000000100000002fb000000100044006900730070006c0061007900730100000000ffffffff0000016a00fffffffb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000000000002b1000002a200fffffffb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e006700000002dd000001d700000000000000000000029f000002af00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000002b1000002a1fc0200000005fb0000000800480065006c00700000000342000000bb0000006e00fffffffb0000000a0056006900650077007300000003b0000000b00000009e00fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fc0000003a000002a1000001bf01000019fa000000000100000002fb000000100044006900730070006c0061007900730100000000ffffffff0000015600fffffffb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000000000002b10000028000fffffffb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e006700000002dd000001d700000000000000000000029f000002a100000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
   Width: 1366
-  X: 0
+  X: 41
   Y: 24
