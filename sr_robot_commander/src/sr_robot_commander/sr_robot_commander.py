@@ -85,11 +85,14 @@ class SrRobotCommander(object):
         self._compute_ik = rospy.ServiceProxy('compute_ik', GetPositionIK)
         self._forward_k = rospy.ServiceProxy('compute_fk', GetPositionFK)
 
+        # Check if the prefix can be set from a known group saved in self.__group_prefixes
+        prefix_from_group = [self.__group_prefixes[known_prefix] for known_prefix in self.__group_prefixes if known_prefix in name]
+
         # prefix of the trajectory controller
         if prefix is not None:
             self._prefix = prefix
-        elif name in self.__group_prefixes.keys():
-            self._prefix = self.__group_prefixes[name]
+        elif prefix_from_group:
+            self._prefix = prefix_from_group[0]
         else:
             # Group name is one of the ones to plan for specific fingers.
             # We need to find the hand prefix using the hand finder
@@ -740,12 +743,10 @@ class SrRobotCommander(object):
 
     def move_to_pose_value_target_unsafe(self, target_pose,  avoid_collisions=False, time=0.002, wait=True):
         joint_state = self.get_ik(target_pose, avoid_collisions)
-        active_joints = self._move_group_commander.get_active_joints()
-        current_indices = [i for i, x in enumerate(joint_state.name) if any(thing in x for thing in active_joints)]
         if joint_state is not None:
+            active_joints = self._move_group_commander.get_active_joints()
+            current_indices = [i for i, x in enumerate(joint_state.name) if any(thing in x for thing in active_joints)]
             current_names = [joint_state.name[i] for i in current_indices]
             current_positions = [joint_state.position[i] for i in current_indices]
             state_as_dict = dict(zip(current_names, current_positions))
-            self.move_to_joint_value_target_unsafe(state_as_dict,
-                                                   time=time,
-                                                   wait=wait)
+            self.move_to_joint_value_target_unsafe(state_as_dict, time=time, wait=wait)
