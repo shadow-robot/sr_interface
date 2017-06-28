@@ -1,6 +1,6 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro" name="ur10srh">
 
-    <xacro:include filename="$(find sr_description_common)/other/robot_stand.urdf.xacro"/>
+    <xacro:include filename="$(find sr_description_common)/xacro/robot_stand.urdf.xacro"/>
     <link name="world"/>
 
     <xacro:arg name="initial_z" default="0.0"/>
