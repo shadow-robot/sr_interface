@@ -17,10 +17,10 @@
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
   <!-- Set world value dependant on scene -->
-  <arg name="world" default="$(find sr_description)/other/worlds/shadowhand.world" unless="$(arg scene)"/>
-  <arg name="world" default="$(find sr_description)/other/worlds/sr_lab.world" if="$(arg scene)"/>
+  <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world" unless="$(arg scene)"/>
+  <arg name="world" default="$(find sr_description_common)/worlds/sr_lab.world" if="$(arg scene)"/>
   <!-- Set the scene file -->
-  <arg name="scene_file" default="$(find sr_description)/other/scenes/lab.scene"/>
+  <arg name="scene_file" default="$(find sr_description_common)/scenes/lab.scene"/>
 
   <!-- Change this for the left hand and arm -->
   <arg name="hand_id" default="rh"/>
@@ -28,7 +28,7 @@
   <arg name="side" default="right"/>
   <arg name="robot_model" default="ur10"/>
   <!-- Set initial_z value dependant on scene-->
-  <arg name="initial_z" default="0.687" if="$(arg scene)"/>
+  <arg name="initial_z" default="1.0" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
 
   <!-- Change this for another hand -->
@@ -138,10 +138,10 @@
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
             args="--wait-for=/arms_ready --shutdown-timeout=1.0 $(arg arm_id)_trajectory_controller"/>
     </group>
-    <!-- Set scene for robot - restrains movement -->
-    <group if="$(arg scene)">
-      <node pkg="moveit_ros_planning" type="moveit_publish_scene_from_text" name="publish_moveit_scene" args="$(arg scene_file)" output="screen"/>
-    </group>
+
+    <!-- Set scene for robot after delay to start after moveit - restrains movement -->
+    <node if="$(arg scene)" pkg="sr_robot_launch" type="timed_roslaunch.sh" args="8 sr_multi_moveit_config scene.launch
+      scene_file:=$(arg scene_file)" name="timed_publish_moveit_scene" output="screen"/>
   </group>
 
   <!-- MOVEIT -->
@@ -155,11 +155,6 @@
       <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
     </include>
     <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
-
-    <!-- Set scene for robot after delay to start after moveit - restrains movement -->
-    <node if="$(arg scene)" pkg="sr_robot_launch" type="timed_roslaunch.sh" args="8 sr_moveit_hand_config scene.launch 
-      scene_file:=$(arg scene_file)" name="timed_publish_moveit_scene" output="screen"/>
-       
   </group>
 
   <!-- Trajectory controller -->
