@@ -4,6 +4,8 @@
   <arg name="debug" default="false"/>
   <arg name="load_robot_description" default="true"/>
   <arg name="gui" default="true"/>
+  <!--Should the planner yaml be automatically generated? -->
+  <arg name="generate_planning_config" default="True"/>
   
   <!-- The name of the robot config file to load -->
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
@@ -21,7 +23,8 @@
     info:=true 
     debug:=$(arg debug) 
     publish_monitored_planning_scene:=true
-    pipeline:=$(arg planning) 
+    pipeline:=$(arg planning)
+    generate_planning_config:=$(arg generate_planning_config)
     robot_config_file:=$(arg robot_config_file)" name="timed_roslaunch" output="screen"
   />
 

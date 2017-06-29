@@ -7,8 +7,14 @@
   
   <!-- The name of the robot config file to load -->
   <arg name="robot_config_file" default=""/>
-  
-  <include file="$(find sr_multi_moveit_config)/launch/$(arg pipeline)_planning_pipeline.launch.xml">
+  <!--Should the planner yaml be automatically generated? -->
+  <arg name="generate_planning_config" default="True"/>
+
+
+  <include if="$(arg generate_planning_config)" file="$(find sr_multi_moveit_config)/launch/$(arg pipeline)_planning_pipeline.launch.xml">
   	<arg name="robot_config_file" value="$(arg robot_config_file)"/>
   </include>
+
+  <include unless="$(arg generate_planning_config)" file="$(find sr_multi_moveit_config)/launch/$(arg pipeline)_planning_pipeline.launch.xml"/>
+
 </launch>

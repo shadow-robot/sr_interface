@@ -14,6 +14,11 @@
     version: 'indigo-devel'
 
 - git:
+    local-name: sr_benchmarking
+    uri: https://github.com/shadow-robot/sr_benchmarking
+    version: 'indigo-devel'
+
+- git:
     local-name: universal_robot
     uri: 'https://github.com/ros-industrial/universal_robot.git'
     version: indigo-devel
@@ -21,21 +26,6 @@
 - git:
     local-name: sr_ur_arm
     uri: 'https://github.com/shadow-robot/sr_ur_arm.git'
-    version: indigo-devel
-
-- git:
-    local-name: lma_kinematics_plugin
-    uri: 'https://github.com/shadow-robot/lma_kinematics_plugin'
-    version: F_ik_with_joint_limits
-
-- git:
-    local-name: moveit_ros
-    uri: https://github.com/shadow-robot/moveit_ros.git
-    version: shadow-indigo-latest
-
-- git:
-    local-name: moveit_core
-    uri: https://github.com/ros-planning/moveit_core.git
     version: indigo-devel
 
 - git:
@@ -52,3 +42,13 @@
     local-name: trac_ik
     uri: https://bitbucket.org/traclabs/trac_ik.git
     version: 'master'
+
+- git:
+    local-name: shadow_robot_ethercat
+    uri: https://github.com/shadow-robot/sr-ros-interface-ethercat.git
+    version: indigo-devel
+    
+- git:
+    local-name: moveit
+    uri: https://github.com/ros-planning/moveit.git
+    version: indigo-devel

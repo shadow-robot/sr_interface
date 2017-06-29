@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+
+from sys import argv
+
+import rospy
+
+from sr_robot_commander.sr_robot_state_combiner import SrRobotStateCombiner
+
+
+"""
+This script provides a command line interface to combine arm joints from one robot_state with hand joints from
+another robot_state. States are identified using their name in the DB
+
+To use this script:
+
+rosrun sr_robot_commander combine_robot_state ARM_STATE_NAME HAND_STATE_NAME NAME_TO_SAVE
+
+NAME_TO_SAVE is the name that will be used for the state in the database.
+
+N.B. IF A STATE ALREADY EXISTS WITH THAT NAME IT WILL BE OVERWRITTEN WITH NO WARNING!
+
+ARM_STATE_NAME specifies the name of the state from which the arm joints have to be read
+HAND_STATE_NAME specifies the name of the state from which the hand joints have to be read
+
+If you don't want to use one of the two arm or hand, you can replace .
+"""
+
+if "__main__" == __name__:
+    rospy.init_node("state_saver")
+    if len(argv) <= 3 or "" == argv[1] or "" == argv[2] or "" == argv[3]:
+        rospy.logerr("You didn't enter names for ARM_STATE_NAME HAND_STATE_NAME and NAME_TO_SAVE.")
+        exit(-1)
+
+    if len(argv) > 3:
+        arm_state = argv[1]
+        hand_state = argv[2]
+        new_state = argv[3]
+        combiner = SrRobotStateCombiner(arm_state, hand_state, new_state)
+        combiner.combine()

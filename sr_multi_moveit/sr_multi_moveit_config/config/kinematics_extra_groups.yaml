@@ -1,0 +1,3 @@
+arm_and_wrist:
+  kinematics_solver: trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin
+  kinematics_solver_timeout: 0.005

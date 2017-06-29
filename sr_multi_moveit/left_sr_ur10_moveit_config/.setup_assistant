@@ -1,8 +1,0 @@
-moveit_setup_assistant_config:
-  URDF:
-    package: sr_multi_description
-    relative_path: urdf/left_srhand_ur10.urdf.xacro
-  SRDF:
-    relative_path: config/ur10srh.srdf
-  CONFIG:
-    generated_timestamp: 1432309046

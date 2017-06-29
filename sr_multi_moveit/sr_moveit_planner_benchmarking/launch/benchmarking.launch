@@ -1,0 +1,12 @@
+<launch>
+  <arg name="planning" default="ompl"/>
+  <arg name="visualization" default="False"/>
+  <!--Should the planner yaml be automatically generated? -->
+  <arg name="generate_planning_config" default="True"/>
+
+  <include file = "$(find sr_multi_moveit_config)/launch/demo.launch">
+    <arg name="planning" value="$(arg planning)"/>
+    <arg name="visualization" value="$(arg visualization)"/>
+    <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
+  </include>
+</launch>
