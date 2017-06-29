@@ -66,114 +66,10 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          H1_F1_link_1:
+          hand_manipulator:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: true
-          H1_F1_link_2:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F1_optoforce:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          H1_F1_palm_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F1_tip:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F2_base_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F2_link_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F2_link_2:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F2_optoforce:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          H1_F2_palm_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F2_tip:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F3_base_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F3_link_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F3_link_2:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F3_optoforce:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          H1_F3_palm_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F3_tip:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_base_attach:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          H1_base_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_insert_F1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          H1_insert_F2:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          H1_insert_F3:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          H1_wrist_attach:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          Link Tree Style: Links in Alphabetic Order
           ra_base:
             Alpha: 1
             Show Axes: false
@@ -228,6 +124,7 @@ Visualization Manager:
             Show Trail: false
         Loop Animation: true
         Robot Alpha: 0.5
+        Robot Color: 150; 50; 150
         Show Robot Collision: false
         Show Robot Visual: true
         Show Trail: false
@@ -256,7 +153,7 @@ Visualization Manager:
       Robot Description: robot_description
       Scene Geometry:
         Scene Alpha: 1
-        Scene Color: 50; 230; 50
+        Scene Color: 230; 230; 230
         Scene Display Time: 0.2
         Show Scene Geometry: true
         Voxel Coloring: Z-Axis
@@ -268,119 +165,16 @@ Visualization Manager:
           Expand Joint Details: false
           Expand Link Details: false
           Expand Tree: false
-          H1_F1_base_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F1_link_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F1_link_2:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F1_optoforce:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          H1_F1_palm_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F1_tip:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F2_base_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F2_link_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F2_link_2:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F2_optoforce:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          H1_F2_palm_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F2_tip:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F3_base_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F3_link_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F3_link_2:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F3_optoforce:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          H1_F3_palm_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_F3_tip:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_base_attach:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          H1_base_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          H1_insert_F1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          H1_insert_F2:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          H1_insert_F3:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          H1_wrist_attach:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
           Link Tree Style: Links in Alphabetic Order
+          hand_base_attach:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          hand_manipulator:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
           ra_base:
             Alpha: 1
             Show Axes: false
@@ -452,22 +246,24 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 2.59895
+      Distance: 3.032058
       Enable Stereo Rendering:
-        Stereo Eye Separation: 0.06
+        Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 1.11517
-        Y: 0.590416
-        Z: 2.23518e-07
+        X: 0.470985353
+        Y: 0.575219214
+        Z: 2.23518001e-07
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.0500000007
       Name: Current View
-      Near Clip Distance: 0.01
-      Pitch: 0.174797
+      Near Clip Distance: 0.00999999978
+      Pitch: 0.274796903
       Target Frame: world
       Value: XYOrbit (rviz)
-      Yaw: 0.54177
+      Yaw: 1.18176949
     Saved: ~
 Window Geometry:
   Displays:
@@ -479,9 +275,9 @@ Window Geometry:
   Hide Right Dock: false
   Motion Planning:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000002a2000003befc0200000005fb000000100044006900730070006c0061007900730100000028000001e1000000dd00fffffffb0000000800480065006c00700000000342000000bb0000007600fffffffb0000000a0056006900650077007300000003b0000000b0000000b000fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e0067010000020f000001d7000001cc00ffffff0000047c000003be00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000002a2000003b0fc0200000005fb000000100044006900730070006c006100790073010000003a000001da000000c600fffffffb0000000800480065006c00700000000342000000bb0000006e00fffffffb0000000a0056006900650077007300000003b0000000b00000009e00fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e0067010000021a000001d0000001a600ffffff0000047c000003b000000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
   Width: 1828
   X: 82
-  Y: 14
+  Y: 24
