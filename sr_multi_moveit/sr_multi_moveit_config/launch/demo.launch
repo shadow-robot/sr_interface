@@ -4,6 +4,10 @@
   <arg name="debug" default="false" />
   <!-- By default, we do not start a database (it can be large) -->
   <arg name="db" default="false" />
+  <!-- Do not open Rviz if running tests -->
+  <arg name="visualization" default="true"/>
+  <!--Should the planner yaml be automatically generated? -->
+  <arg name="generate_planning_config" default="True"/>
 
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
   <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/>
@@ -34,11 +38,12 @@
     info:=true 
     debug:=$(arg debug) 
     publish_monitored_planning_scene:=true
-    pipeline:=$(arg planning) 
+    pipeline:=$(arg planning)
+    generate_planning_config:=$(arg generate_planning_config)
     robot_config_file:=$(arg robot_config_file)" name="timed_roslaunch" output="screen"/>
 
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
-  <include file="$(find sr_multi_moveit_config)/launch/moveit_rviz.launch">
+  <include file="$(find sr_multi_moveit_config)/launch/moveit_rviz.launch" if="$(arg visualization)">
     <arg name="config" value="true"/>
     <arg name="debug" value="$(arg debug)"/>
     <arg name="robot_config_file" value="$(arg robot_config_file)"/>

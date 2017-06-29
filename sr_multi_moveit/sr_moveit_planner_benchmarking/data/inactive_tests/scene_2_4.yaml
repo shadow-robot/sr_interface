@@ -1,0 +1,49 @@
+name: office_scene_4
+
+scene:
+  - type: launch
+    name: roslaunch sr_moveit_planner_benchmarking benchmarking.launch
+  - type: python
+    name: sr_moveit_planner_benchmarking.collision_scene_2.CreateScene2
+  - type: bag
+    name: office_scene_1.bag
+  - type: bag
+    name: office_scene_2.bag
+
+group_id: right_arm
+planners:
+  - BKPIECEkConfigDefault
+  - ESTkConfigDefault
+  - KPIECEkConfigDefault
+  - LBKPIECEkConfigDefault
+  - PRMkConfigDefault
+  - RRTkConfigDefault
+  - SBLkConfigDefault
+  - PRMstarkConfigDefault
+  - RRTstarkConfigDefault
+
+planning_attempts: 100
+goal_tolerance: 0.005
+planning_time: 1000
+allow_replanning: False
+
+tests:
+  - start_joints: [0.11, 0.00, -0.93, -2.22, -1.71, -1.68]
+    goal_joints: [-1.5239292524704837, -1.2894845382670848, -1.8913257438952191, -0.069273532016395, 1.466564282765517, 1.5430552349500921]
+    start_xyz: [1.25, 0, 0.3]
+    goal_xyz: [0.15, 0.51, 0.80]
+
+  - start_joints:  [-1.5239292524704837, -1.2894845382670848, -1.8913257438952191, -0.069273532016395, 1.466564282765517, 1.5430552349500921]
+    goal_joints: [-0.9705460107379753, -1.2274060909056506, -2.5798737542297077, 0.16233656301300264, 1.135619842704714, -2.8441037408209464]
+    start_xyz: [0.15, 0.51, 0.80]
+    goal_xyz: [-0.04, 0.42, 0.41]
+
+  - start_joints: [-0.9705460107379753, -1.2274060909056506, -2.5798737542297077, 0.16233656301300264, 1.135619842704714, -2.8441037408209464]
+    goal_joints: [1.0661255455770708, -0.9074471336718001, -2.5576333130037856, 2.9757176414722126, -1.6351170449654888, 0.2930372395567313]
+    start_xyz: [-0.04, 0.42, 0.41]
+    goal_xyz: [-0.23, -0.09, 0.28]
+
+  - start_joints: [1.0661255455770708, -0.9074471336718001, -2.5576333130037856, 2.9757176414722126, -1.6351170449654888, 0.2930372395567313]
+    goal_joints: [-1.398753311402418, -1.022156133338257, 1.027548929442897, -1.8287371391328364, -1.4912172680615894, -2.815605633361361]
+    start_xyz: [-0.23, -0.09, 0.28]
+    goal_xyz: [0.34, -0.98, 0.59]

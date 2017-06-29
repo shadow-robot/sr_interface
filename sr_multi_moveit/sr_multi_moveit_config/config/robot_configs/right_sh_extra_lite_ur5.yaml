@@ -1,0 +1,18 @@
+robot:
+  name: ur5srh
+  manipulators:
+    right_manipulator:
+      side: right
+      arm:
+        name: ur5
+        main_group: manipulator
+        moveit_path: 
+          package: sr_multi_moveit_config
+          relative_path: /config/ur
+        extra_groups_config_path: /config
+        group_states:
+          - home
+          - up
+      hand:
+        name: shadowhand_extra_lite.urdf.xacro
+        is_lite: true
