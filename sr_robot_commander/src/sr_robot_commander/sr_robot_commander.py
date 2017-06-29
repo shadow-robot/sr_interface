@@ -86,7 +86,8 @@ class SrRobotCommander(object):
         self._forward_k = rospy.ServiceProxy('compute_fk', GetPositionFK)
 
         # Check if the prefix can be set from a known group saved in self.__group_prefixes
-        prefix_from_group = [self.__group_prefixes[known_prefix] for known_prefix in self.__group_prefixes if known_prefix in name]
+        prefix_from_group = [self.__group_prefixes[known_prefix] for known_prefix in self.__group_prefixes
+                             if known_prefix in name]
 
         # prefix of the trajectory controller
         if prefix is not None:
