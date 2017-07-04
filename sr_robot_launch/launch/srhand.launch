@@ -29,7 +29,7 @@
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
-    <arg name="world_name" value="$(find sr_description)/other/worlds/shadowhand.world"/>
+    <arg name="world_name" value="$(find sr_description_common)/worlds/shadowhand.world"/>
     <arg name="paused" value="false"/>
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
       <arg name="world_name" default="$(arg world_name)"/>
