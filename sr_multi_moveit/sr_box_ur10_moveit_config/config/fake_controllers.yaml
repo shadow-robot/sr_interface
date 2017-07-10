@@ -1,0 +1,9 @@
+controller_list:
+  - name: fake_arm_controller
+    joints:
+      - ra_shoulder_pan_joint
+      - ra_shoulder_lift_joint
+      - ra_elbow_joint
+      - ra_wrist_1_joint
+      - ra_wrist_2_joint
+      - ra_wrist_3_joint

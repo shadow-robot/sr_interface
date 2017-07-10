@@ -35,3 +35,7 @@
 
 #QtCreator files
 CMakeLists.txt.user
+
+#Eclipse
+.project
+.pydevproject

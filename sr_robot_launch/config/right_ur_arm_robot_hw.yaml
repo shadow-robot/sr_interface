@@ -1,5 +1,5 @@
-ra_sr_ur_controller:
-  type: sr_ur_controller/UrArmController
+ra_sr_ur_robot_hw:
+  type: sr_ur_robot_hw/UrArmRobotHW
   
   # ra for right side arm la for left side arm
   robot_id: ra

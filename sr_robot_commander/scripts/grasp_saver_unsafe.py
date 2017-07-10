@@ -36,6 +36,7 @@ If WHAT_TO_SAVE is omitted, it defaults to "both".
 
 if "__main__" == __name__:
     rospy.init_node("state_saver")
+
     name = rospy.get_param("~name")
     which = rospy.get_param("~which", "all")
     hand_h = rospy.get_param("~hand_h", False)
