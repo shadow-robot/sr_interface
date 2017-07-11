@@ -42,7 +42,8 @@ class TestExample(TestCase):
         while process.is_alive():
             rospy.sleep(0.1)
 
-        self.assertIsNone(process.exit_code)
+        # self.assertIsNone(process.exit_code)
+        self.assertEqual(process.exit_code, 0)
 
 
 if __name__ == "__main__":

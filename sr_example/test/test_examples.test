@@ -8,26 +8,26 @@
     Generated using:
       for i in ` find scripts -name "*.py" -type f -exec basename {} \;` ; do  name=$(echo $i | cut -f 1 -d '.'); echo "<test test-name=\"test_${name}\" pkg = \"sr_example\" type = \"test_examples.py\" args=\"$i\"/>"; done
     -->
-    <test test-name="test_sr_print_hand_joints_position" pkg = "sr_example" type = "test_examples.py" args="sr_print_hand_joints_position.py"/>
-    <test test-name="test_sr_store_hand" pkg = "sr_example" type = "test_examples.py" args="sr_store_hand.py"/>
-    <test test-name="test_sr_right_hand_follow_finger_trajectory" pkg = "sr_example" type = "test_examples.py" args="sr_right_hand_follow_finger_trajectory.py"/>
+    <test test-name="test_sr_print_hand_joints_position" pkg = "sr_example" type = "test_examples.py" args="sr_print_hand_joints_position.py" time-limit="300.0"/>
+    <test test-name="test_sr_store_hand" pkg = "sr_example" type = "test_examples.py" args="sr_store_hand.py" time-limit="300.0"/>
+    <!-- test test-name="test_sr_right_hand_follow_finger_trajectory" pkg = "sr_example" type = "test_examples.py" args="sr_right_hand_follow_finger_trajectory.py" time-limit="300.0"/ -->
     <test test-name="test_sr_sinusoid_joint_example" pkg = "sr_example" type = "test_examples.py" args="sr_sinusoid_joint_example.py"/>
     <!-- this one has a plot which needs to be killed manually, removing from tests
-    <test test-name="test_sr_right_hand_partial_traj_advanced" pkg = "sr_example" type = "test_examples.py" args="sr_right_hand_partial_traj_advanced.py"/> -->
-    <test test-name="test_sr_handfinder_example" pkg = "sr_example" type = "test_examples.py" args="sr_handfinder_example.py"/>
-    <test test-name="test_sr_right_hand_follow_named_trajectory" pkg = "sr_example" type = "test_examples.py" args="sr_right_hand_follow_named_trajectory.py"/>
-    <test test-name="test_sr_right_hand_partial_traj_grasp" pkg = "sr_example" type = "test_examples.py" args="sr_right_hand_partial_traj_grasp.py"/>
-    <test test-name="test_sr_hand_tactile_example" pkg = "sr_example" type = "test_examples.py" args="sr_hand_tactile_example.py"/>
-    <test test-name="test_sr_right_arm_examples" pkg = "sr_example" type = "test_examples.py" args="sr_right_arm_examples.py"/>
-    <test test-name="test_sr_left_arm_examples" pkg = "sr_example" type = "test_examples.py" args="sr_left_arm_examples.py"/>
-    <test test-name="test_sr_basic_right_hand_arm_example" pkg = "sr_example" type = "test_examples.py" args="sr_basic_right_hand_arm_example.py"/>
-    <test test-name="test_sr_print_joints_position" pkg = "sr_example" type = "test_examples.py" args="sr_print_joints_position.py"/>
-    <test test-name="test_sr_basic_left_hand_arm_example" pkg = "sr_example" type = "test_examples.py" args="sr_basic_left_hand_arm_example.py"/>
-    <test test-name="test_sr_bottle_example" pkg = "sr_example" type = "test_examples.py" args="sr_bottle_example.py"/>
-    <test test-name="test_sr_left_pick_place_example" pkg = "sr_example" type = "test_examples.py" args="sr_left_pick_place_example.py"/>
-    <test test-name="test_sr_link_joints_example" pkg = "sr_example" type = "test_examples.py" args="sr_link_joints_example.py"/>
-    <test test-name="test_sr_publisher_example" pkg = "sr_example" type = "test_examples.py" args="sr_publisher_example.py"/>
-    <test test-name="test_sr_subscriber_example" pkg = "sr_example" type = "test_examples.py" args="sr_subscriber_example.py"/>
-    <test test-name="test_sr_latching_example" pkg = "sr_example" type = "test_examples.py" args="sr_latching_example.py"/>
+    <test test-name="test_sr_right_hand_partial_traj_advanced" pkg = "sr_example" type = "test_examples.py" args="sr_right_hand_partial_traj_advanced.py" time-limit="300.0"/> -->
+    <test test-name="test_sr_handfinder_example" pkg = "sr_example" type = "test_examples.py" args="sr_handfinder_example.py" time-limit="300.0"/>
+    <test test-name="test_sr_right_hand_follow_named_trajectory" pkg = "sr_example" type = "test_examples.py" args="sr_right_hand_follow_named_trajectory.py" time-limit="300.0"/>
+    <test test-name="test_sr_right_hand_partial_traj_grasp" pkg = "sr_example" type = "test_examples.py" args="sr_right_hand_partial_traj_grasp.py" time-limit="300.0"/>
+    <test test-name="test_sr_hand_tactile_example" pkg = "sr_example" type = "test_examples.py" args="sr_hand_tactile_example.py" time-limit="300.0"/>
+    <test test-name="test_sr_right_arm_examples" pkg = "sr_example" type = "test_examples.py" args="sr_right_arm_examples.py" time-limit="300.0"/>
+    <test test-name="test_sr_left_arm_examples" pkg = "sr_example" type = "test_examples.py" args="sr_left_arm_examples.py" time-limit="300.0"/>
+    <test test-name="test_sr_basic_right_hand_arm_example" pkg = "sr_example" type = "test_examples.py" args="sr_basic_right_hand_arm_example.py" time-limit="300.0"/>
+    <test test-name="test_sr_print_joints_position" pkg = "sr_example" type = "test_examples.py" args="sr_print_joints_position.py" time-limit="300.0"/>
+    <test test-name="test_sr_basic_left_hand_arm_example" pkg = "sr_example" type = "test_examples.py" args="sr_basic_left_hand_arm_example.py" time-limit="300.0"/>
+    <test test-name="test_sr_bottle_example" pkg = "sr_example" type = "test_examples.py" args="sr_bottle_example.py" time-limit="300.0"/>
+    <test test-name="test_sr_left_pick_place_example" pkg = "sr_example" type = "test_examples.py" args="sr_left_pick_place_example.py" time-limit="300.0"/>
+    <!-- test test-name="test_sr_link_joints_example" pkg = "sr_example" type = "test_examples.py" args="sr_link_joints_example.py" time-limit="300.0"/ -->
+    <test test-name="test_sr_publisher_example" pkg = "sr_example" type = "test_examples.py" args="sr_publisher_example.py" time-limit="300.0"/>
+    <!-- test test-name="test_sr_subscriber_example" pkg = "sr_example" type = "test_examples.py" args="sr_subscriber_example.py" time-limit="300.0"/ -->
+    <test test-name="test_sr_latching_example" pkg = "sr_example" type = "test_examples.py" args="sr_latching_example.py" time-limit="300.0"/>
 
 </launch>
