@@ -44,7 +44,7 @@ import rospy
 import rospkg
 from rosgraph.names import load_mappings
 
-from sr_utilities.local_urdf_parser_py import URDF
+from urdf_parser_py.urdf import URDF
 
 
 class SRDFHandGenerator(object):
