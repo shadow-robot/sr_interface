@@ -1,0 +1,12 @@
+ controller_list:
+  - name: ra_trajectory_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: true
+    joints:
+      - ra_shoulder_pan_joint
+      - ra_shoulder_lift_joint
+      - ra_elbow_joint
+      - ra_wrist_1_joint
+      - ra_wrist_2_joint
+      - ra_wrist_3_joint

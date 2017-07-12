@@ -13,41 +13,23 @@ from sr_utilities.hand_finder import HandFinder
 
 
 class SrStateSaverUnsafe(object):
-    def __init__(self, name, hand_or_arm="both", hand_h=False):
+    def __init__(self, name, hand_or_arm="both"):
 
         self.__save = rospy.ServiceProxy(
             'save_robot_state', SaveState)
 
         self.__name = name
 
-        self.__hand_h = hand_h
-
         if hand_or_arm == "arm":
             self.__commander = SrArmCommander()
 
         elif hand_or_arm == 'hand':
-            if self.__hand_h:
-                self.__commander = SrRobotCommander("hand_h", prefix="H1_")
-            else:
-                hand_finder = HandFinder()
+            self.__commander = SrHandCommander()
 
-                hand_parameters = hand_finder.get_hand_parameters()
-                hand_serial = hand_parameters.mapping.keys()[0]
-
-                self.__commander = SrHandCommander(hand_parameters=hand_parameters, hand_serial=hand_serial)
         else:
             self.__arm_commander = SrArmCommander()
+            self.__hand_commander = SrHandCommander()
 
-            if self.__hand_h:
-                self.__hand_commander = SrRobotCommander("hand_h", prefix="H1_")
-            else:
-                hand_finder = HandFinder()
-
-                hand_parameters = hand_finder.get_hand_parameters()
-                hand_serial = hand_parameters.mapping.keys()[0]
-
-                self.__hand_commander = SrHandCommander(hand_parameters=hand_parameters,
-                                                        hand_serial=hand_serial)
         self.__hand_or_arm = hand_or_arm
 
         rs = RobotState()

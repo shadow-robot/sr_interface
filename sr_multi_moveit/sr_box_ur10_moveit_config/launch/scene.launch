@@ -1,0 +1,8 @@
+<launch>
+  <!-- This launch file sets the scene for robot - restrains movement -->
+
+  <arg name="scene_file" default="$(find sr_description)/other/scenes/lab.scene"/>
+
+  <node pkg="moveit_ros_planning" type="moveit_publish_scene_from_text" name="publish_moveit_scene" args="$(arg scene_file)" output="screen"/>
+
+</launch>

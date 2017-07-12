@@ -41,7 +41,7 @@ from sr_utilities.hand_finder import HandFinder
 from moveit_msgs.srv import GetPositionFK
 from std_msgs.msg import Header
 
-import tf
+import tf2_ros
 import copy
 
 
@@ -85,20 +85,24 @@ class SrRobotCommander(object):
         self._compute_ik = rospy.ServiceProxy('compute_ik', GetPositionIK)
         self._forward_k = rospy.ServiceProxy('compute_fk', GetPositionFK)
 
+        # Check if the prefix can be set from a known group saved in self.__group_prefixes
+        prefix_from_group = [self.__group_prefixes[known_prefix] for known_prefix in self.__group_prefixes
+                             if known_prefix in name]
+
         # prefix of the trajectory controller
         if prefix is not None:
             self._prefix = prefix
-        elif name in self.__group_prefixes.keys():
-            self._prefix = self.__group_prefixes[name]
+        elif prefix_from_group:
+            self._prefix = prefix_from_group[0]
         else:
             # Group name is one of the ones to plan for specific fingers.
             # We need to find the hand prefix using the hand finder
-            hand_finder = HandFinder()
-            hand_parameters = hand_finder.get_hand_parameters()
-            hand_serial = hand_parameters.mapping.keys()[0]
-            self._prefix = hand_parameters.joint_prefix[hand_serial]
+            self._prefix = HandFinder().get_available_prefix()
 
         self._set_up_action_client()
+
+        self.tf_buffer = tf2_ros.Buffer()
+        self.listener = tf2_ros.TransformListener(self.tf_buffer)
 
         threading.Thread(None, rospy.spin)
 
@@ -134,6 +138,18 @@ class SrRobotCommander(object):
     def refresh_named_targets(self):
         self._srdf_names = self.__get_srdf_names()
         self._warehouse_names = self.__get_warehouse_names()
+
+    def set_max_velocity_scaling_factor(self, value):
+        self._move_group_commander.set_max_velocity_scaling_factor(value)
+
+    def set_max_acceleration_scaling_factor(self, value):
+        self._move_group_commander.set_max_acceleration_scaling_factor(value)
+
+    def allow_looking(self, value):
+        self._move_group_commander.allow_looking(value)
+
+    def allow_replanning(self, value):
+        self._move_group_commander.allow_replanning(value)
 
     def execute(self):
         """
@@ -245,23 +261,21 @@ class SrRobotCommander(object):
         @return geometry_msgs.msg.Pose() - current pose of the end effector
         """
         if reference_frame is not None:
-            listener = tf.TransformListener()
             try:
-                listener.waitForTransform(reference_frame, self._move_group_commander.get_end_effector_link(),
-                                          rospy.Time(0), rospy.Duration(5.0))
-                (trans, rot) = listener.lookupTransform(reference_frame,
+                trans = self.tf_buffer.lookup_transform(reference_frame,
                                                         self._move_group_commander.get_end_effector_link(),
-                                                        rospy.Time(0))
+                                                        rospy.Time(0),
+                                                        rospy.Duration(5.0))
                 current_pose = geometry_msgs.msg.Pose()
-                current_pose.position.x = trans[0]
-                current_pose.position.y = trans[1]
-                current_pose.position.z = trans[2]
-                current_pose.orientation.x = rot[0]
-                current_pose.orientation.y = rot[1]
-                current_pose.orientation.z = rot[2]
-                current_pose.orientation.w = rot[3]
+                current_pose.position.x = trans.transform.translation.x
+                current_pose.position.y = trans.transform.translation.y
+                current_pose.position.z = trans.transform.translation.z
+                current_pose.orientation.x = trans.transform.rotation.x
+                current_pose.orientation.y = trans.transform.rotation.y
+                current_pose.orientation.z = trans.transform.rotation.z
+                current_pose.orientation.w = trans.transform.rotation.w
                 return current_pose
-            except (tf.Exception, tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
                 rospy.logwarn("Couldn't get the pose from " + self._move_group_commander.get_end_effector_link() +
                               " in " + reference_frame + " reference frame")
             return None
@@ -389,6 +403,11 @@ class SrRobotCommander(object):
         joint_trajectory = JointTrajectory()
         joint_names = current.keys()
         joint_trajectory.joint_names = joint_names
+
+        start = JointTrajectoryPoint()
+        start.positions = current.values()
+        start.time_from_start = rospy.Duration.from_sec(0.001)
+        joint_trajectory.points.append(start)
 
         time_from_start = 0.0
 
@@ -726,7 +745,9 @@ class SrRobotCommander(object):
     def move_to_pose_value_target_unsafe(self, target_pose,  avoid_collisions=False, time=0.002, wait=True):
         joint_state = self.get_ik(target_pose, avoid_collisions)
         if joint_state is not None:
-            state_as_dict = dict(zip(joint_state.name, joint_state.position))
-            self.move_to_joint_value_target_unsafe(state_as_dict,
-                                                   time=time,
-                                                   wait=wait)
+            active_joints = self._move_group_commander.get_active_joints()
+            current_indices = [i for i, x in enumerate(joint_state.name) if any(thing in x for thing in active_joints)]
+            current_names = [joint_state.name[i] for i in current_indices]
+            current_positions = [joint_state.position[i] for i in current_indices]
+            state_as_dict = dict(zip(current_names, current_positions))
+            self.move_to_joint_value_target_unsafe(state_as_dict, time=time, wait=wait)
