@@ -31,3 +31,8 @@ file(GLOB PYTHON_SCRIPTS_COMMANDER RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
         "${CMAKE_CURRENT_SOURCE_DIR}/scripts/${PROJECT_NAME}/commander/*.py")
 install(PROGRAMS ${PYTHON_SCRIPTS_COMMANDER}
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+if (CATKIN_ENABLE_TESTING)
+    find_package(rostest REQUIRED)
+    add_rostest(test/test_examples.test)
+endif ()
