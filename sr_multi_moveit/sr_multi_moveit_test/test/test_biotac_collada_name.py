@@ -3,9 +3,8 @@
 import sys
 import os
 from xml.dom.minidom import parse
-from sr_utilities.local_urdf_parser_py import URDF
+from urdf_parser_py.urdf import URDF
 import xacro
-import rospy
 import rospkg
 
 from unittest import TestCase
@@ -27,7 +26,12 @@ class TestBiotacColladaName(TestCase):
         with open(hand_urdf_path, 'r') as hand_urdf_xacro_file:
             hand_urdf_xml = parse(hand_urdf_xacro_file)
         xacro.process_includes(hand_urdf_xml, os.path.dirname(sys.argv[0]))
-        xacro.eval_self_contained(hand_urdf_xml)
+        macros = {}
+        xacro.grab_macros(hand_urdf_xml, macros)
+        symbols = xacro.Table()
+        xacro.grab_properties(hand_urdf_xml, symbols)
+        xacro.eval_all(hand_urdf_xml.documentElement, macros, symbols)
+
         hand_urdf = hand_urdf_xml.toprettyxml(indent='  ')
         robot = URDF.from_xml_string(hand_urdf)
 

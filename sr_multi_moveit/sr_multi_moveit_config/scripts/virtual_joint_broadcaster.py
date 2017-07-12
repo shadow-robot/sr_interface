@@ -4,7 +4,7 @@
 
 import rospy
 import tf
-from sr_utilities.local_urdf_parser_py import URDF
+from urdf_parser_py.urdf import URDF
 
 
 def publish_world_to_base_transform():

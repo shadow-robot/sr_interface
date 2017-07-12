@@ -1,0 +1,15 @@
+robot:
+  name: ursrbox
+  manipulators:
+    right_manipulator:
+      side: right
+      arm:
+        name: ur10
+        main_group: manipulator
+        moveit_path: 
+          package: sr_box_ur10_moveit_config
+          relative_path: /config/ur
+        extra_groups_config_path: /config
+        group_states:
+          - home
+          - up
