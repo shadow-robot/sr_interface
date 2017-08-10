@@ -159,7 +159,7 @@ class SrRobotCommander(object):
             self._move_group_commander.execute(self.__plan)
             self.__plan = None
         else:
-            rospy.logwarn("No plans where made, not executing anything.")
+            rospy.logwarn("No plans were made, not executing anything.")
 
     def execute_plan(self, plan):
         if self.check_given_plan_is_valid(plan):
