@@ -155,11 +155,16 @@ class SrRobotCommander(object):
         """
         Executes the last plan made.
         """
-        if self.__plan is not None:
+        if self.check_plan_is_valid():
             self._move_group_commander.execute(self.__plan)
             self.__plan = None
         else:
             rospy.logwarn("No plans where made, not executing anything.")
+
+    def execute_plan(self, plan):
+        if self.check_given_plan_is_valid(plan):
+            self._move_group_commander.execute(plan)
+            self.__plan = None
 
     def move_to_joint_value_target(self, joint_states, wait=True,
                                    angle_degrees=False):
@@ -201,6 +206,12 @@ class SrRobotCommander(object):
         Checks if current plan contains a valid trajectory
         """
         return (self.__plan is not None and len(self.__plan.joint_trajectory.points) > 0)
+
+    def check_given_plan_is_valid(self, plan):
+        """
+        Checks if given plan contains a valid trajectory
+        """
+        return (plan is not None and len(plan.joint_trajectory.points) > 0)
 
     def get_robot_name(self):
         return self._robot_name
@@ -542,6 +553,7 @@ class SrRobotCommander(object):
         self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_pose_target(pose, end_effector_link)
         self.__plan = self._move_group_commander.plan()
+        return self.__plan
 
     def _joint_states_callback(self, joint_state):
         """
