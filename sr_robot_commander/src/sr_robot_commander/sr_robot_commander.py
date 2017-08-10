@@ -165,6 +165,8 @@ class SrRobotCommander(object):
         if self.check_given_plan_is_valid(plan):
             self._move_group_commander.execute(plan)
             self.__plan = None
+        else:
+            rospy.logwarn("Plan is not valid, not executing anything.")
 
     def move_to_joint_value_target(self, joint_states, wait=True,
                                    angle_degrees=False):
