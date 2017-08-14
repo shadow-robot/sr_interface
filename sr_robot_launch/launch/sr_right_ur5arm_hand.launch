@@ -31,7 +31,7 @@
   <arg name="initial_z" default="1.0" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
 
-  <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur5.urdf.xacro"/>
+  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/right_srhand_ur5.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur5.yaml"/>
 
   <arg name="side" value="right"/>

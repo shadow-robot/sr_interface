@@ -12,7 +12,7 @@
   <arg name="verbose" default="true" />
 
   <!-- Xacro file containing the robot description we want to load -->
-  <arg name="robot_description" default="$(find sr_description)/robots/bimanual_shadowhand_motor.urdf.xacro"/>
+  <arg name="robot_description" default="'$(find sr_description)/robots/bimanual_shadowhand_motor.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
   <arg name="robot_name" default="bimanual_shadowhand_motor"/>
   
@@ -48,7 +48,7 @@
       <arg name="debug" value="$(arg debug)"/>
       <arg name="verbose" value="$(arg verbose)" />
     </include>
-    <param name="robot_description" command="xacro --inorder '$(arg robot_description)'"/>
+    <param name="robot_description" command="xacro --inorder $(arg robot_description)"/>
     <param name="/hand/mapping/$(arg rh_serial)" value="$(arg rh_id)"/>
     <param name="/hand/mapping/$(arg lh_serial)" value="$(arg lh_id)"/>
     <param name="/hand/joint_prefix/$(arg rh_serial)" value="$(arg rh_id)_"/>

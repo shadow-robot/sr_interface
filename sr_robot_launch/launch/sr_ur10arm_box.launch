@@ -34,7 +34,7 @@
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
 
   <!-- Change this for another hand -->
-  <arg name="robot_description" default="$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro"/>
+  <arg name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_box_ur10_moveit_config)/config/robot_configs/$(arg side)_$(arg arm_model).yaml"/>
   <arg name="robot_name" default="ursrbox"/>
 
@@ -59,7 +59,7 @@
       <arg name="debug" value="$(arg debug)"/>
       <arg name="verbose" value="$(arg verbose)"/>
     </include>
-    <param name="robot_description" command="xacro --inorder '$(arg robot_description)' initial_z:=$(arg initial_z)"/>
+    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
 
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name)" respawn="false" output="screen"/>
 
@@ -88,7 +88,7 @@
 
   <!-- REAL ROBOTS -->
   <group unless="$(arg sim)">
-    <param name="robot_description" command="xacro --inorder '$(arg robot_description)' initial_z:=$(arg initial_z)"/>
+    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
 
     <rosparam command="load" file="$(find sr_ur_robot_hw)/config/ra_sr_ur_robot_hw.yaml"/>
     <rosparam command="load" file="$(find sr_ur_launch)/config/ra_trajectory_controller.yaml"/>
