@@ -3,7 +3,7 @@
 import sys
 import os
 from xml.dom.minidom import parse
-from sr_utilities.local_urdf_parser_py import URDF
+from urdf_parser_py.urdf import URDF
 import xacro
 import rospy
 import rospkg

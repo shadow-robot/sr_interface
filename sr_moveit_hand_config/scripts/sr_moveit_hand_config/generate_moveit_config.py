@@ -47,7 +47,7 @@ import rospy
 import rosparam
 from srdfdom.srdf import SRDF
 
-from sr_utilities.local_urdf_parser_py import URDF
+from urdf_parser_py.urdf import URDF
 
 
 def yaml_reindent(in_str, numspaces):

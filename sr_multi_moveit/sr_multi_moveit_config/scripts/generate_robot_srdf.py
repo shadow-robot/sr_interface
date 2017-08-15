@@ -16,7 +16,7 @@ import xacro
 import rospy
 
 from sr_moveit_hand_config.generate_hand_srdf import SRDFHandGenerator
-from sr_utilities.local_urdf_parser_py import URDF
+from urdf_parser_py.urdf import URDF
 
 
 class SRDFRobotGeneratorException(Exception):
