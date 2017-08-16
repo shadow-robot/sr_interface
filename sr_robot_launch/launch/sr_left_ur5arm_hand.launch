@@ -18,11 +18,20 @@
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
+  <!-- Set whether to load a scene to restrain the movement of the robot -->
+  <arg name="scene" default="false"/>
 
-  <arg name="world" default="$(find sr_description)/other/worlds/shadowhand.world"/>
-  <arg name="initial_z" default="0.1"/>  
+  <!-- Set world value dependant on scene -->
+  <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world" unless="$(arg scene)"/>
+  <arg name="world" default="$(find sr_description_common)/worlds/sr_lab.world" if="$(arg scene)"/>
+  <!-- Set the scene file -->
+  <arg name="scene_file" default="$(find sr_description_common)/scenes/lab.scene"/>
 
-  <arg name="robot_description" default="$(find sr_multi_description)/urdf/left_srhand_ur5.urdf.xacro"/>
+  <!-- Set initial_z value dependant on scene-->
+  <arg name="initial_z" default="1.0" if="$(arg scene)"/>
+  <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
+
+  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/left_srhand_ur5.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/left_sh_ur5.yaml"/>
 
   <arg name="side" value="left"/>
@@ -46,5 +55,6 @@
     <arg name="hand_serial" value="$(arg hand_serial)"/>
     <arg name="mapping_path" value="$(arg mapping_path)"/>
     <arg name="eth_port" value="$(arg eth_port)"/>
+    <arg name="scene" value="$(arg scene)"/>
   </include>
 </launch>

@@ -1,0 +1,119 @@
+<launch>
+  <!-- This launch file is for a combination of ur arms and shadow hands -->
+
+  <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
+  <arg name="sim" default="true"/>
+  <!-- Set to true for debugging -->
+  <arg name="debug" default="false"/>
+  <!-- Set to true to allow planning trajectories-->
+  <arg name="use_moveit" default="true"/>
+  <!--Choose planner library, options are ompl, stomp or sbpl-->
+  <arg name="planning" default="ompl"/>
+  <!-- Set to false if you want to start without guis -->
+  <arg name="gui" default="true"/>
+  <!-- Set whether to load a scene to restrain the movement of the robot -->
+  <arg name="scene" default="false"/>
+
+  <arg name="paused" default="false"/>
+  <arg name="verbose" default="true"/>
+
+  <!-- Change this for the left hand and arm -->
+  <arg name="hand_id" default="H1"/>
+  <arg name="arm_id" default="ra"/>
+  <arg name="side" default="right"/>
+  <arg name="arm_model" default="ur10"/>
+
+  <!-- Set world value dependant on scene -->
+  <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world" unless="$(arg scene)"/>
+  <arg name="world" default="$(find sr_description_common)/worlds/sr_lab.world" if="$(arg scene)"/>
+  <!-- Set the scene file -->
+  <arg name="scene_file" default="$(find sr_description_common)/scenes/lab.scene"/>
+
+  <!-- Set initial_z value dependant on scene -->
+  <arg name="initial_z" default="1.0" if="$(arg scene)"/>
+  <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
+
+  <!-- Change this for another hand -->
+  <arg name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro'"/>
+  <arg name="robot_config_file" default="$(find sr_box_ur10_moveit_config)/config/robot_configs/$(arg side)_$(arg arm_model).yaml"/>
+  <arg name="robot_name" default="ursrbox"/>
+
+  <!-- ARM -->
+  <arg name="arm_controller" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_controller.yaml"/>
+  <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_group_name" default="arm"/>
+  <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
+  <arg name="arm_trajectory" default="true"/>
+  <!-- Set to true to spawn the position controllers for the arm -->
+  <arg name="arm_ctrl" default="false"/>
+
+
+  <param name="description_read_repetitions" value="50"/>
+
+  <!-- SIMULATED ROBOTS -->
+  <group if="$(arg sim)">
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+      <arg name="world_name" value="$(arg world)"/>
+      <arg name="gui" default="$(arg gui)"/>
+      <arg name="paused" value="$(arg paused)"/>
+      <arg name="debug" value="$(arg debug)"/>
+      <arg name="verbose" value="$(arg verbose)"/>
+    </include>
+    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
+
+    <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name)" respawn="false" output="screen"/>
+
+    <!-- ARM -->
+    <rosparam file="$(find sr_box_ur10_moveit_config)/config/gazebo/$(arg arm_id)_trajectory_controller.yaml" command="load"/>
+    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
+
+    <group if="$(arg arm_trajectory)">
+      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_id)_trajectory_controller"/>
+    </group>
+
+    <!-- Robot state publisher -->
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+      <param name="publish_frequency" type="double" value="50.0"/>
+      <param name="tf_prefix" type="string" value=""/>
+    </node>
+
+    <!-- Set scene for robot - restrains movement -->
+    <group if="$(arg scene)">
+      <include file="$(find gazebo2rviz)/launch/gazebo2moveit.launch">
+        <arg name="frequency" default="1" />
+      </include>
+    </group>
+
+  </group>
+
+  <!-- REAL ROBOTS -->
+  <group unless="$(arg sim)">
+    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
+
+    <rosparam command="load" file="$(find sr_ur_robot_hw)/config/ra_sr_ur_robot_hw.yaml"/>
+    <rosparam command="load" file="$(find sr_ur_launch)/config/ra_trajectory_controller.yaml"/>
+
+    <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
+
+    <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
+    <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
+
+    <node name="joint_state_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 joint_state_controller" />
+    <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 ra_trajectory_controller"/>
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+      <param name="publish_frequency" type="double" value="50.0" />
+      <param name="tf_prefix" type="string" value="" />
+    </node>
+    <!-- Set scene for robot after delay to start after moveit - restrains movement -->
+    <node if="$(arg scene)" pkg="sr_robot_launch" type="timed_roslaunch.sh" args="8 sr_box_ur10_moveit_config scene.launch
+      scene_file:=$(arg scene_file)" name="timed_publish_moveit_scene" output="screen"/>
+
+  </group>
+
+  <rosparam file="$(arg robot_config_file)"/>
+
+  <!-- Launch moveit configuration after delay to wait for robot description to be avalible -->
+  <node if="$(arg use_moveit)" pkg="sr_robot_launch" type="timed_roslaunch.sh" args="5 sr_box_ur10_moveit_config planning_and_execution.launch
+    use_gui:=$(arg gui)" name="timed_roslaunch" output="screen"/>
+</launch>

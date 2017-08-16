@@ -19,10 +19,15 @@
     version: kinetic-devel
 
 - git:
+    local-name: common_resources
+    uri: https://github.com/shadow-robot/common_resources.git
+    version: kinetic-devel
+
+- git:
     local-name: universal_robot
     uri: https://github.com/shadow-robot/universal_robot.git
     version: F_elbow_limits
-    
+
 - git:
     local-name: sr_ur_arm
     uri: https://github.com/shadow-robot/sr_ur_arm.git
@@ -37,3 +42,13 @@
     local-name: ros_control_robot
     uri: https://github.com/shadow-robot/ros_control_robot/
     version: kinetic-devel
+
+- git:
+    local-name: gazebo2rviz
+    uri: https://github.com/shadow-robot/gazebo2rviz.git
+    version: F_add_moveit_funtionallity
+
+- git:
+    local-name: pysdf
+    uri: https://github.com/andreasBihlmaier/pysdf.git
+    version: master

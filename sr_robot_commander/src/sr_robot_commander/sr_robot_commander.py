@@ -85,7 +85,6 @@ class SrRobotCommander(object):
         self._compute_ik = rospy.ServiceProxy('compute_ik', GetPositionIK)
         self._forward_k = rospy.ServiceProxy('compute_fk', GetPositionFK)
 
-
         controller_list_param = rospy.get_param("/move_group/controller_list")
 
         # create dictionary with name of controllers and corresponding joints
@@ -147,11 +146,18 @@ class SrRobotCommander(object):
         """
         Executes the last plan made.
         """
-        if self.__plan is not None:
+        if self.check_plan_is_valid():
             self._move_group_commander.execute(self.__plan)
             self.__plan = None
         else:
-            rospy.logwarn("No plans where made, not executing anything.")
+            rospy.logwarn("No plans were made, not executing anything.")
+
+    def execute_plan(self, plan):
+        if self.check_given_plan_is_valid(plan):
+            self._move_group_commander.execute(plan)
+            self.__plan = None
+        else:
+            rospy.logwarn("Plan is not valid, not executing anything.")
 
     def move_to_joint_value_target(self, joint_states, wait=True,
                                    angle_degrees=False):
@@ -193,6 +199,12 @@ class SrRobotCommander(object):
         Checks if current plan contains a valid trajectory
         """
         return (self.__plan is not None and len(self.__plan.joint_trajectory.points) > 0)
+
+    def check_given_plan_is_valid(self, plan):
+        """
+        Checks if given plan contains a valid trajectory
+        """
+        return (plan is not None and len(plan.joint_trajectory.points) > 0)
 
     def get_robot_name(self):
         return self._robot_name
@@ -534,6 +546,7 @@ class SrRobotCommander(object):
         self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_pose_target(pose, end_effector_link)
         self.__plan = self._move_group_commander.plan()
+        return self.__plan
 
     def _joint_states_callback(self, joint_state):
         """
@@ -769,12 +782,10 @@ class SrRobotCommander(object):
 
     def move_to_pose_value_target_unsafe(self, target_pose,  avoid_collisions=False, time=0.002, wait=True):
         joint_state = self.get_ik(target_pose, avoid_collisions)
-        active_joints = self._move_group_commander.get_active_joints()
-        current_indices = [i for i, x in enumerate(joint_state.name) if any(thing in x for thing in active_joints)]
         if joint_state is not None:
+            active_joints = self._move_group_commander.get_active_joints()
+            current_indices = [i for i, x in enumerate(joint_state.name) if any(thing in x for thing in active_joints)]
             current_names = [joint_state.name[i] for i in current_indices]
             current_positions = [joint_state.position[i] for i in current_indices]
             state_as_dict = dict(zip(current_names, current_positions))
-            self.move_to_joint_value_target_unsafe(state_as_dict,
-                                                   time=time,
-                                                   wait=wait)
+            self.move_to_joint_value_target_unsafe(state_as_dict, time=time, wait=wait)
