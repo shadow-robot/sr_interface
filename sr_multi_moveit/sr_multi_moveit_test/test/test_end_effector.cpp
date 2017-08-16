@@ -64,15 +64,15 @@ protected:
     srdf_model.reset(new srdf::Model());
 
     std::string xml_string, robot_description_, robot_description_semantic_;
-    
+
     // wait for move_group to be ready
     ros::WallDuration(8.0).sleep();
-	ros::spinOnce();
+    ros::spinOnce();
     if (0)
     {
-		ROS_ERROR("Move group not available within 30 seconds, did you start the demo ?");
-		return;
-	}
+        ROS_ERROR("Move group not available within 30 seconds, did you start the demo ?");
+        return;
+    }
     if (!nh.searchParam("robot_description", robot_description_) || !nh.getParam(robot_description_, xml_string))
     {
       ROS_ERROR("Robot model parameter not found! Did you remap '%s' ?", robot_description_.c_str());
