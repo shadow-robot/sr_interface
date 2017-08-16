@@ -46,48 +46,6 @@ class SrArmCommander(SrRobotCommander):
     def arm_found(self):
         return self._move_group_commander is not None
 
-    def move_to_position_target(self, xyz, end_effector_link="", wait=True):
-        """
-        Specify a target position for the end-effector and moves to it.
-        @param xyz - new position of end-effector
-        @param end_effector_link - name of the end effector link
-        @param wait - should method wait for movement end or not
-        """
-        self.move_to_position_target(xyz, end_effector_link, wait=wait)
-
-    def plan_to_position_target(self, xyz, end_effector_link=""):
-        """
-        Specify a target position for the end-effector and plans.
-        This is a blocking method.
-        @param xyz - new position of end-effector
-        @param end_effector_link - name of the end effector link
-        """
-        self.plan_to_position_target(xyz, end_effector_link)
-
-    def move_to_pose_target(self, pose, end_effector_link="", wait=True):
-        """
-        Specify a target pose for the end-effector and moves to it
-        @param pose - new pose of end-effector: a Pose message, a PoseStamped
-        message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z]
-        or a list of 7 floats: [x, y, z, qx, qy, qz, qw]
-
-        @param end_effector_link - name of the end effector link
-        @param wait - should method wait for movement end or not
-        """
-        self.move_to_pose_target(pose, end_effector_link, wait=wait)
-
-    def plan_to_pose_target(self, pose, end_effector_link=""):
-        """
-        Specify a target pose for the end-effector and plans.
-        This is a blocking method.
-        @param pose - new pose of end-effector: a Pose message, PoseStamped
-        message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z]
-        or a list of 7 floats [x, y, z, qx, qy, qz, qw]
-
-        @param end_effector_link - name of the end effector link
-        """
-        self.plan_to_pose_target(pose, end_effector_link)
-
     def set_ground(self, height=0.1, z_position=-0.1):
         """
         Sets a plane for the ground.

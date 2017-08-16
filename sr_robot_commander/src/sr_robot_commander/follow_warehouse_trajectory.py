@@ -38,17 +38,17 @@ class WarehousePlanner(object):
 
         rospy.sleep(4)
         rospy.loginfo("Waiting for warehouse services...")
-        rospy.wait_for_service('moveit_warehouse_services/list_robot_states')
-        rospy.wait_for_service('moveit_warehouse_services/get_robot_state')
-        rospy.wait_for_service('moveit_warehouse_services/has_robot_state')
+        rospy.wait_for_service('/list_robot_states')
+        rospy.wait_for_service('/get_robot_state')
+        rospy.wait_for_service('/has_robot_state')
 
         rospy.wait_for_service('/compute_fk')
         self._list_states = rospy.ServiceProxy(
-            'moveit_warehouse_services/list_robot_states', ListStates)
+            '/list_robot_states', ListStates)
         self._get_state = rospy.ServiceProxy(
-            'moveit_warehouse_services/get_robot_state', GetState)
+            '/get_robot_state', GetState)
         self._has_state = rospy.ServiceProxy(
-            'moveit_warehouse_services/has_robot_state', HasState)
+            '/has_robot_state', HasState)
         self._forward_k = rospy.ServiceProxy(
             'compute_fk', GetPositionFK)
         rospy.loginfo("Service proxies connected")

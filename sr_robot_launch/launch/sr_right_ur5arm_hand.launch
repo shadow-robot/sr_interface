@@ -18,11 +18,20 @@
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
+  <!-- Set whether to load a scene to restrain the movement of the robot -->
+  <arg name="scene" default="false"/>
 
-  <arg name="world" default="$(find sr_description)/other/worlds/shadowhand.world"/>
-  <arg name="initial_z" default="0.1"/>  
+  <!-- Set world value dependant on scene -->
+  <arg name="world" default="$(find sr_description)/other/worlds/shadowhand.world" unless="$(arg scene)"/>
+  <arg name="world" default="$(find sr_description)/other/worlds/sr_lab.world" if="$(arg scene)"/>
+  <!-- Set the scene file -->
+  <arg name="scene_file" default="$(find sr_description)/other/scenes/lab.scene"/>
+  
+  <!-- Set initial_z value dependant on scene-->
+  <arg name="initial_z" default="0.687" if="$(arg scene)"/>
+  <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
 
-  <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur5_joint_limited.urdf.xacro"/>
+  <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur5.urdf.xacro"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur5.yaml"/>
 
   <arg name="side" value="right"/>
@@ -41,10 +50,11 @@
     <arg name="side" value="$(arg side)"/>
     <arg name="robot_model" value="ur5"/>
     <arg name="robot_name" value="ur5srh"/>
-    <arg name="arm_controller" value="$(find sr_robot_launch)/config/$(arg side)_ur_arm_controller.yaml"/>
+    <arg name="arm_robot_hw" value="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
     <arg name="arm_group_name" value="$(arg side)_arm"/>
     <arg name="hand_serial" value="$(arg hand_serial)"/>
     <arg name="mapping_path" value="$(arg mapping_path)"/>
     <arg name="eth_port" value="$(arg eth_port)"/>
+    <arg name="scene" value="$(arg scene)"/>
   </include>
 </launch>

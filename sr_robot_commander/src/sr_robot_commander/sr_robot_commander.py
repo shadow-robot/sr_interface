@@ -41,7 +41,7 @@ from sr_utilities.hand_finder import HandFinder
 from moveit_msgs.srv import GetPositionFK
 from std_msgs.msg import Header
 
-import tf
+import tf2_ros
 import copy
 import rospkg
 
@@ -85,12 +85,16 @@ class SrRobotCommander(object):
         self._compute_ik = rospy.ServiceProxy('compute_ik', GetPositionIK)
         self._forward_k = rospy.ServiceProxy('compute_fk', GetPositionFK)
 
+
         controller_list_param = rospy.get_param("/move_group/controller_list")
 
         # create dictionary with name of controllers and corresponding joints
         self._controllers = {item["name"]: item["joints"] for item in controller_list_param}
 
         self._set_up_action_client(self._controllers)
+
+        self.tf_buffer = tf2_ros.Buffer()
+        self.listener = tf2_ros.TransformListener(self.tf_buffer)
 
         threading.Thread(None, rospy.spin)
 
@@ -126,6 +130,12 @@ class SrRobotCommander(object):
     def refresh_named_targets(self):
         self._srdf_names = self.__get_srdf_names()
         self._warehouse_names = self.__get_warehouse_names()
+
+    def set_max_velocity_scaling_factor(self, value):
+        self._move_group_commander.set_max_velocity_scaling_factor(value)
+
+    def set_max_acceleration_scaling_factor(self, value):
+        self._move_group_commander.set_max_acceleration_scaling_factor(value)
 
     def allow_looking(self, value):
         self._move_group_commander.allow_looking(value)
@@ -243,23 +253,21 @@ class SrRobotCommander(object):
         @return geometry_msgs.msg.Pose() - current pose of the end effector
         """
         if reference_frame is not None:
-            listener = tf.TransformListener()
             try:
-                listener.waitForTransform(reference_frame, self._move_group_commander.get_end_effector_link(),
-                                          rospy.Time(0), rospy.Duration(5.0))
-                (trans, rot) = listener.lookupTransform(reference_frame,
+                trans = self.tf_buffer.lookup_transform(reference_frame,
                                                         self._move_group_commander.get_end_effector_link(),
-                                                        rospy.Time(0))
+                                                        rospy.Time(0),
+                                                        rospy.Duration(5.0))
                 current_pose = geometry_msgs.msg.Pose()
-                current_pose.position.x = trans[0]
-                current_pose.position.y = trans[1]
-                current_pose.position.z = trans[2]
-                current_pose.orientation.x = rot[0]
-                current_pose.orientation.y = rot[1]
-                current_pose.orientation.z = rot[2]
-                current_pose.orientation.w = rot[3]
+                current_pose.position.x = trans.transform.translation.x
+                current_pose.position.y = trans.transform.translation.y
+                current_pose.position.z = trans.transform.translation.z
+                current_pose.orientation.x = trans.transform.rotation.x
+                current_pose.orientation.y = trans.transform.rotation.y
+                current_pose.orientation.z = trans.transform.rotation.z
+                current_pose.orientation.w = trans.transform.rotation.w
                 return current_pose
-            except (tf.Exception, tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
                 rospy.logwarn("Couldn't get the pose from " + self._move_group_commander.get_end_effector_link() +
                               " in " + reference_frame + " reference frame")
             return None
@@ -387,6 +395,11 @@ class SrRobotCommander(object):
         joint_trajectory = JointTrajectory()
         joint_names = current.keys()
         joint_trajectory.joint_names = joint_names
+
+        start = JointTrajectoryPoint()
+        start.positions = current.values()
+        start.time_from_start = rospy.Duration.from_sec(0.001)
+        joint_trajectory.points.append(start)
 
         time_from_start = 0.0
 
@@ -546,9 +559,9 @@ class SrRobotCommander(object):
         self._action_running = False
 
         for controller_name in controller_list.keys():
-            self._clients["client_"+controller_name] = SimpleActionClient(controller_name+"/follow_joint_trajectory",
+            self._clients[controller_name] = SimpleActionClient(controller_name+"/follow_joint_trajectory",
                                                                           FollowJointTrajectoryAction)
-            if self._clients["client_"+controller_name].wait_for_server(timeout=rospy.Duration(4)) is False:
+            if self._clients[controller_name].wait_for_server(timeout=rospy.Duration(4)) is False:
                 rospy.logfatal("Failed to connect to action server in 4 sec")
                 raise Exception("Failed to connect to action server in 4 sec")
 
@@ -572,18 +585,24 @@ class SrRobotCommander(object):
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
                                     for joint, i in joint_states_cpy.items())
-
-        for i, value in enumerate(self._controllers.values()):
+            
+        for controller in self._controllers:
+            controller_joints = self._controllers[controller]
             goal = FollowJointTrajectoryGoal()
-            goal.trajectory.joint_names = list(value)
+            goal.trajectory.joint_names = []
             point = JointTrajectoryPoint()
-            point.time_from_start = rospy.Duration.from_sec(time)
-            for key in goal.trajectory.joint_names:
-                point.positions.append(joint_states_cpy[key])
+            point.positions = []
 
-            goal.trajectory.points = []
-            goal.trajectory.points.append(point)
-            goals.update({i: goal})
+            for x in joint_states_cpy.keys():
+                if x in controller_joints:
+                    goal.trajectory.joint_names.append(x)
+                    point.positions.append(joint_states_cpy[x])
+        
+            point.time_from_start = rospy.Duration.from_sec(time)
+            
+            goal.trajectory.points = [point]
+
+            goals[controller] = goal
 
         self._call_action(goals)
 
@@ -603,8 +622,8 @@ class SrRobotCommander(object):
     def _call_action(self, goals):
         self._action_running = True
 
-        for i, client in enumerate(self._clients.keys()):
-            self._clients[client].send_goal(goals[i], self._action_done_cb)
+        for client in self._clients:
+            self._clients[client].send_goal(goals[client], self._action_done_cb)
 
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
         """
@@ -724,8 +743,12 @@ class SrRobotCommander(object):
 
     def move_to_pose_value_target_unsafe(self, target_pose,  avoid_collisions=False, time=0.002, wait=True):
         joint_state = self.get_ik(target_pose, avoid_collisions)
+        active_joints = self._move_group_commander.get_active_joints()
+        current_indices = [i for i, x in enumerate(joint_state.name) if any(thing in x for thing in active_joints)]
         if joint_state is not None:
-            state_as_dict = dict(zip(joint_state.name, joint_state.position))
+            current_names = [joint_state.name[i] for i in current_indices]
+            current_positions = [joint_state.position[i] for i in current_indices]
+            state_as_dict = dict(zip(current_names, current_positions))
             self.move_to_joint_value_target_unsafe(state_as_dict,
                                                    time=time,
                                                    wait=wait)

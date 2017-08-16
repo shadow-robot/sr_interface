@@ -17,4 +17,5 @@
   <!-- If we want to reset the database, run this node -->
   <node if="$(arg reset)" name="$(anon moveit_default_db_reset)" type="moveit_init_demo_warehouse" pkg="moveit_ros_warehouse" respawn="false" output="screen" />
 
+  <node name="moveit_warehouse_services" pkg="moveit_ros_warehouse" type="moveit_warehouse_services" output="screen"/>
 </launch>
