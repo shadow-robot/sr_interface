@@ -632,9 +632,28 @@ class SrRobotCommander(object):
         trajectory of the joints which would be executed.
         @param wait - should method wait for movement end or not
         """
-        goal = FollowJointTrajectoryGoal()
-        goal.trajectory = joint_trajectory
-        self._call_action(goal)
+
+        goals = {}
+
+        for controller in self._controllers:
+            controller_joints = self._controllers[controller]
+            goal = FollowJointTrajectoryGoal()
+            goal.trajectory = copy.deepcopy(joint_trajectory)
+        
+            joint_indices = []
+
+            for i, joint in enumerate(joint_trajectory.joint_names):
+                if joint in controller_joints:
+                    joint_indices.append(i)
+
+            goal.trajectory.joint_names = [joint_trajectory.joint_names[i] for i in joint_indices]
+
+            for point in goal.trajectory.points:
+                point.positions = [point.positions[i] for i in joint_indices]
+
+            goals[controller] = goal
+                
+        self._call_action(goals)
 
         if not wait:
             return
