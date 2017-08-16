@@ -324,13 +324,6 @@ class SRDFRobotGenerator(object):
                             node_attribute = group_element.getAttributeNode("tip_link")
                             node_attribute.nodeValue = (manipulator.hand.prefix + "manipulator")
                         elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
-                        new_group = xml.dom.minidom.Document().createElement('group')
-                        new_group.setAttribute("name", manipulator.arm.internal_name + "_manipulator")
-                        manipulator_group = xml.dom.minidom.Document().createElement('link name="' +
-                                                                                     manipulator.hand.prefix +
-                                                                                     'manipulator' + '"')
-                        new_group.appendChild(manipulator_group)
-                        new_group.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
                     if group_name == manipulator.arm.main_group and (manipulator.has_hand):
                         new_group = xml.dom.minidom.Document().createElement('group')
                         new_group.setAttribute("name", manipulator.arm.internal_name + "_and_hand")
@@ -339,8 +332,7 @@ class SRDFRobotGenerator(object):
                                                                                  manipulator.arm.internal_name + '"')
                         else:
                             arm_group = xml.dom.minidom.Document().createElement('group name="' +
-                                                                                 manipulator.arm.internal_name +
-                                                                                 '_and_wrist' + '"')
+                                                                                 manipulator.arm.internal_name + '"')
                         new_group.appendChild(arm_group)
                         hand_group = xml.dom.minidom.Document().createElement('group name="' +
                                                                               manipulator.hand.internal_name + '"')
@@ -404,11 +396,10 @@ class SRDFRobotGenerator(object):
         elt = next_element(previous)
         while elt:
             if elt.tagName == 'end_effector':
-                elt.getAttributeNode("name").nodeValue = manipulator.arm.prefix + elt.getAttribute("name")
+                elt.getAttributeNode("name").nodeValue = manipulator.arm.internal_name + "_ee"
                 elt.getAttributeNode("parent_link").nodeValue = (manipulator.arm.prefix +
                                                                  elt.getAttribute("parent_link"))
-                elt.getAttributeNode("group").nodeValue = (manipulator.arm.prefix +
-                                                           elt.getAttribute("group"))
+                elt.getAttributeNode("group").nodeValue = manipulator.hand.internal_name
                 elt.setAttribute('parent_group', manipulator.arm.internal_name)
                 elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
                 newElement = deepcopy(elt)
@@ -420,7 +411,7 @@ class SRDFRobotGenerator(object):
                 newElement = deepcopy(elt)
                 newElement.getAttributeNode("name").nodeValue = manipulator.arm.prefix + "and_manipulator_ee"
                 newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "manipulator"
-                newElement.getAttributeNode("group").nodeValue = manipulator.arm.internal_name + "_manipulator"
+                newElement.getAttributeNode("group").nodeValue = manipulator.hand.prefix + "fingers"
                 newElement.setAttribute('parent_group', manipulator.arm.internal_name + "_and_manipulator")
                 newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
             previous = elt
