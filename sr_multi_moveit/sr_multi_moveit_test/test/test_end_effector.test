@@ -1,0 +1,12 @@
+<launch>
+
+ <include file = "$(find sr_multi_moveit_config)/launch/demo.launch">
+    <arg name="visualization" value="false" />
+    <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/>
+    <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
+  </include>
+  <test test-name="test_end_effector"  pkg="sr_multi_moveit_test" type="test_end_effector" args = "" time-limit = "300.0">
+  <param name="wait_time" value="1.0" />
+  </test>
+
+</launch>
