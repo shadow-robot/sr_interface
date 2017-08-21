@@ -103,6 +103,7 @@ class PlannerAnnotationParser(AnnotationParserBase):
                 elif planner == "sbpl":
                     planner = "AnytimeD*"
                 self.planner_id = planner
+                rospy.loginfo(self.planner_id)
                 self.group.set_planner_id(planner)
                 self._plan_joints(joints, self._annotations["name"]+"-test_"+str(test_id))
 

@@ -1,0 +1,5 @@
+<launch>
+    <node name="benchmark" pkg="sr_moveit_planner_benchmarking" type="benchmark_planners.py"
+          args="_data:=/home/user/projects/sat/src/sr_interface/sr_multi_moveit/sr_moveit_planner_benchmarking/data/test _results:=/tmp"
+          output="screen"/>
+</launch>

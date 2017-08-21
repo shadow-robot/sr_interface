@@ -8,10 +8,7 @@ scene:
 
 group_id: right_arm
 planners:
-  - ESTkConfigDefault
-  - PRMkConfigDefault
   - RRTkConfigDefault
-  - PRMstarkConfigDefault
   - RRTConnectkConfigDefault
 
 planning_attempts: 1

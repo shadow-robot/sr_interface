@@ -1,6 +1,6 @@
 <launch>
   <arg name="planning" default="ompl"/>
-  <arg name="visualization" default="False"/>
+  <arg name="visualization" default="True"/>
   <!--Should the planner yaml be automatically generated? -->
   <arg name="generate_planning_config" default="True"/>
 

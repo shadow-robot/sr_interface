@@ -1,4 +1,4 @@
-name: simplified_1
+name: simplified_1_3
 
 scene:
   - type: launch
@@ -8,15 +8,12 @@ scene:
 
 group_id: right_arm
 planners:
-  - ESTkConfigDefault
-  - PRMkConfigDefault
   - RRTkConfigDefault
-  - PRMstarkConfigDefault
   - RRTConnectkConfigDefault
 
-planning_attempts: 1
+planning_attempts: 10
 goal_tolerance: 0.005
-planning_time: 10
+planning_time: 1000
 allow_replanning: False
 
 tests:
