@@ -574,7 +574,7 @@ class SrRobotCommander(object):
         for controller_name in controller_list.keys():
             self._action_running[controller_name] = False
             self._clients[controller_name] = SimpleActionClient(controller_name+"/follow_joint_trajectory",
-                                                                          FollowJointTrajectoryAction)
+                                                                FollowJointTrajectoryAction)
             if self._clients[controller_name].wait_for_server(timeout=rospy.Duration(4)) is False:
                 rospy.logfatal("Failed to connect to action server in 4 sec")
                 raise Exception("Failed to connect to action server in 4 sec")
@@ -599,7 +599,7 @@ class SrRobotCommander(object):
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
                                     for joint, i in joint_states_cpy.items())
-            
+
         for controller in self._controllers:
             controller_joints = self._controllers[controller]
             goal = FollowJointTrajectoryGoal()
@@ -611,9 +611,9 @@ class SrRobotCommander(object):
                 if x in controller_joints:
                     goal.trajectory.joint_names.append(x)
                     point.positions.append(joint_states_cpy[x])
-        
+
             point.time_from_start = rospy.Duration.from_sec(time)
-            
+
             goal.trajectory.points = [point]
 
             goals[controller] = goal
@@ -630,7 +630,7 @@ class SrRobotCommander(object):
     def action_is_running(self, controller=None):
         if controller is not None:
             return self._action_running[controller]
-        
+
         for controller_running in self._action_running.values():
             if controller_running:
                 return True
@@ -643,7 +643,7 @@ class SrRobotCommander(object):
         for client in self._clients:
             self._action_running[client] = True
             self._clients[client].send_goal(
-                goals[client], lambda terminal_state, result : self._action_done_cb(client, terminal_state, result))
+                goals[client], lambda terminal_state, result: self._action_done_cb(client, terminal_state, result))
 
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
         """
@@ -657,7 +657,7 @@ class SrRobotCommander(object):
             controller_joints = self._controllers[controller]
             goal = FollowJointTrajectoryGoal()
             goal.trajectory = copy.deepcopy(joint_trajectory)
-        
+
             indices_of_joints_in_this_controller = []
 
             for i, joint in enumerate(joint_trajectory.joint_names):
@@ -671,7 +671,7 @@ class SrRobotCommander(object):
                 point.positions = [point.positions[i] for i in indices_of_joints_in_this_controller]
 
             goals[controller] = goal
-            
+
         self._call_action(goals)
 
         if not wait:
