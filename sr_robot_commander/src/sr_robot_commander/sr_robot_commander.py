@@ -551,6 +551,7 @@ class SrRobotCommander(object):
         message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z] or a list
         of 7 floats [x, y, z, qx, qy, qz, qw]
         @param end_effector_link - name of the end effector link
+        @param alternative_method - use set_joint_value_target instead of set_pose_target
         """
         self._move_group_commander.set_start_state_to_current_state()
         if alternative_method:
