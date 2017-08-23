@@ -543,7 +543,7 @@ class SrRobotCommander(object):
         self._move_group_commander.set_pose_target(pose, end_effector_link)
         self._move_group_commander.go(wait=wait)
 
-    def plan_to_pose_target(self, pose, end_effector_link=""):
+    def plan_to_pose_target(self, pose, end_effector_link="", alternative_method=False):
         """
         Specify a target pose for the end-effector and plans.
         This is a blocking method.
@@ -553,7 +553,10 @@ class SrRobotCommander(object):
         @param end_effector_link - name of the end effector link
         """
         self._move_group_commander.set_start_state_to_current_state()
-        self._move_group_commander.set_pose_target(pose, end_effector_link)
+        if alternative_method:
+            self._move_group_commander.set_joint_value_target(pose, end_effector_link)
+        else:
+            self._move_group_commander.set_pose_target(pose, end_effector_link)
         self.__plan = self._move_group_commander.plan()
         return self.__plan
 
