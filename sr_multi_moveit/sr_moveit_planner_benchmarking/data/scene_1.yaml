@@ -8,8 +8,9 @@ scene:
 
 group_id: right_arm
 planners:
-  - RRTkConfigDefault
   - RRTConnectkConfigDefault
+  - RRTkConfigDefault
+
 
 planning_attempts: 1
 goal_tolerance: 0.005
