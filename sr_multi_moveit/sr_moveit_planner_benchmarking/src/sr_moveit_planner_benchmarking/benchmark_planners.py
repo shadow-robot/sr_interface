@@ -11,6 +11,7 @@ from tabulate import tabulate
 from visualization_msgs.msg import Marker, MarkerArray
 import time
 import os
+import numpy
 
 
 class PlannerAnnotationParser(AnnotationParserBase):
@@ -96,6 +97,7 @@ class PlannerAnnotationParser(AnnotationParserBase):
 
             self.group.set_start_state(current)
             joints = test["goal_joints"]
+            # joints = test["goal_xyz"]
 
             for planner in self.planners:
                 if planner == "stomp":
@@ -171,21 +173,24 @@ class PlannerAnnotationParser(AnnotationParserBase):
         group_variable_values = self.group.get_current_joint_values()
         group_variable_values[0:6] = joints[0:6]
         self.group.set_joint_value_target(group_variable_values)
+        # self.group.set_position_target(joints)
 
         plan = self.group.plan()
         plan_time = "N/A"
         total_joint_rotation = "N/A"
         comp_time = "N/A"
+        plan_evaluation = "N/A"
 
         plan_success = self._check_plan_success(plan)
         if plan_success:
             plan_time = self._check_plan_time(plan)
             total_joint_rotation = self._check_plan_total_rotation(plan)
+            plan_evaluation = self.evaluate_plan(plan)
             while not self._comp_time:
                 rospy.sleep(0.5)
             comp_time = self._comp_time.pop(0)
         self.planner_data.append([self.planner_id, test_name, str(plan_success), plan_time, total_joint_rotation,
-                                  comp_time])
+                                  comp_time, plan_evaluation])
 
     @staticmethod
     def _check_plan_success(plan):
@@ -213,6 +218,21 @@ class PlannerAnnotationParser(AnnotationParserBase):
 
         total_angle_change = sum(angles)
         return total_angle_change
+
+    def evaluate_plan(self, plan):
+        num_of_joints = len(plan.joint_trajectory.points[0].positions)
+        weights = numpy.array(sorted(range(1, num_of_joints + 1), reverse=True))
+        plan_array = numpy.empty(shape=(len(plan.joint_trajectory.points),
+                                        num_of_joints))
+
+        for i, point in enumerate(plan.joint_trajectory.points):
+            plan_array[i] = point.positions
+
+        deltas = abs(numpy.diff(plan_array, axis=0))
+        sum_deltas = numpy.sum(deltas, axis=0)
+        sum_deltas_weighted = sum_deltas * weights
+        plan_quality = numpy.sum(sum_deltas_weighted)
+        return plan_quality
 
     def _check_computation_time(self, msg):
         # get computation time for successful plan to be found
@@ -251,8 +271,8 @@ class PlannerBenchmarking(BenchmarkingBase):
         # reformatting the results
         results = [item for sublist in results for item in sublist]
 
-        row_titles = ["Planner", "Plan name", "Plan succeeded", "Time of plan",
-                      "Total angle change", "Computation time"]
+        row_titles = ["Planner", "Plan name", "Plan succeeded", "Computation time (s)",
+                      "Total angle change", "Time of plan (s)", "Plan quality"]
         print(tabulate(results, headers=row_titles, tablefmt='orgtbl'))
 
         file_path = os.path.join(self._path_to_results, '')

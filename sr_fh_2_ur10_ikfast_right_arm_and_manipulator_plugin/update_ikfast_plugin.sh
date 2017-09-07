@@ -1,0 +1,1 @@
+rosrun moveit_kinematics create_ikfast_moveit_plugin.py ursrfh right_arm_and_manipulator fh_2_ur10_ikfast_right_arm_and_manipulator_plugin /home/user/projects/sat/src/sr_interface/fh_2_ur10_ikfast_right_arm_and_manipulator_plugin/src/ursrfh_right_arm_and_manipulator_ikfast_solver.cpp
