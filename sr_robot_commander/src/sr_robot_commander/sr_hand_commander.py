@@ -72,7 +72,7 @@ class SrHandCommander(SrRobotCommander):
             if prefix is None:
                 prefix = "rh_"
 
-        super(SrHandCommander, self).__init__(name, prefix)
+        super(SrHandCommander, self).__init__(name)
 
         if not self._hand_h:
             self._tactiles = TactileReceiver(prefix)
