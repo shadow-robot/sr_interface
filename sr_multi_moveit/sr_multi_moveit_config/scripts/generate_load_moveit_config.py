@@ -47,7 +47,7 @@ if __name__ == '__main__':
 
     # detect the command to be executed
     if len(sys.argv) > 2:
-        save_file = False
+        save_file = True
         command = sys.argv[1]
         robot_config_file = sys.argv[2]
         rospy.init_node('moveit_config_generator', anonymous=True)
