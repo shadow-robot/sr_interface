@@ -61,14 +61,9 @@ if __name__ == '__main__':
       robot_name = sys.argv[1]
       planning_group_name = sys.argv[2]
       moveit_plugin_pkg = sys.argv[3]
-      print robot_name
-      print planning_group_name
-      print moveit_plugin_pkg
       if len(sys.argv) == 6:
          ikfast_output_file = sys.argv[5]
          search_mode = sys.argv[4]
-         print ikfast_output_file
-         print search_mode
          if search_mode not in search_modes:
             print 'Invalid search mode. Allowed values: ', search_modes
             raise Exception()
@@ -76,9 +71,7 @@ if __name__ == '__main__':
          search_mode = search_modes[0]
          print "Warning: The default search has changed from OPTIMIZE_FREE_JOINT to now %s!" % (search_mode)
          ikfast_output_file = sys.argv[4]
-         print ikfast_output_file
       else:
-         print 'len:', len(sys.argv)
          raise Exception()
    except:
       print("\nUsage: create_ikfast_plugin.py <yourrobot_name> <planning_group_name> <moveit_plugin_pkg> [<search_mode>] <ikfast_output_path>\n")
@@ -104,7 +97,6 @@ if __name__ == '__main__':
    # Check for at least 1 planning group
    try:
       srdf_files = glob.glob(plan_pkg_dir+'/config/*.srdf')
-      print len(srdf_files)
       if (len(srdf_files) == 1):
          srdf_file_name = srdf_files[0]
       else:
