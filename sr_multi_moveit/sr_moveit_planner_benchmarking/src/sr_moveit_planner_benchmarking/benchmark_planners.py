@@ -44,8 +44,6 @@ class PlannerAnnotationParser(AnnotationParserBase):
 
         for element in scene:
             if element["type"] == "launch":
-                print "********:", element["name"]
-                print arm_kinematics_file_name
                 self.play_launch(element["name"] + " arm_kinematics_file_name:=" + arm_kinematics_file_name)
             elif element["type"] == "python":
                 self.load_python(element["name"])
