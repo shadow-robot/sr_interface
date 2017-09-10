@@ -53,3 +53,4 @@ sr_multi_moveit/sr_multi_moveit_config/config/controllers.yaml
 sr_multi_moveit/sr_multi_moveit_config/config/joint_limits.yaml
 sr_multi_moveit/sr_multi_moveit_config/config/kinematics.yaml
 sr_multi_moveit/sr_multi_moveit_config/config/ompl_planning.yaml
+sr_multi_moveit/sr_multi_moveit_config/config/fake_controllers.yaml

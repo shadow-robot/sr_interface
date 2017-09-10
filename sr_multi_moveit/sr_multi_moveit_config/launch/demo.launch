@@ -16,7 +16,7 @@
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro'"/>
 
   <!-- Kinematics file for the arm -->
-  <arg name="kinematics_file_name" default="kinematics.yaml"/>
+  <arg name="arm_kinematics_file_name" default="kinematics.yaml"/>
   
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <include file="$(find sr_multi_moveit_config)/launch/planning_context.launch">
