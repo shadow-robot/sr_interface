@@ -16,6 +16,8 @@ planning_attempts: 1
 goal_tolerance: 0.005
 planning_time: 10
 allow_replanning: False
+arm_kinematics_file_name: kinematics_ikfast.yaml
+
 
 tests:
   - start_joints: [0.11, 0.00, -0.93, -2.22, -1.71, -1.68]

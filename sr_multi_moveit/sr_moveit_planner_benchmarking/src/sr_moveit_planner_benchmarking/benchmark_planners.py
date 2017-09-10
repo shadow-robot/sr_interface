@@ -40,10 +40,13 @@ class PlannerAnnotationParser(AnnotationParserBase):
         It can be either a python static scene or bag containing an occupancy map.
         """
         scene = self._annotations["scene"]
+        arm_kinematics_file_name = self._annotations["arm_kinematics_file_name"]
 
         for element in scene:
             if element["type"] == "launch":
-                self.play_launch(element["name"])
+                print "********:", element["name"]
+                print arm_kinematics_file_name
+                self.play_launch(element["name"] + " arm_kinematics_file_name:=" + arm_kinematics_file_name)
             elif element["type"] == "python":
                 self.load_python(element["name"])
             elif element["type"] == "bag":
