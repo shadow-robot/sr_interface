@@ -14,12 +14,16 @@
 
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro'"/>
+
+  <!-- Kinematics file for the arm -->
+  <arg name="kinematics_file_name" default="kinematics.yaml"/>
   
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <include file="$(find sr_multi_moveit_config)/launch/planning_context.launch">
     <arg name="load_robot_description" value="true"/>
     <arg name="robot_description" value="$(arg robot_description)"/>
     <arg name="robot_config_file" value="$(arg robot_config_file)"/>
+    <arg name="arm_kinematics_file_name" value="$(arg arm_kinematics_file_name)"/>
   </include>
 
   <!-- Broadcast static tf for robot root -->
@@ -43,6 +47,7 @@
     publish_monitored_planning_scene:=true
     pipeline:=$(arg planning)
     generate_planning_config:=$(arg generate_planning_config)
+    arm_kinematics_file_name:=$(arg arm_kinematics_file_name)
     robot_config_file:=$(arg robot_config_file)" name="timed_roslaunch" output="screen"/>
 
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
@@ -50,6 +55,7 @@
     <arg name="config" value="true"/>
     <arg name="debug" value="$(arg debug)"/>
     <arg name="robot_config_file" value="$(arg robot_config_file)"/>
+    <arg name="arm_kinematics_file_name" value="$(arg arm_kinematics_file_name)"/>
   </include>
 
   <!-- If database loading was enabled, start mongodb as well -->
