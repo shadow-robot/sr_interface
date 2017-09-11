@@ -5,6 +5,7 @@ import rospy
 from moveit_commander import (MoveGroupCommander, PlanningSceneInterface,
                               RobotCommander)
 from moveit_msgs.msg import MoveGroupActionResult, RobotState
+from geometry_msgs.msg import Pose
 from sr_benchmarking.sr_benchmarking import (AnnotationParserBase,
                                              BenchmarkingBase)
 from tabulate import tabulate
@@ -96,8 +97,10 @@ class PlannerAnnotationParser(AnnotationParserBase):
             current.joint_state.position = current_joints
 
             self.group.set_start_state(current)
-            joints = test["goal_joints"]
-            # joints = test["goal_xyz"]
+            # joints = test["goal_joints"]
+            position = test["goal_xyz"]
+            orientation = test["goal_orientation"]
+            pose = self.create_pose(position, orientation)
 
             for planner in self.planners:
                 if planner == "stomp":
@@ -107,9 +110,23 @@ class PlannerAnnotationParser(AnnotationParserBase):
                 self.planner_id = planner
                 rospy.loginfo(self.planner_id)
                 self.group.set_planner_id(planner)
-                self._plan_joints(joints, self._annotations["name"]+"-test_"+str(test_id))
+                self._plan_joints(pose, self._annotations["name"]+"-test_"+str(test_id))
+                rospy.loginfo('goal position {}'.format(marker_position_2))
+                rospy.loginfo('current pose {}'.format(self.group.get_current_pose()))
 
         return self.planner_data
+
+    def create_pose(self, position, orientation):
+        pose = Pose()
+        pose.position.x = position[0]
+        pose.position.y = position[1]
+        pose.position.z = position[2]
+
+        pose.orientation.x = orientation[0]
+        pose.orientation.y = orientation[1]
+        pose.orientation.z = orientation[2]
+        pose.orientation.w = orientation[3]
+        return pose
 
     def _add_markers(self, point, text1, point_2, text2):
         # add marker for start and goal pose of EE
@@ -170,12 +187,14 @@ class PlannerAnnotationParser(AnnotationParserBase):
     def _plan_joints(self, joints, test_name):
         # plan to joint target and determine success
         self.group.clear_pose_targets()
-        group_variable_values = self.group.get_current_joint_values()
-        group_variable_values[0:6] = joints[0:6]
-        self.group.set_joint_value_target(group_variable_values)
+        # group_variable_values = self.group.get_current_joint_values()
+        # group_variable_values[0:6] = joints[0:6]
+        # self.group.set_joint_value_target(group_variable_values)
+        self.group.set_joint_value_target(joints)
         # self.group.set_position_target(joints)
 
         plan = self.group.plan()
+        # rospy.loginfo('plan: {}'.format(plan))
         plan_time = "N/A"
         total_joint_rotation = "N/A"
         comp_time = "N/A"
@@ -183,6 +202,8 @@ class PlannerAnnotationParser(AnnotationParserBase):
 
         plan_success = self._check_plan_success(plan)
         if plan_success:
+            rospy.loginfo('success')
+            # self.group.execute(plan, wait=True)
             plan_time = self._check_plan_time(plan)
             total_joint_rotation = self._check_plan_total_rotation(plan)
             plan_evaluation = self.evaluate_plan(plan)
