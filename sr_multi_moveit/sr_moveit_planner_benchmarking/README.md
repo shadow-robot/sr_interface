@@ -8,7 +8,7 @@ Different scenes can be found in the **data/inactive_tests** folder. To include 
 To run all the benchmarkings, simply launch:
 
 ```
-roslaunch sr_moveit_planner_benchmarking test_bench.py
+roslaunch sr_moveit_planner_benchmarking test_bench.launch
 ```
 To visualise the tests in Rviz, set the visualisation argument in launch/benchmarking.launch to 'True'.
 

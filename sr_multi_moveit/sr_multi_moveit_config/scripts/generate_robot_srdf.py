@@ -332,8 +332,7 @@ class SRDFRobotGenerator(object):
                                                                                  manipulator.arm.internal_name + '"')
                         else:
                             arm_group = xml.dom.minidom.Document().createElement('group name="' +
-                                                                                 manipulator.arm.internal_name +
-                                                                                 '_and_wrist' + '"')
+                                                                                 manipulator.arm.internal_name + '"')
                         new_group.appendChild(arm_group)
                         hand_group = xml.dom.minidom.Document().createElement('group name="' +
                                                                               manipulator.hand.internal_name + '"')
@@ -397,25 +396,23 @@ class SRDFRobotGenerator(object):
         elt = next_element(previous)
         while elt:
             if elt.tagName == 'end_effector':
-                elt.getAttributeNode("name").nodeValue = manipulator.arm.prefix + elt.getAttribute("name")
+                elt.getAttributeNode("name").nodeValue = manipulator.arm.internal_name + "_ee"
                 elt.getAttributeNode("parent_link").nodeValue = (manipulator.arm.prefix +
                                                                  elt.getAttribute("parent_link"))
-                elt.getAttributeNode("group").nodeValue = manipulator.arm.internal_name
+                elt.getAttributeNode("group").nodeValue = manipulator.hand.internal_name
+                elt.setAttribute('parent_group', manipulator.arm.internal_name)
                 elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
                 newElement = deepcopy(elt)
-                newElement.getAttributeNode("name").nodeValue = manipulator.arm.internal_name + "_and_wrist_ee"
-                newElement.getAttributeNode("parent_link").nodeValue = manipulator.arm.prefix + "base_link"
-                newElement.getAttributeNode("group").nodeValue = manipulator.arm.internal_name + "_and_wrist"
+                newElement.getAttributeNode("name").nodeValue = manipulator.arm.prefix + "and_wrist_ee"
+                newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "palm"
+                newElement.getAttributeNode("group").nodeValue = manipulator.hand.prefix + "fingers"
+                newElement.setAttribute('parent_group',  manipulator.arm.internal_name + "_and_wrist")
                 newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
                 newElement = deepcopy(elt)
-                newElement.getAttributeNode("name").nodeValue = manipulator.arm.internal_name + "_and_manipulator_ee"
-                newElement.getAttributeNode("parent_link").nodeValue = manipulator.arm.prefix + "base_link"
-                newElement.getAttributeNode("group").nodeValue = manipulator.arm.internal_name + "_and_manipulator"
-                newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
-                newElement = deepcopy(elt)
-                newElement.getAttributeNode("name").nodeValue = manipulator.arm.internal_name + "_and_hand_ee"
-                newElement.getAttributeNode("parent_link").nodeValue = manipulator.arm.prefix + "base_link"
-                newElement.getAttributeNode("group").nodeValue = manipulator.arm.internal_name + "_and_hand"
+                newElement.getAttributeNode("name").nodeValue = manipulator.arm.prefix + "and_manipulator_ee"
+                newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "manipulator"
+                newElement.getAttributeNode("group").nodeValue = manipulator.hand.prefix + "fingers"
+                newElement.setAttribute('parent_group', manipulator.arm.internal_name + "_and_manipulator")
                 newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
             previous = elt
             elt = next_element(previous)

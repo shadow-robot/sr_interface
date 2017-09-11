@@ -10,10 +10,13 @@
   
   <!-- The name of the robot config file to load -->
   <arg name="robot_config_file" default=""/>
+
+  <!-- Kinematics file for the arm -->
+  <arg name="arm_kinematics_file_name" default="kinematics.yaml"/>
   
   <node name="$(anon rviz)" launch-prefix="$(arg launch_prefix)" pkg="rviz" type="rviz" respawn="false" args="$(arg command_args)" output="screen"/>
   <group ns="$(anon rviz)">
-    <node name="load_kinematics" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="kinematics $(arg robot_config_file)" />
+    <node name="load_kinematics" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="kinematics $(arg robot_config_file) $(arg arm_kinematics_file_name)" />
   </group>
 
 </launch>

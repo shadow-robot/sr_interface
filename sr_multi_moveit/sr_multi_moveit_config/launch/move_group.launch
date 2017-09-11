@@ -24,6 +24,9 @@
   <!--Should the planner yaml be automatically generated? -->
   <arg name="generate_planning_config" default="True"/>
 
+  <!-- Kinematics file for the arm -->
+  <arg name="arm_kinematics_file_name" default="kinematics.yaml"/>
+
   <!-- Planning Functionality -->
   <include ns="move_group" file="$(find sr_multi_moveit_config)/launch/planning_pipeline.launch.xml">
     <arg name="pipeline" value="$(arg pipeline)" />
@@ -33,7 +36,7 @@
 
   <!-- Inverse Kinematics -->
   <group ns="move_group">
-    <node name="load_kinematics" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" args="kinematics $(arg robot_config_file)" />
+    <node name="load_kinematics" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" args="kinematics $(arg robot_config_file) $(arg arm_kinematics_file_name)" />
   </group>
 
   <!-- Trajectory Execution Functionality -->
