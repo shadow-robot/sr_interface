@@ -672,11 +672,11 @@ class SrRobotCommander(object):
                 joint_trajectory.joint_names[i] for i in indices_of_joints_in_this_controller]
 
             for point in goal.trajectory.points:
-                if point.positions is not None:
+                if point.positions:
                     point.positions = [point.positions[i] for i in indices_of_joints_in_this_controller]
-                if point.velocities is not None:
+                if point.velocities:
                     point.velocities = [point.velocities[i] for i in indices_of_joints_in_this_controller]
-                if point.effort is not None:
+                if point.effort:
                     point.effort = [point.effort[i] for i in indices_of_joints_in_this_controller]
 
             goals[controller] = goal
