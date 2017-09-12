@@ -105,6 +105,7 @@
         robot_hardware:
           - unique_robot_hw
           - ra_sr_ur_robot_hw
+          - la_sr_ur_robot_hw
       </rosparam>
       <rosparam command="load" file="$(arg arm_robot_hw_1)"/>
       <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
