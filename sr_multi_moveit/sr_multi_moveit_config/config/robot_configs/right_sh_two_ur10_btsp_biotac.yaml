@@ -20,6 +20,8 @@ robot:
       arm:
         name: ur10
         main_group: manipulator
+        other_groups:
+          - endeffector
         moveit_path:
           package: sr_multi_moveit_config
           relative_path: /config/ur

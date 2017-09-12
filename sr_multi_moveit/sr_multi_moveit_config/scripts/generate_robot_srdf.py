@@ -415,6 +415,14 @@ class SRDFRobotGenerator(object):
                     newElement.getAttributeNode("group").nodeValue = manipulator.hand.prefix + "fingers"
                     newElement.setAttribute('parent_group', manipulator.arm.internal_name + "_and_manipulator")
                     newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
+                else:
+                    elt.getAttributeNode("name").nodeValue = manipulator.arm.internal_name + "_ee"
+                    elt.getAttributeNode("parent_link").nodeValue = (manipulator.arm.prefix +
+                                                                     elt.getAttribute("parent_link"))
+                    elt.getAttributeNode("group").nodeValue = (manipulator.arm.prefix +
+                                                               elt.getAttribute("group"))
+                    elt.setAttribute('parent_group', manipulator.arm.internal_name)
+                    elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
             previous = elt
             elt = next_element(previous)
 
