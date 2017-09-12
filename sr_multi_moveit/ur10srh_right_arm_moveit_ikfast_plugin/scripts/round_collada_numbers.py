@@ -80,7 +80,7 @@ if __name__ == '__main__':
 
     # Read string from file
     f = open(input_file, 'r')
-    xml = f.read();
+    xml = f.read()
 
     # Parse XML
     # doc = etree.fromstring(xml)
