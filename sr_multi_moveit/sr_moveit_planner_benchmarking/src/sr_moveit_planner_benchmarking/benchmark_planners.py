@@ -110,6 +110,8 @@ class PlannerAnnotationParser(AnnotationParserBase):
                 position = test["goal_xyz"]
                 orientation = test["goal_orientation"]
                 coordinates = self.create_pose(position, orientation)
+            elif self.space == "position":
+                coordinates = test["goal_xyz"]
 
             for planner in self.planners:
                 if planner == "stomp":
@@ -202,8 +204,8 @@ class PlannerAnnotationParser(AnnotationParserBase):
             self.group.set_joint_value_target(group_variable_values)
         elif self.space == "pose":
             self.group.set_joint_value_target(joints)
-        # elif self.space == "position":
-        #     self.group.set_position_target(joints)
+        elif self.space == "position":
+            self.group.set_position_target(joints)
 
         plan = self.group.plan()
         # rospy.loginfo('plan: {}'.format(plan))
