@@ -14,6 +14,8 @@ import time
 import os
 import numpy
 
+KINEMATICS = ""
+
 
 class PlannerAnnotationParser(AnnotationParserBase):
     """
@@ -77,6 +79,9 @@ class PlannerAnnotationParser(AnnotationParserBase):
         self.group.set_planning_time(self._annotations["planning_time"])
         self.group.allow_replanning(self._annotations["allow_replanning"])
 
+        global KINEMATICS
+        KINEMATICS = self._annotations["arm_kinematics_file_name"]
+
         self._comp_time = []
 
         self.planner_data = []
@@ -85,6 +90,7 @@ class PlannerAnnotationParser(AnnotationParserBase):
         for test_id, test in enumerate(self._annotations["tests"]):
             marker_position_1 = test["start_xyz"]
             marker_position_2 = test["goal_xyz"]
+            self.space = test["space"]
 
             self._add_markers(marker_position_1, "Start test \n sequence", marker_position_2, "Goal")
 
@@ -98,10 +104,12 @@ class PlannerAnnotationParser(AnnotationParserBase):
             current.joint_state.position = current_joints
 
             self.group.set_start_state(current)
-            # joints = test["goal_joints"]
-            position = test["goal_xyz"]
-            orientation = test["goal_orientation"]
-            pose = self.create_pose(position, orientation)
+            if self.space == "joint":
+                coordinates = test["goal_joints"]
+            elif self.space == "pose":
+                position = test["goal_xyz"]
+                orientation = test["goal_orientation"]
+                coordinates = self.create_pose(position, orientation)
 
             for planner in self.planners:
                 if planner == "stomp":
@@ -111,9 +119,9 @@ class PlannerAnnotationParser(AnnotationParserBase):
                 self.planner_id = planner
                 rospy.loginfo(self.planner_id)
                 self.group.set_planner_id(planner)
-                self._plan_joints(pose, self._annotations["name"]+"-test_"+str(test_id))
-                rospy.loginfo('goal position {}'.format(marker_position_2))
-                rospy.loginfo('current pose {}'.format(self.group.get_current_pose()))
+                self._plan_joints(coordinates, self._annotations["name"]+"-test_"+str(test_id)+"-"+self.space)
+                # rospy.loginfo('goal position {}'.format(marker_position_2))
+                # rospy.loginfo('current pose {}'.format(self.group.get_current_pose()))
 
         return self.planner_data
 
@@ -188,11 +196,14 @@ class PlannerAnnotationParser(AnnotationParserBase):
     def _plan_joints(self, joints, test_name):
         # plan to joint target and determine success
         self.group.clear_pose_targets()
-        # group_variable_values = self.group.get_current_joint_values()
-        # group_variable_values[0:6] = joints[0:6]
-        # self.group.set_joint_value_target(group_variable_values)
-        self.group.set_joint_value_target(joints)
-        # self.group.set_position_target(joints)
+        if self.space == "joint":
+            group_variable_values = self.group.get_current_joint_values()
+            group_variable_values[0:6] = joints[0:6]
+            self.group.set_joint_value_target(group_variable_values)
+        elif self.space == "pose":
+            self.group.set_joint_value_target(joints)
+        # elif self.space == "position":
+        #     self.group.set_position_target(joints)
 
         plan = self.group.plan()
         # rospy.loginfo('plan: {}'.format(plan))
@@ -211,8 +222,8 @@ class PlannerAnnotationParser(AnnotationParserBase):
             while not self._comp_time:
                 rospy.sleep(0.5)
             comp_time = self._comp_time.pop(0)
-        self.planner_data.append([self.planner_id, test_name, str(plan_success), plan_time, total_joint_rotation,
-                                  comp_time, plan_evaluation])
+        self.planner_data.append([self.planner_id, test_name, str(plan_success), total_joint_rotation,
+                                 plan_evaluation, comp_time, plan_time])
 
     @staticmethod
     def _check_plan_success(plan):
@@ -293,15 +304,20 @@ class PlannerBenchmarking(BenchmarkingBase):
         # reformatting the results
         results = [item for sublist in results for item in sublist]
 
-        row_titles = ["Planner", "Plan name", "Plan succeeded", "Computation time (s)",
-                      "Total angle change", "Time of plan (s)", "Plan quality"]
+        row_titles = ["Planner", "Plan name", "Plan succeeded", "Total angle change",
+                      "Plan quality", "Time of plan (s)", "Computation time (s)"]
         print(tabulate(results, headers=row_titles, tablefmt='orgtbl'))
+        global KINEMATICS
 
         file_path = os.path.join(self._path_to_results, '')
         file_path += time.strftime("%Y_%m_%d-%H_%M_%S")
+        if KINEMATICS == "kinematics.yaml":
+            file_path += "-trackik"
+        elif KINEMATICS == "kinematics_ikfast.yaml":
+            file_path += "-ikfast"
         file_path += "-planner_benchmark.xml"
         with open(file_path, 'w') as f:
-            f.write(tabulate(results, headers=row_titles, tablefmt="html"))
+            f.write(tabulate(results, headers=row_titles, tablefmt="simple"))  # ="html"))
 
 
 if __name__ == '__main__':
