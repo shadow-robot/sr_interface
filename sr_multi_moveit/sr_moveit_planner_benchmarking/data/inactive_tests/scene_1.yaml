@@ -8,13 +8,17 @@ scene:
 
 group_id: right_arm
 planners:
+  - BKPIECEkConfigDefault
   - ESTkConfigDefault
+  - KPIECEkConfigDefault
+  - LBKPIECEkConfigDefault
   - PRMkConfigDefault
   - RRTkConfigDefault
+  - SBLkConfigDefault
   - PRMstarkConfigDefault
-  - RRTConnectkConfigDefault
+  - RRTstarkConfigDefault
 
-planning_attempts: 1
+planning_attempts: 10
 goal_tolerance: 0.005
 planning_time: 10
 allow_replanning: False
