@@ -119,11 +119,8 @@ class PlannerAnnotationParser(AnnotationParserBase):
                 elif planner == "sbpl":
                     planner = "AnytimeD*"
                 self.planner_id = planner
-                rospy.loginfo(self.planner_id)
                 self.group.set_planner_id(planner)
                 self._plan_joints(coordinates, self._annotations["name"]+"-test_"+str(test_id)+"-"+self.space)
-                # rospy.loginfo('goal position {}'.format(marker_position_2))
-                # rospy.loginfo('current pose {}'.format(self.group.get_current_pose()))
 
         return self.planner_data
 
@@ -208,7 +205,6 @@ class PlannerAnnotationParser(AnnotationParserBase):
             self.group.set_position_target(joints)
 
         plan = self.group.plan()
-        # rospy.loginfo('plan: {}'.format(plan))
         plan_time = "N/A"
         total_joint_rotation = "N/A"
         comp_time = "N/A"
@@ -216,7 +212,6 @@ class PlannerAnnotationParser(AnnotationParserBase):
 
         plan_success = self._check_plan_success(plan)
         if plan_success:
-            rospy.loginfo('success')
             # self.group.execute(plan, wait=True)
             plan_time = self._check_plan_time(plan)
             total_joint_rotation = self._check_plan_total_rotation(plan)
