@@ -50,6 +50,9 @@
 #include <moveit/kinematics_base/kinematics_base.h>
 #include <urdf/model.h>
 #include <tf_conversions/tf_kdl.h>
+#include <map>
+#include <string>
+#include <vector>
 
 // Need a floating point tolerance when checking joint limits, in case the joint starts at limit
 const double LIMIT_TOLERANCE = .0000001;
@@ -486,7 +489,7 @@ int IKFastKinematicsPlugin::solve(KDL::Frame& pose_frame, const std::vector<doub
   solutions.Clear();
 
   double trans[3];
-  trans[0] = pose_frame.p[0];  //-.18;
+  trans[0] = pose_frame.p[0];  // -.18;
   trans[1] = pose_frame.p[1];
   trans[2] = pose_frame.p[2];
 
@@ -877,8 +880,8 @@ bool IKFastKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose& ik_pose
     double max_limit = fmin(joint_max_vector_[free_params_[0]], initial_guess + consistency_limits[free_params_[0]]);
     double min_limit = fmax(joint_min_vector_[free_params_[0]], initial_guess - consistency_limits[free_params_[0]]);
 
-    num_positive_increments = (int)((max_limit - initial_guess) / search_discretization_);
-    num_negative_increments = (int)((initial_guess - min_limit) / search_discretization_);
+    num_positive_increments = static_cast<int>((max_limit - initial_guess) / search_discretization_);
+    num_negative_increments = static_cast<int>((initial_guess - min_limit) / search_discretization_);
   }
   else  // no consitency limits provided
   {
@@ -1256,7 +1259,7 @@ bool IKFastKinematicsPlugin::sampleRedundantJoint(kinematics::DiscretizationMeth
   return true;
 }
 
-}  // end namespace
+}  // end ikfast_kinematics_plugin
 
 // register IKFastKinematicsPlugin as a KinematicsBase implementation
 #include <pluginlib/class_list_macros.h>
