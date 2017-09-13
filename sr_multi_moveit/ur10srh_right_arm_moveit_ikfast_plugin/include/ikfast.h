@@ -36,8 +36,8 @@
 #include <list>
 #include <stdexcept>
 
-#ifndef IKFAST_HEADER_COMMON
-#define IKFAST_HEADER_COMMON
+#ifndef IKFAST_H
+#define IKFAST_H
 
 /// should be the same as ikfast.__version__
 #define IKFAST_VERSION 61
@@ -375,4 +375,4 @@ IKFAST_API const char* GetKinematicsHash();
 }  // namespace IKFAST_NAMESPACE
 #endif
 
-#endif  // IKFAST_HAS_LIBRARY
+#endif  // IKFAST_H

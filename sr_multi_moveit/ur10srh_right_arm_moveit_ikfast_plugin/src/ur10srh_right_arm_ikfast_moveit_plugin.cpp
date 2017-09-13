@@ -317,7 +317,6 @@ private:
   * @return True if sampling succeeded.
   */
   bool sampleRedundantJoint(kinematics::DiscretizationMethod method, std::vector<double>& sampled_joint_vals) const;
-
 };  // end class
 
 bool IKFastKinematicsPlugin::initialize(const std::string& robot_description, const std::string& group_name,
@@ -1259,7 +1258,7 @@ bool IKFastKinematicsPlugin::sampleRedundantJoint(kinematics::DiscretizationMeth
   return true;
 }
 
-}  // end ikfast_kinematics_plugin
+}  // namespace ikfast_kinematics_plugin
 
 // register IKFastKinematicsPlugin as a KinematicsBase implementation
 #include <pluginlib/class_list_macros.h>
