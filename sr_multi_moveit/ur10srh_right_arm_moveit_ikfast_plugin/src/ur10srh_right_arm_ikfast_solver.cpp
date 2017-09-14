@@ -46,7 +46,7 @@ IKFAST_COMPILE_ASSERT(IKFAST_VERSION == 0x10000049);
 #define __PRETTY_FUNCTION__ __func__
 #endif
 
-#define IKFAST_ASSERT(b) { if( !(b) ) { std::stringstream ss; ss << "ikfast exception: " << __FILE__ << ":" << __LINE__ << ": " <<__PRETTY_FUNCTION__ << ": Assertion '" << #b << "' failed"; throw std::runtime_error(ss.str()); } }
+#define IKFAST_ASSERT(b) { if ( !(b) ) { std::stringstream ss; ss << "ikfast exception: " << __FILE__ << ":" << __LINE__ << ": " <<__PRETTY_FUNCTION__ << ": Assertion '" << #b << "' failed"; throw std::runtime_error(ss.str()); } }
 
 #endif
 
@@ -144,16 +144,16 @@ inline float IKasin(float f)
 {
     IKFAST_ASSERT(f > -1 - IKFAST_SINCOS_THRESH
                   && f < 1 + IKFAST_SINCOS_THRESH);  // any more error implies something is wrong with the solver
-    if(f <= -1) return float (-IKPI_2);
-    else if(f >= 1) return float (IKPI_2);
+    if (f <= -1) return float (-IKPI_2);
+    else if (f >= 1) return float (IKPI_2);
     return asinf(f);
 }
 inline double IKasin(double f)
 {
     IKFAST_ASSERT(f > -1 - IKFAST_SINCOS_THRESH
                   && f < 1 + IKFAST_SINCOS_THRESH);  // any more error implies something is wrong with the solver
-    if(f <= -1) return -IKPI_2;
-    else if(f >= 1) return IKPI_2;
+    if (f <= -1) return -IKPI_2;
+    else if (f >= 1) return IKPI_2;
     return asin(f);
 }
 
@@ -181,16 +181,16 @@ inline float IKacos(float f)
 {
     IKFAST_ASSERT(f > -1 - IKFAST_SINCOS_THRESH
                   && f < 1 + IKFAST_SINCOS_THRESH);  // any more error implies something is wrong with the solver
-    if(f <= -1) return float (IKPI);
-    else if(f >= 1) return float (0);
+    if (f <= -1) return float (IKPI);
+    else if (f >= 1) return float (0);
     return acosf(f);
 }
 inline double IKacos(double f)
 {
     IKFAST_ASSERT(f > -1 - IKFAST_SINCOS_THRESH
                   && f < 1 + IKFAST_SINCOS_THRESH);  // any more error implies something is wrong with the solver
-    if(f <= -1) return IKPI;
-    else if(f >= 1) return 0;
+    if (f <= -1) return IKPI;
+    else if (f >= 1) return 0;
     return acos(f);
 }
 inline float IKsin(float f)
@@ -219,12 +219,12 @@ inline double IKtan(double f)
 }
 inline float IKsqrt(float f)
 {
-    if(f <= 0.0f) return 0.0f;
+    if (f <= 0.0f) return 0.0f;
     return sqrtf(f);
 }
 inline double IKsqrt(double f)
 {
-    if(f <= 0.0) return 0.0;
+    if (f <= 0.0) return 0.0;
     return sqrt(f);
 }
 inline float IKatan2Simple(float fy, float fx)
@@ -233,12 +233,12 @@ inline float IKatan2Simple(float fy, float fx)
 }
 inline float IKatan2(float fy, float fx)
 {
-    if(isnan(fy))
+    if (isnan(fy))
     {
         IKFAST_ASSERT(!isnan(fx));  // if both are nan, probably wrong value will be returned
         return float (IKPI_2);
     }
-    else if(isnan(fx))
+    else if (isnan(fx))
     {
         return 0;
     }
@@ -250,12 +250,12 @@ inline double IKatan2Simple(double fy, double fx)
 }
 inline double IKatan2(double fy, double fx)
 {
-    if(isnan(fy))
+    if (isnan(fy))
     {
         IKFAST_ASSERT(!isnan(fx));  // if both are nan, probably wrong value will be returned
         return IKPI_2;
     }
-    else if(isnan(fx))
+    else if (isnan(fx))
     {
         return 0;
     }
@@ -275,9 +275,9 @@ inline CheckValue<T> IKatan2WithCheck(T fy, T fx, T epsilon)
     CheckValue<T> ret;
     ret.valid = false;
     ret.value = 0;
-    if(!isnan(fy) && !isnan(fx))
+    if (!isnan(fy) && !isnan(fx))
     {
-        if(IKabs(fy) >= IKFAST_ATAN2_MAGTHRESH || IKabs(fx) > IKFAST_ATAN2_MAGTHRESH)
+        if (IKabs(fy) >= IKFAST_ATAN2_MAGTHRESH || IKabs(fx) > IKFAST_ATAN2_MAGTHRESH)
         {
             ret.value = IKatan2Simple(fy, fx);
             ret.valid = true;
@@ -288,11 +288,11 @@ inline CheckValue<T> IKatan2WithCheck(T fy, T fx, T epsilon)
 
 inline float IKsign(float f)
 {
-    if(f > 0)
+    if (f > 0)
     {
         return float (1);
     }
-    else if(f < 0)
+    else if (f < 0)
     {
         return float (-1);
     }
@@ -301,11 +301,11 @@ inline float IKsign(float f)
 
 inline double IKsign(double f)
 {
-    if(f > 0)
+    if (f > 0)
     {
         return 1.0;
     }
-    else if(f < 0)
+    else if (f < 0)
     {
         return -1.0;
     }
@@ -317,25 +317,25 @@ inline CheckValue<T> IKPowWithIntegerCheck(T f, int n)
 {
     CheckValue<T> ret;
     ret.valid = true;
-    if(n == 0)
+    if (n == 0)
     {
         ret.value = 1.0;
         return ret;
     }
-    else if(n == 1)
+    else if (n == 1)
     {
         ret.value = f;
         return ret;
     }
-    else if(n < 0)
+    else if (n < 0)
     {
-        if(f == 0)
+        if (f == 0)
         {
             ret.valid = false;
             ret.value = (T) 1.0e30;
             return ret;
         }
-        if(n == -1)
+        if (n == -1)
         {
             ret.value = T(1.0) / f;
             return ret;
@@ -343,11 +343,11 @@ inline CheckValue<T> IKPowWithIntegerCheck(T f, int n)
     }
 
     int num = n > 0 ? n : -n;
-    if(num == 2)
+    if (num == 2)
     {
         ret.value = f * f;
     }
-    else if(num == 3)
+    else if (num == 3)
     {
         ret.value = f * f * f;
     }
@@ -356,7 +356,7 @@ inline CheckValue<T> IKPowWithIntegerCheck(T f, int n)
         ret.value = 1.0;
         while(num > 0)
         {
-            if(num & 1)
+            if (num & 1)
             {
                 ret.value *= f;
             }
@@ -365,7 +365,7 @@ inline CheckValue<T> IKPowWithIntegerCheck(T f, int n)
         }
     }
 
-    if(n < 0)
+    if (n < 0)
     {
         ret.value = T(1.0) / ret.value;
     }
@@ -839,7 +839,7 @@ public:
             matrixinvcoeffs[253] = x61;
             matrixinvcoeffs[254] = 0;
             matrixinvcoeffs[255] = x63;
-            if(!matrixinverse<16> (matrixinvcoeffs))
+            if (!matrixinverse<16> (matrixinvcoeffs))
             {
                 continue;
             }
@@ -2031,14 +2031,14 @@ public:
                            for(int ij8 = 0; ij8 < numroots; ij8 += 3)
         {
             IkReal htj8 = zeror[ij8 + 0], htj7 = zeror[ij8 + 1], htj10 = zeror[ij8 + 2];
-                if(isnan(htj8) || isnan(htj7) || isnan(htj10))
+                if (isnan(htj8) || isnan(htj7) || isnan(htj10))
                 {
                     continue;
                 }
                 j8array[numsolutions] = ((2.0) * (atan(htj8)));
                 j7array[numsolutions] = ((2.0) * (atan(htj7)));
                 j10array[numsolutions] = ((2.0) * (atan(htj10)));
-                if(isinf(htj8))
+                if (isinf(htj8))
                 {
                     cj8array[numsolutions] = IKcos(j8array[numsolutions]);
                     sj8array[numsolutions] = IKsin(j8array[numsolutions]);
@@ -2047,19 +2047,19 @@ public:
                 {
                     IkReal x905 = htj8 * htj8;
                     CheckValue<IkReal> x906 = IKPowWithIntegerCheck(((1.0) + x905), -1);
-                    if(!x906.valid)
+                    if (!x906.valid)
                     {
                         continue;
                     }
                     cj8array[numsolutions] = ((x906.value) * (((1.0) + (((-1.0) * x905)))));
                     CheckValue<IkReal> x907 = IKPowWithIntegerCheck(((1.0) + (htj8 * htj8)), -1);
-                    if(!x907.valid)
+                    if (!x907.valid)
                     {
                         continue;
                     }
                     sj8array[numsolutions] = ((2.0) * htj8 * (x907.value));
                 }
-                if(isinf(htj7))
+                if (isinf(htj7))
                 {
                     cj7array[numsolutions] = IKcos(j7array[numsolutions]);
                     sj7array[numsolutions] = IKsin(j7array[numsolutions]);
@@ -2068,19 +2068,19 @@ public:
                 {
                     IkReal x908 = htj7 * htj7;
                     CheckValue<IkReal> x909 = IKPowWithIntegerCheck(((1.0) + x908), -1);
-                    if(!x909.valid)
+                    if (!x909.valid)
                     {
                         continue;
                     }
                     cj7array[numsolutions] = ((x909.value) * (((1.0) + (((-1.0) * x908)))));
                     CheckValue<IkReal> x910 = IKPowWithIntegerCheck(((1.0) + (htj7 * htj7)), -1);
-                    if(!x910.valid)
+                    if (!x910.valid)
                     {
                         continue;
                     }
                     sj7array[numsolutions] = ((2.0) * htj7 * (x910.value));
                 }
-                if(isinf(htj10))
+                if (isinf(htj10))
                 {
                     cj10array[numsolutions] = IKcos(j10array[numsolutions]);
                     sj10array[numsolutions] = IKsin(j10array[numsolutions]);
@@ -2089,39 +2089,39 @@ public:
                 {
                     IkReal x911 = htj10 * htj10;
                     CheckValue<IkReal> x912 = IKPowWithIntegerCheck(((1.0) + x911), -1);
-                    if(!x912.valid)
+                    if (!x912.valid)
                     {
                         continue;
                     }
                     cj10array[numsolutions] = ((x912.value) * (((1.0) + (((-1.0) * x911)))));
                     CheckValue<IkReal> x913 = IKPowWithIntegerCheck(((1.0) + (htj10 * htj10)), -1);
-                    if(!x913.valid)
+                    if (!x913.valid)
                     {
                         continue;
                     }
                     sj10array[numsolutions] = ((2.0) * htj10 * (x913.value));
                 }
-                if(j8array[numsolutions] > IKPI)
+                if (j8array[numsolutions] > IKPI)
                 {
                     j8array[numsolutions] -= IK2PI;
                 }
-                else if(j8array[numsolutions] < -IKPI)
+                else if (j8array[numsolutions] < -IKPI)
                 {
                     j8array[numsolutions] += IK2PI;
                 }
-                if(j7array[numsolutions] > IKPI)
+                if (j7array[numsolutions] > IKPI)
                 {
                     j7array[numsolutions] -= IK2PI;
                 }
-                else if(j7array[numsolutions] < -IKPI)
+                else if (j7array[numsolutions] < -IKPI)
                 {
                     j7array[numsolutions] += IK2PI;
                 }
-                if(j10array[numsolutions] > IKPI)
+                if (j10array[numsolutions] > IKPI)
                 {
                     j10array[numsolutions] -= IK2PI;
                 }
-                else if(j10array[numsolutions] < -IKPI)
+                else if (j10array[numsolutions] < -IKPI)
                 {
                     j10array[numsolutions] += IK2PI;
                 }
@@ -2133,7 +2133,7 @@ public:
                                _nj10 = 1;
                                for(int ij8 = 0; ij8 < numsolutions; ++ij8)
         {
-            if(!j8valid[ij8])
+            if (!j8valid[ij8])
                 {
                     continue;
                 }
@@ -2145,11 +2145,11 @@ public:
                 _ij10[1] = -1;
                 for(int iij8 = ij8 + 1; iij8 < numsolutions; ++iij8)
                 {
-                    if(!j8valid[iij8])
+                    if (!j8valid[iij8])
                     {
                         continue;
                     }
-                    if(IKabs(cj8array[ij8] - cj8array[iij8]) < IKFAST_SOLUTION_THRESH
+                    if (IKabs(cj8array[ij8] - cj8array[iij8]) < IKFAST_SOLUTION_THRESH
                             && IKabs(sj8array[ij8] - sj8array[iij8]) < IKFAST_SOLUTION_THRESH
                             && IKabs(cj7array[ij8] - cj7array[iij8]) < IKFAST_SOLUTION_THRESH
                             && IKabs(sj7array[ij8] - sj7array[iij8]) < IKFAST_SOLUTION_THRESH
@@ -2183,7 +2183,7 @@ public:
     static inline void polyroots3(IkReal rawcoeffs[3 + 1], IkReal rawroots[3], int& numroots)
     {
         using std::complex;
-        if(rawcoeffs[0] == 0)
+        if (rawcoeffs[0] == 0)
         {
             // solve with one reduced degree
             polyroots2(&rawcoeffs[1], &rawroots[0], numroots);
@@ -2214,7 +2214,7 @@ public:
             bool changed = false;
             for(int i = 0; i < 3; ++i)
             {
-                if(err[i] >= tol)
+                if (err[i] >= tol)
                 {
                     changed = true;
                     // evaluate
@@ -2225,9 +2225,9 @@ public:
                     }
                     for(int j = 0; j < 3; ++j)
                     {
-                        if(i != j)
+                        if (i != j)
                         {
-                            if(roots[i] != roots[j])
+                            if (roots[i] != roots[j])
                             {
                                 x /= (roots[i] - roots[j]);
                             }
@@ -2237,7 +2237,7 @@ public:
                     err[i] = abs(x);
                 }
             }
-            if(!changed)
+            if (!changed)
             {
                 break;
             }
@@ -2247,7 +2247,7 @@ public:
         bool visited[3] = {false};
         for(int i = 0; i < 3; ++i)
         {
-            if(!visited[i])
+            if (!visited[i])
             {
                 // might be a multiple root, in which case it will have more error than the other roots
                 // find any neighboring roots, and take the average
@@ -2256,19 +2256,19 @@ public:
                 for(int j = i + 1; j < 3; ++j)
                 {
                     // care about error in real much more than imaginary
-                    if(abs(real(roots[i]) - real(roots[j])) < tolsqrt && abs(imag(roots[i]) - imag(roots[j])) < 0.002)
+                    if (abs(real(roots[i]) - real(roots[j])) < tolsqrt && abs(imag(roots[i]) - imag(roots[j])) < 0.002)
                     {
                         newroot += roots[j];
                         n += 1;
                         visited[j] = true;
                     }
                 }
-                if(n > 1)
+                if (n > 1)
                 {
                     newroot /= n;
                 }
                 // there are still cases where even the mean is not accurate enough, until a better multi-root algorithm is used, need to use the sqrt
-                if(IKabs(imag(newroot)) < tolsqrt)
+                if (IKabs(imag(newroot)) < tolsqrt)
                 {
                     rawroots[numroots++] = real(newroot);
                 }
@@ -2278,11 +2278,11 @@ public:
     static inline void polyroots2(IkReal rawcoeffs[2 + 1], IkReal rawroots[2], int& numroots)
     {
         IkReal det = rawcoeffs[1] * rawcoeffs[1] - 4 * rawcoeffs[0] * rawcoeffs[2];
-        if(det < 0)
+        if (det < 0)
         {
             numroots = 0;
         }
-        else if(det == 0)
+        else if (det == 0)
         {
             rawroots[0] = -0.5 * rawcoeffs[1] / rawcoeffs[0];
             numroots = 1;
@@ -2298,7 +2298,7 @@ public:
     static inline void polyroots5(IkReal rawcoeffs[5 + 1], IkReal rawroots[5], int& numroots)
     {
         using std::complex;
-        if(rawcoeffs[0] == 0)
+        if (rawcoeffs[0] == 0)
         {
             // solve with one reduced degree
             polyroots4(&rawcoeffs[1], &rawroots[0], numroots);
@@ -2329,7 +2329,7 @@ public:
             bool changed = false;
             for(int i = 0; i < 5; ++i)
             {
-                if(err[i] >= tol)
+                if (err[i] >= tol)
                 {
                     changed = true;
                     // evaluate
@@ -2340,9 +2340,9 @@ public:
                     }
                     for(int j = 0; j < 5; ++j)
                     {
-                        if(i != j)
+                        if (i != j)
                         {
-                            if(roots[i] != roots[j])
+                            if (roots[i] != roots[j])
                             {
                                 x /= (roots[i] - roots[j]);
                             }
@@ -2352,7 +2352,7 @@ public:
                     err[i] = abs(x);
                 }
             }
-            if(!changed)
+            if (!changed)
             {
                 break;
             }
@@ -2362,7 +2362,7 @@ public:
         bool visited[5] = {false};
         for(int i = 0; i < 5; ++i)
         {
-            if(!visited[i])
+            if (!visited[i])
             {
                 // might be a multiple root, in which case it will have more error than the other roots
                 // find any neighboring roots, and take the average
@@ -2371,19 +2371,19 @@ public:
                 for(int j = i + 1; j < 5; ++j)
                 {
                     // care about error in real much more than imaginary
-                    if(abs(real(roots[i]) - real(roots[j])) < tolsqrt && abs(imag(roots[i]) - imag(roots[j])) < 0.002)
+                    if (abs(real(roots[i]) - real(roots[j])) < tolsqrt && abs(imag(roots[i]) - imag(roots[j])) < 0.002)
                     {
                         newroot += roots[j];
                         n += 1;
                         visited[j] = true;
                     }
                 }
-                if(n > 1)
+                if (n > 1)
                 {
                     newroot /= n;
                 }
                 // there are still cases where even the mean is not accurate enough, until a better multi-root algorithm is used, need to use the sqrt
-                if(IKabs(imag(newroot)) < tolsqrt)
+                if (IKabs(imag(newroot)) < tolsqrt)
                 {
                     rawroots[numroots++] = real(newroot);
                 }
@@ -2393,7 +2393,7 @@ public:
     static inline void polyroots4(IkReal rawcoeffs[4 + 1], IkReal rawroots[4], int& numroots)
     {
         using std::complex;
-        if(rawcoeffs[0] == 0)
+        if (rawcoeffs[0] == 0)
         {
             // solve with one reduced degree
             polyroots3(&rawcoeffs[1], &rawroots[0], numroots);
@@ -2424,7 +2424,7 @@ public:
             bool changed = false;
             for(int i = 0; i < 4; ++i)
             {
-                if(err[i] >= tol)
+                if (err[i] >= tol)
                 {
                     changed = true;
                     // evaluate
@@ -2435,9 +2435,9 @@ public:
                     }
                     for(int j = 0; j < 4; ++j)
                     {
-                        if(i != j)
+                        if (i != j)
                         {
-                            if(roots[i] != roots[j])
+                            if (roots[i] != roots[j])
                             {
                                 x /= (roots[i] - roots[j]);
                             }
@@ -2447,7 +2447,7 @@ public:
                     err[i] = abs(x);
                 }
             }
-            if(!changed)
+            if (!changed)
             {
                 break;
             }
@@ -2457,7 +2457,7 @@ public:
         bool visited[4] = {false};
         for(int i = 0; i < 4; ++i)
         {
-            if(!visited[i])
+            if (!visited[i])
             {
                 // might be a multiple root, in which case it will have more error than the other roots
                 // find any neighboring roots, and take the average
@@ -2466,19 +2466,19 @@ public:
                 for(int j = i + 1; j < 4; ++j)
                 {
                     // care about error in real much more than imaginary
-                    if(abs(real(roots[i]) - real(roots[j])) < tolsqrt && abs(imag(roots[i]) - imag(roots[j])) < 0.002)
+                    if (abs(real(roots[i]) - real(roots[j])) < tolsqrt && abs(imag(roots[i]) - imag(roots[j])) < 0.002)
                     {
                         newroot += roots[j];
                         n += 1;
                         visited[j] = true;
                     }
                 }
-                if(n > 1)
+                if (n > 1)
                 {
                     newroot /= n;
                 }
                 // there are still cases where even the mean is not accurate enough, until a better multi-root algorithm is used, need to use the sqrt
-                if(IKabs(imag(newroot)) < tolsqrt)
+                if (IKabs(imag(newroot)) < tolsqrt)
                 {
                     rawroots[numroots++] = real(newroot);
                 }
@@ -2488,7 +2488,7 @@ public:
     static inline void polyroots6(IkReal rawcoeffs[6 + 1], IkReal rawroots[6], int& numroots)
     {
         using std::complex;
-        if(rawcoeffs[0] == 0)
+        if (rawcoeffs[0] == 0)
         {
             // solve with one reduced degree
             polyroots5(&rawcoeffs[1], &rawroots[0], numroots);
@@ -2519,7 +2519,7 @@ public:
             bool changed = false;
             for(int i = 0; i < 6; ++i)
             {
-                if(err[i] >= tol)
+                if (err[i] >= tol)
                 {
                     changed = true;
                     // evaluate
@@ -2530,9 +2530,9 @@ public:
                     }
                     for(int j = 0; j < 6; ++j)
                     {
-                        if(i != j)
+                        if (i != j)
                         {
-                            if(roots[i] != roots[j])
+                            if (roots[i] != roots[j])
                             {
                                 x /= (roots[i] - roots[j]);
                             }
@@ -2542,7 +2542,7 @@ public:
                     err[i] = abs(x);
                 }
             }
-            if(!changed)
+            if (!changed)
             {
                 break;
             }
@@ -2552,7 +2552,7 @@ public:
         bool visited[6] = {false};
         for(int i = 0; i < 6; ++i)
         {
-            if(!visited[i])
+            if (!visited[i])
             {
                 // might be a multiple root, in which case it will have more error than the other roots
                 // find any neighboring roots, and take the average
@@ -2561,19 +2561,19 @@ public:
                 for(int j = i + 1; j < 6; ++j)
                 {
                     // care about error in real much more than imaginary
-                    if(abs(real(roots[i]) - real(roots[j])) < tolsqrt && abs(imag(roots[i]) - imag(roots[j])) < 0.002)
+                    if (abs(real(roots[i]) - real(roots[j])) < tolsqrt && abs(imag(roots[i]) - imag(roots[j])) < 0.002)
                     {
                         newroot += roots[j];
                         n += 1;
                         visited[j] = true;
                     }
                 }
-                if(n > 1)
+                if (n > 1)
                 {
                     newroot /= n;
                 }
                 // there are still cases where even the mean is not accurate enough, until a better multi-root algorithm is used, need to use the sqrt
-                if(IKabs(imag(newroot)) < tolsqrt)
+                if (IKabs(imag(newroot)) < tolsqrt)
                 {
                     rawroots[numroots++] = real(newroot);
                 }
@@ -2588,7 +2588,7 @@ public:
                 IkReal j12eval[2];
                 j12eval[0] = ((r20 * r20) + (r21 * r21));
                 j12eval[1] = ((1.0) + (((-1.0) * (r22 * r22))));
-                if(IKabs(j12eval[0]) < 0.0000010000000000  || IKabs(j12eval[1]) < 0.0000010000000000)
+                if (IKabs(j12eval[0]) < 0.0000010000000000  || IKabs(j12eval[1]) < 0.0000010000000000)
                 {
                     {
                         IkReal evalcond[1];
@@ -2596,7 +2596,7 @@ public:
                         do
                         {
                             evalcond[0] = ((r20 * r20) + (r21 * r21));
-                            if(IKabs(evalcond[0]) < 0.0000050000000000)
+                            if (IKabs(evalcond[0]) < 0.0000050000000000)
                             {
                                 bgotonextstatement = false;
                                 {
@@ -2612,7 +2612,7 @@ public:
                                     rxp1_1 = (r01 * x914);
                                     j11eval[0] = cj10;
                                     j11eval[1] = r22;
-                                    if(IKabs(j11eval[0]) < 0.0000010000000000  || IKabs(j11eval[1]) < 0.0000010000000000)
+                                    if (IKabs(j11eval[0]) < 0.0000010000000000  || IKabs(j11eval[1]) < 0.0000010000000000)
                                     {
                                         {
                                             IkReal j11eval[2];
@@ -2627,7 +2627,7 @@ public:
                                             rxp1_1 = (r01 * x915);
                                             j11eval[0] = r22;
                                             j11eval[1] = sj10;
-                                            if(IKabs(j11eval[0]) < 0.0000010000000000  || IKabs(j11eval[1]) < 0.0000010000000000)
+                                            if (IKabs(j11eval[0]) < 0.0000010000000000  || IKabs(j11eval[1]) < 0.0000010000000000)
                                             {
                                                 continue; // 1 cases reached
 
@@ -2639,17 +2639,17 @@ public:
                                                     bool j11valid[2] = {false};
                                                     _nj11 = 2;
                                                     CheckValue<IkReal> x916 = IKPowWithIntegerCheck(r22, -1);
-                                                    if(!x916.valid)
+                                                    if (!x916.valid)
                                                     {
                                                         continue;
                                                     }
                                                     CheckValue<IkReal> x917 = IKPowWithIntegerCheck(sj10, -1);
-                                                    if(!x917.valid)
+                                                    if (!x917.valid)
                                                     {
                                                         continue;
                                                     }
                                                     sj11array[0] = ((x916.value) * (x917.value) * (((((-1.0) * cj7 * cj8)) + ((sj7 * sj8)))));
-                                                    if(sj11array[0] >= -1 - IKFAST_SINCOS_THRESH && sj11array[0] <= 1 + IKFAST_SINCOS_THRESH)
+                                                    if (sj11array[0] >= -1 - IKFAST_SINCOS_THRESH && sj11array[0] <= 1 + IKFAST_SINCOS_THRESH)
                                                     {
                                                         j11valid[0] = j11valid[1] = true;
                                                         j11array[0] = IKasin(sj11array[0]);
@@ -2658,7 +2658,7 @@ public:
                                                         j11array[1] = j11array[0] > 0 ? (IKPI - j11array[0]) : (-IKPI - j11array[0]);
                                                         cj11array[1] = -cj11array[0];
                                                     }
-                                                    else if(isnan(sj11array[0]))
+                                                    else if (isnan(sj11array[0]))
                                                     {
                                                         // probably any value will work
                                                         j11valid[0] = true;
@@ -2666,17 +2666,17 @@ public:
                                                         sj11array[0] = 0;
                                                         j11array[0] = 0;
                                                     }
-                                                    for(int ij11 = 0; ij11 < 2; ++ij11)
+                                                    for (int ij11 = 0; ij11 < 2; ++ij11)
                                                     {
-                                                        if(!j11valid[ij11])
+                                                        if (!j11valid[ij11])
                                                         {
                                                             continue;
                                                         }
                                                         _ij11[0] = ij11;
                                                         _ij11[1] = -1;
-                                                        for(int iij11 = ij11 + 1; iij11 < 2; ++iij11)
+                                                        for (int iij11 = ij11 + 1; iij11 < 2; ++iij11)
                                                         {
-                                                            if(j11valid[iij11] && IKabs(cj11array[ij11] - cj11array[iij11]) < IKFAST_SOLUTION_THRESH
+                                                            if (j11valid[iij11] && IKabs(cj11array[ij11] - cj11array[iij11]) < IKFAST_SOLUTION_THRESH
                                                                     && IKabs(sj11array[ij11] - sj11array[iij11]) < IKFAST_SOLUTION_THRESH)
                                                             {
                                                                 j11valid[iij11] = false;
@@ -2691,7 +2691,7 @@ public:
                                                             IkReal evalcond[2];
                                                             evalcond[0] = ((-1.0) * r22 * (IKcos(j11)));
                                                             evalcond[1] = (((cj8 * sj7)) + ((cj7 * sj8)) + ((cj10 * r22 * (IKsin(j11)))));
-                                                            if(IKabs(evalcond[0]) > IKFAST_EVALCOND_THRESH  || IKabs(evalcond[1]) > IKFAST_EVALCOND_THRESH)
+                                                            if (IKabs(evalcond[0]) > IKFAST_EVALCOND_THRESH  || IKabs(evalcond[1]) > IKFAST_EVALCOND_THRESH)
                                                             {
                                                                 continue;
                                                             }
@@ -2758,7 +2758,7 @@ public:
                                                                                                                                                                           -1.0) * x953)) + (((-1.0) * x952)) + x949 + x943))))) + (((0.5) * (IKabs((((
                                                                                                                                                                                   sj11 * x920 * x930)) + (((-1.0) * sj11 * x923 * x930)) + (((-16.0) * r01 * x921)) + (((
                                                                                                                                                                                           -16.0) * x932))))))));
-                                                            if(IKabs(j12eval[0]) < 0.0000000010000000)
+                                                            if (IKabs(j12eval[0]) < 0.0000000010000000)
                                                             {
                                                                 continue; // 1 cases reached
 
@@ -2805,18 +2805,18 @@ public:
                                                                 polyroots6(op, zeror, numroots);
                                                                 IkReal j12array[6], cj12array[6], sj12array[6], tempj12array[1];
                                                                 int numsolutions = 0;
-                                                                for(int ij12 = 0; ij12 < numroots; ++ij12)
+                                                                for (int ij12 = 0; ij12 < numroots; ++ij12)
                                                                 {
                                                                     IkReal htj12 = zeror[ij12];
                                                                     tempj12array[0] = ((2.0) * (atan(htj12)));
-                                                                    for(int kj12 = 0; kj12 < 1; ++kj12)
+                                                                    for (int kj12 = 0; kj12 < 1; ++kj12)
                                                                     {
                                                                         j12array[numsolutions] = tempj12array[kj12];
-                                                                        if(j12array[numsolutions] > IKPI)
+                                                                        if (j12array[numsolutions] > IKPI)
                                                                         {
                                                                             j12array[numsolutions] -= IK2PI;
                                                                         }
-                                                                        else if(j12array[numsolutions] < -IKPI)
+                                                                        else if (j12array[numsolutions] < -IKPI)
                                                                         {
                                                                             j12array[numsolutions] += IK2PI;
                                                                         }
@@ -2827,9 +2827,9 @@ public:
                                                                 }
                                                                 bool j12valid[6] = {true, true, true, true, true, true};
                                                                 _nj12 = 6;
-                                                                for(int ij12 = 0; ij12 < numsolutions; ++ij12)
+                                                                for (int ij12 = 0; ij12 < numsolutions; ++ij12)
                                                                 {
-                                                                    if(!j12valid[ij12])
+                                                                    if (!j12valid[ij12])
                                                                     {
                                                                         continue;
                                                                     }
@@ -2870,15 +2870,15 @@ public:
                                                                                                                         -1.0) * x1001)) + (((-1.0) * x1000)) + x996 + x999)))) + (((-1.0) * x999)) + (((
                                                                                                                                 htj12 * htj12) * ((x1000 + (((-1.0) * x1001)) + (((-1.0) * x999)) + x996)))) + ((x1003 *
                                                                                                                                         (htj12 * htj12 * htj12 * htj12 * htj12))) + x995);
-                                                                    if(IKabs(j12evalpoly[0]) > 0.0000000010000000)
+                                                                    if (IKabs(j12evalpoly[0]) > 0.0000000010000000)
                                                                     {
                                                                         continue;
                                                                     }
                                                                     _ij12[0] = ij12;
                                                                     _ij12[1] = -1;
-                                                                    for(int iij12 = ij12 + 1; iij12 < numsolutions; ++iij12)
+                                                                    for (int iij12 = ij12 + 1; iij12 < numsolutions; ++iij12)
                                                                     {
-                                                                        if(j12valid[iij12] && IKabs(cj12array[ij12] - cj12array[iij12]) < IKFAST_SOLUTION_THRESH
+                                                                        if (j12valid[iij12] && IKabs(cj12array[ij12] - cj12array[iij12]) < IKFAST_SOLUTION_THRESH
                                                                                 && IKabs(sj12array[ij12] - sj12array[iij12]) < IKFAST_SOLUTION_THRESH)
                                                                         {
                                                                             j12valid[iij12] = false;
@@ -2892,7 +2892,7 @@ public:
                                                                         _nj9 = 1;
                                                                         IkReal x1004 = (sj11 * sj12);
                                                                         IkReal x1005 = (cj12 * sj11);
-                                                                        if(IKabs((((r01 * x1004)) + (((-1.0) *cj11 * r02)) + (((-1.0) *r00 * x1005)))) <
+                                                                        if (IKabs((((r01 * x1004)) + (((-1.0) *cj11 * r02)) + (((-1.0) *r00 * x1005)))) <
                                                                                 IKFAST_ATAN2_MAGTHRESH
                                                                                 && IKabs((((cj11 * r12)) + (((-1.0) *r11 * x1004)) + ((r10 * x1005)))) < IKFAST_ATAN2_MAGTHRESH
                                                                                 && IKabs(IKsqr((((r01 * x1004)) + (((-1.0) *cj11 * r02)) + (((-1.0) *r00 * x1005)))) +
@@ -2902,26 +2902,26 @@ public:
                                                                                              (((cj11 * r12)) + (((-1.0) * r11 * x1004)) + ((r10 * x1005))));
                                                                         sj9array[0] = IKsin(j9array[0]);
                                                                         cj9array[0] = IKcos(j9array[0]);
-                                                                        if(j9array[0] > IKPI)
+                                                                        if (j9array[0] > IKPI)
                                                                         {
                                                                             j9array[0] -= IK2PI;
                                                                         }
-                                                                        else if(j9array[0] < -IKPI)
+                                                                        else if (j9array[0] < -IKPI)
                                                                         {
                                                                             j9array[0] += IK2PI;
                                                                         }
                                                                         j9valid[0] = true;
-                                                                        for(int ij9 = 0; ij9 < 1; ++ij9)
+                                                                        for (int ij9 = 0; ij9 < 1; ++ij9)
                                                                         {
-                                                                            if(!j9valid[ij9])
+                                                                            if (!j9valid[ij9])
                                                                             {
                                                                                 continue;
                                                                             }
                                                                             _ij9[0] = ij9;
                                                                             _ij9[1] = -1;
-                                                                            for(int iij9 = ij9 + 1; iij9 < 1; ++iij9)
+                                                                            for (int iij9 = ij9 + 1; iij9 < 1; ++iij9)
                                                                             {
-                                                                                if(j9valid[iij9] && IKabs(cj9array[ij9] - cj9array[iij9]) < IKFAST_SOLUTION_THRESH
+                                                                                if (j9valid[iij9] && IKabs(cj9array[ij9] - cj9array[iij9]) < IKFAST_SOLUTION_THRESH
                                                                                         && IKabs(sj9array[ij9] - sj9array[iij9]) < IKFAST_SOLUTION_THRESH)
                                                                                 {
                                                                                     j9valid[iij9] = false;
@@ -2975,7 +2975,7 @@ public:
                                                                                 evalcond[7] = (((cj12 * x1008)) + ((cj10 * x1014)) + (((-1.0) * x1022 * x1028)) + (((
                                                                                                    -1.0) * x1009 * x1018)) + (((-1.0) * r12 * sj10 * x1012)) + (((-1.0) * x1007 * x1025)) + ((
                                                                                                                x1016 * x1021)));
-                                                                                if(IKabs(evalcond[0]) > IKFAST_EVALCOND_THRESH  || IKabs(evalcond[1]) > IKFAST_EVALCOND_THRESH
+                                                                                if (IKabs(evalcond[0]) > IKFAST_EVALCOND_THRESH  || IKabs(evalcond[1]) > IKFAST_EVALCOND_THRESH
                                                                                         || IKabs(evalcond[2]) > IKFAST_EVALCOND_THRESH  || IKabs(evalcond[3]) > IKFAST_EVALCOND_THRESH
                                                                                         || IKabs(evalcond[4]) > IKFAST_EVALCOND_THRESH  || IKabs(evalcond[5]) > IKFAST_EVALCOND_THRESH
                                                                                         || IKabs(evalcond[6]) > IKFAST_EVALCOND_THRESH  || IKabs(evalcond[7]) > IKFAST_EVALCOND_THRESH)
@@ -3041,17 +3041,17 @@ public:
                                             bool j11valid[2] = {false};
                                             _nj11 = 2;
                                             CheckValue<IkReal> x1030 = IKPowWithIntegerCheck(cj10, -1);
-                                            if(!x1030.valid)
+                                            if (!x1030.valid)
                                             {
                                                 continue;
                                             }
                                             CheckValue<IkReal> x1031 = IKPowWithIntegerCheck(r22, -1);
-                                            if(!x1031.valid)
+                                            if (!x1031.valid)
                                             {
                                                 continue;
                                             }
                                             sj11array[0] = ((-1.0) * (x1030.value) * (x1031.value) * ((((cj8 * sj7)) + ((cj7 * sj8)))));
-                                            if(sj11array[0] >= -1 - IKFAST_SINCOS_THRESH && sj11array[0] <= 1 + IKFAST_SINCOS_THRESH)
+                                            if (sj11array[0] >= -1 - IKFAST_SINCOS_THRESH && sj11array[0] <= 1 + IKFAST_SINCOS_THRESH)
                                             {
                                                 j11valid[0] = j11valid[1] = true;
                                                 j11array[0] = IKasin(sj11array[0]);
@@ -3060,7 +3060,7 @@ public:
                                                 j11array[1] = j11array[0] > 0 ? (IKPI - j11array[0]) : (-IKPI - j11array[0]);
                                                 cj11array[1] = -cj11array[0];
                                             }
-                                            else if(isnan(sj11array[0]))
+                                            else if (isnan(sj11array[0]))
                                             {
                                                 // probably any value will work
                                                 j11valid[0] = true;
@@ -3068,17 +3068,17 @@ public:
                                                 sj11array[0] = 0;
                                                 j11array[0] = 0;
                                             }
-                                            for(int ij11 = 0; ij11 < 2; ++ij11)
+                                            for (int ij11 = 0; ij11 < 2; ++ij11)
                                             {
-                                                if(!j11valid[ij11])
+                                                if (!j11valid[ij11])
                                                 {
                                                     continue;
                                                 }
                                                 _ij11[0] = ij11;
                                                 _ij11[1] = -1;
-                                                for(int iij11 = ij11 + 1; iij11 < 2; ++iij11)
+                                                for (int iij11 = ij11 + 1; iij11 < 2; ++iij11)
                                                 {
-                                                    if(j11valid[iij11] && IKabs(cj11array[ij11] - cj11array[iij11]) < IKFAST_SOLUTION_THRESH
+                                                    if (j11valid[iij11] && IKabs(cj11array[ij11] - cj11array[iij11]) < IKFAST_SOLUTION_THRESH
                                                             && IKabs(sj11array[ij11] - sj11array[iij11]) < IKFAST_SOLUTION_THRESH)
                                                     {
                                                         j11valid[iij11] = false;
@@ -3093,7 +3093,7 @@ public:
                                                     IkReal evalcond[2];
                                                     evalcond[0] = ((-1.0) * r22 * (IKcos(j11)));
                                                     evalcond[1] = ((((-1.0) * cj7 * cj8)) + ((sj7 * sj8)) + (((-1.0) * r22 * sj10 * (IKsin(j11)))));
-                                                    if(IKabs(evalcond[0]) > IKFAST_EVALCOND_THRESH  || IKabs(evalcond[1]) > IKFAST_EVALCOND_THRESH)
+                                                    if (IKabs(evalcond[0]) > IKFAST_EVALCOND_THRESH  || IKabs(evalcond[1]) > IKFAST_EVALCOND_THRESH)
                                                     {
                                                         continue;
                                                     }
@@ -3160,7 +3160,7 @@ public:
                                                                                                                                                                         sj11 * x1034 * x1044)) + (((-16.0) * x1046)) + (((-16.0) * r01 * x1035))))))) + (((0.5) *
                                                                                                                                                                                 (IKabs(((((-1.0) * cj11 * x1037 * x1043)) + x1064 + (((-1.0) * x1039 * x1045)) + (((
                                                                                                                                                                                         -1.0) * x1065)) + ((cj11 * x1034 * x1043))))))));
-                                                    if(IKabs(j12eval[0]) < 0.0000000010000000)
+                                                    if (IKabs(j12eval[0]) < 0.0000000010000000)
                                                     {
                                                         continue; // 1 cases reached
 
@@ -3207,18 +3207,18 @@ public:
                                                         polyroots6(op, zeror, numroots);
                                                         IkReal j12array[6], cj12array[6], sj12array[6], tempj12array[1];
                                                         int numsolutions = 0;
-                                                        for(int ij12 = 0; ij12 < numroots; ++ij12)
+                                                        for (int ij12 = 0; ij12 < numroots; ++ij12)
                                                         {
                                                             IkReal htj12 = zeror[ij12];
                                                             tempj12array[0] = ((2.0) * (atan(htj12)));
-                                                            for(int kj12 = 0; kj12 < 1; ++kj12)
+                                                            for (int kj12 = 0; kj12 < 1; ++kj12)
                                                             {
                                                                 j12array[numsolutions] = tempj12array[kj12];
-                                                                if(j12array[numsolutions] > IKPI)
+                                                                if (j12array[numsolutions] > IKPI)
                                                                 {
                                                                     j12array[numsolutions] -= IK2PI;
                                                                 }
-                                                                else if(j12array[numsolutions] < -IKPI)
+                                                                else if (j12array[numsolutions] < -IKPI)
                                                                 {
                                                                     j12array[numsolutions] += IK2PI;
                                                                 }
@@ -3231,7 +3231,7 @@ public:
                                                         _nj12 = 6;
                                                         for(int ij12 = 0; ij12 < numsolutions; ++ij12)
                                                         {
-                                                            if(!j12valid[ij12])
+                                                            if (!j12valid[ij12])
                                                             {
                                                                 continue;
                                                             }
@@ -3272,15 +3272,15 @@ public:
                                                                                                                             -16.0) * r01 * x1095)))))) + ((x1117 * (htj12 * htj12 * htj12 * htj12 * htj12))) + (((
                                                                                                                                     -1.0) * x1116)) + (((-1.0) * x1113)) + (((htj12 * htj12) * ((x1110 + x1114 + (((
                                                                                                                                             -1.0) * x1115)) + (((-1.0) * x1113)))))) + ((htj12 * x1117)));
-                                                            if(IKabs(j12evalpoly[0]) > 0.0000000010000000)
+                                                            if (IKabs(j12evalpoly[0]) > 0.0000000010000000)
                                                             {
                                                                 continue;
                                                             }
                                                             _ij12[0] = ij12;
                                                             _ij12[1] = -1;
-                                                            for(int iij12 = ij12 + 1; iij12 < numsolutions; ++iij12)
+                                                            for (int iij12 = ij12 + 1; iij12 < numsolutions; ++iij12)
                                                             {
-                                                                if(j12valid[iij12] && IKabs(cj12array[ij12] - cj12array[iij12]) < IKFAST_SOLUTION_THRESH
+                                                                if (j12valid[iij12] && IKabs(cj12array[ij12] - cj12array[iij12]) < IKFAST_SOLUTION_THRESH
                                                                         && IKabs(sj12array[ij12] - sj12array[iij12]) < IKFAST_SOLUTION_THRESH)
                                                                 {
                                                                     j12valid[iij12] = false;
@@ -3294,7 +3294,7 @@ public:
                                                                 _nj9 = 1;
                                                                 IkReal x1118 = (sj11 * sj12);
                                                                 IkReal x1119 = (cj12 * sj11);
-                                                                if(IKabs(((((-1.0) *cj11 * r02)) + ((r01 * x1118)) + (((-1.0) *r00 * x1119)))) <
+                                                                if (IKabs(((((-1.0) *cj11 * r02)) + ((r01 * x1118)) + (((-1.0) *r00 * x1119)))) <
                                                                         IKFAST_ATAN2_MAGTHRESH
                                                                         && IKabs((((cj11 * r12)) + (((-1.0) *r11 * x1118)) + ((r10 * x1119)))) < IKFAST_ATAN2_MAGTHRESH
                                                                         && IKabs(IKsqr(((((-1.0) *cj11 * r02)) + ((r01 * x1118)) + (((-1.0) *r00 * x1119)))) +
@@ -3304,26 +3304,26 @@ public:
                                                                                      (((cj11 * r12)) + (((-1.0) * r11 * x1118)) + ((r10 * x1119))));
                                                                 sj9array[0] = IKsin(j9array[0]);
                                                                 cj9array[0] = IKcos(j9array[0]);
-                                                                if(j9array[0] > IKPI)
+                                                                if (j9array[0] > IKPI)
                                                                 {
                                                                     j9array[0] -= IK2PI;
                                                                 }
-                                                                else if(j9array[0] < -IKPI)
+                                                                else if (j9array[0] < -IKPI)
                                                                 {
                                                                     j9array[0] += IK2PI;
                                                                 }
                                                                 j9valid[0] = true;
                                                                 for(int ij9 = 0; ij9 < 1; ++ij9)
                                                                 {
-                                                                    if(!j9valid[ij9])
+                                                                    if (!j9valid[ij9])
                                                                     {
                                                                         continue;
                                                                     }
                                                                     _ij9[0] = ij9;
                                                                     _ij9[1] = -1;
-                                                                    for(int iij9 = ij9 + 1; iij9 < 1; ++iij9)
+                                                                    for (int iij9 = ij9 + 1; iij9 < 1; ++iij9)
                                                                     {
-                                                                        if(j9valid[iij9] && IKabs(cj9array[ij9] - cj9array[iij9]) < IKFAST_SOLUTION_THRESH
+                                                                        if (j9valid[iij9] && IKabs(cj9array[ij9] - cj9array[iij9]) < IKFAST_SOLUTION_THRESH
                                                                                 && IKabs(sj9array[ij9] - sj9array[iij9]) < IKFAST_SOLUTION_THRESH)
                                                                         {
                                                                             j9valid[iij9] = false;
@@ -3375,7 +3375,7 @@ public:
                                                                                            -1.0) * r01 * sj10 * x1123)) + ((cj10 * x1133)) + (((-1.0) * x1120 * x1139)) + ((x1127 * x1135)));
                                                                         evalcond[7] = ((((-1.0) * x1136 * x1142)) + ((x1130 * x1135)) + (((-1.0) * x1121 * x1139)) + (((
                                                                                            -1.0) * x1123 * x1132)) + ((cj10 * x1128)) + ((cj12 * x1122)) + (((-1.0) * r12 * sj10 * x1126)));
-                                                                        if(IKabs(evalcond[0]) > IKFAST_EVALCOND_THRESH  || IKabs(evalcond[1]) > IKFAST_EVALCOND_THRESH
+                                                                        if (IKabs(evalcond[0]) > IKFAST_EVALCOND_THRESH  || IKabs(evalcond[1]) > IKFAST_EVALCOND_THRESH
                                                                                 || IKabs(evalcond[2]) > IKFAST_EVALCOND_THRESH  || IKabs(evalcond[3]) > IKFAST_EVALCOND_THRESH
                                                                                 || IKabs(evalcond[4]) > IKFAST_EVALCOND_THRESH  || IKabs(evalcond[5]) > IKFAST_EVALCOND_THRESH
                                                                                 || IKabs(evalcond[6]) > IKFAST_EVALCOND_THRESH  || IKabs(evalcond[7]) > IKFAST_EVALCOND_THRESH)
@@ -3436,13 +3436,13 @@ public:
                             }
                         }
                         while(0);
-                        if(bgotonextstatement)
+                        if (bgotonextstatement)
                         {
                             bool bgotonextstatement = true;
                             do
                             {
                                 evalcond[0] = ((IKabs(r21)) + (IKabs(r20)));
-                                if(IKabs(evalcond[0]) < 0.0000050000000000)
+                                if (IKabs(evalcond[0]) < 0.0000050000000000)
                                 {
                                     bgotonextstatement = false;
                                     {
@@ -3464,7 +3464,7 @@ public:
                                         rxp2_2 = 0;
                                         j11eval[0] = cj10;
                                         j11eval[1] = r22;
-                                        if(IKabs(j11eval[0]) < 0.0000010000000000  || IKabs(j11eval[1]) < 0.0000010000000000)
+                                        if (IKabs(j11eval[0]) < 0.0000010000000000  || IKabs(j11eval[1]) < 0.0000010000000000)
                                         {
                                             {
                                                 IkReal j11eval[2];
@@ -3485,7 +3485,7 @@ public:
                                                 rxp2_2 = 0;
                                                 j11eval[0] = r22;
                                                 j11eval[1] = sj10;
-                                                if(IKabs(j11eval[0]) < 0.0000010000000000  || IKabs(j11eval[1]) < 0.0000010000000000)
+                                                if (IKabs(j11eval[0]) < 0.0000010000000000  || IKabs(j11eval[1]) < 0.0000010000000000)
                                                 {
                                                     continue; // 1 cases reached
 
@@ -3497,17 +3497,17 @@ public:
                                                         bool j11valid[2] = {false};
                                                         _nj11 = 2;
                                                         CheckValue<IkReal> x1146 = IKPowWithIntegerCheck(r22, -1);
-                                                        if(!x1146.valid)
+                                                        if (!x1146.valid)
                                                         {
                                                             continue;
                                                         }
                                                         CheckValue<IkReal> x1147 = IKPowWithIntegerCheck(sj10, -1);
-                                                        if(!x1147.valid)
+                                                        if (!x1147.valid)
                                                         {
                                                             continue;
                                                         }
                                                         sj11array[0] = ((x1146.value) * (x1147.value) * (((((-1.0) * cj7 * cj8)) + ((sj7 * sj8)))));
-                                                        if(sj11array[0] >= -1 - IKFAST_SINCOS_THRESH && sj11array[0] <= 1 + IKFAST_SINCOS_THRESH)
+                                                        if (sj11array[0] >= -1 - IKFAST_SINCOS_THRESH && sj11array[0] <= 1 + IKFAST_SINCOS_THRESH)
                                                         {
                                                             j11valid[0] = j11valid[1] = true;
                                                             j11array[0] = IKasin(sj11array[0]);
@@ -3516,7 +3516,7 @@ public:
                                                             j11array[1] = j11array[0] > 0 ? (IKPI - j11array[0]) : (-IKPI - j11array[0]);
                                                             cj11array[1] = -cj11array[0];
                                                         }
-                                                        else if(isnan(sj11array[0]))
+                                                        else if (isnan(sj11array[0]))
                                                         {
                                                             // probably any value will work
                                                             j11valid[0] = true;
@@ -3524,17 +3524,17 @@ public:
                                                             sj11array[0] = 0;
                                                             j11array[0] = 0;
                                                         }
-                                                        for(int ij11 = 0; ij11 < 2; ++ij11)
+                                                        for (int ij11 = 0; ij11 < 2; ++ij11)
                                                         {
-                                                            if(!j11valid[ij11])
+                                                            if (!j11valid[ij11])
                                                             {
                                                                 continue;
                                                             }
                                                             _ij11[0] = ij11;
                                                             _ij11[1] = -1;
-                                                            for(int iij11 = ij11 + 1; iij11 < 2; ++iij11)
+                                                            for (int iij11 = ij11 + 1; iij11 < 2; ++iij11)
                                                             {
-                                                                if(j11valid[iij11] && IKabs(cj11array[ij11] - cj11array[iij11]) < IKFAST_SOLUTION_THRESH
+                                                                if (j11valid[iij11] && IKabs(cj11array[ij11] - cj11array[iij11]) < IKFAST_SOLUTION_THRESH
                                                                         && IKabs(sj11array[ij11] - sj11array[iij11]) < IKFAST_SOLUTION_THRESH)
                                                                 {
                                                                     j11valid[iij11] = false;
@@ -3549,7 +3549,7 @@ public:
                                                                 IkReal evalcond[2];
                                                                 evalcond[0] = ((-1.0) * r22 * (IKcos(j11)));
                                                                 evalcond[1] = (((cj8 * sj7)) + ((cj7 * sj8)) + ((cj10 * r22 * (IKsin(j11)))));
-                                                                if(IKabs(evalcond[0]) > IKFAST_EVALCOND_THRESH  || IKabs(evalcond[1]) > IKFAST_EVALCOND_THRESH)
+                                                                if (IKabs(evalcond[0]) > IKFAST_EVALCOND_THRESH  || IKabs(evalcond[1]) > IKFAST_EVALCOND_THRESH)
                                                                 {
                                                                     continue;
                                                                 }
