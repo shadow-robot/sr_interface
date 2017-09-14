@@ -227,7 +227,7 @@ inline float IKatan2(float fy, float fx)
 {
     if (isnan ( fy ))
     {
-        IKFAST_ASSERT(!isnan ( fx ));  // if both are nan, probably wrong value will be returned
+        IKFAST_ASSERT(!isnan(fx));  // if both are nan, probably wrong value will be returned
         return float ( IKPI_2 );
     }
     else if (isnan ( fx ))
@@ -244,7 +244,7 @@ inline double IKatan2(double fy, double fx)
 {
     if ( isnan ( fy ) )
     {
-        IKFAST_ASSERT(!isnan ( fx ));  // if both are nan, probably wrong value will be returned
+        IKFAST_ASSERT(!isnan(fx));  // if both are nan, probably wrong value will be returned
         return IKPI_2;
     }
     else if (isnan ( fx ))
@@ -309,7 +309,8 @@ inline CheckValue<T> IKPowWithIntegerCheck(T f, int n)
 {
     CheckValue<T> ret;
     ret.valid = true;
-    if ( n == 0 ) {
+    if ( n == 0 )
+    {
         ret.value = 1.0;
         return ret;
     }
@@ -326,23 +327,28 @@ inline CheckValue<T> IKPowWithIntegerCheck(T f, int n)
             ret.value = (T) 1.0e30;
             return ret;
         }
-        if ( n == -1 ) {
+        if ( n == -1 )
+        {
             ret.value = T(1.0) / f;
             return ret;
         }
     }
 
     int num = n > 0 ? n : -n;
-    if ( num == 2 ) {
+    if ( num == 2 )
+    {
         ret.value = f * f;
     }
-    else if ( num == 3 ) {
+    else if ( num == 3 )
+    {
         ret.value = f * f * f;
     }
     else {
         ret.value = 1.0;
-        while ( num > 0 ) {
-            if ( num & 1 ) {
+        while ( num > 0 )
+        {
+            if ( num & 1 )
+            {
                 ret.value *= f;
             }
             num >>= 1;
@@ -358,7 +364,8 @@ inline CheckValue<T> IKPowWithIntegerCheck(T f, int n)
 
 /// solves the forward kinematics equations.
 /// \param pfree is an array specifying the free joints of the chain.
-IKFAST_API void ComputeFk(const IkReal* j, IkReal* eetrans, IkReal* eerot) {
+IKFAST_API void ComputeFk(const IkReal* j, IkReal* eetrans, IkReal* eerot)
+{
     IkReal x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15, x16, x17, x18, x19, x20, x21, x22, x23, x24, x25, x26, x27, x28, x29, x30, x31, x32, x33, x34, x35, x36, x37, x38, x39, x40, x41, x42, x43, x44, x45, x46, x47, x48, x49;
     x0 = IKcos(j[0]);
     x1 = IKcos(j[1]);
@@ -372,19 +379,19 @@ IKFAST_API void ComputeFk(const IkReal* j, IkReal* eetrans, IkReal* eerot) {
     x9 = IKsin(j[3]);
     x10 = IKsin(j[5]);
     x11 = IKcos(j[5]);
-    x12 = (( 0.1157) * x4);
-    x13 = (( 0.5723) * x1);
-    x14 = (( 0.1157) * x1);
-    x15 = (( 0.5723) * x4);
-    x16 = (( 0.612) * x1);
-    x17 = (( 1.0) * x6);
-    x18 = (( 1.0) * x9);
-    x19 = (( 1.0) * x7);
-    x20 = (( 1.0) * x8);
-    x21 = (( 0.0922) * x8);
-    x22 = (( 1.0) * x4);
-    x23 = (( 1.0) * x1);
-    x24 = (( 0.0922) * x9);
+    x12 = ((0.1157) * x4);
+    x13 = ((0.5723) * x1);
+    x14 = ((0.1157) * x1);
+    x15 = ((0.5723) * x4);
+    x16 = ((0.612) * x1);
+    x17 = ((1.0) * x6);
+    x18 = ((1.0) * x9);
+    x19 = ((1.0) * x7);
+    x20 = ((1.0) * x8);
+    x21 = ((0.0922) * x8);
+    x22 = ((1.0) * x4);
+    x23 = ((1.0) * x1);
+    x24 = ((0.0922) * x9);
     x25 = (x0 * x3);
     x26 = (x0 * x2);
     x27 = (x5 * x7);
@@ -396,57 +403,63 @@ IKFAST_API void ComputeFk(const IkReal* j, IkReal* eetrans, IkReal* eerot) {
     x33 = (x23 * x3);
     x34 = (x23 * x25);
     x35 = (x23 * x31);
-    x36 = (( ( x1 * x2 ) ) + x29);
-    x37 = (( ( ( -1.0 ) * x2 * x22 ) ) + x33);
-    x38 = ( ( ( ( -1.0 ) * x34 ) ) + ( ( x26 * x4 ) ) );
-    x39 = ( ( ( ( -1.0 ) * x35 ) ) + ( ( x28 * x4 ) ) );
-    x40 = ( ( ( x22 * x25 ) ) + ( ( x23 * x26 ) ) );
-    x41 = ( ( ( x23 * x28 ) ) + ( ( x22 * x31 ) ) );
-    x42 = ( x41 * x9 );
-    x43 = ( ( ( ( -1.0 ) * x18 * x37 ) ) + ( ( ( -1.0 ) * x20 * x36 ) ) );
-    x44 = ( ( ( x9 * ( ( ( ( ( 1.0 ) * x22 * x3 ) ) + ( ( ( 1.0 ) * x2 * x23 ) ) ) ) ) ) + ( ( ( -1.0 ) * x37 * x8 ) ) );
-    x45 = ( ( ( x40 * x9 ) ) + ( ( x38 * x8 ) ) );
-    x46 = ( x42 + ( ( x39 * x8 ) ) );
-    x47 = ( x46 * x7 );
-    x48 = ( ( ( ( -1.0 ) * x20 * x40 ) ) + ( ( x18 * ( ( ( ( ( -1.0 ) * x34 ) ) + ( ( x22 * x26 ) ) ) ) ) ) );
-    x49 = ( ( ( x18 * ( ( ( ( ( -1.0 ) * x35 ) ) + ( ( x22 * x28 ) ) ) ) ) ) + ( ( ( -1.0 ) * x20 * x41 ) ) );
-    eerot[0] = ( ( ( x6 * ( ( ( ( ( -1.0 ) * x18 * x40 ) ) + ( ( ( -1.0 ) * x20 * x38 ) ) ) ) ) ) + ( ( ( -1.0 ) * x19 * x5 ) ) );
-    eerot[1] = ( ( ( x11 * ( ( ( ( ( -1.0 ) * x19 * x45 ) ) + x32 ) ) ) ) + ( ( x10 * x48 ) ) );
-    eerot[2] = ( ( ( x11 * x48 ) ) + ( ( x10 * ( ( ( ( ( -1.0 ) * x32 ) ) + ( ( x45 * x7 ) ) ) ) ) ) );
-    IkReal x50 = ( ( 1.0 ) * x26 );
-    IkReal x51 = ( ( 1.0 ) * x25 );
-    eetrans[0] = ( ( ( x8 * ( ( ( ( ( -1.0 ) * x14 * x50 ) ) + ( ( ( -1.0 ) * x12 * x51 ) ) ) ) ) ) + ( ( x0 * x16 ) ) + ( ( ( -0.0922 ) * x27 ) ) + ( ( ( -1.0 ) * x15 * x50 ) ) + ( ( ( -0.163941 ) * x5 ) ) + ( ( x9 * ( ( ( ( ( -1.0 ) * x14 * x51 ) ) + ( ( x12 * x26 ) ) ) ) ) ) + ( ( x6 * ( ( ( ( ( -1.0 ) * x24 * x40 ) ) + ( ( ( -1.0 ) * x21 * x38 ) ) ) ) ) ) + ( ( x13 * x25 ) ) );
-    eerot[3] = ( ( ( x6 * ( ( ( ( ( -1.0 ) * x18 * x41 ) ) + ( ( ( -1.0 ) * x20 * x39 ) ) ) ) ) ) + x30 );
-    eerot[4] = ( ( ( x10 * x49 ) ) + ( ( x11 * ( ( ( ( ( -1.0 ) * x0 * x17 ) ) + ( ( ( -1.0 ) * x19 * x46 ) ) ) ) ) ) );
-    eerot[5] = ( ( ( x10 * ( ( ( ( x0 * x6 ) ) + x47 ) ) ) ) + ( ( x11 * x49 ) ) );
-    IkReal x52 = ( ( 1.0 ) * x14 );
-    eetrans[1] = ( ( ( ( -1.0 ) * x15 * x28 ) ) + ( ( x9 * ( ( ( ( ( -1.0 ) * x31 * x52 ) ) + ( ( x12 * x28 ) ) ) ) ) ) + ( ( ( 0.0922 ) * x30 ) ) + ( ( x8 * ( ( ( ( ( -1.0 ) * x12 * x31 ) ) + ( ( ( -1.0 ) * x28 * x52 ) ) ) ) ) ) + ( ( x13 * x31 ) ) + ( ( x16 * x5 ) ) + ( ( x6 * ( ( ( ( ( -1.0 ) * x24 * x41 ) ) + ( ( ( -1.0 ) * x21 * x39 ) ) ) ) ) ) + ( ( ( 0.163941 ) * x0 ) ) );
-    eerot[6] = ( x43 * x6 );
-    eerot[7] = ( ( ( x10 * x44 ) ) + ( ( x11 * x43 * x7 ) ) );
-    eerot[8] = ( ( ( x11 * x44 ) ) + ( ( x10 * x7 * ( ( ( ( x36 * x8 ) ) + ( ( x37 * x9 ) ) ) ) ) ) );
-    IkReal x53 = ( ( 1.0 ) * x3 );
-    eetrans[2] = ( ( 0.1273 ) + ( ( ( -0.612 ) * x4 ) ) + ( ( ( -1.0 ) * x15 * x53 ) ) + ( ( x8 * ( ( ( ( ( -1.0 ) * x14 * x53 ) ) + ( ( x12 * x2 ) ) ) ) ) ) + ( ( x6 * ( ( ( ( ( -1.0 ) * x24 * x37 ) ) + ( ( ( -1.0 ) * x21 * x36 ) ) ) ) ) ) + ( ( x9 * ( ( ( ( x14 * x2 ) ) + ( ( x12 * x3 ) ) ) ) ) ) + ( ( ( -1.0 ) * x13 * x2 ) ) );
+    x36 = (((x1 * x2)) + x29);
+    x37 = ((((-1.0) * x2 * x22)) + x33);
+    x38 = ((((-1.0) * x34)) + ((x26 * x4)));
+    x39 = ((((-1.0) * x35)) + ((x28 * x4)));
+    x40 = (((x22 * x25)) + ((x23 * x26 )));
+    x41 = (((x23 * x28)) + ((x22 * x31)));
+    x42 = (x41 * x9);
+    x43 = ((((-1.0) * x18 * x37)) + (((-1.0) * x20 * x36)));
+    x44 = (((x9 * (((((1.0) * x22 * x3)) + (((1.0) * x2 * x23)))))) + (((-1.0) * x37 * x8)));
+    x45 = (((x40 * x9)) + ((x38 * x8)));
+    x46 = (x42 + ((x39 * x8)));
+    x47 = (x46 * x7);
+    x48 = ((((-1.0) * x20 * x40)) + ((x18 * (((((-1.0) * x34)) + ((x22 * x26)))))));
+    x49 = (((x18 * (((((-1.0) * x35)) + ((x22 * x28)))))) + (((-1.0) * x20 * x41)));
+    eerot[0] = (((x6 * (((((-1.0) * x18 * x40)) + (((-1.0) * x20 * x38)))))) + (((-1.0) * x19 * x5)));
+    eerot[1] = (((x11 * (((((-1.0) * x19 * x45)) + x32)))) + ((x10 * x48)));
+    eerot[2] = (((x11 * x48)) + ((x10 * (((((-1.0) * x32)) + ((x45 * x7)))))));
+    IkReal x50 = ((1.0) * x26);
+    IkReal x51 = ((1.0) * x25);
+    eetrans[0] = (((x8 * (((((-1.0) * x14 * x50)) + (((-1.0) * x12 * x51)))))) + ((x0 * x16)) + (((-0.0922) * x27) ) + (((-1.0) * x15 * x50)) + (((-0.163941) * x5)) + ((x9 * (((((-1.0) * x14 * x51)) + ((x12 * x26)))))) + ((x6 * (((((-1.0) * x24 * x40)) + (((-1.0) * x21 * x38)))))) + ((x13 * x25)));
+    eerot[3] = (((x6 * ( ( ( ( ( -1.0 ) * x18 * x41 ) ) + ( ( ( -1.0 ) * x20 * x39 ) ) ) ) ) ) + x30 );
+    eerot[4] = (((x10 * x49 ) ) + ( ( x11 * ( ( ( ( ( -1.0 ) * x0 * x17 ) ) + ( ( ( -1.0 ) * x19 * x46 ) ) ) ) ) ) );
+    eerot[5] = (((x10 * ((((x0 * x6)) + x47)))) + ((x11 * x49)));
+    IkReal x52 = ((1.0) * x14);
+    eetrans[1] = ((((-1.0) * x15 * x28)) + ((x9 * (((((-1.0) * x31 * x52)) + ((x12 * x28)))))) + (((0.0922) * x30)) + ((x8 * (((((-1.0) * x12 * x31)) + (((-1.0) * x28 * x52)))))) + ((x13 * x31)) + ((x16 * x5)) + ((x6 * (((((-1.0) * x24 * x41)) + (((-1.0) * x21 * x39)))))) + (((0.163941) * x0)));
+    eerot[6] = (x43 * x6);
+    eerot[7] = (((x10 * x44)) + ((x11 * x43 * x7)));
+    eerot[8] = (((x11 * x44)) + ((x10 * x7 * ((((x36 * x8)) + ((x37 * x9)))))));
+    IkReal x53 = ((1.0 ) * x3);
+    eetrans[2] = ((0.1273) + (((-0.612) * x4)) + (((-1.0) * x15 * x53)) + ((x8 * (((((-1.0) * x14 * x53)) + ((x12 * x2)))))) + ((x6 * (((((-1.0) * x24 * x37)) + (((-1.0) * x21 * x36)))))) + ((x9 * ((((x14 * x2)) + ((x12 * x3)))))) + (((-1.0) * x13 * x2)));
 }
 
-IKFAST_API int GetNumFreeParameters() {
+IKFAST_API int GetNumFreeParameters()
+{
     return 0;
 }
-IKFAST_API int* GetFreeParameters() {
+IKFAST_API int* GetFreeParameters()
+{
     return NULL;
 }
-IKFAST_API int GetNumJoints() {
+IKFAST_API int GetNumJoints()
+{
     return 6;
 }
 
-IKFAST_API int GetIkRealSize() {
+IKFAST_API int GetIkRealSize()
+{
     return sizeof ( IkReal );
 }
 
-IKFAST_API int GetIkType() {
+IKFAST_API int GetIkType()
+{
     return 0x67000001;
 }
 
-class IKSolver {
+class IKSolver
+{
 public:
     IkReal j9, cj9, sj9, htj9, j9mul, j8, cj8, sj8, htj8, j8mul, j7, cj7, sj7, htj7, j7mul, j10, cj10, sj10, htj10, j10mul, j11, cj11, sj11, htj11, j11mul, j12, cj12, sj12, htj12, j12mul, new_r00, r00, rxp0_0, new_r01, r01, rxp0_1, new_r02, r02, rxp0_2, new_r10, r10, rxp1_0, new_r11, r11, rxp1_1, new_r12, r12, rxp1_2, new_r20, r20, rxp2_0, new_r21, r21, rxp2_1, new_r22, r22, rxp2_2, new_px, px, npx, new_py, py, npy, new_pz, pz, npz, pp;
     unsigned char _ij9[2], _nj9, _ij8[2], _nj8, _ij7[2], _nj7, _ij10[2], _nj10, _ij11[2], _nj11, _ij12[2], _nj12;
@@ -478,7 +491,8 @@ public:
         _ij12[0] = -1;
         _ij12[1] = -1;
         _nj12 = -1;
-        for ( int dummyiter = 0; dummyiter < 1; ++dummyiter ) {
+        for ( int dummyiter = 0; dummyiter < 1; ++dummyiter )
+        {
             solutions.Clear();
             r00 = eerot[0 * 3 + 0];
             r01 = eerot[0 * 3 + 1];
