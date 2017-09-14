@@ -227,10 +227,10 @@ inline float IKatan2(float fy, float fx)
 {
     if (isnan ( fy ))
     {
-        IKFAST_ASSERT ( !isnan ( fx ) ); // if both are nan, probably wrong value will be returned
+        IKFAST_ASSERT(!isnan ( fx ));  // if both are nan, probably wrong value will be returned
         return float ( IKPI_2 );
     }
-    else if(isnan ( fx ))
+    else if (isnan ( fx ))
     {
         return 0;
     }
@@ -244,7 +244,7 @@ inline double IKatan2(double fy, double fx)
 {
     if ( isnan ( fy ) )
     {
-        IKFAST_ASSERT ( !isnan ( fx ) ); // if both are nan, probably wrong value will be returned
+        IKFAST_ASSERT(!isnan ( fx ));  // if both are nan, probably wrong value will be returned
         return IKPI_2;
     }
     else if (isnan ( fx ))
@@ -267,9 +267,9 @@ inline CheckValue<T> IKatan2WithCheck(T fy, T fx, T epsilon)
     CheckValue<T> ret;
     ret.valid = false;
     ret.value = 0;
-    if(!isnan ( fy ) && !isnan ( fx ))
+    if (!isnan ( fy ) && !isnan ( fx ))
     {
-        if(IKabs ( fy ) >= IKFAST_ATAN2_MAGTHRESH || IKabs ( fx ) > IKFAST_ATAN2_MAGTHRESH)
+        if (IKabs ( fy ) >= IKFAST_ATAN2_MAGTHRESH || IKabs ( fx ) > IKFAST_ATAN2_MAGTHRESH)
         {
             ret.value = IKatan2Simple(fy, fx);
             ret.valid = true;
@@ -323,11 +323,11 @@ inline CheckValue<T> IKPowWithIntegerCheck(T f, int n)
         if ( f == 0 )
         {
             ret.valid = false;
-            ret.value = ( T ) 1.0e30;
+            ret.value = (T) 1.0e30;
             return ret;
         }
         if ( n == -1 ) {
-            ret.value = T ( 1.0 ) / f;
+            ret.value = T(1.0) / f;
             return ret;
         }
     }
@@ -351,53 +351,53 @@ inline CheckValue<T> IKPowWithIntegerCheck(T f, int n)
     }
 
     if ( n < 0 ) {
-        ret.value = T ( 1.0 ) / ret.value;
+        ret.value = T(1.0) / ret.value;
     }
     return ret;
 }
 
 /// solves the forward kinematics equations.
 /// \param pfree is an array specifying the free joints of the chain.
-IKFAST_API void ComputeFk ( const IkReal* j, IkReal* eetrans, IkReal* eerot ) {
+IKFAST_API void ComputeFk(const IkReal* j, IkReal* eetrans, IkReal* eerot) {
     IkReal x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15, x16, x17, x18, x19, x20, x21, x22, x23, x24, x25, x26, x27, x28, x29, x30, x31, x32, x33, x34, x35, x36, x37, x38, x39, x40, x41, x42, x43, x44, x45, x46, x47, x48, x49;
-    x0 = IKcos ( j[0] );
-    x1 = IKcos ( j[1] );
-    x2 = IKsin ( j[2] );
-    x3 = IKcos ( j[2] );
-    x4 = IKsin ( j[1] );
-    x5 = IKsin ( j[0] );
-    x6 = IKsin ( j[4] );
-    x7 = IKcos ( j[4] );
-    x8 = IKcos ( j[3] );
-    x9 = IKsin ( j[3] );
-    x10 = IKsin ( j[5] );
-    x11 = IKcos ( j[5] );
-    x12 = ( ( 0.1157 ) * x4 );
-    x13 = ( ( 0.5723 ) * x1 );
-    x14 = ( ( 0.1157 ) * x1 );
-    x15 = ( ( 0.5723 ) * x4 );
-    x16 = ( ( 0.612 ) * x1 );
-    x17 = ( ( 1.0 ) * x6 );
-    x18 = ( ( 1.0 ) * x9 );
-    x19 = ( ( 1.0 ) * x7 );
-    x20 = ( ( 1.0 ) * x8 );
-    x21 = ( ( 0.0922 ) * x8 );
-    x22 = ( ( 1.0 ) * x4 );
-    x23 = ( ( 1.0 ) * x1 );
-    x24 = ( ( 0.0922 ) * x9 );
-    x25 = ( x0 * x3 );
-    x26 = ( x0 * x2 );
-    x27 = ( x5 * x7 );
-    x28 = ( x2 * x5 );
-    x29 = ( x3 * x4 );
-    x30 = ( x0 * x7 );
-    x31 = ( x3 * x5 );
-    x32 = ( x17 * x5 );
-    x33 = ( x23 * x3 );
-    x34 = ( x23 * x25 );
-    x35 = ( x23 * x31 );
-    x36 = ( ( ( x1 * x2 ) ) + x29 );
-    x37 = ( ( ( ( -1.0 ) * x2 * x22 ) ) + x33 );
+    x0 = IKcos(j[0]);
+    x1 = IKcos(j[1]);
+    x2 = IKsin(j[2]);
+    x3 = IKcos(j[2]);
+    x4 = IKsin(j[1]);
+    x5 = IKsin(j[0]);
+    x6 = IKsin(j[4]);
+    x7 = IKcos(j[4]);
+    x8 = IKcos(j[3]);
+    x9 = IKsin(j[3]);
+    x10 = IKsin(j[5]);
+    x11 = IKcos(j[5]);
+    x12 = (( 0.1157) * x4);
+    x13 = (( 0.5723) * x1);
+    x14 = (( 0.1157) * x1);
+    x15 = (( 0.5723) * x4);
+    x16 = (( 0.612) * x1);
+    x17 = (( 1.0) * x6);
+    x18 = (( 1.0) * x9);
+    x19 = (( 1.0) * x7);
+    x20 = (( 1.0) * x8);
+    x21 = (( 0.0922) * x8);
+    x22 = (( 1.0) * x4);
+    x23 = (( 1.0) * x1);
+    x24 = (( 0.0922) * x9);
+    x25 = (x0 * x3);
+    x26 = (x0 * x2);
+    x27 = (x5 * x7);
+    x28 = (x2 * x5);
+    x29 = (x3 * x4);
+    x30 = (x0 * x7);
+    x31 = (x3 * x5);
+    x32 = (x17 * x5);
+    x33 = (x23 * x3);
+    x34 = (x23 * x25);
+    x35 = (x23 * x31);
+    x36 = (( ( x1 * x2 ) ) + x29);
+    x37 = (( ( ( -1.0 ) * x2 * x22 ) ) + x33);
     x38 = ( ( ( ( -1.0 ) * x34 ) ) + ( ( x26 * x4 ) ) );
     x39 = ( ( ( ( -1.0 ) * x35 ) ) + ( ( x28 * x4 ) ) );
     x40 = ( ( ( x22 * x25 ) ) + ( ( x23 * x26 ) ) );
