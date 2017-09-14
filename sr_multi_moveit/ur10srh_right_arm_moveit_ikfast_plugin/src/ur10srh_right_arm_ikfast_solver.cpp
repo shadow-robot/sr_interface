@@ -214,32 +214,41 @@ inline float IKsqrt(float f)
     if ( f <= 0.0f ) return 0.0f;
     return sqrtf ( f );
 }
-inline double IKsqrt ( double f ) {
+inline double IKsqrt(double f)
+{
     if ( f <= 0.0 ) return 0.0;
     return sqrt ( f );
 }
-inline float IKatan2Simple ( float fy, float fx ) {
+inline float IKatan2Simple(float fy, float fx)
+{
     return atan2f ( fy, fx );
 }
-inline float IKatan2 ( float fy, float fx ) {
-    if ( isnan ( fy ) ) {
+inline float IKatan2(float fy, float fx)
+{
+    if (isnan ( fy ))
+    {
         IKFAST_ASSERT ( !isnan ( fx ) ); // if both are nan, probably wrong value will be returned
         return float ( IKPI_2 );
     }
-    else if ( isnan ( fx ) ) {
+    else if(isnan ( fx ))
+    {
         return 0;
     }
     return atan2f ( fy, fx );
 }
-inline double IKatan2Simple ( double fy, double fx ) {
+inline double IKatan2Simple(double fy, double fx)
+{
     return atan2 ( fy, fx );
 }
-inline double IKatan2 ( double fy, double fx ) {
-    if ( isnan ( fy ) ) {
+inline double IKatan2(double fy, double fx)
+{
+    if ( isnan ( fy ) )
+    {
         IKFAST_ASSERT ( !isnan ( fx ) ); // if both are nan, probably wrong value will be returned
         return IKPI_2;
     }
-    else if ( isnan ( fx ) ) {
+    else if (isnan ( fx ))
+    {
         return 0;
     }
     return atan2 ( fy, fx );
@@ -253,42 +262,50 @@ struct CheckValue
 };
 
 template <typename T>
-inline CheckValue<T> IKatan2WithCheck ( T fy, T fx, T epsilon )
+inline CheckValue<T> IKatan2WithCheck(T fy, T fx, T epsilon)
 {
     CheckValue<T> ret;
     ret.valid = false;
     ret.value = 0;
-    if ( !isnan ( fy ) && !isnan ( fx ) ) {
-        if ( IKabs ( fy ) >= IKFAST_ATAN2_MAGTHRESH || IKabs ( fx ) > IKFAST_ATAN2_MAGTHRESH ) {
-            ret.value = IKatan2Simple ( fy, fx );
+    if(!isnan ( fy ) && !isnan ( fx ))
+    {
+        if(IKabs ( fy ) >= IKFAST_ATAN2_MAGTHRESH || IKabs ( fx ) > IKFAST_ATAN2_MAGTHRESH)
+        {
+            ret.value = IKatan2Simple(fy, fx);
             ret.valid = true;
         }
     }
     return ret;
 }
 
-inline float IKsign ( float f ) {
-    if ( f > 0 ) {
+inline float IKsign(float f)
+{
+    if ( f > 0 )
+    {
         return float ( 1 );
     }
-    else if ( f < 0 ) {
+    else if ( f < 0 )
+    {
         return float ( -1 );
     }
     return 0;
 }
 
-inline double IKsign ( double f ) {
-    if ( f > 0 ) {
+inline double IKsign(double f)
+{
+    if ( f > 0 )
+    {
         return 1.0;
     }
-    else if ( f < 0 ) {
+    else if ( f < 0 )
+    {
         return -1.0;
     }
     return 0;
 }
 
 template <typename T>
-inline CheckValue<T> IKPowWithIntegerCheck ( T f, int n )
+inline CheckValue<T> IKPowWithIntegerCheck(T f, int n)
 {
     CheckValue<T> ret;
     ret.valid = true;
