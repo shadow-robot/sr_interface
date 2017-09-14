@@ -156,7 +156,8 @@ inline double IKasin(double f)
 // return positive value in [0,y)
 inline float IKfmod(float x, float y)
 {
-    while ( x < 0 ) {
+    while ( x < 0 )
+    {
         x += y;
     }
     return fmodf ( x, y );
@@ -165,7 +166,8 @@ inline float IKfmod(float x, float y)
 // return positive value in [0,y)
 inline double IKfmod(double x, double y)
 {
-    while ( x < 0 ) {
+    while ( x < 0 )
+    {
         x += y;
     }
     return fmod ( x, y );
@@ -343,7 +345,8 @@ inline CheckValue<T> IKPowWithIntegerCheck(T f, int n)
     {
         ret.value = f * f * f;
     }
-    else {
+    else
+    {
         ret.value = 1.0;
         while ( num > 0 )
         {
@@ -356,7 +359,8 @@ inline CheckValue<T> IKPowWithIntegerCheck(T f, int n)
         }
     }
 
-    if ( n < 0 ) {
+    if ( n < 0 )
+    {
         ret.value = T(1.0) / ret.value;
     }
     return ret;
@@ -466,7 +470,8 @@ public:
 
     IkReal j100, cj100, sj100;
     unsigned char _ij100[2], _nj100;
-    bool ComputeIk(const IkReal* eetrans, const IkReal* eerot, const IkReal* pfree, IkSolutionListBase<IkReal>& solutions) {
+    bool ComputeIk(const IkReal* eetrans, const IkReal* eerot, const IkReal* pfree, IkSolutionListBase<IkReal>& solutions)
+    {
         j9 = numeric_limits<IkReal>::quiet_NaN();
         _ij9[0] = -1;
         _ij9[1] = -1;
@@ -826,13 +831,13 @@ public:
             int numroots;;
             IkReal x70 = pz * pz;
             IkReal x71 = pp * pp;
-            IkReal x72 = (( 0.2314) * pz);
+            IkReal x72 = ((0.2314) * pz);
             IkReal x73 = (pp * r21);
-            IkReal x74 = ((0.2314 ) * rxp0_2);
+            IkReal x74 = ((0.2314) * rxp0_2);
             IkReal x75 = ((0.01338649) * r22);
             IkReal x76 = (gclwh9_0 * pz);
             IkReal x77 = (gclwh4_3 * r22);
-            IkReal x78 = (pp * r20 ;
+            IkReal x78 = (pp * r20);
             IkReal x79 = ((0.327882) * gclwh14_14);
             IkReal x80 = (npy * pz);
             IkReal x81 = ((0.01338649) * r21);
@@ -854,11 +859,11 @@ public:
             IkReal x97 = ((0.00219459455709) * r20);
             IkReal x98 = ((2.0) * gclwh4_11);
             IkReal x99 = ((0.000201684224787892) * r20);
-            IkReal x100 = ((4.7372 ) * npx);
+            IkReal x100 = ((4.7372) * npx);
             IkReal x101 = (gclwh13_1 * r21);
-            IkReal x102 = (( 0.2314 ) * rxp2_2);
+            IkReal x102 = ((0.2314) * rxp2_2);
             IkReal x103 = (gclwh11_13 * r22);
-            IkReal x104 = (( 0.01338649) * r20;
+            IkReal x104 = ((0.01338649) * r20;
             IkReal x105 = (npx * pz);
             IkReal x106 = ((0.327882) * gclwh15_15);
             IkReal x107 = ((0.327675509152703) * rxp0_2);
@@ -895,9 +900,9 @@ public:
             IkReal x138 = (gclwh13_9 * rxp1_2);
             IkReal x139 = ((0.00918658) * rxp0_2);
             IkReal x140 = ((0.015853620107) * r22);
-            IkReal x141 = (gclwh7_13 * r21 );
-            IkReal x142 = (gclwh1_2 * pz );
-            IkReal x143 = ((2.0) * gclwh7_10 );
+            IkReal x141 = (gclwh7_13 * r21);
+            IkReal x142 = (gclwh1_2 * pz);
+            IkReal x143 = ((2.0) * gclwh7_10);
             IkReal x144 = ((0.030644352908) * r20);
             IkReal x145 = ((0.2314) * rxp1_2);
             IkReal x146 = (gclwh5_1 * rxp2_2);
@@ -914,15 +919,15 @@ public:
             IkReal x157 = ((0.05354596) * r21);
             IkReal x158 = (gclwh8_2 * pz);
             IkReal x159 = ((0.05354596) * r22);
-            IkReal x160 = ((4.0 ) * gclwh9_10);
+            IkReal x160 = ((4.0) * gclwh9_10);
             IkReal x161 = (gclwh5_0 * pz);
             IkReal x162 = ((0.54809404) * rxp0_2);
             IkReal x163 = (gclwh4_2 * pz);
-            IkReal x164 = (( 0.015322176454) * r21);
+            IkReal x164 = ((0.015322176454) * r21);
             IkReal x165 = (gclwh9_0 * r20);
             IkReal x166 = (gclwh15_15 * rxp0_2);
             IkReal x167 = ((4.0) * gclwh7_10);
-            IkReal x168 = (gclwh10_2 * pz );
+            IkReal x168 = (gclwh10_2 * pz);
             IkReal x169 = ((0.327882) * gclwh12_14);
             IkReal x170 = (gclwh10_12 * r22);
             IkReal x171 = (gclwh13_1 * rxp1_2);
@@ -1121,126 +1126,126 @@ public:
             IkReal x364 = (gclwh8_2*rxp0_2*x72);
             IkReal x365 = (gclwh2_0*pz*x81);
             IkReal x366 = (x71*x86);
-            IkReal x367 = ( gclwh11_0 * rxp2_2 * x72 );
-            IkReal x368 = ( x161 * x85 );
-            IkReal x369 = ( x173 * x73 );
-            IkReal x370 = ( gclwh0_0 * pz * x104 );
-            IkReal x371 = ( gclwh5_9 * npz * x72 );
-            IkReal x372 = ( x161 * x75 );
-            IkReal x373 = ( x173 * x81 );
-            IkReal x374 = ( gclwh13_9 * npy * x72 );
-            IkReal x375 = ( ( 0.1157 ) * gclwh15_9 * x78 );
-            IkReal x376 = ( x105 * x194 );
-            IkReal x377 = ( gclwh9_0 * rxp0_2 * x72 );
-            IkReal x378 = ( x179 * x71 );
-            IkReal x379 = ( gclwh0_1 * x296 );
-            IkReal x380 = ( ( 0.1157 ) * gclwh5_9 * x85 );
-            IkReal x381 = ( x192 * x84 );
-            IkReal x382 = ( ( 0.1157 ) * gclwh13_9 * x73 );
-            IkReal x383 = ( x203 * x80 );
-            IkReal x384 = ( gclwh7_0 * rxp1_2 * x72 );
-            IkReal x385 = ( gclwh15_9 * npx * x72 );
-            IkReal x386 = ( x104 * x148 );
-            IkReal x387 = ( ( 0.163941 ) * gclwh13_15 * x73 );
-            IkReal x388 = ( ( 0.163941 ) * gclwh5_15 * x85 );
-            IkReal x389 = ( x105 * x106 );
-            IkReal x390 = ( x200 * x80 );
-            IkReal x391 = ( ( 0.163941 ) * gclwh15_15 * x78 );
-            IkReal x392 = ( x184 * x84 );
-            IkReal x393 = ( x186 * x78 );
-            IkReal x394 = ( x134 * x85 );
-            IkReal x395 = ( x199 * x80 );
-            IkReal x396 = ( x105 * x135 );
-            IkReal x397 = ( x177 * x73 );
-            IkReal x398 = ( x187 * x84 );
-            IkReal x399 = ( x85 * x91 );
-            IkReal x400 = ( x167 * x80 );
-            IkReal x401 = ( x120 * x78 );
-            IkReal x402 = ( x143 * x73 );
-            IkReal x403 = ( x105 * x160 );
-            IkReal x404 = ( x137 * x84 );
-            IkReal x405 = ( x209 * x78 );
-            IkReal x406 = ( ( 4.0 ) * gclwh12_11 * x80 );
-            IkReal x407 = ( ( 4.0 ) * gclwh4_11 * x84 );
-            IkReal x408 = ( x78 * x79 );
-            IkReal x409 = ( ( 0.655764 ) * gclwh12_14 * x80 );
-            IkReal x410 = ( ( 0.655764 ) * gclwh4_14 * x84 );
-            IkReal x411 = ( ( 0.655764 ) * gclwh14_14 * x105 );
-            IkReal x412 = ( x169 * x73 );
-            IkReal x413 = ( x196 * x85 );
-            IkReal x414 = ( gclwh6_2 * npy * x294 );
-            IkReal x415 = ( gclwh6_2 * x73 * x95 );
-            IkReal x416 = ( gclwh10_2 * npz * x294 );
-            IkReal x417 = ( gclwh8_2 * npx * x294 );
-            IkReal x418 = ( gclwh7_0 * npy * x294 );
-            IkReal x419 = ( gclwh9_0 * npx * x294 );
-            IkReal x420 = ( gclwh11_0 * npz * x294 );
-            IkReal x421 = ( gclwh7_0 * x73 * x95 );
-            IkReal x422 = ( gclwh12_2 * npy * x294 );
-            IkReal x423 = ( gclwh3_2 * npy * x294 );
-            IkReal x424 = ( gclwh1_2 * npx * x294 );
-            IkReal x425 = ( gclwh14_3 * x105 * x136 );
-            IkReal x426 = ( gclwh4_2 * npz * x294 );
-            IkReal x427 = ( gclwh4_3 * x136 * x84 );
-            IkReal x428 = ( gclwh12_2 * x73 * x95 );
-            IkReal x429 = ( gclwh1_2 * x78 * x95 );
-            IkReal x430 = ( gclwh3_3 * x136 * x80 );
-            IkReal x431 = ( gclwh4_2 * x85 * x95 );
-            IkReal x432 = ( gclwh1_3 * x105 * x136 );
-            IkReal x433 = ( gclwh3_2 * x73 * x95 );
-            IkReal x434 = ( gclwh12_3 * x136 * x80 );
-            IkReal x435 = ( gclwh14_2 * npx * x294 );
-            IkReal x436 = ( gclwh14_3 * r20 * x295 );
-            IkReal x437 = ( gclwh0_0 * npx * x294 );
-            IkReal x438 = ( gclwh2_0 * npy * x294 );
-            IkReal x439 = ( gclwh5_1 * x136 * x84 );
-            IkReal x440 = ( gclwh13_1 * x136 * x80 );
-            IkReal x441 = ( gclwh15_0 * npx * x294 );
-            IkReal x442 = ( gclwh2_1 * x136 * x80 );
-            IkReal x443 = ( gclwh0_1 * x105 * x136 );
-            IkReal x444 = ( gclwh5_0 * npz * x294 );
-            IkReal x445 = ( gclwh13_0 * npy * x294 );
-            IkReal x446 = ( gclwh0_0 * x78 * x95 );
-            IkReal x447 = ( gclwh15_0 * x78 * x95 );
-            IkReal x448 = ( gclwh2_0 * x73 * x95 );
-            IkReal x449 = ( x101 * x295 );
-            IkReal x450 = ( x190 * x295 );
-            IkReal x451 = ( gclwh15_1 * x105 * x136 );
-            IkReal x452 = ( x238 + x237 );
-            IkReal x453 = ( x267 + x268 );
-            IkReal x454 = ( x274 + x275 );
-            IkReal x455 = ( x279 + x280 );
-            IkReal x456 = ( x213 + x215 );
-            IkReal x457 = ( x242 + x240 );
-            IkReal x458 = ( x312 + x221 + x223 + x222 );
-            IkReal x459 = ( x323 + x228 + x225 + x226 );
-            IkReal x460 = ( x357 + x362 + x252 + x253 );
-            IkReal x461 = ( x383 + x381 + x263 + x262 );
-            IkReal x462 = ( x333 + x332 + x331 + x235 );
-            IkReal x463 = ( x391 + x390 + x392 + x269 );
-            IkReal x464 = ( x211 + x298 + x299 + x297 );
-            IkReal x465 = ( x290 + x409 + x408 + x410 );
-            IkReal x466 = ( x339 + x338 + x337 + x241 );
-            IkReal x467 = ( x353 + x251 + x247 + x246 + x249 );
-            IkReal x468 = ( x376 + x258 + x259 + x255 + x257 );
-            IkReal x469 = ( x326 + x328 + x233 + x230 + x231 );
-            IkReal x470 = ( x306 + x307 + x216 + x217 + x218 );
-            IkReal x471 = ( x387 + x388 + x389 + x265 + x266 );
-            IkReal x472 = ( x336 + x335 + x334 + x239 + x236 );
-            IkReal x473 = ( x302 + x300 + x301 + x212 + x214 );
-            IkReal x474 = ( x289 + x288 + x405 + x407 + x406 );
-            IkReal x475 = ( x291 + x292 + x412 + x413 + x411 );
-            IkReal x476 = ( x342 + x340 + x341 + x243 + x245 );
-            IkReal x477 = ( x397 + x396 + x398 + x276 + x277 + x278 );
-            IkReal x478 = ( x287 + x286 + x285 + x403 + x402 + x404 );
-            IkReal x479 = ( x399 + x284 + x283 + x282 + x401 + x400 );
-            IkReal x480 = ( x395 + x394 + x393 + x272 + x270 + x271 );
-            IkReal x481 = ( ( ( gclwh10_11 * x198 ) ) + ( ( ( 4.0 ) * gclwh14_11 * x105 ) ) + ( ( x180 * x73 ) ) + ( ( x85 * x98 ) ) + ( ( gclwh4_11 * x90 ) ) + ( ( gclwh8_11 * x172 ) ) + ( ( gclwh12_11 * x128 ) ) );
-            IkReal x482 = ( x330 + x325 + x327 + x329 + x232 + x419 + x421 + x420 );
-            IkReal x483 = ( x315 + x314 + x316 + x313 + x224 + x416 + x417 + x415 );
-            IkReal x484 = ( x308 + x309 + x304 + x305 + x303 + x311 + x310 + x219 + x220 + x414 );
-            IkReal x485 = ( x324 + x320 + x321 + x322 + x319 + x318 + x317 + x229 + x227 + x418 );
-            IkReal x486 = ( x386 + x384 + x385 + x382 + x380 + x261 + x260 + x449 + x448 + x445 + x444 + x447 + x446 + x443 + x442 + x450 + x451 );
+            IkReal x367 = (gclwh11_0*rxp2_2*x72);
+            IkReal x368 = (x161*x85);
+            IkReal x369 = (x173*x73);
+            IkReal x370 = (gclwh0_0*pz*x104);
+            IkReal x371 = (gclwh5_9*npz*x72);
+            IkReal x372 = (x161*x75);
+            IkReal x373 = (x173*x81);
+            IkReal x374 = (gclwh13_9*npy*x72);
+            IkReal x375 = ((0.1157)*gclwh15_9*x78);
+            IkReal x376 = (x105*x194);
+            IkReal x377 = (gclwh9_0*rxp0_2*x72);
+            IkReal x378 = (x179*x71);
+            IkReal x379 = (gclwh0_1*x296);
+            IkReal x380 = ((0.1157)*gclwh5_9*x85);
+            IkReal x381 = (x192*x84);
+            IkReal x382 = ((0.1157)*gclwh13_9*x73);
+            IkReal x383 = (x203*x80);
+            IkReal x384 = (gclwh7_0*rxp1_2*x72);
+            IkReal x385 = (gclwh15_9*npx*x72);
+            IkReal x386 = (x104*x148);
+            IkReal x387 = ((0.163941)*gclwh13_15*x73);
+            IkReal x388 = ((0.163941)*gclwh5_15*x85);
+            IkReal x389 = (x105*x106);
+            IkReal x390 = (x200*x80);
+            IkReal x391 = ((0.163941)*gclwh15_15*x78);
+            IkReal x392 = (x184*x84);
+            IkReal x393 = (x186*x78);
+            IkReal x394 = (x134*x85);
+            IkReal x395 = (x199*x80);
+            IkReal x396 = (x105*x135);
+            IkReal x397 = (x177*x73);
+            IkReal x398 = (x187*x84);
+            IkReal x399 = (x85*x91);
+            IkReal x400 = (x167*x80);
+            IkReal x401 = (x120*x78);
+            IkReal x402 = (x143*x73);
+            IkReal x403 = (x105*x160);
+            IkReal x404 = (x137*x84);
+            IkReal x405 = (x209*x78);
+            IkReal x406 = ((4.0)*gclwh12_11*x80);
+            IkReal x407 = ((4.0)*gclwh4_11*x84);
+            IkReal x408 = (x78*x79);
+            IkReal x409 = ((0.655764)*gclwh12_14*x80);
+            IkReal x410 = ((0.655764)*gclwh4_14*x84);
+            IkReal x411 = ((0.655764)*gclwh14_14*x105);
+            IkReal x412 = (x169*x73);
+            IkReal x413 = (x196*x85);
+            IkReal x414 = (gclwh6_2*npy*x294);
+            IkReal x415 = (gclwh6_2*x73*x95);
+            IkReal x416 = (gclwh10_2*npz*x294);
+            IkReal x417 = (gclwh8_2*npx*x294);
+            IkReal x418 = (gclwh7_0*npy*x294);
+            IkReal x419 = (gclwh9_0*npx*x294);
+            IkReal x420 = (gclwh11_0*npz*x294);
+            IkReal x421 = (gclwh7_0*x73*x95);
+            IkReal x422 = (gclwh12_2*npy*x294);
+            IkReal x423 = (gclwh3_2*npy*x294);
+            IkReal x424 = (gclwh1_2*npx*x294);
+            IkReal x425 = (gclwh14_3*x105*x136);
+            IkReal x426 = (gclwh4_2*npz*x294);
+            IkReal x427 = (gclwh4_3*x136*x84);
+            IkReal x428 = (gclwh12_2*x73*x95);
+            IkReal x429 = (gclwh1_2*x78*x95);
+            IkReal x430 = (gclwh3_3*x136*x80);
+            IkReal x431 = (gclwh4_2*x85*x95);
+            IkReal x432 = (gclwh1_3*x105*x136);
+            IkReal x433 = (gclwh3_2*x73*x95);
+            IkReal x434 = (gclwh12_3*x136*x80);
+            IkReal x435 = (gclwh14_2*npx*x294);
+            IkReal x436 = (gclwh14_3*r20*x295);
+            IkReal x437 = (gclwh0_0*npx*x294);
+            IkReal x438 = (gclwh2_0*npy*x294);
+            IkReal x439 = (gclwh5_1*x136*x84);
+            IkReal x440 = (gclwh13_1*x136*x80);
+            IkReal x441 = (gclwh15_0*npx*x294);
+            IkReal x442 = (gclwh2_1*x136*x80);
+            IkReal x443 = (gclwh0_1*x105*x136);
+            IkReal x444 = (gclwh5_0*npz*x294);
+            IkReal x445 = (gclwh13_0*npy*x294);
+            IkReal x446 = (gclwh0_0*x78*x95);
+            IkReal x447 = (gclwh15_0*x78*x95);
+            IkReal x448 = (gclwh2_0*x73*x95);
+            IkReal x449 = (x101*x295);
+            IkReal x450 = (x190*x295);
+            IkReal x451 = (gclwh15_1*x105*x136);
+            IkReal x452 = (x238+x237);
+            IkReal x453 = (x267+x268);
+            IkReal x454 = (x274+x275);
+            IkReal x455 = (x279+x280);
+            IkReal x456 = (x213+x215);
+            IkReal x457 = (x242+x240);
+            IkReal x458 = (x312+x221+x223+x222);
+            IkReal x459 = (x323+x228+x225+x226);
+            IkReal x460 = (x357+x362+x252+x253);
+            IkReal x461 = (x383+x381+x263+x262);
+            IkReal x462 = (x333+x332+x331+x235);
+            IkReal x463 = (x391+x390+x392+x269);
+            IkReal x464 = (x211+x298+x299+x297);
+            IkReal x465 = (x290+x409+x408+x410);
+            IkReal x466 = (x339+x338+x337+x241);
+            IkReal x467 = (x353+x251+x247+x246+x249);
+            IkReal x468 = (x376+x258+x259+x255+x257);
+            IkReal x469 = (x326+x328+x233+x230+x231);
+            IkReal x470 = (x306+x307+x216+x217+x218);
+            IkReal x471 = (x387+x388+x389+x265+x266);
+            IkReal x472 = (x336+x335+x334+x239+x236);
+            IkReal x473 = (x302+x300+x301+x212+x214);
+            IkReal x474 = (x289+x288+x405+x407+x406);
+            IkReal x475 = (x291+x292+x412+x413+x411);
+            IkReal x476 = (x342+x340+x341+x243+x245);
+            IkReal x477 = (x397+x396+x398+x276+x277+x278);
+            IkReal x478 = (x287+x286+x285+x403+x402+x404);
+            IkReal x479 = (x399+x284+x283+x282+x401+x400);
+            IkReal x480 = (x395+x394+x393+x272+x270+x271);
+            IkReal x481 = (((gclwh10_11*x198))+(((4.0)*gclwh14_11*x105))+((x180*x73))+((x85*x98))+((gclwh4_11*x90))+((gclwh8_11*x172))+((gclwh12_11*x128)));
+            IkReal x482 = (x330+x325+x327+x329+x232+x419+x421+x420);
+            IkReal x483 = (x315+x314+x316+x313+x224+x416+x417+x415);
+            IkReal x484 = (x308+x309+x304+x305+x303+x311+x310+x219+x220+x414);
+            IkReal x485 = (x324+x320+x321+x322+x319+x318+x317+x229+x227+x418);
+            IkReal x486 = (x386+x384+x385+x382+x380+x261+x260+x449+x448+x445+x444+x447+x446+x443+x442+x450+x451);
             IkReal x487 = ( x351 + x350 + x352 + x355 + x354 + x343 + x346 + x347 + x344 + x345 + x348 + x349 + x250 + x248 + x426 + x425 + x424 + x423 + x422 + x72 );
             IkReal x488 = ( x356 + x359 + x358 + x360 + x361 + x363 + x364 + x254 + x429 + x428 + x427 + x430 + x431 + x432 + x433 + x434 + x435 + x436 );
             IkReal x489 = ( x379 + x378 + x377 + x375 + x374 + x373 + x372 + x371 + x370 + x368 + x369 + x365 + x366 + x367 + x256 + x438 + x439 + x437 + x441 + x440 + x72 );
