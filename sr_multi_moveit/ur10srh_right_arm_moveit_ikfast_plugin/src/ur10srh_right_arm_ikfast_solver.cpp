@@ -23,7 +23,7 @@ using namespace ikfast;
 
 // check if the included ikfast version matches what this file was compiled with
 #define IKFAST_COMPILE_ASSERT(x) extern int __dummy[static_cast<int>(x)]
-IKFAST_COMPILE_ASSERT ( IKFAST_VERSION == 0x10000049 );
+IKFAST_COMPILE_ASSERT(IKFAST_VERSION == 0x10000049);
 
 #include <cmath>
 #include <vector>
@@ -46,7 +46,7 @@ IKFAST_COMPILE_ASSERT ( IKFAST_VERSION == 0x10000049 );
 #define __PRETTY_FUNCTION__ __func__
 #endif
 
-#define IKFAST_ASSERT(b) { if ( !(b) ) { std::stringstream ss; ss << "ikfast exception: " << __FILE__ << ":" << __LINE__ << ": " <<__PRETTY_FUNCTION__ << ": Assertion '" << #b << "' failed"; throw std::runtime_error(ss.str()); } }
+#define IKFAST_ASSERT(b) { if( !(b) ) { std::stringstream ss; ss << "ikfast exception: " << __FILE__ << ":" << __LINE__ << ": " <<__PRETTY_FUNCTION__ << ": Assertion '" << #b << "' failed"; throw std::runtime_error(ss.str()); } }
 
 #endif
 
@@ -67,45 +67,53 @@ IKFAST_COMPILE_ASSERT ( IKFAST_VERSION == 0x10000049 );
 #ifndef isinf
 #define isinf _isinf
 #endif
-//#ifndef isfinite
-//#define isfinite _isfinite
-//#endif
-#endif // _MSC_VER
+// #ifndef isfinite
+// #define isfinite _isfinite
+// #endif
+#endif  // _MSC_VER
 
 // lapack routines
-extern "C" {
-    void dgetrf_ ( const int* m, const int* n, double* a, const int* lda, int* ipiv, int* info );
-    void zgetrf_ ( const int* m, const int* n, std::complex<double>* a, const int* lda, int* ipiv, int* info );
-    void dgetri_ ( const int* n, const double* a, const int* lda, int* ipiv, double* work, const int* lwork, int* info );
-    void dgesv_ ( const int* n, const int* nrhs, double* a, const int* lda, int* ipiv, double* b, const int* ldb, int* info );
-    void dgetrs_ ( const char *trans, const int *n, const int *nrhs, double *a, const int *lda, int *ipiv, double *b, const int *ldb, int *info );
-    void dgeev_ ( const char *jobvl, const char *jobvr, const int *n, double *a, const int *lda, double *wr, double *wi, double *vl, const int *ldvl, double *vr, const int *ldvr, double *work, const int *lwork, int *info );
+extern "C"
+{
+    void dgetrf_(const int* m, const int* n, double* a, const int* lda, int* ipiv, int* info);
+    void zgetrf_(const int* m, const int* n, std::complex<double>* a, const int* lda, int* ipiv, int* info);
+    void dgetri_(const int* n, const double* a, const int* lda, int* ipiv, double* work, const int* lwork, int* info);
+    void dgesv_(const int* n, const int* nrhs, double* a, const int* lda, int* ipiv, double* b, const int* ldb, int* info);
+    void dgetrs_(const char *trans, const int *n, const int *nrhs, double *a, const int *lda, int *ipiv, double *b, const int *ldb, int *info);
+    void dgeev_(const char *jobvl, const char *jobvr, const int *n, double *a, const int *lda, double *wr, double *wi, double *vl, const int *ldvl, double *vr, const int *ldvr, double *work, const int *lwork, int *info);
 }
 
-using namespace std; // necessary to get std math routines
+using namespace std;  // necessary to get std math routines
 
 #ifdef IKFAST_NAMESPACE
-namespace IKFAST_NAMESPACE {
+namespace IKFAST_NAMESPACE
+{
 #endif
 
-inline float IKabs ( float f ) {
+inline float IKabs(float f)
+{
     return fabsf ( f );
 }
-inline double IKabs ( double f ) {
+inline double IKabs(double f)
+{
     return fabs ( f );
 }
 
-inline float IKsqr ( float f ) {
+inline float IKsqr(float f)
+{
     return f * f;
 }
-inline double IKsqr ( double f ) {
+inline double IKsqr(double f)
+{
     return f * f;
 }
 
-inline float IKlog ( float f ) {
+inline float IKlog(float f)
+{
     return logf ( f );
 }
-inline double IKlog ( double f ) {
+inline double IKlog(double f)
+{
     return log ( f );
 }
 
@@ -130,23 +138,23 @@ inline double IKlog ( double f ) {
 #endif
 
 
-inline float IKasin ( float f )
+inline float IKasin(float f)
 {
-    IKFAST_ASSERT ( f > -1 - IKFAST_SINCOS_THRESH && f < 1 + IKFAST_SINCOS_THRESH ); // any more error implies something is wrong with the solver
+    IKFAST_ASSERT(f > -1 - IKFAST_SINCOS_THRESH && f < 1 + IKFAST_SINCOS_THRESH);  // any more error implies something is wrong with the solver
     if ( f <= -1 ) return float ( -IKPI_2 );
     else if ( f >= 1 ) return float ( IKPI_2 );
     return asinf ( f );
 }
-inline double IKasin ( double f )
+inline double IKasin(double f)
 {
-    IKFAST_ASSERT ( f > -1 - IKFAST_SINCOS_THRESH && f < 1 + IKFAST_SINCOS_THRESH ); // any more error implies something is wrong with the solver
+    IKFAST_ASSERT(f > -1 - IKFAST_SINCOS_THRESH && f < 1 + IKFAST_SINCOS_THRESH);  // any more error implies something is wrong with the solver
     if ( f <= -1 ) return -IKPI_2;
     else if ( f >= 1 ) return IKPI_2;
     return asin ( f );
 }
 
 // return positive value in [0,y)
-inline float IKfmod ( float x, float y )
+inline float IKfmod(float x, float y)
 {
     while ( x < 0 ) {
         x += y;
@@ -155,7 +163,7 @@ inline float IKfmod ( float x, float y )
 }
 
 // return positive value in [0,y)
-inline double IKfmod ( double x, double y )
+inline double IKfmod(double x, double y)
 {
     while ( x < 0 ) {
         x += y;
@@ -163,39 +171,46 @@ inline double IKfmod ( double x, double y )
     return fmod ( x, y );
 }
 
-inline float IKacos ( float f )
+inline float IKacos(float f)
 {
-    IKFAST_ASSERT ( f > -1 - IKFAST_SINCOS_THRESH && f < 1 + IKFAST_SINCOS_THRESH ); // any more error implies something is wrong with the solver
+    IKFAST_ASSERT(f > -1 - IKFAST_SINCOS_THRESH && f < 1 + IKFAST_SINCOS_THRESH);  // any more error implies something is wrong with the solver
     if ( f <= -1 ) return float ( IKPI );
     else if ( f >= 1 ) return float ( 0 );
     return acosf ( f );
 }
-inline double IKacos ( double f )
+inline double IKacos(double f)
 {
-    IKFAST_ASSERT ( f > -1 - IKFAST_SINCOS_THRESH && f < 1 + IKFAST_SINCOS_THRESH ); // any more error implies something is wrong with the solver
+    IKFAST_ASSERT(f > -1 - IKFAST_SINCOS_THRESH && f < 1 + IKFAST_SINCOS_THRESH);  // any more error implies something is wrong with the solver
     if ( f <= -1 ) return IKPI;
     else if ( f >= 1 ) return 0;
     return acos ( f );
 }
-inline float IKsin ( float f ) {
+inline float IKsin(float f)
+{
     return sinf ( f );
 }
-inline double IKsin ( double f ) {
+inline double IKsin(double f)
+{
     return sin ( f );
 }
-inline float IKcos ( float f ) {
+inline float IKcos(float f)
+{
     return cosf ( f );
 }
-inline double IKcos ( double f ) {
+inline double IKcos(double f)
+{
     return cos ( f );
 }
-inline float IKtan ( float f ) {
+inline float IKtan(float f)
+{
     return tanf ( f );
 }
-inline double IKtan ( double f ) {
+inline double IKtan(double f)
+{
     return tan ( f );
 }
-inline float IKsqrt ( float f ) {
+inline float IKsqrt(float f)
+{
     if ( f <= 0.0f ) return 0.0f;
     return sqrtf ( f );
 }
