@@ -129,7 +129,7 @@
       <arg name="hand_serial" value="$(arg hand_serial)"/>
       <arg name="hand_id" value="$(arg hand_id)"/>
       <arg name="mapping_path" value="$(arg mapping_path)"/>
-      <arg name="initial_z" value="$(arg initial_z)"/>
+      <arg name="load_robot_description" value="false"/>
     </include>
 
     <!-- Should only be used when testing arm alone, as hand launch includes joint state publisher -->
