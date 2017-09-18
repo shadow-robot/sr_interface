@@ -31,9 +31,10 @@
   <arg name="hand_id" default="rh"/>
   <arg name="side" default="right"/>
   <arg name="robot_model" default="ur10"/>
-  <!-- Set initial_z value dependant on scene-->
-  <arg name="initial_z" default="1.0" if="$(arg scene)"/>
-  <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
+  <!-- Set arm height and separation-->
+  <arg name="arm_1_z" default="0.0"/>
+  <arg name="arm_2_z" default="0.0"/>
+  <arg name="arm_separation" default="1.5"/>
 
   <!-- Change this for another hand -->
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_two_$(arg robot_model).urdf.xacro'"/>
@@ -75,7 +76,7 @@
       <arg name="debug" value="$(arg debug)"/>
       <arg name="verbose" value="$(arg verbose)" />
     </include>
-    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
+    <param name="robot_description" command="xacro --inorder $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_separation:=$(arg arm_separation)"/>
     <!-- HAND -->
     <param name="/hand/mapping/$(arg hand_serial)" value="$(arg hand_id)"/>
     <param name="/hand/joint_prefix/$(arg hand_serial)" value="$(arg hand_id)_"/>
