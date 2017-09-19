@@ -39,6 +39,10 @@
   <arg name="arm_2_z" default="0.0"/>
   <arg name="arm_separation" default="1.5"/>
 
+  <!-- Arm config files -->
+  <arg name="arm_robot_hw_1" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_ur_arm_robot_hw.yaml"/>
+
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/right_srhand_bt_sp_biotacs_two_ur10.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_two_ur10_btsp_biotac.yaml"/>
 
@@ -60,8 +64,8 @@
     <arg name="side" value="$(arg side)"/>
     <arg name="robot_model" value="ur10"/>
     <arg name="robot_name" value="ur10srh"/>
-    <arg name="arm_robot_hw_1" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
-    <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_ur_arm_robot_hw.yaml"/>
+    <arg name="arm_robot_hw_1" default="$(arg arm_robot_hw_1"/>
+    <arg name="arm_robot_hw_2" default="$(arg arm_robot_hw_2"/>
     <arg name="hand_serial" value="$(arg hand_serial)"/>
     <arg name="mapping_path" value="$(arg mapping_path)"/>
     <arg name="eth_port" value="$(arg eth_port)"/>
