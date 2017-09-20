@@ -126,6 +126,7 @@
         - unique_robot_hw
     </rosparam>
 
+    <param name="robot_description" command="xacro --inorder $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_separation:=$(arg arm_separation)"/>
     <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
     <include file="$(find sr_edc_launch)/sr_edc_ros_control.launch">
       <arg name="define_robot_hardware" value="false"/>

@@ -64,8 +64,8 @@
     <arg name="side" value="$(arg side)"/>
     <arg name="robot_model" value="ur10"/>
     <arg name="robot_name" value="ur10srh"/>
-    <arg name="arm_robot_hw_1" default="$(arg arm_robot_hw_1"/>
-    <arg name="arm_robot_hw_2" default="$(arg arm_robot_hw_2"/>
+    <arg name="arm_robot_hw_1" default="$(arg arm_robot_hw_1)"/>
+    <arg name="arm_robot_hw_2" default="$(arg arm_robot_hw_2)"/>
     <arg name="hand_serial" value="$(arg hand_serial)"/>
     <arg name="mapping_path" value="$(arg mapping_path)"/>
     <arg name="eth_port" value="$(arg eth_port)"/>
