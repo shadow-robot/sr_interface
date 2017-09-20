@@ -35,6 +35,8 @@
   <arg name="arm_1_z" default="0.0"/>
   <arg name="arm_2_z" default="0.0"/>
   <arg name="arm_separation" default="1.5"/>
+  <arg name="arm_1_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
+  <arg name="arm_2_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
 
   <!-- Change this for another hand -->
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_two_$(arg robot_model).urdf.xacro'"/>
@@ -117,8 +119,8 @@
       </rosparam>
       <rosparam command="load" file="$(arg arm_robot_hw_1)"/>
       <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
-      <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
-      <param name="la_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
+      <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_1_program_path)"/>
+      <param name="la_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_2_program_path)"/>
     </group>
 
     <rosparam unless="$(arg arm_ctrl)">
