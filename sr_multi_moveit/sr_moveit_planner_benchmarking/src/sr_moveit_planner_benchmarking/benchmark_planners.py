@@ -14,8 +14,6 @@ import time
 import os
 import numpy
 
-KINEMATICS = ""
-
 
 class PlannerAnnotationParser(AnnotationParserBase):
     """
@@ -43,11 +41,10 @@ class PlannerAnnotationParser(AnnotationParserBase):
         It can be either a python static scene or bag containing an occupancy map.
         """
         scene = self._annotations["scene"]
-        arm_kinematics_file_name = self._annotations["arm_kinematics_file_name"]
 
         for element in scene:
             if element["type"] == "launch":
-                self.play_launch(element["name"] + " arm_kinematics_file_name:=" + arm_kinematics_file_name)
+                self.play_launch(element["name"])
             elif element["type"] == "python":
                 self.load_python(element["name"])
             elif element["type"] == "bag":
@@ -78,9 +75,6 @@ class PlannerAnnotationParser(AnnotationParserBase):
         self.group.set_goal_tolerance(self._annotations["goal_tolerance"])
         self.group.set_planning_time(self._annotations["planning_time"])
         self.group.allow_replanning(self._annotations["allow_replanning"])
-
-        global KINEMATICS
-        KINEMATICS = self._annotations["arm_kinematics_file_name"]
 
         self._comp_time = []
 
@@ -212,7 +206,6 @@ class PlannerAnnotationParser(AnnotationParserBase):
 
         plan_success = self._check_plan_success(plan)
         if plan_success:
-            # self.group.execute(plan, wait=True)
             plan_time = self._check_plan_time(plan)
             total_joint_rotation = self._check_plan_total_rotation(plan)
             plan_evaluation = self.evaluate_plan(plan)
@@ -304,14 +297,9 @@ class PlannerBenchmarking(BenchmarkingBase):
         row_titles = ["Planner", "Plan name", "Plan succeeded", "Total angle change",
                       "Plan quality", "Time of plan (s)", "Computation time (s)"]
         print(tabulate(results, headers=row_titles, tablefmt='orgtbl'))
-        global KINEMATICS
 
         file_path = os.path.join(self._path_to_results, '')
         file_path += time.strftime("%Y_%m_%d-%H_%M_%S")
-        if KINEMATICS == "kinematics.yaml":
-            file_path += "-trackik"
-        elif KINEMATICS == "kinematics_ikfast.yaml":
-            file_path += "-ikfast"
         file_path += "-planner_benchmark.xml"
         with open(file_path, 'w') as f:
             f.write(tabulate(results, headers=row_titles, tablefmt="simple"))  # ="html"))
