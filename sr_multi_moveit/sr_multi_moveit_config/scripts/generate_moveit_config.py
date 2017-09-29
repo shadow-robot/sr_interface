@@ -267,7 +267,6 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
 
 
 def generate_kinematics(robot, robot_config, hand_template_path="kinematics_template.yaml",
-                        arm_template_path="kinematics.yaml",
                         output_path=None, ns_=None):
     output_str = ""
     while not rospy.has_param('/robot_description'):
@@ -278,7 +277,7 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
 
     for manipulator in robot_config.manipulators:
         if manipulator.has_arm:
-            arm_yaml_path = manipulator.arm.moveit_path + "/" + arm_template_path
+            arm_yaml_path = manipulator.arm.moveit_path + "/" + "kinematics.yaml"
             with open(arm_yaml_path, 'r') as stream:
                 arm_yamldoc = yaml.load(stream)
             if manipulator.arm.extra_groups_config_path:

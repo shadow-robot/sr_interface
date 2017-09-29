@@ -6,16 +6,12 @@
   <arg name="gui" default="true"/>
   <!--Should the planner yaml be automatically generated? -->
   <arg name="generate_planning_config" default="True"/>
-
-  <!-- Kinematics file for the arm -->
-  <arg name="arm_kinematics_file_name" default="kinematics.yaml"/>
   
   <!-- The name of the robot config file to load -->
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
   
   <include file="$(find sr_multi_moveit_config)/launch/planning_context.launch">
     <arg name="robot_config_file" value="$(arg robot_config_file)"/>
-    <arg name="arm_kinematics_file_name" value="$(arg arm_kinematics_file_name)"/>
   </include>
 
   <!-- Broadcast static tf for robot root -->
@@ -29,7 +25,6 @@
     publish_monitored_planning_scene:=true
     pipeline:=$(arg planning)
     generate_planning_config:=$(arg generate_planning_config)
-    arm_kinematics_file_name:=$(arg arm_kinematics_file_name)
     robot_config_file:=$(arg robot_config_file)" name="timed_roslaunch" output="screen"
   />
 
@@ -38,7 +33,6 @@
     <node pkg="sr_multi_moveit_config" type="timed_roslaunch.sh" args="10 sr_multi_moveit_config moveit_rviz.launch 
       config:=true 
       debug:=$(arg debug)
-      arm_kinematics_file_name:=$(arg arm_kinematics_file_name)
       robot_config_file:=$(arg robot_config_file)" name="timed_roslaunch_rviz" output="screen" respawn="true"
     />
   </group>

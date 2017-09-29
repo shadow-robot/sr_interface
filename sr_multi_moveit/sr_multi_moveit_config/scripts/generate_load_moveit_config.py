@@ -88,14 +88,9 @@ if __name__ == '__main__':
                 generate_ompl_planning(robot, robot_config, hand_template_path, output_path=output_path, ns_=NS)
             elif command == "kinematics":
                 hand_template_path = sh_config_path + "kinematics_template.yaml"
-                if len(sys.argv) > 3:
-                    arm_template_path = sys.argv[3]
-                else:
-                    arm_template_path = "kinematics.yaml"
                 if save_file:
                     output_path = rospkg.RosPack().get_path('sr_multi_moveit_config') + "/config/" + "kinematics.yaml"
-                generate_kinematics(robot, robot_config, hand_template_path, arm_template_path,
-                                    output_path=output_path, ns_=NS)
+                generate_kinematics(robot, robot_config, hand_template_path, output_path=output_path, ns_=NS)
             elif command == "joint_limits":
                 hand_template_path = sh_config_path + "joint_limits_template.yaml"
                 if save_file:

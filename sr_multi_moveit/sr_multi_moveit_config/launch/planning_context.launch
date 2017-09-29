@@ -14,9 +14,6 @@
   <!-- The name of the robot config file to load -->
   <arg name="robot_config_file" default=""/>
 
-  <!-- Kinematics file for the arm -->
-  <arg name="arm_kinematics_file_name" default="kinematics.yaml"/>
-
   <!-- The semantic description that corresponds to the URDF -->
   <node name="generate_robot_srdf" pkg="sr_multi_moveit_config" type="generate_robot_srdf.py" respawn="false" output="screen" args="$(arg robot_config_file)" />
 
@@ -27,7 +24,7 @@
 
   <!-- Load default settings for kinematics; these settings are overridden by settings in a node's namespace -->
   <group ns="$(arg robot_description_name)_kinematics">
-    <node name="load_kinematics" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="kinematics $(arg robot_config_file) $(arg arm_kinematics_file_name)" />
+    <node name="load_kinematics" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="kinematics $(arg robot_config_file)" />
   </group>
 
 </launch>
