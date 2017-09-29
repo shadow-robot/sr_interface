@@ -672,9 +672,12 @@ class SrRobotCommander(object):
                 joint_trajectory.joint_names[i] for i in indices_of_joints_in_this_controller]
 
             for point in goal.trajectory.points:
-                point.positions = [point.positions[i] for i in indices_of_joints_in_this_controller]
-                point.velocities = [point.velocities[i] for i in indices_of_joints_in_this_controller]
-                point.efforts = [point.efforts[i] for i in indices_of_joints_in_this_controller]
+                if point.positions:
+                    point.positions = [point.positions[i] for i in indices_of_joints_in_this_controller]
+                if point.velocities:
+                    point.velocities = [point.velocities[i] for i in indices_of_joints_in_this_controller]
+                if point.effort:
+                    point.effort = [point.effort[i] for i in indices_of_joints_in_this_controller]
 
             goals[controller] = goal
 
