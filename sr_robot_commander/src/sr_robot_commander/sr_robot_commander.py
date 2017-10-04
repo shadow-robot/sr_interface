@@ -98,12 +98,19 @@ class SrRobotCommander(object):
         threading.Thread(None, rospy.spin)
 
     def set_planner_id(self, planner_id):
+        """
+        Sets the planner_id used for all future planning requests
+        @param planner_id - The string for the planner id, set to None to clearp
+        """
         self._move_group_commander.set_planner_id(planner_id)
 
     def set_num_planning_attempts(self, num_planning_attempts):
         self._move_group_commander.set_num_planning_attempts(num_planning_attempts)
 
     def set_planning_time(self, seconds):
+        """
+        Set default planning time to be used for future planning request.
+        """ 
         self._move_group_commander.set_planning_time(seconds)
 
     def get_end_effector_pose_from_named_state(self, name):
@@ -118,9 +125,14 @@ class SrRobotCommander(object):
         return response.pose_stamped[0]
 
     def get_planning_frame(self):
+        """ Get the name of the frame where all planning is performed """
         return self._move_group_commander.get_planning_frame()
 
     def set_pose_reference_frame(self, reference_frame):
+        """ 
+        Set the reference frame to assume for poses of end-effectors 
+        @param reference_frame - name of the frame
+        """
         self._move_group_commander.set_pose_reference_frame(reference_frame)
 
     def get_group_name(self):
@@ -131,15 +143,32 @@ class SrRobotCommander(object):
         self._warehouse_names = self.__get_warehouse_names()
 
     def set_max_velocity_scaling_factor(self, value):
+        """
+        Set a scaling factor for optionally reducing the maximum joint velocity.
+        @param value - Allowed values are in (0,1].
+        """
         self._move_group_commander.set_max_velocity_scaling_factor(value)
 
     def set_max_acceleration_scaling_factor(self, value):
+        """
+        Set a scaling factor for optionally reducing the maximum joint accelaration.
+        @param value - Allowed values are in (0,1].
+        """
         self._move_group_commander.set_max_acceleration_scaling_factor(value)
 
     def allow_looking(self, value):
+        """ 
+        Enable/disable looking around for motion planning 
+        @param value - boolean
+        """
         self._move_group_commander.allow_looking(value)
 
     def allow_replanning(self, value):
+        """ 
+        Enable/disable replanning in case new obstacle are detected 
+        while executing a plan
+        @param value - boolean 
+        """
         self._move_group_commander.allow_replanning(value)
 
     def execute(self):
@@ -153,6 +182,9 @@ class SrRobotCommander(object):
             rospy.logwarn("No plans were made, not executing anything.")
 
     def execute_plan(self, plan):
+        """
+        Executes a given plan.
+        """
         if self.check_given_plan_is_valid(plan):
             self._move_group_commander.execute(plan)
             self.__plan = None
@@ -213,6 +245,7 @@ class SrRobotCommander(object):
         return name in self._srdf_names
 
     def set_named_target(self, name):
+        """ Set a joint configuration by name. """
         if name in self._srdf_names:
             self._move_group_commander.set_named_target(name)
         elif (name in self._warehouse_names):
@@ -233,6 +266,7 @@ class SrRobotCommander(object):
         return True
 
     def get_named_target_joint_values(self, name):
+        """ Get the joint angles for targets specified by name. """
         output = dict()
 
         if (name in self._srdf_names):
@@ -789,6 +823,17 @@ class SrRobotCommander(object):
             rospy.logerr("Service call failed: %s" % e)
 
     def move_to_pose_value_target_unsafe(self, target_pose,  avoid_collisions=False, time=0.002, wait=True):
+        """
+        Specify a target pose for the end-effector and moves to it
+        @param target_pose - new pose of end-effector: a Pose message, a PoseStamped
+        message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z] or a list
+        of 7 floats [x, y, z, qx, qy, qz, qw]
+        @param avoid_collisions - Find an IK solution that avoids collisions. By default, this is false
+        @param - time in s (counting from now) for the robot to reach the
+        target (it needs to be greater than 0.0 for it not to be rejected by
+        the trajectory controller)
+        @param wait - should method wait for movement end or not
+        """
         joint_state = self.get_ik(target_pose, avoid_collisions)
         if joint_state is not None:
             active_joints = self._move_group_commander.get_active_joints()
