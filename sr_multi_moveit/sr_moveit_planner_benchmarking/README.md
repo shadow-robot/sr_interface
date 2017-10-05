@@ -5,10 +5,10 @@ Different scenes can be found in the **data/inactive_tests** folder. To include 
 
 # Launch
 
-To run all the benchmarkings, simply launch a roscore and run:
+To run all the benchmarkings, simply launch:
 
 ```
-rosrun sr_moveit_planner_benchmarking benchmark_planners.py _data:=`rospack find sr_moveit_planner_benchmarking`/data _results:=/tmp
+roslaunch sr_moveit_planner_benchmarking test_bench.launch
 ```
 To visualise the tests in Rviz, set the visualisation argument in launch/benchmarking.launch to 'True'.
 

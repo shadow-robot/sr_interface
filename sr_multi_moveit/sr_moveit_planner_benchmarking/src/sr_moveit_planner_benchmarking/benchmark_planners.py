@@ -5,12 +5,14 @@ import rospy
 from moveit_commander import (MoveGroupCommander, PlanningSceneInterface,
                               RobotCommander)
 from moveit_msgs.msg import MoveGroupActionResult, RobotState
+from geometry_msgs.msg import Pose
 from sr_benchmarking.sr_benchmarking import (AnnotationParserBase,
                                              BenchmarkingBase)
 from tabulate import tabulate
 from visualization_msgs.msg import Marker, MarkerArray
 import time
 import os
+import numpy
 
 
 class PlannerAnnotationParser(AnnotationParserBase):
@@ -82,6 +84,7 @@ class PlannerAnnotationParser(AnnotationParserBase):
         for test_id, test in enumerate(self._annotations["tests"]):
             marker_position_1 = test["start_xyz"]
             marker_position_2 = test["goal_xyz"]
+            self.space = test["space"]
 
             self._add_markers(marker_position_1, "Start test \n sequence", marker_position_2, "Goal")
 
@@ -95,7 +98,14 @@ class PlannerAnnotationParser(AnnotationParserBase):
             current.joint_state.position = current_joints
 
             self.group.set_start_state(current)
-            joints = test["goal_joints"]
+            if self.space == "joint":
+                coordinates = test["goal_joints"]
+            elif self.space == "pose":
+                position = test["goal_xyz"]
+                orientation = test["goal_orientation"]
+                coordinates = self.create_pose(position, orientation)
+            elif self.space == "position":
+                coordinates = test["goal_xyz"]
 
             for planner in self.planners:
                 if planner == "stomp":
@@ -104,9 +114,21 @@ class PlannerAnnotationParser(AnnotationParserBase):
                     planner = "AnytimeD*"
                 self.planner_id = planner
                 self.group.set_planner_id(planner)
-                self._plan_joints(joints, self._annotations["name"]+"-test_"+str(test_id))
+                self._plan_joints(coordinates, self._annotations["name"]+"-test_"+str(test_id)+"-"+self.space)
 
         return self.planner_data
+
+    def create_pose(self, position, orientation):
+        pose = Pose()
+        pose.position.x = position[0]
+        pose.position.y = position[1]
+        pose.position.z = position[2]
+
+        pose.orientation.x = orientation[0]
+        pose.orientation.y = orientation[1]
+        pose.orientation.z = orientation[2]
+        pose.orientation.w = orientation[3]
+        return pose
 
     def _add_markers(self, point, text1, point_2, text2):
         # add marker for start and goal pose of EE
@@ -167,24 +189,31 @@ class PlannerAnnotationParser(AnnotationParserBase):
     def _plan_joints(self, joints, test_name):
         # plan to joint target and determine success
         self.group.clear_pose_targets()
-        group_variable_values = self.group.get_current_joint_values()
-        group_variable_values[0:6] = joints[0:6]
-        self.group.set_joint_value_target(group_variable_values)
+        if self.space == "joint":
+            group_variable_values = self.group.get_current_joint_values()
+            group_variable_values[0:6] = joints[0:6]
+            self.group.set_joint_value_target(group_variable_values)
+        elif self.space == "pose":
+            self.group.set_joint_value_target(joints)
+        elif self.space == "position":
+            self.group.set_position_target(joints)
 
         plan = self.group.plan()
         plan_time = "N/A"
         total_joint_rotation = "N/A"
         comp_time = "N/A"
+        plan_evaluation = "N/A"
 
         plan_success = self._check_plan_success(plan)
         if plan_success:
             plan_time = self._check_plan_time(plan)
             total_joint_rotation = self._check_plan_total_rotation(plan)
+            plan_evaluation = self.evaluate_plan(plan)
             while not self._comp_time:
                 rospy.sleep(0.5)
             comp_time = self._comp_time.pop(0)
-        self.planner_data.append([self.planner_id, test_name, str(plan_success), plan_time, total_joint_rotation,
-                                  comp_time])
+        self.planner_data.append([self.planner_id, test_name, str(plan_success), total_joint_rotation,
+                                 plan_evaluation, comp_time, plan_time])
 
     @staticmethod
     def _check_plan_success(plan):
@@ -212,6 +241,21 @@ class PlannerAnnotationParser(AnnotationParserBase):
 
         total_angle_change = sum(angles)
         return total_angle_change
+
+    def evaluate_plan(self, plan):
+        num_of_joints = len(plan.joint_trajectory.points[0].positions)
+        weights = numpy.array(sorted(range(1, num_of_joints + 1), reverse=True))
+        plan_array = numpy.empty(shape=(len(plan.joint_trajectory.points),
+                                        num_of_joints))
+
+        for i, point in enumerate(plan.joint_trajectory.points):
+            plan_array[i] = point.positions
+
+        deltas = abs(numpy.diff(plan_array, axis=0))
+        sum_deltas = numpy.sum(deltas, axis=0)
+        sum_deltas_weighted = sum_deltas * weights
+        plan_quality = numpy.sum(sum_deltas_weighted)
+        return plan_quality
 
     def _check_computation_time(self, msg):
         # get computation time for successful plan to be found
@@ -250,15 +294,15 @@ class PlannerBenchmarking(BenchmarkingBase):
         # reformatting the results
         results = [item for sublist in results for item in sublist]
 
-        row_titles = ["Planner", "Plan name", "Plan succeeded", "Time of plan",
-                      "Total angle change", "Computation time"]
+        row_titles = ["Planner", "Plan name", "Plan succeeded", "Total angle change",
+                      "Plan quality", "Time of plan (s)", "Computation time (s)"]
         print(tabulate(results, headers=row_titles, tablefmt='orgtbl'))
 
         file_path = os.path.join(self._path_to_results, '')
         file_path += time.strftime("%Y_%m_%d-%H_%M_%S")
         file_path += "-planner_benchmark.xml"
         with open(file_path, 'w') as f:
-            f.write(tabulate(results, headers=row_titles, tablefmt="html"))
+            f.write(tabulate(results, headers=row_titles, tablefmt="simple"))  # ="html"))
 
 
 if __name__ == '__main__':

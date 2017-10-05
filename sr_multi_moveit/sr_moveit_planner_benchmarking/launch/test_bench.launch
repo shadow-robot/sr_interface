@@ -1,0 +1,8 @@
+<launch>
+    <arg name="scenes_path" default="$(find sr_moveit_planner_benchmarking)/data"/>
+    <arg name="results_path" default="/tmp"/>
+
+    <node name="benchmark" pkg="sr_moveit_planner_benchmarking" type="benchmark_planners.py"
+          args="_data:=$(arg scenes_path) _results:=$(arg results_path)"
+          output="screen"/>
+</launch>
