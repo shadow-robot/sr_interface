@@ -110,7 +110,7 @@ class SrRobotCommander(object):
     def set_planning_time(self, seconds):
         """
         Set default planning time to be used for future planning request.
-        """ 
+        """
         self._move_group_commander.set_planning_time(seconds)
 
     def get_end_effector_pose_from_named_state(self, name):
@@ -129,8 +129,8 @@ class SrRobotCommander(object):
         return self._move_group_commander.get_planning_frame()
 
     def set_pose_reference_frame(self, reference_frame):
-        """ 
-        Set the reference frame to assume for poses of end-effectors 
+        """
+        Set the reference frame to assume for poses of end-effectors
         @param reference_frame - name of the frame
         """
         self._move_group_commander.set_pose_reference_frame(reference_frame)
@@ -157,17 +157,17 @@ class SrRobotCommander(object):
         self._move_group_commander.set_max_acceleration_scaling_factor(value)
 
     def allow_looking(self, value):
-        """ 
-        Enable/disable looking around for motion planning 
+        """
+        Enable/disable looking around for motion planning
         @param value - boolean
         """
         self._move_group_commander.allow_looking(value)
 
     def allow_replanning(self, value):
-        """ 
-        Enable/disable replanning in case new obstacle are detected 
+        """
+        Enable/disable replanning in case new obstacle are detected
         while executing a plan
-        @param value - boolean 
+        @param value - boolean
         """
         self._move_group_commander.allow_replanning(value)
 
