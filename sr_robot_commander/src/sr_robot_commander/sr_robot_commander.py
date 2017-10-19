@@ -58,7 +58,7 @@ class SrRobotCommander(object):
         """
         self._name = name
         self._move_group_commander = MoveGroupCommander(name)
-
+        
         self._robot_commander = RobotCommander()
 
         self._robot_name = self._robot_commander._r.get_robot_name()
@@ -76,6 +76,7 @@ class SrRobotCommander(object):
         self._joints_position = {}
         self._joints_velocity = {}
         self._joints_effort = {}
+        self._joints_state = None
         self._clients = {}
         self.__plan = None
 
@@ -380,6 +381,14 @@ class SrRobotCommander(object):
         with self._joint_states_lock:
             return self._joints_effort
 
+    def _get_joints_state(self):
+        """
+        Returns joints state
+        @return - JointState message
+        """
+        with self._joint_states_lock:
+            return self._joints_state
+
     def run_joint_trajectory(self, joint_trajectory):
         """
         Moves robot through all joint states with specified timeouts
@@ -560,6 +569,7 @@ class SrRobotCommander(object):
         @param joint_state - the message containing the joints data.
         """
         with self._joint_states_lock:
+            self._joints_state = joint_state
             self._joints_position = {n: p for n, p in
                                      zip(joint_state.name,
                                          joint_state.position)}
@@ -577,11 +587,12 @@ class SrRobotCommander(object):
 
         for controller_name in controller_list.keys():
             self._action_running[controller_name] = False
-            self._clients[controller_name] = SimpleActionClient(controller_name+"/follow_joint_trajectory",
+            service_name = controller_name+"/follow_joint_trajectory"
+            self._clients[controller_name] = SimpleActionClient(service_name,
                                                                 FollowJointTrajectoryAction)
             if self._clients[controller_name].wait_for_server(timeout=rospy.Duration(4)) is False:
-                rospy.logfatal("Failed to connect to action server in 4 sec")
-                raise Exception("Failed to connect to action server in 4 sec")
+                err_msg = 'Failed to connect to action server ({}) in 4 sec'.format(service_name)
+                rospy.logwarn(err_msg)
 
     def move_to_joint_value_target_unsafe(self, joint_states, time=0.002,
                                           wait=True, angle_degrees=False):
@@ -756,7 +767,7 @@ class SrRobotCommander(object):
         except rospy.ServiceException:
             rospy.logerr("Failed to call service teach_mode")
 
-    def get_ik(self, target_pose, avoid_collisions=False):
+    def get_ik(self, target_pose, avoid_collisions=False, joint_states=None):
         """
         Computes the inverse kinematics for a given pose. It returns a JointState
         @param target_pose - A given pose of type PoseStamped
@@ -766,8 +777,14 @@ class SrRobotCommander(object):
         service_request.group_name = self._name
         service_request.ik_link_name = self._move_group_commander.get_end_effector_link()
         service_request.pose_stamped = target_pose
-        service_request.timeout.secs = 0.005
+        service_request.timeout.secs = 0.5
         service_request.avoid_collisions = avoid_collisions
+        if joint_states is None:
+            service_request.robot_state.joint_state = self._get_joints_state()
+        else:
+            service_request.robot_state.joint_state = joint_states
+        
+        rospy.loginfo(service_request)
 
         try:
             resp = self._compute_ik(ik_request=service_request)
