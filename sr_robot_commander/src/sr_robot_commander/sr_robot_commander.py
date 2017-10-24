@@ -784,8 +784,6 @@ class SrRobotCommander(object):
         else:
             service_request.robot_state.joint_state = joint_states
         
-        rospy.loginfo(service_request)
-
         try:
             resp = self._compute_ik(ik_request=service_request)
             # Check if error_code.val is SUCCESS=1
