@@ -1,6 +1,5 @@
 <launch>
   <arg name="sim" default="false"/>
-  <arg name="eth_port" default="enp0s25"/>
   <arg name="gui" default="true"/>
 
   <!-- SIMULATED ROBOTS -->
@@ -17,7 +16,6 @@
   <group unless="$(arg sim)">
     <include file="$(find sr_ethercat_hand_config)/launch/sr_system.launch">
       <arg name="gui" value="$(arg gui)"/>
-      <!-- arg name="eth_port" value="$(arg eth_port)"/ -->
     </include>
     <include file="$(find robot_blockly)/launch/robot_blockly.launch">
       <arg name="block_packages" value="[sr_blockly_blocks]"/>
