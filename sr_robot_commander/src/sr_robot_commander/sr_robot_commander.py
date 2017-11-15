@@ -58,7 +58,7 @@ class SrRobotCommander(object):
         """
         self._name = name
         self._move_group_commander = MoveGroupCommander(name)
-        
+
         self._robot_commander = RobotCommander()
 
         self._robot_name = self._robot_commander._r.get_robot_name()
@@ -381,7 +381,7 @@ class SrRobotCommander(object):
         with self._joint_states_lock:
             return self._joints_effort
 
-    def _get_joints_state(self):
+    def get_joints_state(self):
         """
         Returns joints state
         @return - JointState message
@@ -780,10 +780,10 @@ class SrRobotCommander(object):
         service_request.timeout.secs = 0.5
         service_request.avoid_collisions = avoid_collisions
         if joint_states is None:
-            service_request.robot_state.joint_state = self._get_joints_state()
+            service_request.robot_state.joint_state = self.get_joints_state()
         else:
             service_request.robot_state.joint_state = joint_states
-        
+
         try:
             resp = self._compute_ik(ik_request=service_request)
             # Check if error_code.val is SUCCESS=1
