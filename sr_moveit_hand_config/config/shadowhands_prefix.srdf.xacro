@@ -33,6 +33,9 @@
       <joint name="$(arg prefix)WRJ1" />
     </xacro:unless>
   </group>
+  <group name="$(arg prefix)manipulator">
+    <chain base_link="$(arg prefix)forearm" tip_link="$(arg prefix)manipulator"/>
+  </group>
 
   <!-- single finger groups -->
   <xacro:if value="$(arg ff)">
@@ -303,6 +306,8 @@
   <xacro:if value="$(arg th)">
     <xacro:finger_ee prefix="$(arg prefix)" link_prefix="th" finger_name="thumb" hand_name="$(arg hand_name)"/>
   </xacro:if>
+  <end_effector group="$(arg prefix)fingers" name="$(arg prefix)manipulator_ee" parent_group="$(arg prefix)manipulator" parent_link="$(arg prefix)manipulator"/>
+
 
   <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
 
