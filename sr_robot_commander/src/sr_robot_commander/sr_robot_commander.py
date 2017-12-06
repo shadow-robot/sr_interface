@@ -768,7 +768,6 @@ class SrRobotCommander(object):
         except rospy.ServiceException:
             rospy.logerr("Failed to call service teach_mode")
 
-
     def get_ik(self, target_pose, ik_constraints=None, avoid_collisions=False, joint_states=None):
 
         """
@@ -809,7 +808,8 @@ class SrRobotCommander(object):
         except rospy.ServiceException, e:
             rospy.logerr("Service call failed: %s" % e)
 
-    def move_to_pose_value_target_unsafe(self, target_pose, ik_constraints=None, avoid_collisions=False, time=0.002, wait=True):
+    def move_to_pose_value_target_unsafe(self, target_pose, ik_constraints=None, avoid_collisions=False,
+                                         time=0.002, wait=True):
         joint_state = self.get_ik(target_pose, ik_constraints, avoid_collisions)
         if joint_state is not None:
             active_joints = self._move_group_commander.get_active_joints()
