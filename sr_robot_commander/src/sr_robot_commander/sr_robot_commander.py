@@ -768,7 +768,7 @@ class SrRobotCommander(object):
         except rospy.ServiceException:
             rospy.logerr("Failed to call service teach_mode")
 
-    def get_ik(self, target_pose, ik_constraints=None, avoid_collisions=False, joint_states=None):
+    def get_ik(self, target_pose, avoid_collisions=False, joint_states=None, ik_constraints=None):
 
         """
         Computes the inverse kinematics for a given pose. It returns a JointState
@@ -810,7 +810,7 @@ class SrRobotCommander(object):
 
     def move_to_pose_value_target_unsafe(self, target_pose, ik_constraints=None, avoid_collisions=False,
                                          time=0.002, wait=True):
-        joint_state = self.get_ik(target_pose, ik_constraints, avoid_collisions)
+        joint_state = self.get_ik(target_pose, avoid_collisions, ik_constraints=ik_constraints)
         if joint_state is not None:
             active_joints = self._move_group_commander.get_active_joints()
             current_indices = [i for i, x in enumerate(joint_state.name) if any(thing in x for thing in active_joints)]
