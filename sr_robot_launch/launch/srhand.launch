@@ -28,7 +28,8 @@
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
 
-
+  <!-- <rosparam command="load" file="$(find sr_ethercat_hand_config)/controls/host/$(arg hand_id)/sr_edc_grasp_controller_PWM.yaml" if="$(arg grasp_controller)"/> -->
+  
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
     <arg name="world_name" value="$(find sr_description_common)/worlds/shadowhand.world"/>
@@ -45,7 +46,8 @@
     <param name="robot_description" command="xacro --inorder $(arg robot_description)"/>
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model usrh -z 0.0 "
           respawn="false" output="screen"/>
-    <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
+    <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml" unless="$(arg grasp_controller)"/>
+    <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_grasp_controller_gazebo.yaml" if="$(arg grasp_controller)"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
     <!-- Robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
