@@ -27,8 +27,6 @@
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
-
-  <!-- <rosparam command="load" file="$(find sr_ethercat_hand_config)/controls/host/$(arg hand_id)/sr_edc_grasp_controller_PWM.yaml" if="$(arg grasp_controller)"/> -->
   
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
