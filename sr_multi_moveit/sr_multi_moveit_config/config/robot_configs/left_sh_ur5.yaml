@@ -17,12 +17,8 @@ robot:
         name: shadowhand_left_motor.urdf.xacro
 
 ra_sr_ur_robot_hw:
-  # UR10 speed scale (0.0-1.0)
-  speed_scale: 0.5
-
-  # TODO: Hand E lite payload
+  # Hand E payload
   payload_mass_kg: 4.55
 
-  # Hand H payload centre of inertia (estimated, need exact from Hardware)
+  # Hand E payload centre of inertia (estimated, need exact from Hardware)
   payload_center_of_mass_m: [0.0, 0.0, 0.12]
-

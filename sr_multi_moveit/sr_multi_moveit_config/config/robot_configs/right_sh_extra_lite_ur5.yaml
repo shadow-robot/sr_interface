@@ -18,9 +18,6 @@ robot:
         is_lite: true
 
 ra_sr_ur_robot_hw:
-  # UR10 speed scale (0.0-1.0)
-  speed_scale: 0.5
-
   # Hand E extra lite payload (estimated, need exact from Hardware
   payload_mass_kg: 2.0
 
