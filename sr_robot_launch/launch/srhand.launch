@@ -85,7 +85,6 @@
     </group>
     <group if="$(arg grasp_controller)">
       <node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen">
-        <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
         <param name="wait_for" value ="/calibrated" unless="$(arg sim)"/>
       </node>
     </group>
