@@ -75,7 +75,7 @@
     <include file="$(find sr_moveit_hand_config)/launch/default_warehouse_db.launch"/>
   </group>
 
-  <!-- Trajectory controller -->
+  <!-- Controller -->
   <group if="$(arg hand_ctrl)">
     <group unless="$(arg grasp_controller)">
       <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">

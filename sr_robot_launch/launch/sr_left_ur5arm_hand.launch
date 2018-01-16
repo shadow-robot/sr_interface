@@ -20,6 +20,9 @@
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
+  <!-- Set to true if you want to use grasp controller -->
+  <arg name="grasp_controller" default="false"/>
+  <arg name="pwm_control" default="true"/>
 
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world" unless="$(arg scene)"/>
@@ -56,5 +59,7 @@
     <arg name="mapping_path" value="$(arg mapping_path)"/>
     <arg name="eth_port" value="$(arg eth_port)"/>
     <arg name="scene" value="$(arg scene)"/>
+    <arg name="grasp_controller" value="$(arg grasp_controller)"/>
+    <arg name="pwm_control" value="$(arg pwm_control)"/>
   </include>
 </launch>
