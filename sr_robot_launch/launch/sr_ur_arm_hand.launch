@@ -55,7 +55,10 @@
   <!-- Set to true to spawn the position controllers for the hands-->
   <arg name="hand_ctrl" default="true"/>
   <!-- The control mode PWM (true) or torque (false) -->
+  <!-- Set to true by default for now as torque control is not available yet -->
   <arg name="pwm_control" default="true"/>
+  <!-- Set to true if you want to use grasp controller -->
+  <arg name="grasp_controller" default="false"/>
   <!-- Serial number of the hand to be used-->
   <arg name="hand_serial" default="1082"/>
   <!-- the path to the mapping files -->
@@ -164,12 +167,19 @@
     <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
   </group>
 
-  <!-- Trajectory controller -->
+  <!-- Controller -->
   <group if="$(arg hand_ctrl)">
-    <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
-      <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
-      <param name="exclude_wrist" value="true"/>
-      <param name="wait_for" value ="/calibrated" unless="$(arg sim)"/>
-    </node>
+    <group unless="$(arg grasp_controller)">
+      <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
+        <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
+        <param name="exclude_wrist" value="true"/>
+        <param name="wait_for" value ="/calibrated" unless="$(arg sim)"/>
+      </node>
+    </group>
+    <group if="$(arg grasp_controller)">
+      <node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen">
+        <param name="wait_for" value ="/calibrated" unless="$(arg sim)"/>
+      </node>
+    </group>
   </group>
 </launch>
