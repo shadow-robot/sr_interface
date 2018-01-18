@@ -58,6 +58,7 @@ class SrRobotCommander(object):
         """
         self._name = name
         self._move_group_commander = MoveGroupCommander(name)
+        print self._move_group_commander
 
         self._robot_commander = RobotCommander()
 
@@ -91,12 +92,18 @@ class SrRobotCommander(object):
         # create dictionary with name of controllers and corresponding joints
         self._controllers = {item["name"]: item["joints"] for item in controller_list_param}
 
-        self._set_up_action_client(self._controllers)
+        print self._move_group_commander
+
+        # self._set_up_action_client(self._controllers) XXXXX
+
+        print self._move_group_commander
 
         self.tf_buffer = tf2_ros.Buffer()
         self.listener = tf2_ros.TransformListener(self.tf_buffer)
 
         threading.Thread(None, rospy.spin)
+
+        print self._move_group_commander
 
     def set_planner_id(self, planner_id):
         self._move_group_commander.set_planner_id(planner_id)
