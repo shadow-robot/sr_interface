@@ -29,10 +29,11 @@
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
   <!-- Loads the robot description -->
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_motor.urdf.xacro'"/>
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_left_motor.urdf.xacro'"/>
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_g')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_lite.urdf.xacro'"/>
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_g')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_left_lite.urdf.xacro'"/>
+  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_motor.urdf.xacro'"/>
+  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_motor.urdf.xacro'"/>
+  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_g')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_lite.urdf.xacro'"/>
+  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_g')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_lite.urdf.xacro'"/>
+    
   
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
