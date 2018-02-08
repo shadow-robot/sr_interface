@@ -392,7 +392,14 @@ class SrRobotCommander(object):
 
         time_from_start = 0.0
 
-        for wp in trajectory:
+        current_waypoint = {
+            'joint_angles': [],
+            'interpolate_time': 0.01,
+            'pause_time': 0.01
+        }
+        waypoints = [current_waypoint] + trajectory
+
+        for wp in waypoints:
 
             joint_positions = None
             if 'name' in wp.keys():
