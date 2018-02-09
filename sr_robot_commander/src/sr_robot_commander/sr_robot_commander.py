@@ -394,8 +394,8 @@ class SrRobotCommander(object):
 
         current_waypoint = {
             'joint_angles': [],
-            'interpolate_time': 0.01,
-            'pause_time': 0.01
+            'interpolate_time': 0.001,
+            'pause_time': 0.0
         }
         waypoints = [current_waypoint] + trajectory
 
