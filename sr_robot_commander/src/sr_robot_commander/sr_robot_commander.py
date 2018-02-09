@@ -397,6 +397,8 @@ class SrRobotCommander(object):
             'interpolate_time': 0.001,
             'pause_time': 0.0
         }
+        # SRC-224: Bug Fix
+        # We create a first trajectory point corresponding to the current position to avoid moveit complaining about it
         waypoints = [current_waypoint] + trajectory
 
         for wp in waypoints:
