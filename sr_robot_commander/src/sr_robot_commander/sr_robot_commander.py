@@ -426,7 +426,7 @@ class SrRobotCommander(object):
 
         current_waypoint = {
             'joint_angles': [],
-            'interpolate_time': 0.001,
+            'interpolate_time': 0.01,
             'pause_time': 0.0
         }
         # SRC-224: Bug Fix
