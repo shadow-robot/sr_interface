@@ -424,7 +424,16 @@ class SrRobotCommander(object):
 
         time_from_start = 0.0
 
-        for wp in trajectory:
+        current_waypoint = {
+            'joint_angles': [],
+            'interpolate_time': 0.01,
+            'pause_time': 0.0
+        }
+        # SRC-224: Bug Fix
+        # We create a first trajectory point corresponding to the current position to avoid moveit complaining about it
+        waypoints = [current_waypoint] + trajectory
+
+        for wp in waypoints:
 
             joint_positions = None
             if 'name' in wp.keys():
