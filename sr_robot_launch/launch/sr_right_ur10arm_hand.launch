@@ -71,6 +71,7 @@
     <arg name="mapping_path" value="$(arg mapping_path)"/>
     <arg name="eth_port" value="$(arg eth_port)"/>
     <arg name="scene" value="$(arg scene)"/>
+    <arg name="scene_file" default="$(arg scene_file)"/>
     <arg name="start_home" value="$(arg start_home)"/>
     <arg name="home_angles" value="$(arg home_angles)"/>
     <arg name="grasp_controller" value="$(arg grasp_controller)"/>
