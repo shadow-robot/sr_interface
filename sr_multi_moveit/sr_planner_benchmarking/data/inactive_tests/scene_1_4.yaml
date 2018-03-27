@@ -2,9 +2,9 @@ name: simplified_1_4
 
 scene:
   - type: launch
-    name: roslaunch sr_moveit_planner_benchmarking benchmarking.launch
+    name: roslaunch sr_planner_benchmarking benchmarking.launch
   - type: python
-    name: sr_moveit_planner_benchmarking.collision_scene_1.CreateScene1
+    name: sr_planner_benchmarking.collision_scene_1.CreateScene1
 
 group_id: right_arm
 planners:

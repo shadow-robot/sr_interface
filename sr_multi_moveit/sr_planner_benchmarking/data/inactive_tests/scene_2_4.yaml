@@ -2,9 +2,9 @@ name: office_scene_4
 
 scene:
   - type: launch
-    name: roslaunch sr_moveit_planner_benchmarking benchmarking.launch
+    name: roslaunch sr_planner_benchmarking benchmarking.launch
   - type: python
-    name: sr_moveit_planner_benchmarking.collision_scene_2.CreateScene2
+    name: sr_planner_benchmarking.collision_scene_2.CreateScene2
   - type: bag
     name: office_scene_1.bag
   - type: bag

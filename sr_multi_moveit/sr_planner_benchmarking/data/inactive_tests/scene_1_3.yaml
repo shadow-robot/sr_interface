@@ -1,17 +1,26 @@
-name: simplified_1_sbpl
+name: simplified_1_3
 
 scene:
   - type: launch
-    name: roslaunch sr_moveit_planner_benchmarking benchmarking.launch generate_planning_config:=False planning:=sbpl
+    name: roslaunch sr_planner_benchmarking benchmarking.launch
   - type: python
-    name: sr_moveit_planner_benchmarking.collision_scene_1.CreateScene1
+    name: sr_planner_benchmarking.collision_scene_1.CreateScene1
 
 group_id: right_arm
 planners:
-  - sbpl
-planning_attempts: 1
+  - BKPIECEkConfigDefault
+  - ESTkConfigDefault
+  - KPIECEkConfigDefault
+  - LBKPIECEkConfigDefault
+  - PRMkConfigDefault
+  - RRTkConfigDefault
+  - SBLkConfigDefault
+  - PRMstarkConfigDefault
+  - RRTstarkConfigDefault
+
+planning_attempts: 10
 goal_tolerance: 0.005
-planning_time: 100
+planning_time: 1000
 allow_replanning: False
 
 tests:

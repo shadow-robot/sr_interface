@@ -1,26 +1,17 @@
-name: simplified_1_2
+name: simplified_1_stomp
 
 scene:
   - type: launch
-    name: roslaunch sr_moveit_planner_benchmarking benchmarking.launch
+    name: roslaunch sr_planner_benchmarking benchmarking.launch generate_planning_config:=False planning:=stomp
   - type: python
-    name: sr_moveit_planner_benchmarking.collision_scene_1.CreateScene1
+    name: sr_planner_benchmarking.collision_scene_1.CreateScene1
 
 group_id: right_arm
 planners:
-  - BKPIECEkConfigDefault
-  - ESTkConfigDefault
-  - KPIECEkConfigDefault
-  - LBKPIECEkConfigDefault
-  - PRMkConfigDefault
-  - RRTkConfigDefault
-  - SBLkConfigDefault
-  - PRMstarkConfigDefault
-  - RRTstarkConfigDefault
-
-planning_attempts: 100
+  - stomp
+planning_attempts: 1
 goal_tolerance: 0.005
-planning_time: 10
+planning_time: 600
 allow_replanning: False
 
 tests:
