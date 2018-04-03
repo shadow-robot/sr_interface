@@ -28,38 +28,38 @@ rospy.sleep(rospy.Duration(2))
 keys = ['ra_shoulder_pan_joint', 'ra_shoulder_lift_joint', 'ra_elbow_joint', 'ra_wrist_1_joint', 'ra_wrist_2_joint',
         'ra_wrist_3_joint']
 
-# pose = [0.11, 0.001, -0.93, -2.22, -1.71, -1.68]
-# joints_goal = dict(zip(keys, pose))
-# print("Moving arm to joints position:\n" + str(joints_goal) + "\n")
-# arm_commander.move_to_joint_value_target_unsafe(joints_goal)
-# rospy.sleep(rospy.Duration(5))
-# print("Arm joints position:\n" + str(arm_commander.get_current_state()) + "\n")
-# raw_input("press a key to continue")
-#
-# pose = [1.55, -1.15, 2.01, 2.39, -1.55, -1.58]
-# joints_goal = dict(zip(keys, pose))
-# print("Moving arm to joints position:\n" + str(joints_goal) + "\n")
-# arm_commander.move_to_joint_value_target_unsafe(joints_goal)
-# rospy.sleep(rospy.Duration(5))
-# print("Arm joints position:\n" + str(arm_commander.get_joints_position()) + "\n")
-# raw_input("press a key to continue")
+pose = [0.11, 0.001, -0.93, -2.22, -1.71, -1.68]
+joints_goal = dict(zip(keys, pose))
+print("Moving arm to joints position:\n" + str(joints_goal) + "\n")
+arm_commander.move_to_joint_value_target_unsafe(joints_goal)
+rospy.sleep(rospy.Duration(5))
+print("Arm joints position:\n" + str(arm_commander.get_current_state()) + "\n")
+raw_input("press a key to continue")
 
-# pose = [2.0124379710802414, -0.6395552894291645, 1.8272080603542877, 2.0191359302159064, -1.3904105764847612,
-#         -3.0564905988137565]
-# joints_goal = dict(zip(keys, pose))
-# print("Moving arm to joints position:\n" + str(joints_goal) + "\n")
-# arm_commander.move_to_joint_value_target_unsafe(joints_goal)
-# rospy.sleep(rospy.Duration(5))
-# print("Arm joints position:\n" + str(arm_commander.get_current_state()) + "\n")
-# raw_input("press a key to continue")
-#
-# pose = [2.6752085499210883, -0.8522038622523826, 1.201729214706459, 2.821729335878766, -1.7238947911545262,
-#         -1.6146325266562542]
-# joints_goal = dict(zip(keys, pose))
-# print("Moving arm to joints position:\n" + str(joints_goal) + "\n")
-# arm_commander.move_to_joint_value_target_unsafe(joints_goal)
-# rospy.sleep(rospy.Duration(5))
-# print("Arm joints position:\n" + str(arm_commander.get_joints_position()) + "\n")
+pose = [1.55, -1.15, 2.01, 2.39, -1.55, -1.58]
+joints_goal = dict(zip(keys, pose))
+print("Moving arm to joints position:\n" + str(joints_goal) + "\n")
+arm_commander.move_to_joint_value_target_unsafe(joints_goal)
+rospy.sleep(rospy.Duration(5))
+print("Arm joints position:\n" + str(arm_commander.get_joints_position()) + "\n")
+raw_input("press a key to continue")
+
+pose = [2.0124379710802414, -0.6395552894291645, 1.8272080603542877, 2.0191359302159064, -1.3904105764847612,
+        -3.0564905988137565]
+joints_goal = dict(zip(keys, pose))
+print("Moving arm to joints position:\n" + str(joints_goal) + "\n")
+arm_commander.move_to_joint_value_target_unsafe(joints_goal)
+rospy.sleep(rospy.Duration(5))
+print("Arm joints position:\n" + str(arm_commander.get_current_state()) + "\n")
+raw_input("press a key to continue")
+
+pose = [2.6752085499210883, -0.8522038622523826, 1.201729214706459, 2.821729335878766, -1.7238947911545262,
+        -1.6146325266562542]
+joints_goal = dict(zip(keys, pose))
+print("Moving arm to joints position:\n" + str(joints_goal) + "\n")
+arm_commander.move_to_joint_value_target_unsafe(joints_goal)
+rospy.sleep(rospy.Duration(5))
+print("Arm joints position:\n" + str(arm_commander.get_joints_position()) + "\n")
 # raw_input("press a key to continue")
 
 pose = [-1.4888676313634834, -2.032021937909764, 2.0806817862208606, -2.7766676701654585, -1.5224358139380132,
@@ -71,7 +71,8 @@ rospy.sleep(rospy.Duration(5))
 print("Arm joints position:\n" + str(arm_commander.get_current_state()) + "\n")
 raw_input("press a key to continue")
 
-pose = [3.0990236703835805, -1.648608875775305, -1.618753950152506, -3.015160603087673, -1.6143316921599373, 3.142204119951054]
+pose = [3.0990236703835805, -1.648608875775305, -1.618753950152506, -3.015160603087673, -1.6143316921599373,
+        3.142204119951054]
 joints_goal = dict(zip(keys, pose))
 print("Moving arm to joints position:\n" + str(joints_goal) + "\n")
 arm_commander.move_to_joint_value_target_unsafe(joints_goal)
@@ -79,4 +80,3 @@ rospy.sleep(rospy.Duration(5))
 print("Arm joints position:\n" + str(arm_commander.get_joints_position()) + "\n")
 raw_input("press a key to continue")
 print "Finished"
-
