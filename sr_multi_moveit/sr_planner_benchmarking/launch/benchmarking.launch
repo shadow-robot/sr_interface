@@ -4,9 +4,13 @@
   <!--Should the planner yaml be automatically generated? -->
   <arg name="generate_planning_config" default="True"/>
 
-  <include file = "$(find sr_multi_moveit_config)/launch/demo.launch">
+  <!-- Using arm with box -->
+  <include file = "$(find sr_box_ur10_moveit_config)/launch/demo.launch" />
+
+  <!-- Using arm with hand E -->
+  <!--include file = "$(find sr_multi_moveit_config)/launch/demo.launch">
     <arg name="planning" value="$(arg planning)"/>
     <arg name="visualization" value="$(arg visualization)"/>
     <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
-  </include>
+  </include-->
 </launch>
