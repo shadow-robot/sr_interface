@@ -5,7 +5,7 @@ benchmark_config:
         scene_name: scene_with_boxes     # Required
     parameters:
         name: scene_with_boxes
-        runs: 30
+        runs: 5
         group: right_arm       # Required
         timeout: 10.0
         output_directory: /tmp/moveit_benchmarks/

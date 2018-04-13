@@ -4,6 +4,5 @@ project(sr_moveit_planner_benchmarking)
 find_package(catkin REQUIRED)
 
 catkin_package()
-catkin_python_setup()
 
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
