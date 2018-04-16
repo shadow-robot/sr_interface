@@ -60,7 +60,7 @@ print("Moving arm to joints position:\n" + str(joints_goal) + "\n")
 arm_commander.move_to_joint_value_target_unsafe(joints_goal)
 rospy.sleep(rospy.Duration(5))
 print("Arm joints position:\n" + str(arm_commander.get_joints_position()) + "\n")
-# raw_input("press a key to continue")
+raw_input("press a key to continue")
 
 pose = [-1.4888676313634834, -2.032021937909764, 2.0806817862208606, -2.7766676701654585, -1.5224358139380132,
         3.1386020362120806]
