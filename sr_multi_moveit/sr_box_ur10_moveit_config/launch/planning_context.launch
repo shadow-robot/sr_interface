@@ -5,7 +5,7 @@
   <!-- The name of the parameter under which the URDF is loaded -->
   <arg name="robot_description_name" default="robot_description"/>
 
-  <arg name="robot_description" default="$(find sr_box_ur10_moveit_config)/config/box_ur10_with_hand.urdf.xacro"/>
+  <arg name="robot_description" default="$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro"/>
 
   <!-- Load universal robot description format (URDF) -->
   <param if="$(arg load_robot_description)" name="$(arg robot_description_name)" command="xacro --inorder $(arg robot_description)"/>
