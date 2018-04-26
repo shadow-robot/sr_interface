@@ -157,4 +157,17 @@ fingers:
     - PRMstarkConfigDefault
   projection_evaluator: joints(FFJ4,FFJ3)
   longest_valid_segment_fraction: 0.002
-
+hand:
+  planner_configs:
+    - SBLkConfigDefault
+    - ESTkConfigDefault
+    - LBKPIECEkConfigDefault
+    - BKPIECEkConfigDefault
+    - KPIECEkConfigDefault
+    - RRTkConfigDefault
+    - RRTConnectkConfigDefault
+    - RRTstarkConfigDefault
+    - TRRTkConfigDefault
+    - PRMkConfigDefault
+    - PRMstarkConfigDefault
+  longest_valid_segment_fraction: 0.001
