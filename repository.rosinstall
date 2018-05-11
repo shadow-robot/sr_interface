@@ -14,11 +14,6 @@
     version: kinetic-devel
 
 - git:
-    local-name: sr_benchmarking
-    uri: https://github.com/shadow-robot/sr_benchmarking
-    version: kinetic-devel
-
-- git:
     local-name: common_resources
     uri: https://github.com/shadow-robot/common_resources.git
     version: kinetic-devel
