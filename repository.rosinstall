@@ -51,4 +51,4 @@
 - git:
     uri: https://github.com/shadow-robot/common_resources.git
     version: kinetic-devel
-    local-name:common_resources
+    local-name: common_resources
