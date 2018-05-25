@@ -34,6 +34,7 @@
   <run_depend>trac_ik_lib</run_depend>
   <build_depend>mongodb</build_depend>
   <run_depend>mongodb</run_depend>
+  <run_depend>sr_utilities_common</run_depend>
   <buildtool_depend>catkin</buildtool_depend>
   
 </package>
