@@ -47,3 +47,9 @@
     local-name: pysdf
     uri: https://github.com/andreasBihlmaier/pysdf.git
     version: master
+
+## TODO: when commit https://github.com/ros-controls/ros_controllers/commit/6bf1b9b2ad13c865028a43a0ca0c96398ae86446 is released on deb package remove ros_controllers from here.
+- git:
+    local-name: ros_controllers
+    uri: https://github.com/ros-controls/ros_controllers.git
+    version: kinetic-devel
