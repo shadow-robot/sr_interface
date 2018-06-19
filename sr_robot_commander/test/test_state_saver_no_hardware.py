@@ -52,7 +52,7 @@ class TestSrStateSaverExceptions(TestCase):
             state_saver = SrStateSaverUnsafe("test_name", "hand")
         except Exception as e:
             exception_raised = True
-            exception_string  = str(e)
+            exception_string = str(e)
 
         self.assertTrue(exception_raised)
         self.assertEqual(exception_string, "'No hand found.'")
