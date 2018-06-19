@@ -20,7 +20,8 @@ class SrStateSaverUnsafe(object):
 
         self.__name = name
 
-        rospy.logwarn(hand_or_arm)
+        if name is None or name == '':
+            raise Exception("Cannot save with empty name.")
 
         if hand_or_arm == "arm":
             self.__commander = SrArmCommander()
