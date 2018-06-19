@@ -11,6 +11,7 @@ from sr_hand_commander import SrHandCommander
 from sr_robot_commander import SrRobotCommander
 from sr_utilities.hand_finder import HandFinder
 
+
 class SrStateSaverUnsafe(object):
     def __init__(self, name, hand_or_arm="both"):
 
@@ -38,11 +39,10 @@ class SrStateSaverUnsafe(object):
             self.__arm_commander = SrArmCommander()
 
             if not self.__arm_commander.arm_found():
-               double_error.append("'No arm found.'")
+                double_error.append("'No arm found.'")
 
             if len(double_error) != 0:
                 raise Exception(" ".join(double_error))
-
 
         self.__hand_or_arm = hand_or_arm
 

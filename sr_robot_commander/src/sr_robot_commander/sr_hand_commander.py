@@ -75,7 +75,6 @@ class SrHandCommander(SrRobotCommander):
 
         super(SrHandCommander, self).__init__(name)
 
-
         if not self._hand_h:
             self._tactiles = TactileReceiver(prefix)
 
