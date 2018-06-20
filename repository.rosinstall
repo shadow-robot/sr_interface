@@ -33,6 +33,7 @@
     uri: https://github.com/shadow-robot/sr-ros-interface-ethercat.git
     version: kinetic-devel
 
+
 - git:
     local-name: ros_control_robot
     uri: https://github.com/shadow-robot/ros_control_robot/
@@ -49,6 +50,7 @@
     version: master
 
 ## TODO: when commit https://github.com/ros-controls/ros_controllers/commit/6bf1b9b2ad13c865028a43a0ca0c96398ae86446 is released on deb package remove ros_controllers from here.
+# The current binary release is 0.13.3. When a new version is available, testing that the cyberglove runs comfortably without crashing the driver will tell if the issue is fixed.
 - git:
     local-name: ros_controllers
     uri: https://github.com/ros-controls/ros_controllers.git
