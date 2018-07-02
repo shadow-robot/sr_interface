@@ -6,6 +6,7 @@ project(sr_robot_commander)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
         rostest
+        rosunit
         rospy
         moveit_commander
         pluginlib
@@ -175,5 +176,5 @@ install(PROGRAMS src/sr_robot_commander/follow_warehouse_trajectory.py
 if (CATKIN_ENABLE_TESTING)
     find_package(rostest REQUIRED)
     add_rostest(test/test_hand_commander.test)
-    add_rostest(test/test_state_saver_no_hardware.py)
+    catkin_add_nosetests(test/test_state_saver_no_hardware.py)
 endif ()
