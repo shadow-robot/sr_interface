@@ -85,5 +85,5 @@ class TestSrStateSaverExceptions(TestCase):
 
 
 if __name__ == "__main__":
-    import rosunit
-    rosunit.rosrun(PKG, "test_state_saver_no_hardware", TestSrStateSaverExceptions)
+    import rostest
+    rostest.rosrun(PKG, "test_state_saver_no_hardware", TestSrStateSaverExceptions)
