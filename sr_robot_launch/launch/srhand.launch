@@ -82,10 +82,8 @@
 
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
-    <include file="$(find sr_moveit_hand_config)/launch/moveit_planning_and_execution.launch">
-      <arg name="load_robot_description" value="false"/>
-      <arg name="gui" default="$(arg gui)"/>
-    </include>
+    <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="15 sr_moveit_hand_config moveit_planning_and_execution.launch
+      use_gui:=$(arg gui)" name="timed_roslaunch" output="screen"/>
     <include file="$(find sr_moveit_hand_config)/launch/default_warehouse_db.launch"/>
   </group>
 
