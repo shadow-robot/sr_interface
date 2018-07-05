@@ -6,7 +6,6 @@ project(sr_robot_commander)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
         rostest
-        rosunit
         rospy
         moveit_commander
         pluginlib
