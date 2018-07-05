@@ -17,7 +17,7 @@
 
 import rospy
 
-from sr_robot_commander import SrRobotCommander
+from sr_robot_commander import SrRobotCommander, SrRobotCommanderException
 from sr_robot_msgs.srv import ForceController
 from sr_hand.tactile_receiver import TactileReceiver
 from sr_utilities.hand_finder import HandFinder
@@ -50,13 +50,14 @@ class SrHandCommander(SrRobotCommander):
                 self._hand_h = True
                 name, prefix, hand_serial = hand_finder.get_hand_h(number=hand_number)
             else:
-                rospy.log_fatal("No hands found and no information given to define hand commander.")
+                rospy.logfatal("No hands found and no information given to define hand commander.")
+                raise SrRobotCommanderException("No hand found.")
 
         elif hand_parameters is not None:
             # extracting the name and prefix from the hand finder parameters
             if len(hand_parameters.mapping) is 0:
-                rospy.logerr("No hand detected")
-                exit("no hand detected")
+                rospy.logfatal("No hand detected")
+                raise SrRobotCommanderException("No hand found.")
 
             hand_mapping = hand_parameters.mapping[hand_serial]
             prefix = hand_parameters.joint_prefix[hand_serial]

@@ -46,6 +46,14 @@ import copy
 import rospkg
 
 
+class SrRobotCommanderException(Exception):
+    def __init__(self, value):
+        self._value = value
+
+    def __str__(self):
+        return repr(self._value)
+
+
 class SrRobotCommander(object):
     """
     Base class for hand and arm commanders
