@@ -202,6 +202,7 @@ class SrRobotCommander(object):
         self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
         self.__plan = self._move_group_commander.plan()
+        return self.__plan
 
     def check_plan_is_valid(self):
         """
