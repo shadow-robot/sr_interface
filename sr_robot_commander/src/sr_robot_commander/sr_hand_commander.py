@@ -80,6 +80,9 @@ class SrHandCommander(SrRobotCommander):
 
         # appends trailing slash if necessary
         self._topic_prefix = prefix
+        if self._topic_prefix and self._topic_prefix.endswith("_"):
+            self._topic_prefix = self._topic_prefix[:-1]  # Remove trailing _
+            
         if self._topic_prefix and not self._topic_prefix.endswith("/"):
             self._topic_prefix += "/"
 
@@ -133,7 +136,7 @@ class SrHandCommander(SrRobotCommander):
                                              motor_settings["deadband"],
                                              motor_settings["sign"],
                                              motor_settings["torque_limit"],
-                                             motor_settings["torque_limitter_gain"])
+                                             motor_settings["torque_limiter_gain"])
         except rospy.ServiceException, e:
             rospy.logerr("Couldn't set the max force for joint " +
                          joint_name + ": " + str(e))
