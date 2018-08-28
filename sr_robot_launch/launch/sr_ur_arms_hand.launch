@@ -14,6 +14,8 @@
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <arg name="verbose" default="true" />
+  <!--When cyberglove is used with arm and hand set "exclude_wrist_from_hand:=false"-->
+  <arg name="exclude_wrist_from_hand" default="false"/>
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
   <!-- Set world value dependant on scene -->
@@ -90,7 +92,8 @@
     <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
     <!-- ARM -->
-    <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/ra_trajectory_controller.yaml" command="load"/>
+    <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/ra_trajectory_controller.yaml" command="load" if="$(arg exclude_wrist_from_hand)"/>
+    <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/ra_trajectory_controller_no_wrist.yaml" command="load" unless="$(arg exclude_wrist_from_hand)"/>
     <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/la_trajectory_controller_no_wrist.yaml" command="load"/>
     <group if="$(arg arm_trajectory)">
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 ra_trajectory_controller la_trajectory_controller"/>
@@ -147,7 +150,8 @@
     <!-- Should only be used when testing arm alone, as hand launch includes joint state publisher -->
     <!-- <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"/> -->
     <group if="$(arg arm_trajectory)">
-      <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml"/>
+      <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml" if="$(arg exclude_wrist_from_arm)"/>
+      <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller_no_wrist.yaml" unless="$(arg exclude_wrist_from_arm)"/>
       <rosparam command="load" file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml"/>
       <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen"/>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
@@ -176,7 +180,7 @@
   <group if="$(arg hand_ctrl)">
     <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
       <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
-      <param name="exclude_wrist" value="true"/>
+      <param name="exclude_wrist" value="$(arg exclude_wrist_from_arm)"/>
       <param name="wait_for" value ="/calibrated" unless="$(arg sim)"/>
     </node>
   </group>
