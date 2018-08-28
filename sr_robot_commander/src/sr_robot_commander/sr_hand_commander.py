@@ -82,7 +82,7 @@ class SrHandCommander(SrRobotCommander):
         self._topic_prefix = prefix
         if self._topic_prefix and self._topic_prefix.endswith("_"):
             self._topic_prefix = self._topic_prefix[:-1]  # Remove trailing _
-            
+
         if self._topic_prefix and not self._topic_prefix.endswith("/"):
             self._topic_prefix += "/"
 
