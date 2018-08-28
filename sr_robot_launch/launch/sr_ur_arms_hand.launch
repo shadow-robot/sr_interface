@@ -150,8 +150,8 @@
     <!-- Should only be used when testing arm alone, as hand launch includes joint state publisher -->
     <!-- <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"/> -->
     <group if="$(arg arm_trajectory)">
-      <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml" if="$(arg exclude_wrist_from_arm)"/>
-      <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller_no_wrist.yaml" unless="$(arg exclude_wrist_from_arm)"/>
+      <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml" if="$(arg exclude_wrist_from_hand)"/>
+      <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller_no_wrist.yaml" unless="$(arg exclude_wrist_from_hand)"/>
       <rosparam command="load" file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml"/>
       <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen"/>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
@@ -180,7 +180,7 @@
   <group if="$(arg hand_ctrl)">
     <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
       <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
-      <param name="exclude_wrist" value="$(arg exclude_wrist_from_arm)"/>
+      <param name="exclude_wrist" value="$(arg exclude_wrist_from_hand)"/>
       <param name="wait_for" value ="/calibrated" unless="$(arg sim)"/>
     </node>
   </group>
