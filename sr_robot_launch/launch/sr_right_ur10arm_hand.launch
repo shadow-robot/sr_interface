@@ -48,6 +48,10 @@
   <arg name="side" value="right"/>
 
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
+
+  <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
+  <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
+  <arg name="include_wrist_in_arm_controller" default="true"/>
   
   <include file="$(find sr_robot_launch)/launch/sr_ur_arm_hand.launch">
     <arg name="sim" value="$(arg sim)"/>
@@ -75,5 +79,6 @@
     <arg name="home_angles" value="$(arg home_angles)"/>
     <arg name="grasp_controller" value="$(arg grasp_controller)"/>
     <arg name="pwm_control" value="$(arg pwm_control)"/>
+    <arg name="include_wrist_in_arm_controller" value="$(arg include_wrist_in_arm_controller)"/>
   </include>
 </launch>
