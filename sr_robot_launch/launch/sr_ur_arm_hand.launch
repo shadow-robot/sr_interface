@@ -90,7 +90,7 @@
     <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
     <!-- ARM -->
-    <rosparam if="$(arg include_wrist_in_arm_controller)"file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_id)_trajectory_controller.yaml" command="load"/>
+    <rosparam if="$(arg include_wrist_in_arm_controller)" file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_id)_trajectory_controller.yaml" command="load"/>
     <rosparam unless="$(arg include_wrist_in_arm_controller)" file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_id)_trajectory_controller_no_wrist.yaml" command="load"/>
     <group if="$(arg arm_trajectory)">
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_id)_trajectory_controller"/>
