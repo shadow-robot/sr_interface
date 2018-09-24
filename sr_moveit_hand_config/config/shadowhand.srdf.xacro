@@ -323,6 +323,7 @@
     <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}thhub" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}thproximal" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}thmiddle" reason="Never" />
+    <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}thdistal" reason="Adjacent" />
     <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thmiddle" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thproximal" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thdistal" reason="Adjacent" />
@@ -335,6 +336,7 @@
     <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}thhub" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}thmiddle" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}thproximal" reason="Never" />
+    <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}thdistal" reason="Adjacent" />
 
     <xacro:if value="${lf}">
       <!-- Little finger special case -->
