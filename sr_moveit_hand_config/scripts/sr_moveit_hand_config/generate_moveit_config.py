@@ -263,11 +263,11 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
     stream.close()
 
     # open biotac template file
-    kdl_template_path = template_path[0:template_path.find("_template")] + "_kdl_template.yaml"
+    #kdl_template_path = template_path[0:template_path.find("_template")] + "_kdl_template.yaml"
 
-    stream = open(kdl_template_path, 'r')
-    yamldockdl = yaml.load(stream)
-    stream.close()
+    #stream = open(kdl_template_path, 'r')
+    #yamldockdl = yaml.load(stream)
+    #stream.close()
 
     # find prefix
     prefix = find_prefix(robot)

@@ -25,7 +25,7 @@
   
   <!-- Inverse Kinematics -->
   <group ns="move_group">
-    <node name="load_kinematics" pkg="sr_moveit_hand_config" type="generate_load_moveit_config.py" respawn="false" args="kinematics $(find sr_moveit_hand_config)/config/kinematics_template.yaml --" />
+    <node name="load_kinematics" pkg="sr_moveit_hand_config" type="generate_load_moveit_config.py" respawn="false" args="kinematics $(find sr_moveit_hand_config)/config/kinematics_bioik_template.yaml --" />
   </group>
 
   <!-- Trajectory Execution Functionality -->

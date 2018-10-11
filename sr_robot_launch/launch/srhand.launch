@@ -28,19 +28,13 @@
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
-  <arg name="haptx_demo" default="true"/>
+
   <!-- Loads the robot description -->
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_motor.urdf.xacro'"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_motor.urdf.xacro'"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_g')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_lite.urdf.xacro'"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_g')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_lite.urdf.xacro'"/>
   
-  <!-- Publish static tf for haptx -->
-  <group if="$(arg haptx_demo)">
-    <node pkg="tf2_ros" type="static_transform_publisher" name="knuckle_glove_tf_broadcaster" args="0.011 0 0.099 -0.5 -0.5 -0.5 0.5 rh_palm rh_mf_knuckle_glove" />
-    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
-  </group>
-
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
     <arg name="world_name" value="$(find sr_description_common)/worlds/shadowhand.world"/>

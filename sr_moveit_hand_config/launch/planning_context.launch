@@ -21,7 +21,7 @@
 
   <!-- Load default settings for kinematics; these settings are overridden by settings in a node's namespace -->
   <group ns="$(arg robot_description)_kinematics">
-    <node name="load_kinematics" pkg="sr_moveit_hand_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="kinematics $(find sr_moveit_hand_config)/config/kinematics_template.yaml --" />
+    <node name="load_kinematics" pkg="sr_moveit_hand_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="kinematics $(find sr_moveit_hand_config)/config/kinematics_bioik_template.yaml --" />
   </group>
   
 </launch>
