@@ -1,18 +1,16 @@
 Panels:
   - Class: rviz/Displays
-    Help Height: 84
+    Help Height: 85
     Name: Displays
     Property Tree Widget:
       Expanded:
         - /MotionPlanning1
-        - /MotionPlanning1/Scene Geometry1
         - /MotionPlanning1/Scene Robot1
-        - /MotionPlanning1/Planning Request1
-        - /MotionPlanning1/Planned Path1
         - /TF1
         - /TF1/Frames1
+        - /TF1/Frames1/rh_first_finger_tip_mocap1
       Splitter Ratio: 0.742560029
-    Tree Height: 277
+    Tree Height: 418
   - Class: rviz/Help
     Name: Help
   - Class: rviz/Views
@@ -385,7 +383,7 @@ Visualization Manager:
         Robot Alpha: 0.5
         Robot Color: 150; 50; 150
         Show Robot Collision: false
-        Show Robot Visual: true
+        Show Robot Visual: false
         Show Trail: false
         State Display Time: 0.05 s
         Trail Step Size: 1
@@ -404,7 +402,7 @@ Visualization Manager:
         Interactive Marker Size: 0.300000012
         Joint Violation Color: 255; 0; 255
         Planning Group: left_hand
-        Query Goal State: true
+        Query Goal State: false
         Query Start State: false
         Show Workspace: false
         Start State Alpha: 1
@@ -415,7 +413,7 @@ Visualization Manager:
         Scene Alpha: 1
         Scene Color: 170; 170; 255
         Scene Display Time: 0.200000003
-        Show Scene Geometry: true
+        Show Scene Geometry: false
         Voxel Coloring: Z-Axis
         Voxel Rendering: Occupied Voxels
       Scene Robot:
@@ -736,7 +734,7 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-        Robot Alpha: 0.5
+        Robot Alpha: 1
         Show Robot Collision: false
         Show Robot Visual: true
       Value: true
@@ -1152,12 +1150,14 @@ Visualization Manager:
         rh_ffdistal:
           Value: false
         rh_ffknuckle:
-          Value: true
+          Value: false
         rh_ffmiddle:
-          Value: true
+          Value: false
         rh_ffproximal:
-          Value: true
+          Value: false
         rh_fftip:
+          Value: true
+        rh_first_finger_tip_mocap:
           Value: true
         rh_forearm:
           Value: false
@@ -1175,6 +1175,8 @@ Visualization Manager:
           Value: false
         rh_lftip:
           Value: false
+        rh_little_finger_tip_mocap:
+          Value: false
         rh_manipulator:
           Value: false
         rh_mfdistal:
@@ -1186,6 +1188,8 @@ Visualization Manager:
         rh_mfproximal:
           Value: false
         rh_mftip:
+          Value: false
+        rh_middle_finger_tip_mocap:
           Value: false
         rh_palm:
           Value: false
@@ -1199,6 +1203,8 @@ Visualization Manager:
           Value: false
         rh_rftip:
           Value: false
+        rh_ring_finger_tip_mocap:
+          Value: false
         rh_thbase:
           Value: false
         rh_thdistal:
@@ -1211,11 +1217,13 @@ Visualization Manager:
           Value: false
         rh_thtip:
           Value: false
+        rh_thumb_tip_mocap:
+          Value: false
         rh_wrist:
           Value: false
         world:
           Value: false
-      Marker Scale: 1
+      Marker Scale: 0.200000003
       Name: TF
       Show Arrows: true
       Show Axes: true
@@ -1270,6 +1278,8 @@ Visualization Manager:
                       rh_ffdistal:
                         rh_fftip:
                           {}
+                rh_first_finger_tip_mocap:
+                  {}
                 rh_imu:
                   {}
                 rh_lfmetacarpal:
@@ -1279,6 +1289,8 @@ Visualization Manager:
                         rh_lfdistal:
                           rh_lftip:
                             {}
+                rh_little_finger_tip_mocap:
+                  {}
                 rh_manipulator:
                   {}
                 rh_mfknuckle:
@@ -1287,12 +1299,16 @@ Visualization Manager:
                       rh_mfdistal:
                         rh_mftip:
                           {}
+                rh_middle_finger_tip_mocap:
+                  {}
                 rh_rfknuckle:
                   rh_rfproximal:
                     rh_rfmiddle:
                       rh_rfdistal:
                         rh_rftip:
                           {}
+                rh_ring_finger_tip_mocap:
+                  {}
                 rh_thbase:
                   rh_thproximal:
                     rh_thhub:
@@ -1300,6 +1316,8 @@ Visualization Manager:
                         rh_thdistal:
                           rh_thtip:
                             {}
+                rh_thumb_tip_mocap:
+                  {}
       Update Interval: 0
       Value: true
   Enabled: true
@@ -1317,31 +1335,31 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Class: rviz/XYOrbit
-      Distance: 2.15181327
+      Class: rviz/Orbit
+      Distance: 0.619809568
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.241227984
-        Y: 0.855306864
-        Z: -1.57229965e-06
+        X: 0.251329422
+        Y: -0.07200744
+        Z: 0.216743559
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: -0.069797121
+      Pitch: 0.224796727
       Target Frame: forearm
-      Value: XYOrbit (rviz)
-      Yaw: 4.6685791
+      Value: Orbit (rviz)
+      Yaw: 5.21357822
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 1043
+  Height: 1590
   Help:
     collapsed: false
   Hide Left Dock: false
@@ -1350,11 +1368,11 @@ Window Geometry:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd00000001000000000000042c000003bffc0200000008fb0000000800480065006c00700000000342000000bb0000006e00fffffffb0000000a0056006900650077007300000003b0000000b00000009e00fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fc0000003a000001a3000000c600fffffffa000000000100000002fb000000100044006900730070006c0061007900730100000000ffffffff0000015600fffffffb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000000000002b10000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e006700000002dd000001d70000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000003e00fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006701000001e3000002160000016b00fffffffb0000003c005400720061006a006500630074006f007200790020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000003e00ffffff0000034e000003bf00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000001000000000000042c000005d4fc0200000008fb0000000800480065006c00700000000342000000bb0000008100fffffffb0000000a005600690065007700730100000044000000b9000000b900fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fc0000010400000238000000eb00fffffffa000000000100000002fb000000100044006900730070006c0061007900730100000000ffffffff0000015a00fffffffb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000000000002b10000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e006700000002dd000001d70000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004700fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670100000343000002d5000001ad00fffffffb0000003c005400720061006a006500630074006f007200790020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004700ffffff000006d0000005d400000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Trajectory - Trajectory Slider:
     collapsed: false
   Views:
     collapsed: false
-  Width: 1920
-  X: 0
-  Y: 0
+  Width: 2819
+  X: 61
+  Y: 30
