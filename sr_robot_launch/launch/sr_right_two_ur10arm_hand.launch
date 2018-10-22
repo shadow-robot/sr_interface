@@ -25,9 +25,9 @@
 
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world" unless="$(arg scene)"/>
-  <arg name="world" default="$(find sr_description_common)/worlds/sr_lab.world" if="$(arg scene)"/>
+  <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large.world" if="$(arg scene)"/>
   <!-- Set the scene file -->
-  <arg name="scene_file" default="$(find sr_description_common)/scenes/lab.scene"/>
+  <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large.scene"/>
 
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="true"/>
