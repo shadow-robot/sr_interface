@@ -29,22 +29,22 @@ class SrStateSaverUnsafe(object):
             raise ValueError("Cannot save with empty name.")
 
         if hand_or_arm == "arm":
-            self.__commander = SrArmCommander()
-            if not self.__commander.arm_found():
+            self._commander = SrArmCommander()
+            if not self._commander.arm_found():
                 raise ValueError("'No arm found.'")
 
         elif hand_or_arm == 'hand':
-            self.__commander = SrHandCommander()
+            self._commander = SrHandCommander()
         else:
             double_error = []
             try:
-                self.__hand_commander = SrHandCommander()
+                self._commander = SrHandCommander()
             except Exception as e:
                 double_error.append(str(e))
 
-            self.__arm_commander = SrArmCommander()
+            self._arm_commander = SrArmCommander()
 
-            if not self.__arm_commander.arm_found():
+            if not self._arm_commander.arm_found():
                 double_error.append("'No arm found.'")
 
             if len(double_error) != 0:
