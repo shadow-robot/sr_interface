@@ -13,7 +13,7 @@
   <arg name="generate_planning_config" default="True"/>
 
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
-  <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/>
+  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro'"/>
   
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <include file="$(find sr_multi_moveit_config)/launch/planning_context.launch">
@@ -35,7 +35,7 @@
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
 
   <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
-  <node pkg="sr_multi_moveit_config" type="timed_roslaunch.sh" args="5 sr_multi_moveit_config move_group.launch 
+  <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="5 sr_multi_moveit_config move_group.launch 
     allow_trajectory_execution:=true 
     fake_execution:=true 
     info:=true 

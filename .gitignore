@@ -39,3 +39,18 @@ CMakeLists.txt.user
 #Eclipse
 .project
 .pydevproject
+
+#Mongodb files
+sr_multi_moveit/sr_box_ur10_moveit_config/default_warehouse_mongo_db/
+sr_moveit_hand_config/default_warehouse_mongo_db/
+sr_multi_moveit/sr_multi_moveit_config/default_warehouse_mongo_db/
+
+#Automatically generated files
+sr_moveit_hand_config/config/generated_shadowhand.srdf
+sr_moveit_hand_config/config/generated_shadowhand.urdf
+sr_multi_moveit/sr_multi_moveit_config/config/generated_robot.srdf
+sr_multi_moveit/sr_multi_moveit_config/config/controllers.yaml
+sr_multi_moveit/sr_multi_moveit_config/config/joint_limits.yaml
+sr_multi_moveit/sr_multi_moveit_config/config/kinematics.yaml
+sr_multi_moveit/sr_multi_moveit_config/config/ompl_planning.yaml
+sr_multi_moveit/sr_multi_moveit_config/config/fake_controllers.yaml

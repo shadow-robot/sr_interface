@@ -17,13 +17,16 @@
   <xacro:macro name="fingerjoints" params="prefix joint_prefix lf">
     <xacro:if value="${lf}">
       <!-- Little finger special case -->
-     <joint name="${prefix}${joint_prefix}J5" /> 
-    </xacro:if> 
+     <joint name="${prefix}${joint_prefix}J5" />
+    </xacro:if>
     <joint name="${prefix}${joint_prefix}J4" />
     <joint name="${prefix}${joint_prefix}J3" />
     <joint name="${prefix}${joint_prefix}J2" />
     <joint name="${prefix}${joint_prefix}J1" />
     <joint name="${prefix}${joint_prefix}tip" />
+  </xacro:macro>
+  <xacro:macro name="fingerchains" params="prefix link_prefix lf">
+    <chain base_link="${prefix}palm" tip_link="${prefix}${link_prefix}tip"/>
   </xacro:macro>
   <xacro:macro name="fingerlinks" params="prefix link_prefix lf">
     <xacro:if value="${lf}">
@@ -132,12 +135,7 @@
   </xacro:macro>
   <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
   <xacro:macro name="finger_ee" params="prefix link_prefix finger_name hand_name" >
-    <xacro:if value="$(arg is_lite)">
-      <end_effector name="${prefix}${link_prefix}tip_ee" parent_link="${prefix}palm" group="${prefix}${finger_name}" parent_group="${prefix}wrist_lite" />
-    </xacro:if>
-    <xacro:unless value="$(arg is_lite)">
-      <end_effector name="${prefix}${link_prefix}tip_ee" parent_link="${prefix}palm" group="${prefix}${finger_name}" parent_group="${prefix}wrist" />
-    </xacro:unless>
+    <end_effector name="${prefix}${link_prefix}tip_ee" parent_link="${prefix}${link_prefix}tip" group="${prefix}${finger_name}_ee" parent_group="${prefix}${finger_name}" />
   </xacro:macro>
   <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
   <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
@@ -325,8 +323,10 @@
     <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}thhub" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}thproximal" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}thmiddle" reason="Never" />
+    <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}thdistal" reason="Adjacent" />
     <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thmiddle" reason="Never" />
-    <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thproximal" reason="Never" />     
+    <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thproximal" reason="Never" />
+    <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thdistal" reason="Adjacent" />
 
     <xacro:if value="${far}">
       <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thproximal" reason="Never" />
@@ -336,6 +336,7 @@
     <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}thhub" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}thmiddle" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}thproximal" reason="Never" />
+    <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}thdistal" reason="Adjacent" />
 
     <xacro:if value="${lf}">
       <!-- Little finger special case -->

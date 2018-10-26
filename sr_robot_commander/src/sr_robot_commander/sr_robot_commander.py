@@ -43,18 +43,23 @@ from std_msgs.msg import Header
 
 import tf2_ros
 import copy
+import rospkg
+
+
+class SrRobotCommanderException(Exception):
+    def __init__(self, value):
+        self._value = value
+
+    def __str__(self):
+        return repr(self._value)
 
 
 class SrRobotCommander(object):
     """
     Base class for hand and arm commanders
     """
-    __group_prefixes = {"right_arm": "ra_",
-                        "left_arm": "la_",
-                        "right_hand": "rh_",
-                        "left_hand": "lh_"}
 
-    def __init__(self, name, prefix=None):
+    def __init__(self, name):
         """
         Initialize MoveGroupCommander object
         @param name - name of the MoveIt group
@@ -79,27 +84,22 @@ class SrRobotCommander(object):
         self._joints_position = {}
         self._joints_velocity = {}
         self._joints_effort = {}
+        self._joints_state = None
+        self._clients = {}
         self.__plan = None
+
+        self._controllers = {}
 
         rospy.wait_for_service('compute_ik')
         self._compute_ik = rospy.ServiceProxy('compute_ik', GetPositionIK)
         self._forward_k = rospy.ServiceProxy('compute_fk', GetPositionFK)
 
-        # Check if the prefix can be set from a known group saved in self.__group_prefixes
-        prefix_from_group = [self.__group_prefixes[known_prefix] for known_prefix in self.__group_prefixes
-                             if known_prefix in name]
+        controller_list_param = rospy.get_param("/move_group/controller_list")
 
-        # prefix of the trajectory controller
-        if prefix is not None:
-            self._prefix = prefix
-        elif prefix_from_group:
-            self._prefix = prefix_from_group[0]
-        else:
-            # Group name is one of the ones to plan for specific fingers.
-            # We need to find the hand prefix using the hand finder
-            self._prefix = HandFinder().get_available_prefix()
+        # create dictionary with name of controllers and corresponding joints
+        self._controllers = {item["name"]: item["joints"] for item in controller_list_param}
 
-        self._set_up_action_client()
+        self._set_up_action_client(self._controllers)
 
         self.tf_buffer = tf2_ros.Buffer()
         self.listener = tf2_ros.TransformListener(self.tf_buffer)
@@ -155,11 +155,18 @@ class SrRobotCommander(object):
         """
         Executes the last plan made.
         """
-        if self.__plan is not None:
+        if self.check_plan_is_valid():
             self._move_group_commander.execute(self.__plan)
             self.__plan = None
         else:
-            rospy.logwarn("No plans where made, not executing anything.")
+            rospy.logwarn("No plans were made, not executing anything.")
+
+    def execute_plan(self, plan):
+        if self.check_given_plan_is_valid(plan):
+            self._move_group_commander.execute(plan)
+            self.__plan = None
+        else:
+            rospy.logwarn("Plan is not valid, not executing anything.")
 
     def move_to_joint_value_target(self, joint_states, wait=True,
                                    angle_degrees=False):
@@ -195,12 +202,19 @@ class SrRobotCommander(object):
         self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
         self.__plan = self._move_group_commander.plan()
+        return self.__plan
 
     def check_plan_is_valid(self):
         """
         Checks if current plan contains a valid trajectory
         """
         return (self.__plan is not None and len(self.__plan.joint_trajectory.points) > 0)
+
+    def check_given_plan_is_valid(self, plan):
+        """
+        Checks if given plan contains a valid trajectory
+        """
+        return (plan is not None and len(plan.joint_trajectory.points) > 0)
 
     def get_robot_name(self):
         return self._robot_name
@@ -376,6 +390,14 @@ class SrRobotCommander(object):
         with self._joint_states_lock:
             return self._joints_effort
 
+    def get_joints_state(self):
+        """
+        Returns joints state
+        @return - JointState message
+        """
+        with self._joint_states_lock:
+            return self._joints_state
+
     def run_joint_trajectory(self, joint_trajectory):
         """
         Moves robot through all joint states with specified timeouts
@@ -530,7 +552,7 @@ class SrRobotCommander(object):
         self._move_group_commander.set_pose_target(pose, end_effector_link)
         self._move_group_commander.go(wait=wait)
 
-    def plan_to_pose_target(self, pose, end_effector_link=""):
+    def plan_to_pose_target(self, pose, end_effector_link="", alternative_method=False):
         """
         Specify a target pose for the end-effector and plans.
         This is a blocking method.
@@ -538,10 +560,15 @@ class SrRobotCommander(object):
         message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z] or a list
         of 7 floats [x, y, z, qx, qy, qz, qw]
         @param end_effector_link - name of the end effector link
+        @param alternative_method - use set_joint_value_target instead of set_pose_target
         """
         self._move_group_commander.set_start_state_to_current_state()
-        self._move_group_commander.set_pose_target(pose, end_effector_link)
+        if alternative_method:
+            self._move_group_commander.set_joint_value_target(pose, end_effector_link)
+        else:
+            self._move_group_commander.set_pose_target(pose, end_effector_link)
         self.__plan = self._move_group_commander.plan()
+        return self.__plan
 
     def _joint_states_callback(self, joint_state):
         """
@@ -551,6 +578,7 @@ class SrRobotCommander(object):
         @param joint_state - the message containing the joints data.
         """
         with self._joint_states_lock:
+            self._joints_state = joint_state
             self._joints_position = {n: p for n, p in
                                      zip(joint_state.name,
                                          joint_state.position)}
@@ -560,23 +588,20 @@ class SrRobotCommander(object):
             self._joints_effort = {n: v for n, v in
                                    zip(joint_state.name, joint_state.effort)}
 
-    def _get_trajectory_controller_name(self):
-        return self._prefix + "trajectory_controller"
-
-    def _set_up_action_client(self):
+    def _set_up_action_client(self, controller_list):
         """
         Sets up an action client to communicate with the trajectory controller
         """
-        self._action_running = False
+        self._action_running = {}
 
-        self._client = SimpleActionClient(
-            self._get_trajectory_controller_name() + "/follow_joint_trajectory",
-            FollowJointTrajectoryAction
-        )
-
-        if self._client.wait_for_server(timeout=rospy.Duration(4)) is False:
-            rospy.logfatal("Failed to connect to action server in 4 sec")
-            raise Exception("Failed to connect to action server in 4 sec")
+        for controller_name in controller_list.keys():
+            self._action_running[controller_name] = False
+            service_name = controller_name+"/follow_joint_trajectory"
+            self._clients[controller_name] = SimpleActionClient(service_name,
+                                                                FollowJointTrajectoryAction)
+            if self._clients[controller_name].wait_for_server(timeout=rospy.Duration(4)) is False:
+                err_msg = 'Failed to connect to action server ({}) in 4 sec'.format(service_name)
+                rospy.logwarn(err_msg)
 
     def move_to_joint_value_target_unsafe(self, joint_states, time=0.002,
                                           wait=True, angle_degrees=False):
@@ -592,40 +617,57 @@ class SrRobotCommander(object):
         """
         # self._update_default_trajectory()
         # self._set_targets_to_default_trajectory(joint_states)
+        goals = {}
         joint_states_cpy = copy.deepcopy(joint_states)
 
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
                                     for joint, i in joint_states_cpy.items())
 
-        goal = FollowJointTrajectoryGoal()
-        goal.trajectory.joint_names = list(joint_states_cpy.keys())
-        point = JointTrajectoryPoint()
-        point.time_from_start = rospy.Duration.from_sec(time)
-        for key in goal.trajectory.joint_names:
-            point.positions.append(joint_states_cpy[key])
+        for controller in self._controllers:
+            controller_joints = self._controllers[controller]
+            goal = FollowJointTrajectoryGoal()
+            goal.trajectory.joint_names = []
+            point = JointTrajectoryPoint()
+            point.positions = []
 
-        goal.trajectory.points = []
-        goal.trajectory.points.append(point)
+            for x in joint_states_cpy.keys():
+                if x in controller_joints:
+                    goal.trajectory.joint_names.append(x)
+                    point.positions.append(joint_states_cpy[x])
 
-        self._call_action(goal)
+            point.time_from_start = rospy.Duration.from_sec(time)
+
+            goal.trajectory.points = [point]
+
+            goals[controller] = goal
+
+        self._call_action(goals)
 
         if not wait:
             return
 
-        if not self._client.wait_for_result():
-            rospy.loginfo("Trajectory not completed")
+        for i in self._clients.keys():
+            if not self._clients[i].wait_for_result():
+                rospy.loginfo("Trajectory not completed")
 
-    def action_is_running(self):
-        return self._action_running
+    def action_is_running(self, controller=None):
+        if controller is not None:
+            return self._action_running[controller]
 
-    def _action_done_cb(self, terminal_state, result):
-        self._action_running = False
+        for controller_running in self._action_running.values():
+            if controller_running:
+                return True
+        return False
 
-    def _call_action(self, goal):
-        self._set_up_action_client()
-        self._action_running = True
-        self._client.send_goal(goal, self._action_done_cb)
+    def _action_done_cb(self, controller, terminal_state, result):
+        self._action_running[controller] = False
+
+    def _call_action(self, goals):
+        for client in self._clients:
+            self._action_running[client] = True
+            self._clients[client].send_goal(
+                goals[client], lambda terminal_state, result: self._action_done_cb(client, terminal_state, result))
 
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
         """
@@ -634,15 +676,39 @@ class SrRobotCommander(object):
         trajectory of the joints which would be executed.
         @param wait - should method wait for movement end or not
         """
-        goal = FollowJointTrajectoryGoal()
-        goal.trajectory = joint_trajectory
-        self._call_action(goal)
+        goals = {}
+        for controller in self._controllers:
+            controller_joints = self._controllers[controller]
+            goal = FollowJointTrajectoryGoal()
+            goal.trajectory = copy.deepcopy(joint_trajectory)
+
+            indices_of_joints_in_this_controller = []
+
+            for i, joint in enumerate(joint_trajectory.joint_names):
+                if joint in controller_joints:
+                    indices_of_joints_in_this_controller.append(i)
+
+            goal.trajectory.joint_names = [
+                joint_trajectory.joint_names[i] for i in indices_of_joints_in_this_controller]
+
+            for point in goal.trajectory.points:
+                if point.positions:
+                    point.positions = [point.positions[i] for i in indices_of_joints_in_this_controller]
+                if point.velocities:
+                    point.velocities = [point.velocities[i] for i in indices_of_joints_in_this_controller]
+                if point.effort:
+                    point.effort = [point.effort[i] for i in indices_of_joints_in_this_controller]
+
+            goals[controller] = goal
+
+        self._call_action(goals)
 
         if not wait:
             return
 
-        if not self._client.wait_for_result():
-            rospy.loginfo("Trajectory not completed")
+        for i in self._clients.keys():
+            if not self._clients[i].wait_for_result():
+                rospy.loginfo("Trajectory not completed")
 
     def plan_to_waypoints_target(self, waypoints, reference_frame=None, eef_step=0.005, jump_threshold=0.0):
         """
@@ -710,7 +776,7 @@ class SrRobotCommander(object):
         except rospy.ServiceException:
             rospy.logerr("Failed to call service teach_mode")
 
-    def get_ik(self, target_pose, avoid_collisions=False):
+    def get_ik(self, target_pose, avoid_collisions=False, joint_states=None):
         """
         Computes the inverse kinematics for a given pose. It returns a JointState
         @param target_pose - A given pose of type PoseStamped
@@ -720,8 +786,12 @@ class SrRobotCommander(object):
         service_request.group_name = self._name
         service_request.ik_link_name = self._move_group_commander.get_end_effector_link()
         service_request.pose_stamped = target_pose
-        service_request.timeout.secs = 0.005
+        service_request.timeout.secs = 0.5
         service_request.avoid_collisions = avoid_collisions
+        if joint_states is None:
+            service_request.robot_state.joint_state = self.get_joints_state()
+        else:
+            service_request.robot_state.joint_state = joint_states
 
         try:
             resp = self._compute_ik(ik_request=service_request)

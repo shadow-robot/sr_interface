@@ -25,15 +25,34 @@ class SrStateSaverUnsafe(object):
         self._hand_h = hand_h
         self._save_target = save_target
 
+        if name is None or name == '':
+            raise ValueError("Cannot save with empty name.")
+
+        if hand_or_arm == "arm":
+            self.__commander = SrArmCommander()
+            if not self.__commander.arm_found():
+                raise ValueError("'No arm found.'")
+
+        elif hand_or_arm == 'hand':
+            self.__commander = SrHandCommander()
+        else:
+            double_error = []
+            try:
+                self.__hand_commander = SrHandCommander()
+            except Exception as e:
+                double_error.append(str(e))
+
+            self.__arm_commander = SrArmCommander()
+
+            if not self.__arm_commander.arm_found():
+                double_error.append("'No arm found.'")
+
+            if len(double_error) != 0:
+                raise ValueError(" ".join(double_error))
+
+
         self._save_hand = (hand_or_arm == "hand" or hand_or_arm == "both")
         self._save_arm = (hand_or_arm == "arm" or hand_or_arm == "both")
-
-        if self._save_hand:
-            rospy.loginfo("Saving hand data")
-        if self._save_arm:
-            rospy.loginfo("Saving arm data")
-
-        rospy.loginfo("Saving for hand %s" % "h" if self._hand_h else "e")
 
         if save_target:
             rospy.loginfo("Saving targets instead of current values")
@@ -47,22 +66,6 @@ class SrStateSaverUnsafe(object):
                 self._arm_subscriber = rospy.Subscriber("/ra_trajectory_controller/state",
                                                          JointTrajectoryControllerState, self._target_cb)
 
-        rospy.loginfo("Creating commanders")
-        if hand_or_arm == 'hand':
-            if self._hand_h:
-                self._commander = SrRobotCommander("hand_h", prefix="H1_")
-            else:
-                hand_finder = HandFinder()
-
-                hand_parameters = hand_finder.get_hand_parameters()
-                hand_serial = hand_parameters.mapping.keys()[0]
-
-                self._commander = SrHandCommander(hand_parameters=hand_parameters, hand_serial=hand_serial)
-        else:
-            if hand_h:
-                self._commander = SrRobotCommander("right_arm", prefix="ra_")
-            else:
-                self._commander = SrArmCommander()
 
         self._hand_or_arm = hand_or_arm
 

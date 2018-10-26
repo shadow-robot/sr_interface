@@ -31,80 +31,72 @@
       </xacro:if>
       <joint name="$(arg prefix)WRJ2" />
       <joint name="$(arg prefix)WRJ1" />
-      <chain base_link="$(arg prefix)forearm" tip_link="$(arg prefix)palm" />
     </xacro:unless>
-    <group name="$(arg prefix)fingers" />
   </group>
-  
-  <xacro:unless value="$(arg is_lite)">
-    <group name="$(arg prefix)wrist">
- 	  <chain base_link="$(arg prefix)forearm" tip_link="$(arg prefix)palm" />
-    </group>
-  </xacro:unless>
-  <xacro:if value="$(arg is_lite)">
-    <group name="$(arg prefix)wrist_lite">
-      <chain base_link="$(arg prefix)forearm" tip_link="$(arg prefix)palm" />
-    </group>
-  </xacro:if>
-
-  <group name="$(arg prefix)forearm">
-    <link name="$(arg prefix)forearm" />
-  </group>
-
   <group name="$(arg prefix)manipulator">
-    <chain base_link="$(arg prefix)forearm" tip_link="$(arg prefix)manipulator" />
+    <chain base_link="$(arg prefix)forearm" tip_link="$(arg prefix)manipulator"/>
   </group>
 
-  <!-- single finger groups -->  
+  <!-- single finger groups -->
   <xacro:if value="$(arg ff)">
     <group name="$(arg prefix)first_finger">
-      <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="FF" lf="0"/>
+      <xacro:fingerchains prefix="$(arg prefix)" link_prefix="ff" lf="0"/>
+    </group>
+    <group name="$(arg prefix)first_finger_ee">
+      <link name="$(arg prefix)fftip"/>
     </group>
   </xacro:if>
   <xacro:if value="$(arg mf)">
     <group name="$(arg prefix)middle_finger">
-      <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="MF" lf="0"/>
+      <xacro:fingerchains prefix="$(arg prefix)" link_prefix="mf" lf="0"/>
+    </group>
+    <group name="$(arg prefix)middle_finger_ee">
+      <link name="$(arg prefix)mftip"/>
     </group>
   </xacro:if>
   <xacro:if value="$(arg rf)">
     <group name="$(arg prefix)ring_finger">
-      <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="RF" lf="0"/>
+      <xacro:fingerchains prefix="$(arg prefix)" link_prefix="rf" lf="0"/>
+    </group>
+    <group name="$(arg prefix)ring_finger_ee">
+      <link name="$(arg prefix)rftip"/>
     </group>
   </xacro:if>
   <xacro:unless value="$(arg is_lite)">
     <xacro:if value="$(arg lf)">
       <group name="$(arg prefix)little_finger">
-        <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="LF" lf="1"/>
+        <xacro:fingerchains prefix="$(arg prefix)" link_prefix="lf" lf="1"/>
+      </group>
+      <group name="$(arg prefix)little_finger_ee">
+        <link name="$(arg prefix)lftip"/>
       </group>
     </xacro:if>
   </xacro:unless>
   <xacro:if value="$(arg th)">
     <group name="$(arg prefix)thumb">
-      <xacro:thumbjoints prefix="$(arg prefix)"/>
+      <xacro:fingerchains prefix="$(arg prefix)" link_prefix="th" lf="0"/>
+    </group>
+    <group name="$(arg prefix)thumb_ee">
+      <link name="$(arg prefix)thtip"/>
     </group>
   </xacro:if>
 
   <!-- all fingers group -->
   <group name="$(arg prefix)fingers">
    <xacro:if value="$(arg th)">
-      <xacro:thumbjoints prefix="$(arg prefix)" />
       <group name="$(arg prefix)thumb" />
     </xacro:if>
     <xacro:if value="$(arg ff)">
-      <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="FF" lf="0"/>
       <group name="$(arg prefix)first_finger" />
     </xacro:if>
     <xacro:if value="$(arg mf)">
-      <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="MF" lf="0"/>
       <group name="$(arg prefix)middle_finger" />
     </xacro:if>
     <xacro:if value="$(arg rf)">
-      <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="RF" lf="0"/>
       <group name="$(arg prefix)ring_finger" />
     </xacro:if>
     <xacro:unless value="$(arg is_lite)">
       <xacro:if value="$(arg lf)">
-        <xacro:fingerjoints prefix="$(arg prefix)" joint_prefix="LF" lf="1"/>
         <group name="$(arg prefix)little_finger" />
       </xacro:if>
     </xacro:unless>
@@ -314,16 +306,8 @@
   <xacro:if value="$(arg th)">
     <xacro:finger_ee prefix="$(arg prefix)" link_prefix="th" finger_name="thumb" hand_name="$(arg hand_name)"/>
   </xacro:if>
-
-  <xacro:unless value="$(arg is_lite)">
-    <end_effector group="$(arg prefix)wrist" name="$(arg prefix)wrist_ee" parent_link="$(arg prefix)forearm" parent_group="$(arg prefix)forearm"/>
-    <end_effector group="$(arg prefix)fingers" name="$(arg prefix)palm_ee" parent_group="$(arg prefix)wrist" parent_link="$(arg prefix)palm"/>
-  </xacro:unless>
-  <xacro:if value="$(arg is_lite)">
-    <end_effector group="$(arg prefix)fingers" name="$(arg prefix)palm_ee" parent_group="$(arg prefix)wrist_lite" parent_link="$(arg prefix)palm"/>
-  </xacro:if>
-
   <end_effector group="$(arg prefix)fingers" name="$(arg prefix)manipulator_ee" parent_group="$(arg prefix)manipulator" parent_link="$(arg prefix)manipulator"/>
+
 
   <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
 

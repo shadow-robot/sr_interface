@@ -20,18 +20,23 @@
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
+  <!-- Set to true if you want to use grasp controller -->
+  <arg name="grasp_controller" default="false"/>
+  <!-- The control mode PWM (true) or torque (false) -->
+  <!-- Set to true by default for now as torque control is not available yet -->
+  <arg name="pwm_control" default="true"/>
 
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world" unless="$(arg scene)"/>
-  <arg name="world" default="$(find sr_description_common)/worlds/sr_lab.world" if="$(arg scene)"/>
+  <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large.world" if="$(arg scene)"/>
   <!-- Set the scene file -->
-  <arg name="scene_file" default="$(find sr_description_common)/scenes/lab.scene"/>
+  <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large.scene"/>
   
   <!-- Set initial_z value dependant on scene-->
   <arg name="initial_z" default="1.0" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
 
-  <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur5.urdf.xacro"/>
+  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/right_srhand_ur5.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur5.yaml"/>
 
   <arg name="side" value="right"/>
@@ -56,5 +61,7 @@
     <arg name="mapping_path" value="$(arg mapping_path)"/>
     <arg name="eth_port" value="$(arg eth_port)"/>
     <arg name="scene" value="$(arg scene)"/>
+    <arg name="grasp_controller" value="$(arg grasp_controller)"/>
+    <arg name="pwm_control" value="$(arg pwm_control)"/>
   </include>
 </launch>

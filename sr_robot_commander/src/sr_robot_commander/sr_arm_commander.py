@@ -36,6 +36,8 @@ class SrArmCommander(SrRobotCommander):
         try:
             super(SrArmCommander, self).__init__(name)
         except Exception as e:
+            # TODO(@dg-shadow): Raise SrRobotCommanderException here. Not doing
+            # now as no time to check for and repair unforseen consequences.
             rospy.logerr("Couldn't initialise robot commander - is there an arm running?: " + str(e))
             self._move_group_commander = None
             return

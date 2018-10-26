@@ -18,9 +18,16 @@
   <arg name="scene" default="false"/>
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world" unless="$(arg scene)"/>
-  <arg name="world" default="$(find sr_description_common)/worlds/sr_lab.world" if="$(arg scene)"/>
+  <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large.world" if="$(arg scene)"/>
   <!-- Set the scene file -->
-  <arg name="scene_file" default="$(find sr_description_common)/scenes/lab.scene"/>
+  <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large.scene"/>
+  <!-- Set to true if you want the robot to start in the "home" positions -->
+  <arg name="start_home" default="false"/>
+  <!-- Definition of "home" position, in joint-angle pairs -->
+  <arg name="home_angles" default="-J ra_shoulder_pan_joint 1.147 -J ra_elbow_joint 1.695 -J ra_wrist_1_joint -1.395 -J ra_wrist_2_joint -1.584 -J ra_shoulder_lift_joint -1.926 -J ra_wrist_3_joint 1.830"/>
+  <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
+  <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
+  <arg name="include_wrist_in_arm_controller" default="true"/>
 
   <!-- Change this for the left hand and arm -->
   <arg name="hand_id" default="rh"/>
@@ -32,7 +39,7 @@
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
 
   <!-- Change this for another hand -->
-  <arg name="robot_description" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro"/>
+  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
   <arg name="robot_name" default="$(arg robot_model)srh"/>
 
@@ -50,7 +57,10 @@
   <!-- Set to true to spawn the position controllers for the hands-->
   <arg name="hand_ctrl" default="true"/>
   <!-- The control mode PWM (true) or torque (false) -->
+  <!-- Set to true by default for now as torque control is not available yet -->
   <arg name="pwm_control" default="true"/>
+  <!-- Set to true if you want to use grasp controller -->
+  <arg name="grasp_controller" default="false"/>
   <!-- Serial number of the hand to be used-->
   <arg name="hand_serial" default="1082"/>
   <!-- the path to the mapping files -->
@@ -62,7 +72,7 @@
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
-    <arg name="paused" value="false"/>
+    <arg name="paused" value="$(arg start_home)"/>
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
       <arg name="world_name" default="$(arg world)"/>
       <arg name="gui" default="$(arg gui)"/>
@@ -70,15 +80,18 @@
       <arg name="debug" value="$(arg debug)"/>
       <arg name="verbose" value="$(arg verbose)" />
     </include>
-    <param name="robot_description" command="xacro --inorder '$(arg robot_description)' initial_z:=$(arg initial_z)"/>
+    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
     <!-- HAND -->
     <param name="/hand/mapping/$(arg hand_serial)" value="$(arg hand_id)"/>
     <param name="/hand/joint_prefix/$(arg hand_serial)" value="$(arg hand_id)_"/>
-    <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name)" respawn="false" output="screen"/>
+    <arg if="$(arg start_home)" name="spawn_model_extra_args" value="-unpause $(arg home_angles)" />    
+    <arg unless="$(arg start_home)" name="spawn_model_extra_args" value="" />
+    <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name) $(arg spawn_model_extra_args)" respawn="false" output="screen"/>
     <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
     <!-- ARM -->
-    <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_id)_trajectory_controller.yaml" command="load"/>
+    <rosparam if="$(arg include_wrist_in_arm_controller)" file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_id)_trajectory_controller.yaml" command="load"/>
+    <rosparam unless="$(arg include_wrist_in_arm_controller)" file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_id)_trajectory_controller_no_wrist.yaml" command="load"/>
     <group if="$(arg arm_trajectory)">
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_id)_trajectory_controller"/>
     </group>
@@ -131,7 +144,8 @@
     <!-- Should only be used when testing arm alone, as hand launch includes joint state publisher -->
     <!-- <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"/> -->
     <group if="$(arg arm_trajectory)">
-      <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/>
+      <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/>
+      <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller_no_wrist.yaml"/>
       <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen">
         <rosparam param="controllers" subst_value="True"> ["$(arg arm_id)_sr_ur_robot_hw"] </rosparam>
       </node>
@@ -140,7 +154,7 @@
     </group>
 
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->
-    <node if="$(arg scene)" pkg="sr_robot_launch" type="timed_roslaunch.sh" args="8 sr_multi_moveit_config scene.launch
+    <node if="$(arg scene)" pkg="sr_utilities_common" type="timed_roslaunch.sh" args="8 sr_multi_moveit_config scene.launch
       scene_file:=$(arg scene_file)" name="timed_publish_moveit_scene" output="screen"/>
   </group>
 
@@ -157,12 +171,19 @@
     <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
   </group>
 
-  <!-- Trajectory controller -->
+  <!-- Controller -->
   <group if="$(arg hand_ctrl)">
-    <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
-      <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
-      <param name="exclude_wrist" value="true"/>
-      <param name="wait_for" value ="/calibrated" unless="$(arg sim)"/>
-    </node>
+    <group unless="$(arg grasp_controller)">
+      <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
+        <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
+        <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
+        <param name="wait_for" value ="/calibrated" unless="$(arg sim)"/>
+      </node>
+    </group>
+    <group if="$(arg grasp_controller)">
+      <node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen">
+        <param name="wait_for" value ="/calibrated" unless="$(arg sim)"/>
+      </node>
+    </group>
   </group>
 </launch>

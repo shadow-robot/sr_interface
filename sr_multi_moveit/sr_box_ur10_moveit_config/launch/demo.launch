@@ -8,12 +8,16 @@
   <!-- By default, we are not in debug mode -->
   <arg name="debug" default="false" />
 
-  <arg name="robot_description" default="$(find sr_box_ur10_moveit_config)/config/box_ur10_with_hand.urdf.xacro"/>
+  <!-- Set initial_z of the robot to enable to set it on a table -->
+  <arg name="initial_z" default="0.1"/>
+
+  <arg name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro'"/>
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <include file="$(find sr_box_ur10_moveit_config)/launch/planning_context.launch">
     <arg name="load_robot_description" value="true"/>
     <arg name="robot_description" value="$(arg robot_description)"/>
+    <arg name="initial_z" value="$(arg initial_z)" />
   </include>
 
   <!-- If needed, broadcast static tf for robot root -->

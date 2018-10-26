@@ -47,7 +47,7 @@ import rospy
 import rosparam
 from srdfdom.srdf import SRDF
 
-from sr_utilities.local_urdf_parser_py import URDF
+from urdf_parser_py.urdf import URDF
 
 
 def yaml_reindent(in_str, numspaces):
@@ -201,7 +201,12 @@ def generate_ompl_planning(robot,
     # for each group
     for group in robot.groups:
         # strip prefix if any
-        group_name = group.name[len(prefix):]
+        group_name = group.name
+        if re.match("^"+str(prefix), group.name) is not None:
+            group_name = group.name[len(prefix):]
+        elif group.name in ["left_hand", "right_hand"]:
+            group_name = "hand"
+
         if group_name in yamldoc:
             output_str += group.name + ":\n"
             group_config = yamldoc[group_name]
