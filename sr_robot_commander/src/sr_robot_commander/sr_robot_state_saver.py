@@ -50,7 +50,6 @@ class SrStateSaverUnsafe(object):
             if len(double_error) != 0:
                 raise ValueError(" ".join(double_error))
 
-
         self._save_hand = (hand_or_arm == "hand" or hand_or_arm == "both")
         self._save_arm = (hand_or_arm == "arm" or hand_or_arm == "both")
 
@@ -61,11 +60,10 @@ class SrStateSaverUnsafe(object):
             if self._save_hand:
                 prefix = "H1" if hand_h else "rh"
                 self._hand_subscriber = rospy.Subscriber("/" + prefix + "_trajectory_controller/state",
-                                                          JointTrajectoryControllerState, self._target_cb)
+                                                         JointTrajectoryControllerState, self._target_cb)
             if self._save_arm:
                 self._arm_subscriber = rospy.Subscriber("/ra_trajectory_controller/state",
-                                                         JointTrajectoryControllerState, self._target_cb)
-
+                                                        JointTrajectoryControllerState, self._target_cb)
 
         self._hand_or_arm = hand_or_arm
 
