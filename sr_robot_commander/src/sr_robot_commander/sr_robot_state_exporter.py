@@ -42,9 +42,9 @@ class SrRobotStateExporter(object):
     def output_module(self, file_name):
         pp = pprint.PrettyPrinter()
         with open(file_name, "w") as output:
-            output.write('warehouse_poses = %s\n' % pp.pformat(self._dictionary))
+            output.write('warehouse_states = %s\n' % pp.pformat(self._dictionary))
 
-    def convert_trajectory(self, named_trajectory)
+    def convert_trajectory(self, named_trajectory):
         new_trajectory = []
         for entry in named_trajectory:
             new_entry = deepcopy(entry)
