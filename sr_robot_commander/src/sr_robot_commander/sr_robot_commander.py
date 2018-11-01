@@ -44,6 +44,7 @@ from std_msgs.msg import Header
 import tf2_ros
 import copy
 import rospkg
+import numpy
 
 
 class SrRobotCommanderException(Exception):
@@ -215,6 +216,40 @@ class SrRobotCommander(object):
         Checks if given plan contains a valid trajectory
         """
         return (plan is not None and len(plan.joint_trajectory.points) > 0)
+
+    def evaluate_plan(self):
+        return self.evaluate_given_plan(self.__plan)
+
+    def evaluate_given_plan(self, plan):
+        """
+        Returns given plan quality calculated by a weighted sum of angles traveled by each
+        of the joints, giving higher weights to the joints closer to the base of the robot,
+        thus penalizing them as smallmovements of these joints will result in bigger movements
+        of the end effector. Formula:
+
+        PQ = sum_(i=0)^(n-1){w_i * abs(x_i - x_(i0)}, where:
+
+        n - number of robot's joints,
+        w - weight specified for each joint,
+        x - joint's goal position,
+        x_0 - joint's initial position.
+
+        The lower the value, the better the plan.
+        """
+
+        num_of_joints = len(plan.joint_trajectory.points[0].positions)
+        weights = numpy.array(sorted(range(1, num_of_joints + 1), reverse=True))
+        plan_array = numpy.empty(shape=(len(plan.joint_trajectory.points),
+                                        num_of_joints))
+
+        for i, point in enumerate(plan.joint_trajectory.points):
+            plan_array[i] = point.positions
+
+        deltas = abs(numpy.diff(plan_array, axis=0))
+        sum_deltas = numpy.sum(deltas, axis=0)
+        sum_deltas_weighted = sum_deltas * weights
+        plan_quality = numpy.sum(sum_deltas_weighted)
+        return plan_quality
 
     def get_robot_name(self):
         return self._robot_name
