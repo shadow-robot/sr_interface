@@ -29,23 +29,23 @@ trajectory = [
     }
 ]
 
-state_extractor = SrRobotStateExtractor()
+state_exporter = SrRobotStateExporter()
 
 # The following three snippets will produce the same effect, i.e. to extract
 # two states, named "state_1" and "state_2"
 
 # Extract one at a time:
-state_extractor.extract_one_state("state_1")
-state_extractor.extract_one_state("state_2")
+state_exporter.extract_one_state("state_1")
+state_exporter.extract_one_state("state_2")
 
 # Extract a list:
-state_extractor.extract_list(['state_1', 'state_2'])
+state_exporter.extract_list(['state_1', 'state_2'])
 
 # Extract all states in a trajectory:
-state_extractor.extract_from_trajetory(trajectory)
+state_exporter.extract_from_trajectory(trajectory)
 
 # Alternatively, you could extract all states from the warehouse:
-state_extractor.extract_all()
+state_exporter.extract_all()
 
 # Once the states you requrie are extracted, they can be exported to a module:
-state_extractor.output_module("/tmp/exported_states.py")
+state_exporter.output_module("/tmp/exported_states.py")

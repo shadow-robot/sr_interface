@@ -25,12 +25,18 @@ warehouse_states = {
 }
 """
 
+rospy.init_node("use_exported_states")
+
 # Define a hand commander, so we have something to do with the states we extracted.
 hand_commander = SrHandCommander()
 
 # You could use the states directly:
-hand_commander.move_to_named_target(warehouse_states['state_1'])
-
+hand_commander.move_to_joint_value_target_unsafe(warehouse_states['state_2'])
+rospy.sleep(2)
+hand_commander.move_to_joint_value_target_unsafe(warehouse_states['state_1'])
+rospy.sleep(2)
+hand_commander.move_to_joint_value_target_unsafe(warehouse_states['state_2'])
+rospy.sleep(2)
 # You could translate all the named states in a trajectory:
 
 trajectory = [
@@ -41,11 +47,11 @@ trajectory = [
     {
         'name': 'state_2',
         'interpolate_time': 3.0,
-        'pause_time': 2
+        'pause_time': 1
     }
 ]
 
-state_exporter = SrRobotStateExporter(warehouse_states))
+state_exporter = SrRobotStateExporter(warehouse_states)
 converted_trajectory = state_exporter.convert_trajectory(trajectory)
 
 hand_commander.run_named_trajectory(converted_trajectory)
@@ -53,5 +59,5 @@ hand_commander.run_named_trajectory(converted_trajectory)
 
 # Or we could repopulate the warehouse with the exported states:
 
-state_exporter = SrRobotStateExporter(warehouse_states))
+state_exporter = SrRobotStateExporter(warehouse_states)
 state_exporter.repopulate_warehouse()
