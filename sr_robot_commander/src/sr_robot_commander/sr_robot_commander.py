@@ -217,9 +217,6 @@ class SrRobotCommander(object):
         """
         return (plan is not None and len(plan.joint_trajectory.points) > 0)
 
-    def evaluate_plan(self):
-        return self.evaluate_given_plan(self.__plan)
-
     def evaluate_given_plan(self, plan):
         """
         Returns given plan quality calculated by a weighted sum of angles traveled by each
@@ -237,6 +234,9 @@ class SrRobotCommander(object):
         The lower the value, the better the plan.
         """
 
+        if plan is None:
+            return None
+
         num_of_joints = len(plan.joint_trajectory.points[0].positions)
         weights = numpy.array(sorted(range(1, num_of_joints + 1), reverse=True))
         plan_array = numpy.empty(shape=(len(plan.joint_trajectory.points),
@@ -250,6 +250,9 @@ class SrRobotCommander(object):
         sum_deltas_weighted = sum_deltas * weights
         plan_quality = numpy.sum(sum_deltas_weighted)
         return plan_quality
+
+    def evaluate_plan(self):
+        return self.evaluate_given_plan(self.__plan)
 
     def get_robot_name(self):
         return self._robot_name
