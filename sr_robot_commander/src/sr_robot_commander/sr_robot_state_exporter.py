@@ -8,9 +8,9 @@ from moveit_msgs.srv import SaveRobotStateToWarehouse as SaveState
 from moveit_msgs.srv import ListRobotStatesInWarehouse as ListState
 from moveit_msgs.msg import RobotState
 
+
 class SrRobotStateExporter(object):
     def __init__(self, start_dictionary={}):
-        # define service proxies
         self._get_state = rospy.ServiceProxy("/get_robot_state", GetState)
         self._has_state = rospy.ServiceProxy("/has_robot_state", HasState)
         self._list_states = rospy.ServiceProxy("/list_robot_states", ListState)
@@ -23,10 +23,10 @@ class SrRobotStateExporter(object):
 
     def extract_one_state(self, name):
         if self._has_state(name, '').exists:
-            state = self._get_state(name,'').state.joint_state
+            state = self._get_state(name, '').state.joint_state
             names = state.name
             position = state.position
-            self._dictionary[name] = {name : position[n] for n, name in enumerate(names) }
+            self._dictionary[name] = {name: position[n] for n, name in enumerate(names)}
         else:
             rospy.logerr("State %s not present in the warehouse." % name)
 
@@ -36,7 +36,7 @@ class SrRobotStateExporter(object):
                 self.extract_one_state(entry['name'])
 
     def extract_all(self):
-        for state in self._list_states("","").states:
+        for state in self._list_states("", "").states:
             self.extract_one_state(state)
 
     def output_module(self, file_name):
@@ -65,4 +65,4 @@ class SrRobotStateExporter(object):
                 state = RobotState()
                 state.joint_state.name = self._dictionary[name].keys()
                 state.joint_state.position = self._dictionary[name].values()
-                self._save_state(name,'',state)
+                self._save_state(name, '', state)
