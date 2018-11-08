@@ -377,7 +377,7 @@ class SrRobotCommander(object):
         Set target of the robot's links and plans
         This is a blocking method.
         @param name - name of the target pose defined in SRDF
-        @param custom_start_state - specify if plannig start state different than the current state
+        @param custom_start_state - specify a start state different than the current state
         """
         if custom_start_state is None:
             self._move_group_commander.set_start_state_to_current_state()
