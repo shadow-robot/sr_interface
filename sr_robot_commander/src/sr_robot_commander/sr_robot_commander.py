@@ -193,7 +193,7 @@ class SrRobotCommander(object):
         @param joint_states - dictionary with joint name and value. It can
         contain only joints values of which need to be changed.
         @param angle_degrees - are joint_states in degrees or not
-        @param custom_start_state - specify if plannig start state different than the current state
+        @param custom_start_state - specify a start state different than the current state
         This is a blocking method.
         """
         joint_states_cpy = copy.deepcopy(joint_states)
@@ -580,7 +580,7 @@ class SrRobotCommander(object):
         This is a blocking method.
         @param xyz - new position of end-effector
         @param end_effector_link - name of the end effector link
-        @param custom_start_state - specify if plannig start state different than the current state
+        @param custom_start_state - specify a start state different than the current state
         """
         if custom_start_state is None:
             self._move_group_commander.set_start_state_to_current_state()
@@ -611,7 +611,7 @@ class SrRobotCommander(object):
         of 7 floats [x, y, z, qx, qy, qz, qw]
         @param end_effector_link - name of the end effector link
         @param alternative_method - use set_joint_value_target instead of set_pose_target
-        @param custom_start_state - specify if plannig start state different than the current state
+        @param custom_start_state - specify a start state different than the current state
         """
         if custom_start_state is None:
             self._move_group_commander.set_start_state_to_current_state()
@@ -773,7 +773,7 @@ class SrRobotCommander(object):
         @param waypoints - an array of poses of end-effector
         @param eef_step - configurations are computed for every eef_step meters
         @param jump_threshold - maximum distance in configuration space between consecutive points in the resulting path
-        @param custom_start_state - specify if plannig start state different than the current state
+        @param custom_start_state - specify a start state different than the current state
         """
         if custom_start_state is None:
             self._move_group_commander.set_start_state_to_current_state()
