@@ -1,7 +1,7 @@
 <launch>
   <!-- This launch file is for shadow hand only -->
   <arg name="hand_id" default="rh"/>
-  <!-- Set to hand_e or hand_g -->
+  <!-- Set to hand_e, hand_e_plus or hand_g -->
   <arg name="hand_type" default="hand_e"/>
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
   <arg name="sim" default="true"/>
@@ -33,7 +33,9 @@
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_motor.urdf.xacro'"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_g')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_lite.urdf.xacro'"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_g')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_lite.urdf.xacro'"/>
-    
+  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_motor_plus.urdf.xacro'"/>
+  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e_plus')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_motor_plus.urdf.xacro'"/>
+
   
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
@@ -51,7 +53,7 @@
     <param name="robot_description" command="xacro --inorder $(arg robot_description)"/>
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model usrh -z 0.0 "
           respawn="false" output="screen"/>
-    <group if="$(eval arg('hand_type') == 'hand_e')">
+    <group if="$(eval arg('hand_type') == 'hand_e' or arg('hand_type') == 'hand_e_plus')">
       <rosparam unless="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
       <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_grasp_controller_gazebo.yaml"/>
     </group>
