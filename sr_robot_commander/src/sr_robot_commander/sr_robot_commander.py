@@ -258,6 +258,18 @@ class SrRobotCommander(object):
     def evaluate_plan(self):
         return self.evaluate_given_plan(self.__plan)
 
+    def evaluate_plan_quality(plan_quality, good_threshold=20, medium_threshold=50):
+        if plan_quality > medium_threshold:
+            rospy.logwarn("Low plan quality! Value: {}".format(plan_quality))
+            return 'poor'
+        elif (plan_quality > good_threshold and
+                plan_quality < medium_threshold):
+            rospy.loginfo("Medium plan quality. Value: {}".format(plan_quality))
+            return 'medium'
+        elif plan_quality < good_threshold:
+            rospy.loginfo("Good plan quality. Value: {}".format(plan_quality))
+            return 'good'
+
     def get_robot_name(self):
         return self._robot_name
 
