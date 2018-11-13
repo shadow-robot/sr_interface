@@ -252,13 +252,13 @@ class SrRobotCommander(object):
         deltas = abs(numpy.diff(plan_array, axis=0))
         sum_deltas = numpy.sum(deltas, axis=0)
         sum_deltas_weighted = sum_deltas * weights
-        plan_quality = numpy.sum(sum_deltas_weighted)
+        plan_quality = float(numpy.sum(sum_deltas_weighted))
         return plan_quality
 
     def evaluate_plan(self):
         return self.evaluate_given_plan(self.__plan)
 
-    def evaluate_plan_quality(plan_quality, good_threshold=20, medium_threshold=50):
+    def evaluate_plan_quality(self, plan_quality, good_threshold=20, medium_threshold=50):
         if plan_quality > medium_threshold:
             rospy.logwarn("Low plan quality! Value: {}".format(plan_quality))
             return 'poor'
