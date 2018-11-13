@@ -44,6 +44,7 @@ from std_msgs.msg import Header
 import tf2_ros
 import copy
 import rospkg
+import numpy
 
 
 class SrRobotCommanderException(Exception):
@@ -186,12 +187,13 @@ class SrRobotCommander(object):
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
         self._move_group_commander.go(wait=wait)
 
-    def plan_to_joint_value_target(self, joint_states, angle_degrees=False):
+    def plan_to_joint_value_target(self, joint_states, angle_degrees=False, custom_start_state=None):
         """
         Set target of the robot's links and plans.
         @param joint_states - dictionary with joint name and value. It can
         contain only joints values of which need to be changed.
         @param angle_degrees - are joint_states in degrees or not
+        @param custom_start_state - specify a start state different than the current state
         This is a blocking method.
         """
         joint_states_cpy = copy.deepcopy(joint_states)
@@ -199,7 +201,10 @@ class SrRobotCommander(object):
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
                                     for joint, i in joint_states_cpy.items())
-        self._move_group_commander.set_start_state_to_current_state()
+        if custom_start_state is None:
+            self._move_group_commander.set_start_state_to_current_state()
+        else:
+            self._move_group_commander.set_start_state(custom_start_state)
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
         self.__plan = self._move_group_commander.plan()
         return self.__plan
@@ -215,6 +220,43 @@ class SrRobotCommander(object):
         Checks if given plan contains a valid trajectory
         """
         return (plan is not None and len(plan.joint_trajectory.points) > 0)
+
+    def evaluate_given_plan(self, plan):
+        """
+        Returns given plan quality calculated by a weighted sum of angles traveled by each
+        of the joints, giving higher weights to the joints closer to the base of the robot,
+        thus penalizing them as smallmovements of these joints will result in bigger movements
+        of the end effector. Formula:
+
+        PQ = sum_(i=0)^(n-1){w_i * abs(x_i - x_(i0)}, where:
+
+        n - number of robot's joints,
+        w - weight specified for each joint,
+        x - joint's goal position,
+        x_0 - joint's initial position.
+
+        The lower the value, the better the plan.
+        """
+
+        if plan is None:
+            return None
+
+        num_of_joints = len(plan.joint_trajectory.points[0].positions)
+        weights = numpy.array(sorted(range(1, num_of_joints + 1), reverse=True))
+        plan_array = numpy.empty(shape=(len(plan.joint_trajectory.points),
+                                        num_of_joints))
+
+        for i, point in enumerate(plan.joint_trajectory.points):
+            plan_array[i] = point.positions
+
+        deltas = abs(numpy.diff(plan_array, axis=0))
+        sum_deltas = numpy.sum(deltas, axis=0)
+        sum_deltas_weighted = sum_deltas * weights
+        plan_quality = numpy.sum(sum_deltas_weighted)
+        return plan_quality
+
+    def evaluate_plan(self):
+        return self.evaluate_given_plan(self.__plan)
 
     def get_robot_name(self):
         return self._robot_name
@@ -330,13 +372,17 @@ class SrRobotCommander(object):
         if self.set_named_target(name):
             self._move_group_commander.go(wait=wait)
 
-    def plan_to_named_target(self, name):
+    def plan_to_named_target(self, name, custom_start_state=None):
         """
         Set target of the robot's links and plans
         This is a blocking method.
         @param name - name of the target pose defined in SRDF
+        @param custom_start_state - specify a start state different than the current state
         """
-        self._move_group_commander.set_start_state_to_current_state()
+        if custom_start_state is None:
+            self._move_group_commander.set_start_state_to_current_state()
+        else:
+            self._move_group_commander.set_start_state(custom_start_state)
         if self.set_named_target(name):
             self.__plan = self._move_group_commander.plan()
 
@@ -528,14 +574,18 @@ class SrRobotCommander(object):
         self._move_group_commander.set_position_target(xyz, end_effector_link)
         self._move_group_commander.go(wait=wait)
 
-    def plan_to_position_target(self, xyz, end_effector_link=""):
+    def plan_to_position_target(self, xyz, end_effector_link="", custom_start_state=None):
         """
         Specify a target position for the end-effector and plans.
         This is a blocking method.
         @param xyz - new position of end-effector
         @param end_effector_link - name of the end effector link
+        @param custom_start_state - specify a start state different than the current state
         """
-        self._move_group_commander.set_start_state_to_current_state()
+        if custom_start_state is None:
+            self._move_group_commander.set_start_state_to_current_state()
+        else:
+            self._move_group_commander.set_start_state(custom_start_state)
         self._move_group_commander.set_position_target(xyz, end_effector_link)
         self.__plan = self._move_group_commander.plan()
 
@@ -552,7 +602,7 @@ class SrRobotCommander(object):
         self._move_group_commander.set_pose_target(pose, end_effector_link)
         self._move_group_commander.go(wait=wait)
 
-    def plan_to_pose_target(self, pose, end_effector_link="", alternative_method=False):
+    def plan_to_pose_target(self, pose, end_effector_link="", alternative_method=False, custom_start_state=None):
         """
         Specify a target pose for the end-effector and plans.
         This is a blocking method.
@@ -561,8 +611,12 @@ class SrRobotCommander(object):
         of 7 floats [x, y, z, qx, qy, qz, qw]
         @param end_effector_link - name of the end effector link
         @param alternative_method - use set_joint_value_target instead of set_pose_target
+        @param custom_start_state - specify a start state different than the current state
         """
-        self._move_group_commander.set_start_state_to_current_state()
+        if custom_start_state is None:
+            self._move_group_commander.set_start_state_to_current_state()
+        else:
+            self._move_group_commander.set_start_state(custom_start_state)
         if alternative_method:
             self._move_group_commander.set_joint_value_target(pose, end_effector_link)
         else:
@@ -710,7 +764,8 @@ class SrRobotCommander(object):
             if not self._clients[i].wait_for_result():
                 rospy.loginfo("Trajectory not completed")
 
-    def plan_to_waypoints_target(self, waypoints, reference_frame=None, eef_step=0.005, jump_threshold=0.0):
+    def plan_to_waypoints_target(self, waypoints, reference_frame=None,
+                                 eef_step=0.005, jump_threshold=0.0, custom_start_state=None):
         """
         Specify a set of waypoints for the end-effector and plans.
         This is a blocking method.
@@ -718,12 +773,18 @@ class SrRobotCommander(object):
         @param waypoints - an array of poses of end-effector
         @param eef_step - configurations are computed for every eef_step meters
         @param jump_threshold - maximum distance in configuration space between consecutive points in the resulting path
+        @param custom_start_state - specify a start state different than the current state
         """
+        if custom_start_state is None:
+            self._move_group_commander.set_start_state_to_current_state()
+        else:
+            self._move_group_commander.set_start_state(custom_start_state)
         old_frame = self._move_group_commander.get_pose_reference_frame()
         if reference_frame is not None:
             self.set_pose_reference_frame(reference_frame)
         (self.__plan, fraction) = self._move_group_commander.compute_cartesian_path(waypoints, eef_step, jump_threshold)
         self.set_pose_reference_frame(old_frame)
+        return self.__plan
 
     def set_teach_mode(self, teach):
         """
