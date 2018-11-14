@@ -39,6 +39,7 @@
   
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
+    <param name="/use_sim_time" value="true"/>
     <arg name="world_name" value="$(find sr_description_common)/worlds/shadowhand.world"/>
     <arg name="paused" value="false"/>
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -66,8 +67,7 @@
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
       <param name="publish_frequency" type="double" value="50.0" />
       <param name="tf_prefix" type="string" value="" />
-    </node>
-    <param name="/use_sim_time" value="true"/>
+    </node>    
   </group>
 
   <!-- REAL ROBOTS -->
