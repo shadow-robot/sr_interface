@@ -16,8 +16,10 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import rospy
+import filecmp
 from sr_robot_commander.sr_robot_state_exporter import SrRobotStateExporter
 from unittest import TestCase
+from std_srvs.srv import SetBool
 
 PKG = "sr_robot_commander"
 
@@ -30,19 +32,23 @@ class TestSrRobotStateExporter(TestCase):
     def setUp(self):
         rospy.init_node('test_hand_commander', anonymous=True)
 
-    def test_strip_prefix(self):
+    def test_extract_output(self):
         state_exporter = SrRobotStateExporter()
+        state_exporter.extract_all()
+        state_exporter.output_module("test_states.py")
+        self.assertTrue(filecmp.cmp("expected_state.py", "test_states.py"), msg="Export states failed")
 
-        self.assertEqual(hand_commander._strip_prefix("rh_ffj3"), "ffj3", msg="Strip failed")
-        self.assertEqual(hand_commander._strip_prefix("ffj3"), "ffj3", msg="Strip failed")
-
-    def test_convert_trajectory(self):
+    def test_extract_one_state(self):
         state_exporter = SrRobotStateExporter()
+        state_exporter.extract_one_state("state1")
+        state_exporter.output_module("test_states.py")
+        self.assertTrue(filecmp.cmp("expected_state.py", "test_states.py"), msg="Export state failed")
 
-        hand_parameters = hand_finder.get_hand_parameters()
-        hand_commander = SrHandCommander(hand_parameters=hand_parameters,
-                                         hand_serial=hand_parameters.mapping.keys()[0])
-        self.assertGreater(len(hand_commander.get_joints_position()), 0, "No joints found, init must have failed.")
+    def test_extract_list(self):
+        state_exporter = SrRobotStateExporter()
+        state_exporter.extract_list(["state1"])
+        state_exporter.output_module("test_states.py")
+        self.assertTrue(filecmp.cmp("expected_state.py", "test_states.py"), msg="Export states failed")
 
 if __name__ == "__main__":
     import rostest
