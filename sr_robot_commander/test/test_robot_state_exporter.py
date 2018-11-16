@@ -31,24 +31,26 @@ class TestSrRobotStateExporter(TestCase):
 
     def setUp(self):
         rospy.init_node('test_hand_commander', anonymous=True)
+        self.expected_state = "{'joint_test2': 1.0, 'joint_test1': 0.0}"
 
-    def test_extract_output(self):
+
+    def test_extract_all(self):
         state_exporter = SrRobotStateExporter()
         state_exporter.extract_all()
-        state_exporter.output_module("test_states.py")
-        self.assertTrue(filecmp.cmp("expected_state.py", "test_states.py"), msg="Export states failed")
+        self.assertEqual(str(state_exporter._dictionary.get('state1')), self.expected_state, msg="Export all states failed")
+
 
     def test_extract_one_state(self):
         state_exporter = SrRobotStateExporter()
         state_exporter.extract_one_state("state1")
-        state_exporter.output_module("test_states.py")
-        self.assertTrue(filecmp.cmp("expected_state.py", "test_states.py"), msg="Export state failed")
+        self.assertEqual(str(state_exporter._dictionary.get('state1')), self.expected_state, msg="Export one state failed")
+
 
     def test_extract_list(self):
         state_exporter = SrRobotStateExporter()
         state_exporter.extract_list(["state1"])
-        state_exporter.output_module("test_states.py")
-        self.assertTrue(filecmp.cmp("expected_state.py", "test_states.py"), msg="Export states failed")
+        self.assertEqual(str(state_exporter._dictionary.get('state1')), self.expected_state, msg="Export list failed")
+
 
 if __name__ == "__main__":
     import rostest
