@@ -22,18 +22,22 @@ from moveit_msgs.msg import RobotState
 from moveit_msgs.srv import SaveRobotStateToWarehouse as SaveState
 from moveit_msgs.srv import ListRobotStatesInWarehouse as ListState
 
+
 def mock_get_state_callback(req):
     resp = RobotState()
     resp.joint_state.name = ["joint_test1", "joint_test2"]
     resp.joint_state.position = [0.0, 1.0]
     return resp
 
+
 def mock_has_state_callback(req):
     return True
+
 
 def mock_list_state_callback(req):
     states = {"state1"}
     return states
+
 
 def mock_save_state_callback(req):
     if "state1" in req.name:
