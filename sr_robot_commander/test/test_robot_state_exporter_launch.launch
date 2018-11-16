@@ -1,0 +1,3 @@
+<launch>
+  <test test-name="test_robot_state_exporter" pkg="sr_robot_commander" type="test_robot_state_exporter.py" time-limit="300.0"/>
+</launch>

@@ -1,4 +1,4 @@
 <launch>
   <node name="test_robot_state_exporter" pkg="sr_robot_commander" type="mock_state_services.py" output="screen"/>
-  <test test-name="test_robot_state_exporter" pkg="sr_robot_commander" type="test_robot_state_exporter.py" time-limit="60.0"/>
+  <include file="$(find sr_robot_commander)/test/test_robot_state_exporter_launch.launch"/>
 </launch>
