@@ -34,18 +34,21 @@ class TestSrRobotStateExporter(TestCase):
         self.expected_state = "{'joint_test2': 1.0, 'joint_test1': 0.0}"
 
     def test_extract_all(self):
+        rospy.wait_for_service("/has_robot_state")
         state_exporter = SrRobotStateExporter()
         state_exporter.extract_all()
         self.assertEqual(str(state_exporter._dictionary.get('state1')),
                          self.expected_state, msg="Export all states failed")
 
     def test_extract_one_state(self):
+        rospy.wait_for_service("/has_robot_state")
         state_exporter = SrRobotStateExporter()
         state_exporter.extract_one_state("state1")
         self.assertEqual(str(state_exporter._dictionary.get('state1')),
                          self.expected_state, msg="Export one state failed")
 
     def test_extract_list(self):
+        rospy.wait_for_service("/has_robot_state")
         state_exporter = SrRobotStateExporter()
         state_exporter.extract_list(["state1"])
         self.assertEqual(str(state_exporter._dictionary.get('state1')),
