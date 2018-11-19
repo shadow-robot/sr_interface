@@ -54,7 +54,6 @@ class TestSrRobotStateExporter(TestCase):
         state_exporter.extract_all()
         state_exporter.output_module(self.test_path + "/exporter_output.py")
         from exporter_output import warehouse_states
-        rospy.logerr(warehouse_states)
         self.assertEqual(warehouse_states, self.expected_state, msg="Export all states failed:" 
                          + str(warehouse_states) + " not " + str(self.expected_state))
 
