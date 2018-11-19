@@ -18,7 +18,7 @@
 import rospy
 import sys
 import os
-import filecmp
+import shutil
 from sr_robot_commander.sr_robot_state_exporter import SrRobotStateExporter
 from unittest import TestCase
 from std_srvs.srv import SetBool
@@ -32,11 +32,12 @@ class TestSrRobotStateExporter(TestCase):
     """
     @classmethod
     def setUpClass(cls):
-        os.mkdir("/tmp/test_exporter")
+        if not os.path.exists("/tmp/test_exporter"):
+            os.mkdir("/tmp/test_exporter")
 
     @classmethod
     def tearDownClass(cls):
-        os.system("rm -rf /tmp/test_exporter")
+        shutil.rmtree("/tmp/test_exporter", ignore_errors=True)
 
     def setUp(self):
         rospy.init_node('test_hand_commander', anonymous=True)
