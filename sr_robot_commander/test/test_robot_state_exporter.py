@@ -16,6 +16,8 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import rospy
+import sys
+import os
 import filecmp
 from sr_robot_commander.sr_robot_state_exporter import SrRobotStateExporter
 from unittest import TestCase
@@ -28,31 +30,51 @@ class TestSrRobotStateExporter(TestCase):
     """
     Tests the Robot State Exporter
     """
+    @classmethod
+    def setUpClass(cls):
+        os.mkdir("/tmp/test_exporter")
+    
+    @classmethod
+    def tearDownClass(cls):
+        os.system("rm -rf /tmp/test_exporter")
 
     def setUp(self):
         rospy.init_node('test_hand_commander', anonymous=True)
-        self.expected_state = "{'joint_test2': 1.0, 'joint_test1': 0.0}"
+        self.test_path = "/tmp/test_exporter"
+        sys.path.append(self.test_path)
+        self.expected_state = {
+            'state1': {
+                'joint_test1': 0.0,
+                'joint_test2': 1.0}
+        }
 
     def test_extract_all(self):
         rospy.wait_for_service("/has_robot_state")
         state_exporter = SrRobotStateExporter()
         state_exporter.extract_all()
-        self.assertEqual(str(state_exporter._dictionary.get('state1')),
-                         self.expected_state, msg="Export all states failed")
+        state_exporter.output_module(self.test_path + "/exporter_output.py")
+        from exporter_output import warehouse_states
+        rospy.logerr(warehouse_states)
+        self.assertEqual(warehouse_states, self.expected_state, msg="Export all states failed:" 
+                         + str(warehouse_states) + " not " + str(self.expected_state))
 
     def test_extract_one_state(self):
         rospy.wait_for_service("/has_robot_state")
         state_exporter = SrRobotStateExporter()
         state_exporter.extract_one_state("state1")
-        self.assertEqual(str(state_exporter._dictionary.get('state1')),
-                         self.expected_state, msg="Export one state failed")
+        state_exporter.output_module(self.test_path + "/exporter_output.py")
+        from exporter_output import warehouse_states
+        self.assertEqual(warehouse_states, self.expected_state, msg="Export all states failed:"
+                         + str(warehouse_states) + " not " + str(self.expected_state))
 
     def test_extract_list(self):
         rospy.wait_for_service("/has_robot_state")
         state_exporter = SrRobotStateExporter()
         state_exporter.extract_list(["state1"])
-        self.assertEqual(str(state_exporter._dictionary.get('state1')),
-                         self.expected_state, msg="Export list failed")
+        state_exporter.output_module(self.test_path + "/exporter_output.py")
+        from exporter_output import warehouse_states
+        self.assertEqual(warehouse_states, self.expected_state, msg="Export all states failed:"
+                         + str(warehouse_states) + " not " + str(self.expected_state))
 
 
 if __name__ == "__main__":
