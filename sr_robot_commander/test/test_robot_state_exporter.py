@@ -33,7 +33,7 @@ class TestSrRobotStateExporter(TestCase):
     @classmethod
     def setUpClass(cls):
         os.mkdir("/tmp/test_exporter")
-    
+
     @classmethod
     def tearDownClass(cls):
         os.system("rm -rf /tmp/test_exporter")
@@ -54,8 +54,8 @@ class TestSrRobotStateExporter(TestCase):
         state_exporter.extract_all()
         state_exporter.output_module(self.test_path + "/exporter_output.py")
         from exporter_output import warehouse_states
-        self.assertEqual(warehouse_states, self.expected_state, msg="Export all states failed:" 
-                         + str(warehouse_states) + " not " + str(self.expected_state))
+        self.assertEqual(warehouse_states, self.expected_state, msg="Export all states failed:" +
+                         str(warehouse_states) + " not " + str(self.expected_state))
 
     def test_extract_one_state(self):
         rospy.wait_for_service("/has_robot_state")
@@ -63,8 +63,8 @@ class TestSrRobotStateExporter(TestCase):
         state_exporter.extract_one_state("state1")
         state_exporter.output_module(self.test_path + "/exporter_output.py")
         from exporter_output import warehouse_states
-        self.assertEqual(warehouse_states, self.expected_state, msg="Export all states failed:"
-                         + str(warehouse_states) + " not " + str(self.expected_state))
+        self.assertEqual(warehouse_states, self.expected_state, msg="Export all states failed:" +
+                         str(warehouse_states) + " not " + str(self.expected_state))
 
     def test_extract_list(self):
         rospy.wait_for_service("/has_robot_state")
@@ -72,8 +72,8 @@ class TestSrRobotStateExporter(TestCase):
         state_exporter.extract_list(["state1"])
         state_exporter.output_module(self.test_path + "/exporter_output.py")
         from exporter_output import warehouse_states
-        self.assertEqual(warehouse_states, self.expected_state, msg="Export all states failed:"
-                         + str(warehouse_states) + " not " + str(self.expected_state))
+        self.assertEqual(warehouse_states, self.expected_state, msg="Export all states failed:" +
+                         str(warehouse_states) + " not " + str(self.expected_state))
 
 
 if __name__ == "__main__":
