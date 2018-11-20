@@ -89,5 +89,4 @@ class TestSrRobotStateExporter(TestCase):
 
 if __name__ == "__main__":
     import rostest
-    
     rostest.rosrun(PKG, "test_robot_state_exporter", TestSrRobotStateExporter)
