@@ -25,8 +25,12 @@ from moveit_msgs.srv import ListRobotStatesInWarehouse as ListState
 
 def mock_get_state_callback(req):
     resp = RobotState()
-    resp.joint_state.name = ["joint_test1", "joint_test2"]
-    resp.joint_state.position = [0.0, 1.0]
+    if req.name == "state1":
+        resp.joint_state.name = ["joint_test1", "joint_test2"]
+        resp.joint_state.position = [1.0, 2.0]
+    if req.name == "state2":
+        resp.joint_state.name = ["joint_test3", "joint_test4"]
+        resp.joint_state.position = [3.0, 4.0]
     return resp
 
 
@@ -35,7 +39,7 @@ def mock_has_state_callback(req):
 
 
 def mock_list_state_callback(req):
-    states = {"state1"}
+    states = {"state1", "state2"}
     return states
 
 
