@@ -44,7 +44,7 @@ roslaunch sr_robot_launch srhand.launch robot_description:=`rospack find sr_desc
 ```
 * Moveit will enable advanced behaviour (inverse kinematics, planning, collision detectection, etc...), but if it is not needed, you can set `use_moveit:=false`
 
-* To start the hand e plus you can add the hand_type like this:
+* To start the dexterous hand plus (shadowhand_motor_plus.urdf.xacro), you can add the hand_type like this:
 ```bash
 roslaunch sr_robot_launch srhand.launch hand_type:=hand_e_plus
 ```
