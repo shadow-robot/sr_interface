@@ -11,9 +11,9 @@ roslaunch sr_robot_launch srhand.launch
 
 This will launch the five finger hand (shadowhand_motor) by default . If you want to launch another hand, these are the hands available:
 
-|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_biotac.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_ff_biotac.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_btsp.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_ellipsoid.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_th_ff_rf_ellipsoid.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_muscle.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_muscle_biotac.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_lite.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_extra_lite.png)|
---- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_biotac.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_ff_biotac.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_btsp.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_ellipsoid.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_th_ff_rf_ellipsoid.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_muscle.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_muscle_biotac.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_lite.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_extra_lite.png)|![](https://raw.githubusercontent.com/shadow-robot/sr_interface/indigo-devel/images/shadowhand_motor_plus.png)|
+--- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
 
 |   | Right                                          | Left                                    | 
 |---| ---------------------------------------------- |-----------------------------------------| 
@@ -27,6 +27,7 @@ This will launch the five finger hand (shadowhand_motor) by default . If you wan
 |8  | shadowhand_muscle_biotac.urdf.xacro            |                                         |
 |9  | shadowhand_lite.urdf.xacro                     |                                         |
 |10 | shadowhand_extra_lite.urdf.xacro               |                                         |
+|11 | shadowhand_motor_plus.urdf.xacro               | shadowhand_left_motor_plus.urdf.xacro   |
 
 
 
@@ -42,6 +43,11 @@ roslaunch sr_robot_launch srhand.launch robot_description:=`rospack find sr_desc
 roslaunch sr_robot_launch srhand.launch robot_description:=`rospack find sr_description`/robots/shadowhand_left_motor.urdf.xacro hand_id:=lh
 ```
 * Moveit will enable advanced behaviour (inverse kinematics, planning, collision detectection, etc...), but if it is not needed, you can set `use_moveit:=false`
+
+* To start the hand e plus you can add the hand_type like this:
+```bash
+roslaunch sr_robot_launch srhand.launch hand_type:=hand_e_plus
+```
 
 ### Real hand
 
