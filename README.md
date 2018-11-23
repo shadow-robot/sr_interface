@@ -7,4 +7,4 @@
 | Code Coverage     | [![codecov.io](https://img.shields.io/codecov/c/github/shadow-robot/sr_interface/indigo-devel.svg)](http://codecov.io/github/shadow-robot/sr_interface?branch=indigo-devel) |
 
 # Shadow Robot Interface packages
-This repository contains the high level interface and its dependencies for interacting simply with our robots.
+This repository contains the high level interface and its dependencies for interacting simply with our robots
