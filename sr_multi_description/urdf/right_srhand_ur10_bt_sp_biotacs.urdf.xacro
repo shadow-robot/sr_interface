@@ -16,7 +16,7 @@
         </xacro:unless>
     </joint>
 
-    <xacro:ur10_robot prefix="ra_" joint_limited="true"/>
+    <xacro:ur10_robot prefix="ra_" joint_limited="false"/>
 
     <xacro:include filename="$(find sr_description)/materials.urdf.xacro"/>
     <xacro:include filename="$(find sr_description)/hand/xacro/full_hand.urdf.xacro"/>
