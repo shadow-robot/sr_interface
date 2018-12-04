@@ -154,6 +154,8 @@ class TeachModeManager(object):
                              "right_arm": ControllerHelper(["ra"], ["ra_"]),
                              "left_arm": ControllerHelper(["la"], ["la_"])}
 
+        self.modes = ["TRAJECTORY_MODE", "TEACH_MODE", "POSITION_MODE", "GRASP_MODE"]
+
     def teach_mode(self, req):
 
         if req.robot == "right_arm" or req.robot == "left_arm":
@@ -230,11 +232,12 @@ class TeachModeManager(object):
 
                 return RobotTeachModeResponse(RobotTeachModeResponse.SUCCESS)
             else:
-                rospy.logerr("Unknown teach mode: %u", req.teach_mode)
+                rospy.logerr("Unknown mode: {}".format(self.modes[req.teach_mode]))
                 return RobotTeachModeResponse(RobotTeachModeResponse.ERROR)
         else:
             rospy.logerr("Unknown robot: %s", req.robot)
             return RobotTeachModeResponse(RobotTeachModeResponse.ERROR)
+
 
 if __name__ == "__main__":
     rospy.init_node("teach_mode_node")
