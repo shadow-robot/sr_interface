@@ -80,6 +80,9 @@ class SrHandCommander(SrRobotCommander):
 
         # appends trailing slash if necessary
         self._topic_prefix = prefix
+        if self._topic_prefix and self._topic_prefix.endswith("_"):
+            self._topic_prefix = self._topic_prefix[:-1]  # Remove trailing _
+
         if self._topic_prefix and not self._topic_prefix.endswith("/"):
             self._topic_prefix += "/"
 
@@ -102,8 +105,6 @@ class SrHandCommander(SrRobotCommander):
         """
         joint_name = self._strip_prefix(joint_name)
 
-        # This is for a beta version of our firmware.
-        # It uses the motor I and Imax to set a max effort.
         if not self.__set_force_srv.get(joint_name):
             service_name = "sr_hand_robot/" + self._topic_prefix + \
                            "change_force_PID_"+joint_name.upper()
@@ -120,8 +121,7 @@ class SrHandCommander(SrRobotCommander):
             rospy.logerr("Couldn't get the motor parameters for joint " +
                          joint_name + " -> " + str(e))
 
-        # imax is used for max force for now.
-        motor_settings["imax"] = value
+        motor_settings["torque_limit"] = value
 
         try:
             # reorder parameters in the expected order since names don't match:
@@ -134,7 +134,9 @@ class SrHandCommander(SrRobotCommander):
                                              motor_settings["d"],
                                              motor_settings["imax"],
                                              motor_settings["deadband"],
-                                             motor_settings["sign"])
+                                             motor_settings["sign"],
+                                             motor_settings["torque_limit"],
+                                             motor_settings["torque_limiter_gain"])
         except rospy.ServiceException, e:
             rospy.logerr("Couldn't set the max force for joint " +
                          joint_name + ": " + str(e))
