@@ -7,5 +7,3 @@ ra_group_position_controller:
     - ra_wrist_1_joint
     - ra_wrist_2_joint
     - ra_wrist_3_joint
-    - rh_WRJ1
-    - rh_WRJ2

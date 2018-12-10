@@ -86,7 +86,7 @@
 
     <!-- Set scene for robot - restrains movement -->
     <group if="$(arg scene)">
-      <include file="$(find gazebo2rviz)/launch/gazebo2moveit.launch">
+      <include if="$(arg use_moveit)" file="$(find gazebo2rviz)/launch/gazebo2moveit.launch">
         <arg name="frequency" default="1" />
       </include>
     </group>
