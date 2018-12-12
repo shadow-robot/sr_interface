@@ -49,8 +49,10 @@
 
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
 
-  <!-- Which arm controller type. Currently supported are "trajectory" and "group_position". -->
-  <arg name="arm_controller_type" default="trajectory"/>
+  <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
+  <arg name="arm_trajectory" default="true"/>
+  <!-- Set to true to spawn group position controllers for the arms -->
+  <arg name="arm_position" default="$(eval not arm_trajectory)"/>
 
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
   <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
@@ -84,6 +86,7 @@
     <arg name="grasp_controller" value="$(arg grasp_controller)"/>
     <arg name="pwm_control" value="$(arg pwm_control)"/>
     <arg name="include_wrist_in_arm_controller" value="$(arg include_wrist_in_arm_controller)"/>
-    <arg name="arm_controller_type" value="$(arg arm_controller_type)"/>
+    <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
+    <arg name="arm_position" default="$(arg arm_position)"/>
   </include>
 </launch>
