@@ -14,7 +14,6 @@
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
 
-  <arg name="paused" default="false"/>
   <arg name="verbose" default="true"/>
 
   <!-- Change this for the left hand and arm -->
@@ -28,6 +27,10 @@
   <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large.world" if="$(arg scene)"/>
   <!-- Set the scene file -->
   <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large.scene"/>
+  <!-- Set to true if you want the robot to start in the "home" positions -->
+  <arg name="start_home" default="false"/>
+  <!-- Definition of "home" position, in joint-angle pairs -->
+  <arg name="home_angles" default="-J ra_shoulder_pan_joint 1.147 -J ra_elbow_joint 1.695 -J ra_wrist_1_joint -1.395 -J ra_wrist_2_joint -1.584 -J ra_shoulder_lift_joint -1.926 -J ra_wrist_3_joint 1.830"/>
 
   <!-- Set initial_z value dependant on scene -->
   <arg name="initial_z" default="1.0" if="$(arg scene)"/>
@@ -44,14 +47,16 @@
   <arg name="arm_group_name" default="arm"/>
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
+  <!-- Set to true to spawn group position controllers for the arms -->
+  <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <!-- Set to true to spawn the position controllers for the arm -->
-  <arg name="arm_ctrl" default="false"/>
 
 
   <param name="description_read_repetitions" value="50"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
+    <arg name="paused" value="$(arg start_home)"/>
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
       <arg name="world_name" value="$(arg world)"/>
       <arg name="gui" default="$(arg gui)"/>
@@ -61,15 +66,17 @@
     </include>
     <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
 
-    <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name)" respawn="false" output="screen"/>
+    <arg if="$(arg start_home)" name="spawn_model_extra_args" value="-unpause $(arg home_angles)" />    
+    <arg unless="$(arg start_home)" name="spawn_model_extra_args" value="" />
+    <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name) $(arg spawn_model_extra_args)" respawn="false" output="screen"/>
 
     <!-- ARM -->
-    <rosparam file="$(find sr_box_ur10_moveit_config)/config/gazebo/$(arg arm_id)_trajectory_controller.yaml" command="load"/>
+    <rosparam if="$(arg arm_trajectory)" file="$(find sr_box_ur10_moveit_config)/config/gazebo/$(arg arm_id)_trajectory_controller.yaml" command="load"/>
+    <rosparam if="$(arg arm_position)" file="$(find sr_box_ur10_moveit_config)/config/gazebo/$(arg arm_id)_group_position_controller.yaml" command="load"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
 
-    <group if="$(arg arm_trajectory)">
-      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_id)_trajectory_controller"/>
-    </group>
+    <node if="$(arg arm_trajectory)" name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_id)_trajectory_controller"/>
+    <node if="$(arg arm_position)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_id)_group_position_controller"/>
 
     <!-- Robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
@@ -79,7 +86,7 @@
 
     <!-- Set scene for robot - restrains movement -->
     <group if="$(arg scene)">
-      <include file="$(find gazebo2rviz)/launch/gazebo2moveit.launch">
+      <include if="$(arg use_moveit)" file="$(find gazebo2rviz)/launch/gazebo2moveit.launch">
         <arg name="frequency" default="1" />
       </include>
     </group>
@@ -91,7 +98,8 @@
     <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
 
     <rosparam command="load" file="$(find sr_ur_robot_hw)/config/ra_sr_ur_robot_hw.yaml"/>
-    <rosparam command="load" file="$(find sr_ur_launch)/config/ra_trajectory_controller.yaml"/>
+    <rosparam if="$(arg arm_trajectory)" command="load" file="$(find sr_ur_launch)/config/ra_trajectory_controller.yaml"/>
+    <rosparam if="$(arg arm_position)" command="load" file="$(find sr_ur_launch)/config/ra__controller.yaml"/>
 
     <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
 
@@ -99,7 +107,8 @@
     <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
 
     <node name="joint_state_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 joint_state_controller" />
-    <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 ra_trajectory_controller"/>
+    <node if="$(arg arm_trajectory)" name="arm_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 ra_trajectory_controller"/>
+    <node if="$(arg arm_position)" name="arm_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 ra_group_position_controller"/>
 
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
       <param name="publish_frequency" type="double" value="50.0" />
