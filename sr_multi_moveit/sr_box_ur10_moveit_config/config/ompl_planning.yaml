@@ -134,23 +134,44 @@ right_arm:
     - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
+    - FMTkConfigDefault
+    - BFMTkConfigDefault
+    - PDSTkConfigDefault
+    - STRIDEkConfigDefault
     - BiTRRTkConfigDefault
-  ##Note: commenting the following line lets moveit chose RRTConnect as default planner rather than LBKPIECE
+    - LBTRRTkConfigDefault
+    - BiESTkConfigDefault
+    - ProjESTkConfigDefault
+    - LazyPRMkConfigDefault
+    - LazyPRMstarkConfigDefault
+    - SPARSkConfigDefault
+    - SPARStwokConfigDefault
   projection_evaluator: joints(ra_shoulder_pan_joint, ra_shoulder_lift_joint)
   longest_valid_segment_fraction: 0.005
 right_arm_and_manipulator:
   default_planner_config: RRTConnectkConfigDefault
   longest_valid_segment_fraction: 0.005
   planner_configs:
-  - SBLkConfigDefault
-  - ESTkConfigDefault
-  - LBKPIECEkConfigDefault
-  - BKPIECEkConfigDefault
-  - KPIECEkConfigDefault
-  - RRTkConfigDefault
-  - RRTConnectkConfigDefault
-  - RRTstarkConfigDefault
-  - TRRTkConfigDefault
-  - PRMkConfigDefault
-  - PRMstarkConfigDefault
-  - BiTRRTkConfigDefault
+    - SBLkConfigDefault
+    - ESTkConfigDefault
+    - LBKPIECEkConfigDefault
+    - BKPIECEkConfigDefault
+    - KPIECEkConfigDefault
+    - RRTkConfigDefault
+    - RRTConnectkConfigDefault
+    - RRTstarkConfigDefault
+    - TRRTkConfigDefault
+    - PRMkConfigDefault
+    - PRMstarkConfigDefault
+    - FMTkConfigDefault
+    - BFMTkConfigDefault
+    - PDSTkConfigDefault
+    - STRIDEkConfigDefault
+    - BiTRRTkConfigDefault
+    - LBTRRTkConfigDefault
+    - BiESTkConfigDefault
+    - ProjESTkConfigDefault
+    - LazyPRMkConfigDefault
+    - LazyPRMstarkConfigDefault
+    - SPARSkConfigDefault
+    - SPARStwokConfigDefault
