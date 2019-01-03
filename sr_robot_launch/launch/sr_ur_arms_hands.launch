@@ -10,7 +10,7 @@
   <!--Choose planner library, options are ompl, stomp or sbpl-->
   <arg name="planning" default="ompl"/>
   <!--Should the planner yaml be automatically generated? -->
-  <arg name="generate_planning_config" default="true"/>
+  <arg name="generate_planning_config" default="True"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <arg name="verbose" default="true" />
@@ -175,14 +175,14 @@
     <!-- <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"/> -->
     <group if="$(arg arm_trajectory)">
       <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml"/>
-      <rosparam command="load" file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml"/>
+      <rosparam command="load" file="$(find sr_robot_launch)/config/la_trajectory_controller.yaml"/>
       <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen"/>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
             args="--wait-for=/arms_ready --shutdown-timeout=1.0 ra_trajectory_controller la_trajectory_controller"/>
     </group>
 
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->
-    <node if="$(arg scene)" pkg="sr_utilities_common" type="timed_roslaunch.sh" args="8 sr_multi_moveit_config scene.launch
+    <node if="$(arg scene)" pkg="sr_utilities_common" type="timed_roslaunch.sh" args="12 sr_multi_moveit_config scene.launch
       scene_file:=$(arg scene_file)" name="timed_publish_moveit_scene" output="screen"/>
   </group>
 
