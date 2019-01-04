@@ -1,6 +1,5 @@
 <launch>
   <!-- This launch file is for a combination of ur arms and shadow hands -->
-
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
   <arg name="sim" default="true"/>
   <!-- Set to true for debugging -->
@@ -113,10 +112,8 @@
     </group>
   </group>
 
-
   <!-- REAL ROBOTS -->
   <group unless="$(arg sim)">
-
 
     <group if="$(arg arm_ctrl)">
       <rosparam>
