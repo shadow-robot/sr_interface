@@ -28,10 +28,8 @@
 
 
   <!-- Change this for the left hand and arm -->
-  <!--arg name="hand_id" default="rh"/-->
   <arg name="lh_id" default="lh"/>
   <arg name="rh_id" default="rh"/>
-  <arg name="side" default="right"/>
   <arg name="robot_model" default="ur10"/>
   <!-- Set arm height and separation-->
   <arg name="arm_1_z" default="0.0"/>
@@ -41,8 +39,8 @@
   <arg name="arm_2_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
 
   <!-- Change this for another hand -->
-  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_two_$(arg robot_model)_two_hands.urdf.xacro'"/>
-  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_two_$(arg robot_model)_two_hands.yaml"/>
+  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/right_srhand_two_$(arg robot_model)_two_hands.urdf.xacro'"/>
+  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_two_$(arg robot_model)_two_hands.yaml"/>
   <arg name="robot_name" default="$(arg robot_model)srh"/>
 
   <!-- ARMS -->
@@ -86,16 +84,13 @@
       <arg name="verbose" value="$(arg verbose)" />
     </include>
     <!-- HAND -->
-    <!--param name="/hand/mapping/$(arg hand_serial)" value="$(arg hand_id)"/-->
     <param name="/hand/mapping/$(arg rh_serial)" value="$(arg rh_id)"/>
     <param name="/hand/mapping/$(arg lh_serial)" value="$(arg lh_id)"/>
-    <!--param name="/hand/joint_prefix/$(arg hand_serial)" value="$(arg hand_id)_"/-->
     <param name="/hand/joint_prefix/$(arg lh_serial)" value="$(arg lh_id)_"/>
     <param name="/hand/joint_prefix/$(arg rh_serial)" value="$(arg rh_id)_"/>
     <arg if="$(arg start_home)" name="spawn_model_extra_args" value="-unpause $(arg home_angles)" />
     <arg unless="$(arg start_home)" name="spawn_model_extra_args" value="" />
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name) $(arg spawn_model_extra_args)" respawn="false" output="screen"/>
-    <!--rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/-->
     <rosparam command="load" file="$(find sr_description)/hand/config/$(arg rh_id)_controller_gazebo.yaml"/>
     <rosparam command="load" file="$(find sr_description)/hand/config/$(arg lh_id)_controller_gazebo.yaml"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
@@ -142,20 +137,6 @@
     </rosparam>
 
     <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
-    <!--include file="$(find sr_edc_launch)/sr_edc_ros_control.launch">
-      <arg name="define_robot_hardware" value="false"/>
-      <arg name="hand_robot_hardware_name" value="unique_robot_hw"/>
-      <arg name="debug" value="$(arg debug)"/>
-      <arg name="eth_port" value="$(arg eth_port)"/>
-      <arg name="robot_description" value="$(arg robot_description)"/>
-      <arg name="pwm_control" value="$(arg pwm_control)"/>
-      <arg name="hand_serial" value="$(arg hand_serial)"/>
-      <arg name="rh_id" value="$(arg rh_id)"/>
-      <arg name="lh_id" value="$(arg lh_id)"/>
-      <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
-      <arg name="lh_mapping_path" value="$(arg lh_mapping_path)"/>
-      <arg name="load_robot_description" value="false"/>
-    </include-->
      <include file="$(find sr_edc_launch)/sr_edc_bimanual.launch">
       <arg name="debug" value="$(arg debug)"/>
       <arg name="eth_port" value="$(arg eth_port)"/>
@@ -168,11 +149,9 @@
       <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
       <arg name="lh_mapping_path" value="$(arg lh_mapping_path)"/>
       <arg name="load_robot_description" value="false"/>
-
     </include>
 
     <!-- Should only be used when testing arm alone, as hand launch includes joint state publisher -->
-    <!-- <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"/> -->
     <group if="$(arg arm_trajectory)">
       <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml"/>
       <rosparam command="load" file="$(find sr_robot_launch)/config/la_trajectory_controller.yaml"/>
@@ -189,7 +168,6 @@
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
     <rosparam file="$(arg robot_config_file)"/>
-    <!--include file="$(find sr_multi_description)/launch/moveit_planning_and_execution.launch"-->
     <include file="$(find sr_multi_moveit_config)/launch/moveit_planning_and_execution.launch">
       <arg name="load_robot_description" value="true"/>
       <arg name="gui" default="$(arg gui)"/>
@@ -202,7 +180,6 @@
 
   <!-- Trajectory controller -->
   <group if="$(arg hand_ctrl)">
-    <!--node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen"-->
     <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
       <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
       <param name="exclude_wrist" value="true"/>
