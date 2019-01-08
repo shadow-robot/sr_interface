@@ -47,9 +47,9 @@
   <arg name="arm_group_name" default="arm"/>
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
-  <arg name="arm_controller_type" default="trajectory"/>
+  <!-- Set to true to spawn group position controllers for the arms -->
+  <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <!-- Set to true to spawn the position controllers for the arm -->
-  <arg name="arm_ctrl" default="false"/>
 
 
   <param name="description_read_repetitions" value="50"/>
@@ -71,12 +71,12 @@
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name) $(arg spawn_model_extra_args)" respawn="false" output="screen"/>
 
     <!-- ARM -->
-    <rosparam file="$(find sr_box_ur10_moveit_config)/config/gazebo/$(arg arm_id)_$(arg arm_controller_type)_controller.yaml" command="load"/>
+    <rosparam if="$(arg arm_trajectory)" file="$(find sr_box_ur10_moveit_config)/config/gazebo/$(arg arm_id)_trajectory_controller.yaml" command="load"/>
+    <rosparam if="$(arg arm_position)" file="$(find sr_box_ur10_moveit_config)/config/gazebo/$(arg arm_id)_group_position_controller.yaml" command="load"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
 
-    <group if="$(arg arm_trajectory)">
-      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_id)_$(arg arm_controller_type)_controller"/>
-    </group>
+    <node if="$(arg arm_trajectory)" name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_id)_trajectory_controller"/>
+    <node if="$(arg arm_position)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_id)_group_position_controller"/>
 
     <!-- Robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
@@ -98,7 +98,8 @@
     <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
 
     <rosparam command="load" file="$(find sr_ur_robot_hw)/config/ra_sr_ur_robot_hw.yaml"/>
-    <rosparam command="load" file="$(find sr_ur_launch)/config/ra_$(arg arm_controller_type)_controller.yaml"/>
+    <rosparam if="$(arg arm_trajectory)" command="load" file="$(find sr_ur_launch)/config/ra_trajectory_controller.yaml"/>
+    <rosparam if="$(arg arm_position)" command="load" file="$(find sr_ur_launch)/config/ra__controller.yaml"/>
 
     <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
 
@@ -106,7 +107,8 @@
     <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
 
     <node name="joint_state_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 joint_state_controller" />
-    <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 ra_$(arg arm_controller_type)_controller"/>
+    <node if="$(arg arm_trajectory)" name="arm_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 ra_trajectory_controller"/>
+    <node if="$(arg arm_position)" name="arm_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 ra_group_position_controller"/>
 
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
       <param name="publish_frequency" type="double" value="50.0" />

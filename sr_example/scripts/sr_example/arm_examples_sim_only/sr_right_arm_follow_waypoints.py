@@ -29,26 +29,26 @@ waypoints = []
 
 # start with the initial position
 initial_pose = arm_commander.get_current_pose()
-waypoints.append(initial_pose)
+
 
 wpose = geometry_msgs.msg.Pose()
-wpose.position.x = waypoints[0].position.x
-wpose.position.y = waypoints[0].position.y - 0.20
-wpose.position.z = waypoints[0].position.z
+wpose.position.x = initial_pose.position.x
+wpose.position.y = initial_pose.position.y - 0.20
+wpose.position.z = initial_pose.position.z
 wpose.orientation = initial_pose.orientation
 waypoints.append(wpose)
 
 wpose = geometry_msgs.msg.Pose()
-wpose.position.x = waypoints[0].position.x
-wpose.position.y = waypoints[0].position.y - 0.20
-wpose.position.z = waypoints[0].position.z - 0.20
+wpose.position.x = initial_pose.position.x
+wpose.position.y = initial_pose.position.y - 0.20
+wpose.position.z = initial_pose.position.z - 0.20
 wpose.orientation = initial_pose.orientation
 waypoints.append(wpose)
 
 wpose = geometry_msgs.msg.Pose()
-wpose.position.x = waypoints[0].position.x
-wpose.position.y = waypoints[0].position.y
-wpose.position.z = waypoints[0].position.z - 0.20
+wpose.position.x = initial_pose.position.x
+wpose.position.y = initial_pose.position.y
+wpose.position.z = initial_pose.position.z - 0.20
 wpose.orientation = initial_pose.orientation
 waypoints.append(wpose)
 

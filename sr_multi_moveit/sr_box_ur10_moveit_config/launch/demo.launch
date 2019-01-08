@@ -11,6 +11,9 @@
   <!-- Set initial_z of the robot to enable to set it on a table -->
   <arg name="initial_z" default="0.1"/>
 
+  <!-- Allow rviz to open optionally -->
+  <arg name="rviz" default="true"/>
+
   <arg name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro'"/>
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
@@ -41,7 +44,7 @@
   </include>
 
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
-  <include file="$(find sr_box_ur10_moveit_config)/launch/moveit_rviz.launch">
+  <include file="$(find sr_box_ur10_moveit_config)/launch/moveit_rviz.launch" if="$(arg rviz)">
     <arg name="config" value="true"/>
     <arg name="debug" value="$(arg debug)"/>
   </include>
