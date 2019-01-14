@@ -14,8 +14,6 @@
 
     <xacro:ur10_robot prefix="ra_" joint_limited="true"/>
 
-    <!--xacro:include filename="$(find ur_description)/urdf/ur10.urdf.xacro"/-->
-
     <joint name="world_to_arm_2_joint" type="fixed">
         <parent link="world"/>
         <child link="la_base_link"/>
