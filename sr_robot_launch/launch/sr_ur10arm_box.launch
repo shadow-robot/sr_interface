@@ -110,6 +110,8 @@
     <node if="$(arg arm_trajectory)" name="arm_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 ra_trajectory_controller"/>
     <node if="$(arg arm_position)" name="arm_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 ra_group_position_controller"/>
 
+    <node name="teach_mode_node" pkg="sr_robot_launch" type="teach_mode_node" output="screen" />
+
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
       <param name="publish_frequency" type="double" value="50.0" />
       <param name="tf_prefix" type="string" value="" />
