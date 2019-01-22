@@ -794,9 +794,9 @@ class SrRobotCommander(object):
         old_frame = self._move_group_commander.get_pose_reference_frame()
         if reference_frame is not None:
             self.set_pose_reference_frame(reference_frame)
-        (self.__plan, fraction) = self._move_group_commander.compute_cartesian_path(waypoints, eef_step, jump_threshold)
+        self.__plan, fraction = self._move_group_commander.compute_cartesian_path(waypoints, eef_step, jump_threshold)
         self.set_pose_reference_frame(old_frame)
-        return self.__plan
+        return self.__plan, fraction
 
     def set_teach_mode(self, teach):
         """
