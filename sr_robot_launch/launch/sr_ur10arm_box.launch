@@ -33,7 +33,7 @@
   <arg name="home_angles" default="-J ra_shoulder_pan_joint 1.147 -J ra_elbow_joint 1.695 -J ra_wrist_1_joint -1.395 -J ra_wrist_2_joint -1.584 -J ra_shoulder_lift_joint -1.926 -J ra_wrist_3_joint 1.830"/>
 
   <!-- Set initial_z value dependant on scene -->
-  <arg name="initial_z" default="1.0" if="$(arg scene)"/>
+  <arg name="initial_z" default="0.7751" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
 
   <!-- Change this for another hand -->
