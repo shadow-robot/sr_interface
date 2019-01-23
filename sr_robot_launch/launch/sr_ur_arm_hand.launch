@@ -35,7 +35,7 @@
   <arg name="side" default="right"/>
   <arg name="robot_model" default="ur10"/>
   <!-- Set initial_z value dependant on scene-->
-  <arg name="initial_z" default="1.0" if="$(arg scene)"/>
+  <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
 
   <!-- Change this for another hand -->
