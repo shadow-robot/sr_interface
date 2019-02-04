@@ -33,7 +33,7 @@
   <arg name="home_angles" default="-J ra_shoulder_pan_joint 1.147 -J ra_elbow_joint 1.695 -J ra_wrist_1_joint -1.395 -J ra_wrist_2_joint -1.584 -J ra_shoulder_lift_joint -1.926 -J ra_wrist_3_joint 1.830"/>
 
   <!-- Set initial_z value dependant on scene -->
-  <arg name="initial_z" default="1.0" if="$(arg scene)"/>
+  <arg name="initial_z" default="0.7751" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
 
   <!-- Change this for another hand -->
@@ -109,6 +109,8 @@
     <node name="joint_state_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 joint_state_controller" />
     <node if="$(arg arm_trajectory)" name="arm_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 ra_trajectory_controller"/>
     <node if="$(arg arm_position)" name="arm_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 ra_group_position_controller"/>
+
+    <node name="teach_mode_node" pkg="sr_robot_launch" type="teach_mode_node" output="screen" />
 
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
       <param name="publish_frequency" type="double" value="50.0" />

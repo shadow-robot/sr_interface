@@ -32,8 +32,10 @@
   <arg name="side" default="right"/>
   <arg name="robot_model" default="ur10"/>
   <!-- Set arm height and separation-->
-  <arg name="arm_1_z" default="0.0"/>
-  <arg name="arm_2_z" default="0.0"/>
+  <arg name="arm_1_z" default="0.7551" if="$(arg scene)"/>
+  <arg name="arm_1_z" default="0.0" unless="$(arg scene)"/>
+  <arg name="arm_2_z" default="0.7551" if="$(arg scene)"/>
+  <arg name="arm_2_z" default="0.0" unless="$(arg scene)"/>
   <arg name="arm_separation" default="1.5"/>
   <arg name="arm_1_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
   <arg name="arm_2_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
