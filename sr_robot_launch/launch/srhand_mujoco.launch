@@ -74,7 +74,7 @@
     </node>
      <!-- Launch mujoco ros control -->
     <include if="$(eval sim_type == 'mujoco')" file="$(find mujoco_ros_control)/launch/mujoco_ros_control.launch">
-      <arg name="robot_model_path" value="$(find sr_description)/mujoco_models/sr_model.xml"/>
+      <arg name="robot_model_path" value="$(find sr_description)/mujoco_models/sr_hand_e_environment.xml"/>
     </include>
   </group>
 
