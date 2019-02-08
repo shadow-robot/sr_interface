@@ -1,8 +1,8 @@
 <launch>
   <!-- This launch file is for shadow hand only -->
   <arg name="hand_id" default="rh"/>
-  <!-- Set to hand_e or hand_g -->
-  <arg name="hand_type" default="hand_e"/>
+  <!-- Set to hand_e or hand_e_plus -->
+  <arg name="hand_type" default="hand_e_plus"/>
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
   <arg name="sim" default="true"/>
   <!-- Set to "gazebo" to run simulation in Gazebo, "mujoco" to run in Mujoco -->
@@ -32,11 +32,14 @@
   <arg name="grasp_controller" default="false"/>
   <!-- Loads the robot description -->
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_urdf_filename" default="shadowhand_motor"/>
+  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="robot_urdf_filename" default="shadowhand_motor_plus"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e')" name="robot_urdf_filename" default="shadowhand_left_motor"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_g')" name="robot_urdf_filename" default="shadowhand_lite"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_g')" name="robot_urdf_filename" default="shadowhand_left_lite"/>
   <arg if="$(eval sim_type == 'gazebo')" name="robot_description" default="$(find sr_description)/robots/$(arg robot_urdf_filename).urdf.xacro"/>
   <arg if="$(eval sim_type == 'mujoco')" name="robot_description" default="$(find sr_description)/mujoco_models/urdfs/$(arg robot_urdf_filename).urdf"/>
+  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="mujoco_model_filename" default="$(find sr_description)/mujoco_models/sr_hand_e_environment.xml"/>
+  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="mujoco_model_filename" default="$(find sr_description)/mujoco_models/sr_hand_e_plus_environment.xml"/>
     
   
   <!-- SIMULATED ROBOTS -->
@@ -74,7 +77,7 @@
     </node>
      <!-- Launch mujoco ros control -->
     <include if="$(eval sim_type == 'mujoco')" file="$(find mujoco_ros_control)/launch/mujoco_ros_control.launch">
-      <arg name="robot_model_path" value="$(find sr_description)/mujoco_models/sr_hand_e_environment.xml"/>
+      <arg name="robot_model_path" value="$(arg mujoco_model_filename)"/>
     </include>
   </group>
 
