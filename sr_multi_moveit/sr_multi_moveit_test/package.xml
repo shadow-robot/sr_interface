@@ -8,7 +8,7 @@
   <author email="beatriz@shadowrobot.com">Beatriz Leon</author>
   <maintainer email="beatriz@shadowrobot.com">Beatriz Leon</maintainer>
 
-  <license>BSD</license>
+  <license>GPL</license>
 
   <run_depend>moveit_ros_move_group</run_depend>
   <run_depend>moveit_planners_ompl</run_depend>
