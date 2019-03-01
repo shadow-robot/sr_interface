@@ -11,7 +11,7 @@
 - git:
     local-name: sr_common
     uri: https://github.com/shadow-robot/sr_common.git
-    version: kinetic-devel
+    version: F_add_collision_piece_lite
 
 - git:
     local-name: common_resources
