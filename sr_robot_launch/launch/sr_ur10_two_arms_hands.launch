@@ -40,7 +40,6 @@
   <arg name="arm_2_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
 
   <!-- Change this for another hand -->
-  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_two_$(arg robot_model)_two_hands.yaml"/-->
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/both_srhand_two_$(arg robot_model)_two_hands.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/both_sh_two_$(arg robot_model)_two_hands.yaml"/>
   <arg name="robot_name" default="$(arg robot_model)srh"/>
