@@ -13,6 +13,8 @@ install:
 script:
   - export toolset_branch="master"
   - export server_type="shippable"
+  - export ubuntu_version_name="bionic"
+  - export ros_release_name="melodic"
   - export used_modules="build_pr_only,check_cache,code_coverage"
   - export remote_shell_script="https://raw.githubusercontent.com/shadow-robot/sr-build-tools/$toolset_branch/bin/sr-run-ci-build.sh"
   - curl -s "$( echo "$remote_shell_script" | sed 's/#/%23/g' )" | bash /dev/stdin "$toolset_branch" $server_type $used_modules
