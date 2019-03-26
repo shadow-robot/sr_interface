@@ -36,7 +36,7 @@
 - git:
     local-name: ros_control_robot
     uri: https://github.com/shadow-robot/ros_control_robot.git
-    version: kinetic-devel
+    version: melodic-devel
 
 - git:
     local-name: gazebo2rviz
