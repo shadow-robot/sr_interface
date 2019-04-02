@@ -99,7 +99,7 @@
 
     <rosparam command="load" file="$(find sr_ur_robot_hw)/config/ra_sr_ur_robot_hw.yaml"/>
     <rosparam if="$(arg arm_trajectory)" command="load" file="$(find sr_ur_launch)/config/ra_trajectory_controller.yaml"/>
-    <rosparam if="$(arg arm_position)" command="load" file="$(find sr_ur_launch)/config/ra__controller.yaml"/>
+    <rosparam if="$(arg arm_position)" command="load" file="$(find sr_ur_launch)/config/ra_group_position_controller.yaml"/>
 
     <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
 
