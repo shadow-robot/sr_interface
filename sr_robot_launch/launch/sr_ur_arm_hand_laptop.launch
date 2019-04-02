@@ -1,0 +1,46 @@
+<launch>
+  <!-- This launch file is for a combination of ur arms and shadow hands -->
+
+  <!-- Set to true to allow planning trajectories-->
+  <arg name="use_moveit" default="true"/>
+  <!--Choose planner library, options are ompl, stomp or sbpl-->
+  <arg name="planning" default="ompl"/>
+  <!--Should the planner yaml be automatically generated? -->
+  <arg name="generate_planning_config" default="True"/>  
+  <!-- Set to false if you want to start without guis -->
+  <arg name="gui" default="true"/>
+
+  <!-- Set whether to load a scene to restrain the movement of the robot -->
+  <arg name="scene" default="false"/>
+    <!-- Set the scene file -->
+  <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large.scene"/>
+
+
+  <arg name="robot_model" default="ur10"/>
+  <!-- Set initial_z value dependant on scene-->
+  <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
+  <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
+
+  <!-- Change this for another hand -->
+  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
+  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
+
+<!-- Set scene for robot after delay to start after moveit - restrains movement -->
+    <node if="$(arg scene)" pkg="sr_utilities_common" type="timed_roslaunch.sh" args="8 sr_multi_moveit_config scene.launch
+      scene_file:=$(arg scene_file)" name="timed_publish_moveit_scene" output="screen"/>
+
+  <!-- MOVEIT -->
+  <group if="$(arg use_moveit)">
+    <rosparam file="$(arg robot_config_file)"/>
+    <include file="$(find sr_multi_moveit_config)/launch/moveit_planning_and_execution.launch">
+      <arg name="load_robot_description" value="true"/>
+      <arg name="gui" default="$(arg gui)"/>
+      <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
+      <arg name="planning" value="$(arg planning)"/>
+      <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
+    </include>
+    <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
+  </group>
+
+
+</launch>
