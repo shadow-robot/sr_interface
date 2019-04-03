@@ -14,6 +14,8 @@
   <arg name="hand_serial" default="1082"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
+  <!-- Set to true to spawn the position controllers for the arm-->
+  <arg name="arm_ctrl" default="true"/>
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
