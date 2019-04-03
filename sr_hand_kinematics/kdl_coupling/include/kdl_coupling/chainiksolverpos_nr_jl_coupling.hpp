@@ -69,6 +69,11 @@ public:
 
   virtual int CartToJnt(const JntArray &q_init, const Frame &p_in, JntArray &q_out);
 
+  virtual void updateInternalDataStructures()
+  {
+    // Added to eliminate abstract class instantiation error
+  };
+
 private:
   const Chain_coupling chain;
   JntArray q_min;
