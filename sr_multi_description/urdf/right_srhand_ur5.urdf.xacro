@@ -9,12 +9,7 @@
     <joint name="world_joint" type="fixed">
         <parent link="world"/>
         <child link="ra_base_link"/>
-        <xacro:if value="$(arg initial_z)">
-            <origin xyz="0.0 0.0 $(arg initial_z)" rpy="0.0 0.0 0.0"/>
-        </xacro:if>
-        <xacro:unless value="$(arg initial_z)">
-            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
-        </xacro:unless>
+        <origin xyz="0.0 0.0 $(arg initial_z)" rpy="0.0 0.0 0.0"/>
     </joint>
 
     <xacro:ur5_robot prefix="ra_" joint_limited="false"/>
