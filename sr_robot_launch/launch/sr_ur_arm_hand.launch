@@ -44,7 +44,7 @@
   <arg name="robot_name" default="$(arg robot_model)srh"/>
 
   <!-- Set this to true if you run the hardware loop on a remote computer -->
-  <arg name="remote_machine" default="false"/>
+  <arg name="external_control_loop" default="false"/>
   
   <!-- ARM -->
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
@@ -122,7 +122,7 @@
 
   <!-- REAL ROBOTS -->
   <group unless="$(arg sim)">
-    <group unless="$(arg remote_machine)">
+    <group unless="$(arg external_control_loop)">
       <include file="$(find sr_robot_launch)/launch/hardware_control_loop.launch">
         <arg name="debug" default="$(arg debug)"/>
         <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
