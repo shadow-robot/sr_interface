@@ -16,8 +16,7 @@
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_ctrl" default="true"/>
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
-  <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
-  <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
+  <arg name="initial_z" default="0.7551"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
