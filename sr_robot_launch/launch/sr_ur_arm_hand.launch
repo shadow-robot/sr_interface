@@ -123,72 +123,29 @@
   <!-- REAL ROBOTS -->
   <group unless="$(arg sim)">
     <group unless="$(arg remote_machine)">
-      <group if="$(arg arm_ctrl)">
-        <rosparam>
-          robot_hardware:
-            - unique_robot_hw
-            - ra_sr_ur_robot_hw
-        </rosparam>
-        <rosparam command="load" file="$(arg arm_robot_hw)"/>
-        <param name="$(arg arm_id)_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
-      </group>
-
-      <rosparam unless="$(arg arm_ctrl)">
-        robot_hardware:
-          - unique_robot_hw
-      </rosparam>
-
-      <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
-      <include file="$(find sr_edc_launch)/sr_edc_ros_control.launch">
-        <arg name="define_robot_hardware" value="false"/>
-        <arg name="hand_robot_hardware_name" value="unique_robot_hw"/>
-        <arg name="debug" value="$(arg debug)"/>
-        <arg name="eth_port" value="$(arg eth_port)"/>
+      <include file="$(find sr_robot_launch)/launch/hardware_control_loop.launch">
+        <arg name="debug" default="$(arg debug)"/>
+        <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
+        <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
         <arg name="robot_description" value="$(arg robot_description)"/>
-        <arg name="pwm_control" value="$(arg pwm_control)"/>
-        <arg name="hand_serial" value="$(arg hand_serial)"/>
         <arg name="hand_id" value="$(arg hand_id)"/>
+        <arg name="arm_id" value="$(arg arm_id)"/>
+        <arg name="side" value="$(arg side)"/>
+        <arg name="robot_model" value="$(arg robot_model)"/>
+        <arg name="arm_robot_hw" value="$(arg arm_robot_hw)"/>
+        <arg name="hand_serial" value="$(arg hand_serial)"/>
         <arg name="mapping_path" value="$(arg mapping_path)"/>
-        <arg name="initial_z" value="$(arg initial_z)"/>
+        <arg name="eth_port" value="$(arg eth_port)"/>
+        <arg name="grasp_controller" value="$(arg grasp_controller)"/>
+        <arg name="pwm_control" value="$(arg pwm_control)"/>
+        <arg name="include_wrist_in_arm_controller" value="$(arg include_wrist_in_arm_controller)"/>
+        <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
+        <arg name="arm_position" default="$(arg arm_position)"/>
+        <arg name="hand_ctrl" default="$(arg hand_ctrl)"/>
+        <arg name="hand_trajectory" default="$(arg hand_trajectory)"/>
+        <arg name="arm_ctrl" default="$(arg arm_ctrl)"/>
       </include>
-
-      <!-- Should only be used when testing arm alone, as hand launch includes joint state publisher -->
-      <!-- <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"/> -->
-      <group if="$(arg arm_trajectory)">
-        <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/>
-        <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller_no_wrist.yaml"/>
-        <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen">
-          <rosparam param="controllers" subst_value="True"> ["$(arg arm_id)_sr_ur_robot_hw"] </rosparam>
-        </node>
-        <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-              args="--wait-for=/arms_ready --shutdown-timeout=1.0 $(arg arm_id)_trajectory_controller"/>
-      </group>
-      <group if="$(arg arm_position)">
-        <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_group_position_controller.yaml"/>
-        <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_group_position_controller_no_wrist.yaml"/>
-        <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen">
-          <rosparam param="controllers" subst_value="True"> ["$(arg arm_id)_sr_ur_robot_hw"] </rosparam>
-        </node>
-        <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-              args="--wait-for=/arms_ready --shutdown-timeout=1.0 $(arg arm_id)_group_position_controller"/>
-      </group>
-      <!-- Controller -->
-      <group if="$(arg hand_ctrl)">
-        <group unless="$(arg grasp_controller)">
-          <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
-            <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
-            <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
-            <param name="wait_for" value ="/calibrated" unless="$(arg sim)"/>
-          </node>
-        </group>
-        <group if="$(arg grasp_controller)">
-          <node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen">
-            <param name="wait_for" value ="/calibrated" unless="$(arg sim)"/>
-          </node>
-        </group>
-      </group>
     </group>
-
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->
     <node if="$(arg scene)" pkg="sr_utilities_common" type="timed_roslaunch.sh" args="8 sr_multi_moveit_config scene.launch
       scene_file:=$(arg scene_file)" name="timed_publish_moveit_scene" output="screen"/>

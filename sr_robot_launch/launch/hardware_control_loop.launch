@@ -1,6 +1,5 @@
 <launch>
   <arg name="hand_id" default="rh"/>
-  <arg name="scene" default="false"/>
   <arg name="hand_ctrl" default="true"/>
   <arg name="hand_trajectory" default="true"/>
   <arg name="arm_id" default="ra"/>
