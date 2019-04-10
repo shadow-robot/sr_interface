@@ -69,12 +69,8 @@
 
   <!-- Should only be used when testing arm alone, as hand launch includes joint state publisher -->
   <!-- <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"/> -->
-  <group unless="$(arg hand_ctrl)">
-    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
-    <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
-    <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
-  </group>
-
+  <param unless="$(arg hand_ctrl)" name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
+   
   <group if="$(arg arm_trajectory)">
     <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/>
     <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller_no_wrist.yaml"/>
@@ -82,7 +78,7 @@
       <rosparam param="controllers" subst_value="True"> ["$(arg arm_id)_sr_ur_robot_hw"] </rosparam>
     </node>
     <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-          args="--wait-for=/arms_ready --shutdown-timeout=1.0 $(arg arm_id)_trajectory_controller"/>
+          args="--wait-for=/arms_ready $(arg arm_id)_trajectory_controller"/>
   </group>
   <group if="$(arg arm_position)">
     <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_group_position_controller.yaml"/>
@@ -91,7 +87,7 @@
       <rosparam param="controllers" subst_value="True"> ["$(arg arm_id)_sr_ur_robot_hw"] </rosparam>
     </node>
     <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-          args="--wait-for=/arms_ready --shutdown-timeout=1.0 $(arg arm_id)_group_position_controller"/>
+          args="--wait-for=/arms_ready $(arg arm_id)_group_position_controller"/>
   </group>
 
 </launch>

@@ -124,8 +124,6 @@
       </include>
     </group>
 
-    <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
-
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
       <param name="publish_frequency" type="double" value="50.0" />
       <param name="tf_prefix" type="string" value="" />
