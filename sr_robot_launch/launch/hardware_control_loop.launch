@@ -99,6 +99,5 @@
       <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
             args="--wait-for=/arms_ready $(arg arm_id)_group_position_controller"/>
     </group>
-  </group>
 
 </launch>
