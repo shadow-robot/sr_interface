@@ -52,9 +52,6 @@
     </group>
   </group>
 
-  <node name="teach_mode_node" pkg="sr_robot_launch" type="teach_mode_node" output="screen" />
-
-
   <group if="$(arg arm_ctrl)">
     <rosparam>
       robot_hardware:
