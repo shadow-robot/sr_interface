@@ -69,8 +69,11 @@
 
   <!-- Should only be used when testing arm alone, as hand launch includes joint state publisher -->
   <!-- <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"/> -->
-  <param unless="$(arg hand_ctrl)" name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
-   
+  <group unless="$(arg hand_ctrl)">
+    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
+    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"/>
+  </group>
+
   <group if="$(arg arm_trajectory)">
     <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/>
     <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller_no_wrist.yaml"/>
