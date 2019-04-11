@@ -58,7 +58,7 @@
         - unique_robot_hw
         - ra_sr_ur_robot_hw
     </rosparam>
-    <rosparam command="load" file="$(arg arm_robot_hw)"/>
+    <!--rosparam command="load" file="$(arg arm_robot_hw)"/-->
     <param name="$(arg arm_id)_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
   </group>
 
@@ -72,7 +72,6 @@
     <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
     <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
     <rosparam command="load" file="$(find sr_ur_robot_hw)/config/ra_sr_ur_robot_hw.yaml"/>
-    <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   </group>
 
     <group if="$(arg arm_trajectory)">
