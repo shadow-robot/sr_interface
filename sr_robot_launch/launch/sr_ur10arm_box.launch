@@ -108,19 +108,11 @@
         <arg name="hand_id" value="$(arg hand_id)"/>
         <arg name="arm_id" value="$(arg arm_id)"/>
         <arg name="side" value="$(arg side)"/>
-        <arg name="robot_model" value="$(arg robot_model)"/>
+        <arg name="robot_model" value="$(arg arm_model)"/>
         <arg name="arm_robot_hw" value="$(arg arm_robot_hw)"/>
-        <arg name="hand_serial" value="$(arg hand_serial)"/>
-        <arg name="mapping_path" value="$(arg mapping_path)"/>
-        <arg name="eth_port" value="$(arg eth_port)"/>
-        <arg name="grasp_controller" value="$(arg grasp_controller)"/>
-        <arg name="pwm_control" value="$(arg pwm_control)"/>
-        <arg name="include_wrist_in_arm_controller" value="$(arg include_wrist_in_arm_controller)"/>
         <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
         <arg name="arm_position" default="$(arg arm_position)"/>
-        <arg name="hand_ctrl" default="$(arg hand_ctrl)"/>
-        <arg name="hand_trajectory" default="$(arg hand_trajectory)"/>
-        <arg name="arm_ctrl" default="$(arg arm_ctrl)"/>
+        <arg name="hand_ctrl" default="false"/>
       </include>
     </group>
 

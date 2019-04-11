@@ -67,14 +67,14 @@
       - unique_robot_hw
   </rosparam>
 
-  <!-- Should only be used when testing arm alone, as hand launch includes joint state publisher -->
-  <!-- <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"/> -->
   <group unless="$(arg hand_ctrl)">
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"/>
     <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
     <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
     <rosparam command="load" file="$(find sr_ur_robot_hw)/config/ra_sr_ur_robot_hw.yaml"/>
+    <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   </group>
+
     <group if="$(arg arm_trajectory)">
       <group if="$(arg hand_ctrl)">
         <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/>
@@ -87,6 +87,7 @@
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
             args="--wait-for=/arms_ready $(arg arm_id)_trajectory_controller"/>
     </group>
+
     <group if="$(arg arm_position)">
       <group if="$(arg hand_ctrl)">
         <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_group_position_controller.yaml"/>
