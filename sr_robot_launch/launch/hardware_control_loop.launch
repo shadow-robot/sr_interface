@@ -22,6 +22,13 @@
   <arg name="robot_description" unless="$(arg hand_ctrl)" default="'$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro'"/>
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
 
+  <!-- Logging local topics -->
+  <group ns="control_box">
+    <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch">
+      <arg name="log_topics" value='-e ".*(controller|debug_etherCAT_data).*" /joint_states /diagnostics /mechanism_statistics /journalctl_log'/>
+      <arg name="log_bag_prefix" value="sr_hardware_control"/>
+    </include>
+  </group-->
 
   <!-- Controller -->
   <group if="$(arg hand_ctrl)">
@@ -73,6 +80,7 @@
     <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
     <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
     <rosparam command="load" file="$(find sr_ur_robot_hw)/config/ra_sr_ur_robot_hw.yaml"/>
+    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
   </group>
   <!-- Trajectory mode -->
   <group if="$(arg arm_trajectory)">

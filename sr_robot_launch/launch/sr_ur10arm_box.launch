@@ -53,10 +53,10 @@
   <!-- Set to true to spawn group position controllers for the arms -->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <!-- Set to true to spawn the position controllers for the arm -->
-
-
   <param name="description_read_repetitions" value="50"/>
-
+  <!-- Logging -->
+  <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch"/>
+  
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
     <arg name="paused" value="$(arg start_home)"/>
@@ -98,7 +98,6 @@
 
   <!-- REAL ROBOTS -->
   <group unless="$(arg sim)">
-    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
     <group unless="$(arg external_control_loop)">
       <include file="$(find sr_robot_launch)/launch/hardware_control_loop.launch">
         <arg name="debug" default="$(arg debug)"/>
