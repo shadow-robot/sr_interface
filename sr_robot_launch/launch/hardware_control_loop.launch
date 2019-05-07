@@ -25,7 +25,7 @@
   <!-- Logging local topics -->
   <group ns="control_box">
     <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch">
-      <arg name="log_topics" value='-e ".*(controller|debug_etherCAT_data).*" /joint_states /diagnostics /mechanism_statistics /journalctl_log'/>
+      <arg name="log_topics" value='-e ".*(controller|debug_etherCAT_data).*" /joint_states /diagnostics /mechanism_statistics'/>
       <arg name="log_bag_prefix" value="sr_hardware_control"/>
     </include>
   </group>
