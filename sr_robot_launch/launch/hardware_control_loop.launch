@@ -28,7 +28,7 @@
       <arg name="log_topics" value='-e ".*(controller|debug_etherCAT_data).*" /joint_states /diagnostics /mechanism_statistics /journalctl_log'/>
       <arg name="log_bag_prefix" value="sr_hardware_control"/>
     </include>
-  </group-->
+  </group>
 
   <!-- Controller -->
   <group if="$(arg hand_ctrl)">
