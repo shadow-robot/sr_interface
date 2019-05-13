@@ -263,7 +263,7 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
     stream.close()
 
     if biotac:
-    # open biotac template file
+        # open biotac template file
         kdl_template_path = template_path[0:template_path.find("_template")] + "_kdl_template.yaml"
 
         stream = open(kdl_template_path, 'r')
