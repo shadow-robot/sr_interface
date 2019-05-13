@@ -40,6 +40,8 @@
   <arg name="joint_state_publisher_freq" default="100"/>
   <!-- Publish rate of robot state publisher -->
   <arg name="robot_state_publisher_freq" default="50"/>
+  <!-- Config file of the IK used -->
+  <arg name="kinematics_template" default="$(find sr_moveit_hand_config)/config/kinematics_template.yaml"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
@@ -93,6 +95,7 @@
       <arg name="load_robot_description" value="false"/>
       <arg name="gui" default="$(arg gui)"/>
       <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
+      <arg name="kinematics_template" default="$(arg kinematics_template)"/>
     </include>
     <!--include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/-->
   </group>

@@ -28,6 +28,8 @@
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
+  <!-- Config file of the IK used -->
+  <arg name="kinematics_template" default="$(find sr_moveit_hand_config)/config/kinematics_template.yaml"/>
 
   <!-- Loads the robot description -->
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_motor.urdf.xacro'"/>
@@ -86,7 +88,8 @@
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
     <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="15 sr_moveit_hand_config moveit_planning_and_execution.launch
-      gui:=$(arg gui)" name="timed_roslaunch" output="screen"/>
+      gui:=$(arg gui)
+      kinematics_template:=$(arg kinematics_template)" name="timed_roslaunch" output="screen"/>
     <include file="$(find sr_moveit_hand_config)/launch/default_warehouse_db.launch"/>
   </group>
 

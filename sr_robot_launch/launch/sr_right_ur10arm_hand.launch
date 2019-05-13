@@ -35,6 +35,8 @@
   <arg name="joint_state_publisher_freq" default="100"/>
   <!-- Publish rate of robot state publisher -->
   <arg name="robot_state_publisher_freq" default="50"/>
+  <!-- Config file of the IK used -->
+  <arg name="kinematics_template" default="$(find sr_moveit_hand_config)/config/kinematics_template.yaml"/>
 
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world" unless="$(arg scene)"/>
@@ -94,5 +96,6 @@
     <arg name="arm_position" default="$(arg arm_position)"/>
     <arg name="joint_state_publisher_freq" default="$(arg joint_state_publisher_freq)"/>
     <arg name="robot_state_publisher_freq" default="$(arg robot_state_publisher_freq)"/>
+    <arg name="kinematics_template" default="$(arg kinematics_template)"/>
   </include>
 </launch>
