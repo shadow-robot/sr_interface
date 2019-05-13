@@ -28,6 +28,10 @@
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
+  <!-- Publish rate of joint state publisher -->
+  <arg name="joint_state_publisher_freq" default="100"/>
+  <!-- Publish rate of robot state publisher -->
+  <arg name="robot_state_publisher_freq" default="50"/>
   <!-- Config file of the IK used -->
   <arg name="kinematics_template" default="$(find sr_moveit_hand_config)/config/kinematics_template.yaml"/>
 
@@ -64,10 +68,12 @@
       <rosparam unless="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
       <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_lite_grasp_controller_gazebo.yaml"/>
     </group>
-    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
+    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
+      <param name="publish_frequency" type="double" value="$(arg joint_state_publisher_freq)" />
+    </include>
     <!-- Robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="50.0" />
+      <param name="publish_frequency" type="double" value="$(arg robot_state_publisher_freq)" />
       <param name="tf_prefix" type="string" value="" />
     </node>    
   </group>
