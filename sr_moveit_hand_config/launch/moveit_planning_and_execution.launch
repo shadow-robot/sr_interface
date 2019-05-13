@@ -4,6 +4,7 @@
   <arg name="debug" default="false"/>
   <arg name="load_robot_description" default="true"/>
   <arg name="gui" default="true"/>
+  <arg name="rviz_config" default="$(find sr_moveit_hand_config)/launch/moveit.rviz" />
   <arg name="kinematics_template" default="$(find sr_moveit_hand_config)/config/kinematics_template.yaml"/>
   
   <!-- Broadcast static tf for robot root -->
@@ -27,7 +28,8 @@
     <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="2 sr_moveit_hand_config moveit_rviz.launch 
       config:=true 
       debug:=$(arg debug)
-      kinematics_template:=($arg kinematics_template)" name="timed_roslaunch_rviz" output="screen"
+      rviz_config:=$(arg rviz_config)
+      kinematics_template:=$(arg kinematics_template)" name="timed_roslaunch_rviz" output="screen"
     />
   </group>
 </launch>
