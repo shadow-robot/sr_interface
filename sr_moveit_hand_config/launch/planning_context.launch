@@ -7,6 +7,9 @@
   
   <!-- The name of the URDF file to load -->
   <arg name="hand_urdf" default="$(find sr_description)/robots/shadowhand_motor.urdf.xacro"/>
+
+  <!-- Config file of the IK used -->
+  <arg name="kinematics_template" default="$(find sr_moveit_hand_config)/config/kinematics_template.yaml"/>
   
   <!-- Load universal robot description format (URDF) -->
   <param if="$(arg load_robot_description)" name="$(arg robot_description)" command="xacro --inorder '$(arg hand_urdf)'"/>
@@ -21,7 +24,7 @@
 
   <!-- Load default settings for kinematics; these settings are overridden by settings in a node's namespace -->
   <group ns="$(arg robot_description)_kinematics">
-    <node name="load_kinematics" pkg="sr_moveit_hand_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="kinematics $(find sr_moveit_hand_config)/config/kinematics_bioik_template.yaml --" />
+    <node name="load_kinematics" pkg="sr_moveit_hand_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="kinematics $(arg kinematics_template) --" />
   </group>
   
 </launch>

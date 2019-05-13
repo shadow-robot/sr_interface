@@ -36,6 +36,10 @@
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth1_eth2)"/>
+  <!-- Publish rate of joint state publisher -->
+  <arg name="joint_state_publisher_freq" default="100"/>
+  <!-- Publish rate of robot state publisher -->
+  <arg name="robot_state_publisher_freq" default="50"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
@@ -58,12 +62,12 @@
     <rosparam command="load" file="$(find sr_description)/hand/config/$(arg rh_id)_controller_gazebo.yaml"/>
     <rosparam command="load" file="$(find sr_description)/hand/config/$(arg lh_id)_controller_gazebo.yaml"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
-      <arg name="publish_rate" value="500.0"/>
+      <arg name="publish_rate" value="$(arg joint_state_publisher_freq)"/>
     </include>
     <!-- Robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="500.0" />
-      <param name="tf_prefix" type="string" value="" />
+      <param name="publish_frequency" type="double" value="$(arg robot_state_publisher_freq)"/>
+      <param name="tf_prefix" type="string" value=""/>
     </node>
   </group>
 
