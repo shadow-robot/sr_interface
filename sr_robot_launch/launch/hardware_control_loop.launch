@@ -52,12 +52,12 @@
       <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
         <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
         <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
-        <param name="wait_for" value ="/calibrated"/>
+        <param name="wait_for" value ="calibrated"/>
       </node>
     </group>
     <group if="$(arg grasp_controller)">
       <node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen">
-        <param name="wait_for" value ="/calibrated"/>
+        <param name="wait_for" value ="calibrated"/>
       </node>
     </group>
   </group>
