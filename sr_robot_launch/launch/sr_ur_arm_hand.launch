@@ -68,7 +68,7 @@
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
   <!-- Serial number of the hand to be used-->
-  <arg name="hand_serial" default="1082"/>
+  <arg name="hand_serial" default="634"/>
   <!-- the path to the mapping files -->
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
 
