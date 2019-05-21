@@ -30,6 +30,8 @@
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
+  <!-- The robot state publisher publishing frequency  -->
+  <arg name="publish_frequency" default="50"/>
   <!-- Loads the robot description -->
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_urdf_filename" default="shadowhand_motor"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="robot_urdf_filename" default="shadowhand_motor_plus"/>
@@ -72,7 +74,7 @@
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
     <!-- Robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="50.0" />
+      <param name="publish_frequency" type="double" value="$(arg publish_frequency)"/>
       <param name="tf_prefix" type="string" value="" />
     </node>
      <!-- Launch mujoco ros control -->

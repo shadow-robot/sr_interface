@@ -16,6 +16,7 @@
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_ctrl" default="true"/>
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
+  <arg name="publish_frequency" default="50"/>
   <arg name="initial_z" default="0.7551"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   <arg name="robot_description" if="$(arg hand_ctrl)" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
@@ -46,6 +47,7 @@
       <arg name="hand_serial" value="$(arg hand_serial)"/>
       <arg name="hand_id" value="$(arg hand_id)"/>
       <arg name="mapping_path" value="$(arg mapping_path)"/>
+      <arg name="publish_frequency" value="$(arg publish_frequency)"/>
       <arg name="initial_z" value="$(arg initial_z)"/>
     </include>
     <group unless="$(arg grasp_controller)">
