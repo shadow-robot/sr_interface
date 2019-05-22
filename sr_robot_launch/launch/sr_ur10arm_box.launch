@@ -13,6 +13,8 @@
   <arg name="gui" default="true"/>
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
+  <!-- The robot state publisher publishing frequency  -->
+  <arg name="publish_frequency" default="50"/>
 
   <arg name="verbose" default="true"/>
 
@@ -83,7 +85,7 @@
 
     <!-- Robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="50.0"/>
+      <param name="publish_frequency" type="double" value="$(arg publish_frequency)"/>
       <param name="tf_prefix" type="string" value=""/>
     </node>
 
@@ -116,7 +118,7 @@
     </group>
 
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="50.0" />
+      <param name="publish_frequency" type="double" value="$(arg publish_frequency)"/>
       <param name="tf_prefix" type="string" value="" />
     </node>
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->

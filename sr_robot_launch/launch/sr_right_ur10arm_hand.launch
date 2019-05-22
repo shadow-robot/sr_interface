@@ -33,6 +33,8 @@
   <arg name="pwm_control" default="true"/>
   <!-- Set this to true if you run the hardware loop on a remote computer -->
   <arg name="external_control_loop" default="false"/>
+  <!-- The robot state publisher publishing frequency  -->
+  <arg name="publish_frequency" default="50"/>
 
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world" unless="$(arg scene)"/>
@@ -91,5 +93,6 @@
     <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
     <arg name="arm_position" default="$(arg arm_position)"/>
     <arg name="external_control_loop" value="$(arg external_control_loop)"/>
+    <arg name="publish_frequency" value="$(arg publish_frequency)"/>
   </include>
 </launch>

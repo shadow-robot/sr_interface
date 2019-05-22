@@ -28,6 +28,8 @@
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
   <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
   <arg name="include_wrist_in_arm_controller" default="true"/>
+  <!-- The robot state publisher publishing frequency  -->
+  <arg name="publish_frequency" default="50"/>
 
   <!-- Change this for the left hand and arm -->
   <arg name="hand_id" default="rh"/>
@@ -108,7 +110,7 @@
     </group>
     <!-- Robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="50.0" />
+      <param name="publish_frequency" type="double" value="$(arg publish_frequency)"/>
       <param name="tf_prefix" type="string" value="" />
     </node>
     <!-- Set scene for robot - restrains movement -->
