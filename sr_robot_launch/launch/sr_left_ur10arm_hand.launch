@@ -26,7 +26,9 @@
   <!-- Set to true by default for now as torque control is not available yet -->
   <arg name="pwm_control" default="true"/>
   <!-- The robot state publisher publishing frequency  -->
-  <arg name="publish_frequency" default="50"/>
+  <arg name="robot_state_pub_frequency" default="50"/>
+  <!-- The joint state publisher publishing frequency  -->
+  <arg name="joint_state_pub_frequency" default="100"/>
 
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world" unless="$(arg scene)"/>
@@ -65,6 +67,7 @@
     <arg name="scene" value="$(arg scene)"/>
     <arg name="grasp_controller" value="$(arg grasp_controller)"/>
     <arg name="pwm_control" value="$(arg pwm_control)"/>
-    <arg name="publish_frequency" value="$(arg publish_frequency)"/>
+    <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
+    <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
   </include>
 </launch>

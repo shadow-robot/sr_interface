@@ -16,7 +16,8 @@
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_ctrl" default="true"/>
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
-  <arg name="publish_frequency" default="50"/>
+  <arg name="robot_state_pub_frequency" default="100"/>
+  <arg name="joint_state_pub_frequency" default="100"/>
   <arg name="initial_z" default="0.7551"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   <arg name="robot_description" if="$(arg hand_ctrl)" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
@@ -47,7 +48,8 @@
       <arg name="hand_serial" value="$(arg hand_serial)"/>
       <arg name="hand_id" value="$(arg hand_id)"/>
       <arg name="mapping_path" value="$(arg mapping_path)"/>
-      <arg name="publish_frequency" value="$(arg publish_frequency)"/>
+      <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
+      <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       <arg name="initial_z" value="$(arg initial_z)"/>
     </include>
     <group unless="$(arg grasp_controller)">
@@ -81,7 +83,9 @@
 
   <!-- These will be loaded if hand_ctrl is false so UR10 with box will load instead. -->
   <group unless="$(arg hand_ctrl)">
-    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"/>
+    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
+      <param name="publish_rate" type="double" value="$(arg joint_state_pub_frequency)"/>
+    </include>
     <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
     <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
     <rosparam command="load" file="$(find sr_ur_robot_hw)/config/ra_sr_ur_robot_hw.yaml"/>
