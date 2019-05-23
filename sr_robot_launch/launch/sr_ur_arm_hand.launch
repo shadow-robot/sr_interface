@@ -78,6 +78,9 @@
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
+    <env name="GAZEBO_MODEL_PATH" value="$(find sr_description_common)/models/" />
+    <env name="GAZEBO_MODEL_DATABASE_URI" value="" />
+    <env name="MESH_WORKSPACE_PATH" value="$(find sr_description_common)/models/" />
     <arg name="paused" value="$(arg start_home)"/>
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
       <arg name="world_name" default="$(arg world)"/>
