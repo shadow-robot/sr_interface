@@ -10,7 +10,6 @@
         <parent link="world"/>
         <child link="la_base_link"/>
         <origin xyz="0.0 0.0 $(arg initial_z)" rpy="0.0 0.0 0.0"/>
-        </xacro:unless>
     </joint>
 
     <xacro:ur10_robot prefix="la_" joint_limited="true"/>
