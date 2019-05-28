@@ -63,11 +63,20 @@
   </group>
 
   <group if="$(arg arm_ctrl)">
-    <rosparam>
-      robot_hardware:
-        - unique_robot_hw
-        - ra_sr_ur_robot_hw
-    </rosparam>
+    <group if="$(eval arg('side') == 'right')">
+      <rosparam>
+        robot_hardware:
+          - unique_robot_hw
+          - ra_sr_ur_robot_hw
+      </rosparam>
+    </group>
+    <group if="$(eval arg('side') == 'left')">
+      <rosparam>
+        robot_hardware:
+          - unique_robot_hw
+          - la_sr_ur_robot_hw
+      </rosparam>
+    </group>
     <rosparam command="load" file="$(arg arm_robot_hw)"/>
     <param name="$(arg arm_id)_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
   </group>
