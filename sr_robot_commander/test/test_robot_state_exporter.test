@@ -1,0 +1,3 @@
+<launch>
+  <include file="$(find sr_robot_commander)/test/test_robot_state_exporter_launch.launch"/>
+</launch>

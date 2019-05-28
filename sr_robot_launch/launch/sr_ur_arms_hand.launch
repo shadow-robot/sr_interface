@@ -18,9 +18,9 @@
   <arg name="scene" default="false"/>
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world" unless="$(arg scene)"/>
-  <arg name="world" default="$(find sr_description_common)/worlds/sr_lab.world" if="$(arg scene)"/>
+  <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large.world" if="$(arg scene)"/>
   <!-- Set the scene file -->
-  <arg name="scene_file" default="$(find sr_description_common)/scenes/lab.scene"/>
+  <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large.scene"/>
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="false"/>
   <!-- Definition of "home" position, in joint-angle pairs -->
@@ -32,8 +32,10 @@
   <arg name="side" default="right"/>
   <arg name="robot_model" default="ur10"/>
   <!-- Set arm height and separation-->
-  <arg name="arm_1_z" default="0.0"/>
-  <arg name="arm_2_z" default="0.0"/>
+  <arg name="arm_1_z" default="0.7551" if="$(arg scene)"/>
+  <arg name="arm_1_z" default="0.0" unless="$(arg scene)"/>
+  <arg name="arm_2_z" default="0.7551" if="$(arg scene)"/>
+  <arg name="arm_2_z" default="0.0" unless="$(arg scene)"/>
   <arg name="arm_separation" default="1.5"/>
   <arg name="arm_1_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
   <arg name="arm_2_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
@@ -155,7 +157,7 @@
     </group>
 
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->
-    <node if="$(arg scene)" pkg="sr_robot_launch" type="timed_roslaunch.sh" args="8 sr_multi_moveit_config scene.launch
+    <node if="$(arg scene)" pkg="sr_utilities_common" type="timed_roslaunch.sh" args="8 sr_multi_moveit_config scene.launch
       scene_file:=$(arg scene_file)" name="timed_publish_moveit_scene" output="screen"/>
   </group>
 
@@ -177,7 +179,7 @@
     <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
       <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
       <param name="exclude_wrist" value="true"/>
-      <param name="wait_for" value ="/calibrated" unless="$(arg sim)"/>
+      <param name="wait_for" value ="calibrated" unless="$(arg sim)"/>
     </node>
   </group>
 </launch>
