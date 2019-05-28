@@ -11,7 +11,6 @@
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT enp2s0)"/>
   <arg name="pwm_control" default="true"/>
   <arg name="hand_serial" default="1082"/>
-  <arg name="biotacs" default="false"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
   <!-- Set to true to spawn the position controllers for the arm-->
@@ -19,8 +18,7 @@
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="initial_z" default="0.7551"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
-  <arg if="$(eval hand_ctrl and not biotacs)" name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
-  <arg if="$(eval hand_ctrl and biotacs)" name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_ur10_bt_sp_biotacs.urdf.xacro'"/>
+  <arg if="$(arg hand_ctrl)" name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg unless="$(arg hand_ctrl)" name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro'"/>
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
