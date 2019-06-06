@@ -18,6 +18,9 @@
   <arg name="jiggle_fraction" default="0.05" />
   <arg name="publish_monitored_planning_scene" default="true"/>
 
+  <!-- ik solver possible values shadow_ik/track_ik/bio_ik -->
+  <arg name="ik_solver" default="shadow_ik">
+
   <!-- Planning Functionality -->
   <include ns="move_group" file="$(find sr_moveit_hand_config)/launch/planning_pipeline.launch.xml">
     <arg name="pipeline" value="$(arg pipeline)" />
@@ -25,7 +28,9 @@
   
   <!-- Inverse Kinematics -->
   <group ns="move_group">
-    <node name="load_kinematics" pkg="sr_moveit_hand_config" type="generate_load_moveit_config.py" respawn="false" args="kinematics $(find sr_moveit_hand_config)/config/kinematics_template.yaml --" />
+    <node name="load_kinematics" pkg="sr_moveit_hand_config" type="generate_load_moveit_config.py" respawn="false" args="kinematics $(find sr_moveit_hand_config)/config/kinematics_template.yaml --" unless="$(eval ik_solver == 'track_ik' or ik_solver == 'bio_ik')" />
+    <node name="load_kinematics" pkg="sr_moveit_hand_config" type="generate_load_moveit_config.py" respawn="false" args="kinematics $(find sr_moveit_hand_config)/config/kinematics_trackik_template.yaml --" if="$(eval ik_solver == 'track_ik')" />
+    <node name="load_kinematics" pkg="sr_moveit_hand_config" type="generate_load_moveit_config.py" respawn="false" args="kinematics $(find sr_moveit_hand_config)/config/kinematics_bioik_template.yaml --" if="$(eval ik_solver == 'bio_ik')" />
   </group>
 
   <!-- Trajectory Execution Functionality -->

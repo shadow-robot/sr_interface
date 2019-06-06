@@ -4,6 +4,9 @@
   <arg name="debug" default="false"/>
   <arg name="load_robot_description" default="true"/>
   <arg name="gui" default="true"/>
+
+  <!-- ik solver possible values shadow_ik/track_ik/bio_ik -->
+  <arg name="ik_solver" default="shadow_ik">
   
   <!-- Broadcast static tf for robot root -->
   <node name="virtual_joint_broadcaster" pkg="sr_moveit_hand_config" type="virtual_joint_broadcaster.py" output="screen" />
@@ -11,6 +14,7 @@
   <include file="$(find sr_moveit_hand_config)/launch/planning_context.launch" />
   
   <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="2 sr_moveit_hand_config move_group.launch 
+    ik_solver:=$(arg ik_solver)
     allow_trajectory_execution:=true 
     fake_execution:=false 
     info:=true 
