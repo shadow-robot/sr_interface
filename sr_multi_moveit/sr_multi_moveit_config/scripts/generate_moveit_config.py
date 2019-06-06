@@ -45,6 +45,8 @@ from urdf_parser_py.urdf import URDF
 import generate_robot_srdf
 import sr_moveit_hand_config.generate_moveit_config as hand_config
 
+from copy import deepcopy
+
 
 def yaml_reindent(in_str, numspaces):
     s_indent = "\n".join((numspaces * " ") + i for i in in_str.splitlines())
@@ -330,13 +332,14 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
                     output_str += "\n"
 
         if manipulator.has_hand:
-                # open hand template files
-            tracik_template_path = (hand_template_path[0:hand_template_path.find("_template")] +
-                                    "_tracik_template.yaml")
+            # open hand template files
+            # tracik_template_path = (hand_template_path[0:hand_template_path.find("_template")] +
+            #                         "_tracik_template.yaml")
             with open(hand_template_path, 'r') as stream:
                 hand_yamldoc = yaml.load(stream)
-            with open(tracik_template_path, 'r') as stream:
-                hand_yamldock_tracik = yaml.load(stream)
+            # with open(tracik_template_path, 'r') as stream:
+            #     hand_yamldock_tracik = yaml.load(stream)
+            hand_yamldock_tracik = deepcopy(hand_yamldoc)
 
             prefix = manipulator.hand.prefix
             finger_prefixes = ["FF", "MF", "RF", "LF", "TH"]
@@ -355,6 +358,7 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
             is_fixed['ring_finger'] = finger_with_fixed_joint[2]
             is_fixed['little_finger'] = finger_with_fixed_joint[3]
             is_fixed['thumb'] = finger_with_fixed_joint[4]
+            rospy.logwarn("is_fixed: {}".format(is_fixed))
 
             for group in robot.groups:
                 kinematics_config = None

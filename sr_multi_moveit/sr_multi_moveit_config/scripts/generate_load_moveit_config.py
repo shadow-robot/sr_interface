@@ -47,7 +47,7 @@ if __name__ == '__main__':
 
     # detect the command to be executed
     if len(sys.argv) > 2:
-        save_file = False
+        save_file = True
         command = sys.argv[1]
         robot_config_file = sys.argv[2]
         rospy.init_node('moveit_config_generator', anonymous=True)
@@ -88,12 +88,14 @@ if __name__ == '__main__':
                 generate_ompl_planning(robot, robot_config, hand_template_path, output_path=output_path, ns_=NS)
             elif command == "kinematics":
                 # get the template file
-                hand_template_path = sys.argv[2]
+                hand_template_path = sys.argv[3]
+                rospy.logwarn("hand_template_path: {}".format(hand_template_path))
                 if (hand_template_path.startswith("_") or hand_template_path.startswith("--")):
                     hand_template_path = None
                 if save_file:
                     output_path = (rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/" +
                                     "kinematics.yaml")
+                
                 generate_kinematics(robot, robot_config, hand_template_path, output_path=output_path, ns_=NS)
             elif command == "joint_limits":
                 hand_template_path = sh_config_path + "joint_limits_template.yaml"

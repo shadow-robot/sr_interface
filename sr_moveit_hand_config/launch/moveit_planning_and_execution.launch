@@ -6,7 +6,7 @@
   <arg name="gui" default="true"/>
 
   <!-- ik solver possible values shadow_ik/track_ik/bio_ik -->
-  <arg name="ik_solver" default="shadow_ik">
+  <arg name="ik_solver" default="shadow_ik"/>
   
   <!-- Broadcast static tf for robot root -->
   <node name="virtual_joint_broadcaster" pkg="sr_moveit_hand_config" type="virtual_joint_broadcaster.py" output="screen" />

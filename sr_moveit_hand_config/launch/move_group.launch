@@ -19,7 +19,7 @@
   <arg name="publish_monitored_planning_scene" default="true"/>
 
   <!-- ik solver possible values shadow_ik/track_ik/bio_ik -->
-  <arg name="ik_solver" default="shadow_ik">
+  <arg name="ik_solver" default="shadow_ik"/>
 
   <!-- Planning Functionality -->
   <include ns="move_group" file="$(find sr_moveit_hand_config)/launch/planning_pipeline.launch.xml">
