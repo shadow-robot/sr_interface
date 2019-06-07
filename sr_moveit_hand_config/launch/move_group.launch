@@ -19,7 +19,7 @@
   <arg name="publish_monitored_planning_scene" default="true"/>
 
   <!-- ik solver path -->
-  <arg name="ik_solver_path" default="$(find sr_moveit_hand_config)/config/kinematics_template.yaml"/>
+  <arg name="hand_ik_solver_path" default="$(find sr_moveit_hand_config)/config/kinematics_template.yaml"/>
 
   <!-- Planning Functionality -->
   <include ns="move_group" file="$(find sr_moveit_hand_config)/launch/planning_pipeline.launch.xml">
@@ -28,7 +28,7 @@
   
   <!-- Inverse Kinematics -->
   <group ns="move_group">
-    <node name="load_kinematics" pkg="sr_moveit_hand_config" type="generate_load_moveit_config.py" respawn="false" args="kinematics $(arg ik_solver_path) --" />
+    <node name="load_kinematics" pkg="sr_moveit_hand_config" type="generate_load_moveit_config.py" respawn="false" args="kinematics $(arg hand_ik_solver_path) --" />
   </group>
 
   <!-- Trajectory Execution Functionality -->

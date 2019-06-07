@@ -25,7 +25,7 @@
   <arg name="generate_planning_config" default="True"/>
 
   <!-- ik solver path -->
-  <arg name="ik_solver_path" default="$(find sr_moveit_hand_config)/config/kinematics_template.yaml"/>
+  <arg name="hand_ik_solver_path" default="$(find sr_moveit_hand_config)/config/kinematics_template.yaml"/>
 
   <!-- Planning Functionality -->
   <include ns="move_group" file="$(find sr_multi_moveit_config)/launch/planning_pipeline.launch.xml">
@@ -36,7 +36,7 @@
 
   <!-- Inverse Kinematics -->
   <group ns="move_group">
-    <node name="load_kinematics" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" args="kinematics $(arg robot_config_file) $(arg ik_solver_path)"/>
+    <node name="load_kinematics" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" args="kinematics $(arg robot_config_file) $(arg hand_ik_solver_path)"/>
   </group>
 
   <!-- Trajectory Execution Functionality -->
