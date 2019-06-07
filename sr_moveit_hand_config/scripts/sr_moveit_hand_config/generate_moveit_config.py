@@ -264,8 +264,7 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
     stream.close()
 
     if 'tracik' not in template_path and 'bioik' not in template_path:
-        fixed_joint_template_path = (template_path[0:template_path.find("_template")] +
-                                "_tracik_template.yaml")
+        fixed_joint_template_path = (template_path[0:template_path.find("_template")] + "_tracik_template.yaml")
 
         with open(fixed_joint_template_path, 'r') as stream:
             yamldock_fixed_joint = yaml.load(stream)

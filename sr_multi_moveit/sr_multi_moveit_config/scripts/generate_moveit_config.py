@@ -337,8 +337,7 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
 
             if 'tracik' not in hand_template_path and 'bioik' not in hand_template_path:
                 fixed_joint_template_path = (hand_template_path[0:hand_template_path.find("_template")] +
-                                        "_tracik_template.yaml")
-
+                                             "_tracik_template.yaml")
                 with open(fixed_joint_template_path, 'r') as stream:
                     hand_yamldock_fixed_joint = yaml.load(stream)
             else:

@@ -92,9 +92,7 @@ if __name__ == '__main__':
                 if (hand_template_path.startswith("_") or hand_template_path.startswith("--")):
                     hand_template_path = None
                 if save_file:
-                    output_path = (rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/" +
-                                    "kinematics.yaml")
-                
+                    output_path = (rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/" + "kinematics.yaml")
                 generate_kinematics(robot, robot_config, hand_template_path, output_path=output_path, ns_=NS)
             elif command == "joint_limits":
                 hand_template_path = sh_config_path + "joint_limits_template.yaml"
