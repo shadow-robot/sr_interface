@@ -8,7 +8,7 @@
   <arg name="generate_planning_config" default="True"/>
 
   <!-- ik solver possible values shadow_ik/trac_ik/bio_ik -->
-  <arg name="ik_solver" default="bio_ik"/>
+  <arg name="ik_solver" default="shadow_ik"/>
   <arg name="ik_solver_path" value="$(find sr_moveit_hand_config)/config/kinematics_template.yaml" unless="$(eval ik_solver == 'trac_ik' or ik_solver == 'bio_ik')" />
   <arg name="ik_solver_path" value="$(find sr_moveit_hand_config)/config/kinematics_tracik_template.yaml" if="$(eval ik_solver == 'trac_ik')" />
   <arg name="ik_solver_path" value="$(find sr_moveit_hand_config)/config/kinematics_bioik_template.yaml" if="$(eval ik_solver == 'bio_ik')" />
