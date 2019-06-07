@@ -5,16 +5,21 @@
   <arg name="load_robot_description" default="true"/>
   <arg name="gui" default="true"/>
 
-  <!-- ik solver possible values shadow_ik/track_ik/bio_ik -->
-  <arg name="ik_solver" default="shadow_ik"/>
+  <!-- ik solver possible values shadow_ik/trac_ik/bio_ik -->
+  <arg name="ik_solver" default="bio_ik"/>
+  <arg name="ik_solver_path" value="$(find sr_moveit_hand_config)/config/kinematics_template.yaml" unless="$(eval ik_solver == 'trac_ik' or ik_solver == 'bio_ik')" />
+  <arg name="ik_solver_path" value="$(find sr_moveit_hand_config)/config/kinematics_tracik_template.yaml" if="$(eval ik_solver == 'trac_ik')" />
+  <arg name="ik_solver_path" value="$(find sr_moveit_hand_config)/config/kinematics_bioik_template.yaml" if="$(eval ik_solver == 'bio_ik')" />
   
   <!-- Broadcast static tf for robot root -->
   <node name="virtual_joint_broadcaster" pkg="sr_moveit_hand_config" type="virtual_joint_broadcaster.py" output="screen" />
   
-  <include file="$(find sr_moveit_hand_config)/launch/planning_context.launch" />
+  <include file="$(find sr_moveit_hand_config)/launch/planning_context.launch" >
+    <arg name="ik_solver_path" value="$(arg ik_solver_path)"/>
+  </include>
   
   <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="2 sr_moveit_hand_config move_group.launch 
-    ik_solver:=$(arg ik_solver)
+    ik_solver_path:=$(arg ik_solver_path)
     allow_trajectory_execution:=true 
     fake_execution:=false 
     info:=true 
@@ -25,6 +30,7 @@
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
   <group if="$(arg gui)">
     <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="2 sr_moveit_hand_config moveit_rviz.launch 
+      ik_solver_path:=$(arg ik_solver_path)
       config:=true 
       debug:=$(arg debug)" name="timed_roslaunch_rviz" output="screen"
     />

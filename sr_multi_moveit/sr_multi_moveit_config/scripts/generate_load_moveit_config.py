@@ -47,7 +47,7 @@ if __name__ == '__main__':
 
     # detect the command to be executed
     if len(sys.argv) > 2:
-        save_file = True
+        save_file = False
         command = sys.argv[1]
         robot_config_file = sys.argv[2]
         rospy.init_node('moveit_config_generator', anonymous=True)
@@ -89,7 +89,6 @@ if __name__ == '__main__':
             elif command == "kinematics":
                 # get the template file
                 hand_template_path = sys.argv[3]
-                rospy.logwarn("hand_template_path: {}".format(hand_template_path))
                 if (hand_template_path.startswith("_") or hand_template_path.startswith("--")):
                     hand_template_path = None
                 if save_file:

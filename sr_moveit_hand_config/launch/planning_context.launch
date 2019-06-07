@@ -4,6 +4,9 @@
 
   <!-- The name of the parameter under which the URDF is loaded -->
   <arg name="robot_description" default="robot_description"/>
+
+  <!-- ik solver path -->
+  <arg name="ik_solver_path" default="$(find sr_moveit_hand_config)/config/kinematics_template.yaml"/>
   
   <!-- The name of the URDF file to load -->
   <arg name="hand_urdf" default="$(find sr_description)/robots/shadowhand_motor.urdf.xacro"/>
@@ -21,7 +24,7 @@
 
   <!-- Load default settings for kinematics; these settings are overridden by settings in a node's namespace -->
   <group ns="$(arg robot_description)_kinematics">
-    <node name="load_kinematics" pkg="sr_moveit_hand_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="kinematics $(find sr_moveit_hand_config)/config/kinematics_template.yaml --" />
+    <node name="load_kinematics" pkg="sr_moveit_hand_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="kinematics $(arg ik_solver_path) --" />
   </group>
   
 </launch>

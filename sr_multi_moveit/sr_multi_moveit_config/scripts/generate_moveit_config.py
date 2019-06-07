@@ -40,12 +40,11 @@ import rospy
 import rospkg
 import rosparam
 from srdfdom.srdf import SRDF
+from copy import deepcopy
 
 from urdf_parser_py.urdf import URDF
 import generate_robot_srdf
 import sr_moveit_hand_config.generate_moveit_config as hand_config
-
-from copy import deepcopy
 
 
 def yaml_reindent(in_str, numspaces):

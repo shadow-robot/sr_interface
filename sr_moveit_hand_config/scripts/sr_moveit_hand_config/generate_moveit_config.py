@@ -46,6 +46,7 @@ import re
 import rospy
 import rosparam
 from srdfdom.srdf import SRDF
+from copy import deepcopy
 
 from urdf_parser_py.urdf import URDF
 
@@ -262,12 +263,14 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
     yamldoc = yaml.load(stream)
     stream.close()
 
-    # open biotac template file
-    kdl_template_path = template_path[0:template_path.find("_template")] + "_kdl_template.yaml"
+    if 'tracik' not in template_path and 'bioik' not in template_path:
+        fixed_joint_template_path = (template_path[0:template_path.find("_template")] +
+                                "_tracik_template.yaml")
 
-    stream = open(kdl_template_path, 'r')
-    yamldockdl = yaml.load(stream)
-    stream.close()
+        with open(fixed_joint_template_path, 'r') as stream:
+            yamldock_fixed_joint = yaml.load(stream)
+    else:
+        yamldock_fixed_joint = deepcopy(yamldoc)
 
     # find prefix
     prefix = find_prefix(robot)
@@ -308,8 +311,8 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
         group_name = group.name[len(prefix):]
         # check for fixed joint for this group
         if is_fixed.get(group_name):
-            if group_name in yamldockdl:
-                kinematics_config = yamldockdl[group_name]
+            if group_name in yamldock_fixed_joint:
+                kinematics_config = yamldock_fixed_joint[group_name]
         else:
             if group_name in yamldoc:
                 kinematics_config = yamldoc[group_name]
