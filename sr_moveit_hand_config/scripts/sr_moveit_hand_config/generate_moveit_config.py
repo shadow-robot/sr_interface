@@ -264,7 +264,7 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
     yamldoc = yaml.load(stream)
     stream.close()
 
-    if 'sr_hand_kinematics' in template_path:
+    if 'kinematics_template' in template_path:
         default_solver_for_fixed_joint = "trac_ik"
         fixed_joint_template_path = rospkg.RosPack().get_path(
             'sr_moveit_hand_config') + "/config/kinematics_" + default_solver_for_fixed_joint + "_template.yaml"
@@ -305,6 +305,7 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
     is_fixed['ring_finger'] = finger_with_fixed_joint[2]
     is_fixed['little_finger'] = finger_with_fixed_joint[3]
     is_fixed['thumb'] = finger_with_fixed_joint[4]
+    rospy.logwarn("is_fixed: {}".format(is_fixed))
 
     # for each group
     for group in robot.groups:

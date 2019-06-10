@@ -335,7 +335,7 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
             with open(hand_template_path, 'r') as stream:
                 hand_yamldoc = yaml.load(stream)
 
-            if 'sr_hand_kinematics' in hand_template_path:
+            if 'kinematics_template' in hand_template_path:
                 default_solver_for_fixed_joint = "trac_ik"
                 fixed_joint_template_path = rospkg.RosPack().get_path(
                     'sr_moveit_hand_config') + "/config/kinematics_" + default_solver_for_fixed_joint + "_template.yaml"
