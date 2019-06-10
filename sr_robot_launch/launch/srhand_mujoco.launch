@@ -74,7 +74,7 @@
       <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_lite_grasp_controller_gazebo.yaml"/>
     </group>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
-      <param name="publish_rate" type="double" value="$(arg joint_state_pub_frequency)"/>
+      <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
     <!-- Robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">

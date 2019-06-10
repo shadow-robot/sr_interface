@@ -94,7 +94,7 @@
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name) $(arg spawn_model_extra_args)" respawn="false" output="screen"/>
     <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
-      <param name="publish_rate" type="double" value="$(arg joint_state_pub_frequency)"/>
+      <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
     <!-- ARM -->
     <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/ra_trajectory_controller.yaml" command="load"/>

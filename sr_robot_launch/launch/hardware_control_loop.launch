@@ -89,7 +89,7 @@
   <!-- These will be loaded if hand_ctrl is false so UR10 with box will load instead. -->
   <group unless="$(arg hand_ctrl)">
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
-      <param name="publish_rate" type="double" value="$(arg joint_state_pub_frequency)"/>
+      <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
     <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
     <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>

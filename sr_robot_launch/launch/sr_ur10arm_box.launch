@@ -81,7 +81,7 @@
     <rosparam if="$(arg arm_trajectory)" file="$(find sr_box_ur10_moveit_config)/config/gazebo/$(arg arm_id)_trajectory_controller.yaml" command="load"/>
     <rosparam if="$(arg arm_position)" file="$(find sr_box_ur10_moveit_config)/config/gazebo/$(arg arm_id)_group_position_controller.yaml" command="load"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
-      <param name="publish_rate" type="double" value="$(arg joint_state_pub_frequency)"/>
+      <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
 
     <node if="$(arg arm_trajectory)" name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_id)_trajectory_controller"/>

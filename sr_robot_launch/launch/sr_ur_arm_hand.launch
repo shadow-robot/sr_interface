@@ -28,10 +28,10 @@
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
   <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
   <arg name="include_wrist_in_arm_controller" default="true"/>
-  <!-- The robot state publisher publishing frequency  -->
-  <arg name="robot_state_pub_frequency" default="50"/>
+  <!-- The robot state publisher publishing frequecy  -->
+  <arg name="robot_state_pub_frequency" default="57"/>
   <!-- The joint state publisher publishing frequency  -->
-  <arg name="joint_state_pub_frequency" default="100"/>
+  <arg name="joint_state_pub_frequency" default="321"/>
   
 
   <!-- Change this for the left hand and arm -->
@@ -103,7 +103,7 @@
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name) $(arg spawn_model_extra_args)" respawn="false" output="screen"/>
     <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
-      <param name="publish_rate" type="double" value="$(arg joint_state_pub_frequency)"/>
+      <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
     <!-- ARM -->
     <group if="$(arg arm_trajectory)">
