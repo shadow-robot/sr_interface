@@ -13,6 +13,10 @@
   <arg name="gui" default="true"/>
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
+  <!-- The robot state publisher publishing frequency  -->
+  <arg name="robot_state_pub_frequency" default="50"/>
+  <!-- The joint state publisher publishing frequency  -->
+  <arg name="joint_state_pub_frequency" default="100"/>
 
   <arg name="verbose" default="true"/>
 
@@ -76,14 +80,16 @@
     <!-- ARM -->
     <rosparam if="$(arg arm_trajectory)" file="$(find sr_box_ur10_moveit_config)/config/gazebo/$(arg arm_id)_trajectory_controller.yaml" command="load"/>
     <rosparam if="$(arg arm_position)" file="$(find sr_box_ur10_moveit_config)/config/gazebo/$(arg arm_id)_group_position_controller.yaml" command="load"/>
-    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
+    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
+      <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
+    </include>
 
     <node if="$(arg arm_trajectory)" name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_id)_trajectory_controller"/>
     <node if="$(arg arm_position)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_id)_group_position_controller"/>
 
     <!-- Robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="50.0"/>
+      <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)"/>
       <param name="tf_prefix" type="string" value=""/>
     </node>
 
@@ -112,11 +118,13 @@
         <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
         <arg name="arm_position" default="$(arg arm_position)"/>
         <arg name="hand_ctrl" default="false"/>
+        <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
+        <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       </include>
     </group>
 
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="50.0" />
+      <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)"/>
       <param name="tf_prefix" type="string" value="" />
     </node>
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->

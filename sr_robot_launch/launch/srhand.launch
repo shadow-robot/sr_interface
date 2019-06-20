@@ -28,6 +28,11 @@
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
+  <!-- The robot state publisher publishing frequency  -->
+  <arg name="robot_state_pub_frequency" default="50"/>
+  <!-- The joint state publisher publishing frequency  -->
+  <arg name="joint_state_pub_frequency" default="100"/>
+  
   <!-- Loads the robot description -->
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_motor.urdf.xacro'"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_motor.urdf.xacro'"/>
@@ -62,10 +67,12 @@
       <rosparam unless="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
       <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_lite_grasp_controller_gazebo.yaml"/>
     </group>
-    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
+    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
+      <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
+    </include>
     <!-- Robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="50.0" />
+      <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)"/>
       <param name="tf_prefix" type="string" value="" />
     </node>    
   </group>
@@ -80,6 +87,8 @@
       <arg name="hand_serial" value="$(arg hand_serial)"/>
       <arg name="hand_id" value="$(arg hand_id)"/>
       <arg name="mapping_path" value="$(arg mapping_path)"/>
+      <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
+      <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
     </include>
   </group>
 
