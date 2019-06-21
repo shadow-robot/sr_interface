@@ -34,6 +34,9 @@
   <arg name="joint_state_pub_frequency" default="321"/>
   
 
+  <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
+  <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
+
   <!-- Change this for the left hand and arm -->
   <arg name="hand_id" default="rh"/>
   <arg name="arm_id" default="ra"/>
@@ -178,6 +181,7 @@
   <group if="$(arg use_moveit)">
     <rosparam file="$(arg robot_config_file)"/>
     <include file="$(find sr_multi_moveit_config)/launch/moveit_planning_and_execution.launch">
+      <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
       <arg name="load_robot_description" value="true"/>
       <arg name="gui" default="$(arg gui)"/>
       <arg name="robot_config_file" value ="$(arg robot_config_file)"/>

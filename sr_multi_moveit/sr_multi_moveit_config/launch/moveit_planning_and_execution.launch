@@ -6,18 +6,25 @@
   <arg name="gui" default="true"/>
   <!--Should the planner yaml be automatically generated? -->
   <arg name="generate_planning_config" default="True"/>
-  
+
+  <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
+  <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
+  <arg name="hand_ik_solver_path" value="$(find sr_moveit_hand_config)/config/kinematics_template.yaml" if="$(eval hand_ik_solver == 'sr_hand_kinematics')" />
+  <arg name="hand_ik_solver_path" value="$(find sr_moveit_hand_config)/config/kinematics_$(arg hand_ik_solver)_template.yaml" unless="$(eval hand_ik_solver == 'sr_hand_kinematics')" />
+
   <!-- The name of the robot config file to load -->
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
   
   <include file="$(find sr_multi_moveit_config)/launch/planning_context.launch">
     <arg name="robot_config_file" value="$(arg robot_config_file)"/>
+    <arg name="hand_ik_solver_path" value="$(arg hand_ik_solver_path)"/>
   </include>
 
   <!-- Broadcast static tf for robot root -->
   <!--node name="virtual_joint_broadcaster" pkg="sr_multi_moveit_config" type="virtual_joint_broadcaster.py" output="screen" /-->
 
   <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="11 sr_multi_moveit_config move_group.launch 
+    hand_ik_solver_path:=$(arg hand_ik_solver_path)
     allow_trajectory_execution:=true 
     fake_execution:=false 
     info:=true 
@@ -31,6 +38,7 @@
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
   <group if="$(arg gui)">
     <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="14 sr_multi_moveit_config moveit_rviz.launch 
+      hand_ik_solver_path:=$(arg hand_ik_solver_path)
       config:=true 
       debug:=$(arg debug)
       robot_config_file:=$(arg robot_config_file)" name="timed_roslaunch_rviz" output="screen" respawn="true"

@@ -41,6 +41,9 @@
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_motor_plus.urdf.xacro'"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e_plus')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_motor_plus.urdf.xacro'"/>
 
+  <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
+  <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
+
   
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
@@ -95,7 +98,7 @@
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
     <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="15 sr_moveit_hand_config moveit_planning_and_execution.launch
-      gui:=$(arg gui)" name="timed_roslaunch" output="screen"/>
+      gui:=$(arg gui) hand_ik_solver=$(arg hand_ik_solver)" name="timed_roslaunch" output="screen"/>
     <include file="$(find sr_moveit_hand_config)/launch/default_warehouse_db.launch"/>
   </group>
 
