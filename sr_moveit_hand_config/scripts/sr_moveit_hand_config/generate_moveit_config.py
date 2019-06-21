@@ -46,6 +46,8 @@ import re
 import rospy
 import rosparam
 from srdfdom.srdf import SRDF
+from copy import deepcopy
+import rospkg
 
 from urdf_parser_py.urdf import URDF
 
@@ -262,12 +264,15 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
     yamldoc = yaml.load(stream)
     stream.close()
 
-    # open biotac template file
-    kdl_template_path = template_path[0:template_path.find("_template")] + "_kdl_template.yaml"
+    if 'kinematics_template' in template_path:
+        default_solver_for_fixed_joint = "trac_ik"
+        fixed_joint_template_path = rospkg.RosPack().get_path(
+            'sr_moveit_hand_config') + "/config/kinematics_" + default_solver_for_fixed_joint + "_template.yaml"
 
-    stream = open(kdl_template_path, 'r')
-    yamldockdl = yaml.load(stream)
-    stream.close()
+        with open(fixed_joint_template_path, 'r') as stream:
+            yamldoc_fixed_joint = yaml.load(stream)
+    else:
+        yamldoc_fixed_joint = deepcopy(yamldoc)
 
     # find prefix
     prefix = find_prefix(robot)
@@ -300,6 +305,7 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
     is_fixed['ring_finger'] = finger_with_fixed_joint[2]
     is_fixed['little_finger'] = finger_with_fixed_joint[3]
     is_fixed['thumb'] = finger_with_fixed_joint[4]
+    rospy.logwarn("is_fixed: {}".format(is_fixed))
 
     # for each group
     for group in robot.groups:
@@ -308,8 +314,8 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
         group_name = group.name[len(prefix):]
         # check for fixed joint for this group
         if is_fixed.get(group_name):
-            if group_name in yamldockdl:
-                kinematics_config = yamldockdl[group_name]
+            if group_name in yamldoc_fixed_joint:
+                kinematics_config = yamldoc_fixed_joint[group_name]
         else:
             if group_name in yamldoc:
                 kinematics_config = yamldoc[group_name]
