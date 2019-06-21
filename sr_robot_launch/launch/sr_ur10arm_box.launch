@@ -39,9 +39,6 @@
   <!-- Set this to true if you run the hardware loop on a remote computer -->
   <arg name="external_control_loop" default="false"/>
 
-  <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
-  <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
-
   <!-- Change this for another hand -->
   <arg name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_box_ur10_moveit_config)/config/robot_configs/$(arg side)_$(arg arm_model).yaml"/>
