@@ -51,7 +51,7 @@
   <!-- ARM -->
   <arg name="arm_controller" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_controller.yaml"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
-  <arg name="arm_group_name" default="arm"/>
+
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn group position controllers for the arms -->
