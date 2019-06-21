@@ -33,6 +33,10 @@
   <arg name="pwm_control" default="true"/>
   <!-- Set this to true if you run the hardware loop on a remote computer -->
   <arg name="external_control_loop" default="false"/>
+  <!-- The robot state publisher publishing frequency  -->
+  <arg name="robot_state_pub_frequency" default="50"/>
+  <!-- The joint state publisher publishing frequency  -->
+  <arg name="joint_state_pub_frequency" default="100"/>
 
   <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
@@ -95,5 +99,7 @@
     <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
     <arg name="arm_position" default="$(arg arm_position)"/>
     <arg name="external_control_loop" value="$(arg external_control_loop)"/>
+    <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
+    <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
   </include>
 </launch>
