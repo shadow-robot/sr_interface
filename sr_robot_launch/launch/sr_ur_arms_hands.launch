@@ -24,21 +24,20 @@
   <arg name="start_home" default="false"/>
   <!-- Definition of "home" position, in joint-angle pairs -->
   <arg name="home_angles" default=""/>
+  <!-- Set this to true if you run the hardware loop on a remote computer -->
+  <arg name="external_control_loop" default="false"/>
   <!-- The robot state publisher publishing frequency  -->
   <arg name="robot_state_pub_frequency" default="50"/>
   <!-- The joint state publisher publishing frequency  -->
   <arg name="joint_state_pub_frequency" default="100"/>
 
-  <!-- Set this to true if you run the hardware loop on a remote computer -->
-  <arg name="external_control_loop" default="false"/>
-
   <!-- ROBOT CONFIG-->
   <arg name="side" default="bimanual"/>
   <!-- Specify if the system has "both" hands, only "right", or only "left" -->
   <arg name="hands" default="both"/>
-  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_two_$(arg robot_model).urdf.xacro'"/>
-  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_two_$(arg robot_model).yaml"/>
   <arg name="robot_model" value="ur10"/>
+  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
+  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
   <arg name="robot_name" default="$(arg robot_model)srh"/>
 
   <!-- HANDS CONFIG-->
@@ -161,7 +160,7 @@
   <!-- REAL ROBOTS -->
   <group unless="$(arg sim)">
     <group unless="$(arg external_control_loop)">
-      <include file="$(find sr_robot_launch)/launch/hardware_control_loop.launch">
+      <include file="$(find sr_robot_launch)/launch/bimanual_hardware_control_loop.launch">
         <arg name="debug" default="$(arg debug)"/>
         <arg name="initial_z" value="$(arg initial_z)"/>
         <arg name="robot_description" value="$(arg robot_description)"/>
@@ -205,69 +204,3 @@
   </group>
 
 </launch>
-
-
-
-
-  <!-- move to other file REAL ROBOTS -->
-  <group unless="$(arg sim)">
-    <group if="$(arg arm_ctrl)">
-      <rosparam>
-        robot_hardware:
-          - unique_robot_hw
-          - ra_sr_ur_robot_hw
-          - la_sr_ur_robot_hw
-      </rosparam>
-      <rosparam command="load" file="$(arg arm_robot_hw_1)"/>
-      <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
-      <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_1_program_path)"/>
-      <param name="la_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_2_program_path)"/>
-    </group>
-
-    <rosparam unless="$(arg arm_ctrl)">
-      robot_hardware:
-        - unique_robot_hw
-    </rosparam>
-
-    <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
-    <include file="$(find sr_edc_launch)/sr_edc_ros_control.launch">
-      <arg name="define_robot_hardware" value="false"/>
-      <arg name="hand_robot_hardware_name" value="unique_robot_hw"/>
-      <arg name="debug" value="$(arg debug)"/>
-      <arg name="eth_port" value="$(arg eth_port)"/>
-      <arg name="robot_description" value="$(arg robot_description)"/>
-      <arg name="pwm_control" value="$(arg pwm_control)"/>
-      <arg name="hand_serial" value="$(arg hand_serial)"/>
-      <arg name="hand_id" value="$(arg hand_id)"/>
-      <arg name="mapping_path" value="$(arg mapping_path)"/>
-      <arg name="load_robot_description" value="false"/>
-      <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
-      <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
-    </include>
-
-    <!-- Should only be used when testing arm alone, as hand launch includes joint state publisher -->
-    <!-- <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"> 
-      <param name="publish_rate" type="double" value="$(arg joint_state_pub_frequency)"/>
-    </include> -->
-    <group if="$(arg arm_trajectory)">
-      <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml"/>
-      <rosparam command="load" file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml"/>
-      <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen"/>
-      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/arms_ready --shutdown-timeout=1.0 ra_trajectory_controller la_trajectory_controller"/>
-    </group>
-
-
-  </group>
-
-
-
-  <!-- Trajectory controller -->
-  <group if="$(arg hand_ctrl)">
-    <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
-      <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
-      <param name="exclude_wrist" value="true"/>
-      <param name="wait_for" value ="calibrated" unless="$(arg sim)"/>
-    </node>
-  </group>
-

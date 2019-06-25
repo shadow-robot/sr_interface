@@ -1,5 +1,5 @@
 <launch>
-  <!-- This launch file is for bimanual system consisting of ur arms and shadow dexterous hands -->
+  <!-- This launch file is for bimanual system consisting of 2 ur arms and 1 shadow hand -->
 
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
   <arg name="sim" default="true"/>
@@ -13,7 +13,13 @@
   <arg name="generate_planning_config" default="True"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
-  <arg name="verbose" default="true" />
+  <!-- Serial number of the hand to be used-->
+  <arg name="hand_serial" default="1082"/>
+  <!-- the path to the mapping files -->
+  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
+  <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
+       More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
+  <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
   <!-- Set world value dependant on scene -->
@@ -21,26 +27,6 @@
   <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large.world" if="$(arg scene)"/>
   <!-- Set the scene file -->
   <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large.scene"/>
-  <!-- Set to true if you want the robot to start in the "home" positions -->
-  <arg name="start_home" default="false"/>
-  <!-- Definition of "home" position, in joint-angle pairs -->
-  <arg name="home_angles" default="-J ra_shoulder_pan_joint 1.147 -J ra_elbow_joint 1.695 -J ra_wrist_1_joint -1.395 -J ra_wrist_2_joint -1.584 -J ra_shoulder_lift_joint -1.926 -J ra_wrist_3_joint 1.830"/>
-  <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
-  <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
-  <arg name="include_wrist_in_arm_controller" default="true"/>
-  <!-- The robot state publisher publishing frequecy  -->
-  <arg name="robot_state_pub_frequency" default="57"/>
-  <!-- The joint state publisher publishing frequency  -->
-  <arg name="joint_state_pub_frequency" default="321"/>
-
-    <!-- Serial number of the hand to be used-->
-  <arg name="hand_serial" default="1082"/>
-  <!-- the path to the mapping files -->
-  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
-  <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
-       More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
-  <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
-
 
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="true"/>
