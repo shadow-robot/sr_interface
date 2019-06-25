@@ -38,7 +38,7 @@
   <arg name="arm_1_z" default="0.0" unless="$(arg scene)"/>
   <arg name="arm_2_z" default="0.7551" if="$(arg scene)"/>
   <arg name="arm_2_z" default="0.0" unless="$(arg scene)"/>
-  <arg name="arm_separation" default="1.5"/>
+  <arg name="arm_x_separation" default="1.5"/>
   <arg name="arm_1_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
   <arg name="arm_2_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
 
@@ -60,7 +60,7 @@
     <arg name="world" value="$(arg world)"/>
     <arg name="arm_1_z" value="$(arg arm_1_z)"/>
     <arg name="arm_2_z" value="$(arg arm_2_z)"/>
-    <arg name="arm_separation" value="$(arg arm_separation)"/>
+    <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
     <arg name="arm_1_program_path" default="$(arg arm_1_program_path)/"/>
     <arg name="arm_2_program_path" default="$(arg arm_2_program_path)/"/>
     <arg name="robot_description" value="$(arg robot_description)"/>

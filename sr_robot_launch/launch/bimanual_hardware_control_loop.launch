@@ -30,7 +30,8 @@
   <!-- ARMS CONFIG-->
   <arg name="arm_1_z" default="0.0"/>
   <arg name="arm_2_z" default="0.0"/>
-  <arg name="arm_separation" default="1.0"/>
+  <arg name="arm_x_separation" default="1.0"/>
+  <arg name="arm_y_separation" default="1.0"/>
   <arg name="arm_1_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
   <arg name="arm_2_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
   <arg name="arm_robot_hw_1" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
@@ -69,7 +70,8 @@
     <arg name="pwm_control" value="$(arg pwm_control)"/>
     <arg name="arm_1_z" value="$(arg arm_1_z)"/>
     <arg name="arm_2_z" value="$(arg arm_2_z)"/>
-    <arg name="arm_separation" value="$(arg arm_separation)"/>
+    <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
+    <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
     <arg name="arm_robot_hw_1" value="$(arg arm_robot_hw_1)"/>
     <arg name="arm_robot_hw_2" value="$(arg arm_robot_hw_2)"/>
     <arg name="arm_1_program_path" value="$(arg arm_1_program_path)"/>

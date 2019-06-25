@@ -60,7 +60,8 @@
   <arg name="arm_1_z" default="0.0" unless="$(arg scene)"/>
   <arg name="arm_2_z" default="0.7551" if="$(arg scene)"/>
   <arg name="arm_2_z" default="0.0" unless="$(arg scene)"/>
-  <arg name="arm_separation" default="1.5"/>
+  <arg name="arm_x_separation" default="1.5"/>
+  <arg name="arm_y_separation" default="0.0"/>
   <arg name="arm_robot_hw_1" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
   <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_ur_arm_robot_hw.yaml"/>
     <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
@@ -89,7 +90,8 @@
 
     <arg name="arm_1_z" value="$(arg arm_1_z)"/>
     <arg name="arm_2_z" value="$(arg arm_2_z)"/>
-    <arg name="arm_separation" value="$(arg arm_separation)"/>
+    <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
+    <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
     <arg name="arm_robot_hw_1" default="$(arg arm_robot_hw_1)"/>
     <arg name="arm_robot_hw_2" default="$(arg arm_robot_hw_2)"/>
     <arg name="include_wrist_in_arm_controller" value="$(arg include_wrist_in_arm_controller)"/>
