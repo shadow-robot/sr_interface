@@ -66,7 +66,7 @@ protected:
     std::string xml_string, robot_description_, robot_description_semantic_;
 
     // wait for move_group to be ready
-    ros::WallDuration(8.0).sleep();
+    ros::WallDuration(30.0).sleep();
     ros::spinOnce();
     if (0)
     {

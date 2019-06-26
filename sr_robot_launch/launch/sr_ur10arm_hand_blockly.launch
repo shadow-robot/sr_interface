@@ -1,0 +1,26 @@
+<launch>
+  <arg name="sim" default="false"/>
+  <arg name="gui" default="true"/>
+
+  <!-- SIMULATED ROBOTS -->
+  <group if="$(arg sim)">
+    <include file="$(find sr_robot_launch)/launch/sr_right_ur10arm_hand.launch">
+      <arg name="sim" value="$(arg sim)"/>
+    </include>
+    <include file="$(find robot_blockly)/launch/robot_blockly.launch">
+      <arg name="block_packages" value="[sr_blockly_blocks]"/>
+    </include>
+  </group>
+
+  <!-- REAL ROBOTS -->
+  <group unless="$(arg sim)">
+    <include file="$(find sr_ethercat_hand_config)/launch/sr_system.launch">
+      <arg name="gui" value="$(arg gui)"/>
+    </include>
+    <include file="$(find robot_blockly)/launch/robot_blockly.launch">
+      <arg name="block_packages" value="[sr_blockly_blocks]"/>
+    </include>
+  </group>
+</launch>
+
+

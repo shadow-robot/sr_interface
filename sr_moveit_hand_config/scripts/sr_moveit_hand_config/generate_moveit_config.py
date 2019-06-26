@@ -46,6 +46,8 @@ import re
 import rospy
 import rosparam
 from srdfdom.srdf import SRDF
+from copy import deepcopy
+import rospkg
 
 from urdf_parser_py.urdf import URDF
 
@@ -201,7 +203,12 @@ def generate_ompl_planning(robot,
     # for each group
     for group in robot.groups:
         # strip prefix if any
-        group_name = group.name[len(prefix):]
+        group_name = group.name
+        if re.match("^"+str(prefix), group.name) is not None:
+            group_name = group.name[len(prefix):]
+        elif group.name in ["left_hand", "right_hand"]:
+            group_name = "hand"
+
         if group_name in yamldoc:
             output_str += group.name + ":\n"
             group_config = yamldoc[group_name]
@@ -257,12 +264,15 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
     yamldoc = yaml.load(stream)
     stream.close()
 
-    # open biotac template file
-    kdl_template_path = template_path[0:template_path.find("_template")] + "_kdl_template.yaml"
+    if 'kinematics_template' in template_path:
+        default_solver_for_fixed_joint = "trac_ik"
+        fixed_joint_template_path = rospkg.RosPack().get_path(
+            'sr_moveit_hand_config') + "/config/kinematics_" + default_solver_for_fixed_joint + "_template.yaml"
 
-    stream = open(kdl_template_path, 'r')
-    yamldockdl = yaml.load(stream)
-    stream.close()
+        with open(fixed_joint_template_path, 'r') as stream:
+            yamldoc_fixed_joint = yaml.load(stream)
+    else:
+        yamldoc_fixed_joint = deepcopy(yamldoc)
 
     # find prefix
     prefix = find_prefix(robot)
@@ -303,8 +313,8 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
         group_name = group.name[len(prefix):]
         # check for fixed joint for this group
         if is_fixed.get(group_name):
-            if group_name in yamldockdl:
-                kinematics_config = yamldockdl[group_name]
+            if group_name in yamldoc_fixed_joint:
+                kinematics_config = yamldoc_fixed_joint[group_name]
         else:
             if group_name in yamldoc:
                 kinematics_config = yamldoc[group_name]

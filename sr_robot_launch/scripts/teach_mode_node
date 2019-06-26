@@ -1,4 +1,17 @@
 #!/usr/bin/env python
+# Copyright 2019 Shadow Robot Company Ltd.
+#
+# This program is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation version 2 of the License.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from controller_manager_msgs.srv import (ListControllers, LoadController,
                                          SwitchController, SwitchControllerRequest)
@@ -154,6 +167,8 @@ class TeachModeManager(object):
                              "right_arm": ControllerHelper(["ra"], ["ra_"]),
                              "left_arm": ControllerHelper(["la"], ["la_"])}
 
+        self.modes = ["TRAJECTORY_MODE", "TEACH_MODE", "POSITION_MODE", "GRASP_MODE"]
+
     def teach_mode(self, req):
 
         if req.robot == "right_arm" or req.robot == "left_arm":
@@ -230,11 +245,12 @@ class TeachModeManager(object):
 
                 return RobotTeachModeResponse(RobotTeachModeResponse.SUCCESS)
             else:
-                rospy.logerr("Unknown teach mode: %u", req.teach_mode)
+                rospy.logerr("Unknown mode: {}".format(self.modes[req.teach_mode]))
                 return RobotTeachModeResponse(RobotTeachModeResponse.ERROR)
         else:
             rospy.logerr("Unknown robot: %s", req.robot)
             return RobotTeachModeResponse(RobotTeachModeResponse.ERROR)
+
 
 if __name__ == "__main__":
     rospy.init_node("teach_mode_node")
