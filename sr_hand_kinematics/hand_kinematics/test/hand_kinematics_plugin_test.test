@@ -3,6 +3,6 @@
     <include file="$(find sr_description)/loaders/load_hand_model.launch">
         <arg name="robot_param" value="robot_description"/>
     </include>
-    <node pkg="sr_multi_moveit_config" type="timed_roslaunch.sh" args="8 sr_hand_kinematics hand_kinematics_plugin_test_launch.launch" name="test_iksolvers" output="screen"/>
+    <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="8 sr_hand_kinematics hand_kinematics_plugin_test_launch.launch" name="test_iksolvers" output="screen"/>
 
 </launch>

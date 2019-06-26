@@ -7,9 +7,15 @@
   <!-- Allow user to specify database location -->
   <arg name="db_path" default="$(find sr_moveit_hand_config)/default_warehouse_mongo_db" />
 
+  <!-- hand ik solver possible values sr_hand_kinematics/kdl/trac_ik/bio_ik -->
+  <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
+  <arg name="hand_ik_solver_path" value="$(find sr_moveit_hand_config)/config/kinematics_template.yaml" if="$(eval hand_ik_solver == 'sr_hand_kinematics')" />
+  <arg name="hand_ik_solver_path" value="$(find sr_moveit_hand_config)/config/kinematics_$(arg hand_ik_solver)_template.yaml" unless="$(eval hand_ik_solver == 'sr_hand_kinematics')" />
+
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <include file="$(find sr_moveit_hand_config)/launch/planning_context.launch">
     <arg name="load_robot_description" value="true"/>
+    <arg name="hand_ik_solver_path" value="$(arg hand_ik_solver_path)"/>
   </include>
 
   <!-- Broadcast static tf for robot root -->
@@ -25,7 +31,8 @@
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
 
   <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
-  <node pkg="sr_moveit_hand_config" type="timed_roslaunch.sh" args="2 sr_moveit_hand_config move_group.launch 
+  <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="2 sr_moveit_hand_config move_group.launch 
+    hand_ik_solver_path:=$(arg hand_ik_solver_path)
     allow_trajectory_execution:=true 
     fake_execution:=true 
     info:=true 
@@ -35,6 +42,7 @@
 
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
   <include file="$(find sr_moveit_hand_config)/launch/moveit_rviz.launch">
+    <arg name="hand_ik_solver_path" value="$(arg hand_ik_solver_path)"/>
     <arg name="config" value="true"/>
     <arg name="debug" value="$(arg debug)"/>
   </include>

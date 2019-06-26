@@ -17,7 +17,7 @@
 
 import rospy
 
-from sr_robot_commander import SrRobotCommander
+from sr_robot_commander import SrRobotCommander, SrRobotCommanderException
 from sr_robot_msgs.srv import ForceController
 from sr_hand.tactile_receiver import TactileReceiver
 from sr_utilities.hand_finder import HandFinder
@@ -50,13 +50,14 @@ class SrHandCommander(SrRobotCommander):
                 self._hand_h = True
                 name, prefix, hand_serial = hand_finder.get_hand_h(number=hand_number)
             else:
-                rospy.log_fatal("No hands found and no information given to define hand commander.")
+                rospy.logfatal("No hands found and no information given to define hand commander.")
+                raise SrRobotCommanderException("No hand found.")
 
         elif hand_parameters is not None:
             # extracting the name and prefix from the hand finder parameters
             if len(hand_parameters.mapping) is 0:
-                rospy.logerr("No hand detected")
-                exit("no hand detected")
+                rospy.logfatal("No hand detected")
+                raise SrRobotCommanderException("No hand found.")
 
             hand_mapping = hand_parameters.mapping[hand_serial]
             prefix = hand_parameters.joint_prefix[hand_serial]
@@ -79,6 +80,9 @@ class SrHandCommander(SrRobotCommander):
 
         # appends trailing slash if necessary
         self._topic_prefix = prefix
+        if self._topic_prefix and self._topic_prefix.endswith("_"):
+            self._topic_prefix = self._topic_prefix[:-1]  # Remove trailing _
+
         if self._topic_prefix and not self._topic_prefix.endswith("/"):
             self._topic_prefix += "/"
 
@@ -101,8 +105,6 @@ class SrHandCommander(SrRobotCommander):
         """
         joint_name = self._strip_prefix(joint_name)
 
-        # This is for a beta version of our firmware.
-        # It uses the motor I and Imax to set a max effort.
         if not self.__set_force_srv.get(joint_name):
             service_name = "sr_hand_robot/" + self._topic_prefix + \
                            "change_force_PID_"+joint_name.upper()
@@ -119,8 +121,7 @@ class SrHandCommander(SrRobotCommander):
             rospy.logerr("Couldn't get the motor parameters for joint " +
                          joint_name + " -> " + str(e))
 
-        # imax is used for max force for now.
-        motor_settings["imax"] = value
+        motor_settings["torque_limit"] = value
 
         try:
             # reorder parameters in the expected order since names don't match:
@@ -133,7 +134,9 @@ class SrHandCommander(SrRobotCommander):
                                              motor_settings["d"],
                                              motor_settings["imax"],
                                              motor_settings["deadband"],
-                                             motor_settings["sign"])
+                                             motor_settings["sign"],
+                                             motor_settings["torque_limit"],
+                                             motor_settings["torque_limiter_gain"])
         except rospy.ServiceException, e:
             rospy.logerr("Couldn't set the max force for joint " +
                          joint_name + ": " + str(e))

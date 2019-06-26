@@ -1,0 +1,3 @@
+<launch>
+  <test test-name="test_state_save_no_hardware" pkg="sr_robot_commander" type="test_state_saver_no_hardware.py" time-limit="300.0"/>
+</launch>
