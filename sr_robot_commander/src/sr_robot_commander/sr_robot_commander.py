@@ -890,8 +890,8 @@ class SrRobotCommander(object):
         except rospy.ServiceException, e:
             rospy.logerr("Service call failed: %s" % e)
 
-    def move_to_pose_value_target_unsafe(self, target_pose, ik_constraints=None, avoid_collisions=False,
-                                         time=0.002, wait=True):
+    def move_to_pose_value_target_unsafe(self, target_pose, avoid_collisions=False,
+                                         time=0.002, wait=True, ik_constraints=None):
         joint_state = self.get_ik(target_pose, avoid_collisions, ik_constraints=ik_constraints)
         if joint_state is not None:
             active_joints = self._move_group_commander.get_active_joints()
