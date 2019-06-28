@@ -32,6 +32,9 @@
   <arg name="robot_state_pub_frequency" default="50"/>
   <!-- The joint state publisher publishing frequency  -->
   <arg name="joint_state_pub_frequency" default="100"/>
+
+  <arg name="variable_controller" default="true"/>
+  <arg name="variable_controller_only_joint_0" default="false"/>
   
   <!-- Loads the robot description -->
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_motor.urdf.xacro'"/>
@@ -108,6 +111,8 @@
       <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
         <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
         <param name="wait_for" value ="calibrated" unless="$(arg sim)"/>
+        <param name="variable_controller" value="$(arg variable_controller)"/>
+        <param name="variable_controller_only_joint_0" value="$(arg variable_controller_only_joint_0)"/>
       </node>
     </group>
     <group if="$(arg grasp_controller)">
