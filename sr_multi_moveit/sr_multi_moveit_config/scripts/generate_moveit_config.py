@@ -361,7 +361,6 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
             is_fixed['ring_finger'] = finger_with_fixed_joint[2]
             is_fixed['little_finger'] = finger_with_fixed_joint[3]
             is_fixed['thumb'] = finger_with_fixed_joint[4]
-            rospy.logwarn("is_fixed: {}".format(is_fixed))
 
             for group in robot.groups:
                 kinematics_config = None

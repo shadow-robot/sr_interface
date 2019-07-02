@@ -15,7 +15,7 @@
   <arg name="gui" default="true"/>
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
-    <!-- Set the scene file -->
+  <!-- Set the scene file -->
   <arg name="scene_file" default="$(find sr_description_common)/scenes/bimanual_demo_space_small.scene"/>
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhands_and_arms.world" unless="$(arg scene)"/>
@@ -32,9 +32,10 @@
   <arg name="joint_state_pub_frequency" default="100"/>
 
   <!-- ROBOT CONFIG-->
-  <arg name="side" default="bimanual"/>
   <!-- Specify if the system has "both" hands, only "right", or only "left" -->
   <arg name="hands" default="both"/>
+  <!-- Specify if the system has arms or is only a hand bimanual system -->
+  <arg name="arms" default="true"/>
   <arg name="robot_model" value="ur10"/>
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
@@ -98,7 +99,6 @@
     <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
     <arg name="arm_position" default="$(arg arm_position)"/>
 
-    <arg name="side" value="$(arg side)"/>
     <arg name="hands" value="$(arg hands)"/>
     <arg name="robot_description" value="$(arg robot_description)"/>
     <arg name="robot_config_file" value="$(arg robot_config_file)"/>

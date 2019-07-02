@@ -1,5 +1,5 @@
 <launch>
-  <!-- This launch file is for bimanual system -->
+  <!-- This launch file is for bimanual hand system -->
 
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
   <arg name="sim" default="true"/>

@@ -1,6 +1,6 @@
 <launch>
   <arg name="debug" default="false"/>
-  <arg name="robot_state_pub_frequency" default="50"/>
+  <arg name="robot_state_pub_frequency" default="100"/>
   <arg name="joint_state_pub_frequency" default="100"/>
 
   <!-- ROBOT CONFIG-->
@@ -28,10 +28,10 @@
   <arg name="hand_trajectory" default="true"/>
 
   <!-- ARMS CONFIG-->
-  <arg name="arm_1_z" default="0.0"/>
-  <arg name="arm_2_z" default="0.0"/>
+  <arg name="arm_1_z" default="0.01"/>
+  <arg name="arm_2_z" default="0.01"/>
   <arg name="arm_x_separation" default="1.0"/>
-  <arg name="arm_y_separation" default="1.0"/>
+  <arg name="arm_y_separation" default="0.0"/>
   <arg name="arm_1_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
   <arg name="arm_2_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
   <arg name="arm_robot_hw_1" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
@@ -39,7 +39,6 @@
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
   <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
   <arg name="include_wrist_in_arm_controller" default="true"/>
-
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
@@ -72,10 +71,6 @@
     <arg name="arm_2_z" value="$(arg arm_2_z)"/>
     <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
     <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
-    <arg name="arm_robot_hw_1" value="$(arg arm_robot_hw_1)"/>
-    <arg name="arm_robot_hw_2" value="$(arg arm_robot_hw_2)"/>
-    <arg name="arm_1_program_path" value="$(arg arm_1_program_path)"/>
-    <arg name="arm_2_program_path" value="$(arg arm_2_program_path)"/>
     <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
     <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
     <arg name="load_robot_description" value="$(arg load_robot_description)"/>
@@ -109,9 +104,9 @@
   <group if="$(arg arm_trajectory)">
     <group if="$(arg include_wrist_in_arm_controller)">
       <rosparam if="$(eval hands == 'both' or hands == 'right')" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml" command="load"/>
-      <rosparam if="$(hands == 'left')" file="$(find sr_robot_launch)/config/ra_trajectory_controller_no_wrist.yaml" command="load"/>
+      <rosparam if="$(eval hands == 'left')" file="$(find sr_robot_launch)/config/ra_trajectory_controller_no_wrist.yaml" command="load"/>
       <rosparam if="$(eval hands == 'both' or hands == 'left')" file="$(find sr_robot_launch)/config/la_trajectory_controller.yaml" command="load"/>
-      <rosparam if="$(hands == 'right')" file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml" command="load"/>
+      <rosparam if="$(eval hands == 'right')" file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml" command="load"/>
     </group>
     <group unless="$(arg include_wrist_in_arm_controller)">
       <rosparam file="$(find sr_robot_launch)/config/ra_trajectory_controller_no_wrist.yaml" command="load"/>
@@ -119,16 +114,16 @@
     </group>
     <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen"/>
     <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-          args="--wait-for=/arms_ready --shutdown-timeout=1.0 ra_trajectory_controller la_trajectory_controller"/>
+          args="--wait-for=/arms_ready ra_trajectory_controller la_trajectory_controller"/>
   </group>
 
   <!-- Position mode -->
   <group if="$(arg arm_position)">
     <group if="$(arg include_wrist_in_arm_controller)">
       <rosparam if="$(eval hands == 'both' or hands == 'right')" file="$(find sr_robot_launch)/config/ra_group_position_controller.yaml" command="load"/>
-      <rosparam if="$(hands == 'left')" file="$(find sr_robot_launch)/config/ra_group_position_controller_no_wrist.yaml" command="load"/>
+      <rosparam if="$(eval hands == 'left')" file="$(find sr_robot_launch)/config/ra_group_position_controller_no_wrist.yaml" command="load"/>
       <rosparam if="$(eval hands == 'both' or hands == 'left')" file="$(find sr_robot_launch)/config/la_group_position_controller.yaml" command="load"/>
-      <rosparam if="$(hands == 'right')" file="$(find sr_robot_launch)/config/la_group_position_controller_no_wrist.yaml" command="load"/>
+      <rosparam if="$(eval hands == 'right')" file="$(find sr_robot_launch)/config/la_group_position_controller_no_wrist.yaml" command="load"/>
     </group>
     <group unless="$(arg include_wrist_in_arm_controller)">
       <rosparam file="$(find sr_robot_launch)/config/ra_group_position_controller_no_wrist.yaml" command="load"/>
@@ -138,5 +133,4 @@
     <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
           args="--wait-for=/arms_ready ra_trajectory_controller la_trajectory_controller"/>
   </group>
-
 </launch>
