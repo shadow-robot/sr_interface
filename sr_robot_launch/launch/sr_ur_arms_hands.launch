@@ -125,7 +125,7 @@
         <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/ra_trajectory_controller_no_wrist.yaml" command="load"/>
         <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/la_trajectory_controller_no_wrist.yaml" command="load"/>
       </group>
-      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 ra_trajectory_controller la_trajectory_controller"/>
+      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="ra_trajectory_controller la_trajectory_controller"/>
     </group>
     <group if="$(arg arm_position)">
       <group if="$(arg include_wrist_in_arm_controller)">
@@ -138,7 +138,7 @@
         <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/ra_group_position_controller_no_wrist.yaml" command="load"/>
         <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/la_group_position_controller_no_wrist.yaml" command="load"/>
       </group>
-      <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 ra_trajectory_controller la_trajectory_controller"/>
+      <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="ra_trajectory_controller la_trajectory_controller"/>
     </group>
     <!-- Robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
