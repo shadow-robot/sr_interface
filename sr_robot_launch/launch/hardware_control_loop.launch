@@ -66,25 +66,33 @@
     </group>
   </group>
 
-  <group if="$(arg arm_ctrl)">
-    <rosparam if="$(eval arg('side') == 'right')">
-      robot_hardware:
-        - unique_robot_hw
-        - ra_sr_ur_robot_hw
-    </rosparam>
-    <rosparam if="$(eval arg('side') == 'left')">
-      robot_hardware:
-        - unique_robot_hw
-        - la_sr_ur_robot_hw
-    </rosparam>
-    <rosparam command="load" file="$(arg arm_robot_hw)"/>
-    <param name="$(arg arm_id)_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
-  </group>
+  <arg name="robot_ip" default="192.168.1.1"/>
+  <arg name="kinematics_config" default="$(find ur_calibration)/etc/ur10_example_calibration"/>
 
-  <rosparam unless="$(arg arm_ctrl)">
-    robot_hardware:
-      - unique_robot_hw
-  </rosparam>
+  <include file="$(find sr_robot_launch)/launch/ur10_new_ros_driver.launch">
+       <arg name="robot_ip" value="$(arg robot_ip)"/>
+       <arg name="kinematics_config" value="$(arg kinematics_config)"/>
+  </include>
+
+  <!--<group if="$(arg arm_ctrl)">-->
+    <!--<rosparam if="$(eval arg('side') == 'right')">-->
+      <!--robot_hardware:-->
+        <!-- - unique_robot_hw-->
+        <!-- - ra_sr_ur_robot_hw-->
+    <!--</rosparam>-->
+    <!--<rosparam if="$(eval arg('side') == 'left')">-->
+      <!--robot_hardware:-->
+        <!-- - unique_robot_hw-->
+        <!-- - la_sr_ur_robot_hw-->
+    <!--</rosparam>-->
+    <!--<rosparam command="load" file="$(arg arm_robot_hw)"/>-->
+    <!--<param name="$(arg arm_id)_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>-->
+  <!--</group>-->
+
+  <!--<rosparam unless="$(arg arm_ctrl)">-->
+    <!--robot_hardware:-->
+      <!-- - unique_robot_hw-->
+  <!--</rosparam>-->
 
   <!-- These will be loaded if hand_ctrl is false so UR10 with box will load instead. -->
   <group unless="$(arg hand_ctrl)">
