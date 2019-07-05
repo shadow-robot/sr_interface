@@ -33,7 +33,7 @@
   <!-- The joint state publisher publishing frequency  -->
   <arg name="joint_state_pub_frequency" default="100"/>
 
-  <arg name="variable_controller" default="true"/>
+  <arg name="variable_controller" default="false"/>
   <arg name="variable_controller_only_joint_0" default="false"/>
   
   <!-- Loads the robot description -->
