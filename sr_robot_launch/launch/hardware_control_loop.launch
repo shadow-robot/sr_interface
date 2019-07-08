@@ -67,7 +67,7 @@
   </group>
 
   <arg name="robot_ip" default="192.168.1.1"/>
-  <arg name="kinematics_config" default="$(find ur_calibration)/etc/ur10_example_calibration"/>
+  <arg name="kinematics_config" default="$(find ur_calibration)/etc/ur10_big_demo_room_calibration.yaml"/>
 
   <include file="$(find sr_robot_launch)/launch/ur10_new_ros_driver.launch">
        <arg name="robot_ip" value="$(arg robot_ip)"/>

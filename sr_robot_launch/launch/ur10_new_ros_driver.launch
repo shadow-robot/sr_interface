@@ -2,7 +2,7 @@
     <arg name="robot_ip" default="192.168.1.1"/>
     <arg name="kinematics_config" default="$(find ur_calibration)/etc/ur10_example_calibration"/>
 
-    <include file="$(find ur_rtde_drive)/laubch/ur10_bringup.launch">
+    <include file="$(find ur_rtde_driver)/launch/ur10_bringup.launch">
        <arg name="robot_ip" value="$(arg robot_ip)"/>
        <arg name="kinematics_config" value="$(arg kinematics_config)"/>
    </include>
