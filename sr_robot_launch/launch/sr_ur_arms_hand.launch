@@ -51,7 +51,7 @@
 
   <!-- ARMS -->
   <arg name="arm_robot_hw_1" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
-  <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_bimanual_ur_arm_robot_hw.yaml"/>
 
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
