@@ -10,7 +10,7 @@
     <joint name="world_to_arm_1_joint" type="fixed">
         <parent link="world"/>
         <child link="ra_base_link"/>
-        <origin xyz="0.0 0.0 $(arg arm_1_z)" rpy="0.0 0.0 ${pi}"/>
+        <origin xyz="0.0 0.0 $(arg arm_1_z)" rpy="0.0 0.0 0.0"/>
     </joint>
 
     <xacro:ur10_robot prefix="ra_" joint_limited="false"/>
@@ -18,7 +18,7 @@
     <joint name="world_to_arm_2_joint" type="fixed">
         <parent link="world"/>
         <child link="la_base_link"/>
-        <origin xyz="$(arg arm_x_separation) $(arg arm_y_separation) $(arg arm_2_z)" rpy="0.0 0.0 0.0"/>
+        <origin xyz="$(arg arm_x_separation) $(arg arm_y_separation) $(arg arm_2_z)" rpy="0.0 0.0 ${pi}"/>
     </joint>
 
     <xacro:ur10_robot prefix="la_" joint_limited="false"/>
