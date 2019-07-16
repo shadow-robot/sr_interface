@@ -32,12 +32,13 @@
   <arg name="joint_state_pub_frequency" default="100"/>
 
   <!-- ROBOT CONFIG-->
-  <!-- Specify if the system has "both" hands, only "right", or only "left" -->
+  <!-- Specify if the system has "both" hands, only "right", only "left" or "none" hands-->
   <arg name="hands" default="both"/>
   <!-- Specify if the system has arms or is only a hand bimanual system -->
   <arg name="arms" default="true"/>
   <arg name="robot_model" value="ur10"/>
-  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
+  <arg name="robot_description" unless="$(eval arg('hands') == 'none')" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
+  <arg name="robot_description" if="$(eval arg('hands') == 'none')" default="'$(find sr_bimanual_box_ur10_moveit_config)/config/bimanual_ur10_with_boxs.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
 
   <!-- HANDS CONFIG-->
