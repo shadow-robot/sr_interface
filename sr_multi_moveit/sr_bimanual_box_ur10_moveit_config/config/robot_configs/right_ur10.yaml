@@ -1,0 +1,27 @@
+robot:
+  name: biursrbox
+  manipulators:
+    right_manipulator:
+      side: right
+      arm:
+        name: ur10
+        main_group: ra_manipulator
+        moveit_path: 
+          package: sr_bimanual_box_ur10_moveit_config
+          relative_path: /config/ur
+        extra_groups_config_path: /config
+        group_states:
+          - home
+          - up
+    left_manipulator:
+      side: left
+      arm:
+        name: ur10
+        main_group: la_manipulator
+        moveit_path:
+          package: sr_bimanual_box_ur10_moveit_config
+          relative_path: /config/ur
+        extra_groups_config_path: /config
+        group_states:
+          - home
+          - up
