@@ -1,0 +1,25 @@
+robot:
+  name: ur10srh
+  manipulators:
+    right_manipulator:
+      side: right
+      arm:
+        name: ur10
+        main_group: manipulator
+        moveit_path: 
+          package: sr_multi_moveit_config
+          relative_path: /config/ur
+        extra_groups_config_path: /config
+        group_states:
+          - home
+          - up
+      hand:
+        name: shadowhand_lite.urdf.xacro
+        is_lite: true
+
+ra_sr_ur_robot_hw:
+  # Hand E lite payload (estimated, need exact from Hardware)
+  payload_mass_kg: 2.4
+
+  # Hand E lite payload centre of inertia (estimated, need exact from Hardware)
+  payload_center_of_mass_m: [0.0, 0.0, 0.1]

@@ -1,0 +1,7 @@
+robot:
+  name: shadowhand_motor
+  manipulators:
+    left_manipulator:
+      side: left
+      hand:
+        name: shadowhand_left_motor.urdf.xacro

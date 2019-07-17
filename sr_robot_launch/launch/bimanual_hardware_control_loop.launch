@@ -52,7 +52,7 @@
   </group>
 
   <!-- Controller -->
-  <group if="$(eval hands == 'none')">
+  <group unless="$(eval hands == 'none')">
     <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
     <rosparam file="$(arg robot_config_file)"/>
     <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
