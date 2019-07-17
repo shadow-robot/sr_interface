@@ -23,11 +23,11 @@
   <!-- The control mode PWM (true) or torque (false) -->
   <arg name="pwm_control" default="$(optenv PWM_CONTROL 1)"/>
   <!-- The ethercat serial number for the right hand -->
-  <arg name="rh_serial" default="1290"/>
+  <arg name="rh_serial" default="1130"/>
   <!-- The id for the right hand. It needs to be the same (but without trailing underscore) as the prefix used in the hand model. -->
   <arg name="rh_id" default="rh"/>
   <!-- The ethercat serial number for the left hand -->
-  <arg name="lh_serial" default="1338"/>
+  <arg name="lh_serial" default="2346"/>
   <!-- The id for the left hand. It needs to be the same (but without trailing underscore) as the prefix used in the hand model. -->
   <arg name="lh_id" default="lh"/>
   <!-- the path to the mapping files -->
