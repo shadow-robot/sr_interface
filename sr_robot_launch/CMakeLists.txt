@@ -159,7 +159,6 @@ include_directories(
 # catkin_add_nosetests(test)
 
 install(PROGRAMS
-        scripts/check_arms_ready
         scripts/teach_mode_node
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
