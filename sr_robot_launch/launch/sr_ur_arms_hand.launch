@@ -160,8 +160,10 @@
     <group if="$(arg arm_trajectory)">
       <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml"/>
       <rosparam command="load" file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml"/>
-      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/arms_ready --shutdown-timeout=1.0 ra_trajectory_controller la_trajectory_controller"/>
+      <node name="ra_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+            args="--wait-for=/ra_arm_ready --shutdown-timeout=1.0 ra_trajectory_controller"/>
+      <node name="la_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+            args="--wait-for=/la_arm_ready --shutdown-timeout=1.0 la_trajectory_controller"/>
     </group>
 
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->
