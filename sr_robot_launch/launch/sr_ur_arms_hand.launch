@@ -50,7 +50,7 @@
 
   <!-- ARMS -->
   <arg name="arm_robot_hw_1" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
-  <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_bimanual_ur_arm_robot_hw.yaml"/>
 
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
@@ -154,16 +154,14 @@
     </include>
 
     <!-- Should only be used when testing arm alone, as hand launch includes joint state publisher -->
-    <!-- <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch"> 
+    <!-- <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
       <param name="publish_rate" type="double" value="$(arg joint_state_pub_frequency)"/>
     </include> -->
     <group if="$(arg arm_trajectory)">
       <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml"/>
       <rosparam command="load" file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml"/>
-      <node name="ra_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/ra_arm_ready --shutdown-timeout=1.0 ra_trajectory_controller"/>
-      <node name="la_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/la_arm_ready --shutdown-timeout=1.0 la_trajectory_controller"/>
+      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+            args="--shutdown-timeout=1.0 ra_trajectory_controller la_trajectory_controller"/>
     </group>
 
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->

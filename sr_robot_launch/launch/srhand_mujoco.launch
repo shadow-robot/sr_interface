@@ -120,7 +120,7 @@
       </group>
       <group if="$(eval sim_type == 'mujoco')">
         <rosparam command="load" file="$(find sr_description)/mujoco_models/rh_trajectory_controller.yaml"/>
-        <node name="spawn_hand_controller" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="--shutdown-timeout=1.0 rh_trajectory_controller"/>
+        <node name="spawn_hand_controller" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="rh_trajectory_controller"/>
       </group>
     </group>
     <group if="$(arg grasp_controller)">

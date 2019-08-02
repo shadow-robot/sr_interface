@@ -1,5 +1,5 @@
 <launch>
-  <!-- This launch file is for a combination of ur arms and shadow hands -->
+  <!-- This launch file is for one ur arm and a shadow hand -->
 
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
   <arg name="sim" default="true"/>
@@ -10,62 +10,43 @@
   <!--Choose planner library, options are ompl, stomp or sbpl-->
   <arg name="planning" default="ompl"/>
   <!--Should the planner yaml be automatically generated? -->
-  <arg name="generate_planning_config" default="True"/>  
+  <arg name="generate_planning_config" default="True"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <arg name="verbose" default="true" />
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
-  <!-- Set world value dependant on scene -->
-  <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world" unless="$(arg scene)"/>
-  <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large.world" if="$(arg scene)"/>
   <!-- Set the scene file -->
   <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large.scene"/>
+  <!-- Set world value dependant on scene -->
+  <arg name="world" default="$(find sr_description_common)/worlds/shadowhands_and_arms.world"/>
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="false"/>
   <!-- Definition of "home" position, in joint-angle pairs -->
   <arg name="home_angles" default="-J ra_shoulder_pan_joint 1.147 -J ra_elbow_joint 1.695 -J ra_wrist_1_joint -1.395 -J ra_wrist_2_joint -1.584 -J ra_shoulder_lift_joint -1.926 -J ra_wrist_3_joint 1.830"/>
-  <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
-  <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
-  <arg name="include_wrist_in_arm_controller" default="true"/>
-  <!-- The robot state publisher publishing frequecy  -->
+  <!-- Set this to true if you run the hardware loop on a remote computer -->
+  <arg name="external_control_loop" default="false"/>
+  <!-- The robot state publisher publishing frequency  -->
   <arg name="robot_state_pub_frequency" default="57"/>
   <!-- The joint state publisher publishing frequency  -->
   <arg name="joint_state_pub_frequency" default="321"/>
-  
 
-  <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
-  <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
-
-  <!-- Change this for the left hand and arm -->
-  <arg name="hand_id" default="rh"/>
-  <arg name="arm_id" default="ra"/>
+  <!-- ROBOT CONFIG-->
   <arg name="side" default="right"/>
-  <arg name="robot_model" default="ur10"/>
-  <!-- Set initial_z value dependant on scene-->
-  <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
-  <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
-
-  <!-- Change this for another hand -->
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
+  <arg name="robot_model" default="ur10"/>
   <arg name="robot_name" default="$(arg robot_model)srh"/>
 
-  <!-- Set this to true if you run the hardware loop on a remote computer -->
-  <arg name="external_control_loop" default="false"/>
-  
-  <!-- ARM -->
-  <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
-  <arg name="arm_group_name" default="$(arg side)_arm"/>
-  <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
-  <arg name="arm_trajectory" default="true"/>
-  <!-- Set to true to spawn group position controllers for the arms -->
-  <arg name="arm_position" default="$(eval not arm_trajectory)"/>
-
-  <!-- Set to true to spawn the position controllers for the arm-->
-  <arg name="arm_ctrl" default="true"/>
-
-  <!-- HAND -->
+  <!-- HANDS CONFIG-->
+  <arg name="hand_id" default="rh"/>
+  <arg name="hand_serial" default="634"/>
+  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
+  <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
+       More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
+  <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
+  <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
+  <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="hand_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the hands-->
@@ -75,14 +56,20 @@
   <arg name="pwm_control" default="true"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
-  <!-- Serial number of the hand to be used-->
-  <arg name="hand_serial" default="634"/>
-  <!-- the path to the mapping files -->
-  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
 
-  <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
-       More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
-  <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
+  <!-- ARMS CONFIG-->
+  <arg name="arm_id" default="ra"/>
+  <arg name="initial_z" default="0.1"/>
+  <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
+  <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
+  <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
+  <arg name="include_wrist_in_arm_controller" default="true"/>
+  <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
+  <arg name="arm_trajectory" default="true"/>
+  <!-- Set to true to spawn group position controllers for the arms -->
+  <arg name="arm_position" default="$(eval not arm_trajectory)"/>
+  <!-- Set to true to spawn the position controllers for the arm-->
+  <arg name="arm_ctrl" default="true"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
@@ -101,7 +88,7 @@
     <!-- HAND -->
     <param name="/hand/mapping/$(arg hand_serial)" value="$(arg hand_id)"/>
     <param name="/hand/joint_prefix/$(arg hand_serial)" value="$(arg hand_id)_"/>
-    <arg if="$(arg start_home)" name="spawn_model_extra_args" value="-unpause $(arg home_angles)" />    
+    <arg if="$(arg start_home)" name="spawn_model_extra_args" value="-unpause $(arg home_angles)" />
     <arg unless="$(arg start_home)" name="spawn_model_extra_args" value="" />
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name) $(arg spawn_model_extra_args)" respawn="false" output="screen"/>
     <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
@@ -112,12 +99,12 @@
     <group if="$(arg arm_trajectory)">
       <rosparam if="$(arg include_wrist_in_arm_controller)" file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_id)_trajectory_controller.yaml" command="load"/>
       <rosparam unless="$(arg include_wrist_in_arm_controller)" file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_id)_trajectory_controller_no_wrist.yaml" command="load"/>
-      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_id)_trajectory_controller"/>
+      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="$(arg arm_id)_trajectory_controller"/>
     </group>
     <group if="$(arg arm_position)">
       <rosparam if="$(arg include_wrist_in_arm_controller)" file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_id)_group_position_controller.yaml" command="load"/>
       <rosparam unless="$(arg include_wrist_in_arm_controller)" file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_id)_group_position_controller_no_wrist.yaml" command="load"/>
-      <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_id)_group_position_controller"/>
+      <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="$(arg arm_id)_group_position_controller"/>
     </group>
     <!-- Robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
@@ -143,14 +130,12 @@
     </group>
   </group>
 
-
   <!-- REAL ROBOTS -->
   <group unless="$(arg sim)">
     <group unless="$(arg external_control_loop)">
       <include file="$(find sr_robot_launch)/launch/hardware_control_loop.launch">
         <arg name="debug" default="$(arg debug)"/>
-        <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
-        <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
+        <arg name="initial_z" value="$(arg initial_z)"/>
         <arg name="robot_description" value="$(arg robot_description)"/>
         <arg name="hand_id" value="$(arg hand_id)"/>
         <arg name="arm_id" value="$(arg arm_id)"/>
@@ -163,11 +148,11 @@
         <arg name="grasp_controller" value="$(arg grasp_controller)"/>
         <arg name="pwm_control" value="$(arg pwm_control)"/>
         <arg name="include_wrist_in_arm_controller" value="$(arg include_wrist_in_arm_controller)"/>
-        <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
-        <arg name="arm_position" default="$(arg arm_position)"/>
-        <arg name="hand_ctrl" default="$(arg hand_ctrl)"/>
-        <arg name="hand_trajectory" default="$(arg hand_trajectory)"/>
-        <arg name="arm_ctrl" default="$(arg arm_ctrl)"/>
+        <arg name="arm_trajectory" value="$(arg arm_trajectory)"/>
+        <arg name="arm_position" value="$(arg arm_position)"/>
+        <arg name="hand_ctrl" value="$(arg hand_ctrl)"/>
+        <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>
+        <arg name="arm_ctrl" value="$(arg arm_ctrl)"/>
         <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
         <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       </include>

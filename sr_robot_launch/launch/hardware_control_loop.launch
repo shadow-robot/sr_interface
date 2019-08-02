@@ -1,29 +1,36 @@
 <launch>
-  <arg name="hand_id" default="rh"/>
-  <arg name="hand_ctrl" default="true"/>
-  <arg name="hand_trajectory" default="true"/>
-  <arg name="arm_id" default="ra"/>
   <arg name="debug" default="false"/>
-  <arg name="side" default="right"/>
-  <arg name="arm_trajectory" default="true"/>
-  <arg name="robot_model" default="ur10"/>
-  <arg name="include_wrist_in_arm_controller" default="true"/>
-  <arg name="eth_port" default="$(optenv ETHERCAT_PORT enp2s0)"/>
-  <arg name="pwm_control" default="true"/>
-  <arg name="hand_serial" default="1082"/>
-  <!-- Set to true if you want to use grasp controller -->
-  <arg name="grasp_controller" default="false"/>
-  <!-- Set to true to spawn the position controllers for the arm-->
-  <arg name="arm_ctrl" default="true"/>
-  <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="robot_state_pub_frequency" default="100"/>
   <arg name="joint_state_pub_frequency" default="100"/>
-  <arg name="initial_z" default="0.7551"/>
-  <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
+
+  <!-- ROBOT CONFIG-->
+  <arg name="robot_model" default="ur10"/>
+  <arg name="side" default="right"/>
   <arg name="robot_description" if="$(arg hand_ctrl)" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_description" unless="$(arg hand_ctrl)" default="'$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro'"/>
-  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
+
+
+  <!-- HANDS CONFIG-->
+  <arg name="hand_id" default="rh"/>
+  <arg name="hand_serial" default="1082"/>
+  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
+  <arg name="eth_port" default="$(optenv ETHERCAT_PORT enp2s0)"/>
+  <arg name="hand_ctrl" default="true"/>
+  <arg name="pwm_control" default="true"/>
+  <!-- Set to true if you want to use grasp controller -->
+  <arg name="grasp_controller" default="false"/>
+  <arg name="hand_trajectory" default="true"/>
+
+  <!-- ARMS CONFIG-->
+  <arg name="initial_z" default="0.7551"/>
+  <arg name="arm_id" default="ra"/>
+  <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>config/ur10_with_box.urdf.xacro'"/>
+  <arg name="include_wrist_in_arm_controller" default="true"/>
+  <arg name="arm_trajectory" default="true"/>
+  <!-- Set to true to spawn the position controllers for the arm-->
+  <arg name="arm_position" default="$(eval not arm_trajectory)"/>
+  <arg name="arm_ctrl" default="true"/>
 
   <!-- Logging local topics -->
   <group ns="control_box">
@@ -107,7 +114,7 @@
       </group>
       <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_ur_launch)/config/ra_trajectory_controller.yaml"/>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_id)_arm_ready $(arg arm_id)_trajectory_controller"/>
+            args="$(arg arm_id)_trajectory_controller"/>
     </group>
     <!-- Position mode -->
     <group if="$(arg arm_position)">
@@ -117,7 +124,7 @@
       </group>
       <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_ur_launch)/config/ra_group_position_controller.yaml"/>
       <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_id)_arm_ready $(arg arm_id)_group_position_controller"/>
+            args="$(arg arm_id)_group_position_controller"/>
     </group>
   </group>
 </launch>

@@ -1,5 +1,5 @@
 <launch>
-  <!-- This launch file is for bimanual system -->
+  <!-- This launch file is for bimanual hand system -->
 
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
   <arg name="sim" default="true"/>
@@ -15,7 +15,7 @@
   <arg name="robot_description" default="'$(find sr_description)/robots/bimanual_shadowhand_motor.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
   <arg name="robot_name" default="bimanual_shadowhand_motor"/>
-  
+
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="hand_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the hands-->
@@ -23,11 +23,11 @@
   <!-- The control mode PWM (true) or torque (false) -->
   <arg name="pwm_control" default="$(optenv PWM_CONTROL 1)"/>
   <!-- The ethercat serial number for the right hand -->
-  <arg name="rh_serial" default="1290"/>
+  <arg name="rh_serial" default="1130"/>
   <!-- The id for the right hand. It needs to be the same (but without trailing underscore) as the prefix used in the hand model. -->
   <arg name="rh_id" default="rh"/>
   <!-- The ethercat serial number for the left hand -->
-  <arg name="lh_serial" default="1338"/>
+  <arg name="lh_serial" default="2346"/>
   <!-- The id for the left hand. It needs to be the same (but without trailing underscore) as the prefix used in the hand model. -->
   <arg name="lh_id" default="lh"/>
   <!-- the path to the mapping files -->
@@ -42,8 +42,8 @@
     <arg name="world_name" value="$(find sr_description_common)/worlds/shadowhand.world"/>
     <arg name="paused" value="false"/>
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-      <arg name="world_name" default="$(arg world_name)"/>
-      <arg name="gui" default="$(arg gui)"/>
+      <arg name="world_name" value="$(arg world_name)"/>
+      <arg name="gui" value="$(arg gui)"/>
       <arg name="paused" value="$(arg paused)"/>
       <arg name="debug" value="$(arg debug)"/>
       <arg name="verbose" value="$(arg verbose)" />
