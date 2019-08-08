@@ -32,6 +32,7 @@
     <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch">
       <arg name="log_topics" value='-e ".*(controller|debug_etherCAT_data).*" /joint_states /diagnostics /mechanism_statistics'/>
       <arg name="log_bag_prefix" value="sr_hardware_control"/>
+      <arg name="log_directory" value="$(optenv HOME)/.ros/log"/>
     </include>
   </group>
 
@@ -108,11 +109,8 @@
         <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller_no_wrist.yaml"/>
       </group>
       <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_ur_launch)/config/ra_trajectory_controller.yaml"/>
-      <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen">
-        <rosparam param="controllers" subst_value="True"> ["$(arg arm_id)_sr_ur_robot_hw"] </rosparam>
-      </node>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/arms_ready $(arg arm_id)_trajectory_controller"/>
+            args="--wait-for=/$(arg arm_id)_arm_ready $(arg arm_id)_trajectory_controller"/>
     </group>
     <!-- Position mode -->
     <group if="$(arg arm_position)">
@@ -121,11 +119,8 @@
         <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_group_position_controller_no_wrist.yaml"/>
       </group>
       <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_ur_launch)/config/ra_group_position_controller.yaml"/>
-      <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen">
-        <rosparam param="controllers" subst_value="True"> ["$(arg arm_id)_sr_ur_robot_hw"] </rosparam>
-      </node>
       <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/arms_ready $(arg arm_id)_group_position_controller"/>
+            args="--wait-for=/$(arg arm_id)_arm_ready $(arg arm_id)_group_position_controller"/>
     </group>
   </group>
 </launch>
