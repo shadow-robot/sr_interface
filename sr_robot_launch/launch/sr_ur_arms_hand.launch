@@ -175,32 +175,7 @@
   </group>
 
   <!-- MOVEIT -->
-  <group if="$(arg use_moveit)">	modified:   ansible/roles/products/teleop/client/deploy/defaults/main.yml
-	modified:   ansible/roles/products/teleop/control_machine/deploy/defaults/main.yml
-	modified:   ansible/roles/products/teleop/server/deploy/defaults/main.yml
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-	ansible/roles/products/common/resources/templates/scripts/upgrade_image.j2
-
-no changes added to commit (use "git add" and/or "git commit -a")
-fotios@fotios-ThinkPad-W540:~/shadow/src/aurora$ git add -A
-fotios@fotios-ThinkPad-W540:~/shadow/src/aurora$ git status
-On branch F#SRC-3034_upgrade
-Changes to be committed:
-  (use "git reset HEAD <file>..." to unstage)
-
-	modified:   ansible/inventory/local/group_vars/docker_deploy.yml
-	modified:   ansible/roles/products/common/docker-container/defaults/main.yml
-	modified:   ansible/roles/products/common/resources/templates/scripts/start-docker-container.j2
-	new file:   ansible/roles/products/common/resources/templates/scripts/upgrade_image.j2
-	modified:   ansible/roles/products/hand-e/deploy/defaults/main.yml
-	modified:   ansible/roles/products/hand-e/deploy/tasks/main.yml
-	modified:   ansible/roles/products/teleop/client/deploy/defaults/main.yml
-	modified:   ansible/roles/products/teleop/control_machine/deploy/defaults/main.yml
-	modified:   ansible/roles/products/teleop/server/deploy/defaults/main.yml
-
+  <group if="$(arg use_moveit)">
     <rosparam file="$(arg robot_config_file)"/>
     <include file="$(find sr_multi_moveit_config)/launch/moveit_planning_and_execution.launch">
       <arg name="load_robot_description" value="true"/>
