@@ -62,8 +62,7 @@
     <param name="/hand/mapping/$(arg hand_serial)" value="$(arg hand_id)"/>
     <param name="/hand/joint_prefix/$(arg hand_serial)" value="$(arg hand_id)_"/>
     <param name="robot_description" command="xacro --inorder $(arg robot_description)"/>
-    <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model usrh -z 0.0 "
-          respawn="false" output="screen"/>
+    <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model usrh -z 0.0 " respawn="false" output="screen"/>
     <group if="$(eval arg('hand_type') == 'hand_e' or arg('hand_type') == 'hand_e_plus')">
       <rosparam if="$(arg variable_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_variable_pid_controller_gazebo.yaml"/>
       <rosparam unless="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
@@ -80,7 +79,7 @@
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
       <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)"/>
       <param name="tf_prefix" type="string" value="" />
-    </node>    
+    </node>
   </group>
 
   <!-- REAL ROBOTS -->
