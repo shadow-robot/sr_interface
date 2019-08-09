@@ -1,5 +1,5 @@
 <launch>
-  <!-- This launch file is for a combination of ur arms and shadow hands -->
+  <!-- This launch file is for a ur10 arm and box -->
 
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
   <arg name="sim" default="true"/>
@@ -11,57 +11,51 @@
   <arg name="planning" default="ompl"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
+  <arg name="verbose" default="true"/>
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
+    <!-- Set the scene file -->
+  <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large.scene"/>
+  <!-- Set world value dependant on scene -->
+  <arg name="world" default="$(find sr_description_common)/worlds/shadowhands_and_arms.world" unless="$(arg scene)"/>
+  <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large.world" if="$(arg scene)"/>
+  <!-- Set to true if you want the robot to start in the "home" positions -->
+  <arg name="start_home" default="false"/>
+  <!-- Definition of "home" position, in joint-angle pairs -->
+  <arg name="home_angles" default="-J ra_shoulder_pan_joint 1.147 -J ra_elbow_joint 1.695 -J ra_wrist_1_joint -1.395 -J ra_wrist_2_joint -1.584 -J ra_shoulder_lift_joint -1.926 -J ra_wrist_3_joint 1.830"/>
+  <!-- Set this to true if you run the hardware loop on a remote computer -->
+  <arg name="external_control_loop" default="false"/>
   <!-- The robot state publisher publishing frequency  -->
   <arg name="robot_state_pub_frequency" default="50"/>
   <!-- The joint state publisher publishing frequency  -->
   <arg name="joint_state_pub_frequency" default="100"/>
 
-  <arg name="verbose" default="true"/>
-
-  <!-- Change this for the left hand and arm -->
+  <!-- HAND CONFIG-->
   <arg name="hand_id" default="H1"/>
+
+  <!-- ARM CONFIG-->
   <arg name="arm_id" default="ra"/>
   <arg name="side" default="right"/>
   <arg name="arm_model" default="ur10"/>
-
-  <!-- Set world value dependant on scene -->
-  <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world" unless="$(arg scene)"/>
-  <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large.world" if="$(arg scene)"/>
-  <!-- Set the scene file -->
-  <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large.scene"/>
-  <!-- Set to true if you want the robot to start in the "home" positions -->
-  <arg name="start_home" default="false"/>
-  <!-- Definition of "home" position, in joint-angle pairs -->
-  <arg name="home_angles" default="-J ra_shoulder_pan_joint 1.147 -J ra_elbow_joint 1.695 -J ra_wrist_1_joint -1.395 -J ra_wrist_2_joint -1.584 -J ra_shoulder_lift_joint -1.926 -J ra_wrist_3_joint 1.830"/>
-
-  <!-- Set initial_z value dependant on scene -->
   <arg name="initial_z" default="0.7751" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
-
-  <!-- Set this to true if you run the hardware loop on a remote computer -->
-  <arg name="external_control_loop" default="false"/>
-
-  <!-- Change this for another hand -->
-  <arg name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro'"/>
-  <arg name="robot_config_file" default="$(find sr_box_ur10_moveit_config)/config/robot_configs/$(arg side)_$(arg arm_model).yaml"/>
-  <arg name="robot_name" default="ursrbox"/>
-
-  <!-- ARM -->
-  <arg name="arm_controller" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_controller.yaml"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_controller" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_controller.yaml"/>
   <arg name="arm_speed_scale" default="0.5"/>
-  <arg name="arm_group_name" default="arm"/>
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn group position controllers for the arms -->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
-  <!-- Set to true to spawn the position controllers for the arm -->
   <param name="description_read_repetitions" value="50"/>
+
+  <!-- ROBOT CONFIG-->
+  <arg name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro'"/>
+  <arg name="robot_config_file" default="$(find sr_box_ur10_moveit_config)/config/robot_configs/$(arg side)_$(arg arm_model).yaml"/>
+  <arg name="robot_name" default="ursrbox"/>
+
   <!-- Logging -->
   <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch"/>
-  
+
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
     <arg name="paused" value="$(arg start_home)"/>
@@ -74,7 +68,7 @@
     </include>
     <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
 
-    <arg if="$(arg start_home)" name="spawn_model_extra_args" value="-unpause $(arg home_angles)" />    
+    <arg if="$(arg start_home)" name="spawn_model_extra_args" value="-unpause $(arg home_angles)" />
     <arg unless="$(arg start_home)" name="spawn_model_extra_args" value="" />
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name) $(arg spawn_model_extra_args)" respawn="false" output="screen"/>
 
@@ -100,7 +94,6 @@
         <arg name="frequency" default="1" />
       </include>
     </group>
-
   </group>
 
   <!-- REAL ROBOTS -->
