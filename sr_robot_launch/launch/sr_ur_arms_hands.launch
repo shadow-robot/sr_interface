@@ -34,8 +34,6 @@
   <!-- ROBOT CONFIG-->
   <!-- Specify if the system has "both" hands, only "right", only "left" or "none" hands-->
   <arg name="hands" default="both"/>
-  <!-- Specify if the system has arms or is only a hand bimanual system -->
-  <arg name="arms" default="true"/>
   <arg name="robot_model" default="ur10"/>
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
@@ -166,11 +164,10 @@
     </group>
   </group>
 
-
   <!-- REAL ROBOTS -->
   <group unless="$(arg sim)">
     <group unless="$(arg external_control_loop)">
-      <include file="$(find sr_robot_launch)/launch/bimanual_hardware_control_loop.launch">
+      <include file="sr_bimanual_hardware_control_loop.launch">
         <arg name="debug" value="$(arg debug)"/>
         <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
         <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
@@ -184,8 +181,8 @@
         <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
         <arg name="lh_mapping_path" value="$(arg lh_mapping_path)"/>
         <arg name="eth_port" value="$(arg eth_port)"/>
-        <arg name="pwm_control" value="$(arg pwm_control)"/>
         <arg name="grasp_controller" value="$(arg grasp_controller)"/>
+        <arg name="pwm_control" value="$(arg pwm_control)"/>
         <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>
         <arg name="arm_1_z" value="$(arg arm_1_z)"/>
         <arg name="arm_2_z" value="$(arg arm_2_z)"/>
@@ -203,10 +200,6 @@
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->
     <node if="$(arg scene)" pkg="sr_utilities_common" type="timed_roslaunch.sh" args="8 sr_multi_moveit_config scene.launch
       scene_file:=$(arg scene_file)" name="timed_publish_moveit_scene" output="screen"/>
-    <!--<node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">-->
-      <!--<param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)"/>-->
-      <!--<param name="tf_prefix" type="string" value="" />-->
-    <!--</node>-->
   </group>
 
   <!-- MOVEIT -->
@@ -224,9 +217,7 @@
       <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
     </group>
     <group if="$(eval hands == 'none')">
-      <include file="$(find sr_bimanual_box_ur10_moveit_config)/launch/planning_and_execution.launch">
-        <arg name="use_gui" value="$(arg gui)"/>
-      </include>
+      <!-- Not available yet -->
     </group>
   </group>
 </launch>
