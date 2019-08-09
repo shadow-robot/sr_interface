@@ -56,6 +56,7 @@
   
   <!-- ARM -->
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_speed_scale" default="0.5"/>
   <arg name="arm_group_name" default="$(arg side)_arm"/>
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
@@ -157,6 +158,7 @@
         <arg name="side" value="$(arg side)"/>
         <arg name="robot_model" value="$(arg robot_model)"/>
         <arg name="arm_robot_hw" value="$(arg arm_robot_hw)"/>
+        <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
         <arg name="hand_serial" value="$(arg hand_serial)"/>
         <arg name="mapping_path" value="$(arg mapping_path)"/>
         <arg name="eth_port" value="$(arg eth_port)"/>
