@@ -70,6 +70,7 @@
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_ctrl" default="true"/>
+  <arg name="arm_speed_scale" default="0.5"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
@@ -142,6 +143,7 @@
         <arg name="side" value="$(arg side)"/>
         <arg name="robot_model" value="$(arg robot_model)"/>
         <arg name="arm_robot_hw" value="$(arg arm_robot_hw)"/>
+        <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
         <arg name="hand_serial" value="$(arg hand_serial)"/>
         <arg name="mapping_path" value="$(arg mapping_path)"/>
         <arg name="eth_port" value="$(arg eth_port)"/>

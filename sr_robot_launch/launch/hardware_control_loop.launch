@@ -10,7 +10,6 @@
   <arg name="robot_description" unless="$(arg hand_ctrl)" default="'$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
 
-
   <!-- HANDS CONFIG-->
   <arg name="hand_id" default="rh"/>
   <arg name="hand_serial" default="1082"/>
@@ -25,12 +24,13 @@
   <!-- ARMS CONFIG-->
   <arg name="initial_z" default="0.7551"/>
   <arg name="arm_id" default="ra"/>
-  <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>config/ur10_with_box.urdf.xacro'"/>
+  <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   <arg name="include_wrist_in_arm_controller" default="true"/>
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="arm_ctrl" default="true"/>
+  <arg name="arm_speed_scale" default="0.5"/>
 
   <!-- Logging local topics -->
   <group ns="control_box">
@@ -86,6 +86,7 @@
         - la_sr_ur_robot_hw
     </rosparam>
     <rosparam command="load" file="$(arg arm_robot_hw)"/>
+    <param name="$(arg arm_id)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
     <param name="$(arg arm_id)_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
   </group>
 
