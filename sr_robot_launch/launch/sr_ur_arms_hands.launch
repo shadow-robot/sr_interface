@@ -17,7 +17,7 @@
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
   <!-- Set the scene file -->
-  <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large.scene"/>
+  <arg name="scene_file" default="$(find sr_description_common)/scenes/bimanual_demo_space_small.scene"/>
   <!-- Set world value -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhands_and_arms.world" />
   <!-- Set to true if you want the robot to start in the "home" positions -->
@@ -169,7 +169,7 @@
   <!-- REAL ROBOTS -->
   <group unless="$(arg sim)">
     <group unless="$(arg external_control_loop)">
-      <include file="sr_bimanual_hardware_control_loop.launch">
+      <include file="$(find sr_robot_launch)/launch/sr_bimanual_hardware_control_loop.launch">
         <arg name="debug" value="$(arg debug)"/>
         <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
         <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
