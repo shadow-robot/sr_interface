@@ -71,20 +71,20 @@ class HandKinematicsPlugin :
 {
 public:
 /** @class
- *  @brief Plugin-able interface to the Shadow hand kinematics
- */
+*  @brief Plugin-able interface to the Shadow hand kinematics
+*/
 HandKinematicsPlugin();
 
 /**
- *  @brief Specifies if the node is active or not
- *  @return True if the node is active, false otherwise.
- */
+*  @brief Specifies if the node is active or not
+*  @return True if the node is active, false otherwise.
+*/
 bool isActive();
 
 /**
- * @brief Given a desired pose of the end-effector, compute the joint angles to reach it
- * @return True if a valid solution was found, false otherwise
- */
+* @brief Given a desired pose of the end-effector, compute the joint angles to reach it
+* @return True if a valid solution was found, false otherwise
+*/
 virtual bool getPositionIK(const geometry_msgs::Pose &ik_pose,
                            const std::vector<double> &ik_seed_state,
                            std::vector<double> &solution,
@@ -112,10 +112,10 @@ virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
 
 
 /**
- * @brief Given a desired pose of the end-effector, search for the joint angles required to reach it.
- * This particular method is intended for "searching" for a solutions by stepping through the redundancy
- * (or other numerical routines).
- */
+* @brief Given a desired pose of the end-effector, search for the joint angles required to reach it.
+* This particular method is intended for "searching" for a solutions by stepping through the redundancy
+* (or other numerical routines).
+*/
 virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
                               const std::vector<double> &ik_seed_state,
                               double timeout,
@@ -126,10 +126,10 @@ virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                 kinematics::KinematicsQueryOptions()) const;
 
 /**
- * @brief Given a desired pose of the end-effector, search for the joint angles required to reach it.
- * This particular method is intended for "searching" for a solutions by stepping through the redundancy
- * (or other numerical routines).
- */
+* @brief Given a desired pose of the end-effector, search for the joint angles required to reach it.
+* This particular method is intended for "searching" for a solutions by stepping through the redundancy
+* (or other numerical routines).
+*/
 virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
                               const std::vector<double> &ik_seed_state,
                               double timeout,
@@ -142,21 +142,21 @@ virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
 
 
 /**
- * @brief Given a set of joint angles and a set of links, compute their pose
- * @param link_names - set of links for which poses are to be computed
- * @param joint_angles - the contains the joint angles
- * @param poses - the response contains pose information for all the requested links
- * @return True if a valid solution was found, false otherwise
- */
+* @brief Given a set of joint angles and a set of links, compute their pose
+* @param link_names - set of links for which poses are to be computed
+* @param joint_angles - the contains the joint angles
+* @param poses - the response contains pose information for all the requested links
+* @return True if a valid solution was found, false otherwise
+*/
 virtual bool getPositionFK(const std::vector<std::string> &link_names,
                            const std::vector<double> &joint_angles,
                            std::vector<geometry_msgs::Pose> &poses) const;
 
 
 /**
- * @brief  Initialization function for the kinematics
- * @return True if initialization was successful, false otherwise
- */
+* @brief  Initialization function for the kinematics
+* @return True if initialization was successful, false otherwise
+*/
 virtual bool initialize(const std::string &robot_description,
                         const std::string &group_name,
                         const std::string &base_frame,
@@ -165,13 +165,13 @@ virtual bool initialize(const std::string &robot_description,
 
 
 /**
- * @brief Return all the joint names in the order they are used internally
- */
+* @brief Return all the joint names in the order they are used internally
+*/
 const std::vector<std::string> &getJointNames() const;
 
 /**
- * @brief Return all the link names in the order they are represented internally
- */
+* @brief Return all the link names in the order they are represented internally
+*/
 const std::vector<std::string> &getLinkNames() const;
 
 protected:
