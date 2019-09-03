@@ -1,39 +1,22 @@
 /**
- * @file   link_joints.cpp
- * @author Ugo Cupcic <ugo@shadowrobot.com>, Contact <contact@shadowrobot.com>
- * @date   Thu Jul  8 16:57:22 2010
- *
-*
-* Copyright 2011 Shadow Robot Company Ltd.
-*
-* This program is free software: you can redistribute it and/or modify it
-* under the terms of the GNU General Public License as published by the Free
-* Software Foundation, either version 2 of the License, or (at your option)
-* any later version.
-*
-* This program is distributed in the hope that it will be useful, but WITHOUT
-* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-* FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-* more details.
-*
-* You should have received a copy of the GNU General Public License along
-* with this program.  If not, see <http://www.gnu.org/licenses/>.
+* @file   link_joints.cpp
+* @author Ugo Cupcic <ugo@shadowrobot.com>, Contact <contact@shadowrobot.com>
+* @date   Thu Jul  8 16:57:22 2010
 *
 *
 * Copyright 2011 Shadow Robot Company Ltd.
 *
 * This program is free software: you can redistribute it and/or modify it
 * under the terms of the GNU General Public License as published by the Free
-* Software Foundation, either version 2 of the License, or (at your option)
-* any later version.
+* Software Foundation version 2 of the License.
 *
 * This program is distributed in the hope that it will be useful, but WITHOUT
 * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-* FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 * more details.
 *
 * You should have received a copy of the GNU General Public License along
-* with this program.  If not, see <http://www.gnu.org/licenses/>.
+* with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 * This example demonstrates how two joints can have their positions 'linked' by
 * having a child joint subscribing to the parent joint's controller state topic.
@@ -74,11 +57,11 @@ ros::Subscriber sub;
 ros::Publisher pub;
 
 /**
- * The callback function is called each time a message is received on the
- * controller
- *
- * @param msg message of type sr_hand::joints_data
- */
+* The callback function is called each time a message is received on the
+* controller
+*
+* @param msg message of type sr_hand::joints_data
+*/
 void callback(const control_msgs::JointControllerStateConstPtr &msg)
 {
   // publish the message
@@ -90,13 +73,13 @@ void callback(const control_msgs::JointControllerStateConstPtr &msg)
 }
 
 /**
- * The main: initialise a ros node, a subscriber and a publisher
- *
- * @param argc
- * @param argv
- *
- * @return 0 on success
- */
+* The main: initialise a ros node, a subscriber and a publisher
+*
+* @param argc
+* @param argv
+*
+* @return 0 on success
+*/
 int main(int argc, char **argv)
 {
   // init the ros node
