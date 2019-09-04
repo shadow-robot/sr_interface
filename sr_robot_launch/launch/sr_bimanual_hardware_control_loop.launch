@@ -1,0 +1,150 @@
+<launch>
+  <arg name="debug" default="false"/>
+  <arg name="robot_state_pub_frequency" default="100"/>
+  <arg name="joint_state_pub_frequency" default="100"/>
+  <!-- Specify if the system has "both" hands, only "right", or only "left" -->
+  <arg name="hands" default="both"/>
+  <!-- ROBOT CONFIG-->
+  <arg name="robot_model" default="ur10"/>
+  <arg name="robot_description" unless="$(eval arg('hands') == 'none')" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
+  <arg name="robot_description" if="$(eval arg('hands') == 'none')" default="'$(find sr_bimanual_box_ur10_moveit_config)/config/bimanual_ur10_with_box.urdf.xacro'"/>
+  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_ur10.yaml"/>
+  <!-- setting this parameter to false allows to load the robot_description from a higher level -->
+  <arg name="load_robot_description" default="true"/>
+
+  <!-- HANDS CONFIG-->
+  <arg name="lh_id" default="lh"/>
+  <arg name="rh_id" default="rh"/>
+  <arg name="rh_serial" default="1130"/>
+  <arg name="lh_serial" default="2346"/>
+  <arg name="rh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
+  <arg name="lh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_E_v3.yaml"/>
+  <!-- Allows to specify the ethernet interface/s to be used. It defaults to the value of the env var ETHERCAT_PORT
+       More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
+  <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
+  <!-- The control mode PWM (true) or torque (false) -->
+  <arg name="pwm_control" default="true"/>
+  <!-- Set to true if you want to use grasp controller -->
+  <arg name="grasp_controller" default="false"/>
+  <arg name="hand_trajectory" default="true"/>
+
+  <!-- ARMS CONFIG-->
+  <arg name="arm_1_z" default="0.7551"/>
+  <arg name="arm_2_z" default="0.7551"/>
+  <arg name="arm_x_separation" default="0.0"/>
+  <arg name="arm_y_separation" default="1.5"/>
+  <arg name="arm_1_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
+  <arg name="arm_2_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
+  <arg name="arm_robot_hw_1" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_bimanual_ur_arm_robot_hw.yaml"/>
+  <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
+  <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
+  <arg name="include_wrist_in_arm_controller" default="true"/>
+  <arg name="arm_trajectory" default="true"/>
+  <!-- Set to true to spawn the position controllers for the arm-->
+  <arg name="arm_position" default="$(eval not arm_trajectory)"/>
+  <arg name="right_arm_speed_scale" default="0.5"/>
+  <arg name="left_arm_speed_scale" default="0.5"/>
+
+  <!-- Logging local topics -->
+  <group ns="control_box">
+    <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch">
+      <arg name="log_topics" value='-e ".*(controller|debug_etherCAT_data).*" /joint_states /diagnostics /mechanism_statistics'/>
+      <arg name="log_bag_prefix" value="sr_hardware_control"/>
+      <arg name="log_directory" value="$(optenv HOME)/.ros/log"/>
+    </include>
+  </group>
+
+  <!-- Controller -->
+  <group unless="$(eval hands == 'none')">
+    <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
+    <rosparam file="$(arg robot_config_file)"/>
+    <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
+    <include file="$(find sr_edc_launch)/sr_edc_bimanual_ros_control.launch">
+      <arg name="define_robot_hardware" value="false"/>
+      <arg name="debug" value="$(arg debug)"/>
+      <arg name="robot_description" value="$(arg robot_description)"/>
+      <arg name="lh_id" value="$(arg lh_id)"/>
+      <arg name="rh_id" value="$(arg rh_id)"/>
+      <arg name="rh_serial" value="$(arg rh_serial)"/>
+      <arg name="lh_serial" value="$(arg lh_serial)"/>
+      <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
+      <arg name="lh_mapping_path" value="$(arg lh_mapping_path)"/>
+      <arg name="eth_port" value="$(arg eth_port)"/>
+      <arg name="pwm_control" value="$(arg pwm_control)"/>
+      <arg name="arm_1_z" value="$(arg arm_1_z)"/>
+      <arg name="arm_2_z" value="$(arg arm_2_z)"/>
+      <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
+      <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
+      <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
+      <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
+      <arg name="load_robot_description" value="$(arg load_robot_description)"/>
+    </include>
+    <group unless="$(arg grasp_controller)">
+      <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
+        <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
+        <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
+        <param name="wait_for" value ="calibrated"/>
+      </node>
+    </group>
+    <group if="$(arg grasp_controller)">
+      <!-- Not available yet -->
+      <!--node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen">
+        <param name="wait_for" value ="calibrated"/>
+      </node-->
+    </group>
+  </group>
+  <group if="$(eval hands == 'none')">
+   <param name="robot_description" command="xacro --inorder $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
+    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
+      <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
+    </include>
+  </group>
+
+  <rosparam>
+    robot_hardware:
+      - unique_robot_hw
+      - ra_sr_ur_robot_hw
+      - la_sr_ur_robot_hw
+  </rosparam>
+  <rosparam command="load" file="$(arg arm_robot_hw_1)"/>
+  <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
+  <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_1_program_path)"/>
+  <param name="la_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_2_program_path)"/>
+  <arg name="ra_sr_ur_robot_hw/speed_scale" type="double" value="$(arg right_arm_speed_scale)"/>
+  <arg name="la_sr_ur_robot_hw/speed_scale" type="double" value="$(arg left_arm_speed_scale)"/>
+
+  <!-- Trajectory mode -->
+  <group if="$(arg arm_trajectory)">
+    <group if="$(arg include_wrist_in_arm_controller)">
+      <rosparam if="$(eval hands == 'both' or hands == 'right')" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml" command="load"/>
+      <rosparam if="$(eval hands == 'left' or hands == 'none')" file="$(find sr_robot_launch)/config/ra_trajectory_controller_no_wrist.yaml" command="load"/>
+      <rosparam if="$(eval hands == 'both' or hands == 'left')" file="$(find sr_robot_launch)/config/la_trajectory_controller.yaml" command="load"/>
+      <rosparam if="$(eval hands == 'right' or hands == 'none')" file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml" command="load"/>
+    </group>
+    <group unless="$(arg include_wrist_in_arm_controller)">
+      <rosparam file="$(find sr_robot_launch)/config/ra_trajectory_controller_no_wrist.yaml" command="load"/>
+      <rosparam file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml" command="load"/>
+    </group>
+    <node name="ra_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+          args="--wait-for=/ra_arm_ready ra_trajectory_controller "/>
+    <node name="la_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+          args="--wait-for=/la_arm_ready la_trajectory_controller"/>
+  </group>
+
+  <!-- Position mode -->
+  <group if="$(arg arm_position)">
+    <group if="$(arg include_wrist_in_arm_controller)">
+      <rosparam if="$(eval hands == 'both' or hands == 'right')" file="$(find sr_robot_launch)/config/ra_group_position_controller.yaml" command="load"/>
+      <rosparam if="$(eval hands == 'left' or hands == 'none')" file="$(find sr_robot_launch)/config/ra_group_position_controller_no_wrist.yaml" command="load"/>
+      <rosparam if="$(eval hands == 'both' or hands == 'left')" file="$(find sr_robot_launch)/config/la_group_position_controller.yaml" command="load"/>
+      <rosparam if="$(eval hands == 'right' or hands == 'none')" file="$(find sr_robot_launch)/config/la_group_position_controller_no_wrist.yaml" command="load"/>
+    </group>
+    <group unless="$(arg include_wrist_in_arm_controller)">
+      <rosparam file="$(find sr_robot_launch)/config/ra_group_position_controller_no_wrist.yaml" command="load"/>
+      <rosparam file="$(find sr_robot_launch)/config/la_group_position_controller_no_wrist.yaml" command="load"/>
+    </group>
+    <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+          args="ra_trajectory_controller la_trajectory_controller"/>
+  </group>
+</launch>

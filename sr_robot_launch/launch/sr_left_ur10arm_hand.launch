@@ -59,6 +59,7 @@
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn group position controllers for the arms -->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
+  <arg name="arm_speed_scale" default="0.5"/>
 
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
   <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
@@ -81,7 +82,7 @@
     <arg name="robot_model" value="ur10"/>
     <arg name="robot_name" value="ur10srh"/>
     <arg name="arm_robot_hw" value="$(arg arm_robot_hw)"/>
-    <arg name="arm_group_name" value="$(arg side)_arm"/>
+    <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
     <arg name="hand_serial" value="$(arg hand_serial)"/>
     <arg name="mapping_path" value="$(arg mapping_path)"/>
     <arg name="eth_port" value="$(arg eth_port)"/>
