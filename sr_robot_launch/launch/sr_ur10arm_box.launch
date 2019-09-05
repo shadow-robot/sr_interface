@@ -49,7 +49,7 @@
   <param name="description_read_repetitions" value="50"/>
 
   <!-- ROBOT CONFIG-->
-  <arg name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro'"/>
+  <arg name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/$(arg arm_model)_with_box.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_box_ur10_moveit_config)/config/robot_configs/$(arg side)_$(arg arm_model).yaml"/>
   <arg name="robot_name" default="ursrbox"/>
 
