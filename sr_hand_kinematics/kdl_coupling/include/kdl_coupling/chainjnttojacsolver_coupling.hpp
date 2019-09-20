@@ -31,13 +31,13 @@
 
 namespace KDL
 {
-/**
- * @brief  Class to calculate the jacobian of a general
- * KDL::Chain, it is used by other solvers. It should not be used
- * outside of KDL.
- *
- *
- */
+/*
+* @brief  Class to calculate the jacobian of a general
+* KDL::Chain, it is used by other solvers. It should not be used
+* outside of KDL.
+*
+*
+*/
 
 class ChainJntToJacSolver_coupling
 {
@@ -46,7 +46,7 @@ public:
 
   ~ChainJntToJacSolver_coupling();
 
-  /**
+  /*
    * Calculate the jacobian expressed in the base frame of the
    * chain, with reference point at the end effector of the
    * *chain. The alghoritm is similar to the one used in

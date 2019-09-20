@@ -25,7 +25,7 @@
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <!-- the path to the mapping files -->
-  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
+  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
   <!-- The robot state publisher publishing frequency  -->
@@ -35,7 +35,15 @@
 
   <arg name="variable_controller" default="false"/>
   <arg name="variable_controller_only_joint_0" default="false"/>
-  
+
+  <!-- Logging. -->
+  <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch">
+    <arg name="node_name" value="server_record"/>
+    <arg name="log_bag_prefix" value="sr_hand"/>
+    <arg name="log_directory" value="$(optenv HOME)/.ros/log"/>
+    <arg name="log_topics" value='-e ".*(controller|debug_etherCAT_data).*" /joint_states /rosout /diagnostics /mechanism_statistics /journalctl_log'/>
+  </include>  
+
   <!-- Loads the robot description -->
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_motor.urdf.xacro'"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_motor.urdf.xacro'"/>
