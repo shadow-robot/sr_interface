@@ -24,7 +24,6 @@
   <!-- ARMS CONFIG-->
   <arg name="initial_z" default="0.7551"/>
   <arg name="arm_id" default="ra"/>
-  <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   <arg name="include_wrist_in_arm_controller" default="true"/>
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the arm-->
@@ -74,57 +73,56 @@
     </group>
   </group>
 
-  <group if="$(arg arm_ctrl)">
-    <rosparam if="$(eval arg('side') == 'right')">
-      robot_hardware:
-        - unique_robot_hw
-        - ra_sr_ur_robot_hw
-    </rosparam>
-    <rosparam if="$(eval arg('side') == 'left')">
-      robot_hardware:
-        - unique_robot_hw
-        - la_sr_ur_robot_hw
-    </rosparam>
-    <rosparam command="load" file="$(arg arm_robot_hw)"/>
-    <param name="$(arg arm_id)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
-    <param name="$(arg arm_id)_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
-  </group>
+  <arg name="robot_ip" default="192.168.1.1"/>
+  <arg name="kinematics_config" default="$(find ur_calibration)/etc/ur10_b_calibration.yaml"/>
 
-  <rosparam unless="$(arg arm_ctrl)">
-    robot_hardware:
-      - unique_robot_hw
-  </rosparam>
+  <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
+
+  <include file="$(find sr_robot_launch)/launch/ur10_new_ros_driver.launch">
+       <arg name="robot_ip" value="$(arg robot_ip)"/>
+       <arg name="kinematics_config" value="$(arg kinematics_config)"/>
+  </include>
+
+  <!--<group if="$(arg arm_ctrl)">-->
+    <!--<rosparam if="$(eval arg('side') == 'right')">-->
+      <!--robot_hardware:-->
+        <!-- - unique_robot_hw-->
+        <!-- - ra_sr_ur_robot_hw-->
+    <!--</rosparam>-->
+    <!--<rosparam if="$(eval arg('side') == 'left')">-->
+      <!--robot_hardware:-->
+        <!-- - unique_robot_hw-->
+        <!-- - la_sr_ur_robot_hw-->
+    <!--</rosparam>-->
+    <!--<rosparam command="load" file="$(arg arm_robot_hw)"/>-->
+    <!--<param name="$(arg arm_id)_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>-->
+  <!--</group>-->
+
+  <!--<rosparam unless="$(arg arm_ctrl)">-->
+    <!--robot_hardware:-->
+      <!-- - unique_robot_hw-->
+  <!--</rosparam>-->
 
   <!-- These will be loaded if hand_ctrl is false so UR10 with box will load instead. -->
-  <group unless="$(arg hand_ctrl)">
-    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
-      <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
-    </include>
-    <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
-    <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
-    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
-  </group>
   <!-- These will be loaded if arm and hand are enabled -->
   <!-- Trajectory mode -->
   <group if="$(arg arm_ctrl)">
     <group if="$(arg arm_trajectory)">
       <group if="$(arg hand_ctrl)">
-        <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/>
-        <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller_no_wrist.yaml"/>
+        <!--<rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/> -->
+        <!-- <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller_no_wrist.yaml"/>-->
       </group>
-      <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_ur_launch)/config/ra_trajectory_controller.yaml"/>
-      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_id)_arm_ready $(arg arm_id)_trajectory_controller"/>
+      <!-- <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_ur_launch)/config/ra_trajectory_controller.yaml"/> -->
+      <!-- <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="$(arg arm_id)_trajectory_controller"/> -->
     </group>
     <!-- Position mode -->
     <group if="$(arg arm_position)">
       <group if="$(arg hand_ctrl)">
-        <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_group_position_controller.yaml"/>
-        <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_group_position_controller_no_wrist.yaml"/>
+        <!-- <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_group_position_controller.yaml"/> -->
+        <!-- <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_group_position_controller_no_wrist.yaml"/> -->
       </group>
-      <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_ur_launch)/config/ra_group_position_controller.yaml"/>
-      <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_id)_arm_ready $(arg arm_id)_group_position_controller"/>
+      <!-- <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_ur_launch)/config/ra_group_position_controller.yaml"/> -->
+      <!-- <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="$(arg arm_id)_position_controller"/> -->
     </group>
   </group>
 </launch>

@@ -1,6 +1,7 @@
-<robot xmlns:xacro="http://ros.org/wiki/xacro" name="ursrbox">
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="ursrbox">
 
   <!-- Arm -->
+  <xacro:arg name="kinematics_config" default="$(find ur_calibration)/etc/ur10_a_calibration.yaml"/>
   <xacro:include filename="$(find ur_description)/urdf/ur10.urdf.xacro"/>
   <xacro:ur10_robot prefix="ra_" joint_limited="false" kinematics_config="$(find ur_calibration)/etc/ur10_b_calibration.yaml"/>
   <gazebo>
