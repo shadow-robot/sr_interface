@@ -36,7 +36,7 @@
   <!-- ARM CONFIG-->
   <arg name="arm_id" default="ra"/>
   <arg name="side" default="right"/>
-  <arg name="arm_model" default="ur10"/>
+  <arg name="arm_model" default="ur3"/>
   <arg name="initial_z" default="0.7751" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
