@@ -32,7 +32,7 @@
   <arg name="joint_state_pub_frequency" default="100"/>
 
   <!-- ROBOT CONFIG-->
-  <arg name="side" value="right"/>
+  <arg name="side" default="right"/>
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/right_srhand_ur10.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
 

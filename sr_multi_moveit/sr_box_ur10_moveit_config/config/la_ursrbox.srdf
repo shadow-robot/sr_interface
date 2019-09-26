@@ -1,0 +1,69 @@
+<?xml version="1.0" ?>
+<!--This does not replace URDF, and is not an extension of URDF.
+    This is a format for representing semantic information about the robot structure.
+    A URDF file must exist for this robot as well, where the joints and the links that are referenced are defined
+-->
+<robot name="ursrbox">
+    <!--GROUPS: Representation of a set of joints and links. This can be useful for specifying DOF to plan for, defining arms, end effectors, etc-->
+    <!--LINKS: When a link is specified, the parent joint of that link (if it exists) is automatically included-->
+    <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
+    <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
+    <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
+    <group name="left_arm">
+      <chain base_link="la_base_link" tip_link="la_ee_link"/>
+    </group>
+    <group name="left_arm_base">
+        <chain base_link="world" tip_link="la_base_link"/>
+    </group>
+    <group name="left_arm_and_manipulator">
+        <chain base_link="la_base_link" tip_link="hand_manipulator"/>
+    </group>
+    <group name="la_end_effector">
+        <link name="la_ee_link"/>
+    </group>
+    <group name="la_manipulator">
+        <link name="hand_manipulator"/>
+    </group>
+    <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
+    <group_state name="lifted" group="left_arm">
+        <joint name="la_elbow_joint" value="0" />
+        <joint name="la_shoulder_lift_joint" value="-0.7413" />
+        <joint name="la_shoulder_pan_joint" value="0" />
+        <joint name="la_wrist_1_joint" value="0" />
+        <joint name="la_wrist_2_joint" value="0" />
+        <joint name="la_wrist_3_joint" value="0" />
+    </group_state>
+    <group_state name="flat" group="left_arm">
+        <joint name="la_elbow_joint" value="0" />
+        <joint name="la_shoulder_lift_joint" value="-0" />
+        <joint name="la_shoulder_pan_joint" value="0" />
+        <joint name="la_wrist_1_joint" value="0" />
+        <joint name="la_wrist_2_joint" value="0" />
+        <joint name="la_wrist_3_joint" value="0" />
+    </group_state>
+
+    <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
+    <end_effector group="la_end_effector" name="left_arm_ee" parent_group="left_arm" parent_link="la_ee_link"/>
+    <end_effector group="la_manipulator" name="la_and_manipulator_ee" parent_group="left_arm_and_manipulator" parent_link="hand_manipulator"/>
+
+    <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
+    <disable_collisions link1="hand_base_attach" link2="la_ee_link" reason="Adjacent" />
+    <disable_collisions link1="hand_base_attach" link2="la_wrist_1_link" reason="Never" />
+    <disable_collisions link1="hand_base_attach" link2="la_wrist_2_link" reason="Never" />
+    <disable_collisions link1="hand_base_attach" link2="la_wrist_3_link" reason="Never" />
+    <disable_collisions link1="la_base_link" link2="la_shoulder_link" reason="Adjacent" />
+    <disable_collisions link1="la_base_link" link2="la_upper_arm_link" reason="Never" />
+    <disable_collisions link1="la_base_link" link2="la_wrist_1_link" reason="Never" />
+    <disable_collisions link1="la_base_link" link2="la_wrist_2_link" reason="Never" />
+    <disable_collisions link1="la_ee_link" link2="la_wrist_1_link" reason="Never" />
+    <disable_collisions link1="la_ee_link" link2="la_wrist_2_link" reason="Never" />
+    <disable_collisions link1="la_ee_link" link2="la_wrist_3_link" reason="Adjacent" />
+    <disable_collisions link1="la_forearm_link" link2="la_upper_arm_link" reason="Adjacent" />
+    <disable_collisions link1="la_forearm_link" link2="la_wrist_1_link" reason="Adjacent" />
+    <disable_collisions link1="la_shoulder_link" link2="la_upper_arm_link" reason="Adjacent" />
+    <disable_collisions link1="la_shoulder_link" link2="la_wrist_1_link" reason="Never" />
+    <disable_collisions link1="la_shoulder_link" link2="la_wrist_2_link" reason="Never" />
+    <disable_collisions link1="la_wrist_1_link" link2="la_wrist_2_link" reason="Adjacent" />
+    <disable_collisions link1="la_wrist_1_link" link2="la_wrist_3_link" reason="Never" />
+    <disable_collisions link1="la_wrist_2_link" link2="la_wrist_3_link" reason="Adjacent" />
+</robot>

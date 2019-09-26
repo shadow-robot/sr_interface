@@ -4,7 +4,7 @@ robot:
     right_manipulator:
       side: left
       arm:
-        name: ur10
+        name: ur5
         main_group: manipulator
         moveit_path: 
           package: sr_box_ur10_moveit_config

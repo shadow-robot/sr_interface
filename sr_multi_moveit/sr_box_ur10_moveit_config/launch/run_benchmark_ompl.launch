@@ -2,6 +2,8 @@
 
   <!-- This argument must specify the list of .cfg files to process for benchmarking -->
   <arg name="cfg" />
+  <arg name="side" default="right"/>
+  <arg name="side_letter" value="$(eval side[0])"/>
 
   <!-- Load URDF -->
   <include file="$(find sr_box_ur10_moveit_config)/launch/planning_context.launch">
@@ -15,8 +17,8 @@
 
   <!-- Start Benchmark Executable -->
   <node name="$(anon moveit_benchmark)" pkg="moveit_ros_benchmarks" type="moveit_run_benchmark" args="$(arg cfg) --benchmark-planners" respawn="false" output="screen">
-    <rosparam command="load" file="$(find sr_box_ur10_moveit_config)/config/kinematics.yaml"/>
-    <rosparam command="load" file="$(find sr_box_ur10_moveit_config)/config/ompl_planning.yaml"/>
+    <rosparam command="load" file="$(find sr_box_ur10_moveit_config)/config/$(arg side_letter)a_kinematics.yaml"/>
+    <rosparam command="load" file="$(find sr_box_ur10_moveit_config)/config/$(arg side_letter)a_ompl_planning.yaml"/>
   </node>
 
 </launch>

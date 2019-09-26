@@ -1,0 +1,22 @@
+la_trajectory_controller:
+  type: "position_controllers/JointTrajectoryController"
+  joints:
+    - la_shoulder_pan_joint
+    - la_shoulder_lift_joint
+    - la_elbow_joint
+    - la_wrist_1_joint
+    - la_wrist_2_joint
+    - la_wrist_3_joint
+  constraints:
+      goal_time: 0.6
+      stopped_velocity_tolerance: 0.05
+      la_shoulder_pan_joint: {trajectory: 0.3, goal: 0.1}
+      la_shoulder_lift_joint: {trajectory: 0.3, goal: 0.1}
+      la_elbow_joint: {trajectory: 0.3, goal: 0.1}
+      la_wrist_1_joint: {trajectory: 0.3, goal: 0.1}
+      la_wrist_2_joint: {trajectory: 0.3, goal: 0.1}
+      la_wrist_3_joint: {trajectory: 0.3, goal: 0.1}
+  stop_trajectory_duration: 0.5
+  state_publish_rate:  25
+  action_monitor_rate: 10
+  allow_partial_joints_goal: true
