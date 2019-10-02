@@ -1,7 +1,7 @@
 <launch>
   <arg name="debug" default="false"/>
-  <arg name="robot_state_pub_frequency" default="100"/>
-  <arg name="joint_state_pub_frequency" default="100"/>
+  <arg name="robot_state_pub_frequency" default="250"/>
+  <arg name="joint_state_pub_frequency" default="125"/>
   <!-- Specify if the system has "both" hands, only "right", or only "left" -->
   <arg name="hands" default="both"/>
   <!-- ROBOT CONFIG-->
