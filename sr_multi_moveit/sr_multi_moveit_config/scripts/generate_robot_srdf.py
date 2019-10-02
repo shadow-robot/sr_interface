@@ -264,7 +264,6 @@ class SRDFRobotGenerator(object):
             if manipulator.has_hand:
                 self.parse_hand_collisions(manipulator_id, manipulator)
 
-
         # Finish and close file
         self.new_robot_srdf.write('</robot>\n')
         self.new_robot_srdf.close()
@@ -464,7 +463,7 @@ class SRDFRobotGenerator(object):
                     newElement.getAttributeNode("name").nodeValue = manipulator.arm.prefix + "and_wrist_ee"
                     newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "palm"
                     newElement.getAttributeNode("group").nodeValue = manipulator.hand.prefix + "fingers"
-                    newElement.setAttribute('parent_group',  manipulator.arm.internal_name + "_and_wrist")
+                    newElement.setAttribute('parent_group', manipulator.arm.internal_name + "_and_wrist")
                     newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
                     newElement = deepcopy(elt)
                     newElement.getAttributeNode("name").nodeValue = manipulator.arm.prefix + "and_manipulator_ee"
