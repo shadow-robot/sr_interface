@@ -230,10 +230,10 @@ class SRDFRobotGenerator(object):
                 self.parse_hand_groups(manipulator_id, manipulator)
 
         # Add groups for bimanual arm system
-        comment = ["Bi-manual group"]
-        self.add_comments(comment)
         if len(self.robot.manipulators) == 2:
             if self.robot.manipulators[0].has_arm and self.robot.manipulators[1].has_arm:
+                comment = ["Bimanual groups"]
+                self.add_comments(comment)
                 self.add_bimanual_arm_groups(self.robot.manipulators[0].arm.internal_name,
                                              self.robot.manipulators[1].arm.internal_name)
 
