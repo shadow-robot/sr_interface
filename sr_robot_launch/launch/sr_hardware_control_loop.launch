@@ -74,7 +74,7 @@
   </group>
 
   <arg name="robot_ip" default="192.168.1.1"/>
-  <arg name="kinematics_config" default="$(find ur_calibration)/etc/ur10_b_calibration.yaml"/>
+  <arg name="kinematics_config" default="$(find ur_calibration)/etc/UR10A_calibration.yaml"/>
 
   <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
 
