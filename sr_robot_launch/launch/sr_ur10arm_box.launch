@@ -11,7 +11,7 @@
   <arg name="planning" default="ompl"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
-  <arg name="verbose" default="true" />
+  <arg name="verbose" default="true"/>
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
     <!-- Set the scene file -->

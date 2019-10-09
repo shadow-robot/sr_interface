@@ -2,7 +2,7 @@ robot:
   name: ursrbox
   manipulators:
     right_manipulator:
-      side: left
+      side: right
       arm:
         name: ur10
         main_group: manipulator

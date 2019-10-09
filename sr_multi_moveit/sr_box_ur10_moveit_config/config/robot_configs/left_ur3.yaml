@@ -1,8 +1,8 @@
 robot:
   name: ursrbox
   manipulators:
-    right_manipulator:
-      side: right
+    left_manipulator:
+      side: left
       arm:
         name: ur3
         main_group: manipulator

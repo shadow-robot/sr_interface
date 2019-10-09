@@ -1,7 +1,7 @@
 robot:
   name: ursrbox
   manipulators:
-    right_manipulator:
+    left_manipulator:
       side: left
       arm:
         name: ur10
