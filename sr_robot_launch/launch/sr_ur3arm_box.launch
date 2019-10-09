@@ -26,9 +26,9 @@
   <!-- Set this to true if you run the hardware loop on a remote computer -->
   <arg name="external_control_loop" default="false"/>
   <!-- The robot state publisher publishing frequency  -->
-  <arg name="robot_state_pub_frequency" default="50"/>
+  <arg name="robot_state_pub_frequency" default="250"/>
   <!-- The joint state publisher publishing frequency  -->
-  <arg name="joint_state_pub_frequency" default="100"/>
+  <arg name="joint_state_pub_frequency" default="125"/>
 
   <!-- HAND CONFIG-->
   <arg name="hand_id" default="H1"/>
