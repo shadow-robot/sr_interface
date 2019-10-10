@@ -1,13 +1,14 @@
 <launch>
   <arg name="debug" default="false"/>
-  <arg name="robot_state_pub_frequency" default="100"/>
-  <arg name="joint_state_pub_frequency" default="100"/>
+  <arg name="robot_state_pub_frequency" default="250"/>
+  <arg name="joint_state_pub_frequency" default="125"/>
 
   <!-- ROBOT CONFIG-->
   <arg name="robot_model" default="ur10"/>
   <arg name="side" default="right"/>
+  <arg name="side_letter" value="$(eval side[0])"/>
   <arg name="robot_description" if="$(arg hand_ctrl)" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
-  <arg name="robot_description" unless="$(arg hand_ctrl)" default="'$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro'"/>
+  <arg name="robot_description" unless="$(arg hand_ctrl)" default="'$(find sr_box_ur10_moveit_config)/config/$(arg side_letter)a_ur10_with_box.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
 
   <!-- HANDS CONFIG-->
@@ -102,7 +103,6 @@
     </include>
     <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
     <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
-    <rosparam command="load" file="$(find sr_ur_robot_hw)/config/ra_sr_ur_robot_hw.yaml"/>
     <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
   </group>
   <!-- These will be loaded if arm and hand are enabled -->
