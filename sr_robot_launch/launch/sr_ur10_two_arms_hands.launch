@@ -26,9 +26,6 @@
   <arg name="home_angles" default="-J ra_shoulder_pan_joint 1.147 -J ra_elbow_joint 1.695 -J ra_wrist_1_joint -1.395 -J ra_wrist_2_joint -1.584 -J ra_shoulder_lift_joint -1.926 -J ra_wrist_3_joint 2.7 -J la_shoulder_pan_joint -1.147 -J la_elbow_joint -1.695 -J la_wrist_1_joint -1.75 -J la_wrist_2_joint 1.57 -J la_shoulder_lift_joint -1.22 -J la_wrist_3_joint -2.70"/>
 
 
-  <!-- Change this for the left hand and arm -->
-  <arg name="lh_id" default="lh"/>
-  <arg name="rh_id" default="rh"/>
   <arg name="robot_model" default="ur10"/>
   <!-- Set arm height and separation-->
   <arg name="arm_1_z" default="0.7551" if="$(arg scene)"/>
@@ -87,15 +84,15 @@
       <arg name="verbose" value="$(arg verbose)" />
     </include>
     <!-- HAND -->
-    <param name="/hand/mapping/$(arg rh_serial)" value="$(arg rh_id)"/>
-    <param name="/hand/mapping/$(arg lh_serial)" value="$(arg lh_id)"/>
-    <param name="/hand/joint_prefix/$(arg lh_serial)" value="$(arg lh_id)_"/>
-    <param name="/hand/joint_prefix/$(arg rh_serial)" value="$(arg rh_id)_"/>
+    <param name="/hand/mapping/$(arg rh_serial)" value="rh"/>
+    <param name="/hand/mapping/$(arg lh_serial)" value="lh"/>
+    <param name="/hand/joint_prefix/$(arg lh_serial)" value="lh_"/>
+    <param name="/hand/joint_prefix/$(arg rh_serial)" value="rh_"/>
     <arg if="$(arg start_home)" name="spawn_model_extra_args" value="-unpause $(arg home_angles)" />
     <arg unless="$(arg start_home)" name="spawn_model_extra_args" value="" />
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name) $(arg spawn_model_extra_args)" respawn="false" output="screen"/>
-    <rosparam command="load" file="$(find sr_description)/hand/config/$(arg rh_id)_controller_gazebo.yaml"/>
-    <rosparam command="load" file="$(find sr_description)/hand/config/$(arg lh_id)_controller_gazebo.yaml"/>
+    <rosparam command="load" file="$(find sr_description)/hand/config/rh_controller_gazebo.yaml"/>
+    <rosparam command="load" file="$(find sr_description)/hand/config/lh_controller_gazebo.yaml"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
     <!-- ARM -->
     <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/ra_trajectory_controller.yaml" command="load"/>
@@ -146,9 +143,7 @@
       <arg name="robot_description" value="$(arg robot_description)"/>
       <arg name="pwm_control" value="$(arg pwm_control)"/>
       <arg name="rh_serial" value="$(arg rh_serial)"/>
-      <arg name="rh_id" value="$(arg rh_id)"/>
       <arg name="lh_serial" value="$(arg lh_serial)"/>
-      <arg name="lh_id" value="$(arg lh_id)"/>
       <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
       <arg name="lh_mapping_path" value="$(arg lh_mapping_path)"/>
       <arg name="load_robot_description" value="false"/>

@@ -40,8 +40,6 @@
   <arg name="robot_name" default="$(arg robot_model)srh"/>
 
   <!-- HANDS CONFIG-->
-  <arg name="lh_id" default="lh"/>
-  <arg name="rh_id" default="rh"/>
   <arg name="rh_serial" default="1290"/>
   <arg name="lh_serial" default="1338"/>
   <arg name="rh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
@@ -99,14 +97,14 @@
     <param name="robot_description" command="xacro --inorder $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
     <!-- HAND -->
     <group if="$(eval hands == 'both' or hands == 'right')">
-      <param name="/hand/mapping/$(arg rh_serial)" value="$(arg rh_id)"/>
-      <param name="/hand/joint_prefix/$(arg rh_serial)" value="$(arg rh_id)_"/>
-      <rosparam command="load" file="$(find sr_description)/hand/config/$(arg rh_id)_controller_gazebo.yaml"/>
+      <param name="/hand/mapping/$(arg rh_serial)" value="rh"/>
+      <param name="/hand/joint_prefix/$(arg rh_serial)" value="rh_"/>
+      <rosparam command="load" file="$(find sr_description)/hand/config/rh_controller_gazebo.yaml"/>
     </group>
     <group if="$(eval hands == 'both' or hands == 'left')">
-      <param name="/hand/mapping/$(arg lh_serial)" value="$(arg lh_id)"/>
-      <param name="/hand/joint_prefix/$(arg lh_serial)" value="$(arg lh_id)_"/>
-      <rosparam command="load" file="$(find sr_description)/hand/config/$(arg lh_id)_controller_gazebo.yaml"/>
+      <param name="/hand/mapping/$(arg lh_serial)" value="lh"/>
+      <param name="/hand/joint_prefix/$(arg lh_serial)" value="lh_"/>
+      <rosparam command="load" file="$(find sr_description)/hand/config/lh_controller_gazebo.yaml"/>
     </group>
     <arg if="$(arg start_home)" name="spawn_model_extra_args" value="-unpause $(arg home_angles)" />
     <arg unless="$(arg start_home)" name="spawn_model_extra_args" value="" />
@@ -176,8 +174,6 @@
         <arg name="robot_description" value="$(arg robot_description)"/>
         <arg name="robot_config_file" value="$(arg robot_config_file)"/>
         <arg name="hands" value="$(arg hands)"/>
-        <arg name="lh_id" value="$(arg lh_id)"/>
-        <arg name="rh_id" value="$(arg rh_id)"/>
         <arg name="rh_serial" value="$(arg rh_serial)"/>
         <arg name="lh_serial" value="$(arg lh_serial)"/>
         <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
