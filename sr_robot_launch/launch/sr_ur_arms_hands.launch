@@ -159,7 +159,7 @@
       </group>
       <group if="$(arg grasp_controller)">
         <!-- Not available yet -->
-        <!--node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen"/-->
+        <!--node name="$(arg hand_prefix)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen"/-->
       </group>
     </group>
   </group>

@@ -104,7 +104,7 @@
         <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
         <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
         <arg name="robot_description" value="$(arg robot_description)"/>
-        <arg name="hand_prefix" value="$(arg hand_id)"/>
+        <arg name="hand_prefix" value="$(arg hand_prefix)"/>
         <arg name="arm_prefix" value="$(arg arm_prefix)"/>
         <arg name="side" value="$(arg side)"/>
         <arg name="robot_model" value="$(arg arm_model)"/>
