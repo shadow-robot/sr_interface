@@ -1,6 +1,9 @@
 <launch>
+  <!--This parameter is deprecated. It will be removed soon -->
+  <arg name="hand_id" default=""/>
   <!-- This launch file is for shadow hand only -->
-  <arg name="hand_prefix" default="rh"/>
+  <arg if="$(eval arg('hand_id') == '')" name="hand_prefix" default="rh">
+  <arg unless="$(eval arg('hand_id') == '')" name="hand_prefix" default="$(arg hand_id)">
   <!-- Set to hand_e, hand_e_plus or hand_g -->
   <arg name="hand_type" default="hand_e"/>
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
