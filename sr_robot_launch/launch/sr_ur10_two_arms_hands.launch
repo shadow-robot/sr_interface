@@ -25,7 +25,6 @@
   <!-- Definition of "home" position, in joint-angle pairs -->
   <arg name="home_angles" default="-J ra_shoulder_pan_joint 1.147 -J ra_elbow_joint 1.695 -J ra_wrist_1_joint -1.395 -J ra_wrist_2_joint -1.584 -J ra_shoulder_lift_joint -1.926 -J ra_wrist_3_joint 2.7 -J la_shoulder_pan_joint -1.147 -J la_elbow_joint -1.695 -J la_wrist_1_joint -1.75 -J la_wrist_2_joint 1.57 -J la_shoulder_lift_joint -1.22 -J la_wrist_3_joint -2.70"/>
 
-
   <arg name="robot_model" default="ur10"/>
   <!-- Set arm height and separation-->
   <arg name="arm_1_z" default="0.7551" if="$(arg scene)"/>

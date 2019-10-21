@@ -1,6 +1,6 @@
 <launch>
   <!-- This launch file is for shadow hand only -->
-  <arg name="hand_id" default="rh"/>
+  <arg name="hand_prefix" default="rh"/>
   <!-- Set to hand_e or hand_e_plus -->
   <arg name="hand_type" default="hand_e_plus"/>
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
@@ -35,15 +35,15 @@
   <!-- The joint state publisher publishing frequency  -->
   <arg name="joint_state_pub_frequency" default="100"/>
   <!-- Loads the robot description -->
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_urdf_filename" default="shadowhand_motor"/>
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="robot_urdf_filename" default="shadowhand_motor_plus"/>
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e')" name="robot_urdf_filename" default="shadowhand_left_motor"/>
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_g')" name="robot_urdf_filename" default="shadowhand_lite"/>
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_g')" name="robot_urdf_filename" default="shadowhand_left_lite"/>
+  <arg if="$(eval arg('hand_prefix') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_urdf_filename" default="shadowhand_motor"/>
+  <arg if="$(eval arg('hand_prefix') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="robot_urdf_filename" default="shadowhand_motor_plus"/>
+  <arg if="$(eval arg('hand_prefix') + '_' + arg('hand_type') == 'lh_hand_e')" name="robot_urdf_filename" default="shadowhand_left_motor"/>
+  <arg if="$(eval arg('hand_prefix') + '_' + arg('hand_type') == 'rh_hand_g')" name="robot_urdf_filename" default="shadowhand_lite"/>
+  <arg if="$(eval arg('hand_prefix') + '_' + arg('hand_type') == 'lh_hand_g')" name="robot_urdf_filename" default="shadowhand_left_lite"/>
   <arg if="$(eval sim_type == 'gazebo')" name="robot_description" default="$(find sr_description)/robots/$(arg robot_urdf_filename).urdf.xacro"/>
   <arg if="$(eval sim_type == 'mujoco')" name="robot_description" default="$(find sr_description)/mujoco_models/urdfs/$(arg robot_urdf_filename).urdf"/>
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="mujoco_model_filename" default="$(find sr_description)/mujoco_models/sr_hand_e_environment.xml"/>
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="mujoco_model_filename" default="$(find sr_description)/mujoco_models/sr_hand_e_plus_environment.xml"/>
+  <arg if="$(eval arg('hand_prefix') + '_' + arg('hand_type') == 'rh_hand_e')" name="mujoco_model_filename" default="$(find sr_description)/mujoco_models/sr_hand_e_environment.xml"/>
+  <arg if="$(eval arg('hand_prefix') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="mujoco_model_filename" default="$(find sr_description)/mujoco_models/sr_hand_e_plus_environment.xml"/>
     
   
   <!-- SIMULATED ROBOTS -->
@@ -63,15 +63,15 @@
       <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model usrh -z 0.0 "
             respawn="false" output="screen"/>
     </group>
-    <param name="/hand/mapping/$(arg hand_serial)" value="$(arg hand_id)"/>
-    <param name="/hand/joint_prefix/$(arg hand_serial)" value="$(arg hand_id)_"/>
+    <param name="/hand/mapping/$(arg hand_serial)" value="$(arg hand_prefix)"/>
+    <param name="/hand/joint_prefix/$(arg hand_serial)" value="$(arg hand_prefix)_"/>
     <group if="$(eval arg('hand_type') == 'hand_e')">
-      <rosparam unless="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
-      <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_grasp_controller_gazebo.yaml"/>
+      <rosparam unless="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_prefix)_controller_gazebo.yaml"/>
+      <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_prefix)_grasp_controller_gazebo.yaml"/>
     </group>
     <group if="$(eval arg('hand_type') == 'hand_g')">
-      <rosparam unless="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
-      <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_lite_grasp_controller_gazebo.yaml"/>
+      <rosparam unless="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_prefix)_controller_gazebo.yaml"/>
+      <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_prefix)_lite_grasp_controller_gazebo.yaml"/>
     </group>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
       <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
@@ -95,7 +95,7 @@
       <arg name="robot_description" value="$(arg robot_description)"/>
       <arg name="pwm_control" value="$(arg pwm_control)"/>
       <arg name="hand_serial" value="$(arg hand_serial)"/>
-      <arg name="hand_id" value="$(arg hand_id)"/>
+      <arg name="hand_prefix" value="$(arg hand_prefix)"/>
       <arg name="mapping_path" value="$(arg mapping_path)"/>
       <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
@@ -113,7 +113,7 @@
   <group if="$(arg hand_ctrl)">
     <group unless="$(arg grasp_controller)">
       <group unless="$(eval sim_type == 'mujoco')">
-        <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
+        <node name="$(arg hand_prefix)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
           <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
           <param name="wait_for" value ="calibrated" unless="$(arg sim)"/>
         </node>
@@ -124,7 +124,7 @@
       </group>
     </group>
     <group if="$(arg grasp_controller)">
-      <node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen">
+      <node name="$(arg hand_prefix)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen">
         <param name="wait_for" value ="calibrated" unless="$(arg sim)"/>
       </node>
     </group>
