@@ -21,8 +21,8 @@
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
   <arg name="hand_trajectory" default="true"/>
-
-  <!-- ARMS CONFIG-->
+  <!-- UR firmware check-->
+  <node name="ur_firmware_check" pkg="ur_firmware_checker" type="ur_firmware_checker" output="screen" launch-prefix="/bin/bash -c '$* `rosparam get ra_sr_ur_robot_hw/robot_ip_address` 29999' --"/>
   <arg name="initial_z" default="0.7551"/>
   <arg name="arm_id" default="ra"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
