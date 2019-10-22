@@ -72,13 +72,11 @@
     <arg name="gui" default="$(arg gui)"/>
     <arg name="world" value="$(arg world)"/>
 
-    <arg name="hand_prefix" value="lh"/>
     <arg name="hand_serial" value="$(arg hand_serial)"/>
     <arg name="mapping_path" value="$(arg mapping_path)"/>
     <arg name="eth_port" value="$(arg eth_port)"/>
     <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
 
-    <arg name="arm_prefix" value="la"/>
     <arg name="initial_z" value="$(arg initial_z)"/>
     <arg name="arm_robot_hw" value="$(arg arm_robot_hw)"/>
     <arg name="include_wrist_in_arm_controller" value="$(arg include_wrist_in_arm_controller)"/>
