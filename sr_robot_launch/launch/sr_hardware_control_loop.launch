@@ -7,8 +7,8 @@
   <arg name="robot_model" default="ur10"/>
   <arg name="side" default="right"/>
   <arg name="side_letter" value="$(eval side[0])"/>
-  <arg name="hand_prefix" value="$(eval side_letter)h"/>
-  <arg name="arm_prefix" value="$(eval side_letter)a"/>
+  <arg name="hand_prefix" value="$(arg side_letter)h"/>
+  <arg name="arm_prefix" value="$(arg side_letter)a"/>
 
   <arg name="robot_description" if="$(arg hand_ctrl)" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_description" unless="$(arg hand_ctrl)" default="'$(find sr_box_ur10_moveit_config)/config/$(arg arm_prefix)_ur10_with_box.urdf.xacro'"/>
