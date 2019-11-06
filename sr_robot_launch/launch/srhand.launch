@@ -39,26 +39,13 @@
   <!-- Set this to true if you run the hardware loop on a remote computer -->
   <arg name="external_control_loop" default="false"/>
 
-  <!-- Logging  -->
-  <group if="$(arg external_control_loop)">
-    <group ns="control_box">
-      <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch">
-        <arg name="node_name" value="control_box_record"/>
-        <arg name="log_topics" value='-e ".*(controller|debug_etherCAT_data).*" /joint_states /diagnostics /mechanism_statistics'/>
-        <arg name="log_bag_prefix" value="sr_hardware_control"/>
-        <arg name="log_directory" value="$(optenv HOME)/.ros/log"/>
-    </include>
-    </group>
-  </group>
-  <group unless="$(arg external_control_loop)">
-    <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch">
-      <arg name="node_name" value="server_record"/>
-      <arg name="log_bag_prefix" value="sr_hand"/>
-      <arg name="log_directory" value="$(optenv HOME)/.ros/log"/>
-      <arg name="log_topics" value='-e ".*(controller|debug_etherCAT_data).*" /joint_states /rosout /diagnostics /mechanism_statistics /journalctl_log'/>
-    </include>  
-  </group>
-
+  <!-- Logging. -->
+  <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch">
+    <arg name="node_name" value="server_record"/>
+    <arg name="log_bag_prefix" value="sr_hand"/>
+    <arg name="log_directory" value="$(optenv HOME)/.ros/log"/>
+    <arg name="log_topics" value='-e ".*(controller|debug_etherCAT_data).*" /joint_states /rosout /diagnostics /mechanism_statistics /journalctl_log'/>
+  </include>  
 
   <!-- Loads the robot description -->
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_motor.urdf.xacro'"/>
@@ -119,7 +106,6 @@
         <arg name="mapping_path" value="$(arg mapping_path)"/>
         <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
         <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
-        <arg name="external_control_loop" value="$(arg external_control_loop)"/>
       </include>
     </group>
   </group>
@@ -132,19 +118,21 @@
   </group>
 
   <!-- Controller -->
-  <group if="$(arg hand_ctrl)">
-    <group unless="$(arg grasp_controller)">
-      <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
-        <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
-        <param name="wait_for" value ="calibrated" unless="$(arg sim)"/>
-        <param name="variable_controller" value="$(arg variable_controller)"/>
-        <param name="variable_controller_only_joint_0" value="$(arg variable_controller_only_joint_0)"/>
-      </node>
+  <group unless="$(arg external_control_loop)">
+    <group if="$(arg hand_ctrl)">
+      <group unless="$(arg grasp_controller)">
+        <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
+          <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
+          <param name="wait_for" value ="calibrated" unless="$(arg sim)"/>
+          <param name="variable_controller" value="$(arg variable_controller)"/>
+          <param name="variable_controller_only_joint_0" value="$(arg variable_controller_only_joint_0)"/>
+        </node>
+      </group>
+      <group if="$(arg grasp_controller)">
+        <node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen">
+          <param name="wait_for" value ="calibrated" unless="$(arg sim)"/>
+        </node>
+      </group>
     </group>
-    <group if="$(arg grasp_controller)">
-      <node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen">
-        <param name="wait_for" value ="calibrated" unless="$(arg sim)"/>
-      </node>
-    </group>
-  </group>
-</launch>
+  </launch>
+</group>
