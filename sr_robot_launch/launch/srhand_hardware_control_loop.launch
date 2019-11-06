@@ -1,0 +1,79 @@
+<launch>
+  <!-- This launch file is for shadow hand only -->
+  <arg name="hand_id" default="rh"/>
+  <!-- Set to hand_e, hand_e_plus or hand_g -->
+  <arg name="hand_type" default="hand_e"/>
+  <!-- Set to true for debugging -->
+  <arg name="debug" default="false"/>
+  <arg name="verbose" default="true" />
+  <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
+  <arg name="hand_trajectory" default="true"/>
+  <!-- Set to true to spawn the position controllers for the hands-->
+  <arg name="hand_ctrl" default="true"/>
+  <!-- The control mode PWM (true) or torque (false) -->
+  <!-- Set to true by default for now as torque control is not available yet -->
+  <arg name="pwm_control" default="true"/>
+  <!-- Serial number of the hand to be used-->
+  <arg name="hand_serial" default="1322"/>
+  <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
+       More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
+  <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
+  <!-- the path to the mapping files -->
+  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
+  <!-- Set to true if you want to use grasp controller -->
+  <arg name="grasp_controller" default="false"/>
+  <!-- The robot state publisher publishing frequency  -->
+  <arg name="robot_state_pub_frequency" default="250"/>
+  <!-- The joint state publisher publishing frequency  -->
+  <arg name="joint_state_pub_frequency" default="125"/>
+
+  <arg name="variable_controller" default="false"/>
+  <arg name="variable_controller_only_joint_0" default="false"/>
+
+  <!-- Logging local topics -->
+  <group ns="control_box">
+    <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch">
+      <arg name="log_topics" value='-e ".*(controller|debug_etherCAT_data).*" /joint_states /diagnostics /mechanism_statistics'/>
+      <arg name="log_bag_prefix" value="sr_hardware_control"/>
+      <arg name="log_directory" value="$(optenv HOME)/.ros/log"/>
+    </include>
+  </group>
+
+  <!-- Loads the robot description -->
+  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_motor.urdf.xacro'"/>
+  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_motor.urdf.xacro'"/>
+  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_g')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_lite.urdf.xacro'"/>
+  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_g')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_lite.urdf.xacro'"/>
+  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_motor_plus.urdf.xacro'"/>
+  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e_plus')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_motor_plus.urdf.xacro'"/>
+
+  <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
+  <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
+
+  <!-- REAL HAND -->
+  <include file="$(find sr_edc_launch)/sr_edc_ros_control.launch">
+    <arg name="debug" value="$(arg debug)"/>
+    <arg name="eth_port" value="$(arg eth_port)"/>
+    <arg name="robot_description" value="$(arg robot_description)"/>
+    <arg name="pwm_control" value="$(arg pwm_control)"/>
+    <arg name="hand_serial" value="$(arg hand_serial)"/>
+    <arg name="hand_id" value="$(arg hand_id)"/>
+    <arg name="mapping_path" value="$(arg mapping_path)"/>
+    <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
+    <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
+  </include>
+
+  <!-- Controller -->
+  <group if="$(arg hand_ctrl)">
+    <group unless="$(arg grasp_controller)">
+      <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
+        <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
+        <param name="variable_controller" value="$(arg variable_controller)"/>
+        <param name="variable_controller_only_joint_0" value="$(arg variable_controller_only_joint_0)"/>
+      </node>
+    </group>
+    <group if="$(arg grasp_controller)">
+      <node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen"/>
+    </group>
+  </group>
+</launch>
