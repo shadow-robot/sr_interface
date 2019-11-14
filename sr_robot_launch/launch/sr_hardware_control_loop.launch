@@ -57,7 +57,7 @@
   <!-- Controller -->
   <group if="$(arg hand_ctrl)">
     <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
-    <rosparam file="$(arg robot_config_file)"/>
+    <rosparam if="$(arg arm_ctrl)" file="$(arg robot_config_file)"/>
     <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
     <include file="$(find sr_edc_launch)/sr_edc_ros_control.launch">
       <arg name="define_robot_hardware" if="$(arg arm_ctrl)" value="false"/>
