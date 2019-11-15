@@ -1,11 +1,12 @@
 <launch>
   <arg name="debug" default="false"/>
-  <arg name="robot_state_pub_frequency" default="100"/>
-  <arg name="joint_state_pub_frequency" default="100"/>
+  <arg name="robot_state_pub_frequency" default="250"/>
+  <arg name="joint_state_pub_frequency" default="125"/>
 
   <!-- ROBOT CONFIG-->
   <arg name="robot_model" default="ur10"/>
   <arg name="side" default="right"/>
+
   <!--arg name="robot_description" if="$(arg hand_ctrl)" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_description" unless="$(arg hand_ctrl)" default="'$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro'"/-->
   <arg name="robot_description_file" default="$(find ur_description)/launch/ur10_upload.launch" doc="Robot description launch file."/>

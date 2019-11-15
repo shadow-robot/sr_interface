@@ -29,9 +29,9 @@
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
   <!-- The robot state publisher publishing frequency  -->
-  <arg name="robot_state_pub_frequency" default="50"/>
+  <arg name="robot_state_pub_frequency" default="250"/>
   <!-- The joint state publisher publishing frequency  -->
-  <arg name="joint_state_pub_frequency" default="100"/>
+  <arg name="joint_state_pub_frequency" default="125"/>
 
   <arg name="variable_controller" default="false"/>
   <arg name="variable_controller_only_joint_0" default="false"/>
