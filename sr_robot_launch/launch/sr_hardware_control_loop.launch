@@ -6,8 +6,10 @@
   <!-- ROBOT CONFIG-->
   <arg name="robot_model" default="ur10"/>
   <arg name="side" default="right"/>
-  <arg name="robot_description" if="$(arg hand_ctrl)" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
-  <arg name="robot_description" unless="$(arg hand_ctrl)" default="'$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro'"/>
+  <!--arg name="robot_description" if="$(arg hand_ctrl)" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
+  <arg name="robot_description" unless="$(arg hand_ctrl)" default="'$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro'"/-->
+  <arg name="robot_description_file" default="$(find ur_description)/launch/ur10_upload.launch" doc="Robot description launch file."/>
+
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
 
   <!-- HANDS CONFIG-->
@@ -50,7 +52,7 @@
       <arg name="hand_robot_hardware_name" value="unique_robot_hw"/>
       <arg name="debug" value="$(arg debug)"/>
       <arg name="eth_port" value="$(arg eth_port)"/>
-      <arg name="robot_description" value="$(arg robot_description)"/>
+      <arg name="robot_description" value="$(arg robot_description_file)"/>
       <arg name="pwm_control" value="$(arg pwm_control)"/>
       <arg name="hand_serial" value="$(arg hand_serial)"/>
       <arg name="hand_id" value="$(arg hand_id)"/>
@@ -76,7 +78,16 @@
   <arg name="robot_ip" default="192.168.1.1"/>
   <arg name="kinematics_config" default="$(find ur_calibration)/etc/UR10A_calibration.yaml"/>
 
-  <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
+  <!--param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/-->
+  <!-- robot model -->
+  <arg name="limited" default="false" doc="Use the description in limited mode (Every axis rotates from -PI to PI)"/>
+  <arg name="kinematics_config" default="/home/user/my_robot_calibration.yaml" doc="Kinematics config file used for calibration correction. This will be used to verify the robot's calibration is matching the robot_description."/>
+
+  <include file="$(arg robot_description_file)">
+    <arg name="limited" value="$(arg limited)"/>
+    <arg name="kinematics_config" value="$(arg kinematics_config)"/>
+  </include>
+
 
   <include file="$(find sr_robot_launch)/launch/ur10_new_ros_driver.launch">
        <arg name="robot_ip" value="$(arg robot_ip)"/>
