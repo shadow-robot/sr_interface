@@ -7,8 +7,10 @@
   <arg name="robot_model" default="ur10"/>
   <arg name="side" default="right"/>
   <arg name="side_letter" value="$(eval side[0])"/>
-  <arg name="robot_description" if="$(arg hand_ctrl)" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
-  <arg name="robot_description" unless="$(arg hand_ctrl)" default="'$(find sr_box_ur10_moveit_config)/config/$(arg side_letter)a_ur10_with_box.urdf.xacro'"/>
+  <!-- HAND AND ARM -->
+  <arg name="robot_description" if="$(eval arg('hand_ctrl') and arg('arm_ctrl'))" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
+  <!-- ARM BUT NO HAND -->
+  <arg name="robot_description" if="$(eval not arg('hand_ctrl') and arg('arm_ctrl'))" default="'$(find sr_box_ur10_moveit_config)/config/$(arg side_letter)a_ur10_with_box.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
 
   <!-- HANDS CONFIG-->
@@ -21,6 +23,10 @@
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
   <arg name="hand_trajectory" default="true"/>
+  <!-- RIGHT HAND BUT NO ARM -->
+  <arg name="robot_description" if="$(eval arg('hand_ctrl') and not arg('arm_ctrl') and arg('hand_id')=='rh')" default="$(find sr_description)/robots/shadowhand_motor_plus.urdf.xacro"/>
+  <!-- LEFT HAND BUT NO ARM -->
+  <arg name="robot_description" if="$(eval arg('hand_ctrl') and not arg('arm_ctrl') and arg('hand_id')=='lh')" default="'$(find sr_description)/robots/shadowhand_left_motor_plus.urdf.xacro'"/>
 
   <!-- ARMS CONFIG-->
   <arg name="initial_z" default="0.7551"/>
