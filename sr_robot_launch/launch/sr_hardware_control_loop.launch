@@ -8,9 +8,9 @@
   <arg name="side" default="right"/>
   <arg name="side_letter" value="$(eval side[0])"/>
   <!-- HAND AND ARM -->
-  <arg name="robot_description" if="$(eval arg('hand_ctrl') and arg('arm_ctrl'))" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
+  <arg name="robot_description" if="$(eval arg('hand_ctrl') and arg('arm_ctrl'))" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_ur10_bt_sp_biotacs.urdf.xacro"/>
   <!-- ARM BUT NO HAND -->
-  <arg name="robot_description" if="$(eval not arg('hand_ctrl') and arg('arm_ctrl'))" default="'$(find sr_box_ur10_moveit_config)/config/$(arg side_letter)a_ur10_with_box.urdf.xacro'"/>
+  <arg name="robot_description" if="$(eval not arg('hand_ctrl') and arg('arm_ctrl'))" default="$(find sr_box_ur10_moveit_config)/config/$(arg side_letter)a_ur10_with_box.urdf.xacro"/>
   <arg name="robot_config_file" if="$(arg arm_ctrl)" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
 
   <!-- HANDS CONFIG-->
@@ -26,7 +26,7 @@
   <!-- RIGHT HAND BUT NO ARM -->
   <arg name="robot_description" if="$(eval arg('hand_ctrl') and not arg('arm_ctrl') and arg('hand_id')=='rh')" default="$(find sr_description)/robots/shadowhand_motor_plus.urdf.xacro"/>
   <!-- LEFT HAND BUT NO ARM -->
-  <arg name="robot_description" if="$(eval arg('hand_ctrl') and not arg('arm_ctrl') and arg('hand_id')=='lh')" default="'$(find sr_description)/robots/shadowhand_left_motor_plus.urdf.xacro'"/>
+  <arg name="robot_description" if="$(eval arg('hand_ctrl') and not arg('arm_ctrl') and arg('hand_id')=='lh')" default="$(find sr_description)/robots/shadowhand_left_motor_plus.urdf.xacro"/>
   <arg name="robot_config_file" if="$(eval arg('hand_ctrl') and not arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh.yaml"/>
 
   <!-- ARMS CONFIG-->
