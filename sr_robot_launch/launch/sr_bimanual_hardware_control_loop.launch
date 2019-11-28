@@ -1,7 +1,7 @@
 <launch>
   <arg name="debug" default="false"/>
-  <arg name="robot_state_pub_frequency" default="100"/>
-  <arg name="joint_state_pub_frequency" default="100"/>
+  <arg name="robot_state_pub_frequency" default="250"/>
+  <arg name="joint_state_pub_frequency" default="125"/>
   <!-- Specify if the system has "both" hands, only "right", or only "left" -->
   <arg name="hands" default="both"/>
   <!-- ROBOT CONFIG-->
@@ -111,8 +111,8 @@
   <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
   <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_1_program_path)"/>
   <param name="la_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_2_program_path)"/>
-  <arg name="ra_sr_ur_robot_hw/speed_scale" type="double" value="$(arg right_arm_speed_scale)"/>
-  <arg name="la_sr_ur_robot_hw/speed_scale" type="double" value="$(arg left_arm_speed_scale)"/>
+  <param name="ra_sr_ur_robot_hw/speed_scale" type="double" value="$(arg right_arm_speed_scale)"/>
+  <param name="la_sr_ur_robot_hw/speed_scale" type="double" value="$(arg left_arm_speed_scale)"/>
 
   <!-- Trajectory mode -->
   <group if="$(arg arm_trajectory)">
@@ -127,9 +127,9 @@
       <rosparam file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml" command="load"/>
     </group>
     <node name="ra_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-          args="--wait-for=/ra_arm_ready ra_trajectory_controller "/>
+          args="--wait-for=/ra_arm_ready --wait-for=/calibrated ra_trajectory_controller "/>
     <node name="la_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-          args="--wait-for=/la_arm_ready la_trajectory_controller"/>
+          args="--wait-for=/la_arm_ready --wait-for=/calibrated la_trajectory_controller"/>
   </group>
 
   <!-- Position mode -->
