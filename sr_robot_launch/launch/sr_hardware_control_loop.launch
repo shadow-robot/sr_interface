@@ -124,7 +124,7 @@
       </group>
       <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_ur_launch)/config/ra_trajectory_controller.yaml"/>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_id)_arm_ready $(arg arm_id)_trajectory_controller"/>
+            args="--wait-for=/$(arg arm_id)_arm_ready --wait-for=/calibrated $(arg arm_id)_trajectory_controller"/>
     </group>
     <!-- Position mode -->
     <group if="$(arg arm_position)">
@@ -134,7 +134,7 @@
       </group>
       <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_ur_launch)/config/ra_group_position_controller.yaml"/>
       <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_id)_arm_ready $(arg arm_id)_group_position_controller"/>
+            args="--wait-for=/$(arg arm_id)_arm_ready --wait-for=/calibrated $(arg arm_id)_group_position_controller"/>
     </group>
   </group>
 </launch>
