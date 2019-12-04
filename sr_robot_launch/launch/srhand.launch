@@ -91,6 +91,19 @@
       <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)"/>
       <param name="tf_prefix" type="string" value="" />
     </node>
+    <!-- Controller -->
+    <group if="$(arg hand_ctrl)">
+      <group unless="$(arg grasp_controller)">
+        <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
+          <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
+          <param name="variable_controller" value="$(arg variable_controller)"/>
+          <param name="variable_controller_only_joint_0" value="$(arg variable_controller_only_joint_0)"/>
+        </node>
+      </group>
+      <group if="$(arg grasp_controller)">
+        <node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen" />
+      </group>
+    </group>
   </group>
 
   <!-- REAL ROBOTS -->
