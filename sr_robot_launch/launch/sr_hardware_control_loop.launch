@@ -7,6 +7,8 @@
   <arg name="robot_model" default="ur10"/>
   <arg name="side" default="right"/>
   <arg name="side_letter" value="$(eval side[0])"/>
+  <arg name="arm_ctrl" default="true"/>
+  <arg name="hand_ctrl" default="true"/>
   <!-- HAND AND ARM -->
   <arg name="robot_description" if="$(eval arg('hand_ctrl') and arg('arm_ctrl'))" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_ur10_bt_sp_biotacs.urdf.xacro"/>
   <!-- ARM BUT NO HAND -->
@@ -18,7 +20,6 @@
   <arg name="hand_serial" default="1082"/>
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT enp2s0)"/>
-  <arg name="hand_ctrl" default="true"/>
   <arg name="pwm_control" default="true"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
@@ -38,7 +39,6 @@
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
-  <arg name="arm_ctrl" default="true"/>
   <arg name="arm_speed_scale" default="0.5"/>
 
   <!-- Logging local topics -->
