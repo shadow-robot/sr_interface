@@ -35,18 +35,16 @@ from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
 from math import radians
 
-from sr_utilities.hand_finder import HandFinder
-
 from moveit_msgs.srv import GetPositionFK
 from std_msgs.msg import Header
 
 import tf2_ros
 import copy
-import rospkg
 import numpy
 
 
 class SrRobotCommanderException(Exception):
+
     def __init__(self, value):
         self._value = value
 
@@ -55,6 +53,7 @@ class SrRobotCommanderException(Exception):
 
 
 class SrRobotCommander(object):
+
     """
     Base class for hand and arm commanders
     """
@@ -299,8 +298,7 @@ class SrRobotCommander(object):
         output = dict()
 
         if (name in self._srdf_names):
-            output = self._move_group_commander.\
-                           _g.get_named_target_values(str(name))
+            output = self._move_group_commander._g.get_named_target_values(str(name))
 
         elif (name in self._warehouse_names):
             js = self._warehouse_name_get_srv(
@@ -661,7 +659,7 @@ class SrRobotCommander(object):
 
         for controller_name in controller_list.keys():
             self._action_running[controller_name] = False
-            service_name = controller_name+"/follow_joint_trajectory"
+            service_name = controller_name + "/follow_joint_trajectory"
             self._clients[controller_name] = SimpleActionClient(service_name,
                                                                 FollowJointTrajectoryAction)
             if self._clients[controller_name].wait_for_server(timeout=rospy.Duration(4)) is False:
@@ -881,7 +879,7 @@ class SrRobotCommander(object):
             else:
                 return resp.solution.joint_state
 
-        except rospy.ServiceException, e:
+        except rospy.ServiceException as e:
             rospy.logerr("Service call failed: %s" % e)
 
     def move_to_pose_value_target_unsafe(self, target_pose,  avoid_collisions=False, time=0.002, wait=True):
