@@ -6,7 +6,7 @@
   <!-- ROBOT CONFIG-->
   <arg name="robot_model" default="ur10"/>
   <arg name="side" default="right"/>
-  <arg name="robot_description" if="$(arg hand_ctrl)" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
+  <arg name="robot_description" if="$(arg hand_ctrl)" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model)_new_driver.urdf.xacro'"/>
   <arg name="robot_description" unless="$(arg hand_ctrl)" default="'$(find sr_box_ur10_moveit_config)/config/ur10_with_box.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
 
@@ -74,14 +74,30 @@
   </group>
 
   <arg name="robot_ip" default="192.168.1.1"/>
-  <arg name="kinematics_config" default="$(find ur_calibration)/etc/UR10A_calibration_2.yaml"/>
+  <arg name="kinematics_config" default="/home/user/my_robot_calibration.yaml"/>
 
   <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
 
-  <include file="$(find sr_robot_launch)/launch/ur10_new_ros_driver.launch">
+
+  <!-- disaled so that we can try and load it as a plugin instead -->
+  <!--include file="$(find sr_robot_launch)/launch/ur10_new_ros_driver.launch">
        <arg name="robot_ip" value="$(arg robot_ip)"/>
        <arg name="kinematics_config" value="$(arg kinematics_config)"/>
-  </include>
+  </include-->
+
+  <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_group_position_controller.yaml"/>
+
+<rosparam command="load" file="$(find ur_robot_driver)/config/ur_hardware_interface.yaml"/>
+
+  <rosparam>
+    robot_hardware:
+       <!--- ur_robot_driver
+       - ur_driver-->
+       - ur_hardware_interface
+       - ur_robot_driver_plugin
+       - praise_crab
+       - unique_robot_hw
+  </rosparam>
 
   <!--<group if="$(arg arm_ctrl)">-->
     <!--<rosparam if="$(eval arg('side') == 'right')">-->

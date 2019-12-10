@@ -28,16 +28,6 @@
     kinematics_file="${load_yaml('$(arg kinematics_config)')}"
   />
 
-  <link name="world" />
-
-  <joint name="world_joint" type="fixed">
-    <parent link="world" />
-    <child link = "base_link" />
-    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
-  </joint>
-
-
-
     <xacro:include filename="$(find sr_description)/materials.urdf.xacro"/>
     <xacro:include filename="$(find sr_description)/hand/xacro/full_hand.urdf.xacro"/>
     <xacro:include filename="$(find sr_description)/other/xacro/gazebo/gazebo.urdf.xacro"/>
