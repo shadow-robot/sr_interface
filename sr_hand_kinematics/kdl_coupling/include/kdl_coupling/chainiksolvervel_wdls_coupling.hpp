@@ -31,43 +31,43 @@
 
 namespace KDL
 {
-/**
- * Implementation of a inverse velocity kinematics algorithm based
- * on the weighted pseudo inverse with damped least-square to calculate the velocity
- * transformation from Cartesian to joint space of a general
- * KDL::Chain. It uses a svd-calculation based on householders
- * rotations.
- *
- * J# = M_q*Vb*pinv_dls(Db)*Ub'*M_x
- *
- * where B = Mx*J*Mq
- *
- * and B = Ub*Db*Vb' is the SVD decomposition of B
- *
- * Mq and Mx represent, respectively, the joint-space and task-space weighting
- * matrices.
- * Please refer to the documentation of setWeightJS(const Eigen::MatrixXd& Mq)
- * and setWeightTS(const Eigen::MatrixXd& Mx) for details on the effects of
- * these matrices.
- *
- * For more details on Weighted Pseudo Inverse, see :
- * 1) [Ben Israel 03] A. Ben Israel & T.N.E. Greville.
- * Generalized Inverses : Theory and Applications,
- * second edition. Springer, 2003. ISBN 0-387-00293-6.
- *
- * 2) [Doty 93] K. L. Doty, C. Melchiorri & C. Boniveto.
- * A theory of generalized inverses applied to Robotics.
- * The International Journal of Robotics Research,
- * vol. 12, no. 1, pages 1-19, february 1993.
- *
- *
- * @ingroup KinematicFamily
- */
+/*
+* Implementation of a inverse velocity kinematics algorithm based
+* on the weighted pseudo inverse with damped least-square to calculate the velocity
+* transformation from Cartesian to joint space of a general
+* KDL::Chain. It uses a svd-calculation based on householders
+* rotations.
+*
+* J# = M_q*Vb*pinv_dls(Db)*Ub'*M_x
+*
+* where B = Mx*J*Mq
+*
+* and B = Ub*Db*Vb' is the SVD decomposition of B
+*
+* Mq and Mx represent, respectively, the joint-space and task-space weighting
+* matrices.
+* Please refer to the documentation of setWeightJS(const Eigen::MatrixXd& Mq)
+* and setWeightTS(const Eigen::MatrixXd& Mx) for details on the effects of
+* these matrices.
+*
+* For more details on Weighted Pseudo Inverse, see :
+* 1) [Ben Israel 03] A. Ben Israel & T.N.E. Greville.
+* Generalized Inverses : Theory and Applications,
+* second edition. Springer, 2003. ISBN 0-387-00293-6.
+*
+* 2) [Doty 93] K. L. Doty, C. Melchiorri & C. Boniveto.
+* A theory of generalized inverses applied to Robotics.
+* The International Journal of Robotics Research,
+* vol. 12, no. 1, pages 1-19, february 1993.
+*
+*
+* @ingroup KinematicFamily
+*/
 class ChainIkSolverVel_wdls_coupling :
         public ChainIkSolverVel
 {
 public:
-  /**
+  /*
    * Constructor of the solver
    *
    * @param chain the chain to calculate the inverse velocity
@@ -86,7 +86,7 @@ public:
 
   virtual int CartToJnt(const JntArray &q_in, const Twist &v_in, JntArray &qdot_out);
 
-  /**
+  /*
    * not (yet) implemented.
    *
    */
@@ -101,6 +101,7 @@ public:
   };
 
   /**
+  /*
    * Set the joint space weighting matrix
    *
    * @param weight_js joint space weighting symetric matrix,
@@ -126,7 +127,7 @@ public:
 
   Eigen::MatrixXd getWeightJS();
 
-  /**
+  /*
    * Set the task space weighting matrix
    *
    * @param weight_ts task space weighting symetric matrix,

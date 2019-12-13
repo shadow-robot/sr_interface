@@ -9,59 +9,100 @@
   <arg name="use_moveit" default="true"/>
   <!--Choose planner library, options are ompl, stomp or sbpl-->
   <arg name="planning" default="ompl"/>
+  <!--Should the planner yaml be automatically generated? -->
+  <arg name="generate_planning_config" default="True"/> 
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
-  <!-- Serial number of the hand to be used-->
-  <arg name="hand_serial" default="1082"/>
-  <!-- the path to the mapping files -->
-  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_E_v3.yaml"/>
-  <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
-       More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
-  <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
-  <!-- Set to true if you want to use grasp controller -->
-  <arg name="grasp_controller" default="false"/>
-  <!-- The control mode PWM (true) or torque (false) -->
-  <!-- Set to true by default for now as torque control is not available yet -->
-  <arg name="pwm_control" default="true"/>
-
-  <!-- Set world value dependant on scene -->
-  <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world" unless="$(arg scene)"/>
-  <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large.world" if="$(arg scene)"/>
   <!-- Set the scene file -->
   <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large.scene"/>
+  <!-- Set world value dependant on scene -->
+  <arg name="world" default="$(find sr_description_common)/worlds/shadowhands_and_arms.world" unless="$(arg scene)"/>
+  <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large.world" if="$(arg scene)"/>
+  <!-- Set to true if you want the robot to start in the "home" positions -->
+  <arg name="start_home" default="false"/>
+  <!-- Definition of "home" position, in joint-angle pairs -->
+  <arg name="home_angles" default="-J la_shoulder_pan_joint 1.147 -J la_elbow_joint -1.695 -J la_wrist_1_joint -1.75 -J la_wrist_2_joint 1.57 -J la_shoulder_lift_joint -1.22 -J la_wrist_3_joint -1.830"/>
+  <!-- Set this to true if you run the hardware loop on a remote computer -->
+  <arg name="external_control_loop" default="false"/>
+  <!-- The robot state publisher publishing frequency  -->
+  <arg name="robot_state_pub_frequency" default="250"/>
+  <!-- The joint state publisher publishing frequency  -->
+  <arg name="joint_state_pub_frequency" default="125"/>
 
-  <!-- Set initial_z value dependant on scene-->
-  <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
-  <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
-
+  <!-- ROBOT CONFIG-->
+  <arg name="side" default="left"/>
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/left_srhand_ur10.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/left_sh_ur10.yaml"/>
 
-  <arg name="side" value="left"/>
+  <!-- HAND CONFIG-->
+  <arg name="hand_serial" default="1082"/>
+  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_E_v3.yaml"/>
+  <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
+       More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
+  <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/> 
+  <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
+  <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
+  <!-- The control mode PWM (true) or torque (false) -->
+  <!-- Set to true by default for now as torque control is not available yet -->
+  <arg name="pwm_control" default="true"/>
+  <!-- Set to true if you want to use grasp controller -->
+  <arg name="grasp_controller" default="false"/>
+
+  <!-- ARM CONFIG-->
+  <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
+  <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
+  <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_speed_scale" default="0.5"/>
+
+  <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
+  <arg name="arm_trajectory" default="true"/>
+  <!-- Set to true to spawn group position controllers for the arms -->
+  <arg name="arm_position" default="$(eval not arm_trajectory)"/>
+  <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
+  <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
+  <arg name="include_wrist_in_arm_controller" default="true"/>
+  
   <include file="$(find sr_robot_launch)/launch/sr_ur_arm_hand.launch">
     <arg name="sim" value="$(arg sim)"/>
     <arg name="debug" default="$(arg debug)"/>
     <arg name="use_moveit" default="$(arg use_moveit)"/>
     <arg name="planning" default="$(arg planning)"/>
+    <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
     <arg name="gui" default="$(arg gui)"/>
     <arg name="world" value="$(arg world)"/>
-    <arg name="initial_z" value="$(arg initial_z)"/>
-    <arg name="robot_description" value="$(arg robot_description)"/>
-    <arg name="robot_config_file" value="$(arg robot_config_file)"/>
+
     <arg name="hand_id" value="lh"/>
-    <arg name="arm_id" value="la"/>
-    <arg name="side" value="$(arg side)"/>
-    <arg name="robot_model" value="ur10"/>
-    <arg name="robot_name" value="ur10srh"/>
-    <arg name="arm_robot_hw" value="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
-    <arg name="arm_group_name" value="$(arg side)_arm"/>
     <arg name="hand_serial" value="$(arg hand_serial)"/>
     <arg name="mapping_path" value="$(arg mapping_path)"/>
     <arg name="eth_port" value="$(arg eth_port)"/>
-    <arg name="scene" value="$(arg scene)"/>
+    <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
+
+    <arg name="arm_id" value="la"/>
+    <arg name="initial_z" value="$(arg initial_z)"/>
+    <arg name="arm_robot_hw" value="$(arg arm_robot_hw)"/>
+    <arg name="include_wrist_in_arm_controller" value="$(arg include_wrist_in_arm_controller)"/>
+    <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
+    <arg name="arm_position" default="$(arg arm_position)"/>
+    <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
+
+    <arg name="side" value="$(arg side)"/>
+    <arg name="robot_description" value="$(arg robot_description)"/>
+    <arg name="robot_config_file" value="$(arg robot_config_file)"/>
+    <arg name="robot_model" value="ur10"/>
+    <arg name="robot_name" value="ur10srh"/>
+    <arg name="external_control_loop" value="$(arg external_control_loop)"/>
+
     <arg name="grasp_controller" value="$(arg grasp_controller)"/>
     <arg name="pwm_control" value="$(arg pwm_control)"/>
+
+    <arg name="scene" value="$(arg scene)"/>
+    <arg name="scene_file" value="$(arg scene_file)"/>
+    <arg name="start_home" value="$(arg start_home)"/>
+    <arg name="home_angles" value="$(arg home_angles)"/>
+
+    <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
+    <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
   </include>
 </launch>

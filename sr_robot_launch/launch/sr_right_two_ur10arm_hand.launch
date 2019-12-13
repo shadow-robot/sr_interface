@@ -10,7 +10,7 @@
   <!--Choose planner library, options are ompl, stomp or sbpl-->
   <arg name="planning" default="ompl"/>
   <!--Should the planner yaml be automatically generated? -->
-  <arg name="generate_planning_config" default="True"/> 
+  <arg name="generate_planning_config" default="True"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <!-- Serial number of the hand to be used-->
@@ -46,7 +46,8 @@
   <!-- Arm config files -->
   <arg name="arm_robot_hw_1" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
   <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_ur_arm_robot_hw.yaml"/>
-
+  <arg name="right_arm_speed_scale" default="0.5"/>
+  <arg name="left_arm_speed_scale" default="0.5"/>
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/right_srhand_bt_sp_biotacs_two_ur10.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_two_ur10_btsp_biotac.yaml"/>
 
@@ -72,6 +73,8 @@
     <arg name="robot_name" value="ur10srh"/>
     <arg name="arm_robot_hw_1" default="$(arg arm_robot_hw_1)"/>
     <arg name="arm_robot_hw_2" default="$(arg arm_robot_hw_2)"/>
+    <arg name="right_arm_speed_scale" default="$(arg right_arm_speed_scale)"/>
+    <arg name="left_arm_speed_scale" default="$(arg left_arm_speed_scale)"/>
     <arg name="hand_serial" value="$(arg hand_serial)"/>
     <arg name="mapping_path" value="$(arg mapping_path)"/>
     <arg name="eth_port" value="$(arg eth_port)"/>

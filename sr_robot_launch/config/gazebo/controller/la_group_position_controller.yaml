@@ -1,0 +1,11 @@
+la_group_position_controller:
+  type: "position_controllers/JointGroupPositionController"
+  joints:
+    - la_shoulder_pan_joint
+    - la_shoulder_lift_joint
+    - la_elbow_joint
+    - la_wrist_1_joint
+    - la_wrist_2_joint
+    - la_wrist_3_joint
+    - lh_WRJ1
+    - lh_WRJ2

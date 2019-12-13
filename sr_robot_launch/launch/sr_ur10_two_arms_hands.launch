@@ -47,6 +47,8 @@
   <!-- ARMS -->
   <arg name="arm_robot_hw_1" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
   <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_ur_arm_robot_hw.yaml"/>
+  <arg name="right_arm_speed_scale" default="0.5"/>
+  <arg name="left_arm_speed_scale" default="0.5"/>
 
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
@@ -126,6 +128,8 @@
       </rosparam>
       <rosparam command="load" file="$(arg arm_robot_hw_1)"/>
       <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
+      <arg name="ra_sr_ur_robot_hw/speed_scale" type="double" value="$(arg right_arm_speed_scale)"/>
+      <arg name="la_sr_ur_robot_hw/speed_scale" type="double" value="$(arg left_arm_speed_scale)"/>
       <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_1_program_path)"/>
       <param name="la_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_2_program_path)"/>
     </group>
@@ -154,9 +158,10 @@
     <group if="$(arg arm_trajectory)">
       <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml"/>
       <rosparam command="load" file="$(find sr_robot_launch)/config/la_trajectory_controller.yaml"/>
-      <node name="arm_checker" pkg="sr_robot_launch" type="check_arms_ready" output="screen"/>
-      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/arms_ready --shutdown-timeout=1.0 ra_trajectory_controller la_trajectory_controller"/>
+      <node name="ra_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+            args="--wait-for=/ra_arm_ready --shutdown-timeout=1.0 ra_trajectory_controller"/>
+      <node name="la_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+            args="--wait-for=/la_arm_ready --shutdown-timeout=1.0 la_trajectory_controller"/>
     </group>
 
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->
@@ -182,7 +187,7 @@
     <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
       <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
       <param name="exclude_wrist" value="true"/>
-      <param name="wait_for" value ="/calibrated" unless="$(arg sim)"/>
+      <param name="wait_for" value ="calibrated" unless="$(arg sim)"/>
     </node>
   </group>
 </launch>
