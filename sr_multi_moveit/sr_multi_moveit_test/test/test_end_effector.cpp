@@ -1,10 +1,7 @@
 /**
- * @file   test_end_effector.cpp
- * @author Guillaume Walck
- *
- * Copyright 2015 Shadow Robot Company Ltd.
+* @file   test_end_effector.cpp
+* @author Guillaume Walck
 */
-
 
 
 /*********************************************************************
@@ -66,7 +63,7 @@ protected:
     std::string xml_string, robot_description_, robot_description_semantic_;
 
     // wait for move_group to be ready
-    ros::WallDuration(8.0).sleep();
+    ros::WallDuration(30.0).sleep();
     ros::spinOnce();
     if (0)
     {

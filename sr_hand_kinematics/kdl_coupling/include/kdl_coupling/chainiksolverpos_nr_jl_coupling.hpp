@@ -32,19 +32,19 @@
 
 namespace KDL
 {
-/**
- * Implementation of a general inverse position kinematics
- * algorithm based on Newton-Raphson iterations to calculate the
- * position transformation from Cartesian to joint space of a general
- * KDL::Chain. Takes joint limits into account.
- *
- * @ingroup KinematicFamily
- */
+/*
+* Implementation of a general inverse position kinematics
+* algorithm based on Newton-Raphson iterations to calculate the
+* position transformation from Cartesian to joint space of a general
+* KDL::Chain. Takes joint limits into account.
+*
+* @ingroup KinematicFamily
+*/
 class ChainIkSolverPos_NR_JL_coupling :
         public ChainIkSolverPos
 {
 public:
-  /**
+  /*
    * Constructor of the solver, it needs the chain, a forward
    * position kinematics solver and an inverse velocity
    * kinematics solver for that chain.
