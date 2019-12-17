@@ -8,12 +8,7 @@
     <joint name="world_joint" type="fixed">
         <parent link="world"/>
         <child link="stand_link"/>
-        <xacro:if value="$(arg initial_z)">
-            <origin xyz="0.0 0.0 $(arg initial_z)" rpy="0.0 0.0 0.0"/>
-        </xacro:if>
-        <xacro:unless value="$(arg initial_z)">
-            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
-        </xacro:unless>
+        <origin xyz="0.0 0.0 $(arg initial_z)" rpy="0.0 0.0 0.0"/>
     </joint>
 
     <xacro:include filename="$(find ur_description)/urdf/ur10.urdf.xacro"/>
@@ -32,7 +27,7 @@
     <xacro:include filename="$(find sr_description)/other/xacro/gazebo/gazebo.urdf.xacro"/>
 
     <xacro:shadowhand muscletrans="false" muscle="false" bio="false" bt_sp="true" ubi="false" eli="false"
-                      reflect="1.0" prefix="rh_" lf="true"/>
+                      reflect="1.0" prefix="rh_" lf="true" cable_mesh="true"/>
 
     <joint name="ra_arm_to_hand" type="fixed">
         <parent link="ra_ee_link"/>

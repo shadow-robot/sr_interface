@@ -61,7 +61,8 @@ Visualization Manager:
           Expand Joint Details: false
           Expand Link Details: false
           Expand Tree: false
-          H1_F1_base_link:
+          Link Tree Style: Links in Alphabetic Order
+          hand_base_attach:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -129,6 +130,7 @@ Visualization Manager:
         Show Robot Visual: true
         Show Trail: false
         State Display Time: 0.05 s
+        Trail Step Size: 1
         Trajectory Topic: move_group/display_planned_path
       Planning Metrics:
         Payload: 1
@@ -141,7 +143,7 @@ Visualization Manager:
         Colliding Link Color: 255; 0; 0
         Goal State Alpha: 1
         Goal State Color: 250; 128; 0
-        Interactive Marker Size: 0.1
+        Interactive Marker Size: 0.2
         Joint Violation Color: 255; 0; 255
         Planning Group: right_arm
         Query Goal State: true
@@ -234,6 +236,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
+    Default Light: true
     Fixed Frame: world
     Frame Rate: 30
   Name: root
@@ -258,6 +261,7 @@ Visualization Manager:
         Z: 2.23518001e-07
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
+      Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
       Pitch: 0.274796903
@@ -273,9 +277,11 @@ Window Geometry:
     collapsed: false
   Hide Left Dock: false
   Hide Right Dock: false
-  Motion Planning:
+  MotionPlanning:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000002a2000003b0fc0200000005fb000000100044006900730070006c006100790073010000003a000001da000000c600fffffffb0000000800480065006c00700000000342000000bb0000006e00fffffffb0000000a0056006900650077007300000003b0000000b00000009e00fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e0067010000021a000001d0000001a600ffffff0000047c000003b000000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  MotionPlanning - Trajectory Slider:
+    collapsed: false
+  QMainWindow State: 000000ff00000000fd0000000100000000000002a2000003b0fc0200000007fb000000100044006900730070006c006100790073010000003a000001c1000000c600fffffffb0000000800480065006c00700000000342000000bb0000006e00fffffffb0000000a0056006900650077007300000003b0000000b00000009e00fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e0067010000021a000001d00000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000003e00fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670100000201000001e90000016b00ffffff0000047c000003b000000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
   Width: 1828

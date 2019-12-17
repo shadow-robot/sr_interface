@@ -40,6 +40,7 @@ import rospy
 import rospkg
 import rosparam
 from srdfdom.srdf import SRDF
+from copy import deepcopy
 
 from urdf_parser_py.urdf import URDF
 import generate_robot_srdf
@@ -330,13 +331,18 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
                     output_str += "\n"
 
         if manipulator.has_hand:
-                # open hand template files
-            tracik_template_path = (hand_template_path[0:hand_template_path.find("_template")] +
-                                    "_tracik_template.yaml")
+            # open hand template files
             with open(hand_template_path, 'r') as stream:
                 hand_yamldoc = yaml.load(stream)
-            with open(tracik_template_path, 'r') as stream:
-                hand_yamldock_tracik = yaml.load(stream)
+
+            if 'kinematics_template' in hand_template_path:
+                default_solver_for_fixed_joint = "trac_ik"
+                fixed_joint_template_path = rospkg.RosPack().get_path(
+                    'sr_moveit_hand_config') + "/config/kinematics_" + default_solver_for_fixed_joint + "_template.yaml"
+                with open(fixed_joint_template_path, 'r') as stream:
+                    hand_yamldoc_fixed_joint = yaml.load(stream)
+            else:
+                hand_yamldoc_fixed_joint = deepcopy(hand_yamldoc)
 
             prefix = manipulator.hand.prefix
             finger_prefixes = ["FF", "MF", "RF", "LF", "TH"]
@@ -368,7 +374,7 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
 
                 if group_name in hand_yamldoc and group_prefix == prefix:
                     if is_fixed.get(group_name):
-                        kinematics_config = hand_yamldock_tracik[group_name]
+                        kinematics_config = hand_yamldoc_fixed_joint[group_name]
                     else:
                         kinematics_config = hand_yamldoc[group_name]
 
