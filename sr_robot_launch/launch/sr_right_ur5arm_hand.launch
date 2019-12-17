@@ -31,13 +31,14 @@
   <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large.world" if="$(arg scene)"/>
   <!-- Set the scene file -->
   <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large.scene"/>
-  
+
   <!-- Set initial_z value dependant on scene-->
   <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
 
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/right_srhand_ur5.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur5.yaml"/>
+  <arg name="arm_speed_scale" default="0.5"/>
 
   <arg name="side" value="right"/>
   <include file="$(find sr_robot_launch)/launch/sr_ur_arm_hand.launch">
@@ -56,7 +57,7 @@
     <arg name="robot_model" value="ur5"/>
     <arg name="robot_name" value="ur5srh"/>
     <arg name="arm_robot_hw" value="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
-    <arg name="arm_group_name" value="$(arg side)_arm"/>
+    <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
     <arg name="hand_serial" value="$(arg hand_serial)"/>
     <arg name="mapping_path" value="$(arg mapping_path)"/>
     <arg name="eth_port" value="$(arg eth_port)"/>
