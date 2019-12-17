@@ -33,6 +33,8 @@ from moveit_msgs.srv import ListRobotStatesInWarehouse as ListStates
 from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
 from moveit_msgs.msg import OrientationConstraint, Constraints
 
+from actionlib_msgs.msg import GoalStatus
+
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
 from math import radians
 
@@ -712,8 +714,16 @@ class SrRobotCommander(object):
             return
 
         for i in self._clients.keys():
-            if not self._clients[i].wait_for_result():
-                rospy.loginfo("Trajectory not completed")
+            self._clients[i].wait_for_result()
+            if self._clients[i].get_state() == GoalStatus.REJECTED:
+                rospy.logwarn("Goal rejected")
+                del self._clients[i]
+            elif self._clients[i].get_state() == GoalStatus.SUCCEEDED:
+                rospy.loginfo("Goal executed")
+                return True
+            elif self._clients[i].get_state() == GoalStatus.ABORTED:
+                rospy.loginfo("Goal aborted")
+                return False
 
     def action_is_running(self, controller=None):
         if controller is not None:
