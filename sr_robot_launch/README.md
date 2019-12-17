@@ -38,9 +38,9 @@ roslaunch sr_robot_launch srhand.launch robot_description:=`rospack find sr_desc
 ```
 
 * The `robot description` param can be changed to start any of the available Shadow hands shown in the table.
-* If it is a left hand, `hand_prefix:=lh` should be added. For example: 
+* If it is a left hand, `hand_id:=lh` should be added. For example: 
 ```bash
-roslaunch sr_robot_launch srhand.launch robot_description:=`rospack find sr_description`/robots/shadowhand_left_motor.urdf.xacro hand_prefix:=lh
+roslaunch sr_robot_launch srhand.launch robot_description:=`rospack find sr_description`/robots/shadowhand_left_motor.urdf.xacro hand_id:=lh
 ```
 * Moveit will enable advanced behaviour (inverse kinematics, planning, collision detectection, etc...), but if it is not needed, you can set `use_moveit:=false`
 

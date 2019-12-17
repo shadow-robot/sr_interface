@@ -40,9 +40,6 @@
   <!-- The joint state publisher publishing frequency  -->
   <arg name="joint_state_pub_frequency" default="125"/>
 
-  <!-- HAND CONFIG-->
-  <arg name="hand_prefix" default="H1"/>
-
   <!-- ARM CONFIG-->
   <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
@@ -109,8 +106,6 @@
         <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
         <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
         <arg name="robot_description" value="$(arg robot_description)"/>
-        <arg name="hand_prefix" value="$(arg hand_prefix)"/>
-        <arg name="arm_id" value="$(arg arm_prefix)"/>
         <arg name="side" value="$(arg side)"/>
         <arg name="robot_model" value="$(arg arm_model)"/>
         <arg name="arm_robot_hw" value="$(arg arm_robot_hw)"/>

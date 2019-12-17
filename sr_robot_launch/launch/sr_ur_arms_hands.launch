@@ -57,8 +57,6 @@
   <!-- The control mode PWM (true) or torque (false) -->
   <!-- Set to true by default for now as torque control is not available yet -->
   <arg name="pwm_control" default="true"/>
-  <!-- Set to true if you want to use grasp controller -->
-  <arg name="grasp_controller" default="false"/>
 
   <!-- ARMS CONFIG-->
   <arg name="arm_1_z" default="0.0"/>
@@ -156,10 +154,6 @@
           <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
           <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
         </node>
-      </group>
-      <group if="$(arg grasp_controller)">
-        <!-- Not available yet -->
-        <!--node name="$(arg hand_prefix)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen"/-->
       </group>
     </group>
   </group>

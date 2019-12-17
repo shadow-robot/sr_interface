@@ -22,8 +22,6 @@
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
   <!-- The control mode PWM (true) or torque (false) -->
   <arg name="pwm_control" default="true"/>
-  <!-- Set to true if you want to use grasp controller -->
-  <arg name="grasp_controller" default="false"/>
   <arg name="hand_trajectory" default="true"/>
 
   <!-- ARMS CONFIG-->
@@ -82,12 +80,6 @@
         <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
         <param name="wait_for" value ="calibrated"/>
       </node>
-    </group>
-    <group if="$(arg grasp_controller)">
-      <!-- Not available yet -->
-      <!--node name="$(arg hand_prefix)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen">
-        <param name="wait_for" value ="calibrated"/>
-      </node-->
     </group>
   </group>
   <group if="$(eval hands == 'none')">
