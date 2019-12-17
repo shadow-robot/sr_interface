@@ -31,22 +31,21 @@ from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, \
 from moveit_msgs.srv import GetPositionIK
 from moveit_msgs.srv import ListRobotStatesInWarehouse as ListStates
 from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
+from moveit_msgs.msg import OrientationConstraint, Constraints
 
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
 from math import radians
-
-from sr_utilities.hand_finder import HandFinder
 
 from moveit_msgs.srv import GetPositionFK
 from std_msgs.msg import Header
 
 import tf2_ros
 import copy
-import rospkg
 import numpy
 
 
 class SrRobotCommanderException(Exception):
+
     def __init__(self, value):
         self._value = value
 
@@ -55,6 +54,7 @@ class SrRobotCommanderException(Exception):
 
 
 class SrRobotCommander(object):
+
     """
     Base class for hand and arm commanders
     """
@@ -299,8 +299,7 @@ class SrRobotCommander(object):
         output = dict()
 
         if (name in self._srdf_names):
-            output = self._move_group_commander.\
-                           _g.get_named_target_values(str(name))
+            output = self._move_group_commander._g.get_named_target_values(str(name))
 
         elif (name in self._warehouse_names):
             js = self._warehouse_name_get_srv(
@@ -661,7 +660,7 @@ class SrRobotCommander(object):
 
         for controller_name in controller_list.keys():
             self._action_running[controller_name] = False
-            service_name = controller_name+"/follow_joint_trajectory"
+            service_name = controller_name + "/follow_joint_trajectory"
             self._clients[controller_name] = SimpleActionClient(service_name,
                                                                 FollowJointTrajectoryAction)
             if self._clients[controller_name].wait_for_server(timeout=rospy.Duration(4)) is False:
@@ -848,11 +847,13 @@ class SrRobotCommander(object):
         except rospy.ServiceException:
             rospy.logerr("Failed to call service teach_mode")
 
-    def get_ik(self, target_pose, avoid_collisions=False, joint_states=None):
+    def get_ik(self, target_pose, avoid_collisions=False, joint_states=None, ik_constraints=None):
+
         """
         Computes the inverse kinematics for a given pose. It returns a JointState
         @param target_pose - A given pose of type PoseStamped
         @param avoid_collisions - Find an IK solution that avoids collisions. By default, this is false
+        @param ik_constraints - Set constraints of type Constraints for computing the IK solution
         """
         service_request = PositionIKRequest()
         service_request.group_name = self._name
@@ -860,6 +861,8 @@ class SrRobotCommander(object):
         service_request.pose_stamped = target_pose
         service_request.timeout.secs = 0.5
         service_request.avoid_collisions = avoid_collisions
+        if ik_constraints is not None:
+            service_request.constraints = ik_constraints
         if joint_states is None:
             service_request.robot_state.joint_state = self.get_joints_state()
         else:
@@ -881,11 +884,12 @@ class SrRobotCommander(object):
             else:
                 return resp.solution.joint_state
 
-        except rospy.ServiceException, e:
+        except rospy.ServiceException as e:
             rospy.logerr("Service call failed: %s" % e)
 
-    def move_to_pose_value_target_unsafe(self, target_pose,  avoid_collisions=False, time=0.002, wait=True):
-        joint_state = self.get_ik(target_pose, avoid_collisions)
+    def move_to_pose_value_target_unsafe(self, target_pose, avoid_collisions=False,
+                                         time=0.002, wait=True, ik_constraints=None):
+        joint_state = self.get_ik(target_pose, avoid_collisions, ik_constraints=ik_constraints)
         if joint_state is not None:
             active_joints = self._move_group_commander.get_active_joints()
             current_indices = [i for i, x in enumerate(joint_state.name) if any(thing in x for thing in active_joints)]
