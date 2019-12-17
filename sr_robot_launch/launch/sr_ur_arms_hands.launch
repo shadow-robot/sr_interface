@@ -149,12 +149,10 @@
       </include>
     </group>
     <group if="$(arg hand_ctrl)">
-      <group unless="$(arg grasp_controller)">
         <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
           <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
           <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
         </node>
-      </group>
     </group>
   </group>
 
@@ -173,7 +171,6 @@
         <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
         <arg name="lh_mapping_path" value="$(arg lh_mapping_path)"/>
         <arg name="eth_port" value="$(arg eth_port)"/>
-        <arg name="grasp_controller" value="$(arg grasp_controller)"/>
         <arg name="pwm_control" value="$(arg pwm_control)"/>
         <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>
         <arg name="arm_1_z" value="$(arg arm_1_z)"/>
