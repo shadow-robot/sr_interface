@@ -37,7 +37,7 @@
 
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
   <group if="$(arg gui)">
-    <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="14 sr_multi_moveit_config moveit_rviz.launch 
+    <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="15 sr_multi_moveit_config moveit_rviz.launch
       hand_ik_solver_path:=$(arg hand_ik_solver_path)
       config:=true 
       debug:=$(arg debug)

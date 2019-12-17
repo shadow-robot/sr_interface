@@ -10,5 +10,3 @@ ra_sr_ur_robot_hw:
   # for the server that moves the robot 
   control_pc_ip_address: 192.168.1.100
 
-  # UR10 speed scale (0.0-1.0)
-  speed_scale: 0.5

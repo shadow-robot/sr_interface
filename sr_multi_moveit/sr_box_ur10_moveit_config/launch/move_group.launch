@@ -1,6 +1,9 @@
 <launch>
+  <arg name="side" default="right"/>
 
-  <include file="$(find sr_box_ur10_moveit_config)/launch/planning_context.launch" />
+  <include file="$(find sr_box_ur10_moveit_config)/launch/planning_context.launch">
+    <arg name="side" value="$(arg side)"/>
+  </include>
 
   <!-- GDB Debug Option -->
   <arg name="debug" default="false" />
@@ -23,10 +26,12 @@
   <!-- Planning Functionality -->
   <include ns="move_group" file="$(find sr_box_ur10_moveit_config)/launch/planning_pipeline.launch.xml">
     <arg name="pipeline" value="ompl" />
+    <arg name="side" value="$(arg side)"/>
   </include>
 
   <!-- Trajectory Execution Functionality -->
   <include ns="move_group" file="$(find sr_box_ur10_moveit_config)/launch/trajectory_execution.launch.xml" if="$(arg allow_trajectory_execution)">
+    <arg name="side" value="$(arg side)"/>
     <arg name="moveit_manage_controllers" value="true" />
     <arg name="moveit_controller_manager" value="ursrbox" unless="$(arg fake_execution)"/>
     <arg name="moveit_controller_manager" value="fake" if="$(arg fake_execution)"/>

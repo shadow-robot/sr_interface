@@ -1,10 +1,7 @@
 /**
- * @file   test_end_effector.cpp
- * @author Guillaume Walck
- *
- * Copyright 2015 Shadow Robot Company Ltd.
+* @file   test_end_effector.cpp
+* @author Guillaume Walck
 */
-
 
 
 /*********************************************************************
