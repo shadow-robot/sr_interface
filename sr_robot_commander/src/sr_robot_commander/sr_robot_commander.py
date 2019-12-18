@@ -31,6 +31,7 @@ from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, \
 from moveit_msgs.srv import GetPositionIK
 from moveit_msgs.srv import ListRobotStatesInWarehouse as ListStates
 from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
+from moveit_msgs.msg import OrientationConstraint, Constraints
 
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
 from math import radians
@@ -880,11 +881,13 @@ class SrRobotCommander(object):
         except rospy.ServiceException:
             rospy.logerr("Failed to call service teach_mode")
 
-    def get_ik(self, target_pose, avoid_collisions=False, joint_states=None):
+    def get_ik(self, target_pose, avoid_collisions=False, joint_states=None, ik_constraints=None):
+
         """
         Computes the inverse kinematics for a given pose. It returns a JointState
         @param target_pose - A given pose of type PoseStamped
         @param avoid_collisions - Find an IK solution that avoids collisions. By default, this is false
+        @param ik_constraints - Set constraints of type Constraints for computing the IK solution
         """
         service_request = PositionIKRequest()
         service_request.group_name = self._name
@@ -892,6 +895,8 @@ class SrRobotCommander(object):
         service_request.pose_stamped = target_pose
         service_request.timeout.secs = 0.5
         service_request.avoid_collisions = avoid_collisions
+        if ik_constraints is not None:
+            service_request.constraints = ik_constraints
         if joint_states is None:
             service_request.robot_state.joint_state = self.get_joints_state()
         else:
@@ -916,7 +921,8 @@ class SrRobotCommander(object):
         except rospy.ServiceException as e:
             rospy.logerr("Service call failed: %s" % e)
 
-    def move_to_pose_value_target_unsafe(self, target_pose,  avoid_collisions=False, time=0.002, wait=True):
+    def move_to_pose_value_target_unsafe(self, target_pose, avoid_collisions=False,
+                                         time=0.002, wait=True, ik_constraints=None):
         """
         Specify a target pose for the end-effector and moves to it
         @param target_pose - new pose of end-effector: a Pose message, a PoseStamped
@@ -928,7 +934,7 @@ class SrRobotCommander(object):
         the trajectory controller)
         @param wait - should method wait for movement end or not
         """
-        joint_state = self.get_ik(target_pose, avoid_collisions)
+        joint_state = self.get_ik(target_pose, avoid_collisions, ik_constraints=ik_constraints)
         if joint_state is not None:
             active_joints = self._move_group_commander.get_active_joints()
             current_indices = [i for i, x in enumerate(joint_state.name) if any(thing in x for thing in active_joints)]
