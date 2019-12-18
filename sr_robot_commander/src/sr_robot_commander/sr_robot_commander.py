@@ -835,7 +835,8 @@ class SrRobotCommander(object):
         @param reference_frame - the reference frame in which the waypoints are given.
         @param waypoints - an array of poses of end-effector.
         @param eef_step - configurations are computed for every eef_step meters.
-        @param jump_threshold - maximum distance in configuration space between consecutive points in the resulting path.
+        @param jump_threshold - maximum distance in configuration space between consecutive points in the
+        resulting path.
         @param custom_start_state - specify a start state different than the current state.
         @return - motion plan (RobotTrajectory msg) that contains the trajectory to the set wayapoints targets.
         """
