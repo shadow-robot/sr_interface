@@ -12,9 +12,9 @@
 
   <!-- HANDS CONFIG-->
   <arg name="hand_id" default="rh"/>
-  <arg name="hand_serial" default="1370"/>
+  <arg name="hand_serial" default="634"/>
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
-  <arg name="eth_port" default="enx000ec6b29e35"/>
+  <arg name="eth_port" default="enx000ec6bfef7b"/>
   <arg name="hand_ctrl" default="true"/>
   <arg name="pwm_control" default="true"/>
   <!-- Set to true if you want to use grasp controller -->
