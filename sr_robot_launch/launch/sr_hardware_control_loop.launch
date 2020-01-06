@@ -53,9 +53,9 @@
   </group>
 
 
-  <rosparam command="load" file="$(find sr_ur_robot_hw)/config/ur_hardware_interface.yaml"/>    
+  <!--rosparam command="load" file="$(find sr_ur_robot_hw)/config/ur_hardware_interface.yaml"/-->    
 
-  <rosparam command="load" file="$(find ur_robot_driver)/config/ur10_controllers.yaml"/>
+  <!--rosparam command="load" file="$(find ur_robot_driver)/config/ur10_controllers.yaml"/-->
 
 
 
@@ -122,13 +122,13 @@
     <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
     <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
     <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
-    <rosparam command="load" file="$(find sr_ur_robot_hw)/config/ur_hardware_interface.yaml"/>    
     <!--rosparam command="load" file="$(find sr_ur_robot_hw)/config/$(arg arm_id)_sr_ur_robot_hw.yaml"/-->
   </group>
   <!-- These will be loaded if arm and hand are enabled -->
   <!-- Trajectory mode -->
   <group if="$(arg arm_ctrl)">
     <group if="$(arg arm_trajectory)">
+    <rosparam command="load" file="$(find sr_ur_robot_hw)/config/ur_hardware_interface.yaml"/>    
       <group if="$(arg hand_ctrl)">
         <!--rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/-->
         <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find ur_robot_driver)/config/ur10_controllers.yaml"/>
