@@ -53,9 +53,9 @@
   </group>
 
 
-  <!--rosparam command="load" file="$(find sr_ur_robot_hw)/config/ur_hardware_interface.yaml"/>    
+  <rosparam command="load" file="$(find sr_ur_robot_hw)/config/ur_hardware_interface.yaml"/>    
 
-  <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find ur_robot_driver)/config/ur10_controllers.yaml"/-->
+  <rosparam command="load" file="$(find ur_robot_driver)/config/ur10_controllers.yaml"/>
 
 
 
@@ -95,8 +95,8 @@
   <group if="$(arg arm_ctrl)">
     <rosparam if="$(eval arg('side') == 'right')">
       robot_hardware:
-        - unique_robot_hw
         - ur_hardware_interface
+        - unique_robot_hw
         <!-- ra_sr_ur_robot_hw-->
     </rosparam>
     <rosparam if="$(eval arg('side') == 'left')">
