@@ -35,13 +35,13 @@
   <arg name="initial_z" if="$(arg arm_ctrl)" default="0.7551"/>
   <arg name="initial_z" unless="$(arg arm_ctrl)" default="0.0"/>
   <arg name="arm_id" default="ra"/>
-  <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
-  <!--arg name="arm_robot_hw" default="$(find ur_robot_driver)/config/ur_hardware_interface.yaml"/-->
+  <!--arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/-->
+  <arg name="arm_robot_hw" default="$(find ur_robot_driver)/config/ur_hardware_interface.yaml"/>
   <arg name="include_wrist_in_arm_controller" default="true"/>
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
-  <arg name="arm_speed_scale" default="0.5"/>
+  <arg name="arm_speed_scale" default="0.5"/>	
 
   <!-- Logging local topics -->
   <group ns="control_box">
@@ -51,13 +51,6 @@
       <arg name="log_directory" value="$(optenv HOME)/.ros/log"/>
     </include>
   </group>
-
-
-  <rosparam command="load" file="$(find sr_ur_robot_hw)/config/ur_hardware_interface.yaml"/>    
-
-  <rosparam command="load" file="$(find ur_robot_driver)/config/ur10_controllers.yaml"/>
-
-
 
   <!-- Controller -->
   <group if="$(arg hand_ctrl)">
@@ -130,7 +123,8 @@
   <group if="$(arg arm_ctrl)">
     <group if="$(arg arm_trajectory)">
       <group if="$(arg hand_ctrl)">
-        <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/>
+        <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find ur_robot_driver)/config/ur10_controllers.yaml"/>
+        <!--rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/-->
         <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller_no_wrist.yaml"/>
       </group>
       <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_ur_launch)/config/ra_trajectory_controller.yaml"/>
