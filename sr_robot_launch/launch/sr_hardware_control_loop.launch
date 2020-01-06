@@ -104,6 +104,8 @@
 
   <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/>
 
+  <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
+
 
   <rosparam unless="$(arg arm_ctrl)">
     robot_hardware:
