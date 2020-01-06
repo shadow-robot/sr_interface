@@ -104,7 +104,7 @@
         - unique_robot_hw
         - la_sr_ur_robot_hw
     </rosparam>
-    <rosparam command="load" file="$(arg arm_robot_hw)"/>
+    <!--rosparam command="load" file="$(arg arm_robot_hw)"/-->
     <param name="$(arg arm_id)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
     <param name="$(arg arm_id)_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
   </group>
