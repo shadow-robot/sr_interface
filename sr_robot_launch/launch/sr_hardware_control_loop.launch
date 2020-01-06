@@ -55,7 +55,7 @@
 
   <rosparam command="load" file="$(find sr_ur_robot_hw)/config/ur_hardware_interface.yaml"/>    
 
-  <rosparam command="load" file="$(find ur_robot_driver)/config/ur10_controllers.yaml"/>
+  <!--rosparam command="load" file="$(find ur_robot_driver)/config/ur10_controllers.yaml"/-->
 
 
 
