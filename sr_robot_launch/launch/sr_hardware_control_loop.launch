@@ -121,7 +121,6 @@
   <!-- Trajectory mode -->
   <group if="$(arg arm_ctrl)">
     <group if="$(arg arm_trajectory)">
-    <rosparam command="load" file="$(find sr_ur_robot_hw)/config/ur_hardware_interface.yaml"/>    
       <group if="$(arg hand_ctrl)">
         <!--rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/-->
         <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find ur_robot_driver)/config/ur10_controllers.yaml"/>
