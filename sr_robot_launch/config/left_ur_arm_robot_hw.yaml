@@ -5,8 +5,7 @@ la_sr_ur_robot_hw:
   robot_id: la
   
   # for sending robot programs
-  robot_ip_address: 192.168.1.1
+  robot_ip_address: 192.168.2.1
   
   # for the server that moves the robot 
   control_pc_ip_address: 192.168.1.100
-  
