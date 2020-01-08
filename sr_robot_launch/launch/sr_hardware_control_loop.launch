@@ -35,7 +35,7 @@
   <!-- ARMS CONFIG-->
   <arg name="initial_z" if="$(arg arm_ctrl)" default="0.7551"/>
   <arg name="initial_z" unless="$(arg arm_ctrl)" default="0.0"/>
-  <arg name="arm_id" default="$(arg side_letter)a"/>
+  <arg name="arm_id" default="ra"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   <arg name="include_wrist_in_arm_controller" default="$(arg arm_ctrl)"/>
   <arg name="arm_trajectory" default="true"/>
@@ -124,7 +124,7 @@
         <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/>
         <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller_no_wrist.yaml"/>
       </group>
-      <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_ur_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/>
+      <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_ur_launch)/config/ra_trajectory_controller.yaml"/>
       <node if="$(arg hand_ctrl)" name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
             args="--wait-for=/$(arg arm_id)_arm_ready --wait-for=/calibrated $(arg arm_id)_trajectory_controller"/>
       <node unless="$(arg hand_ctrl)" name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
