@@ -35,7 +35,7 @@
   <!-- ARMS CONFIG-->
   <arg name="initial_z" if="$(arg arm_ctrl)" default="0.7551"/>
   <arg name="initial_z" unless="$(arg arm_ctrl)" default="0.0"/>
-  <arg name="arm_id" default="ra"/>
+  <arg name="arm_id" default="$(arg side_letter)a"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   <arg name="include_wrist_in_arm_controller" default="$(arg arm_ctrl)"/>
   <arg name="arm_trajectory" default="true"/>
