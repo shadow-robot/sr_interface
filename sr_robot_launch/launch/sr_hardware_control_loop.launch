@@ -8,6 +8,7 @@
   <arg name="side" default="right"/>
   <arg name="side_letter" value="$(eval side[0])"/>
   <arg name="arm_ctrl" default="true"/>
+  <arg name="hand_ctrl" default="true"/>
   <!-- HAND AND ARM -->
   <!--arg name="robot_description" if="$(eval arg('hand_ctrl') and arg('arm_ctrl'))" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_ur10_bt_sp_biotacs.urdf.xacro"/-->
   <arg name="robot_description" if="$(eval arg('hand_ctrl') and arg('arm_ctrl'))" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_ur10_new_driver.urdf.xacro"/>
@@ -20,7 +21,6 @@
   <arg name="hand_serial" default="634"/>
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
   <arg name="eth_port" default="enx000ec6bfef7b"/>
-  <arg name="hand_ctrl" default="true"/>
   <arg name="pwm_control" default="true"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
