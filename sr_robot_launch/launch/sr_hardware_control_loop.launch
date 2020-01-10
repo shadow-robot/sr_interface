@@ -35,7 +35,7 @@
   <arg name="initial_z" unless="$(arg arm_ctrl)" default="0.0"/>
   <arg name="arm_id" default="ra"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
-  <arg name="include_wrist_in_arm_controller" default="true"/>
+  <arg name="include_wrist_in_arm_controller" default="$(arg arm_ctrl)"/>
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>

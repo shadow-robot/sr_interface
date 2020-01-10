@@ -31,6 +31,7 @@ from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, \
 from moveit_msgs.srv import GetPositionIK
 from moveit_msgs.srv import ListRobotStatesInWarehouse as ListStates
 from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
+from moveit_msgs.msg import OrientationConstraint, Constraints
 
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
 from math import radians
@@ -55,13 +56,13 @@ class SrRobotCommanderException(Exception):
 class SrRobotCommander(object):
 
     """
-    Base class for hand and arm commanders
+    Base class for hand and arm commanders.
     """
 
     def __init__(self, name):
         """
-        Initialize MoveGroupCommander object
-        @param name - name of the MoveIt group
+        Initialize MoveGroupCommander object.
+        @param name - name of the MoveIt group.
         """
         self._name = name
         self._move_group_commander = MoveGroupCommander(name)
@@ -106,12 +107,21 @@ class SrRobotCommander(object):
         threading.Thread(None, rospy.spin)
 
     def set_planner_id(self, planner_id):
+        """
+        Sets the planner_id used for all future planning requests.
+        @param planner_id - The string for the planner id, set to None to clear.
+        """
         self._move_group_commander.set_planner_id(planner_id)
 
     def set_num_planning_attempts(self, num_planning_attempts):
         self._move_group_commander.set_num_planning_attempts(num_planning_attempts)
 
     def set_planning_time(self, seconds):
+        """
+        Specifies the amount of time to be used for motion planning.
+        Some planning algorithms might require more time than others to compute
+        a valid solution.
+        """
         self._move_group_commander.set_planning_time(seconds)
 
     def get_end_effector_pose_from_named_state(self, name):
@@ -126,9 +136,17 @@ class SrRobotCommander(object):
         return response.pose_stamped[0]
 
     def get_planning_frame(self):
+        """
+        @return - returns the name of the frame wrt which the motion planning
+        is computed.
+        """
         return self._move_group_commander.get_planning_frame()
 
     def set_pose_reference_frame(self, reference_frame):
+        """
+        Set the reference frame to assume for poses of end-effectors.
+        @param reference_frame - name of the frame.
+        """
         self._move_group_commander.set_pose_reference_frame(reference_frame)
 
     def get_group_name(self):
@@ -139,15 +157,32 @@ class SrRobotCommander(object):
         self._warehouse_names = self.__get_warehouse_names()
 
     def set_max_velocity_scaling_factor(self, value):
+        """
+        Set a scaling factor for optionally reducing the maximum joint velocity.
+        @param value - Allowed values are in (0,1].
+        """
         self._move_group_commander.set_max_velocity_scaling_factor(value)
 
     def set_max_acceleration_scaling_factor(self, value):
+        """
+        Set a scaling factor for optionally reducing the maximum joint accelaration.
+        @param value - Allowed values are in (0,1].
+        """
         self._move_group_commander.set_max_acceleration_scaling_factor(value)
 
     def allow_looking(self, value):
+        """
+        Enable/disable looking around for motion planning.
+        @param value - boolean.
+        """
         self._move_group_commander.allow_looking(value)
 
     def allow_replanning(self, value):
+        """
+        Enable/disable replanning in case new obstacles are detected
+        while executing a plan.
+        @param value - boolean.
+        """
         self._move_group_commander.allow_replanning(value)
 
     def execute(self):
@@ -161,6 +196,11 @@ class SrRobotCommander(object):
             rospy.logwarn("No plans were made, not executing anything.")
 
     def execute_plan(self, plan):
+        """
+        Executes a given plan.
+        @param plan - RobotTrajectory msg that contains the trajectory
+        to the set goal state.
+        """
         if self.check_given_plan_is_valid(plan):
             self._move_group_commander.execute(plan)
             self.__plan = None
@@ -173,8 +213,8 @@ class SrRobotCommander(object):
         Set target of the robot's links and moves to it.
         @param joint_states - dictionary with joint name and value. It can
         contain only joints values of which need to be changed.
-        @param wait - should method wait for movement end or not
-        @param angle_degrees - are joint_states in degrees or not
+        @param wait - should method wait for movement end or not.
+        @param angle_degrees - are joint_states in degrees or not.
         """
         joint_states_cpy = copy.deepcopy(joint_states)
 
@@ -190,9 +230,10 @@ class SrRobotCommander(object):
         Set target of the robot's links and plans.
         @param joint_states - dictionary with joint name and value. It can
         contain only joints values of which need to be changed.
-        @param angle_degrees - are joint_states in degrees or not
+        @param angle_degrees - are joint_states in degrees or not.
         @param custom_start_state - specify a start state different than the current state
         This is a blocking method.
+        @return - motion plan (RobotTrajectory msg) that contains the trajectory to the set goal state.
         """
         joint_states_cpy = copy.deepcopy(joint_states)
 
@@ -275,6 +316,12 @@ class SrRobotCommander(object):
         return name in self._srdf_names
 
     def set_named_target(self, name):
+        """
+        Set a joint configuration by name.
+        @param name - name of the target which must correspond to a name defined,
+        either in the srdf or in the mongo warehouse database.
+        @return - bool to confirm that the target has been correctly set.
+        """
         if name in self._srdf_names:
             self._move_group_commander.set_named_target(name)
         elif (name in self._warehouse_names):
@@ -295,6 +342,12 @@ class SrRobotCommander(object):
         return True
 
     def get_named_target_joint_values(self, name):
+        """
+        Get the joint angles for targets specified by name.
+        @param name - @param name - name of the target which must correspond to a name defined,
+        either in the srdf or in the mongo warehouse database.
+        @return - joint values of the named target.
+        """
         output = dict()
 
         if (name in self._srdf_names):
@@ -323,7 +376,7 @@ class SrRobotCommander(object):
         Get the current pose of the end effector.
         @param reference_frame - The desired reference frame in which end effector pose should be returned.
         If none is passed, it will use the planning frame as reference.
-        @return geometry_msgs.msg.Pose() - current pose of the end effector
+        @return - geometry_msgs.msg.Pose() - current pose of the end effector.
         """
         if reference_frame is not None:
             try:
@@ -350,7 +403,7 @@ class SrRobotCommander(object):
     def get_current_state(self):
         """
         Get the current joint state of the group being used.
-        @return a dictionary with the joint names as keys and current joint values
+        @return - a dictionary with the joint names as keys and current joint values.
         """
         joint_names = self._move_group_commander._g.get_active_joints()
         joint_values = self._move_group_commander._g.get_current_joint_values()
@@ -360,7 +413,7 @@ class SrRobotCommander(object):
     def get_current_state_bounded(self):
         """
         Get the current joint state of the group being used, enforcing that they are within each joint limits.
-        @return a dictionary with the joint names as keys and current joint values
+        @return - a dictionary with the joint names as keys and current joint values.
         """
         current = self._move_group_commander._g.get_current_state_bounded()
         names = self._move_group_commander._g.get_active_joints()
@@ -385,8 +438,9 @@ class SrRobotCommander(object):
         """
         Set target of the robot's links and plans
         This is a blocking method.
-        @param name - name of the target pose defined in SRDF
-        @param custom_start_state - specify a start state different than the current state
+        @param name - name of the target pose defined in SRDF.
+        @param custom_start_state - specify a start state different than the current state.
+        @return - a motion plan (RobotTrajectory msg) that contains the trajectory to the named target.
         """
         if custom_start_state is None:
             self._move_group_commander.set_start_state_to_current_state()
@@ -417,14 +471,14 @@ class SrRobotCommander(object):
         """
         Get the complete list of named targets, from SRDF
         as well as warehouse poses if available.
-        @return list of strings containing names of targets.
+        @return - list of strings containing names of targets.
         """
         return self._srdf_names + self._warehouse_names
 
     def get_joints_position(self):
         """
-        Returns joints position
-        @return - dictionary with joints positions
+        Returns joints position.
+        @return - dictionary with joints positions.
         """
         with self._joint_states_lock:
             return self._joints_position
@@ -432,15 +486,15 @@ class SrRobotCommander(object):
     def get_joints_velocity(self):
         """
         Returns joints velocities
-        @return - dictionary with joints velocities
+        @return - dictionary with joints velocities.
         """
         with self._joint_states_lock:
             return self._joints_velocity
 
     def _get_joints_effort(self):
         """
-        Returns joints effort
-        @return - dictionary with joints efforts
+        Returns joints effort.
+        @return - dictionary with joints efforts.
         """
         with self._joint_states_lock:
             return self._joints_effort
@@ -455,7 +509,7 @@ class SrRobotCommander(object):
 
     def run_joint_trajectory(self, joint_trajectory):
         """
-        Moves robot through all joint states with specified timeouts
+        Moves robot through all joint states with specified timeouts.
         @param joint_trajectory - JointTrajectory class object. Represents
         trajectory of the joints which would be executed.
         """
@@ -466,14 +520,14 @@ class SrRobotCommander(object):
     def make_named_trajectory(self, trajectory):
         """
         Makes joint value trajectory from specified by named poses (either from
-        SRDF or from warehouse)
+        SRDF or from warehouse).
         @param trajectory - list of waypoints, each waypoint is a dict with
                             the following elements (n.b either name or joint_angles is required)
-                            - name -> the name of the way point
-                            - joint_angles -> a dict of joint names and angles
-                            - interpolate_time -> time to move from last wp
-                            - pause_time -> time to wait at this wp
-                            - degrees -> set to true if joint_angles is specified in degrees. Assumed false if absent.
+                          - name -> the name of the way point
+                          - joint_angles -> a dict of joint names and angles
+                          - interpolate_time -> time to move from last wp
+                          - pause_time -> time to wait at this wp
+                          - degrees -> set to true if joint_angles is specified in degrees. Assumed false if absent.
         """
         current = self.get_current_state_bounded()
 
@@ -564,9 +618,9 @@ class SrRobotCommander(object):
         SRDF or from warehouse. Runs trajectory via moveit.
         @param trajectory - list of waypoints, each waypoint is a dict with
                             the following elements:
-                            - name -> the name of the way point
-                            - interpolate_time -> time to move from last wp
-                            - pause_time -> time to wait at this wp
+                          - name -> the name of the way point
+                          - interpolate_time -> time to move from last wp
+                          - pause_time -> time to wait at this wp
         """
         joint_trajectory = self.make_named_trajectory(trajectory)
         if joint_trajectory is not None:
@@ -574,10 +628,10 @@ class SrRobotCommander(object):
 
     def move_to_position_target(self, xyz, end_effector_link="", wait=True):
         """
-        Specify a target position for the end-effector and moves to it
-        @param xyz - new position of end-effector
-        @param end_effector_link - name of the end effector link
-        @param wait - should method wait for movement end or not
+        Specify a target position for the end-effector and moves to it.
+        @param xyz - new position of end-effector.
+        @param end_effector_link - name of the end effector link.
+        @param wait - should method wait for movement end or not.
         """
         self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_position_target(xyz, end_effector_link)
@@ -587,9 +641,9 @@ class SrRobotCommander(object):
         """
         Specify a target position for the end-effector and plans.
         This is a blocking method.
-        @param xyz - new position of end-effector
-        @param end_effector_link - name of the end effector link
-        @param custom_start_state - specify a start state different than the current state
+        @param xyz - new position of end-effector.
+        @param end_effector_link - name of the end effector link.
+        @param custom_start_state - specify a start state different than the current state.
         """
         if custom_start_state is None:
             self._move_group_commander.set_start_state_to_current_state()
@@ -603,9 +657,9 @@ class SrRobotCommander(object):
         Specify a target pose for the end-effector and moves to it
         @param pose - new pose of end-effector: a Pose message, a PoseStamped
         message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z] or a list
-        of 7 floats [x, y, z, qx, qy, qz, qw]
-        @param end_effector_link - name of the end effector link
-        @param wait - should method wait for movement end or not
+        of 7 floats [x, y, z, qx, qy, qz, qw].
+        @param end_effector_link - name of the end effector link.
+        @param wait - should method wait for movement end or not.
         """
         self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_pose_target(pose, end_effector_link)
@@ -617,10 +671,10 @@ class SrRobotCommander(object):
         This is a blocking method.
         @param pose - new pose of end-effector: a Pose message, a PoseStamped
         message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z] or a list
-        of 7 floats [x, y, z, qx, qy, qz, qw]
-        @param end_effector_link - name of the end effector link
-        @param alternative_method - use set_joint_value_target instead of set_pose_target
-        @param custom_start_state - specify a start state different than the current state
+        of 7 floats [x, y, z, qx, qy, qz, qw].
+        @param end_effector_link - name of the end effector link.
+        @param alternative_method - use set_joint_value_target instead of set_pose_target.
+        @param custom_start_state - specify a start state different than the current state.
         """
         if custom_start_state is None:
             self._move_group_commander.set_start_state_to_current_state()
@@ -637,7 +691,7 @@ class SrRobotCommander(object):
         """
         The callback function for the topic joint_states.
         It will store the received joint position, velocity and efforts
-        information into dictionaries
+        information into dictionaries.
         @param joint_state - the message containing the joints data.
         """
         with self._joint_states_lock:
@@ -653,7 +707,7 @@ class SrRobotCommander(object):
 
     def _set_up_action_client(self, controller_list):
         """
-        Sets up an action client to communicate with the trajectory controller
+        Sets up an action client to communicate with the trajectory controller.
         """
         self._action_running = {}
 
@@ -674,9 +728,9 @@ class SrRobotCommander(object):
         contain only joints values of which need to be changed.
         @param time - time in s (counting from now) for the robot to reach the
         target (it needs to be greater than 0.0 for it not to be rejected by
-        the trajectory controller)
-        @param wait - should method wait for movement end or not
-        @param angle_degrees - are joint_states in degrees or not
+        the trajectory controller).
+        @param wait - should method wait for movement end or not.
+        @param angle_degrees - are joint_states in degrees or not.
         """
         # self._update_default_trajectory()
         # self._set_targets_to_default_trajectory(joint_states)
@@ -734,10 +788,10 @@ class SrRobotCommander(object):
 
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
         """
-        Moves robot through all joint states with specified timeouts
+        Moves robot through all joint states with specified timeouts.
         @param joint_trajectory - JointTrajectory class object. Represents
         trajectory of the joints which would be executed.
-        @param wait - should method wait for movement end or not
+        @param wait - should method wait for movement end or not.
         """
         goals = {}
         for controller in self._controllers:
@@ -778,11 +832,13 @@ class SrRobotCommander(object):
         """
         Specify a set of waypoints for the end-effector and plans.
         This is a blocking method.
-        @param reference_frame - the reference frame in which the waypoints are given
-        @param waypoints - an array of poses of end-effector
-        @param eef_step - configurations are computed for every eef_step meters
-        @param jump_threshold - maximum distance in configuration space between consecutive points in the resulting path
-        @param custom_start_state - specify a start state different than the current state
+        @param reference_frame - the reference frame in which the waypoints are given.
+        @param waypoints - an array of poses of end-effector.
+        @param eef_step - configurations are computed for every eef_step meters.
+        @param jump_threshold - maximum distance in configuration space between consecutive points in the
+        resulting path.
+        @param custom_start_state - specify a start state different than the current state.
+        @return - motion plan (RobotTrajectory msg) that contains the trajectory to the set wayapoints targets.
         """
         if custom_start_state is None:
             self._move_group_commander.set_start_state_to_current_state()
@@ -815,8 +871,8 @@ class SrRobotCommander(object):
 
     def move_to_trajectory_start(self, trajectory, wait=True):
         """
-        Make and execute a plan from the current state to the first state in an pre-existing trajectory
-        @param trajectory - moveit_msgs/JointTrajectory
+        Make and execute a plan from the current state to the first state in an pre-existing trajectory.
+        @param trajectory - moveit_msgs/JointTrajectory.
         @param wait - Bool to specify if movement should block untill finished.
         """
 
@@ -846,11 +902,15 @@ class SrRobotCommander(object):
         except rospy.ServiceException:
             rospy.logerr("Failed to call service teach_mode")
 
-    def get_ik(self, target_pose, avoid_collisions=False, joint_states=None):
+    def get_ik(self, target_pose, avoid_collisions=False, joint_states=None, ik_constraints=None):
+
         """
-        Computes the inverse kinematics for a given pose. It returns a JointState
-        @param target_pose - A given pose of type PoseStamped
-        @param avoid_collisions - Find an IK solution that avoids collisions. By default, this is false
+        Computes the inverse kinematics for a given pose. It returns a JointState.
+        @param target_pose - A given pose of type PoseStamped.
+        @param avoid_collisions - Find an IK solution that avoids collisions. By default, this is false.
+        @param joint_states - initial joint configuration of type JointState from which the IK solution is computed.
+        If set to None, the current joint state is retrieved automatically.
+        @param ik_constraints - Set constraints of type Constraints for computing the IK solution.
         """
         service_request = PositionIKRequest()
         service_request.group_name = self._name
@@ -858,6 +918,8 @@ class SrRobotCommander(object):
         service_request.pose_stamped = target_pose
         service_request.timeout.secs = 0.5
         service_request.avoid_collisions = avoid_collisions
+        if ik_constraints is not None:
+            service_request.constraints = ik_constraints
         if joint_states is None:
             service_request.robot_state.joint_state = self.get_joints_state()
         else:
@@ -882,8 +944,21 @@ class SrRobotCommander(object):
         except rospy.ServiceException as e:
             rospy.logerr("Service call failed: %s" % e)
 
-    def move_to_pose_value_target_unsafe(self, target_pose,  avoid_collisions=False, time=0.002, wait=True):
-        joint_state = self.get_ik(target_pose, avoid_collisions)
+    def move_to_pose_value_target_unsafe(self, target_pose, avoid_collisions=False,
+                                         time=0.002, wait=True, ik_constraints=None):
+        """
+        Specify a target pose for the end-effector and moves to it.
+        @param target_pose - new pose of end-effector: a Pose message, a PoseStamped
+        message or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z] or a list
+        of 7 floats [x, y, z, qx, qy, qz, qw].
+        @param avoid_collisions - Find an IK solution that avoids collisions. By default, this is false.
+        @param time - time in s (counting from now) for the robot to reach the
+        target (it needs to be greater than 0.0 for it not to be rejected by
+        the trajectory controller).
+        @param wait - should method wait for movement end or not.
+        @param ik_constraints - Set constraints of type Constraints for computing the IK solution.
+        """
+        joint_state = self.get_ik(target_pose, avoid_collisions, ik_constraints=ik_constraints)
         if joint_state is not None:
             active_joints = self._move_group_commander.get_active_joints()
             current_indices = [i for i, x in enumerate(joint_state.name) if any(thing in x for thing in active_joints)]
