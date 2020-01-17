@@ -1,6 +1,4 @@
 <launch>
-  <rosparam command="load" file="$(find ur_robot_driver)/config/ur10_controllers.yaml"/>
-
   <arg name="debug" default="false"/>
   <arg name="robot_state_pub_frequency" default="250"/>
   <arg name="joint_state_pub_frequency" default="125"/>
@@ -102,7 +100,6 @@
     </rosparam>
   </node>
 
-
   <!-- Controller -->
   <group if="$(arg hand_ctrl)">
     <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
@@ -135,8 +132,6 @@
       </node>
     </group>
   </group>
-
-
 
   <group if="$(arg arm_ctrl)">
     <rosparam if="$(eval arg('side') == 'right')">
