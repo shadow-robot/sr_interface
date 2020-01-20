@@ -41,7 +41,6 @@
 
   <arg name="arm_speed_scale" default="0.5"/>
 
-  <arg name="side" value="left"/>
   <include file="$(find sr_robot_launch)/launch/sr_ur_arm_hand.launch">
     <arg name="sim" value="$(arg sim)"/>
     <arg name="debug" value="$(arg debug)"/>
@@ -52,12 +51,10 @@
     <arg name="initial_z" value="$(arg initial_z)"/>
     <arg name="robot_description" value="$(arg robot_description)"/>
     <arg name="robot_config_file" value="$(arg robot_config_file)"/>
-    <arg name="hand_id" value="lh"/>
-    <arg name="arm_id" value="la"/>
-    <arg name="side" value="$(arg side)"/>
+    <arg name="side" value="left"/>
     <arg name="robot_model" value="ur5"/>
     <arg name="robot_name" value="ur5slh"/>
-    <arg name="arm_robot_hw" value="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
+    <arg name="arm_robot_hw" value="$(find sr_robot_launch)/config/left_ur_arm_robot_hw.yaml"/>
     <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
     <arg name="hand_serial" value="$(arg hand_serial)"/>
     <arg name="mapping_path" value="$(arg mapping_path)"/>
