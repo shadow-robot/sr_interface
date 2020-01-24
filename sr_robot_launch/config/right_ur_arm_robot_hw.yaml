@@ -19,4 +19,10 @@ ra_sr_ur_robot_hw:
   use_tool_communication: false
   
   headless_mode: false 
+  
+  non_blocking_read: true
+  
+  servoj_gain: 300
+  
+  servoj_lookahead_time: 0.1
 

@@ -11,13 +11,14 @@
         <origin xyz="0.0 0.0 $(arg initial_z)" rpy="0.0 0.0 ${pi}"/>
     </joint>
 
-    <xacro:arg name="kinematics_config" default="$(find sr_multi_description)/arm_calibration/bristol_ur10_calibration.yaml"/>
+    <xacro:arg name="kinematics_config" default="$(find ur_description)/arm/ur10_default.yaml"/>
     <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
 
     <xacro:ur10_robot prefix="la_" joint_limited="true"
-    transmission_hw_interface="$(arg transmission_hw_interface)"
-    kinematics_file="${load_yaml('$(arg kinematics_config)')}"
+      transmission_hw_interface="$(arg transmission_hw_interface)"
+      kinematics_file="${load_yaml('$(arg kinematics_config)')}"
   />
+
     <xacro:include filename="$(find sr_description)/materials.urdf.xacro"/>
     <xacro:include filename="$(find sr_description)/hand/xacro/full_hand.urdf.xacro"/>
     <xacro:include filename="$(find sr_description)/other/xacro/gazebo/gazebo.urdf.xacro"/>
