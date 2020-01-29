@@ -26,7 +26,7 @@
   <arg name="headless_mode" default="false" doc="Automatically send URScript to robot to execute. On e-Series this does require the robot to be in 'remote-control' mode. With this, the URCap is not needed on the robot."/>
 
   <!-- Load hardware interface -->
-  <node name="ur_hardware_interface" pkg="ur_robot_driver" type="ur_robot_driver_node" output="screen" launch-prefix="$(arg launch_prefix)" required="true">
+  <node name="ra_sr_ur_robot_hw" pkg="ur_robot_driver" type="ur_robot_driver_node" output="screen" launch-prefix="$(arg launch_prefix)" required="true">
     <param name="robot_ip" type="str" value="$(arg robot_ip)"/>
     <param name="script_file" value="$(arg urscript_file)"/>
     <param name="output_recipe_file" value="$(arg rtde_output_recipe_file)"/>
