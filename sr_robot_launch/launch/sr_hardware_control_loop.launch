@@ -52,7 +52,8 @@
   </group>
 
   <rosparam command="load" file="$(arg kinematics_config)" ns="$(arg arm_id)_sr_ur_robot_hw"/>
-  <rosparam command="load" file="$(find ur_robot_driver)/config/ur10_controllers.yaml"/>
+  <rosparam command="load" file="$(find sr_robot_launch)/config/ur10_controllers.yaml"/>
+
   <node name="controller_stopper" pkg="controller_stopper" type="node" respawn="false" output="screen">
     <remap from="robot_running" to="$(arg arm_id)_sr_ur_robot_hw/robot_program_running"/>
     <rosparam param="consistent_controllers">
@@ -180,7 +181,7 @@
       <node if="$(arg hand_ctrl)" name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
             args="--wait-for=/$(arg arm_id)_sr_ur_robot_hw/robot_program_running $(arg arm_id)_trajectory_controller"/>
       <node unless="$(arg hand_ctrl)" name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_id)_arm_ready $(arg arm_id)_trajectory_controller"/>
+            args="$(arg arm_id)_trajectory_controller"/>
     </group>
     <!-- Position mode -->
     <group if="$(arg arm_position)">
