@@ -40,7 +40,7 @@
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="arm_speed_scale" default="0.5"/>
-  <arg name="kinematics_config" default="/home/user/.ros/robot_calibration.yaml"/>
+  <arg name="kinematics_config" default="$(find sr_ur_calibration)/calibrations/bristol_ur10_calibration.yaml"/>
 
   <!-- Logging local topics -->
   <group ns="control_box">
@@ -53,6 +53,10 @@
 
   <rosparam command="load" file="$(arg kinematics_config)" ns="$(arg arm_id)_sr_ur_robot_hw"/>
   <rosparam command="load" file="$(find sr_robot_launch)/config/ur10_controllers.yaml"/>
+
+  <param if="$(arg hand_ctrl)" name="$(arg arm_id)_sr_ur_robot_hw/non_blocking_read" type="bool" value="true"/>
+  <param unless="$(arg hand_ctrl)" name="$(arg arm_id)_sr_ur_robot_hw/non_blocking_read" type="bool" value="false"/>
+
 
   <node name="controller_stopper" pkg="controller_stopper" type="node" respawn="false" output="screen">
     <remap from="robot_running" to="$(arg arm_id)_sr_ur_robot_hw/robot_program_running"/>
