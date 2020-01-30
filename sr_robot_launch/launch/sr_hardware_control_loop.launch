@@ -12,7 +12,7 @@
   <!-- HAND AND ARM -->
   <arg name="robot_description" if="$(eval arg('hand_ctrl') and arg('arm_ctrl'))" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_ur10_bt_sp_biotacs.urdf.xacro"/>
   <!-- ARM BUT NO HAND -->
-  <arg name="robot_description" if="$(eval not arg('hand_ctrl') and arg('arm_ctrl'))" default="$(find sr_box_ur10_moveit_config)/config/$(arg side_letter)a_ur10_with_box.urdf.xacro"/>
+  <arg name="robot_description" if="$(eval not arg('hand_ctrl') and arg('arm_ctrl'))" default="$(find sr_box_ur10_moveit_config)/config/$(arg side_letter)a_$(arg robot_model)_with_box.urdf.xacro"/>
   <arg name="robot_config_file" if="$(arg arm_ctrl)" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
 
   <!-- HANDS CONFIG-->
