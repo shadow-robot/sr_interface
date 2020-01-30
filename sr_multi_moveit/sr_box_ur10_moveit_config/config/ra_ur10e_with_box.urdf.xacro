@@ -1,7 +1,7 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro" name="ursrbox">
 
   <!-- Arm -->
-  <xacro:include filename="$(find ur_e_description)/urdf/ur10e_robot.urdf.xacro"/>
+  <xacro:include filename="$(find ur_e_description)/urdf/ur10e.urdf.xacro"/>
   <xacro:arg name="kinematics_config" default="$(find sr_multi_description)/arm_calibration/bristol_ur10_calibration.yaml"/>
   <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
 
