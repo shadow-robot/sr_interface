@@ -78,6 +78,7 @@
         <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
         <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
         <param name="wait_for" value ="calibrated"/>
+      </node>
     </group>
   </group>
   <group if="$(eval hands == 'none')">
