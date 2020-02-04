@@ -99,8 +99,7 @@ namespace hand_kinematics
     urdf::Model robot_model_urdf;
     std::string xml_string;
     ros::NodeHandle private_handle("~/" + group_name);
-    ROS_WARN_STREAM("********** Started IK for: ");
-    ROS_WARN_STREAM(tip_frames_[0]);
+    ROS_INFO("Started IK for %s", tip_frames_[0].c_str());
     while (!loadRobotModel(private_handle, robot_model_urdf, base_frame_, tip_frames_[0], xml_string) && private_handle.ok())
     {
       ROS_ERROR("Could not load robot model. Are you sure the robot model is on the parameter server?");
@@ -118,31 +117,31 @@ namespace hand_kinematics
     // are coupled while J3 and J4 are independent.
     // The rows of coupling matrix correspond to all joints (unlocked ones) while the columns
     // correspond to independent joints (not coupled).
-    if (std::find(tip_frames_.begin(), tip_frames_.end(), "fftip") != tip_frames_.end())
+    if (tip_frames_[0].find("fftip") != string::npos)
     {
       // Assign update function for dynamic coupling
       kdl_chain_.setUpdateCouplingFunction(updateCouplingFF);
       dimension_ = 4;
     }
-    if (std::find(tip_frames_.begin(), tip_frames_.end(), "mftip") != tip_frames_.end())
+    if (tip_frames_[0].find("mftip") != string::npos)
     {
       // Assign update function for dynamic coupling
       kdl_chain_.setUpdateCouplingFunction(updateCouplingMF);
       dimension_ = 4;
     }
-    if (std::find(tip_frames_.begin(), tip_frames_.end(), "rftip") != tip_frames_.end())
+    if (tip_frames_[0].find("rftip") != string::npos)
     {
       // Assign update function for dynamic coupling
       kdl_chain_.setUpdateCouplingFunction(updateCouplingRF);
       dimension_ = 4;
     }
-    if (std::find(tip_frames_.begin(), tip_frames_.end(), "lftip") != tip_frames_.end())
+    if (tip_frames_[0].find("lftip") != string::npos)
     {
       // Assign update function for dynamic coupling
       kdl_chain_.setUpdateCouplingFunction(updateCouplingLF);
       dimension_ = 5;
     }
-    if (std::find(tip_frames_.begin(), tip_frames_.end(), "thtip") != tip_frames_.end())
+    if (tip_frames_[0].find("thtip") != string::npos)
     {
       // Assign update function for thumb: identity matrix is used since there is no coupling
       kdl_chain_.setUpdateCouplingFunction(updateCouplingTH);
@@ -235,7 +234,7 @@ namespace hand_kinematics
     // restart 10 times with different rand
     for (int i = 0; i < 10 && ik_valid < 0; i++)
     {
-      if (std::find(tip_frames_.begin(), tip_frames_.end(), "thtip") != tip_frames_.end() || std::find(tip_frames_.begin(), tip_frames_.end(), "lftip") != tip_frames_.end())
+      if (tip_frames_[0].find("thtip") != std::string::npos || tip_frames_[0].find("lftip") != std::string::npos)
         ROS_DEBUG("IK Seed: %f, %f, %f, %f, %f", jnt_pos_in(0), jnt_pos_in(1), jnt_pos_in(2), jnt_pos_in(3),
                   jnt_pos_in(4));
       else
@@ -243,11 +242,11 @@ namespace hand_kinematics
       ik_valid = ik_solver_pos->CartToJnt(jnt_pos_in, pose_desired, jnt_pos_out);
       generateRandomJntSeed(jnt_pos_in);
       // maintain 1:1 coupling
-      if (std::find(tip_frames_.begin(), tip_frames_.end(), "thtip") != tip_frames_.end() && std::find(tip_frames_.begin(), tip_frames_.end(), "lftip") != tip_frames_.end())
+      if (tip_frames_[0].find("thtip") == std::string::npos && tip_frames_[0].find("lftip") == std::string::npos)
       {
         jnt_pos_in(3) = jnt_pos_in(2);
       }
-      else if (std::find(tip_frames_.begin(), tip_frames_.end(), "lftip") != tip_frames_.end())
+      else if (tip_frames_[0].find("lftip") != std::string::npos)
       {
         jnt_pos_in(4) = jnt_pos_in(3);
       }
@@ -352,7 +351,7 @@ namespace hand_kinematics
     // restart 10 times with different rand
     for (int i = 0; i < 10 && ik_valid < 0; i++)
     {
-      if (std::find(tip_frames_.begin(), tip_frames_.end(), "thtip") != tip_frames_.end() || std::find(tip_frames_.begin(), tip_frames_.end(), "lftip") != tip_frames_.end())
+      if (tip_frames_[0].find("thtip") != std::string::npos || tip_frames_[0].find("lftip") != std::string::npos)
         ROS_DEBUG("IK Seed: %f, %f, %f, %f, %f", jnt_pos_in(0), jnt_pos_in(1), jnt_pos_in(2), jnt_pos_in(3),
                   jnt_pos_in(4));
       else
@@ -360,11 +359,11 @@ namespace hand_kinematics
       ik_valid = ik_solver_pos->CartToJnt(jnt_pos_in, pose_desired, jnt_pos_out);
       generateRandomJntSeed(jnt_pos_in);
       // maintain 1:1 coupling
-      if (std::find(tip_frames_.begin(), tip_frames_.end(), "thtip") != tip_frames_.end() && std::find(tip_frames_.begin(), tip_frames_.end(), "lftip") != tip_frames_.end())
+      if (tip_frames_[0].find("thtip") == std::string::npos && tip_frames_[0].find("lftip") == std::string::npos)
       {
         jnt_pos_in(3) = jnt_pos_in(2);
       }
-      else if (std::find(tip_frames_.begin(), tip_frames_.end(), "lftip") != tip_frames_.end())
+      else if (tip_frames_[0].find("lftip") != std::string::npos)
       {
         jnt_pos_in(4) = jnt_pos_in(3);
       }
