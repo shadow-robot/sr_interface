@@ -21,6 +21,9 @@
   <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large.world" if="$(arg scene)"/>
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="false"/>
+  <arg name="kinematics_config" default="$(find sr_ur_calibration)/calibrations/bristol_ur10_calibration.yaml"/>
+
+
 
   <!-- ROBOT CONFIG-->
   <arg name="side" default="right"/>
@@ -48,6 +51,8 @@
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   <arg name="arm_speed_scale" default="0.5"/>
+
+  <rosparam command="load" file="$(arg kinematics_config)" ns="$(arg arm_id)_sr_ur_robot_hw"/>
 
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
