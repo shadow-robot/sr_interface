@@ -14,7 +14,7 @@
     <xacro:arg name="kinematics_config" default="$(find ur_description)/config/ur10_default.yaml"/>
     <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
 
-    <xacro:ur10_robot prefix="ra_" joint_limited="true"
+    <xacro:ur10_robot prefix="ra_" joint_limited="false"
       transmission_hw_interface="$(arg transmission_hw_interface)"
       kinematics_file="${load_yaml('$(arg kinematics_config)')}"
   />
