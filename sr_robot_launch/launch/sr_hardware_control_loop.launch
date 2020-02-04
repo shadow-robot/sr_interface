@@ -40,7 +40,7 @@
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="arm_speed_scale" default="0.5"/>
-  <arg name="kinematics_config" default="$(find sr_ur_calibration)/calibrations/bristol_ur10_calibration.yaml"/>
+  <arg name="kinematics_config" default="$(find ur_description)/config/ur10_default.yaml"/>
 
   <!-- Logging local topics -->
   <group ns="control_box">
