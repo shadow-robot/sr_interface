@@ -23,7 +23,7 @@
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="false"/>
   <!-- Definition of "home" position, in joint-angle pairs -->
-  <arg name="home_angles" default=""/>
+  <arg name="home_angles" default="-J la_shoulder_pan_joint 0.0 -J la_elbow_joint -2.0 -J la_wrist_1_joint -2.4 -J la_wrist_2_joint -1.5708 -J la_shoulder_lift_joint -1.89 -J la_wrist_3_joint 3.1416 -J ra_shoulder_pan_joint 0.0 -J ra_elbow_joint 2.0 -J ra_wrist_1_joint -0.733 -J ra_wrist_2_joint 1.5708 -J ra_shoulder_lift_joint -1.25 -J ra_wrist_3_joint 3.1416"/>
   <!-- Set this to true if you run the hardware loop on a remote computer -->
   <arg name="external_control_loop" default="false"/>
   <!-- The robot state publisher publishing frequency  -->
@@ -196,7 +196,7 @@
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
     <rosparam file="$(arg robot_config_file)"/>
-    <group if="$(eval hands == 'both')">
+    <!-- <group if="$(eval hands == 'both')"> -->
       <include file="$(find sr_multi_moveit_config)/launch/moveit_planning_and_execution.launch">
         <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
         <arg name="load_robot_description" value="true"/>
@@ -206,9 +206,8 @@
         <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
       </include>
       <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
-    </group>
+    <!-- </group>
     <group if="$(eval hands == 'none')">
-      <!-- Not available yet -->
-    </group>
+    </group> -->
   </group>
 </launch>

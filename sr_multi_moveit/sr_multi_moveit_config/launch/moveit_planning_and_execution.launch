@@ -23,7 +23,7 @@
   <!-- Broadcast static tf for robot root -->
   <!--node name="virtual_joint_broadcaster" pkg="sr_multi_moveit_config" type="virtual_joint_broadcaster.py" output="screen" /-->
 
-  <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="11 sr_multi_moveit_config move_group.launch 
+  <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="22 sr_multi_moveit_config move_group.launch 
     hand_ik_solver_path:=$(arg hand_ik_solver_path)
     allow_trajectory_execution:=true 
     fake_execution:=false 
@@ -37,7 +37,7 @@
 
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
   <group if="$(arg gui)">
-    <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="15 sr_multi_moveit_config moveit_rviz.launch
+    <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="30 sr_multi_moveit_config moveit_rviz.launch
       hand_ik_solver_path:=$(arg hand_ik_solver_path)
       config:=true 
       debug:=$(arg debug)
