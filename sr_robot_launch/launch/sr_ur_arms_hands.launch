@@ -196,7 +196,6 @@
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
     <rosparam file="$(arg robot_config_file)"/>
-    <!-- <group if="$(eval hands == 'both')"> -->
       <include file="$(find sr_multi_moveit_config)/launch/moveit_planning_and_execution.launch">
         <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
         <arg name="load_robot_description" value="true"/>
@@ -206,8 +205,5 @@
         <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
       </include>
       <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
-    <!-- </group>
-    <group if="$(eval hands == 'none')">
-    </group> -->
   </group>
 </launch>
