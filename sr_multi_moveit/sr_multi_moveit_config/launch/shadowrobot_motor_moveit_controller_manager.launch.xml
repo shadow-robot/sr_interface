@@ -8,5 +8,4 @@
   <arg name="robot_config_file" default=""/>
 
   <node name="load_controllers" pkg="sr_multi_moveit_config" type="generate_load_moveit_config.py" respawn="false" output="screen" args="real_controllers $(arg robot_config_file)"/>
-  
 </launch>
