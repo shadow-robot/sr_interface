@@ -40,7 +40,7 @@
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="arm_speed_scale" default="0.5"/>
-  <arg name="arm_hardware_name" default="[$(arg arm_id)_sr_ur_robot_hw]"/>
+  <arg name="arm_only_hardware_name" value="[$(arg arm_id)_sr_ur_robot_hw]"/>
   <arg name="kinematics_config" default="$(find ur_description)/config/ur10_default.yaml"/>
 
   <!-- Logging local topics -->
@@ -52,6 +52,7 @@
     </include>
   </group>
 
+  <!-- So that the driver can check we're loading the right calibration -->
   <rosparam command="load" file="$(arg kinematics_config)" ns="$(arg arm_id)_sr_ur_robot_hw"/>
 
   <param name="$(arg arm_id)_sr_ur_robot_hw/non_blocking_read" type="bool" value="true"/>
@@ -155,8 +156,7 @@
           - la_sr_ur_robot_hw
       </rosparam>
     </group>
-    <rosparam unless="$(arg hand_ctrl)" param="robot_hardware" subst_value="True">$(arg arm_hardware_name)</rosparam> 
-    <!--param unless="$(arg hand_ctrl)" name="robot_hardware" type="str" value="[$(arg arm_id)_sr_ur_robot_hw]"/-->
+    <rosparam unless="$(arg hand_ctrl)" param="robot_hardware" subst_value="True">$(arg arm_only_hardware_name)</rosparam>
     <rosparam command="load" file="$(arg arm_robot_hw)"/>
     <param name="$(arg arm_id)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
     <!--param name="$(arg arm_id)_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/-->
