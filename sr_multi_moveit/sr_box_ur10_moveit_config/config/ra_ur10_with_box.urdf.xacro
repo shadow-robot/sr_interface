@@ -2,7 +2,7 @@
 
   <!-- Arm -->
   <xacro:include filename="$(find ur_description)/urdf/ur10.urdf.xacro"/>
-  <xacro:arg name="kinematics_config" default="$(find sr_multi_description)/arm_calibration/bristol_ur10_calibration.yaml"/>
+  <xacro:arg name="kinematics_config" default="$(find ur_description)/arm/ur10_default.yaml"/>
   <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
 
   <xacro:ur10_robot prefix="ra_" joint_limited="false"

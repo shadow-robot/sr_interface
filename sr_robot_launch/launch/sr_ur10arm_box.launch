@@ -21,7 +21,7 @@
   <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large.world" if="$(arg scene)"/>
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="false"/>
-  <arg name="kinematics_config" default="$(find sr_ur_calibration)/calibrations/bristol_ur10_calibration.yaml"/>
+  <arg name="kinematics_config" default=default="$(find ur_description)/arm/ur10_default.yaml"/>
 
 
 
@@ -76,7 +76,7 @@
       <arg name="debug" value="$(arg debug)"/>
       <arg name="verbose" value="$(arg verbose)"/>
     </include>
-    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
+    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
 
     <arg if="$(arg start_home)" name="spawn_model_extra_args" value="-unpause $(arg home_angles)" />
     <arg unless="$(arg start_home)" name="spawn_model_extra_args" value="" />
