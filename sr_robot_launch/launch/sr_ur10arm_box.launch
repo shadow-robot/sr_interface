@@ -21,7 +21,7 @@
   <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large.world" if="$(arg scene)"/>
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="false"/>
-  <arg name="kinematics_config" default=default="$(find ur_description)/arm/ur10_default.yaml"/>
+  <arg name="kinematics_config" default="$(find ur_description)/arm/ur10_default.yaml"/>
 
 
 
