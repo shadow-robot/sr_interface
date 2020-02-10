@@ -55,7 +55,7 @@
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <param name="description_read_repetitions" value="50"/>
 
-  <node if="$(eval arg('sim') or not arg('hand_ctrl'))" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
+  <node if="$(eval arg('sim'))" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
 
   <!-- ROBOT CONFIG-->
   <arg name="robot_name" default="ursrbox"/>
