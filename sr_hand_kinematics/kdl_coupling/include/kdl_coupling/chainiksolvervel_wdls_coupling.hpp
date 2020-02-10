@@ -95,6 +95,12 @@ public:
     return -1;
   };
 
+  virtual void updateInternalDataStructures()
+  {
+    // Added to eliminate abstract class instantiation error
+  };
+
+  /**
   /*
    * Set the joint space weighting matrix
    *

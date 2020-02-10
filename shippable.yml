@@ -6,16 +6,21 @@ python:
 env:
   - secure: oXM0nFsDG4BEE2GqdVjxfY4eYAoBo2g0M4i9uvS10sF7iQRortdNQxS9nVZL/ENb0khrvz6hby3KmM6DKZnbssYlGcq2W9MpD5w1PNFU0lbSeQY4yJMPLAmeQe5clLBQy0W/SaxL9dxy2JccW+j/aKIisrbvoVtSPXApw/vwxt7d7XcZ3ucq0acvyM6DG+rdPGOJV4QJlJN9JpSgCFJDUykVLPFoi6h6pU1ym2m4r1qVyOgabjNNbCHU4ZbSnEGJfkyrr6omcXF1Cd438++tUPRjjPvrFYLoKKkRjPCLgTkOfCD/nhba9xFv60/zzC4oYtXWZQ9jjAhBHm11Xwft0Q==
 
-install:
-  - sudo apt-get update
-  - sudo apt-get install curl -y
-
-script:
-  - export toolset_branch="master"
-  - export server_type="shippable"
-  - export used_modules="build_pr_only,check_cache,code_coverage"
-  - export remote_shell_script="https://raw.githubusercontent.com/shadow-robot/sr-build-tools/$toolset_branch/bin/sr-run-ci-build.sh"
-  - curl -s "$( echo "$remote_shell_script" | sed 's/#/%23/g' )" | bash /dev/stdin "$toolset_branch" $server_type $used_modules
-
-after_failure:
-  - curl -X POST --data-urlencode "payload={\"channel\":\"#bots\", \"username\":\"shippable\", \"text\":\"[$SHIPPABLE_REPO_SLUG branch $BRANCH] <$BUILD_URL|Build $SHIPPABLE_BUILD_NUMBER> failed\", \"icon_emoji\":\":monkey_face:\"}" $SLACK_WEB_HOOK_URL
+build:
+  pre_ci_boot:
+    image_name: shadowrobot/build-tools
+    image_tag: bionic-melodic
+    pull: true
+    options: "-e HOME=/root"
+  ci:
+    - sudo apt-get update
+    - sudo apt-get install curl -y
+    - export toolset_branch="master"
+    - export server_type="shippable"
+    - export ubuntu_version_name="bionic"
+    - export ros_release_name="melodic"
+    - export used_modules="build_pr_only,check_cache,code_coverage"
+    - export remote_shell_script="https://raw.githubusercontent.com/shadow-robot/sr-build-tools/$toolset_branch/bin/sr-run-ci-build.sh"
+    - curl -s "$( echo "$remote_shell_script" | sed 's/#/%23/g' )" | bash /dev/stdin "$toolset_branch" $server_type $used_modules
+  on_failure:
+    - curl -X POST --data-urlencode "payload={\"channel\":\"#bots\", \"username\":\"shippable\", \"text\":\"[$SHIPPABLE_REPO_SLUG branch $BRANCH] <$BUILD_URL|Build $SHIPPABLE_BUILD_NUMBER> failed\", \"icon_emoji\":\":monkey_face:\"}" $SLACK_WEB_HOOK_URL

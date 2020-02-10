@@ -21,7 +21,7 @@
   <run_depend>sr_multi_description</run_depend>
   <build_depend>rostest</build_depend>
   <run_depend>sr_utilities_common</run_depend>
-
+  <build_depend>moveit_ros_planning_interface</build_depend>
   <buildtool_depend>catkin</buildtool_depend>
 
 </package>
