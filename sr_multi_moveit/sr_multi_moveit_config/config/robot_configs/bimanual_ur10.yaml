@@ -6,6 +6,8 @@ robot:
       arm:
         name: ur10
         main_group: manipulator
+        other_groups:
+          - endeffector
         moveit_path:
           package: sr_multi_moveit_config
           relative_path: /config/ur
@@ -18,6 +20,8 @@ robot:
       arm:
         name: ur10
         main_group: manipulator
+        other_groups:
+          - endeffector
         moveit_path:
           package: sr_multi_moveit_config
           relative_path: /config/ur
@@ -27,9 +31,9 @@ robot:
           - up
 
 ra_sr_ur_robot_hw:
-  # Hand E payload
-  payload_mass_kg: 4.55
+  # No hand
+  payload_mass_kg: 0.0
 
 la_sr_ur_robot_hw:
-  # Hand E payload
-  payload_mass_kg: 4.55
+  # No hand
+  payload_mass_kg: 0.0
