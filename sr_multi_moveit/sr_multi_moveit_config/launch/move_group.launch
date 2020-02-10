@@ -53,7 +53,7 @@
   </include>
 
   <!-- Start the actual move_group node/action server -->
-  <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="10 sr_multi_moveit_config move_group_action_server.launch 
+  <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="5 sr_multi_moveit_config move_group_action_server.launch 
     allow_trajectory_execution:=$(arg allow_trajectory_execution) 
     max_safe_path_cost:=$(arg max_safe_path_cost)
     jiggle_fraction:=$(arg jiggle_fraction)
