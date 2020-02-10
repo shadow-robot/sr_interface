@@ -123,9 +123,9 @@
       <rosparam file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml" command="load"/>
     </group>
     <node name="ra_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-          args="--wait-for=/ra_arm_ready --wait-for=/calibrated ra_trajectory_controller "/>
+          args="--wait-for=/ra_arm_ready ra_trajectory_controller "/>
     <node name="la_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-          args="--wait-for=/la_arm_ready --wait-for=/calibrated la_trajectory_controller"/>
+          args="--wait-for=/la_arm_ready la_trajectory_controller"/>
   </group>
 
   <!-- Position mode -->
