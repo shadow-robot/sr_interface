@@ -102,7 +102,6 @@
     </rosparam>
   </group>
 
-
   <rosparam command="load" file="$(arg arm_robot_hw_1)"/>
   <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
   <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_1_program_path)"/>

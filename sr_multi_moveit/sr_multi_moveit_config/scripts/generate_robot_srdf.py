@@ -235,12 +235,12 @@ class SRDFRobotGenerator(object):
                 if self.robot.manipulators[0].has_hand and self.robot.manipulators[1].has_hand:
                     comment = ["Bimanual groups with hands"]
                     self.add_bimanual_arm_groups(self.robot.manipulators[0].arm.internal_name,
-                                                self.robot.manipulators[1].arm.internal_name)
+                                                 self.robot.manipulators[1].arm.internal_name)
                 else:
                     comment = ["Bimanual groups without hands"]
                     self.add_bimanual_arm_groups(self.robot.manipulators[0].arm.internal_name,
-                                                self.robot.manipulators[1].arm.internal_name,
-                                                False)
+                                                 self.robot.manipulators[1].arm.internal_name,
+                                                 False)
                 self.add_comments(comment)
 
         for manipulator_id, manipulator in enumerate(self.robot.manipulators):
