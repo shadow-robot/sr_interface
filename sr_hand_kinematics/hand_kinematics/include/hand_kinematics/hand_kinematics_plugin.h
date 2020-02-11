@@ -157,10 +157,10 @@ virtual bool getPositionFK(const std::vector<std::string> &link_names,
 * @brief  Initialization function for the kinematics
 * @return True if initialization was successful, false otherwise
 */
-virtual bool initialize(const std::string &robot_description,
+virtual bool initialize(const moveit::core::RobotModel& robot_model,
                         const std::string &group_name,
                         const std::string &base_frame,
-                        const std::string &tip_frame,
+                        const std::vector<std::string>& tip_frames,
                         double search_discretization);
 
 
