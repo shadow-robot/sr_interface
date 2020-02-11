@@ -51,6 +51,8 @@
     </include>
   </group>
 
+  <node unless="$(arg hand_ctrl)" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
+
   <!-- Controller -->
   <group unless="$(eval hands == 'none')">
     <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
@@ -77,9 +79,9 @@
       <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
         <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
         <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
-        <param name="wait_for" value ="calibrated"/>
+        <param name="wait_for" value="calibrated"/>
+      </node>
     </group>
-  </group>
   <group if="$(eval hands == 'none')">
    <param name="robot_description" command="xacro --inorder $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">

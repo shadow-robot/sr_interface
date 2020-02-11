@@ -76,8 +76,8 @@
       <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
 
-    <node if="$(arg arm_trajectory)" name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_prefix)_trajectory_controller"/>
-    <node if="$(arg arm_position)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_prefix)_group_position_controller"/>
+    <node if="$(arg arm_trajectory)" name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="$(arg arm_prefix)_trajectory_controller"/>
+    <node if="$(arg arm_position)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="$(arg arm_prefix)_group_position_controller"/>
 
     <!-- Robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
