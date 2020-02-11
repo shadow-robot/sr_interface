@@ -45,6 +45,10 @@
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="right_arm_speed_scale" default="0.5"/>
   <arg name="left_arm_speed_scale" default="0.5"/>
+  <arg name="kinematics_config_left" default="$(find ur_description)/config/ur10_default.yaml"/>
+  <arg name="kinematics_config_right" default="$(find ur_description)/config/ur10_default.yaml"/>
+
+  <node unless="$(eval arg('hands') == 'none')" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
 
   <!-- Logging local topics -->
   <group ns="control_box">
@@ -54,6 +58,8 @@
       <arg name="log_directory" value="$(optenv HOME)/.ros/log"/>
     </include>
   </group>
+
+  <include file="$(find sr_robot_launch)/launch/bimanual_controller_stopper.launch"/>
 
   <!-- Controller -->
   <group unless="$(eval hands == 'none')">
@@ -74,6 +80,8 @@
       <arg name="pwm_control" value="$(arg pwm_control)"/>
       <arg name="arm_1_z" value="$(arg arm_1_z)"/>
       <arg name="arm_2_z" value="$(arg arm_2_z)"/>
+      <arg name="kinematics_config_right" value="$(arg kinematics_config_right)"/>
+      <arg name="kinematics_config_left" value="$(arg kinematics_config_left)"/>
       <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
       <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
       <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
@@ -109,6 +117,11 @@
   </rosparam>
   <rosparam command="load" file="$(arg arm_robot_hw_1)"/>
   <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
+  <rosparam command="load" file="$(arg kinematics_config_right)" ns="ra_sr_ur_robot_hw"/>
+  <rosparam command="load" file="$(arg kinematics_config_left)" ns="la_sr_ur_robot_hw"/>
+  <param name="ra_sr_ur_robot_hw/non_blocking_read" type="bool" value="true"/>
+  <param name="la_sr_ur_robot_hw/non_blocking_read" type="bool" value="true"/>
+
   <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_1_program_path)"/>
   <param name="la_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_2_program_path)"/>
   <param name="ra_sr_ur_robot_hw/speed_scale" type="double" value="$(arg right_arm_speed_scale)"/>

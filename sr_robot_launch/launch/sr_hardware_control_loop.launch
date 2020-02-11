@@ -58,6 +58,10 @@
 
   <node unless="$(arg hand_ctrl)" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
 
+  <include file="$(find sr_robot_launch)/launch/unimanual_controller_stopper.launch">
+    <arg name="side" value="$(arg side)"/>
+  </include>
+
   <node name="controller_stopper" pkg="controller_stopper" type="node" respawn="false" output="screen">
     <remap from="robot_running" to="$(arg arm_id)_sr_ur_robot_hw/robot_program_running"/>
     <rosparam param="consistent_controllers">
