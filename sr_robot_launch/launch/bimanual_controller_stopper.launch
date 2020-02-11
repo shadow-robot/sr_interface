@@ -49,7 +49,7 @@
     </rosparam>
   </node>
 
-  <node name="controller_stopper" pkg="controller_stopper" type="node" respawn="false" output="screen">
+  <node name="controller_stopper_left" pkg="controller_stopper" type="node" respawn="false" output="screen">
     <remap from="robot_running" to="la_sr_ur_robot_hw/robot_program_running"/>
     <rosparam param="consistent_controllers">
        - "force_torque_sensor_controller"
