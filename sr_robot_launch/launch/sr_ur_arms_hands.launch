@@ -23,7 +23,7 @@
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="false"/>
   <!-- Definition of "home" position, in joint-angle pairs -->
-  <arg name="home_angles" default=""/>
+  <arg name="home_angles" default="-J la_shoulder_pan_joint 0.0 -J la_elbow_joint -2.0 -J la_wrist_1_joint -2.4 -J la_wrist_2_joint -1.5708 -J la_shoulder_lift_joint -1.89 -J la_wrist_3_joint 3.1416 -J ra_shoulder_pan_joint 0.0 -J ra_elbow_joint 2.0 -J ra_wrist_1_joint -0.733 -J ra_wrist_2_joint 1.5708 -J ra_shoulder_lift_joint -1.25 -J ra_wrist_3_joint 3.1416"/>
   <!-- Set this to true if you run the hardware loop on a remote computer -->
   <arg name="external_control_loop" default="false"/>
   <!-- The robot state publisher publishing frequency  -->
@@ -40,8 +40,6 @@
   <arg name="robot_name" default="$(arg robot_model)srh"/>
 
   <!-- HANDS CONFIG-->
-  <arg name="lh_id" default="lh"/>
-  <arg name="rh_id" default="rh"/>
   <arg name="rh_serial" default="1290"/>
   <arg name="lh_serial" default="1338"/>
   <arg name="rh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
@@ -59,8 +57,6 @@
   <!-- The control mode PWM (true) or torque (false) -->
   <!-- Set to true by default for now as torque control is not available yet -->
   <arg name="pwm_control" default="true"/>
-  <!-- Set to true if you want to use grasp controller -->
-  <arg name="grasp_controller" default="false"/>
 
   <!-- ARMS CONFIG-->
   <arg name="arm_1_z" default="0.0"/>
@@ -99,14 +95,14 @@
     <param name="robot_description" command="xacro --inorder $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
     <!-- HAND -->
     <group if="$(eval hands == 'both' or hands == 'right')">
-      <param name="/hand/mapping/$(arg rh_serial)" value="$(arg rh_id)"/>
-      <param name="/hand/joint_prefix/$(arg rh_serial)" value="$(arg rh_id)_"/>
-      <rosparam command="load" file="$(find sr_description)/hand/config/$(arg rh_id)_controller_gazebo.yaml"/>
+      <param name="/hand/mapping/$(arg rh_serial)" value="rh"/>
+      <param name="/hand/joint_prefix/$(arg rh_serial)" value="rh_"/>
+      <rosparam command="load" file="$(find sr_description)/hand/config/rh_controller_gazebo.yaml"/>
     </group>
     <group if="$(eval hands == 'both' or hands == 'left')">
-      <param name="/hand/mapping/$(arg lh_serial)" value="$(arg lh_id)"/>
-      <param name="/hand/joint_prefix/$(arg lh_serial)" value="$(arg lh_id)_"/>
-      <rosparam command="load" file="$(find sr_description)/hand/config/$(arg lh_id)_controller_gazebo.yaml"/>
+      <param name="/hand/mapping/$(arg lh_serial)" value="lh"/>
+      <param name="/hand/joint_prefix/$(arg lh_serial)" value="lh_"/>
+      <rosparam command="load" file="$(find sr_description)/hand/config/lh_controller_gazebo.yaml"/>
     </group>
     <arg if="$(arg start_home)" name="spawn_model_extra_args" value="-unpause $(arg home_angles)" />
     <arg unless="$(arg start_home)" name="spawn_model_extra_args" value="" />
@@ -153,16 +149,10 @@
       </include>
     </group>
     <group if="$(arg hand_ctrl)">
-      <group unless="$(arg grasp_controller)">
         <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
           <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
           <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
         </node>
-      </group>
-      <group if="$(arg grasp_controller)">
-        <!-- Not available yet -->
-        <!--node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen"/-->
-      </group>
     </group>
   </group>
 
@@ -176,14 +166,11 @@
         <arg name="robot_description" value="$(arg robot_description)"/>
         <arg name="robot_config_file" value="$(arg robot_config_file)"/>
         <arg name="hands" value="$(arg hands)"/>
-        <arg name="lh_id" value="$(arg lh_id)"/>
-        <arg name="rh_id" value="$(arg rh_id)"/>
         <arg name="rh_serial" value="$(arg rh_serial)"/>
         <arg name="lh_serial" value="$(arg lh_serial)"/>
         <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
         <arg name="lh_mapping_path" value="$(arg lh_mapping_path)"/>
         <arg name="eth_port" value="$(arg eth_port)"/>
-        <arg name="grasp_controller" value="$(arg grasp_controller)"/>
         <arg name="pwm_control" value="$(arg pwm_control)"/>
         <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>
         <arg name="arm_1_z" value="$(arg arm_1_z)"/>
@@ -209,7 +196,6 @@
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
     <rosparam file="$(arg robot_config_file)"/>
-    <group if="$(eval hands == 'both')">
       <include file="$(find sr_multi_moveit_config)/launch/moveit_planning_and_execution.launch">
         <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
         <arg name="load_robot_description" value="true"/>
@@ -219,9 +205,5 @@
         <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
       </include>
       <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
-    </group>
-    <group if="$(eval hands == 'none')">
-      <!-- Not available yet -->
-    </group>
   </group>
 </launch>

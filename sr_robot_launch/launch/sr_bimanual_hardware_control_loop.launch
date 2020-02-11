@@ -7,8 +7,10 @@
   <!-- ROBOT CONFIG-->
   <arg name="robot_model" default="ur10"/>
   <arg name="robot_description" unless="$(eval arg('hands') == 'none')" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
-  <arg name="robot_description" if="$(eval arg('hands') == 'none')" default="'$(find sr_bimanual_box_ur10_moveit_config)/config/bimanual_ur10_with_box.urdf.xacro'"/>
-  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_ur10.yaml"/>
+  <arg name="robot_description" if="$(eval arg('hands') == 'none')" default="'$(find sr_multi_description)/urdf/bimanual_ur10.urdf.xacro'"/>
+  <arg name="robot_config_file" unless="$(eval arg('hands') == 'none')" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
+  <arg name="robot_config_file" if="$(eval arg('hands') == 'none')" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_$(arg robot_model).yaml"/>
+
   <!-- setting this parameter to false allows to load the robot_description from a higher level -->
   <arg name="load_robot_description" default="true"/>
 
@@ -26,7 +28,8 @@
   <arg name="pwm_control" default="true"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
-  <arg name="hand_trajectory" default="true"/>
+  <arg name="hand_trajectory" unless="$(eval hands == 'none')" value="true"/>
+  <arg name="hand_trajectory" if="$(eval hands == 'none')" value="false"/>
 
   <!-- ARMS CONFIG-->
   <arg name="arm_1_z" default="0.7551"/>
@@ -48,7 +51,7 @@
   <arg name="kinematics_config_left" default="$(find ur_description)/config/ur10_default.yaml"/>
   <arg name="kinematics_config_right" default="$(find ur_description)/config/ur10_default.yaml"/>
 
-  <node unless="$(eval arg('hands') == 'none')" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
+  <node if="$(eval arg('hands') == 'none')" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
 
   <!-- Logging local topics -->
   <group ns="control_box">
@@ -89,11 +92,18 @@
       <arg name="load_robot_description" value="$(arg load_robot_description)"/>
     </include>
     <group unless="$(arg grasp_controller)">
-      <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
-        <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
-        <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
-        <param name="wait_for" value ="calibrated"/>
-      </node>
+    <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
+      <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
+      <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
+      <param name="wait_for" value="calibrated"/>
+    </node>
+    <rosparam>
+      robot_hardware:
+        - unique_robot_hw
+        - ra_sr_ur_robot_hw
+        - la_sr_ur_robot_hw
+    </rosparam>
+  </group>
     </group>
     <group if="$(arg grasp_controller)">
       <!-- Not available yet -->
@@ -107,14 +117,19 @@
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
       <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
-  </group>
 
-  <rosparam>
+    <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
+    <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
+    <rosparam>
     robot_hardware:
-      - unique_robot_hw
       - ra_sr_ur_robot_hw
       - la_sr_ur_robot_hw
-  </rosparam>
+    </rosparam>
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+      <param name="publish_frequency" type="double" value="250.0" />
+    </node>
+  </group>
+
   <rosparam command="load" file="$(arg arm_robot_hw_1)"/>
   <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
   <rosparam command="load" file="$(arg kinematics_config_right)" ns="ra_sr_ur_robot_hw"/>
