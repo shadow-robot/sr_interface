@@ -103,13 +103,6 @@
         - ra_sr_ur_robot_hw
         - la_sr_ur_robot_hw
     </rosparam>
-  </group>
-    </group>
-    <group if="$(arg grasp_controller)">
-      <!-- Not available yet -->
-      <!--node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen">
-        <param name="wait_for" value ="calibrated"/>
-      </node-->
     </group>
   </group>
   <group if="$(eval hands == 'none')">
