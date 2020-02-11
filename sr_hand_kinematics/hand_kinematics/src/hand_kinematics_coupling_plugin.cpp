@@ -100,7 +100,8 @@ namespace hand_kinematics
     std::string xml_string;
     ros::NodeHandle private_handle("~/" + group_name);
     ROS_INFO("Started IK for %s", tip_frames_[0].c_str());
-    while (!loadRobotModel(private_handle, robot_model_urdf, base_frame_, tip_frames_[0], xml_string) && private_handle.ok())
+    while (!loadRobotModel(private_handle, robot_model_urdf, base_frame_, tip_frames_[0], xml_string) &&
+      private_handle.ok())
     {
       ROS_ERROR("Could not load robot model. Are you sure the robot model is on the parameter server?");
       ros::Duration(0.5).sleep();
