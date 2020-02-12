@@ -38,9 +38,9 @@
   <arg name="arms" default="true"/>
   <arg name="robot_model" value="ur10"/>
   <arg name="robot_description" unless="$(eval arg('hands') == 'none')" default="'$(find sr_multi_description)/urdf/bimanual_srhand_plus_bt_sp_biotacs_$(arg robot_model).urdf.xacro'"/>
-  <arg name="robot_description" if="$(eval arg('hands') == 'none')" default="'$(find sr_bimanual_box_ur10_moveit_config)/config/bimanual_ur10_with_box.urdf.xacro'"/>
+  <arg name="robot_description" if="$(eval arg('hands') == 'none')" default="'$(find sr_multi_description)/urdf/bimanual_ur10.urdf.xacro'"/>
   <arg name="robot_config_file" unless="$(eval arg('hands') == 'none')" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
-  <arg name="robot_config_file" if="$(eval arg('hands') == 'none')" default="$(find sr_bimanual_box_ur10_moveit_config)/config/robot_configs/right_ur10.yaml"/>
+  <arg name="robot_config_file" if="$(eval arg('hands') == 'none')" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_$(arg robot_model).yaml"/>
 
   <!-- HANDS CONFIG-->
   <arg name="rh_serial" default="1130"/>

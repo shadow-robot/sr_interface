@@ -7,8 +7,9 @@
   <!-- ROBOT CONFIG-->
   <arg name="robot_model" default="ur10"/>
   <arg name="robot_description" unless="$(eval arg('hands') == 'none')" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
-  <arg name="robot_description" if="$(eval arg('hands') == 'none')" default="'$(find sr_bimanual_box_ur10_moveit_config)/config/bimanual_ur10_with_box.urdf.xacro'"/>
-  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_ur10.yaml"/>
+  <arg name="robot_description" if="$(eval arg('hands') == 'none')" default="'$(find sr_multi_description)/urdf/bimanual_ur10.urdf.xacro'"/>
+  <arg name="robot_config_file" unless="$(eval arg('hands') == 'none')" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
+  <arg name="robot_config_file" if="$(eval arg('hands') == 'none')" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_$(arg robot_model).yaml"/>
   <!-- setting this parameter to false allows to load the robot_description from a higher level -->
   <arg name="load_robot_description" default="true"/>
 
@@ -22,7 +23,8 @@
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
   <!-- The control mode PWM (true) or torque (false) -->
   <arg name="pwm_control" default="true"/>
-  <arg name="hand_trajectory" default="true"/>
+  <arg name="hand_trajectory" unless="$(eval hands == 'none')" value="true"/>
+  <arg name="hand_trajectory" if="$(eval hands == 'none')" value="false"/>
 
   <!-- ARMS CONFIG-->
   <arg name="arm_1_z" default="0.7551"/>
@@ -76,25 +78,35 @@
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       <arg name="load_robot_description" value="$(arg load_robot_description)"/>
     </include>
-      <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
-        <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
-        <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
-        <param name="wait_for" value="calibrated"/>
-      </node>
-    </group>
+    <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
+      <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
+      <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
+      <param name="wait_for" value="calibrated"/>
+    </node>
+    <rosparam>
+      robot_hardware:
+        - unique_robot_hw
+        - ra_sr_ur_robot_hw
+        - la_sr_ur_robot_hw
+    </rosparam>
+  </group>
   <group if="$(eval hands == 'none')">
    <param name="robot_description" command="xacro --inorder $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
       <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
-  </group>
-
-  <rosparam>
+    <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
+    <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
+    <rosparam>
     robot_hardware:
-      - unique_robot_hw
       - ra_sr_ur_robot_hw
       - la_sr_ur_robot_hw
-  </rosparam>
+    </rosparam>
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+      <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)" />
+    </node>
+  </group>
+
   <rosparam command="load" file="$(arg arm_robot_hw_1)"/>
   <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
   <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_1_program_path)"/>
@@ -115,9 +127,9 @@
       <rosparam file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml" command="load"/>
     </group>
     <node name="ra_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-          args="--wait-for=/ra_arm_ready --wait-for=/calibrated ra_trajectory_controller "/>
+          args="--wait-for=/ra_arm_ready ra_trajectory_controller "/>
     <node name="la_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-          args="--wait-for=/la_arm_ready --wait-for=/calibrated la_trajectory_controller"/>
+          args="--wait-for=/la_arm_ready la_trajectory_controller"/>
   </group>
 
   <!-- Position mode -->
