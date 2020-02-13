@@ -1,6 +1,15 @@
 la_sr_ur_robot_hw:
-  type: ur_driver/HardwareInterface
+  hardware_interface:
+    joints: &robot_joints
+      - la_shoulder_pan_joint
+      - la_shoulder_lift_joint
+      - la_elbow_joint
+      - la_wrist_1_joint
+      - la_wrist_2_joint
+      - la_wrist_3_joint
   
+  type: ur_driver/HardwareInterface
+
   # ra for right side arm la for left side arm
   robot_id: la
   
@@ -14,7 +23,7 @@ la_sr_ur_robot_hw:
   
   output_recipe_file: /home/user/projects/shadow_robot/base/src/Universal_Robots_ROS_Driver/ur_robot_driver/resources/rtde_output_recipe.txt
   
-  script_file: /home/user/projects/shadow_robot/base/src/Universal_Robots_ROS_Driver/ur_robot_driver/resources/servoj.urscript
+  script_file: /home/user/projects/shadow_robot/base/src/Universal_Robots_ROS_Driver/ur_robot_driver/resources/ros_control.urscript
   
   use_tool_communication: false
   
@@ -24,3 +33,8 @@ la_sr_ur_robot_hw:
   
   servoj_lookahead_time: 0.1
 
+  reverse_port: 50003
+
+  script_sender_port: 50004
+
+  use_local_hardware_interface_param: true
