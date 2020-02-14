@@ -92,6 +92,7 @@
     </node>
   </group>
 
+  <!-- HANDS AND ARMS -->
   <group if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))">
     <rosparam>
       robot_hardware:
@@ -99,20 +100,28 @@
         - ra_sr_ur_robot_hw
         - la_sr_ur_robot_hw
     </rosparam>
-    <rosparam command="load" file="$(arg arm_robot_hw_1)"/>
-    <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
-    <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_1_program_path)"/>
-    <param name="la_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_2_program_path)"/>
-    <param name="ra_sr_ur_robot_hw/speed_scale" type="double" value="$(arg right_arm_speed_scale)"/>
-    <param name="la_sr_ur_robot_hw/speed_scale" type="double" value="$(arg left_arm_speed_scale)"/>
   </group>
 
+  <!-- ARMS BUT NO HANDS -->
   <group if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))">
     <rosparam>
       robot_hardware:
         - ra_sr_ur_robot_hw
         - la_sr_ur_robot_hw
     </rosparam>
+    <param name="robot_description" command="xacro --inorder $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
+    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
+      <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
+    </include>
+    <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
+    <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+      <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)" />
+    </node>
+  </group>
+
+  <!-- WHENEVER THERE ARE ARMS -->
+  <group if="$(eval arg('arm_ctrl'))">
     <rosparam command="load" file="$(arg arm_robot_hw_1)"/>
     <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
     <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_1_program_path)"/>
@@ -121,6 +130,7 @@
     <param name="la_sr_ur_robot_hw/speed_scale" type="double" value="$(arg left_arm_speed_scale)"/>
   </group>
 
+  <!-- HANDS BUT NO ARMS -->
   <group if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))">
     <rosparam>
       robot_hardware:
@@ -128,22 +138,8 @@
     </rosparam>
   </group>
 
-  <group if="$(eval hands == 'none')">
-   <param name="robot_description" command="xacro --inorder $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
-    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
-      <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
-    </include>
-    <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
-    <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
-
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)" />
-    </node>
-  </group>
-
-
   <!-- Trajectory mode -->
-  <group if="$(arg arm_trajectory)">
+  <group if="$(eval arg('arm_trajectory') and arg('arm_ctrl'))">
     <group if="$(arg include_wrist_in_arm_controller)">
       <rosparam if="$(eval hands == 'both' or hands == 'right')" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml" command="load"/>
       <rosparam if="$(eval hands == 'left' or hands == 'none')" file="$(find sr_robot_launch)/config/ra_trajectory_controller_no_wrist.yaml" command="load"/>
@@ -161,7 +157,7 @@
   </group>
 
   <!-- Position mode -->
-  <group if="$(arg arm_position)">
+  <group if="$(eval arg('arm_position') and arg('arm_ctrl'))">
     <group if="$(arg include_wrist_in_arm_controller)">
       <rosparam if="$(eval hands == 'both' or hands == 'right')" file="$(find sr_robot_launch)/config/ra_group_position_controller.yaml" command="load"/>
       <rosparam if="$(eval hands == 'left' or hands == 'none')" file="$(find sr_robot_launch)/config/ra_group_position_controller_no_wrist.yaml" command="load"/>
