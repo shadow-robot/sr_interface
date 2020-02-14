@@ -14,7 +14,7 @@
   <arg name="robot_description" if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))" default="'$(find sr_multi_description)/urdf/bimanual_ur10.urdf.xacro'"/>
   <arg name="robot_config_file" if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_$(arg robot_model).yaml"/>
   <!-- HANDS BUT NO ARMS -->
-  <arg name="robot_description" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="'$(find sr_description)/urdf/bimanual_shadowhand_motor_plus.urdf.xacro'"/>
+  <arg name="robot_description" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="'$(find sr_description)/robots/bimanual_shadowhand_motor_plus.urdf.xacro'"/>
   <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
 
   <!-- setting this parameter to false allows to load the robot_description from a higher level -->
