@@ -386,8 +386,8 @@ bool Kinematics::readJoints(urdf::Model &robot_model)
 {
   num_joints = 0;
   // get joint maxs and mins
-  boost::shared_ptr<const urdf::Link> link = robot_model.getLink(tip_name);
-  boost::shared_ptr<const urdf::Joint> joint;
+  urdf::LinkConstSharedPtr link = robot_model.getLink(tip_name);
+  urdf::JointConstSharedPtr joint;
 
   urdf::Vector3 length;
 

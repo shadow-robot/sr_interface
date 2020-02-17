@@ -33,13 +33,16 @@
 
   <!-- ROBOT CONFIG-->
   <arg name="side" default="right"/>
-  <arg name="robot_model" default="ur10"/>
-  <arg name="robot_name" default="$(arg robot_model)srh"/>
+  <arg name="side_letter" value="$(eval side[0])"/>
+  <arg name="hand_id" value="$(arg side_letter)h"/>
+  <arg name="arm_prefix" value="$(arg side_letter)a"/>
+
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
+  <arg name="robot_model" default="ur10"/>
+  <arg name="robot_name" default="$(arg robot_model)srh"/>
 
   <!-- HANDS CONFIG-->
-  <arg name="hand_id" default="rh"/>
   <arg name="hand_serial" default="634"/>
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
@@ -58,7 +61,6 @@
   <arg name="grasp_controller" default="false"/>
 
   <!-- ARMS CONFIG-->
-  <arg name="arm_id" default="ra"/>
   <arg name="initial_z" default="0.1"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
@@ -99,14 +101,14 @@
     </include>
     <!-- ARM -->
     <group if="$(arg arm_trajectory)">
-      <rosparam if="$(arg include_wrist_in_arm_controller)" file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_id)_trajectory_controller.yaml" command="load"/>
-      <rosparam unless="$(arg include_wrist_in_arm_controller)" file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_id)_trajectory_controller_no_wrist.yaml" command="load"/>
-      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_id)_trajectory_controller"/>
+      <rosparam if="$(arg include_wrist_in_arm_controller)" file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_prefix)_trajectory_controller.yaml" command="load"/>
+      <rosparam unless="$(arg include_wrist_in_arm_controller)" file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_prefix)_trajectory_controller_no_wrist.yaml" command="load"/>
+      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="$(arg arm_prefix)_trajectory_controller"/>
     </group>
     <group if="$(arg arm_position)">
-      <rosparam if="$(arg include_wrist_in_arm_controller)" file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_id)_group_position_controller.yaml" command="load"/>
-      <rosparam unless="$(arg include_wrist_in_arm_controller)" file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_id)_group_position_controller_no_wrist.yaml" command="load"/>
-      <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--shutdown-timeout=1.0 $(arg arm_id)_group_position_controller"/>
+      <rosparam if="$(arg include_wrist_in_arm_controller)" file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_prefix)_group_position_controller.yaml" command="load"/>
+      <rosparam unless="$(arg include_wrist_in_arm_controller)" file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_prefix)_group_position_controller_no_wrist.yaml" command="load"/>
+      <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="$(arg arm_prefix)_group_position_controller"/>
     </group>
     <!-- Robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
@@ -139,8 +141,6 @@
         <arg name="debug" value="$(arg debug)"/>
         <arg name="initial_z" value="$(arg initial_z)"/>
         <arg name="robot_description" value="$(arg robot_description)"/>
-        <arg name="hand_id" value="$(arg hand_id)"/>
-        <arg name="arm_id" value="$(arg arm_id)"/>
         <arg name="side" value="$(arg side)"/>
         <arg name="robot_model" value="$(arg robot_model)"/>
         <arg name="arm_robot_hw" value="$(arg arm_robot_hw)"/>
