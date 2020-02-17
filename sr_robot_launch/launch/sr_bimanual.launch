@@ -21,7 +21,7 @@
   <!-- Set to true to spawn the position controllers for the hands-->
   <arg name="hand_ctrl" default="true"/>
   <!-- The control mode PWM (true) or torque (false) -->
-  <arg name="pwm_control" default="$(optenv PWM_CONTROL 1)"/>
+  <arg name="pwm_control" default="true"/>
   <!-- The ethercat serial number for the right hand -->
   <arg name="rh_serial" default="1130"/>
   <!-- The ethercat serial number for the left hand -->
