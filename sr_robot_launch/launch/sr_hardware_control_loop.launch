@@ -199,5 +199,6 @@
       <node unless="$(arg hand_ctrl)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
             args="--wait-for=/$(arg arm_id)_arm_ready $(arg arm_id)_group_position_controller"/>
     </group>
+  <node name="arm_force_torque_sensor_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--wait-for=/$(arg arm_id)_sr_ur_robot_hw/robot_program_running force_torque_sensor_controller"/>
   </group>
 </launch>
