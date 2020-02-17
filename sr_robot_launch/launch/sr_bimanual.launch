@@ -7,6 +7,10 @@
   <arg name="debug" default="false"/>
   <!-- Set to true to allow planning trajectories-->
   <arg name="use_moveit" default="true"/>
+  <!--Choose planner library, options are ompl, stomp or sbpl-->
+  <arg name="planning" default="ompl"/>
+  <!--Should the planner yaml be automatically generated? -->
+  <arg name="generate_planning_config" default="True"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <arg name="verbose" default="true" />
@@ -32,6 +36,8 @@
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth1_eth2)"/>
+  <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
+  <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
 
   <!-- Set this to true if you run the hardware loop on a remote computer -->
   <arg name="external_control_loop" default="false"/>
@@ -91,8 +97,15 @@
 
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
-    <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="15 sr_moveit_hand_config moveit_planning_and_execution.launch
-      gui:=$(arg gui) hand_ik_solver:=$(arg hand_ik_solver)" name="timed_roslaunch" output="screen"/>
-    <include file="$(find sr_moveit_hand_config)/launch/default_warehouse_db.launch"/>
+    <rosparam file="$(arg robot_config_file)"/>
+      <include file="$(find sr_multi_moveit_config)/launch/moveit_planning_and_execution.launch">
+        <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
+        <arg name="load_robot_description" value="true"/>
+        <arg name="gui" value="$(arg gui)"/>
+        <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
+        <arg name="planning" value="$(arg planning)"/>
+        <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
+      </include>
+      <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
   </group>
 </launch>
