@@ -4,12 +4,19 @@
   <arg name="joint_state_pub_frequency" default="125"/>
   <!-- Specify if the system has "both" hands, only "right", or only "left" -->
   <arg name="hands" default="both"/>
+  <arg name="arm_ctrl" default="true"/>	
   <!-- ROBOT CONFIG-->
   <arg name="robot_model" default="ur10"/>
-  <arg name="robot_description" unless="$(eval arg('hands') == 'none')" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
-  <arg name="robot_description" if="$(eval arg('hands') == 'none')" default="'$(find sr_multi_description)/urdf/bimanual_ur10.urdf.xacro'"/>
-  <arg name="robot_config_file" unless="$(eval arg('hands') == 'none')" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
-  <arg name="robot_config_file" if="$(eval arg('hands') == 'none')" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_$(arg robot_model).yaml"/>
+  <!-- HANDS AND ARMS -->
+  <arg name="robot_description" if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
+  <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
+  <!-- ARMS BUT NO HANDS -->
+  <arg name="robot_description" if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))" default="'$(find sr_multi_description)/urdf/bimanual_ur10.urdf.xacro'"/>
+  <arg name="robot_config_file" if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_$(arg robot_model).yaml"/>
+  <!-- HANDS BUT NO ARMS -->
+  <arg name="robot_description" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="'$(find sr_description)/robots/bimanual_shadowhand_motor_plus.urdf.xacro'"/>
+  <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
+
   <!-- setting this parameter to false allows to load the robot_description from a higher level -->
   <arg name="load_robot_description" default="true"/>
 
@@ -37,7 +44,9 @@
   <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_bimanual_ur_arm_robot_hw.yaml"/>
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
   <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
-  <arg name="include_wrist_in_arm_controller" default="true"/>
+  <arg name="include_wrist_in_arm_controller" default="true" if="$(arg arm_ctrl)"/>
+  <arg name="include_wrist_in_arm_controller" default="false" unless="$(arg arm_ctrl)"/>
+
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
@@ -53,7 +62,7 @@
     </include>
   </group>
 
-  <node unless="$(arg hand_ctrl)" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
+  <node if="$(eval hands == 'none')" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
 
   <!-- Controller -->
   <group unless="$(eval hands == 'none')">
@@ -83,6 +92,10 @@
       <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
       <param name="wait_for" value="calibrated"/>
     </node>
+  </group>
+
+  <!-- Set rosparam if both hands and arms are being used -->
+  <group if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))">
     <rosparam>
       robot_hardware:
         - unique_robot_hw
@@ -90,32 +103,45 @@
         - la_sr_ur_robot_hw
     </rosparam>
   </group>
-  <group if="$(eval hands == 'none')">
-   <param name="robot_description" command="xacro --inorder $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
+
+  <!-- Set rosparam, load xacros and launch state publisher nodes if only arms are being used (no hands) -->
+  <group if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))">
+    <rosparam>
+      robot_hardware:
+        - ra_sr_ur_robot_hw
+        - la_sr_ur_robot_hw
+    </rosparam>
+    <param name="robot_description" command="xacro --inorder $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
       <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
     <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
     <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
-    <rosparam>
-    robot_hardware:
-      - ra_sr_ur_robot_hw
-      - la_sr_ur_robot_hw
-    </rosparam>
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
       <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)" />
     </node>
   </group>
 
-  <rosparam command="load" file="$(arg arm_robot_hw_1)"/>
-  <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
-  <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_1_program_path)"/>
-  <param name="la_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_2_program_path)"/>
-  <param name="ra_sr_ur_robot_hw/speed_scale" type="double" value="$(arg right_arm_speed_scale)"/>
-  <param name="la_sr_ur_robot_hw/speed_scale" type="double" value="$(arg left_arm_speed_scale)"/>
+  <!-- Set rosparams and load robot hardware if arms are being used -->
+  <group if="$(eval arg('arm_ctrl'))">
+    <rosparam command="load" file="$(arg arm_robot_hw_1)"/>
+    <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
+    <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_1_program_path)"/>
+    <param name="la_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_2_program_path)"/>
+    <param name="ra_sr_ur_robot_hw/speed_scale" type="double" value="$(arg right_arm_speed_scale)"/>
+    <param name="la_sr_ur_robot_hw/speed_scale" type="double" value="$(arg left_arm_speed_scale)"/>
+  </group>
 
-  <!-- Trajectory mode -->
-  <group if="$(arg arm_trajectory)">
+  <!-- Set rosparam if only bimanual hands and no arms are being used -->
+  <group if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))">
+    <rosparam>
+      robot_hardware:
+        - unique_robot_hw
+    </rosparam>
+  </group>
+
+  <!-- Trajectory mode if arms are being used -->
+  <group if="$(eval arg('arm_trajectory') and arg('arm_ctrl'))">
     <group if="$(arg include_wrist_in_arm_controller)">
       <rosparam if="$(eval hands == 'both' or hands == 'right')" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml" command="load"/>
       <rosparam if="$(eval hands == 'left' or hands == 'none')" file="$(find sr_robot_launch)/config/ra_trajectory_controller_no_wrist.yaml" command="load"/>
@@ -132,8 +158,8 @@
           args="--wait-for=/la_arm_ready la_trajectory_controller"/>
   </group>
 
-  <!-- Position mode -->
-  <group if="$(arg arm_position)">
+  <!-- Position mode if arms are being used -->
+  <group if="$(eval arg('arm_position') and arg('arm_ctrl'))">
     <group if="$(arg include_wrist_in_arm_controller)">
       <rosparam if="$(eval hands == 'both' or hands == 'right')" file="$(find sr_robot_launch)/config/ra_group_position_controller.yaml" command="load"/>
       <rosparam if="$(eval hands == 'left' or hands == 'none')" file="$(find sr_robot_launch)/config/ra_group_position_controller_no_wrist.yaml" command="load"/>
