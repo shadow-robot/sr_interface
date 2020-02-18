@@ -113,8 +113,6 @@
     </rosparam>
   </node>
 
-  <node unless="$(arg hand_ctrl)" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
-
   <!-- Controller -->
   <group if="$(arg hand_ctrl)">
     <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
