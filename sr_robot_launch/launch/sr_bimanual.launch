@@ -75,7 +75,7 @@
       <arg name="debug" value="$(arg debug)"/>
       <arg name="verbose" value="$(arg verbose)" />
     </include>
-    <param name="robot_description" command="xacro $(arg robot_description) arm_x_separation:=$(arg hand_x_separation) "/>
+    <param name="robot_description" command="xacro --inorder $(arg robot_description) arm_x_separation:=$(arg hand_x_separation) "/>
     <param name="/hand/mapping/$(arg rh_serial)" value="rh"/>
     <param name="/hand/mapping/$(arg lh_serial)" value="lh"/>
     <param name="/hand/joint_prefix/$(arg rh_serial)" value="rh_"/>
