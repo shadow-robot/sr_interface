@@ -107,7 +107,7 @@
         <arg name="debug" value="$(arg debug)"/>
         <arg name="robot_description" value="$(arg robot_description)"/>
         <arg name="robot_config_file" value="$(arg robot_config_file)"/>
-        <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
+        <arg name="arm_x_separation" value="$(arg hand_x_separation)"/>
         <arg name="hands" value="both"/>
         <arg name="rh_serial" value="$(arg rh_serial)"/>
         <arg name="lh_serial" value="$(arg lh_serial)"/>
