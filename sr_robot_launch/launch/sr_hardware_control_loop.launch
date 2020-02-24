@@ -16,7 +16,7 @@
   <arg name="robot_config_file" if="$(arg arm_ctrl)" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
 
   <!-- HANDS CONFIG-->
-  <arg name="hand_id" default="rh"/>
+  <arg name="hand_id" value="$(arg side_letter)h"/>
   <arg name="hand_serial" default="1082"/>
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT enp2s0)"/>
