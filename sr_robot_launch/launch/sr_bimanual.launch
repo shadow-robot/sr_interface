@@ -115,7 +115,6 @@
         <arg name="lh_mapping_path" value="$(arg lh_mapping_path)"/>
         <arg name="eth_port" value="$(arg eth_port)"/>
         <arg name="pwm_control" value="$(arg pwm_control)"/>
-        <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>
         <arg name="arm_ctrl" value="false"/>
       </include>
     </group>
