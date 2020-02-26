@@ -73,8 +73,6 @@
 
   <arg name="hand_ctrl" default="false"/>
   <arg name="initial_z" default="0.0"/>
-  <node unless="$(arg hand_ctrl)" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
-
 
   <node name="controller_stopper" pkg="controller_stopper" type="node" respawn="false" output="screen">
     <remap from="robot_running" to="rh_sr_ur_robot_hw/robot_program_running"/>
