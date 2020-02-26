@@ -20,6 +20,8 @@
   <!-- setting this parameter to false allows to load the robot_description from a higher level -->
   <arg name="load_robot_description" default="true"/>
 
+
+
   <!-- HANDS CONFIG-->
   <arg name="rh_serial" default="1370"/>
   <arg name="lh_serial" default="2346"/>
@@ -56,6 +58,8 @@
   <arg name="kinematics_config_right" default="$(find ur_description)/config/ur10_default.yaml"/>
 
   <node if="$(eval arg('hands') == 'none')" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
+
+<!-- ***********************8 -->
 
   <!-- Logging local topics -->
   <group ns="control_box">
