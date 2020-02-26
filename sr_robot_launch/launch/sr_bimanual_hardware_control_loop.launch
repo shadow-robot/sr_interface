@@ -75,7 +75,7 @@
         - la_sr_ur_robot_hw
     </rosparam>
     <rosparam command="load" file="$(arg arm_robot_hw_1)"/>
-    <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
+    <!-- <rosparam command="load" file="$(arg arm_robot_hw_2)"/> -->
     <!-- <rosparam command="load" file="$(arg kinematics_config_right)" ns="ra_sr_ur_robot_hw"/>
     <rosparam command="load" file="$(arg kinematics_config_left)" ns="la_sr_ur_robot_hw"/>
     <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_1_program_path)"/>
