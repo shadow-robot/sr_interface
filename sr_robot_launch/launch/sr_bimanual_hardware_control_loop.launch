@@ -81,7 +81,7 @@
     <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_1_program_path)"/>
     <param name="la_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_2_program_path)"/>
     <param name="ra_sr_ur_robot_hw/speed_scale" type="double" value="$(arg right_arm_speed_scale)"/>
-    <!-- <param name="la_sr_ur_robot_hw/speed_scale" type="double" value="$(arg left_arm_speed_scale)"/> -->
+    <param name="la_sr_ur_robot_hw/speed_scale" type="double" value="$(arg left_arm_speed_scale)"/>
   </group>
 
   <!-- These will be loaded if hand_ctrl is false so UR10 with box will load instead. -->
