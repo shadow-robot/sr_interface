@@ -114,6 +114,4 @@
     <node name="la_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
           args="--wait-for=/la_sr_ur_robot_hw/robot_program_running la_trajectory_controller"/>
   </group>
-    <!-- Position mode -->
-  </group>
 </launch>
