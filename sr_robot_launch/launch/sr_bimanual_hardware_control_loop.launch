@@ -137,8 +137,8 @@
   <!-- Trajectory mode if arms are being used -->
   <group if="$(eval arg('arm_trajectory') and arg('arm_ctrl'))">
     <group if="$(arg include_wrist_in_arm_controller)">
-      <rosparam file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml" command="load"/>
-      <!-- <rosparam if="$(eval hands == 'right' or hands == 'none')" file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml" command="load"/> -->
+      <!-- <rosparam if="$(eval hands == 'both' or hands == 'right')" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml" command="load"/> -->
+      <rosparam file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml" command="load"/>
     </group>
     <group unless="$(arg include_wrist_in_arm_controller)">
       <rosparam file="$(find sr_robot_launch)/config/ra_trajectory_controller_no_wrist.yaml" command="load"/>
