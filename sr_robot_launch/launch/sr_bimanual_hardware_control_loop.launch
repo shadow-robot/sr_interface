@@ -66,56 +66,7 @@
     </include>
   </group>
 
-  <!-- <include file="$(find sr_robot_launch)/launch/bimanual_controller_stopper.launch"/> -->]
-  <node name="controller_stopper" pkg="controller_stopper" type="node" respawn="false" output="screen">
-    <remap from="robot_running" to="ra_sr_ur_robot_hw/robot_program_running"/>
-    <rosparam param="consistent_controllers">
-       - "force_torque_sensor_controller"
-       - "joint_state_controller"
-       - "sr_rh_tactile_sensor_controller"
-       - "rh_trajectory_controller"
-       - "sh_rh_ffj0_position_controller"
-       - "sh_rh_ffj3_position_controller"
-       - "sh_rh_ffj4_position_controller"
-       - "sh_rh_mfj0_position_controller"
-       - "sh_rh_mfj3_position_controller"
-       - "sh_rh_mfj4_position_controller"
-       - "sh_rh_rfj0_position_controller"
-       - "sh_rh_rfj3_position_controller"
-       - "sh_rh_rfj4_position_controller"
-       - "sh_rh_lfj0_position_controller"
-       - "sh_rh_lfj3_position_controller"
-       - "sh_rh_lfj4_position_controller"
-       - "sh_rh_lfj5_position_controller"
-       - "sh_rh_thj1_position_controller"
-       - "sh_rh_thj2_position_controller"
-       - "sh_rh_thj3_position_controller"
-       - "sh_rh_thj4_position_controller"
-       - "sh_rh_thj5_position_controller"
-       - "sh_rh_wrj1_position_controller"
-       - "sh_rh_wrj2_position_controller"
-       - "cal_sh_rh_ffj0"
-       - "cal_sh_rh_ffj3"
-       - "cal_sh_rh_ffj4"
-       - "cal_sh_rh_mfj0"
-       - "cal_sh_rh_mfj3"
-       - "cal_sh_rh_mfj4"
-       - "cal_sh_rh_rfj0"
-       - "cal_sh_rh_rfj3"
-       - "cal_sh_rh_rfj4"
-       - "cal_sh_rh_lfj0"
-       - "cal_sh_rh_lfj3"
-       - "cal_sh_rh_lfj4"
-       - "cal_sh_rh_lfj5"
-       - "cal_sh_rh_thj1"
-       - "cal_sh_rh_thj2"
-       - "cal_sh_rh_thj3"
-       - "cal_sh_rh_thj4"
-       - "cal_sh_rh_thj5"
-       - "cal_sh_rh_wrj1"
-       - "cal_sh_rh_wrj2"
-    </rosparam>
-  </node>
+  <include file="$(find sr_robot_launch)/launch/bimanual_controller_stopper.launch"/>
 
   <!-- Controller -->
   <group unless="$(eval hands == 'none')">
@@ -198,10 +149,8 @@
   <!-- Trajectory mode if arms are being used -->
   <group if="$(eval arg('arm_trajectory') and arg('arm_ctrl'))">
     <group if="$(arg include_wrist_in_arm_controller)">
-      <rosparam if="$(eval hands == 'both' or hands == 'right')" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml" command="load"/>
-      <rosparam if="$(eval hands == 'left' or hands == 'none')" file="$(find sr_robot_launch)/config/ra_trajectory_controller_no_wrist.yaml" command="load"/>
-      <rosparam if="$(eval hands == 'both' or hands == 'left')" file="$(find sr_robot_launch)/config/la_trajectory_controller.yaml" command="load"/>
-      <rosparam if="$(eval hands == 'right' or hands == 'none')" file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml" command="load"/>
+      <rosparam file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml" command="load"/>
+      <rosparam file="$(find sr_robot_launch)/config/la_trajectory_controller.yaml" command="load"/>
     </group>
     <group unless="$(arg include_wrist_in_arm_controller)">
       <rosparam file="$(find sr_robot_launch)/config/ra_trajectory_controller_no_wrist.yaml" command="load"/>
