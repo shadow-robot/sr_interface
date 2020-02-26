@@ -108,7 +108,6 @@
         - ra_sr_ur_robot_hw
         - la_sr_ur_robot_hw
     </rosparam>
-    </group>
   </group>
 
   <!-- Set rosparam, load xacros and launch state publisher nodes if only arms are being used (no hands) -->
