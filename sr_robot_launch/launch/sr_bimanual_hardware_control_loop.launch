@@ -52,8 +52,8 @@
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="right_arm_speed_scale" default="0.5"/>
   <arg name="left_arm_speed_scale" default="0.5"/>
-  <arg name="kinematics_config_left" default="/home/user/left_ur10.yaml"/>
-  <arg name="kinematics_config_right" default="/home/user/right_ur10.yaml"/>
+  <arg name="kinematics_config_left" default="$(find ur_description)/config/ur10_default.yaml"/>
+  <arg name="kinematics_config_right" default="$(find ur_description)/config/ur10_default.yaml"/>
 
   <node if="$(eval arg('hands') == 'none')" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
 
