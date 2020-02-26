@@ -98,18 +98,22 @@
   </group>
   <!-- These will be loaded if arm and hand are enabled -->
   <!-- Trajectory mode -->
-  <group if="$(arg arm_ctrl)">
-    <group if="$(arg arm_trajectory)">
-      <group if="$(arg hand_ctrl)">
-        <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller.yaml"/>
-        <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller_no_wrist.yaml"/>
-      </group>
-      <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller_no_wrist.yaml"/>
-      <node if="$(arg hand_ctrl)" name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/ra_sr_ur_robot_hw/robot_program_running ra_trajectory_controller"/>
-      <node unless="$(arg hand_ctrl)" name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/ra_sr_ur_robot_hw/robot_program_running ra_trajectory_controller"/>
+  <group if="$(eval arg('arm_trajectory') and arg('arm_ctrl'))">
+    <group if="$(arg include_wrist_in_arm_controller)">
+      <rosparam if="$(eval hands == 'both' or hands == 'right')" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml" command="load"/>
+      <rosparam if="$(eval hands == 'left' or hands == 'none')" file="$(find sr_robot_launch)/config/ra_trajectory_controller_no_wrist.yaml" command="load"/>
+      <rosparam if="$(eval hands == 'both' or hands == 'left')" file="$(find sr_robot_launch)/config/la_trajectory_controller.yaml" command="load"/>
+      <rosparam if="$(eval hands == 'right' or hands == 'none')" file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml" command="load"/>
     </group>
+    <group unless="$(arg include_wrist_in_arm_controller)">
+      <rosparam file="$(find sr_robot_launch)/config/ra_trajectory_controller_no_wrist.yaml" command="load"/>
+      <rosparam file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml" command="load"/>
+    </group>
+    <node name="ra_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+          args="--wait-for=/ra_sr_ur_robot_hw/robot_program_running ra_trajectory_controller"/>
+    <node name="la_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+          args="--wait-for=/la_sr_ur_robot_hw/robot_program_running la_trajectory_controller"/>
+  </group>
     <!-- Position mode -->
   </group>
 </launch>
