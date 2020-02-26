@@ -2,21 +2,25 @@
   <arg name="debug" default="false"/>
   <arg name="robot_state_pub_frequency" default="250"/>
   <arg name="joint_state_pub_frequency" default="125"/>
-
+  <!-- Specify if the system has "both" hands, only "right", or only "left" -->
+  <arg name="hands" default="both"/>
+  <arg name="arm_ctrl" default="true"/>	
   <!-- ROBOT CONFIG-->
   <arg name="robot_model" default="ur10"/>
-  <arg name="side" default="right"/>
-  <arg name="side_letter" value="$(eval side[0])"/>
-  <arg name="hand_id" value="$(arg side_letter)h"/>
-  <arg name="arm_prefix" value="$(arg side_letter)a"/>
-  <arg name="arm_ctrl" default="true"/>
-  <arg name="hand_ctrl" default="true"/>
-  <!-- HAND AND ARM -->
-  <arg name="robot_description" if="$(eval arg('hand_ctrl') and arg('arm_ctrl'))" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_ur10_bt_sp_biotacs.urdf.xacro"/>
-  <!-- ARM BUT NO HAND -->
-  <arg name="robot_description" if="$(eval not arg('hand_ctrl') and arg('arm_ctrl'))" default="$(find sr_box_ur10_moveit_config)/config/$(arg side_letter)a_$(arg robot_model)_with_box.urdf.xacro"/>
-  <arg name="robot_config_file" if="$(arg arm_ctrl)" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
+  <!-- HANDS AND ARMS -->
+  <arg name="robot_description" if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
+  <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
+  <!-- ARMS BUT NO HANDS -->
+  <arg name="robot_description" if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))" default="'$(find sr_multi_description)/urdf/bimanual_ur10.urdf.xacro'"/>
+  <arg name="robot_config_file" if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_$(arg robot_model).yaml"/>
+  <!-- HANDS BUT NO ARMS -->
+  <arg name="robot_description" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="'$(find sr_description)/robots/bimanual_shadowhand_motor_plus.urdf.xacro'"/>
+  <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
 
+  <!-- setting this parameter to false allows to load the robot_description from a higher level -->
+  <arg name="load_robot_description" default="true"/>
+
+  
   <!-- HANDS CONFIG-->
   <arg name="hand_serial" default="1082"/>
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
