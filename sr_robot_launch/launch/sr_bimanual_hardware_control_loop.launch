@@ -114,7 +114,7 @@
     </include>
     <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
     <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
-    <param name="robot_description" command="xacro --inorder $(find sr_box_ur10_moveit_config)/config/ra_ur10_with_box.urdf.xacro initial_z:=0 kinematics_config:=$(arg kinematics_config)"/>
+    <param name="robot_description" command="xacro --inorder $(find sr_box_ur10_moveit_config)/config/ra_ur10_with_box.urdf.xacro initial_z:=0 kinematics_config:=$(arg kinematics_config_right)"/>
 
   </group>
 
