@@ -73,25 +73,14 @@
     <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
     <rosparam file="$(arg robot_config_file)"/>
     <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
-    <include file="$(find sr_edc_launch)/sr_edc_bimanual_ros_control.launch">
-      <arg name="define_robot_hardware" value="false"/>
+    <include file="$(find sr_edc_launch)/sr_edc_ros_control.launch">
+      <arg name="kinematics_config" value="$(arg kinematics_config_right)"/>
       <arg name="debug" value="$(arg debug)"/>
       <arg name="robot_description" value="$(arg robot_description)"/>
-      <arg name="rh_serial" value="$(arg rh_serial)"/>
-      <arg name="lh_serial" value="$(arg lh_serial)"/>
-      <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
-      <arg name="lh_mapping_path" value="$(arg lh_mapping_path)"/>
-      <arg name="eth_port" value="$(arg eth_port)"/>
       <arg name="pwm_control" value="$(arg pwm_control)"/>
-      <arg name="arm_1_z" value="$(arg arm_1_z)"/>
-      <arg name="arm_2_z" value="$(arg arm_2_z)"/>
-      <arg name="kinematics_config_right" value="$(arg kinematics_config_right)"/>
-      <arg name="kinematics_config_left" value="$(arg kinematics_config_left)"/>
-      <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
-      <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
+      <arg name="mapping_path" value="$(arg rh_mapping_path)"/>
       <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
-      <arg name="load_robot_description" value="$(arg load_robot_description)"/>
     </include>
     <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
       <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
