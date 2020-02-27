@@ -188,9 +188,7 @@
         <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller_no_wrist.yaml"/>
       </group>
       <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller_no_wrist.yaml"/>
-      <node if="$(arg hand_ctrl)" name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_id)_sr_ur_robot_hw/robot_program_running $(arg arm_id)_trajectory_controller"/>
-      <node unless="$(arg hand_ctrl)" name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
             args="--wait-for=/$(arg arm_id)_sr_ur_robot_hw/robot_program_running $(arg arm_id)_trajectory_controller"/>
     </group>
     <!-- Position mode -->
