@@ -61,10 +61,9 @@
   <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
 
-  <node if="$(eval arg('sim') or not arg('hand_ctrl'))" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
-
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
+    <node pkg="rostopic" type="rostopic" name="simulation_calibration_publisher" args="pub /calibrated std_msgs/Bool true" output="screen"/>
     <param name="/use_sim_time" value="true"/>
     <arg name="world_name" value="$(find sr_description_common)/worlds/shadowhand.world"/>
     <arg name="paused" value="false"/>
