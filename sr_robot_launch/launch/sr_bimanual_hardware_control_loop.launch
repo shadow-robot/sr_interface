@@ -58,6 +58,7 @@
   <node if="$(eval arg('hands') == 'none')" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
 
   <param name="ra_sr_ur_robot_hw/non_blocking_read" type="bool" value="true"/>
+  <param name="la_sr_ur_robot_hw/non_blocking_read" type="bool" value="true"/>
 
   <!-- Logging local topics -->
   <group ns="control_box">
