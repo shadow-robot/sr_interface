@@ -63,7 +63,6 @@
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
-    <node pkg="rostopic" type="rostopic" name="simulation_calibration_publisher" args="pub /calibrated std_msgs/Bool true" output="screen"/>
     <param name="/use_sim_time" value="true"/>
     <arg name="world_name" value="$(find sr_description_common)/worlds/shadowhand.world"/>
     <arg name="paused" value="false"/>
