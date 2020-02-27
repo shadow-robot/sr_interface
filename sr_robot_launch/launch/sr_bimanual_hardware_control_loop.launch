@@ -59,7 +59,8 @@
   <arg name="kinematics_config_left" default="$(find ur_description)/config/ur10_default.yaml"/>
   <arg name="kinematics_config_right" default="$(find ur_description)/config/ur10_default.yaml"/>
 
-  <node if="$(eval arg('hands') == 'none')" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
+  <param name="ra_sr_ur_robot_hw/non_blocking_read" type="bool" value="true"/>
+  <param name="la_sr_ur_robot_hw/non_blocking_read" type="bool" value="true"/>
 
 
   <!-- So that the driver can check we're loading the right calibration -->
