@@ -34,7 +34,6 @@
   <!-- ARMS CONFIG-->
   <arg name="initial_z" if="$(arg arm_ctrl)" default="0.7551"/>
   <arg name="initial_z" unless="$(arg arm_ctrl)" default="0.0"/>
-  <arg name="arm_id" default="ra"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   <arg name="include_wrist_in_arm_controller" default="$(arg arm_ctrl)"/>
   <arg name="arm_trajectory" default="true"/>
@@ -53,9 +52,9 @@
   </group>
 
   <!-- So that the driver can check we're loading the right calibration -->
-  <rosparam command="load" file="$(arg kinematics_config)" ns="$(arg arm_id)_sr_ur_robot_hw"/>
+  <rosparam command="load" file="$(arg kinematics_config)" ns="$(arg arm_prefix)_sr_ur_robot_hw"/>
 
-  <param name="$(arg arm_id)_sr_ur_robot_hw/non_blocking_read" type="bool" value="true"/>
+  <param name="$(arg arm_prefix)_sr_ur_robot_hw/non_blocking_read" type="bool" value="true"/>
 
   <node unless="$(arg hand_ctrl)" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
 
@@ -64,7 +63,7 @@
   </include-->
 
   <node name="controller_stopper" pkg="controller_stopper" type="node" respawn="false" output="screen">
-    <remap from="robot_running" to="$(arg arm_id)_sr_ur_robot_hw/robot_program_running"/>
+    <remap from="robot_running" to="$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running"/>
     <rosparam param="consistent_controllers">
        - "force_torque_sensor_controller"
        - "joint_state_controller"
@@ -160,9 +159,9 @@
           - la_sr_ur_robot_hw
       </rosparam>
     </group>
-    <rosparam unless="$(arg hand_ctrl)" param="robot_hardware" subst_value="True">[$(arg arm_id)_sr_ur_robot_hw]</rosparam>
+    <rosparam unless="$(arg hand_ctrl)" param="robot_hardware" subst_value="True">[$(arg arm_prefix)_sr_ur_robot_hw]</rosparam>
     <rosparam command="load" file="$(arg arm_robot_hw)"/>
-    <param name="$(arg arm_id)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
+    <param name="$(arg arm_prefix)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
   </group>
 
   <rosparam unless="$(arg arm_ctrl)">
@@ -187,9 +186,9 @@
         <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller.yaml"/>
         <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller_no_wrist.yaml"/>
       </group>
-      <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller_no_wrist.yaml"/>
+      <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller_no_wrist.yaml"/>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_id)_sr_ur_robot_hw/robot_program_running $(arg arm_id)_trajectory_controller"/>
+            args="--wait-for=/$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running $(arg arm_prefix)_trajectory_controller"/>
     </group>
     <!-- Position mode -->
     <group if="$(arg arm_position)">
@@ -197,11 +196,11 @@
         <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_group_position_controller.yaml"/>
         <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_group_position_controller_no_wrist.yaml"/>
       </group>
-      <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_group_position_controller_no_wrist.yaml"/>
+      <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_group_position_controller_no_wrist.yaml"/>
       <node if="$(arg hand_ctrl)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_id)_arm_ready --wait-for=/calibrated $(arg arm_id)_group_position_controller"/>
+            args="--wait-for=/$(arg arm_prefix)_arm_ready --wait-for=/calibrated $(arg arm_prefix)_group_position_controller"/>
       <node unless="$(arg hand_ctrl)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_id)_arm_ready $(arg arm_id)_group_position_controller"/>
+            args="--wait-for=/$(arg arm_prefix)_arm_ready $(arg arm_prefix)_group_position_controller"/>
     </group>
   </group>
 </launch>
