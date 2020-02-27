@@ -1,12 +1,41 @@
 ra_sr_ur_robot_hw:
-  type: sr_ur_robot_hw/UrArmRobotHW
+  hardware_interface:
+    joints: &robot_joints
+      - ra_shoulder_pan_joint
+      - ra_shoulder_lift_joint
+      - ra_elbow_joint
+      - ra_wrist_1_joint
+      - ra_wrist_2_joint
+      - ra_wrist_3_joint
+
+  type: ur_driver/HardwareInterface
   
   # ra for right side arm la for left side arm
   robot_id: ra
   
   # for sending robot programs
-  robot_ip_address: 192.168.1.1
+  robot_ip: 192.168.1.1
   
   # for the server that moves the robot 
   control_pc_ip_address: 192.168.1.100
+  
+  input_recipe_file: /home/user/projects/shadow_robot/base/src/Universal_Robots_ROS_Driver/ur_robot_driver/resources/rtde_input_recipe.txt
+  
+  output_recipe_file: /home/user/projects/shadow_robot/base/src/Universal_Robots_ROS_Driver/ur_robot_driver/resources/rtde_output_recipe.txt
+  
+  script_file: /home/user/projects/shadow_robot/base/src/Universal_Robots_ROS_Driver/ur_robot_driver/resources/ros_control.urscript
+  
+  use_tool_communication: false
+  
+  headless_mode: false 
+  
+  servoj_gain: 300
+  
+  servoj_lookahead_time: 0.1
+
+  reverse_port: 50001
+
+  script_sender_port: 50002
+
+  use_local_hardware_interface_param: true
 

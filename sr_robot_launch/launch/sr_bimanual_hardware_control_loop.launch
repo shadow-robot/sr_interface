@@ -21,7 +21,7 @@
   <arg name="load_robot_description" default="true"/>
 
   <!-- HANDS CONFIG-->
-  <arg name="rh_serial" default="1130"/>
+  <arg name="rh_serial" default="1370"/>
   <arg name="lh_serial" default="2346"/>
   <arg name="rh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
   <arg name="lh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_E_v3.yaml"/>
@@ -42,7 +42,7 @@
   <arg name="arm_1_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
   <arg name="arm_2_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
   <arg name="arm_robot_hw_1" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
-  <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_bimanual_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_ur_arm_robot_hw.yaml"/>
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
   <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
   <arg name="include_wrist_in_arm_controller" default="true" if="$(arg arm_ctrl)"/>
@@ -53,6 +53,10 @@
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="right_arm_speed_scale" default="0.5"/>
   <arg name="left_arm_speed_scale" default="0.5"/>
+  <arg name="kinematics_config_left" default="$(find ur_description)/config/ur10_default.yaml"/>
+  <arg name="kinematics_config_right" default="$(find ur_description)/config/ur10_default.yaml"/>
+
+  <node if="$(eval arg('hands') == 'none')" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
 
   <!-- Logging local topics -->
   <group ns="control_box">
@@ -63,7 +67,56 @@
     </include>
   </group>
 
-  <node if="$(eval hands == 'none')" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
+  <!-- <include file="$(find sr_robot_launch)/launch/bimanual_controller_stopper.launch"/> -->]
+  <node name="controller_stopper" pkg="controller_stopper" type="node" respawn="false" output="screen">
+    <remap from="robot_running" to="ra_sr_ur_robot_hw/robot_program_running"/>
+    <rosparam param="consistent_controllers">
+       - "force_torque_sensor_controller"
+       - "joint_state_controller"
+       - "sr_rh_tactile_sensor_controller"
+       - "rh_trajectory_controller"
+       - "sh_rh_ffj0_position_controller"
+       - "sh_rh_ffj3_position_controller"
+       - "sh_rh_ffj4_position_controller"
+       - "sh_rh_mfj0_position_controller"
+       - "sh_rh_mfj3_position_controller"
+       - "sh_rh_mfj4_position_controller"
+       - "sh_rh_rfj0_position_controller"
+       - "sh_rh_rfj3_position_controller"
+       - "sh_rh_rfj4_position_controller"
+       - "sh_rh_lfj0_position_controller"
+       - "sh_rh_lfj3_position_controller"
+       - "sh_rh_lfj4_position_controller"
+       - "sh_rh_lfj5_position_controller"
+       - "sh_rh_thj1_position_controller"
+       - "sh_rh_thj2_position_controller"
+       - "sh_rh_thj3_position_controller"
+       - "sh_rh_thj4_position_controller"
+       - "sh_rh_thj5_position_controller"
+       - "sh_rh_wrj1_position_controller"
+       - "sh_rh_wrj2_position_controller"
+       - "cal_sh_rh_ffj0"
+       - "cal_sh_rh_ffj3"
+       - "cal_sh_rh_ffj4"
+       - "cal_sh_rh_mfj0"
+       - "cal_sh_rh_mfj3"
+       - "cal_sh_rh_mfj4"
+       - "cal_sh_rh_rfj0"
+       - "cal_sh_rh_rfj3"
+       - "cal_sh_rh_rfj4"
+       - "cal_sh_rh_lfj0"
+       - "cal_sh_rh_lfj3"
+       - "cal_sh_rh_lfj4"
+       - "cal_sh_rh_lfj5"
+       - "cal_sh_rh_thj1"
+       - "cal_sh_rh_thj2"
+       - "cal_sh_rh_thj3"
+       - "cal_sh_rh_thj4"
+       - "cal_sh_rh_thj5"
+       - "cal_sh_rh_wrj1"
+       - "cal_sh_rh_wrj2"
+    </rosparam>
+  </node>
 
   <!-- Controller -->
   <group unless="$(eval hands == 'none')">
@@ -82,6 +135,8 @@
       <arg name="pwm_control" value="$(arg pwm_control)"/>
       <arg name="arm_1_z" value="$(arg arm_1_z)"/>
       <arg name="arm_2_z" value="$(arg arm_2_z)"/>
+      <arg name="kinematics_config_right" value="$(arg kinematics_config_right)"/>
+      <arg name="kinematics_config_left" value="$(arg kinematics_config_left)"/>
       <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
       <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
       <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
@@ -127,8 +182,8 @@
   <group if="$(eval arg('arm_ctrl'))">
     <rosparam command="load" file="$(arg arm_robot_hw_1)"/>
     <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
-    <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_1_program_path)"/>
-    <param name="la_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_2_program_path)"/>
+    <rosparam command="load" file="$(arg kinematics_config_right)" ns="ra_sr_ur_robot_hw"/>
+    <rosparam command="load" file="$(arg kinematics_config_left)" ns="la_sr_ur_robot_hw"/>
     <param name="ra_sr_ur_robot_hw/speed_scale" type="double" value="$(arg right_arm_speed_scale)"/>
     <param name="la_sr_ur_robot_hw/speed_scale" type="double" value="$(arg left_arm_speed_scale)"/>
   </group>
@@ -154,9 +209,9 @@
       <rosparam file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml" command="load"/>
     </group>
     <node name="ra_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-          args="--wait-for=/ra_arm_ready ra_trajectory_controller "/>
+          args="--wait-for=/ra_sr_ur_robot_hw/robot_program_running ra_trajectory_controller"/>
     <node name="la_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-          args="--wait-for=/la_arm_ready la_trajectory_controller"/>
+          args="--wait-for=/la_sr_ur_robot_hw/robot_program_running la_trajectory_controller"/>
   </group>
 
   <!-- Position mode if arms are being used -->
