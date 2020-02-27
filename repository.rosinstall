@@ -21,7 +21,7 @@
 - git:
     local-name: universal_robot
     uri: https://github.com/shadow-robot/universal_robot.git
-    version: F_elbow_limits_melodic
+    version: calibration_devel
 
 - git:
     local-name: sr_ur_arm
