@@ -26,7 +26,7 @@
 - git:
     local-name: sr_ur_arm
     uri: https://github.com/shadow-robot/sr_ur_arm.git
-    version: melodic-devel
+    version: F#SRC-3432_test_integrate_new_driver_arms_hands
 
 - git:
     local-name: shadow_robot_ethercat
