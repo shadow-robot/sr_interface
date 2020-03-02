@@ -59,10 +59,7 @@
   <arg name="load_robot_description_command" default="xacro --inorder $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation) kinematics_config_right:=$(arg kinematics_config_right) kinematics_config_left:=$(arg kinematics_config_left)"/>
 
   <node if="$(eval arg('hands') == 'none')" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
-
-  <param name="ra_sr_ur_robot_hw/non_blocking_read" type="bool" value="true"/>
-  <param name="la_sr_ur_robot_hw/non_blocking_read" type="bool" value="true"/>
-
+  
   <!-- Logging local topics -->
   <group ns="control_box">
     <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch">
