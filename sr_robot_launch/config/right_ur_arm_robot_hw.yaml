@@ -38,4 +38,5 @@ ra_sr_ur_robot_hw:
   script_sender_port: 50002
 
   use_local_hardware_interface_param: true
-
+  
+  non_blocking_read: true
