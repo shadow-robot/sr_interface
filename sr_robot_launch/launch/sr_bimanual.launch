@@ -59,8 +59,6 @@
     <arg name="log_topics" value='-e ".*(controller|debug_etherCAT_data).*" /joint_states /rosout /diagnostics /mechanism_statistics /journalctl_log'/>
   </include>
 
-  <node if="$(eval arg('sim') or not arg('hand_ctrl'))" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
-
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
     <param name="/use_sim_time" value="true"/>

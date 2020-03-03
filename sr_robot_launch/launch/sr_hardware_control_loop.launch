@@ -55,8 +55,6 @@
   <!-- So that the driver can check we're loading the right calibration -->
   <rosparam command="load" file="$(arg kinematics_config)" ns="$(arg arm_prefix)_sr_ur_robot_hw"/>
 
-  <node unless="$(arg hand_ctrl)" pkg="rostopic" type="rostopic" name="hacky_publisher" args="pub /calibrated std_msgs/Bool -- true" output="screen"/>
-
   <include file="$(find sr_robot_launch)/launch/unimanual_controller_stopper.launch">
     <arg name="side" value="$(arg side)"/>
   </include>
@@ -146,7 +144,7 @@
       </group>
       <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_group_position_controller_no_wrist.yaml"/>
       <node if="$(arg hand_ctrl)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_prefix)_arm_ready --wait-for=/calibrated $(arg arm_prefix)_group_position_controller"/>
+            args="--wait-for=/$(arg arm_prefix)_arm_ready $(arg arm_prefix)_group_position_controller"/>
       <node unless="$(arg hand_ctrl)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
             args="--wait-for=/$(arg arm_prefix)_arm_ready $(arg arm_prefix)_group_position_controller"/>
     </group>
