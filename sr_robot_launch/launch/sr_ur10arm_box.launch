@@ -21,6 +21,9 @@
   <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large.world" if="$(arg scene)"/>
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="false"/>
+  <arg name="kinematics_config" default="$(find ur_description)/config/ur10_default.yaml"/>
+
+
 
   <!-- ROBOT CONFIG-->
   <arg name="side" default="right"/>
@@ -46,6 +49,8 @@
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   <arg name="arm_speed_scale" default="0.5"/>
 
+  <rosparam command="load" file="$(arg kinematics_config)" ns="$(arg arm_prefix)_sr_ur_robot_hw"/>
+
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn group position controllers for the arms -->
@@ -70,7 +75,7 @@
       <arg name="debug" value="$(arg debug)"/>
       <arg name="verbose" value="$(arg verbose)"/>
     </include>
-    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
+    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
 
     <arg if="$(arg start_home)" name="spawn_model_extra_args" value="-unpause $(arg home_angles)" />
     <arg unless="$(arg start_home)" name="spawn_model_extra_args" value="" />

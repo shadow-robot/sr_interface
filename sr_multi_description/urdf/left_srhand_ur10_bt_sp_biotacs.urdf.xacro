@@ -11,7 +11,10 @@
         <origin xyz="0.0 0.0 $(arg initial_z)" rpy="0.0 0.0 ${pi}"/>
     </joint>
 
-    <xacro:ur10_robot prefix="la_" joint_limited="false"/>
+    <xacro:arg name="kinematics_config" default="$(find ur_description)/config/ur10_default.yaml"/>
+    <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+
+    <xacro:ur10_robot prefix="la_" joint_limited="false" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_file="${load_yaml('$(arg kinematics_config)')}"/>
 
     <xacro:include filename="$(find sr_description)/materials.urdf.xacro"/>
     <xacro:include filename="$(find sr_description)/hand/xacro/full_hand.urdf.xacro"/>

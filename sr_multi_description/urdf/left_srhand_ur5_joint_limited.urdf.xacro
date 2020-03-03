@@ -12,7 +12,10 @@
         <origin xyz="0.0 0.0 $(arg initial_z)" rpy="0.0 0.0 0.0"/>
     </joint>
 
-    <xacro:ur5_robot prefix="la_" joint_limited="true"/>
+    <xacro:arg name="kinematics_config" default="$(find ur_description)/config/ur5_default.yaml"/>
+    <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+
+    <xacro:ur5_robot prefix="la_" joint_limited="true" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_file="${load_yaml('$(arg kinematics_config)')}"/>
 
     <xacro:include filename="$(find sr_description)/materials.urdf.xacro"/>
     <xacro:include filename="$(find sr_description)/hand/xacro/full_hand.urdf.xacro"/>
