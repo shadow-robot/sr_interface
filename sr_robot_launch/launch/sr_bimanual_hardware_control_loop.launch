@@ -53,7 +53,9 @@
   <arg name="kinematics_config_left" default="$(find ur_description)/config/ur10_default.yaml"/>
   <arg name="kinematics_config_right" default="$(find ur_description)/config/ur10_default.yaml"/>
   <arg name="load_robot_description_command" default="xacro --inorder $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation) kinematics_config_right:=$(arg kinematics_config_right) kinematics_config_left:=$(arg kinematics_config_left)"/>
-
+  <arg name="right_arm_speed_scale" default="0.5"/>	
+  <arg name="left_arm_speed_scale" default="0.5"/>
+  
   <!-- Logging local topics -->
   <group ns="control_box">
     <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch">
@@ -129,6 +131,8 @@
     <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
     <rosparam command="load" file="$(arg kinematics_config_right)" ns="ra_sr_ur_robot_hw"/>
     <rosparam command="load" file="$(arg kinematics_config_left)" ns="la_sr_ur_robot_hw"/>
+    <param name="ra_sr_ur_robot_hw/speed_scale" type="double" value="$(arg right_arm_speed_scale)"/>	
+    <param name="la_sr_ur_robot_hw/speed_scale" type="double" value="$(arg left_arm_speed_scale)"/>
   </group>
 
   <!-- Set rosparam if only bimanual hands and no arms are being used -->
