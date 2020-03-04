@@ -39,7 +39,6 @@
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
-  <arg name="arm_speed_scale" default="0.5"/>
   <arg name="kinematics_config" default="$(find ur_description)/config/ur10_default.yaml"/>
   <arg name="load_robot_description_command" default="xacro --inorder $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
 
@@ -107,7 +106,6 @@
     </group>
     <rosparam unless="$(arg hand_ctrl)" param="robot_hardware" subst_value="True">[$(arg arm_prefix)_sr_ur_robot_hw]</rosparam>
     <rosparam command="load" file="$(arg arm_robot_hw)"/>
-    <param name="$(arg arm_prefix)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
   </group>
 
   <rosparam unless="$(arg arm_ctrl)">
