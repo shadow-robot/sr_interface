@@ -43,6 +43,8 @@
   <arg name="kinematics_config" default="$(find ur_description)/config/ur10_default.yaml"/>
   <arg name="load_robot_description_command" default="xacro --inorder $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
 
+  <node pkg="rosservice" type="rosservice" name="set_speed_scale" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg arm_speed_scale)'"/>
+
   <!-- Logging local topics -->
   <group ns="control_box">
     <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch">
