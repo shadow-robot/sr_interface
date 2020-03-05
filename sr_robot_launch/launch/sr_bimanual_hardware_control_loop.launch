@@ -40,8 +40,6 @@
   <arg name="arm_x_separation" default="-0.4" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))"/>
   <arg name="arm_x_separation" default="0.0" unless="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))"/>
   <arg name="arm_y_separation" default="1.5"/>
-  <arg name="arm_1_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
-  <arg name="arm_2_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
   <arg name="arm_robot_hw_1" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
   <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_ur_arm_robot_hw.yaml"/>
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
@@ -133,8 +131,6 @@
     <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
     <rosparam command="load" file="$(arg kinematics_config_right)" ns="ra_sr_ur_robot_hw"/>
     <rosparam command="load" file="$(arg kinematics_config_left)" ns="la_sr_ur_robot_hw"/>
-    <param name="ra_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_1_program_path)"/>
-    <param name="la_sr_ur_robot_hw/robot_program_path" type="str" value="$(arg arm_2_program_path)"/>
     <param name="ra_sr_ur_robot_hw/speed_scale" type="double" value="$(arg right_arm_speed_scale)"/>
     <param name="la_sr_ur_robot_hw/speed_scale" type="double" value="$(arg left_arm_speed_scale)"/>
   </group>
