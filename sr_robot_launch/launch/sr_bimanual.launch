@@ -7,12 +7,18 @@
   <arg name="debug" default="false"/>
   <!-- Set to true to allow planning trajectories-->
   <arg name="use_moveit" default="true"/>
+  <!--Choose planner library, options are ompl, stomp or sbpl-->
+  <arg name="planning" default="ompl"/>
+  <!--Should the planner yaml be automatically generated? -->
+  <arg name="generate_planning_config" default="True"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <arg name="verbose" default="true" />
+  <!-- Set world value -->
+  <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world" />
 
   <!-- Xacro file containing the robot description we want to load -->
-  <arg name="robot_description" default="'$(find sr_description)/robots/bimanual_shadowhand_motor.urdf.xacro'"/>
+  <arg name="robot_description" default="'$(find sr_description)/robots/bimanual_shadowhand_motor_plus.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
   <arg name="robot_name" default="bimanual_shadowhand_motor"/>
 
@@ -21,7 +27,7 @@
   <!-- Set to true to spawn the position controllers for the hands-->
   <arg name="hand_ctrl" default="true"/>
   <!-- The control mode PWM (true) or torque (false) -->
-  <arg name="pwm_control" default="$(optenv PWM_CONTROL 1)"/>
+  <arg name="pwm_control" default="true"/>
   <!-- The ethercat serial number for the right hand -->
   <arg name="rh_serial" default="1130"/>
   <!-- The ethercat serial number for the left hand -->
@@ -32,19 +38,42 @@
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth1_eth2)"/>
+  <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
+  <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
+
+  <!-- The robot state publisher publishing frequency  -->
+  <arg name="robot_state_pub_frequency" default="250"/>
+  <!-- The joint state publisher publishing frequency  -->
+  <arg name="joint_state_pub_frequency" default="125"/>
+
+  <!-- Set this to true if you run the hardware loop on a remote computer -->
+  <arg name="external_control_loop" default="false"/>
+
+  <arg name="hand_x_separation" default="-0.4"/>
+
+  <!-- Logging. -->
+  <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch">
+    <arg name="node_name" value="server_record"/>
+    <arg name="log_bag_prefix" value="sr_hand"/>
+    <arg name="log_directory" value="$(optenv HOME)/.ros/log"/>
+    <arg name="log_topics" value='-e ".*(controller|debug_etherCAT_data).*" /joint_states /rosout /diagnostics /mechanism_statistics /journalctl_log'/>
+  </include>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
-    <arg name="world_name" value="$(find sr_description_common)/worlds/shadowhand.world"/>
+    <param name="/use_sim_time" value="true"/>
+    <env name="GAZEBO_MODEL_PATH" value="$(find sr_description_common)/models/" />
+    <env name="GAZEBO_MODEL_DATABASE_URI" value="" />
+    <env name="MESH_WORKSPACE_PATH" value="$(find sr_description_common)/models/" />
     <arg name="paused" value="false"/>
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-      <arg name="world_name" value="$(arg world_name)"/>
+      <arg name="world_name" value="$(arg world)"/>
       <arg name="gui" value="$(arg gui)"/>
       <arg name="paused" value="$(arg paused)"/>
       <arg name="debug" value="$(arg debug)"/>
       <arg name="verbose" value="$(arg verbose)" />
     </include>
-    <param name="robot_description" command="xacro --inorder $(arg robot_description)"/>
+    <param name="robot_description" command="xacro $(arg robot_description) arm_x_separation:=$(arg hand_x_separation) "/>
     <param name="/hand/mapping/$(arg rh_serial)" value="rh"/>
     <param name="/hand/mapping/$(arg lh_serial)" value="lh"/>
     <param name="/hand/joint_prefix/$(arg rh_serial)" value="rh_"/>
@@ -53,43 +82,53 @@
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name) -z 0.0 " respawn="false" output="screen"/>
     <rosparam command="load" file="$(find sr_description)/hand/config/rh_controller_gazebo.yaml"/>
     <rosparam command="load" file="$(find sr_description)/hand/config/lh_controller_gazebo.yaml"/>
-    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" />
+    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
+      <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
+    </include>
     <!-- Robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="50.0" />
+      <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)"/>
       <param name="tf_prefix" type="string" value="" />
     </node>
+    <group if="$(arg hand_ctrl)">
+        <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
+          <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
+          <param name="exclude_wrist" value="false"/>
+        </node>
+    </group>
   </group>
 
   <!-- REAL ROBOTS -->
   <group unless="$(arg sim)">
-    <include file="$(find sr_edc_launch)/sr_edc_bimanual.launch">
-      <arg name="debug" value="$(arg debug)"/>
-      <arg name="eth_port" value="$(arg eth_port)"/>
-      <arg name="robot_description" value="$(arg robot_description)"/>
-      <arg name="pwm_control" value="$(arg pwm_control)"/>
-      <arg name="rh_serial" value="$(arg rh_serial)"/>
-      <arg name="lh_serial" value="$(arg lh_serial)"/>
-      <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
-      <arg name="lh_mapping_path" value="$(arg lh_mapping_path)"/>
-    </include>
+    <group unless="$(arg external_control_loop)">
+      <include file="$(find sr_robot_launch)/launch/sr_bimanual_hardware_control_loop.launch">
+        <arg name="debug" value="$(arg debug)"/>
+        <arg name="robot_description" value="$(arg robot_description)"/>
+        <arg name="robot_config_file" value="$(arg robot_config_file)"/>
+        <arg name="arm_x_separation" value="$(arg hand_x_separation)"/>
+        <arg name="hands" value="both"/>
+        <arg name="rh_serial" value="$(arg rh_serial)"/>
+        <arg name="lh_serial" value="$(arg lh_serial)"/>
+        <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
+        <arg name="lh_mapping_path" value="$(arg lh_mapping_path)"/>
+        <arg name="eth_port" value="$(arg eth_port)"/>
+        <arg name="pwm_control" value="$(arg pwm_control)"/>
+        <arg name="arm_ctrl" value="false"/>
+      </include>
+    </group>
   </group>
 
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
-    <include file="$(find sr_multi_moveit_config)/launch/moveit_planning_and_execution.launch">
-      <arg name="load_robot_description" value="false"/>
-      <arg name="gui" default="$(arg gui)"/>
-      <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
-    </include>
-    <!--include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/-->
-  </group>
-
-  <!-- Trajectory controller -->
-  <group if="$(arg hand_ctrl)">
-    <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
-      <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
-      <param name="wait_for" value ="calibrated" unless="$(arg sim)"/>
-    </node>
+    <rosparam file="$(arg robot_config_file)"/>
+      <include file="$(find sr_multi_moveit_config)/launch/moveit_planning_and_execution.launch">
+        <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
+        <arg name="load_robot_description" value="true"/>
+        <arg name="gui" value="$(arg gui)"/>
+        <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
+        <arg name="planning" value="$(arg planning)"/>
+        <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
+      </include>
+      <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
   </group>
 </launch>

@@ -54,6 +54,8 @@
   <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_bimanual_ur_arm_robot_hw.yaml"/>
   <arg name="right_arm_speed_scale" default="0.5"/>
   <arg name="left_arm_speed_scale" default="0.5"/>
+  <arg name="kinematics_config_left" default="$(find ur_description)/config/ur10_default.yaml"/>
+  <arg name="kinematics_config_right" default="$(find ur_description)/config/ur10_default.yaml"/>
 
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
@@ -77,7 +79,7 @@
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
 
   <!-- Robot description -->
-  <param name="robot_description" command="xacro --inorder $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_separation:=$(arg arm_separation)"/>
+  <param name="load_robot_description_command" command="xacro --inorder $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_separation:=$(arg arm_separation) kinematics_config_right:=$(arg kinematics_config_right) kinematics_config_left:=$(arg kinematics_config_left)"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
@@ -147,7 +149,7 @@
       <arg name="hand_robot_hardware_name" value="unique_robot_hw"/>
       <arg name="debug" value="$(arg debug)"/>
       <arg name="eth_port" value="$(arg eth_port)"/>
-      <arg name="robot_description" value="$(arg robot_description)"/>
+      <arg name="load_robot_description_command" value="$(arg load_robot_description_command)"/>
       <arg name="pwm_control" value="$(arg pwm_control)"/>
       <arg name="hand_serial" value="$(arg hand_serial)"/>
       <arg name="hand_id" value="$(arg hand_id)"/>
