@@ -1,0 +1,13 @@
+robot:
+  name: bimanual_shadowhand_motor
+  manipulators:
+    right_manipulator:
+      side: right
+      hand:
+        name: shadowhand_extra_lite.urdf.xacro
+        is_lite: true
+    left_manipulator:
+      side: left
+      hand:
+        name: shadowhand_left_extra_lite.urdf.xacro
+        is_lite: true
