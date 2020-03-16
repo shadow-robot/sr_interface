@@ -254,8 +254,6 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
                                                              r'\g<2>)',
                                                              proj_eval)
                             group_config["projection_evaluator"] = proj_eval_new
-                        if "hand" == group_name and manipulator.hand.is_lite:
-                            del group_config["projection_evaluator"]
                     group_dump = yaml.dump(group_config,
                                            default_flow_style=False,
                                            allow_unicode=True)
