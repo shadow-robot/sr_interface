@@ -107,7 +107,9 @@
           - la_sr_ur_robot_hw
       </rosparam>
     </group>
-    <node name="sr_ur_arm_helper" pkg="sr_robot_launch" type="sr_ur_release" output="screen">
+    <node name="sr_ur_arm_unlock" pkg="sr_robot_launch" type="sr_ur_arm_unlock" output="screen">
+      <param name="URCap_program_name" value="external_ctrl.urp"/>
+    </node>
     <rosparam unless="$(arg hand_ctrl)" param="robot_hardware" subst_value="True">[$(arg arm_prefix)_sr_ur_robot_hw]</rosparam>
     <rosparam command="load" file="$(arg arm_robot_hw)"/>
     <param name="$(arg arm_prefix)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>

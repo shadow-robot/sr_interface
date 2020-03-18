@@ -136,7 +136,9 @@
     <rosparam command="load" file="$(arg kinematics_config_left)" ns="la_sr_ur_robot_hw"/>
     <param name="ra_sr_ur_robot_hw/speed_scale" type="double" value="$(arg right_arm_speed_scale)"/>
     <param name="la_sr_ur_robot_hw/speed_scale" type="double" value="$(arg left_arm_speed_scale)"/>
-    <node name="sr_ur_arm_helper" pkg="sr_robot_launch" type="sr_ur_release" output="screen">
+    <node name="sr_ur_arm_unlock" pkg="sr_robot_launch" type="sr_ur_arm_unlock" output="screen">
+      <param name="URCap_program_name" value="external_ctrl.urp"/>
+    </node>
   </group>
 
   <!-- Set rosparam if only bimanual hands and no arms are being used -->
