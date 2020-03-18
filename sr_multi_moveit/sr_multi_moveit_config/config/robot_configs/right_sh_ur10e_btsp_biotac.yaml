@@ -14,7 +14,7 @@ robot:
           - home
           - up
       hand:
-        name: shadowhand_motor.urdf.xacro
+        name: shadowhand_motor_btsp.urdf.xacro
 
 ra_sr_ur_robot_hw:
   # Hand E payload

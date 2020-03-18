@@ -2,13 +2,11 @@
 
   <!-- Arm -->
   <xacro:include filename="$(find ur_e_description)/urdf/ur10e.urdf.xacro"/>
-  <xacro:arg name="kinematics_config" default="$(find sr_multi_description)/arm_calibration/bristol_ur10_calibration.yaml"/>
+  <xacro:arg name="kinematics_config" default="$(find ur_e_description)/config/ur10e_default.yaml"/>
   <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
 
-  <xacro:ur10e_robot prefix="ra_" joint_limited="true"
-    transmission_hw_interface="$(arg transmission_hw_interface)"
-    kinematics_file="${load_yaml('$(arg kinematics_config)')}"
-  />
+  <xacro:ur10e_robot prefix="ra_" joint_limited="false" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_file="${load_yaml('$(arg kinematics_config)')}"/>
+
   <gazebo>
     <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
       <robotSimType>sr_gazebo_sim/SrGazeboHWSim</robotSimType>
