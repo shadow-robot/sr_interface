@@ -14,7 +14,6 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import rospy
-from sr_pedal.msg import Status
 from std_msgs.msg import Bool
 from ur_dashboard_msgs.srv import GetSafetyMode, GetProgramState, GetRobotMode, Load
 from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
@@ -30,8 +29,7 @@ class SrUrUnlock():
             self.arms.append('la')
         if len(self.arms) == 0:
             rospy.signal_shutdown("No arms detected, shutting down %s", rospy.get_name())
-        self.subscriber = rospy.Subscriber("sr_pedal/status", Status, self.pedal_sub)
-        self.subscriber = rospy.Subscriber("sr_arm/release", Bool, self.pedal_sub_bool)
+        self.subscriber = rospy.Subscriber("sr_arm/release", Bool, self.pedal_sub)
         self.rate = rospy.Rate(5)
         while not rospy.is_shutdown():
             try:
@@ -40,10 +38,6 @@ class SrUrUnlock():
                 rospy.loginfo("Shutting down %s", rospy.get_name())
 
     def pedal_sub(self, data):
-        if data.connected and data.left_pressed and data.right_pressed:
-            self.release_arm()
-
-    def pedal_sub_bool(self, data):
         if data == True:
             self.release_arm()
 
