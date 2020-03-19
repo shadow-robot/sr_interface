@@ -36,7 +36,7 @@
   <arg name="hands" default="both"/>
   <!-- Specify if the system has arms or is only a hand bimanual system -->
   <arg name="arms" default="true"/>
-  <arg name="robot_model" value="ur10"/>
+  <arg name="robot_model" default="ur10"/>
   <arg name="robot_description" unless="$(eval arg('hands') == 'none')" default="'$(find sr_multi_description)/urdf/bimanual_srhand_plus_bt_sp_biotacs_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_description" if="$(eval arg('hands') == 'none')" default="'$(find sr_multi_description)/urdf/bimanual_ur10.urdf.xacro'"/>
   <arg name="robot_config_file" unless="$(eval arg('hands') == 'none')" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>

@@ -14,7 +14,7 @@
   <arg name="robot_description" default="$(find sr_box_ur10_moveit_config)/config/$(arg side_letter)a_ur10_with_box.urdf.xacro"/>
 
   <!-- Load universal robot description format (URDF) -->
-  <param if="$(arg load_robot_description)" name="$(arg robot_description_name)" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
+  <param if="$(arg load_robot_description)" name="$(arg robot_description_name)" command="xacro $(arg robot_description) initial_z:=$(arg initial_z)"/>
 
   <!-- The semantic description that corresponds to the URDF -->
   <param name="$(arg robot_description_name)_semantic" textfile="$(find sr_box_ur10_moveit_config)/config/$(arg side_letter)a_ursrbox.srdf" />

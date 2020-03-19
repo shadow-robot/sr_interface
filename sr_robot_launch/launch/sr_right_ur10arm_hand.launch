@@ -31,10 +31,6 @@
   <!-- The joint state publisher publishing frequency  -->
   <arg name="joint_state_pub_frequency" default="125"/>
 
-  <!-- ROBOT CONFIG-->
-  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/right_srhand_ur10.urdf.xacro'"/>
-  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
-
   <!-- HAND CONFIG-->
   <arg name="hand_serial" default="1082"/>
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
@@ -52,6 +48,8 @@
   <!-- ARM CONFIG-->
   <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
+  <!-- You can select ur10 or ur10e -->
+  <arg name="robot_model" default="ur10"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
   <arg name="arm_speed_scale" default="0.5"/>
 
@@ -85,10 +83,8 @@
     <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
 
     <arg name="side" value="right"/>
-    <arg name="robot_description" value="$(arg robot_description)"/>
-    <arg name="robot_config_file" value="$(arg robot_config_file)"/>
-    <arg name="robot_model" value="ur10"/>
-    <arg name="robot_name" value="ur10srh"/>
+    <arg name="robot_model" value="$(arg robot_model)"/>
+    <arg name="robot_name" value="$(arg robot_model)srh"/>
     <arg name="external_control_loop" value="$(arg external_control_loop)"/>
 
     <arg name="grasp_controller" value="$(arg grasp_controller)"/>

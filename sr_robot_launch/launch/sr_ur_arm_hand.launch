@@ -87,7 +87,7 @@
       <arg name="debug" value="$(arg debug)"/>
       <arg name="verbose" value="$(arg verbose)" />
     </include>
-    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z)"/>
+    <param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z)"/>
     <!-- HAND -->
     <param name="/hand/mapping/$(arg hand_serial)" value="$(arg hand_id)"/>
     <param name="/hand/joint_prefix/$(arg hand_serial)" value="$(arg hand_id)_"/>
