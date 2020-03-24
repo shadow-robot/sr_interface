@@ -44,7 +44,6 @@
   <arg name="load_robot_description_command" default="xacro --inorder $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
   <arg name="urcap_program_name" default="external_ctrl.urp"/>
 
-
   <node pkg="rosservice" type="rosservice" name="set_speed_scale" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg arm_speed_scale)'"/>
 
   <!-- Logging local topics -->
