@@ -63,8 +63,6 @@
   <arg name="arm_2_z" default="0.0"/>
   <arg name="arm_x_separation" default="1.0"/>
   <arg name="arm_y_separation" default="1.0"/>
-  <arg name="arm_1_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
-  <arg name="arm_2_program_path" default="$(find sr_ur_bringup)/robot_programs/"/>
   <arg name="arm_robot_hw_1" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
   <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_bimanual_ur_arm_robot_hw.yaml"/>
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
@@ -92,7 +90,7 @@
       <arg name="debug" value="$(arg debug)"/>
       <arg name="verbose" value="$(arg verbose)" />
     </include>
-    <param name="robot_description" command="xacro --inorder $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
+    <param name="robot_description" command="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
     <!-- HAND -->
     <group if="$(eval hands == 'both' or hands == 'right')">
       <param name="/hand/mapping/$(arg rh_serial)" value="rh"/>
@@ -179,8 +177,6 @@
         <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
         <arg name="arm_robot_hw_1" value="$(arg arm_robot_hw_1)"/>
         <arg name="arm_robot_hw_2" value="$(arg arm_robot_hw_2)"/>
-        <arg name="arm_1_program_path" value="$(arg arm_1_program_path)"/>
-        <arg name="arm_2_program_path" value="$(arg arm_2_program_path)"/>
         <arg name="include_wrist_in_arm_controller" value="$(arg include_wrist_in_arm_controller)"/>
         <arg name="arm_trajectory" value="$(arg arm_trajectory)"/>
         <arg name="arm_position" value="$(arg arm_position)"/>
