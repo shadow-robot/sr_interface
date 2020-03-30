@@ -10,7 +10,7 @@
   <!--Choose planner library, options are ompl, stomp or sbpl-->
   <arg name="planning" default="ompl"/>
   <!--Should the planner yaml be automatically generated? -->
-  <arg name="generate_planning_config" default="True"/> 
+  <arg name="generate_planning_config" default="True"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <!-- Set whether to load a scene to restrain the movement of the robot -->
@@ -31,16 +31,12 @@
   <!-- The joint state publisher publishing frequency  -->
   <arg name="joint_state_pub_frequency" default="125"/>
 
-  <!-- ROBOT CONFIG-->
-  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/left_srhand_ur10.urdf.xacro'"/>
-  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/left_sh_ur10.yaml"/>
-
   <!-- HAND CONFIG-->
   <arg name="hand_serial" default="1082"/>
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_E_v3.yaml"/>
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
-  <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/> 
+  <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
   <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
   <!-- The control mode PWM (true) or torque (false) -->
@@ -52,6 +48,8 @@
   <!-- ARM CONFIG-->
   <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
+  <!-- You can select ur10 or ur10e -->
+  <arg name="robot_model" default="ur10"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/left_ur_arm_robot_hw.yaml"/>
   <arg name="arm_speed_scale" default="0.5"/>
 
@@ -62,7 +60,7 @@
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
   <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
   <arg name="include_wrist_in_arm_controller" default="true"/>
-  
+
   <include file="$(find sr_robot_launch)/launch/sr_ur_arm_hand.launch">
     <arg name="sim" value="$(arg sim)"/>
     <arg name="debug" default="$(arg debug)"/>
@@ -85,9 +83,7 @@
     <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
 
     <arg name="side" value="left"/>
-    <arg name="robot_description" value="$(arg robot_description)"/>
-    <arg name="robot_config_file" value="$(arg robot_config_file)"/>
-    <arg name="robot_model" value="ur10"/>
+    <arg name="robot_model" value="$(arg robot_model)"/>
     <arg name="robot_name" value="ur10srh"/>
     <arg name="external_control_loop" value="$(arg external_control_loop)"/>
 
