@@ -30,7 +30,7 @@ class SrUrUnlock():
         if 0 == len(self._arms):
             rospy.logerr("No arms detected, shutting down %s", rospy.get_name())
             rospy.signal_shutdown("No arms detected")
-        self.subscriber = rospy.Subscriber("/sr_arm/release", Bool, self.unlock_subscriber)
+        rospy.Subscriber("/sr_arm/release", Bool, self.unlock_subscriber)
 
     def unlock_subscriber(self, message):
         if message.data:
