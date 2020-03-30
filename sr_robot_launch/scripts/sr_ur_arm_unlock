@@ -21,7 +21,7 @@ from std_srvs.srv import Trigger
 
 class SrUrUnlock():
     def __init__(self):
-        self.external_control_program_name = rospy.get_param("~urcap_program_name", "external_ctrl.urp")
+        self._external_control_program_name = rospy.get_param("~urcap_program_name", "external_ctrl.urp")
         self._arms = []
         if rospy.has_param('ra_sr_ur_robot_hw'):
             self._arms.append('ra')
@@ -59,8 +59,8 @@ class SrUrUnlock():
     def check_arms_e_stops(self):
         for arm in self._arms:
             safety_mode = self.call_arm_service(arm, "get_safety_mode", GetSafetyMode)
-            if safety_mode.safety_mode.mode == SafetyMode.ROBOT_EMERGENCY_STOP:
-                while safety_mode.safety_mode.mode == SafetyMode.ROBOT_EMERGENCY_STOP:
+            if SafetyMode.ROBOT_EMERGENCY_STOP == safety_mode.safety_mode.mode:
+                while SafetyMode.ROBOT_EMERGENCY_STOP == safety_mode.safety_mode.mode:
                     rospy.logwarn("Emergency stop button is still pressed for arm %s, please release", arm)
                     safety_mode = self.call_arm_service(arm, "get_safety_mode", GetSafetyMode)
                     rospy.sleep(2)
@@ -68,7 +68,7 @@ class SrUrUnlock():
     def unlock_arms_if_protective_stop(self):
         for arm in self._arms:
             safety_mode = self.call_arm_service(arm, "get_safety_mode", GetSafetyMode)
-            if safety_mode.safety_mode.mode == SafetyMode.PROTECTIVE_STOP:
+            if SafetyMode.PROTECTIVE_STOP == safety_mode.safety_mode.mode:
                 rospy.loginfo("Protective stop detected on: %s. Unlocking...", arm)
                 self.call_arm_service(arm, "unlock_protective_stop", Trigger)
 
@@ -76,7 +76,7 @@ class SrUrUnlock():
         fault = False
         for arm in self._arms:
             safety_mode = self.call_arm_service(arm, "get_safety_mode", GetSafetyMode)
-            if safety_mode.safety_mode.mode == SafetyMode.FAULT:
+            if SafetyMode.FAULT == safety_mode.safety_mode.mode:
                 fault = True
                 rospy.loginfo("Fault detected on: %s. This can be caused by using the external e-stop.\
                                Have you released it?", arm)
@@ -87,7 +87,7 @@ class SrUrUnlock():
         arm_needs_starting = False
         for arm in self._arms:
             robot_mode = self.call_arm_service(arm, "get_robot_mode", GetRobotMode)
-            if robot_mode.robot_mode.mode == RobotMode.IDLE or robot_mode.robot_mode.mode == RobotMode.POWER_OFF:
+            if RobotMode.IDLE == robot_mode.robot_mode.mode or RobotMode.POWER_OFF == robot_mode.robot_mode.mode:
                 rospy.loginfo("Starting arm: %s", arm)
                 arm_needs_starting = True
         return arm_needs_starting
@@ -117,7 +117,7 @@ class SrUrUnlock():
         for arm in self._arms:
             if not rospy.get_param("/" + arm + "_sr_ur_robot_hw/headless_mode") :
                 play_msg = self.call_arm_service(arm, "program_state", GetProgramState)
-                if play_msg.state.state == ProgramState.STOPPED or play_msg.state.state == ProgramState.PAUSED:
+                if ProgramState.STOPPED == play_msg.state.state or ProgramState.PAUSED == play_msg.state.state:
                     rospy.loginfo("Not in headless mode. Starting program: %s for arm: %s", play_msg.program_name, arm)
                     self.call_arm_service(arm, "play", Trigger)
                     sleep_time = True
