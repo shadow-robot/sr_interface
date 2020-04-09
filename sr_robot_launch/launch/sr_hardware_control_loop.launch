@@ -107,6 +107,7 @@
           - la_sr_ur_robot_hw
       </rosparam>
     </group>
+    <node name="sr_ur_arm_calibration_loader" pkg="sr_ur_arm_calibration_loader" type="sr_ur_load_calibration" output="screen"/>
     <rosparam unless="$(arg hand_ctrl)" param="robot_hardware" subst_value="True">[$(arg arm_prefix)_sr_ur_robot_hw]</rosparam>
     <rosparam command="load" file="$(arg arm_robot_hw)"/>
     <param name="$(arg arm_prefix)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
