@@ -11,7 +11,7 @@
   <arg name="robot_description" if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
   <!-- ARMS BUT NO HANDS -->
-  <arg name="robot_description" if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))" default="'$(find sr_multi_description)/urdf/bimanual_ur10.urdf.xacro'"/>
+  <arg name="robot_description" if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))" default="'$(find sr_multi_description)/urdf/bimanual_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_config_file" if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_$(arg robot_model).yaml"/>
   <!-- HANDS BUT NO ARMS -->
   <arg name="robot_description" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="'$(find sr_description)/robots/bimanual_shadowhand_motor_plus.urdf.xacro'"/>
@@ -41,7 +41,7 @@
   <arg name="arm_x_separation" default="0.0" unless="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))"/>
   <arg name="arm_y_separation" default="1.5"/>
   <arg name="arm_robot_hw_1" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
-  <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_bimanual_ur_arm_robot_hw.yaml/>
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
   <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
   <arg name="include_wrist_in_arm_controller" default="true" if="$(arg arm_ctrl)"/>
@@ -52,9 +52,13 @@
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="right_arm_speed_scale" default="0.5"/>
   <arg name="left_arm_speed_scale" default="0.5"/>
-  <arg name="kinematics_config_left" default="$(find ur_description)/config/ur10_default.yaml"/>
-  <arg name="kinematics_config_right" default="$(find ur_description)/config/ur10_default.yaml"/>
-  <arg name="load_robot_description_command" default="xacro --inorder $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation) kinematics_config_right:=$(arg kinematics_config_right) kinematics_config_left:=$(arg kinematics_config_left)"/>
+
+  <arg name="kinematics_config_left" if="$(eval not arg('robot_model') == 'ur10')" default="$(find ur_description)/config/ur10_default.yaml"/>
+  <arg name="kinematics_config_left" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find ur_e_description)/config/ur10e_default.yaml"/>
+  <arg name="kinematics_config_right" if="$(eval not arg('robot_model') == 'ur10')" default="$(find ur_description)/config/ur10_default.yaml"/>
+  <arg name="kinematics_config_right" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find ur_e_description)/config/ur10e_default.yaml"/>
+
+  <arg name="load_robot_description_command" default="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation) kinematics_config_right:=$(arg kinematics_config_right) kinematics_config_left:=$(arg kinematics_config_left)"/>
 
   <node pkg="rosservice" type="rosservice" name="set_right_speed_scale" args="call --wait /ra_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg right_arm_speed_scale)'"/>
   <node pkg="rosservice" type="rosservice" name="set_left_speed_scale" args="call --wait /la_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg left_arm_speed_scale)'"/>
@@ -117,7 +121,7 @@
         - ra_sr_ur_robot_hw
         - la_sr_ur_robot_hw
     </rosparam>
-    <param name="robot_description" command="xacro --inorder $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
+    <param name="robot_description" command="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
       <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>

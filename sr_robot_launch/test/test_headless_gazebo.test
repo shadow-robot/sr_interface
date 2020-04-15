@@ -1,0 +1,7 @@
+<launch>
+<include file="$(find sr_robot_launch)/launch/sr_ur10arm_box.launch" >
+    <arg name="sim" value="true"/>
+    <arg name="gui" value="false"/>
+</include>
+  <test test-name="test_headless_gazebo" pkg="sr_robot_launch" type="test_headless_gazebo.py" time-limit="300.0"/>
+</launch>
