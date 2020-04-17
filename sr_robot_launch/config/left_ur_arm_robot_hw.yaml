@@ -27,7 +27,7 @@ la_sr_ur_robot_hw:
   
   use_tool_communication: false
   
-  headless_mode: false 
+  headless_mode: true
   
   servoj_gain: 300
   
