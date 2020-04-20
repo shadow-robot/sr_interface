@@ -147,6 +147,7 @@ include_directories(
 
 install(PROGRAMS
         scripts/teach_mode_node
+        scripts/sr_ur_arm_unlock
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

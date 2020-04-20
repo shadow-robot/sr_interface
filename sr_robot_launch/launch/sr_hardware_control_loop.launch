@@ -41,6 +41,7 @@
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="arm_speed_scale" default="0.5"/>
   <arg name="kinematics_config" default="$(find ur_description)/config/ur10_default.yaml"/>
+  <arg name="urcap_program_name" default="external_ctrl.urp"/>
   <arg name="load_robot_description_command" default="xacro $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
 
   <node pkg="rosservice" type="rosservice" name="set_speed_scale" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg arm_speed_scale)'"/>
@@ -107,6 +108,9 @@
           - la_sr_ur_robot_hw
       </rosparam>
     </group>
+    <node name="sr_ur_arm_unlock" pkg="sr_robot_launch" type="sr_ur_arm_unlock" output="screen">
+      <param name="urcap_program_name" value="$(arg urcap_program_name)"/>
+    </node>
     <rosparam unless="$(arg hand_ctrl)" param="robot_hardware" subst_value="True">[$(arg arm_prefix)_sr_ur_robot_hw]</rosparam>
     <rosparam command="load" file="$(arg arm_robot_hw)"/>
     <param name="$(arg arm_prefix)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
