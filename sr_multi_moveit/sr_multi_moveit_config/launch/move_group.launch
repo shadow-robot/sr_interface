@@ -22,7 +22,7 @@
   <arg name="publish_monitored_planning_scene" default="true"/>
 
   <!--Should the planner yaml be automatically generated? -->
-  <arg name="generate_planning_config" default="True"/>
+  <arg name="generate_planning_config" default="true"/>
 
   <!-- ik solver path -->
   <arg name="hand_ik_solver_path" default="$(find sr_moveit_hand_config)/config/kinematics_template.yaml"/>

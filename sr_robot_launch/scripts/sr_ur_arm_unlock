@@ -19,6 +19,7 @@ from ur_dashboard_msgs.srv import GetSafetyMode, GetProgramState, GetRobotMode, 
 from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
 from std_srvs.srv import Trigger
 
+
 class SrUrUnlock():
     def __init__(self):
         self._external_control_program_name = rospy.get_param("~urcap_program_name", "external_ctrl.urp")
@@ -109,8 +110,10 @@ class SrUrUnlock():
             if not rospy.get_param("/" + arm + "_sr_ur_robot_hw/headless_mode"):
                 play_msg = self.call_arm_service(arm, "program_state", GetProgramState)
                 if "null" == play_msg.program_name:
-                    rospy.loginfo("Not in headless mode. Loading program: %s for arm: %s", self._external_control_program_name, arm)
-                    resp = self.call_arm_service(arm, "load_program", Load, service_data=self._external_control_program_name)
+                    rospy.loginfo("Not in headless mode. Loading program: %s for arm: %s",
+                                  self._external_control_program_name, arm)
+                    resp = self.call_arm_service(arm, "load_program", Load,
+                                                 service_data=self._external_control_program_name)
                     rospy.loginfo("%s", resp)
                     sleep_time = True
         return sleep_time
@@ -118,7 +121,7 @@ class SrUrUnlock():
     def start_arms_program_if_stopped(self):
         sleep_time = False
         for arm in self._arms:
-            if not rospy.get_param("/" + arm + "_sr_ur_robot_hw/headless_mode") :
+            if not rospy.get_param("/" + arm + "_sr_ur_robot_hw/headless_mode"):
                 play_msg = self.call_arm_service(arm, "program_state", GetProgramState)
                 if ProgramState.STOPPED == play_msg.state.state or ProgramState.PAUSED == play_msg.state.state:
                     rospy.loginfo("Not in headless mode. Starting program: %s for arm: %s", play_msg.program_name, arm)
@@ -159,6 +162,7 @@ class SrUrUnlock():
         except rospy.ServiceException, e:
             for arm in self._arms:
                 rospy.logerr("Arm checking/restarting failed for arm: %s. %s", arm, e)
+
 
 if __name__ == "__main__":
     rospy.init_node("sr_ur_arm_unlock")
