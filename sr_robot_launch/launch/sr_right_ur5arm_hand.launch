@@ -42,7 +42,7 @@
   <!-- The control mode PWM (true) or torque (false) -->
   <!-- Set to true by default for now as torque control is not available yet -->
   <arg name="pwm_control" default="true"/>
-<!-- Set to true if you want to use grasp controller -->
+  <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
 
   <!-- ARM CONFIG-->
