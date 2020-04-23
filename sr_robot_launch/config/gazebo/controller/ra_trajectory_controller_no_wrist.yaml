@@ -1,5 +1,5 @@
 ra_trajectory_controller:
-  type: "position_controllers/JointTrajectoryController"
+  type: "velocity_controllers/ComplianceController"
   joints:
     - ra_shoulder_pan_joint
     - ra_shoulder_lift_joint
@@ -7,6 +7,7 @@ ra_trajectory_controller:
     - ra_wrist_1_joint
     - ra_wrist_2_joint
     - ra_wrist_3_joint
+  compliance_command_timeout: 1.5
   constraints:
       goal_time: 0.6
       stopped_velocity_tolerance: 1.0
@@ -20,3 +21,20 @@ ra_trajectory_controller:
   state_publish_rate:  25
   action_monitor_rate: 10
   allow_partial_joints_goal: true
+  #!!These values have not been optimized!!
+  gains:
+    ra_shoulder_pan_joint:  {p: 5.0,  i: 0.05, d: 0.1, i_clamp: 1}
+    ra_shoulder_lift_joint: {p: 5.0,  i: 0.05, d: 0.1, i_clamp: 1}
+    ra_elbow_joint:         {p: 5.0,  i: 0.05, d: 0.1, i_clamp: 1}
+    ra_wrist_1_joint:       {p: 5.0,  i: 0.05, d: 0.1, i_clamp: 1}
+    ra_wrist_2_joint:       {p: 5.0,  i: 0.05, d: 0.1, i_clamp: 1}
+    ra_wrist_3_joint:       {p: 5.0,  i: 0.05, d: 0.1, i_clamp: 1}
+
+  # Use a feedforward term to reduce the size of PID gains
+  velocity_ff:
+    ra_shoulder_pan_joint: 1.0
+    ra_shoulder_lift_joint: 1.0
+    ra_elbow_joint: 1.0
+    ra_wrist_1_joint: 1.0
+    ra_wrist_2_joint: 1.0
+    ra_wrist_3_joint: 1.0
