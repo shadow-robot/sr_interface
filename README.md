@@ -1,4 +1,4 @@
-|     Service       |  Status  |
+|     Service       |  Status  | 
 | ----------------- | -------- |
 | Documentation     | [![Documentation Status](https://readthedocs.org/projects/shadow-robot-interface/badge/?version=latest)](http://shadow-robot-interface.readthedocs.org/) |
 | Code style checks | [![Circle CI](https://circleci.com/gh/shadow-robot/sr_interface.svg?style=shield)](https://circleci.com/gh/shadow-robot/sr_interface) |
