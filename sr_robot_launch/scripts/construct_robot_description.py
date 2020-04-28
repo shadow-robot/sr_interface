@@ -22,8 +22,8 @@ class SrConstructRobotDescription():
         self.node_name = rospy.get_name()
 
         arm1 = ('ra', '192.168.1.1')
-        arm1 = ('la', '192.168.2.1')
-        if self.bimanual:
+        arm2 = ('la', '192.168.2.1')
+        if not self.bimanual:
             self.sr_ur_load_calibration = SrUrLoadCalibration([arm1])
         else:
             self.sr_ur_load_calibration = SrUrLoadCalibration([arm1, arm2])
