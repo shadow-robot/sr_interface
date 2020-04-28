@@ -10,11 +10,6 @@ from subprocess import check_output
 from sr_ur_arm_calibration_loader.sr_ur_arm_calibration_loader import SrUrLoadCalibration
 
 
-
-
-# default="xacro $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"
-
-
 class SrConstructRobotDescription():
     def __init__(self):
         self.robot_description_file = rospy.get_param("~robot_description_file")
@@ -38,7 +33,6 @@ class SrConstructRobotDescription():
 
         self.urdf = parse_xacro()
         rospy.set_param('robot_description', self.urdf)
-
 
     def parse_xacro(self):
         self.xacro_commands.append("xacro")
@@ -70,7 +64,6 @@ class SrConstructRobotDescription():
         except:
             rospy.logerr("error")
         return out
-
 
     def run(self):
         if not self.check_arm_calibration_exists(arm_serial):
