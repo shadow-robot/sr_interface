@@ -1,3 +1,13 @@
+gazebo_ros_control:
+    pid_gains:
+      ra_shoulder_pan_joint:  {p: 500, i: 1000, d: 0.1, i_clamp_max: 1000, i_clamp_min: -1000, antiwindup: true}
+      ra_shoulder_lift_joint: {p: 500, i: 1000, d: 0.1, i_clamp_max: 1000, i_clamp_min: -1000, antiwindup: true}
+      ra_elbow_joint:         {p: 500, i: 1000, d: 0.1, i_clamp_max: 1000, i_clamp_min: -1000, antiwindup: true}
+      ra_wrist_1_joint:       {p: 500, i: 1000, d: 0.1, i_clamp_max: 1000, i_clamp_min: -1000, antiwindup: true}
+      ra_wrist_2_joint:       {p: 500, i: 1000, d: 0.1, i_clamp_max: 1000, i_clamp_min: -1000, antiwindup: true}
+      ra_wrist_3_joint:       {p: 500, i: 1000, d: 0.1, i_clamp_max: 1000, i_clamp_min: -1000, antiwindup: true}
+
+
 ra_trajectory_controller:
   type: "velocity_controllers/ComplianceController"
   joints:
