@@ -21,7 +21,6 @@ class SrConstructRobotDescription():
         self.bimanual = False
         self.node_name = rospy.get_name()
 
-        # If multiple arms, specify right arm first!
         arm1 = ('ra', '192.168.1.1')
         self.sr_ur_load_calibration = SrUrLoadCalibration([arm1])
         self.robot_description_params = self.get_parameters()
