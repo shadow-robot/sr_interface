@@ -56,12 +56,11 @@
     <arg name="side" value="$(arg side)"/>
   </include>
 
-    <node name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description.py" output="screen">
-      <param name="robot_description_file" value="$(arg robot_description)"/>
-      <param name="initial_z" value="$(arg initial_z)"/>
-      <param name="prefix" value="$(arg hand_id)_"/>
-    </node>
-
+  <node name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description.py" output="screen">
+    <param name="robot_description_file" value="$(arg robot_description)"/>
+    <param name="initial_z" value="$(arg initial_z)"/>
+    <param name="prefix" value="$(arg hand_id)_"/>
+  </node>
 
   <!-- Controller -->
   <group if="$(arg hand_ctrl)">

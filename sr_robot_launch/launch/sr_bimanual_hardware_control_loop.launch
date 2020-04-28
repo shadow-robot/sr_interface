@@ -73,6 +73,14 @@
 
   <include file="$(find sr_robot_launch)/launch/bimanual_controller_stopper.launch"/>
 
+  <node name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description.py" output="screen">
+    <param name="robot_description_file" value="$(arg robot_description)"/>
+    <param name="arm_1_z" value="$(arg arm_1_z)"/>
+    <param name="arm_2_z" value="$(arg arm_2_z)"/>
+    <param name="arm_x_separation" value="$(arg arm_x_separation)"/>
+    <param name="arm_y_separation" value="$(arg arm_y_separation)"/>
+  </node>
+
   <!-- Controller -->
   <group unless="$(eval hands == 'none')">
     <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
@@ -111,14 +119,6 @@
         - la_sr_ur_robot_hw
     </rosparam>
   </group>
-
-  <node name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description.py" output="screen">
-    <param name="robot_description_file" value="$(arg robot_description)"/>
-    <param name="arm_1_z" value="$(arg arm_1_z)"/>
-    <param name="arm_2_z" value="$(arg arm_2_z)"/>
-    <param name="arm_x_separation" value="$(arg arm_x_separation)"/>
-    <param name="arm_y_separation" value="$(arg arm_y_separation)"/>
-  </node>
 
   <!-- Set rosparam, load xacros and launch state publisher nodes if only arms are being used (no hands) -->
   <group if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))">
