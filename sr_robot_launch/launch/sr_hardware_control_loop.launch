@@ -64,6 +64,11 @@
 
   <!-- Controller -->
   <group if="$(arg hand_ctrl)">
+    <node name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description.py" output="screen">
+      <param name="robot_description_file" value="$(arg robot_description)"/>
+      <param name="initial_z" value="$(arg initial_z)"/>
+      <param name="prefix" value="$(arg hand_id)_"/>
+    </node>
     <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
     <rosparam file="$(arg robot_config_file)"/>
     <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
@@ -72,6 +77,7 @@
       <arg name="hand_robot_hardware_name" value="unique_robot_hw"/>
       <arg name="debug" value="$(arg debug)"/>
       <arg name="eth_port" value="$(arg eth_port)"/>
+      <arg name="load_robot_description" value="false"/>
       <arg name="load_robot_description_command" value="$(arg load_robot_description_command)"/>
       <arg name="pwm_control" value="$(arg pwm_control)"/>
       <arg name="hand_serial" value="$(arg hand_serial)"/>

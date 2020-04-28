@@ -19,7 +19,7 @@
 
 
   <!-- setting this parameter to false allows to load the robot_description from a higher level -->
-  <arg name="load_robot_description" default="true"/>
+  <arg name="load_robot_description" default="false"/>
 
   <!-- HANDS CONFIG-->
   <arg name="rh_serial" default="1370"/>
@@ -41,11 +41,12 @@
   <arg name="arm_x_separation" default="0.0" unless="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))"/>
   <arg name="arm_y_separation" default="1.5"/>
   <arg name="arm_robot_hw_1" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
-  <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_bimanual_ur_arm_robot_hw.yaml/>
+  <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_bimanual_ur_arm_robot_hw.yaml"/>
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
   <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
   <arg name="include_wrist_in_arm_controller" default="true" if="$(arg arm_ctrl)"/>
   <arg name="include_wrist_in_arm_controller" default="false" unless="$(arg arm_ctrl)"/>
+  <arg name="urcap_program_name" default="external_ctrl.urp"/>
 
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the arm-->
@@ -57,8 +58,6 @@
   <arg name="kinematics_config_left" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find ur_e_description)/config/ur10e_default.yaml"/>
   <arg name="kinematics_config_right" if="$(eval not arg('robot_model') == 'ur10')" default="$(find ur_description)/config/ur10_default.yaml"/>
   <arg name="kinematics_config_right" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find ur_e_description)/config/ur10e_default.yaml"/>
-
-  <arg name="load_robot_description_command" default="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation) kinematics_config_right:=$(arg kinematics_config_right) kinematics_config_left:=$(arg kinematics_config_left)"/>
 
   <node pkg="rosservice" type="rosservice" name="set_right_speed_scale" args="call --wait /ra_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg right_arm_speed_scale)'"/>
   <node pkg="rosservice" type="rosservice" name="set_left_speed_scale" args="call --wait /la_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg left_arm_speed_scale)'"/>
@@ -82,7 +81,6 @@
     <include file="$(find sr_edc_launch)/sr_edc_bimanual_ros_control.launch">
       <arg name="define_robot_hardware" value="false"/>
       <arg name="debug" value="$(arg debug)"/>
-      <arg name="load_robot_description_command" value="$(arg load_robot_description_command)"/>
       <arg name="rh_serial" value="$(arg rh_serial)"/>
       <arg name="lh_serial" value="$(arg lh_serial)"/>
       <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
@@ -114,6 +112,14 @@
     </rosparam>
   </group>
 
+  <node name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description.py" output="screen">
+    <param name="robot_description_file" value="$(arg robot_description)"/>
+    <param name="arm_1_z" value="$(arg arm_1_z)"/>
+    <param name="arm_2_z" value="$(arg arm_2_z)"/>
+    <param name="arm_x_separation" value="$(arg arm_x_separation)"/>
+    <param name="arm_y_separation" value="$(arg arm_y_separation)"/>
+  </node>
+
   <!-- Set rosparam, load xacros and launch state publisher nodes if only arms are being used (no hands) -->
   <group if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))">
     <rosparam>
@@ -121,7 +127,6 @@
         - ra_sr_ur_robot_hw
         - la_sr_ur_robot_hw
     </rosparam>
-    <param name="robot_description" command="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
       <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
@@ -140,7 +145,9 @@
     <rosparam command="load" file="$(arg kinematics_config_left)" ns="la_sr_ur_robot_hw"/>
     <param name="ra_sr_ur_robot_hw/speed_scale" type="double" value="$(arg right_arm_speed_scale)"/>
     <param name="la_sr_ur_robot_hw/speed_scale" type="double" value="$(arg left_arm_speed_scale)"/>
-    <node name="sr_ur_arm_calibration_loader" pkg="sr_ur_arm_calibration_loader" type="sr_ur_load_calibration" output="screen"/>
+    <node name="sr_ur_arm_unlock" pkg="sr_robot_launch" type="sr_ur_arm_unlock" output="screen">
+      <param name="urcap_program_name" value="$(arg urcap_program_name)"/>
+    </node>
   </group>
 
   <!-- Set rosparam if only bimanual hands and no arms are being used -->
