@@ -23,20 +23,16 @@ class SrConstructRobotDescription():
 
         # If multiple arms, specify right arm first!
         arm1 = ('ra', '192.168.1.1')
-        rospy.loginfo('################################1')
         self.sr_ur_load_calibration = SrUrLoadCalibration([arm1])
-        rospy.loginfo('################################2')
         self.robot_description_params = self.get_parameters()
-        rospy.loginfo('################################3')
         self.kinematics_configs = self.get_kinematics_config()
-        rospy.loginfo('################################4')
         if not self.bimanual:
             self.robot_description_params['kinematics_config'] = self.kinematics_configs[0]
         else:
             self.robot_description_params['kinematics_config_right'] = self.kinematics_configs[0]
             self.robot_description_params['kinematics_config_left'] = self.kinematics_configs[1]
 
-        self.urdf = parse_xacro()
+        self.urdf = self.parse_xacro()
         rospy.set_param('robot_description', self.urdf)
 
     def parse_xacro(self):
