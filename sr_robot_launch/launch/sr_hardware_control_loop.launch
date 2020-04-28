@@ -40,9 +40,6 @@
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="arm_speed_scale" default="0.5"/>
-  <arg name="kinematics_config" command="cat $(find sr_ur_arm_calibration_loader)/config/arm_1_calibration_file"/>
-
-  <arg name="load_robot_description_command" default="xacro $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
 
   <node pkg="rosservice" type="rosservice" name="set_speed_scale" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg arm_speed_scale)'"/>
 
@@ -55,20 +52,19 @@
     </include>
   </group>
 
-  <!-- So that the driver can check we're loading the right calibration -->
-  <rosparam command="load" file="$(arg kinematics_config)" ns="$(arg arm_prefix)_sr_ur_robot_hw"/>
-
   <include file="$(find sr_robot_launch)/launch/unimanual_controller_stopper.launch">
     <arg name="side" value="$(arg side)"/>
   </include>
 
-  <!-- Controller -->
-  <group if="$(arg hand_ctrl)">
     <node name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description.py" output="screen">
       <param name="robot_description_file" value="$(arg robot_description)"/>
       <param name="initial_z" value="$(arg initial_z)"/>
       <param name="prefix" value="$(arg hand_id)_"/>
     </node>
+
+
+  <!-- Controller -->
+  <group if="$(arg hand_ctrl)">
     <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
     <rosparam file="$(arg robot_config_file)"/>
     <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
@@ -78,7 +74,6 @@
       <arg name="debug" value="$(arg debug)"/>
       <arg name="eth_port" value="$(arg eth_port)"/>
       <arg name="load_robot_description" value="false"/>
-      <arg name="load_robot_description_command" value="$(arg load_robot_description_command)"/>
       <arg name="pwm_control" value="$(arg pwm_control)"/>
       <arg name="hand_serial" value="$(arg hand_serial)"/>
       <arg name="hand_id" value="$(arg hand_id)"/>
@@ -114,7 +109,6 @@
           - la_sr_ur_robot_hw
       </rosparam>
     </group>
-    <node name="sr_ur_arm_calibration_loader" pkg="sr_ur_arm_calibration_loader" type="sr_ur_load_calibration" output="screen"/>
     <rosparam unless="$(arg hand_ctrl)" param="robot_hardware" subst_value="True">[$(arg arm_prefix)_sr_ur_robot_hw]</rosparam>
     <rosparam command="load" file="$(arg arm_robot_hw)"/>
     <param name="$(arg arm_prefix)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
@@ -132,7 +126,6 @@
     </include>
     <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
     <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
-    <param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
   </group>
   <!-- These will be loaded if arm and hand are enabled -->
   <!-- Trajectory mode -->

@@ -22,9 +22,14 @@ class SrConstructRobotDescription():
         self.node_name = rospy.get_name()
 
         # If multiple arms, specify right arm first!
-        self.sr_ur_load_calibration = SrUrLoadCalibration("192.168.1.1")
+        arm1 = ('ra', '192.168.1.1')
+        rospy.loginfo('################################1')
+        self.sr_ur_load_calibration = SrUrLoadCalibration([arm1])
+        rospy.loginfo('################################2')
         self.robot_description_params = self.get_parameters()
+        rospy.loginfo('################################3')
         self.kinematics_configs = self.get_kinematics_config()
+        rospy.loginfo('################################4')
         if not self.bimanual:
             self.robot_description_params['kinematics_config'] = self.kinematics_configs[0]
         else:
@@ -52,10 +57,10 @@ class SrConstructRobotDescription():
         kinematics_configs = []
         arms_info = self.sr_ur_load_calibration.get_calibration_files()
         if not self.bimanual:
-            kinematics_configs.append(arms_info[0][2])
+            kinematics_configs.append(arms_info[0]['kinematics_config'])
         else:
             for arm in arms_info:
-                kinematics_configs.append(arm[2])
+                kinematics_configs.append(arm['kinematics_config'])
         return kinematics_configs
 
     def generate_urdf(self, xacro_commands):
