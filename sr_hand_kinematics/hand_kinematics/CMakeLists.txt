@@ -28,15 +28,15 @@ target_link_libraries(hand_kinematics_coupling ${catkin_LIBRARIES} ${orocos_kdl_
 
 if (CATKIN_ENABLE_TESTING)
   add_rostest_gtest(test_kinematics_as_plugin test/hand_kinematics_plugin_test.test test/test_kinematics_as_plugin.cpp)
+  target_link_libraries(test_kinematics_as_plugin ${moveit_core_LIBRARIES} hand_kinematics ${catkin_LIBRARIES})
+  add_dependencies(test_kinematics_as_plugin ${hand_kinematics_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 endif()
-target_link_libraries(test_kinematics_as_plugin ${moveit_core_LIBRARIES} hand_kinematics ${catkin_LIBRARIES})
-add_dependencies(test_kinematics_as_plugin ${hand_kinematics_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 if (CATKIN_ENABLE_TESTING)
   add_rostest_gtest(test_kinematics_as_service test/hand_kinematics_services_test.test test/test_kinematics_as_service.cpp)
+  target_link_libraries(test_kinematics_as_service ${catkin_LIBRARIES})
+  add_dependencies(test_kinematics_as_service ${hand_kinematics_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 endif()
-target_link_libraries(test_kinematics_as_service ${catkin_LIBRARIES})
-add_dependencies(test_kinematics_as_service ${hand_kinematics_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 install(TARGETS hand_kinematics hand_kinematics_coupling_lib
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
