@@ -148,6 +148,7 @@ include_directories(
 install(PROGRAMS
         scripts/teach_mode_node
         scripts/sr_ur_arm_unlock
+        scripts/construct_robot_description
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
