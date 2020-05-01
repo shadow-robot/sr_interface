@@ -24,52 +24,60 @@ from sr_ur_arm_calibration_loader.sr_ur_arm_calibration_loader import SrUrLoadCa
 class SrConstructRobotDescription():
     def __init__(self):
         self._robot_description_file = rospy.get_param("~robot_description_file")
-        arm_type = rospy.get_param("~arm_type")
-        self._bimanual = False
-        self._xacro_commands = []
+        CONST_ARM_TYPE = rospy.get_param("~arm_type")
+        self._side = ''
+        self._robot_description_params = {}
         self._node_name = rospy.get_name()
+        self._arm_ra = {'prefix': 'ra', 'ip_address': '192.168.1.1', 'arm_type': CONST_ARM_TYPE)
+        self._arm_la = {'prefix': 'la', 'ip_address': '192.168.2.1', 'arm_type': CONST_ARM_TYPE)
 
         if 'bimanual' in self._robot_description_file:
-            self._bimanual = True
-
-        arm1 = ('ra', '192.168.1.1', arm_type)
-        arm2 = ('la', '192.168.2.1', arm_type)
-        if not self._bimanual:
-            self._sr_ur_load_calibration = SrUrLoadCalibration([arm1])
+            self._side = 'both'
         else:
-            self._sr_ur_load_calibration = SrUrLoadCalibration([arm1, arm2])
-        self._robot_description_params = self._get_parameters()
-        kinematics_configs = self._get_kinematics_config()
-        if not self._bimanual:
-            self._robot_description_params['kinematics_config'] = kinematics_configs[0]
-        else:
-            self._robot_description_params['kinematics_config_right'] = kinematics_configs[0]
-            self._robot_description_params['kinematics_config_left'] = kinematics_configs[1]
+            prefix = rospy.get_param("~prefix"):
+            if 'rh' in prefix:
+                self._side = 'right'
+            elif 'lh' in prefix:
+                self._side = 'left'
+            else:
+                rospy.logerr("'prefix' param not specified correctly")
 
+        self._process_parameters()
         urdf = self._parse_xacro()
         rospy.set_param('robot_description', urdf)
 
     def _parse_xacro(self):
-        self._xacro_commands.append("xacro")
-        self._xacro_commands.append(self._robot_description_file)
+        xacro_commands = []
+        xacro_commands.append("xacro")
+        xacro_commands.append(self._robot_description_file)
         for key, value in self._robot_description_params.items():
-            self._xacro_commands.append(key + ':=' + str(value))
-        return self._generate_urdf(self._xacro_commands)
+            xacro_commands.append(key + ':=' + str(value))
+        return self._generate_urdf(xacro_commands)
 
-    def _get_parameters(self):
-        robot_description_params = {}
+    def _process_parameters(self):
         robot_description_param_names = [param for param in rospy.get_param_names()
                                          if self._node_name in param and
                                          'robot_description' not in param and
                                          'arm_type' not in param]
         for name in robot_description_param_names:
-            robot_description_params[name.rsplit('/', 1)[1]] = rospy.get_param(name)
-        return robot_description_params
+            self._robot_description_params[name.rsplit('/', 1)[1]] = rospy.get_param(name)
+        kinematics_configs = self._get_kinematics_config()
+        if not 'both' == self._side:
+            self._robot_description_params['kinematics_config'] = kinematics_configs[0]
+        else:
+            self._robot_description_params['kinematics_config_right'] = kinematics_configs[0]
+            self._robot_description_params['kinematics_config_left'] = kinematics_configs[1]
 
     def _get_kinematics_config(self):
         kinematics_configs = []
+        if 'both' == self._side:
+            self._sr_ur_load_calibration = SrUrLoadCalibration([self._arm_ra, self._arm_la])
+        elif 'right' == self._side:
+            self._sr_ur_load_calibration = SrUrLoadCalibration([self._arm_ra])
+        elif 'left' == self._side:
+            self._sr_ur_load_calibration = SrUrLoadCalibration([self._arm_la])
         arms_info = self._sr_ur_load_calibration.get_calibration_files()
-        if not self._bimanual:
+        if 'both' != self._side:
             kinematics_configs.append(arms_info[0]['kinematics_config'])
         else:
             for arm in arms_info:
