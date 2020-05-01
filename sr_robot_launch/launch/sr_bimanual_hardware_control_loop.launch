@@ -18,8 +18,8 @@
   <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
 
 
-  <!-- setting this parameter to false allows to load the robot_description from a higher level -->
-  <arg name="load_robot_description" default="false"/>
+  <!-- setting this parameter to true allows to load the robot_description from a lower level -->
+  <arg name="load_robot_description_at_lower_level" default="false"/>
 
   <!-- HANDS CONFIG-->
   <arg name="rh_serial" default="1370"/>
@@ -59,6 +59,8 @@
   <arg name="kinematics_config_right" if="$(eval not arg('robot_model') == 'ur10')" default="$(find ur_description)/config/ur10_default.yaml"/>
   <arg name="kinematics_config_right" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find ur_e_description)/config/ur10e_default.yaml"/>
 
+  <arg name="load_robot_description_command" default="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation) kinematics_config_right:=$(arg kinematics_config_right) kinematics_config_left:=$(arg kinematics_config_left)"/>
+
   <node pkg="rosservice" type="rosservice" name="set_right_speed_scale" args="call --wait /ra_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg right_arm_speed_scale)'"/>
   <node pkg="rosservice" type="rosservice" name="set_left_speed_scale" args="call --wait /la_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg left_arm_speed_scale)'"/>
 
@@ -73,7 +75,8 @@
 
   <include file="$(find sr_robot_launch)/launch/bimanual_controller_stopper.launch"/>
 
-  <node name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description.py" output="screen">
+  <!-- Constructs robot description string and loads it -->
+  <node unless="$(arg load_robot_description_at_lower_level)" name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description.py" output="screen">
     <param name="arm_type" value="$(arg robot_model)"/>
     <param name="robot_description_file" value="$(arg robot_description)"/>
     <param name="arm_1_z" value="$(arg arm_1_z)"/>
@@ -90,6 +93,7 @@
     <include file="$(find sr_edc_launch)/sr_edc_bimanual_ros_control.launch">
       <arg name="define_robot_hardware" value="false"/>
       <arg name="debug" value="$(arg debug)"/>
+      <arg name="load_robot_description_command" value="$(arg load_robot_description_command)"/>
       <arg name="rh_serial" value="$(arg rh_serial)"/>
       <arg name="lh_serial" value="$(arg lh_serial)"/>
       <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
