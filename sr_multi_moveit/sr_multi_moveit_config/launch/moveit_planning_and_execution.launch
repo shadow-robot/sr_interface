@@ -5,7 +5,7 @@
   <arg name="load_robot_description" default="true"/>
   <arg name="gui" default="true"/>
   <!--Should the planner yaml be automatically generated? -->
-  <arg name="generate_planning_config" default="True"/>
+  <arg name="generate_planning_config" default="true"/>
 
   <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
