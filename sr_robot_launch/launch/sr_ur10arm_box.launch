@@ -73,7 +73,7 @@
       <arg name="debug" value="$(arg debug)"/>
       <arg name="verbose" value="$(arg verbose)"/>
     </include>
-    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
+    <param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
 
     <arg if="$(arg start_home)" name="spawn_model_extra_args" value="-unpause $(arg home_angles)" />
     <arg unless="$(arg start_home)" name="spawn_model_extra_args" value="" />

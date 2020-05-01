@@ -51,7 +51,7 @@
   
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
-    <param if="$(eval arg('robot_description').endswith('.xacro'))" name="robot_description" command="xacro --inorder $(arg robot_description)"/>
+    <param if="$(eval arg('robot_description').endswith('.xacro'))" name="robot_description" command="xacro $(arg robot_description)"/>
     <rosparam if="$(eval not arg('robot_description').endswith('.xacro'))" param="robot_description" command="load" file="$(arg robot_description)"/>
     <group if="$(eval sim_type == 'gazebo')">
       <arg name="world_name" value="$(find sr_description_common)/worlds/shadowhand.world"/>

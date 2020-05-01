@@ -12,7 +12,7 @@
   <arg name="robot_description" default="$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro"/>
   
   <!-- Load universal robot description format (URDF) -->
-  <param if="$(arg load_robot_description)" name="$(arg robot_description_name)" command="xacro --inorder $(arg robot_description)"/>
+  <param if="$(arg load_robot_description)" name="$(arg robot_description_name)" command="xacro $(arg robot_description)"/>
 
   <!-- The name of the robot config file to load -->
   <arg name="robot_config_file" default=""/>

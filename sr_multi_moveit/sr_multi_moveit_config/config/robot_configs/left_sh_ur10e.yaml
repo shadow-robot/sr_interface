@@ -1,8 +1,8 @@
 robot:
   name: ur10esrh
   manipulators:
-    right_manipulator:
-      side: right
+    left_manipulator:
+      side: left
       arm:
         name: ur10e
         main_group: manipulator
@@ -14,9 +14,9 @@ robot:
           - home
           - up
       hand:
-        name: shadowhand_motor.urdf.xacro
+        name: shadowhand_left_motor.urdf.xacro
 
-ra_sr_ur_robot_hw:
+la_sr_ur_robot_hw:
   # Hand E payload
   payload_mass_kg: 4.55
 

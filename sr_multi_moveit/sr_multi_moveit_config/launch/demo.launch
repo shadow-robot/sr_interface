@@ -10,7 +10,7 @@
   <!-- Do not open Rviz if running tests -->
   <arg name="visualization" default="true"/>
   <!--Should the planner yaml be automatically generated? -->
-  <arg name="generate_planning_config" default="True"/>
+  <arg name="generate_planning_config" default="true"/>
 
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro'"/>

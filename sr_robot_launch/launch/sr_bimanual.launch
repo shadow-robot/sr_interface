@@ -10,7 +10,7 @@
   <!--Choose planner library, options are ompl, stomp or sbpl-->
   <arg name="planning" default="ompl"/>
   <!--Should the planner yaml be automatically generated? -->
-  <arg name="generate_planning_config" default="True"/>
+  <arg name="generate_planning_config" default="true"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <arg name="verbose" default="true" />
@@ -21,6 +21,9 @@
   <arg name="robot_description" default="'$(find sr_description)/robots/bimanual_shadowhand_motor_plus.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
   <arg name="robot_name" default="bimanual_shadowhand_motor"/>
+
+  <!-- The name of the rviz config file to load -->
+  <arg name="rviz_config_file" default="$(find sr_multi_moveit_config)/launch/moveit_hands.rviz"/>
 
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="hand_trajectory" default="true"/>
@@ -128,6 +131,7 @@
         <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
         <arg name="planning" value="$(arg planning)"/>
         <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
+        <arg name="rviz_config_file" value="$(arg rviz_config_file)"/>
       </include>
       <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
   </group>
