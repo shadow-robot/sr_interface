@@ -11,6 +11,7 @@
   <arg name="arm_prefix" value="$(arg side_letter)a"/>
   <arg name="arm_ctrl" default="true"/>
   <arg name="hand_ctrl" default="true"/>
+  <arg name="load_robot_description_at_lower_level" default="false"/>
   <!-- HAND AND ARM -->
   <arg name="robot_description" if="$(eval arg('hand_ctrl') and arg('arm_ctrl'))" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_ur10_bt_sp_biotacs.urdf.xacro"/>
   <!-- ARM BUT NO HAND -->
@@ -41,7 +42,7 @@
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="arm_speed_scale" default="0.5"/>
   <arg name="urcap_program_name" default="external_ctrl.urp"/>
-  <arg name="load_robot_description_command" default="xacro $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
+  <arg name="load_robot_description_command" default="xacro $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z)"/>
 
   <node pkg="rosservice" type="rosservice" name="set_speed_scale" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg arm_speed_scale)'"/>
 
