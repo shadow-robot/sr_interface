@@ -66,7 +66,7 @@ class SrConstructRobotDescription():
         try:
             out = check_output(xacro_commands)
         except:
-            rospy.logerr("error")
+            rospy.logerr("Error running xacro command")
         return out
 
 
