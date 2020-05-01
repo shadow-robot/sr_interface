@@ -7,6 +7,8 @@
   <arg name="robot_model" default="ur10"/>
   <arg name="side" default="right"/>
   <arg name="side_letter" value="$(eval side[0])"/>
+  <arg name="hand_id" value="$(arg side_letter)h"/>
+  <arg name="arm_prefix" value="$(arg side_letter)a"/>
   <arg name="arm_ctrl" default="true"/>
   <arg name="hand_ctrl" default="true"/>
   <!-- HAND AND ARM -->
@@ -16,7 +18,6 @@
   <arg name="robot_config_file" if="$(arg arm_ctrl)" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
 
   <!-- HANDS CONFIG-->
-  <arg name="hand_id" default="rh"/>
   <arg name="hand_serial" default="1082"/>
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT enp2s0)"/>
@@ -33,14 +34,17 @@
   <!-- ARMS CONFIG-->
   <arg name="initial_z" if="$(arg arm_ctrl)" default="0.7551"/>
   <arg name="initial_z" unless="$(arg arm_ctrl)" default="0.0"/>
-  <arg name="arm_id" default="ra"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   <arg name="include_wrist_in_arm_controller" default="$(arg arm_ctrl)"/>
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="arm_speed_scale" default="0.5"/>
-  <arg name="kinematics_config" default="$(find sr_ur_calibration)/calibrations/bristol_ur10_calibration.yaml"/>
+  <arg name="kinematics_config" default="$(find ur_description)/config/ur10_default.yaml"/>
+  <arg name="urcap_program_name" default="external_ctrl.urp"/>
+  <arg name="load_robot_description_command" default="xacro $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
+
+  <node pkg="rosservice" type="rosservice" name="set_speed_scale" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg arm_speed_scale)'"/>
 
   <!-- Logging local topics -->
   <group ns="control_box">
@@ -51,62 +55,12 @@
     </include>
   </group>
 
-  <rosparam command="load" file="$(arg kinematics_config)" ns="$(arg arm_id)_sr_ur_robot_hw"/>
-  <rosparam command="load" file="$(find sr_robot_launch)/config/ur10_controllers.yaml"/>
+  <!-- So that the driver can check we're loading the right calibration -->
+  <rosparam command="load" file="$(arg kinematics_config)" ns="$(arg arm_prefix)_sr_ur_robot_hw"/>
 
-  <param if="$(arg hand_ctrl)" name="$(arg arm_id)_sr_ur_robot_hw/non_blocking_read" type="bool" value="true"/>
-  <param unless="$(arg hand_ctrl)" name="$(arg arm_id)_sr_ur_robot_hw/non_blocking_read" type="bool" value="false"/>
-
-
-  <node name="controller_stopper" pkg="controller_stopper" type="node" respawn="false" output="screen">
-    <remap from="robot_running" to="$(arg arm_id)_sr_ur_robot_hw/robot_program_running"/>
-    <rosparam param="consistent_controllers">
-       - "force_torque_sensor_controller"
-       - "joint_state_controller"
-       - "sr_rh_tactile_sensor_controller"
-       - "rh_trajectory_controller"
-       - "sh_rh_ffj0_position_controller"
-       - "sh_rh_ffj3_position_controller"
-       - "sh_rh_ffj4_position_controller"
-       - "sh_rh_mfj0_position_controller"
-       - "sh_rh_mfj3_position_controller"
-       - "sh_rh_mfj4_position_controller"
-       - "sh_rh_rfj0_position_controller"
-       - "sh_rh_rfj3_position_controller"
-       - "sh_rh_rfj4_position_controller"
-       - "sh_rh_lfj0_position_controller"
-       - "sh_rh_lfj3_position_controller"
-       - "sh_rh_lfj4_position_controller"
-       - "sh_rh_lfj5_position_controller"
-       - "sh_rh_thj1_position_controller"
-       - "sh_rh_thj2_position_controller"
-       - "sh_rh_thj3_position_controller"
-       - "sh_rh_thj4_position_controller"
-       - "sh_rh_thj5_position_controller"
-       - "sh_rh_wrj1_position_controller"
-       - "sh_rh_wrj2_position_controller"
-       - "cal_sh_rh_ffj0"
-       - "cal_sh_rh_ffj3"
-       - "cal_sh_rh_ffj4"
-       - "cal_sh_rh_mfj0"
-       - "cal_sh_rh_mfj3"
-       - "cal_sh_rh_mfj4"
-       - "cal_sh_rh_rfj0"
-       - "cal_sh_rh_rfj3"
-       - "cal_sh_rh_rfj4"
-       - "cal_sh_rh_lfj0"
-       - "cal_sh_rh_lfj3"
-       - "cal_sh_rh_lfj4"
-       - "cal_sh_rh_lfj5"
-       - "cal_sh_rh_thj1"
-       - "cal_sh_rh_thj2"
-       - "cal_sh_rh_thj3"
-       - "cal_sh_rh_thj4"
-       - "cal_sh_rh_thj5"
-       - "cal_sh_rh_wrj1"
-       - "cal_sh_rh_wrj2"
-    </rosparam>
-  </node>
+  <include file="$(find sr_robot_launch)/launch/unimanual_controller_stopper.launch">
+    <arg name="side" value="$(arg side)"/>
+  </include>
 
   <!-- Controller -->
   <group if="$(arg hand_ctrl)">
@@ -115,11 +69,10 @@
     <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
     <include file="$(find sr_edc_launch)/sr_edc_ros_control.launch">
       <arg name="define_robot_hardware" value="false"/>
-      <arg name="kinematics_config" value="$(arg kinematics_config)"/>
       <arg name="hand_robot_hardware_name" value="unique_robot_hw"/>
       <arg name="debug" value="$(arg debug)"/>
       <arg name="eth_port" value="$(arg eth_port)"/>
-      <arg name="robot_description" value="$(arg robot_description)"/>
+      <arg name="load_robot_description_command" value="$(arg load_robot_description_command)"/>
       <arg name="pwm_control" value="$(arg pwm_control)"/>
       <arg name="hand_serial" value="$(arg hand_serial)"/>
       <arg name="hand_id" value="$(arg hand_id)"/>
@@ -143,19 +96,24 @@
   </group>
 
   <group if="$(arg arm_ctrl)">
-    <rosparam if="$(eval arg('side') == 'right')">
-      robot_hardware:
-        - unique_robot_hw
-        - ra_sr_ur_robot_hw
-    </rosparam>
-    <rosparam if="$(eval arg('side') == 'left')">
-      robot_hardware:
-        - unique_robot_hw
-        - la_sr_ur_robot_hw
-    </rosparam>
+    <group if="$(arg hand_ctrl)">
+      <rosparam if="$(eval arg('side') == 'right')">
+        robot_hardware:
+          - unique_robot_hw
+          - ra_sr_ur_robot_hw
+      </rosparam>
+      <rosparam if="$(eval arg('side') == 'left')">
+        robot_hardware:
+          - unique_robot_hw
+          - la_sr_ur_robot_hw
+      </rosparam>
+    </group>
+    <node name="sr_ur_arm_unlock" pkg="sr_robot_launch" type="sr_ur_arm_unlock" output="screen">
+      <param name="urcap_program_name" value="$(arg urcap_program_name)"/>
+    </node>
+    <rosparam unless="$(arg hand_ctrl)" param="robot_hardware" subst_value="True">[$(arg arm_prefix)_sr_ur_robot_hw]</rosparam>
     <rosparam command="load" file="$(arg arm_robot_hw)"/>
-    <param name="$(arg arm_id)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
-    <param name="$(arg arm_id)_sr_ur_robot_hw/robot_program_path" type="str" value="$(find sr_ur_bringup)/robot_programs/"/>
+    <param name="$(arg arm_prefix)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
   </group>
 
   <rosparam unless="$(arg arm_ctrl)">
@@ -169,35 +127,32 @@
       <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
     <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
-    <include file="$(find sr_robot_launch)/launch/ur_control.launch"/>
-    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
-    <rosparam command="load" file="$(find sr_ur_robot_hw)/config/$(arg arm_id)_sr_ur_robot_hw.yaml"/>    
+    <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
+    <param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
   </group>
   <!-- These will be loaded if arm and hand are enabled -->
   <!-- Trajectory mode -->
   <group if="$(arg arm_ctrl)">
     <group if="$(arg arm_trajectory)">
       <group if="$(arg hand_ctrl)">
-        <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller.yaml"/>
-        <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_trajectory_controller_no_wrist.yaml"/>
+        <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller.yaml"/>
+        <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller_no_wrist.yaml"/>
       </group>
-      <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_ur_launch)/config/ra_trajectory_controller.yaml"/>
-      <node if="$(arg hand_ctrl)" name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_id)_sr_ur_robot_hw/robot_program_running $(arg arm_id)_trajectory_controller"/>
-      <node unless="$(arg hand_ctrl)" name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_id)_sr_ur_robot_hw/robot_program_running $(arg arm_id)_trajectory_controller"/>
+      <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller_no_wrist.yaml"/>
+      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+            args="--wait-for=/$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running $(arg arm_prefix)_trajectory_controller"/>
     </group>
     <!-- Position mode -->
     <group if="$(arg arm_position)">
       <group if="$(arg hand_ctrl)">
-        <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_group_position_controller.yaml"/>
-        <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_id)_group_position_controller_no_wrist.yaml"/>
+        <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_group_position_controller.yaml"/>
+        <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_group_position_controller_no_wrist.yaml"/>
       </group>
-      <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_ur_launch)/config/ra_group_position_controller.yaml"/>
+      <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_group_position_controller_no_wrist.yaml"/>
       <node if="$(arg hand_ctrl)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_id)_arm_ready --wait-for=/calibrated $(arg arm_id)_group_position_controller"/>
+            args="--wait-for=/$(arg arm_prefix)_arm_ready $(arg arm_prefix)_group_position_controller"/>
       <node unless="$(arg hand_ctrl)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_id)_arm_ready $(arg arm_id)_group_position_controller"/>
+            args="--wait-for=/$(arg arm_prefix)_arm_ready $(arg arm_prefix)_group_position_controller"/>
     </group>
   <node name="arm_force_torque_sensor_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--wait-for=/$(arg arm_id)_sr_ur_robot_hw/robot_program_running force_torque_sensor_controller"/>
   </group>

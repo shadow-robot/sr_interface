@@ -51,7 +51,7 @@
   
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
-    <param if="$(eval arg('robot_description').endswith('.xacro'))" name="robot_description" command="xacro --inorder $(arg robot_description)"/>
+    <param if="$(eval arg('robot_description').endswith('.xacro'))" name="robot_description" command="xacro $(arg robot_description)"/>
     <rosparam if="$(eval not arg('robot_description').endswith('.xacro'))" param="robot_description" command="load" file="$(arg robot_description)"/>
     <group if="$(eval sim_type == 'gazebo')">
       <arg name="world_name" value="$(find sr_description_common)/worlds/shadowhand.world"/>
@@ -123,7 +123,7 @@
       </group>
       <group if="$(eval sim_type == 'mujoco')">
         <rosparam command="load" file="$(find sr_description)/mujoco_models/$(arg hand_id)_trajectory_controller.yaml"/>
-        <node name="spawn_hand_controller" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="--shutdown-timeout=1.0 $(arg hand_id)_trajectory_controller"/>
+        <node name="spawn_hand_controller" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg hand_id)_trajectory_controller"/>
       </group>
     </group>
     <group if="$(arg grasp_controller)">

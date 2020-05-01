@@ -8,7 +8,7 @@
   <!-- The name of the robot config file to load -->
   <arg name="robot_config_file" default=""/>
   <!--Should the planner yaml be automatically generated? -->
-  <arg name="generate_planning_config" default="True"/>
+  <arg name="generate_planning_config" default="true"/>
 
 
   <include if="$(arg generate_planning_config)" file="$(find sr_multi_moveit_config)/launch/$(arg pipeline)_planning_pipeline.launch.xml">

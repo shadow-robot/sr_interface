@@ -1,0 +1,39 @@
+robot:
+  name: ur10esrh
+  manipulators:
+    right_manipulator:
+      side: right
+      arm:
+        name: ur10e
+        main_group: manipulator
+        other_groups:
+          - endeffector
+        moveit_path:
+          package: sr_multi_moveit_config
+          relative_path: /config/ur
+        extra_groups_config_path: /config
+        group_states:
+          - home
+          - up
+    left_manipulator:
+      side: left
+      arm:
+        name: ur10e
+        main_group: manipulator
+        other_groups:
+          - endeffector
+        moveit_path:
+          package: sr_multi_moveit_config
+          relative_path: /config/ur
+        extra_groups_config_path: /config
+        group_states:
+          - home
+          - up
+
+ra_sr_ur_robot_hw:
+  # No hand
+  payload_mass_kg: 0.0
+
+la_sr_ur_robot_hw:
+  # No hand
+  payload_mass_kg: 0.0

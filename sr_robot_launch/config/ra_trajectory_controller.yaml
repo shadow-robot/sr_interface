@@ -1,14 +1,15 @@
-hardware_interface:
-  joints: &robot_joints
-    - ra_shoulder_pan_joint
-    - ra_shoulder_lift_joint
-    - ra_elbow_joint
-    - ra_wrist_1_joint
-    - ra_wrist_2_joint
-    - ra_wrist_3_joint
-
 ra_trajectory_controller:
   type: "position_controllers/JointTrajectoryController"
+  hardware_interface:
+    joints: &robot_joints
+      - ra_shoulder_pan_joint
+      - ra_shoulder_lift_joint
+      - ra_elbow_joint
+      - ra_wrist_1_joint
+      - ra_wrist_2_joint
+      - ra_wrist_3_joint
+      - rh_WRJ1
+      - rh_WRJ2
   joints: *robot_joints
   constraints:
       goal_time: 0.6
@@ -23,4 +24,3 @@ ra_trajectory_controller:
       rh_WRJ2: {trajectory: 0.9, goal: 0.4}
   stop_trajectory_duration: 0.5
   allow_partial_joints_goal: true
-
