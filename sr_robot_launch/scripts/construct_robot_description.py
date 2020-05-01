@@ -13,6 +13,7 @@ from sr_ur_arm_calibration_loader.sr_ur_arm_calibration_loader import SrUrLoadCa
 class SrConstructRobotDescription():
     def __init__(self):
         self._robot_description_file = rospy.get_param("~robot_description_file")
+        arm_type = rospy.get_param("~arm_type")
         self._bimanual = False
         self._xacro_commands = []
         self._node_name = rospy.get_name()
@@ -20,8 +21,8 @@ class SrConstructRobotDescription():
         if 'bimanual' in self._robot_description_file:
             self._bimanual = True
 
-        arm1 = ('ra', '192.168.1.1')
-        arm2 = ('la', '192.168.2.1')
+        arm1 = ('ra', '192.168.1.1', arm_type)
+        arm2 = ('la', '192.168.2.1', arm_type)
         if not self._bimanual:
             self._sr_ur_load_calibration = SrUrLoadCalibration([arm1])
         else:
@@ -47,7 +48,9 @@ class SrConstructRobotDescription():
     def _get_parameters(self):
         robot_description_params = {}
         robot_description_param_names = [param for param in rospy.get_param_names() 
-                                         if self._node_name in param and 'robot_description' not in param]
+                                         if self._node_name in param 
+                                         and 'robot_description' not in param
+                                         and 'arm_type' not in param]
         for name in robot_description_param_names:
             robot_description_params[name.rsplit('/',1)[1]] = rospy.get_param(name)
         return robot_description_params
