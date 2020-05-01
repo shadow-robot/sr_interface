@@ -47,12 +47,12 @@ class SrConstructRobotDescription():
 
     def _get_parameters(self):
         robot_description_params = {}
-        robot_description_param_names = [param for param in rospy.get_param_names() 
-                                         if self._node_name in param 
-                                         and 'robot_description' not in param
-                                         and 'arm_type' not in param]
+        robot_description_param_names = [param for param in rospy.get_param_names()
+                                         if self._node_name in param and 
+                                         'robot_description' not in param and 
+                                         'arm_type' not in param]
         for name in robot_description_param_names:
-            robot_description_params[name.rsplit('/',1)[1]] = rospy.get_param(name)
+            robot_description_params[name.rsplit('/', 1)[1]] = rospy.get_param(name)
         return robot_description_params
 
     def _get_kinematics_config(self):
