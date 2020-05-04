@@ -93,11 +93,10 @@ class SrConstructRobotDescription():
         return self._generate_urdf(xacro_commands)
 
     def _generate_urdf(self, xacro_commands):
-        out = check_output(xacro_commands)        
+        out = check_output(xacro_commands)
         return out
 
 
 if __name__ == "__main__":
     rospy.init_node("sr_construct_robot_description")
     sr_construct_robot_description = SrConstructRobotDescription()
-
