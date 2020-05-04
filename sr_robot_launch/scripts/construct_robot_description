@@ -39,8 +39,8 @@ class SrConstructRobotDescription():
         CONST_ARM_TYPE = rospy.get_param("~arm_type")
         self._side = ''
         self._robot_description_params = {}
-        self._arm_ra = {'prefix': 'ra', 'ip_address': '192.168.1.1', 'arm_type': CONST_ARM_TYPE}
-        self._arm_la = {'prefix': 'la', 'ip_address': '192.168.2.1', 'arm_type': CONST_ARM_TYPE}
+        self._CONST_RA_ARM = {'prefix': 'ra', 'ip_address': '192.168.1.1', 'arm_type': CONST_ARM_TYPE}
+        self._CONST_LA_ARM = {'prefix': 'la', 'ip_address': '192.168.2.1', 'arm_type': CONST_ARM_TYPE}
 
         if 'bimanual' in self._robot_description_file:
             self._side = 'both'
@@ -76,11 +76,11 @@ class SrConstructRobotDescription():
     def _get_kinematics_config(self):
         kinematics_configs = []
         if 'both' == self._side:
-            self._sr_ur_load_calibration = SrUrLoadCalibration([self._arm_ra, self._arm_la])
+            self._sr_ur_load_calibration = SrUrLoadCalibration([self._CONST_RA_ARM, self._CONST_LA_ARM])
         elif 'right' == self._side:
-            self._sr_ur_load_calibration = SrUrLoadCalibration([self._arm_ra])
+            self._sr_ur_load_calibration = SrUrLoadCalibration([self._CONST_RA_ARM])
         elif 'left' == self._side:
-            self._sr_ur_load_calibration = SrUrLoadCalibration([self._arm_la])
+            self._sr_ur_load_calibration = SrUrLoadCalibration([self._CONST_LA_ARM])
         arms_info = self._sr_ur_load_calibration.get_calibration_files()
         if 'both' != self._side:
             kinematics_configs.append(arms_info[0]['kinematics_config'])
