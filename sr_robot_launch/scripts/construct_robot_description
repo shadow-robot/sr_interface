@@ -26,7 +26,6 @@ class SrRobotDescriptionExceptions(Exception):
 
 
 class PrefixNotCorrect(SrRobotDescriptionExceptions):
-    print "'prefix' param not specified correctly"
     pass
 
 
@@ -49,7 +48,7 @@ class SrConstructRobotDescription():
                 elif 'lh' in prefix:
                     self._side = 'left'
                 else:
-                    raise PrefixNotCorrect
+                    raise PrefixNotCorrect("'prefix' param not specified correctly")
             except PrefixNotCorrect as e:
                 rospy.logerr(e)
 
