@@ -21,13 +21,24 @@ from subprocess import check_output
 from sr_ur_arm_calibration_loader.sr_ur_arm_calibration_loader import SrUrLoadCalibration
 
 
+class SrRobotDescriptionExceptions(Exception):
+    pass
+
+
+class PrefixNotCorrect(SrRobotDescriptionExceptions):
+    pass
+
+
+class XacroError(SrRobotDescriptionExceptions):
+    pass
+
+
 class SrConstructRobotDescription():
     def __init__(self):
         self._robot_description_file = rospy.get_param("~robot_description_file")
         CONST_ARM_TYPE = rospy.get_param("~arm_type")
         self._side = ''
         self._robot_description_params = {}
-        self._node_name = rospy.get_name()
         self._arm_ra = {'prefix': 'ra', 'ip_address': '192.168.1.1', 'arm_type': CONST_ARM_TYPE}
         self._arm_la = {'prefix': 'la', 'ip_address': '192.168.2.1', 'arm_type': CONST_ARM_TYPE}
 
@@ -41,22 +52,16 @@ class SrConstructRobotDescription():
                 self._side = 'left'
             else:
                 rospy.logerr("'prefix' param not specified correctly")
+                raise PrefixNotCorrect
 
         self._process_parameters()
         urdf = self._parse_xacro()
         rospy.set_param('robot_description', urdf)
 
-    def _parse_xacro(self):
-        xacro_commands = []
-        xacro_commands.append("xacro")
-        xacro_commands.append(self._robot_description_file)
-        for key, value in self._robot_description_params.items():
-            xacro_commands.append(key + ':=' + str(value))
-        return self._generate_urdf(xacro_commands)
-
     def _process_parameters(self):
+        node_name = rospy.get_name()
         robot_description_param_names = [param for param in rospy.get_param_names()
-                                         if self._node_name in param and
+                                         if node_name in param and
                                          'robot_description' not in param and
                                          'arm_type' not in param]
         for name in robot_description_param_names:
@@ -77,7 +82,6 @@ class SrConstructRobotDescription():
         elif 'left' == self._side:
             self._sr_ur_load_calibration = SrUrLoadCalibration([self._arm_la])
         arms_info = self._sr_ur_load_calibration.get_calibration_files()
-        rospy.logwarn(arms_info)
         if 'both' != self._side:
             kinematics_configs.append(arms_info[0]['kinematics_config'])
         else:
@@ -85,14 +89,24 @@ class SrConstructRobotDescription():
                 kinematics_configs.append(arm['kinematics_config'])
         return kinematics_configs
 
+    def _parse_xacro(self):
+        xacro_commands = []
+        xacro_commands.append("xacro")
+        xacro_commands.append(self._robot_description_file)
+        for key, value in self._robot_description_params.items():
+            xacro_commands.append(key + ':=' + str(value))
+        return self._generate_urdf(xacro_commands)
+
     def _generate_urdf(self, xacro_commands):
         try:
             out = check_output(xacro_commands)
         except:
             rospy.logerr("Error running xacro command")
+            raise XacroError
         return out
 
 
 if __name__ == "__main__":
     rospy.init_node("sr_construct_robot_description")
     sr_construct_robot_description = SrConstructRobotDescription()
+
