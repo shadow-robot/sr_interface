@@ -26,10 +26,7 @@ class SrRobotDescriptionExceptions(Exception):
 
 
 class PrefixNotCorrect(SrRobotDescriptionExceptions):
-    pass
-
-
-class XacroError(SrRobotDescriptionExceptions):
+    print "'prefix' param not specified correctly"
     pass
 
 
@@ -46,13 +43,15 @@ class SrConstructRobotDescription():
             self._side = 'both'
         else:
             prefix = rospy.get_param("~prefix")
-            if 'rh' in prefix:
-                self._side = 'right'
-            elif 'lh' in prefix:
-                self._side = 'left'
-            else:
-                rospy.logerr("'prefix' param not specified correctly")
-                raise PrefixNotCorrect
+            try:
+                if 'rh' in prefix:
+                    self._side = 'right'
+                elif 'lh' in prefix:
+                    self._side = 'left'
+                else:
+                    raise PrefixNotCorrect
+            except PrefixNotCorrect as e:
+                rospy.logerr(e)
 
         self._process_parameters()
         urdf = self._parse_xacro()
@@ -98,11 +97,7 @@ class SrConstructRobotDescription():
         return self._generate_urdf(xacro_commands)
 
     def _generate_urdf(self, xacro_commands):
-        try:
-            out = check_output(xacro_commands)
-        except:
-            rospy.logerr("Error running xacro command")
-            raise XacroError
+        out = check_output(xacro_commands)        
         return out
 
 
