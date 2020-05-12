@@ -62,6 +62,8 @@ class SrConstructRobotDescription():
         for name in robot_description_param_names:
             self._robot_description_params[name.rsplit('/', 1)[1]] = rospy.get_param(name)
         kinematics_configs = self._get_kinematics_config()
+        for itm in kinematics_configs:
+            rospy.loginfo("itm: %s", itm)
         if not 'both' == self._side:
             self._robot_description_params['kinematics_config'] = kinematics_configs[0]
         else:
