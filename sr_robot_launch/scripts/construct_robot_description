@@ -96,7 +96,7 @@ class SrConstructRobotDescription():
         for key, value in self._robot_description_params.items():
             xacro_commands.append(key + ':=' + str(value))
         for command in xacro_commands:
-            rospy.loginfo(command)
+            rospy.loginfo("xac: %s", command)
         return self._generate_urdf(xacro_commands)
 
     def _generate_urdf(self, xacro_commands):
