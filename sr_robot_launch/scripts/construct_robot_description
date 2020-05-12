@@ -50,16 +50,18 @@ class SrConstructRobotDescription():
                 raise PrefixNotCorrect("'prefix' param not specified correctly")
 
         self._process_parameters()
-        urdf = self._parse_xacro()
-        rospy.set_param('robot_description', urdf)
+        #urdf = self._parse_xacro()
+        #rospy.set_param('robot_description', urdf)
 
     def _process_parameters(self):
+        rospy.loginfo("#################################################################################")
         node_name = rospy.get_name()
         robot_description_param_names = [param for param in rospy.get_param_names()
                                          if node_name in param and
                                          'robot_description' not in param and
                                          'arm_type' not in param]
         for name in robot_description_param_names:
+            rospy.loginfo("%s: %s", name, rospy.get_param(name))
             self._robot_description_params[name.rsplit('/', 1)[1]] = rospy.get_param(name)
         kinematics_configs = self._get_kinematics_config()
         if not 'both' == self._side:
@@ -67,7 +69,7 @@ class SrConstructRobotDescription():
         else:
             self._robot_description_params['kinematics_config_right'] = kinematics_configs[0]
             self._robot_description_params['kinematics_config_left'] = kinematics_configs[1]
-        rospy.loginfo("#################################################################################")
+
         for key, value in self._robot_description_params.items():
             rospy.loginfo("%s: %s", key, value)
 
