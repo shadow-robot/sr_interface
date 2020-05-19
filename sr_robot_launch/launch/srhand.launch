@@ -92,14 +92,11 @@
     </node>
     <!-- Controller -->
     <group if="$(arg hand_ctrl)">
-      <group unless="$(arg grasp_controller)">
-        <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
-          <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
-        </node>
-      </group>
-      <group if="$(arg grasp_controller)">
-        <node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen" />
-      </group>
+      <node name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
+        <param if="$(arg grasp_controller)" name="controller_group" value="grasp"/>
+        <param if="$(eval hand_trajectory and not grasp_controller)" name="controller_group" value="trajectory"/>
+        <param if="$(eval not hand_trajectory and not grasp_controller)" name="controller_group" value="position"/>
+      </node>
     </group>
   </group>
 
