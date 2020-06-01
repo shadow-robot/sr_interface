@@ -81,6 +81,7 @@
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       <arg name="initial_z" value="$(arg initial_z)"/>
     </include>
+    <arg name="hand_controller_group"/>
     <arg if="$(arg grasp_controller)" name="hand_controller_group" default="grasp"/>
     <arg if="$(eval hand_trajectory and not grasp_controller)" name="hand_controller_group" default="trajectory"/>
     <arg if="$(eval not hand_trajectory and not grasp_controller)" name="hand_controller_group" default="position"/>
