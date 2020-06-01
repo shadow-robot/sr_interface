@@ -103,7 +103,7 @@ You can change the reference frame to get pose information:
 
 .. code:: python
 
-   set_pose_reference_frame("palm"):
+   set_pose_reference_frame("palm")
 
 You can also activate or deactivate the teach mode for the robot:
 
