@@ -81,10 +81,11 @@
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       <arg name="initial_z" value="$(arg initial_z)"/>
     </include>
+    <arg if="$(arg grasp_controller)" name="hand_controller_group" default="grasp"/>
+    <arg if="$(eval hand_trajectory and not grasp_controller)" name="hand_controller_group" default="trajectory"/>
+    <arg if="$(eval not hand_trajectory and not grasp_controller)" name="hand_controller_group" default="position"/>
     <node name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
-      <param if="$(eval hand_trajectory and not grasp_controller)" name="controller_group" value="trajectory"/>
-      <param if="$(eval not hand_trajectory and not grasp_controller)" name="controller_group" value="position"/>
-      <param if="$(arg grasp_controller)" name="controller_group" value="grasp"/>
+      <param name="controller_group" value="$(arg hand_controller_group)"/>
       <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
       <param name="wait_for" value ="calibrated"/>
     </node>
