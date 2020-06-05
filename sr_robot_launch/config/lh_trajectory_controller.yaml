@@ -25,29 +25,30 @@ lh_trajectory_controller:
     - lh_THJ5
   constraints:
       goal_time: 0.6
-      stopped_velocity_tolerance: 0.05
-      lh_FFJ1: {trajectory: 0.9, goal: 0.4}
-      lh_FFJ2: {trajectory: 0.9, goal: 0.4}
-      lh_FFJ3: {trajectory: 0.9, goal: 0.4}
-      lh_FFJ4: {trajectory: 0.9, goal: 0.4}
-      lh_LFJ1: {trajectory: 0.9, goal: 0.4}
-      lh_LFJ2: {trajectory: 0.9, goal: 0.4}
-      lh_LFJ3: {trajectory: 0.9, goal: 0.4}
-      lh_LFJ4: {trajectory: 0.9, goal: 0.4}
-      lh_MFJ1: {trajectory: 0.9, goal: 0.4}
-      lh_MFJ2: {trajectory: 0.9, goal: 0.4}
-      lh_MFJ3: {trajectory: 0.9, goal: 0.4}
-      lh_MFJ4: {trajectory: 0.9, goal: 0.4}
-      lh_RFJ1: {trajectory: 0.9, goal: 0.4}
-      lh_RFJ2: {trajectory: 0.9, goal: 0.4}
-      lh_RFJ3: {trajectory: 0.9, goal: 0.4}
-      lh_RFJ4: {trajectory: 0.9, goal: 0.4}
-      lh_THJ1: {trajectory: 0.9, goal: 0.4}
-      lh_THJ2: {trajectory: 0.9, goal: 0.4}
-      lh_THJ3: {trajectory: 0.9, goal: 0.4}
-      lh_THJ4: {trajectory: 0.9, goal: 0.4}
-      lh_THJ5: {trajectory: 0.9, goal: 0.4}
-      lh_WRJ1: {trajectory: 0.9, goal: 0.4}
-      lh_WRJ2: {trajectory: 0.9, goal: 0.4}
+      stopped_velocity_tolerance: 10.0
+      lh_FFJ1: {trajectory: 2.0, goal: 2.1}
+      lh_FFJ2: {trajectory: 2.0, goal: 2.1}
+      lh_FFJ3: {trajectory: 2.0, goal: 2.1}
+      lh_FFJ4: {trajectory: 2.0, goal: 2.1}
+      lh_LFJ1: {trajectory: 2.0, goal: 2.1}
+      lh_LFJ2: {trajectory: 2.0, goal: 2.1}
+      lh_LFJ3: {trajectory: 2.0, goal: 2.1}
+      lh_LFJ4: {trajectory: 2.0, goal: 2.1}
+      lh_LFJ5: {trajectory: 2.0, goal: 2.1}
+      lh_MFJ1: {trajectory: 2.0, goal: 2.1}
+      lh_MFJ2: {trajectory: 2.0, goal: 2.1}
+      lh_MFJ3: {trajectory: 2.0, goal: 2.1}
+      lh_MFJ4: {trajectory: 2.0, goal: 2.1}
+      lh_RFJ1: {trajectory: 2.0, goal: 2.1}
+      lh_RFJ2: {trajectory: 2.0, goal: 2.1}
+      lh_RFJ3: {trajectory: 2.0, goal: 2.1}
+      lh_RFJ4: {trajectory: 2.0, goal: 2.1}
+      lh_THJ1: {trajectory: 2.0, goal: 2.1}
+      lh_THJ2: {trajectory: 2.0, goal: 2.1}
+      lh_THJ3: {trajectory: 2.0, goal: 2.1}
+      lh_THJ4: {trajectory: 2.0, goal: 2.1}
+      lh_THJ5: {trajectory: 2.0, goal: 2.1}
+      lh_WRJ1: {trajectory: 2.0, goal: 2.1}
+      lh_WRJ2: {trajectory: 2.0, goal: 2.1}
   stop_trajectory_duration: 0.5
   allow_partial_joints_goal: true
