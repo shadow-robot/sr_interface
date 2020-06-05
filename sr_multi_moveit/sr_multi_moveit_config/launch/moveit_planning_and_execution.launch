@@ -38,28 +38,6 @@
     <arg name="robot_config_file" value="$(arg robot_config_file)"/>
   </include>
 
-  <!-- <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="11 sr_multi_moveit_config move_group.launch 
-    hand_ik_solver_path:=$(arg hand_ik_solver_path)
-    allow_trajectory_execution:=true 
-    fake_execution:=false 
-    info:=true 
-    debug:=$(arg debug) 
-    publish_monitored_planning_scene:=true
-    pipeline:=$(arg planning)
-    generate_planning_config:=$(arg generate_planning_config)
-    robot_config_file:=$(arg robot_config_file)" name="timed_roslaunch" output="screen"
-  /> -->
-
-  <!-- <group if="$(arg gui)">
-    <include file="$(find sr_multi_moveit_config)/launch/moveit_rviz.launch">
-      <arg name="hand_ik_solver_path" value="$(arg hand_ik_solver_path)"/>
-      <arg name="config" value="true"/>
-      <arg name="debug" value="$(arg debug)"/>
-      <arg name="rviz_config_file" value="$(arg rviz_config_file)"/>
-      <arg name="robot_config_file" value="$(arg robot_config_file)"/>
-    </include>
-  </group> -->
-
   <group if="$(arg gui)">
     <node name="conditional_delayed_rostool_rviz_multi" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen" required="true">
       <param name="package_name" value="sr_multi_moveit_config" />
@@ -74,14 +52,4 @@
     </node>
   </group>
 
-  <!-- Run Rviz and load the default config to see the state of the move_group node -->
-  <!-- <group if="$(arg gui)">
-    <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="15 sr_multi_moveit_config moveit_rviz.launch
-      hand_ik_solver_path:=$(arg hand_ik_solver_path)
-      config:=true
-      debug:=$(arg debug)
-      rviz_config_file:=$(arg rviz_config_file)
-      robot_config_file:=$(arg robot_config_file)" name="timed_roslaunch_rviz" output="screen" respawn="true"
-    />
-  </group> -->
 </launch>

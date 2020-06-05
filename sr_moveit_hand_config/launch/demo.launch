@@ -31,21 +31,27 @@
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
 
   <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
-  <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="2 sr_moveit_hand_config move_group.launch 
-    hand_ik_solver_path:=$(arg hand_ik_solver_path)
-    allow_trajectory_execution:=true 
-    fake_execution:=true 
-    info:=true 
-    debug:=$(arg debug) 
-    publish_monitored_planning_scene:=true
-    pipeline:=$(arg planning)" name="timed_roslaunch" output="screen"/>
+  <include file="$(find sr_moveit_hand_config)/launch/move_group.launch">
+    <arg name="hand_ik_solver_path" value="$(arg hand_ik_solver_path)"/>
+    <arg name="allow_trajectory_execution" value="true"/>
+    <arg name="fake_execution" value="true"/>
+    <arg name="info" value="true"/>
+    <arg name="debug" value="$(arg debug)"/>
+    <arg name="publish_monitored_planning_scene" value="true"/>
+    <arg name="pipeline" value="$(arg planning)"/>
+  </include>
+
 
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
-  <include file="$(find sr_moveit_hand_config)/launch/moveit_rviz.launch">
-    <arg name="hand_ik_solver_path" value="$(arg hand_ik_solver_path)"/>
-    <arg name="config" value="true"/>
-    <arg name="debug" value="$(arg debug)"/>
-  </include>
+  <node name="conditional_delayed_rostool_rviz_hand" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen" required="true">
+    <param name="package_name" value="sr_moveit_hand_config" />
+    <param name="executable_name" value="moveit_rviz.launch" />
+    <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+    <param name="launch_args_list" value="hand_ik_solver_path:=$(arg hand_ik_solver_path)
+    config:=true
+    debug:=$(arg debug)" />
+    <param name="timeout" value="20.0" />
+  </node>
 
   <!-- If database loading was enabled, start mongodb as well -->
   <include file="$(find sr_moveit_hand_config)/launch/default_warehouse_db.launch" if="$(arg db)">

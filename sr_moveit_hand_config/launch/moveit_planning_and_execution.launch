@@ -27,15 +27,7 @@
     <arg name="pipeline" value="$(arg planning)"/>
   </include>
 
-  <!-- <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="2 sr_moveit_hand_config move_group.launch 
-    hand_ik_solver_path:=$(arg hand_ik_solver_path)
-    allow_trajectory_execution:=true 
-    fake_execution:=false 
-    info:=true 
-    debug:=$(arg debug) 
-    publish_monitored_planning_scene:=true
-    pipeline:=$(arg planning)" name="timed_roslaunch" output="screen"/> -->
-
+  <!-- Run Rviz and load the default config to see the state of the move_group node -->
   <group if="$(arg gui)">
     <node name="conditional_delayed_rostool_rviz_hand" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen" required="true">
       <param name="package_name" value="sr_moveit_hand_config" />
@@ -48,12 +40,4 @@
     </node>
   </group>
 
-  <!-- Run Rviz and load the default config to see the state of the move_group node -->
-  <!-- <group if="$(arg gui)">
-    <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="2 sr_moveit_hand_config moveit_rviz.launch 
-      hand_ik_solver_path:=$(arg hand_ik_solver_path)
-      config:=true 
-      debug:=$(arg debug)" name="timed_roslaunch_rviz" output="screen"
-    />
-  </group> -->
 </launch>
