@@ -161,9 +161,13 @@
       </include>
     </group>
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->
-    <include file="$(find sr_multi_moveit_config)/launch/scene.launch">
-      <arg name="scene_file" value="$(arg scene_file)"/>
-    </include>
+    <node name="conditional_delayed_rostool_bimanual_scene" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
+      <param name="package_name" value="sr_multi_moveit_config" />
+      <param name="executable_name" value="scene.launch" />
+      <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+      <param name="launch_args_list" value="scene_file:=$(arg scene_file)" />
+      <param name="timeout" value="20.0" />
+    </node>
   </group>
 
   <!-- MOVEIT -->
