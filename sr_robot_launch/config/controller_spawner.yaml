@@ -45,6 +45,17 @@ controller_groups:
         - sh_lh_lfj0_effort_controller
       lh_LFJ2:
         - sh_lh_lfj0_effort_controller
+  hybrid:
+    rh:
+      common:
+        - rh_trajectory_controller
+      default:
+        - sh_rh_hybrid_controller
+    lh:
+      common:
+        - lh_trajectory_controller
+      default:
+        - sh_lh_hybrid_controller
   grasp:
     rh:
       default:
