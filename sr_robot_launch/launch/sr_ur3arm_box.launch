@@ -87,9 +87,13 @@
 
     <!-- Set scene for robot - restrains movement -->
     <group if="$(arg scene)">
-      <include if="$(arg use_moveit)" file="$(find gazebo2rviz)/launch/gazebo2moveit.launch">
-        <arg name="frequency" default="1" />
-      </include>
+      <node name="conditional_delayed_rostool_arm_scene" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
+        <param name="package_name" value="sr_box_ur10_moveit_config" />
+        <param name="executable_name" value="scene.launch" />
+        <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+        <param name="launch_args_list" value="scene_file:=$(arg scene_file)" />
+        <param name="timeout" value="20.0" />
+      </node>
     </group>
   </group>
 
