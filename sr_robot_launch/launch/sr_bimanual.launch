@@ -94,8 +94,9 @@
       <param name="tf_prefix" type="string" value="" />
     </node>
     <group if="$(arg hand_ctrl)">
-        <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
-          <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
+        <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="controller_spawner.py" output="screen">
+          <param if="$(arg hand_trajectory)" name="controller_group" value="trajectory"/>
+          <param unless="$(arg hand_trajectory)" name="controller_group" value="position"/>
           <param name="exclude_wrist" value="false"/>
         </node>
     </group>

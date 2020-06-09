@@ -117,8 +117,9 @@
   <group if="$(arg hand_ctrl)">
     <group unless="$(arg grasp_controller)">
       <group unless="$(eval sim_type == 'mujoco')">
-        <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
-          <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
+        <node name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
+          <param if="$(arg hand_trajectory)" name="controller_group" value="trajectory"/>
+          <param unless="$(arg hand_trajectory)" name="controller_group" value="position"/>
           <param name="wait_for" value ="calibrated" unless="$(arg sim)"/>
         </node>
       </group>
@@ -128,7 +129,8 @@
       </group>
     </group>
     <group if="$(arg grasp_controller)">
-      <node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen">
+      <node name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
+        <param name="controller_group" value="grasp"/>
         <param name="wait_for" value ="calibrated" unless="$(arg sim)"/>
       </node>
     </group>
