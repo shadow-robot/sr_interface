@@ -2,7 +2,7 @@
   <arg name="debug" default="false"/>
   <arg name="robot_state_pub_frequency" default="250"/>
   <arg name="joint_state_pub_frequency" default="125"/>
-  <!-- Specify if the system has "both" or "none" hands-->
+  <!-- Specify if the system has "both" hands, only "right", only "left", or "none"-->
   <arg name="hands" default="both"/>
   <arg name="arm_ctrl" default="true"/>	
   <!-- ROBOT CONFIG-->
