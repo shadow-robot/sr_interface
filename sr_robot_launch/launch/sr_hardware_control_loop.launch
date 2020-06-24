@@ -66,6 +66,11 @@
     <param name="initial_z" value="$(arg initial_z)"/>
     <param name="prefix" value="$(arg hand_id)_"/>
   </node>
+  
+  <!-- Default hand controller groups -->
+  <arg if="$(arg grasp_controller)" name="hand_controller_group" default="grasp"/>
+  <arg if="$(eval hand_trajectory and not grasp_controller)" name="hand_controller_group" default="trajectory"/>
+  <arg if="$(eval not hand_trajectory and not grasp_controller)" name="hand_controller_group" default="position"/>
 
   <!-- Controller -->
   <group if="$(arg hand_ctrl)">
@@ -87,18 +92,11 @@
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       <arg name="initial_z" value="$(arg initial_z)"/>
     </include>
-    <group unless="$(arg grasp_controller)">
-      <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
-        <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
-        <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
-        <param name="wait_for" value ="calibrated"/>
-      </node>
-    </group>
-    <group if="$(arg grasp_controller)">
-      <node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen">
-        <param name="wait_for" value ="calibrated"/>
-      </node>
-    </group>
+    <node name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
+      <param name="controller_group" value="$(arg hand_controller_group)"/>
+      <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
+      <param name="wait_for" value ="calibrated"/>
+    </node>
   </group>
 
   <group if="$(arg arm_ctrl)">

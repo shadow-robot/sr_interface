@@ -2,7 +2,7 @@
   <arg name="debug" default="false"/>
   <arg name="robot_state_pub_frequency" default="250"/>
   <arg name="joint_state_pub_frequency" default="125"/>
-  <!-- Specify if the system has "both" hands, only "right", or only "left" -->
+  <!-- Specify if the system has "both" hands, only "right", only "left", or "none"-->
   <arg name="hands" default="both"/>
   <arg name="arm_ctrl" default="true"/>	
   <!-- ROBOT CONFIG-->
@@ -108,8 +108,9 @@
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       <arg name="load_robot_description" value="$(arg load_robot_description_at_lower_level)"/>
     </include>
-    <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
-      <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
+    <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="controller_spawner.py" output="screen">
+      <param if="$(arg hand_trajectory)" name="controller_group" value="trajectory"/>
+      <param unless="$(arg hand_trajectory)" name="controller_group" value="position"/>
       <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
       <param name="wait_for" value="calibrated"/>
     </node>
