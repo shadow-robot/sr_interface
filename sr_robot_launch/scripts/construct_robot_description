@@ -62,16 +62,11 @@ class SrConstructRobotDescription():
         for name in robot_description_param_names:
             self._robot_description_params[name.rsplit('/', 1)[1]] = rospy.get_param(name)
         kinematics_configs = self._get_kinematics_config()
-        for itm in kinematics_configs:
-            rospy.loginfo("itm: %s", itm)
         if not 'both' == self._side:
             self._robot_description_params['kinematics_config'] = kinematics_configs[0]
         else:
             self._robot_description_params['kinematics_config_right'] = kinematics_configs[0]
             self._robot_description_params['kinematics_config_left'] = kinematics_configs[1]
-
-        for key, value in self._robot_description_params.items():
-            rospy.loginfo("%s: %s", key, value)
 
     def _get_kinematics_config(self):
         kinematics_configs = []
@@ -95,8 +90,6 @@ class SrConstructRobotDescription():
         xacro_commands.append(self._robot_description_file)
         for key, value in self._robot_description_params.items():
             xacro_commands.append(key + ':=' + str(value))
-        for command in xacro_commands:
-            rospy.loginfo("xac: %s", command)
         return self._generate_urdf(xacro_commands)
 
     def _generate_urdf(self, xacro_commands):
