@@ -93,7 +93,10 @@ class SrConstructRobotDescription():
         return self._generate_urdf(xacro_commands)
 
     def _generate_urdf(self, xacro_commands):
-        out = check_output(xacro_commands)
+        clean_commands = []
+        for xacro_command in xacro_commands:
+            clean_commands.append(xacro_command.strip('\''))
+        out = check_output(clean_commands)
         return out
 
 

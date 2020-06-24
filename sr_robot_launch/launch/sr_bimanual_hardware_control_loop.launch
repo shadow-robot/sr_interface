@@ -54,10 +54,10 @@
   <arg name="right_arm_speed_scale" default="0.5"/>
   <arg name="left_arm_speed_scale" default="0.5"/>
 
-  <arg name="kinematics_config_left" if="$(eval not arg('robot_model') == 'ur10')" default="$(find ur_description)/config/ur10_default.yaml"/>
-  <arg name="kinematics_config_left" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find ur_e_description)/config/ur10e_default.yaml"/>
-  <arg name="kinematics_config_right" if="$(eval not arg('robot_model') == 'ur10')" default="$(find ur_description)/config/ur10_default.yaml"/>
-  <arg name="kinematics_config_right" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find ur_e_description)/config/ur10e_default.yaml"/>
+  <arg name="kinematics_config_left"  if="$(eval arg('robot_model') == 'ur10')"  default="$(find ur_description)/config/ur10_default.yaml"/>
+  <arg name="kinematics_config_left"  if="$(eval arg('robot_model') == 'ur10e')" default="$(find ur_e_description)/config/ur10e_default.yaml"/>
+  <arg name="kinematics_config_right" if="$(eval arg('robot_model') == 'ur10')"  default="$(find ur_description)/config/ur10_default.yaml"/>
+  <arg name="kinematics_config_right" if="$(eval arg('robot_model') == 'ur10e')" default="$(find ur_e_description)/config/ur10e_default.yaml"/>
 
   <arg name="load_robot_description_command" default="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation) kinematics_config_right:=$(arg kinematics_config_right) kinematics_config_left:=$(arg kinematics_config_left)"/>
 
@@ -106,7 +106,7 @@
       <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
       <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
-      <arg name="load_robot_description" value="$(arg load_robot_description)"/>
+      <arg name="load_robot_description" value="$(arg load_robot_description_at_lower_level)"/>
     </include>
     <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
       <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
@@ -144,10 +144,10 @@
 
   <!-- Set rosparams and load robot hardware if arms are being used -->
   <group if="$(eval arg('arm_ctrl'))">
+    <rosparam if="$(arg load_robot_description_at_lower_level)" command="load" file="$(arg kinematics_config_right)" ns="ra_sr_ur_robot_hw"/>
+    <rosparam if="$(arg load_robot_description_at_lower_level)" command="load" file="$(arg kinematics_config_left)" ns="la_sr_ur_robot_hw"/>
     <rosparam command="load" file="$(arg arm_robot_hw_1)"/>
     <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
-    <rosparam command="load" file="$(arg kinematics_config_right)" ns="ra_sr_ur_robot_hw"/>
-    <rosparam command="load" file="$(arg kinematics_config_left)" ns="la_sr_ur_robot_hw"/>
     <param name="ra_sr_ur_robot_hw/speed_scale" type="double" value="$(arg right_arm_speed_scale)"/>
     <param name="la_sr_ur_robot_hw/speed_scale" type="double" value="$(arg left_arm_speed_scale)"/>
     <node name="sr_ur_arm_unlock" pkg="sr_robot_launch" type="sr_ur_arm_unlock" output="screen">
