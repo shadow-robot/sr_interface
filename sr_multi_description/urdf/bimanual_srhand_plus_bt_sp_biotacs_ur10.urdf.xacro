@@ -16,7 +16,7 @@
     <xacro:arg name="kinematics_config" default="$(find ur_description)/config/ur10_default.yaml"/>
     <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
 
-    <xacro:ur10_robot prefix="ra_" joint_limited="false" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_file="${load_yaml('$(arg kinematics_config)')}"/>
+    <xacro:ur10_robot prefix="ra_" joint_limited="false" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_file="${load_yaml('$(arg kinematics_config_right)')}"/>
 
     <joint name="world_to_arm_2_joint" type="fixed">
         <parent link="world"/>
@@ -24,7 +24,7 @@
         <origin xyz="$(arg arm_x_separation) $(arg arm_y_separation) $(arg arm_2_z)" rpy="0.0 0.0 ${pi}"/>
     </joint>
 
-    <xacro:ur10_robot prefix="la_" joint_limited="false" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_file="${load_yaml('$(arg kinematics_config)')}"/>
+    <xacro:ur10_robot prefix="la_" joint_limited="false" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_file="${load_yaml('$(arg kinematics_config_left)')}"/>
 
     <xacro:include filename="$(find sr_description)/materials.urdf.xacro"/>
     <xacro:include filename="$(find sr_description)/hand/xacro/full_hand.urdf.xacro"/>
