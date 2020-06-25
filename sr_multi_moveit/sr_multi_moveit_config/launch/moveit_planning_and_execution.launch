@@ -26,26 +26,30 @@
   <!-- Broadcast static tf for robot root -->
   <!--node name="virtual_joint_broadcaster" pkg="sr_multi_moveit_config" type="virtual_joint_broadcaster.py" output="screen" /-->
 
-  <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="11 sr_multi_moveit_config move_group.launch 
-    hand_ik_solver_path:=$(arg hand_ik_solver_path)
-    allow_trajectory_execution:=true 
-    fake_execution:=false 
-    info:=true 
-    debug:=$(arg debug) 
-    publish_monitored_planning_scene:=true
-    pipeline:=$(arg planning)
-    generate_planning_config:=$(arg generate_planning_config)
-    robot_config_file:=$(arg robot_config_file)" name="timed_roslaunch" output="screen"
-  />
+  <include file="$(find sr_multi_moveit_config)/launch/move_group.launch">
+    <arg name="hand_ik_solver_path" value="$(arg hand_ik_solver_path)"/>
+    <arg name="allow_trajectory_execution" value="true"/>
+    <arg name="fake_execution" value="false"/>
+    <arg name="info" value="true"/>
+    <arg name="debug" value="$(arg debug)"/>
+    <arg name="publish_monitored_planning_scene" value="true"/>
+    <arg name="pipeline" value="$(arg planning)"/>
+    <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
+    <arg name="robot_config_file" value="$(arg robot_config_file)"/>
+  </include>
 
-  <!-- Run Rviz and load the default config to see the state of the move_group node -->
   <group if="$(arg gui)">
-    <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="15 sr_multi_moveit_config moveit_rviz.launch
-      hand_ik_solver_path:=$(arg hand_ik_solver_path)
+    <node name="conditional_delayed_rostool_rviz_multi" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen" required="true">
+      <param name="package_name" value="sr_multi_moveit_config" />
+      <param name="executable_name" value="moveit_rviz.launch" />
+      <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+      <param name="launch_args_list" value="hand_ik_solver_path:=$(arg hand_ik_solver_path)
       config:=true
       debug:=$(arg debug)
       rviz_config_file:=$(arg rviz_config_file)
-      robot_config_file:=$(arg robot_config_file)" name="timed_roslaunch_rviz" output="screen" respawn="true"
-    />
+      robot_config_file:=$(arg robot_config_file)" />
+      <param name="timeout" value="20.0" />
+    </node>
   </group>
+
 </launch>

@@ -118,14 +118,28 @@
       <param name="tf_prefix" type="string" value="" />
     </node>
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->
-    <node if="$(arg scene)" pkg="sr_utilities_common" type="timed_roslaunch.sh" args="8 sr_box_ur10_moveit_config scene.launch
-      scene_file:=$(arg scene_file)" name="timed_publish_moveit_scene" output="screen"/>
-
+    <group if="$(arg scene)">
+      <node name="conditional_delayed_rostool_arm_scene" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
+        <param name="package_name" value="sr_box_ur10_moveit_config" />
+        <param name="executable_name" value="scene.launch" />
+        <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+        <param name="launch_args_list" value="scene_file:=$(arg scene_file)" />
+        <param name="timeout" value="20.0" />
+      </node>
+    </group>
   </group>
 
   <rosparam file="$(arg robot_config_file)"/>
 
   <!-- Launch moveit configuration after delay to wait for robot description to be avalible -->
-  <node if="$(arg use_moveit)" pkg="sr_utilities_common" type="timed_roslaunch.sh" args="5 sr_box_ur10_moveit_config planning_and_execution.launch
-    use_gui:=$(arg gui)" name="timed_roslaunch" output="screen"/>
+  <group if="$(arg use_moveit)">
+    <node name="conditional_delayed_rostool_rviz_multi" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen" required="true">
+      <param name="package_name" value="sr_box_ur10_moveit_config" />
+      <param name="executable_name" value="planning_and_execution.launch" />
+      <rosparam param="params_list">[/robot_description]</rosparam>
+      <param name="launch_args_list" value="side:=$(arg side)
+        use_gui:=$(arg gui)" />
+      <param name="timeout" value="20.0" />
+    </node>
+  </group>
 </launch>
