@@ -42,6 +42,7 @@
   <arg name="initial_z" if="$(arg arm)" default="0.7551"/>
   <arg name="initial_z" unless="$(arg arm)" default="0.0"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
+  <arg name="force_torque_sensor_hw" default="$(find sr_robot_launch)/config/$(arg arm_prefix)_force_torque_controller.yaml"/>
   <arg name="include_wrist_in_arm_controller" default="$(arg arm_ctrl)"/>
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the arm-->
@@ -119,6 +120,10 @@
     <rosparam unless="$(arg hand_ctrl)" param="robot_hardware" subst_value="True">[$(arg arm_prefix)_sr_ur_robot_hw]</rosparam>
     <rosparam command="load" file="$(arg arm_robot_hw)"/>
     <param name="$(arg arm_prefix)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
+    <group if="$(eval 'e' in arg('robot_model'))">
+      <rosparam command="load" file="$(arg force_torque_sensor_hw)"/>
+      <node name="ft_sensor_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg arm_prefix)_force_torque_sensor_controller" />
+    </group>
   </group>
 
   <rosparam unless="$(arg arm_ctrl)">
