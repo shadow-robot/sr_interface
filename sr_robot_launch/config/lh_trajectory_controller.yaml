@@ -23,6 +23,8 @@ lh_trajectory_controller:
     - lh_THJ3
     - lh_THJ4
     - lh_THJ5
+    - lh_WRJ1
+    - lh_WRJ2
   constraints:
       goal_time: 0.6
       stopped_velocity_tolerance: 10.0

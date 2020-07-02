@@ -119,7 +119,7 @@
         <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
         <arg name="grasp_controller" value="$(arg grasp_controller)"/>
         <arg name="hand_ctrl" value="$(arg hand_ctrl)"/>
-        <arg name="arm_ctrl" value="false"/>
+        <arg name="arm" value="false"/>
         <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>
         <arg name="hand_controller_group" value="$(arg hand_controller_group)"/>
       </include>
@@ -128,8 +128,10 @@
 
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
-    <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="15 sr_moveit_hand_config moveit_planning_and_execution.launch
-      gui:=$(arg gui) hand_ik_solver:=$(arg hand_ik_solver)" name="timed_roslaunch" output="screen"/>
+    <include file="$(find sr_moveit_hand_config)/launch/moveit_planning_and_execution.launch">
+      <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
+      <arg name="gui" value="$(arg gui)"/>
+    </include>
     <include file="$(find sr_moveit_hand_config)/launch/default_warehouse_db.launch"/>
   </group>
 
