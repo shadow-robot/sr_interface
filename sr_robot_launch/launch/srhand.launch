@@ -119,7 +119,7 @@
         <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
         <arg name="grasp_controller" value="$(arg grasp_controller)"/>
         <arg name="hand_ctrl" value="$(arg hand_ctrl)"/>
-        <arg name="arm_ctrl" value="false"/>
+        <arg name="arm" value="false"/>
         <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>
         <arg name="hand_controller_group" value="$(arg hand_controller_group)"/>
       </include>
