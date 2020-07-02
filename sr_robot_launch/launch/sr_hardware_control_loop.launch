@@ -121,8 +121,8 @@
     <rosparam command="load" file="$(arg arm_robot_hw)"/>
     <param name="$(arg arm_prefix)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
     <group if="$(eval 'e' in arg('robot_model'))">
-      <node name="ft_sensor_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="force_torque_sensor_controller" />
       <rosparam command="load" file="$(arg force_torque_sensor_hw)"/>
+      <node name="ft_sensor_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="force_torque_sensor_controller" />
     </group>
   </group>
 
