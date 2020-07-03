@@ -19,19 +19,13 @@
   <arg name="hand_ctrl" default="$(arg hand)"/>
 
   <!-- Robot description -->
-  <group if="$(eval arg('hand') and arg('arm'))">
-    <arg name="robot_description" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_ur10_bt_sp_biotacs.urdf.xacro"/>
-    <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
-  </group>
-  <group if="$(eval not arg('hand') and arg('arm'))">
-    <arg name="robot_description" default="$(find sr_box_ur10_moveit_config)/config/$(arg side_letter)a_$(arg robot_model)_with_box.urdf.xacro"/>
-    <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
-  </group>
-  <group if="$(eval arg('hand') and not arg('arm'))">
-    <arg name="robot_description" if="$(eval arg('hand_id')=='rh')" default="$(find sr_description)/robots/shadowhand_motor_plus.urdf.xacro"/>
-    <arg name="robot_description" if="$(eval arg('hand_id')=='lh')" default="$(find sr_description)/robots/shadowhand_left_motor_plus.urdf.xacro"/>
-    <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh.yaml"/>
-  </group>
+  <arg if="$(eval arg('hand') and arg('arm'))" name="robot_description" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_ur10_bt_sp_biotacs.urdf.xacro"/>
+  <arg if="$(eval arg('hand') and arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
+  <arg if="$(eval not arg('hand') and arg('arm'))" name="robot_description" default="$(find sr_box_ur10_moveit_config)/config/$(arg side_letter)a_$(arg robot_model)_with_box.urdf.xacro"/>
+  <arg if="$(eval not arg('hand') and arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
+  <arg if="$(eval arg('hand') and arg('hand_id')=='rh' and not arg('arm'))" name="robot_description" default="$(find sr_description)/robots/shadowhand_motor_plus.urdf.xacro"/>
+  <arg if="$(eval arg('hand') and arg('hand_id')=='lh' and not arg('arm'))" name="robot_description" default="$(find sr_description)/robots/shadowhand_left_motor_plus.urdf.xacro"/>
+  <arg if="$(eval arg('hand') and not arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh.yaml"/>
 
   <!-- Robot config -->
 
@@ -48,6 +42,7 @@
   <arg name="initial_z" if="$(arg arm)" default="0.7551"/>
   <arg name="initial_z" unless="$(arg arm)" default="0.0"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
+  <arg name="force_torque_sensor_hw" default="$(find sr_robot_launch)/config/$(arg arm_prefix)_force_torque_controller.yaml"/>
   <arg name="include_wrist_in_arm_controller" default="$(arg arm_ctrl)"/>
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the arm-->
@@ -125,6 +120,10 @@
     <rosparam unless="$(arg hand_ctrl)" param="robot_hardware" subst_value="True">[$(arg arm_prefix)_sr_ur_robot_hw]</rosparam>
     <rosparam command="load" file="$(arg arm_robot_hw)"/>
     <param name="$(arg arm_prefix)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
+    <group if="$(eval 'e' in arg('robot_model'))">
+      <rosparam command="load" file="$(arg force_torque_sensor_hw)"/>
+      <node name="ft_sensor_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg arm_prefix)_force_torque_sensor_controller" />
+    </group>
   </group>
 
   <rosparam unless="$(arg arm_ctrl)">
