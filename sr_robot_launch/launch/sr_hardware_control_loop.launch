@@ -132,7 +132,7 @@
   </rosparam>
 
   <!-- These will be loaded if hand_ctrl is false so UR10 with box will load instead. -->
-  <group unless="$(arg hand_ctrl)">
+  <group unless="$(arg hand)">
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
       <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
