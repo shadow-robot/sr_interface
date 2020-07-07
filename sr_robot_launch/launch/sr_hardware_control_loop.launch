@@ -76,7 +76,7 @@
   <arg if="$(eval not hand_trajectory and not grasp_controller)" name="hand_controller_group" default="position"/>
 
   <!-- Controller -->
-  <group if="$(arg hand_ctrl)">
+  <group if="$(arg hand)">
     <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
     <rosparam file="$(arg robot_config_file)"/>
     <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
@@ -94,7 +94,7 @@
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       <arg name="initial_z" value="$(arg initial_z)"/>
     </include>
-    <node name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
+    <node if="$(arg hand_ctrl)" name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
       <param name="controller_group" value="$(arg hand_controller_group)"/>
       <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
       <param name="wait_for" value ="calibrated"/>
