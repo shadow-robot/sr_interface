@@ -29,9 +29,9 @@
   <arg name="side" default="right"/>
   <arg name="side_letter" value="$(eval side[0])"/>
   <arg name="arm_prefix" value="$(arg side_letter)a"/>
-  <arg name="arm_model" default="ur10"/>
-  <arg name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/$(arg arm_prefix)_$(arg arm_model)_with_box.urdf.xacro'"/>
-  <arg name="robot_config_file" default="$(find sr_box_ur10_moveit_config)/config/robot_configs/$(arg side)_$(arg arm_model).yaml"/>
+  <arg name="robot_model" default="ur10"/>
+  <arg name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/$(arg arm_prefix)_$(arg robot_model)_with_box.urdf.xacro'"/>
+  <arg name="robot_config_file" default="$(find sr_box_ur10_moveit_config)/config/robot_configs/$(arg side)_$(arg robot_model).yaml"/>
 
   <!-- Definition of "home" position, in joint-angle pairs -->
   <arg name="home_angles" unless="$(eval side=='left')" default="-J ra_shoulder_pan_joint 1.147 -J ra_elbow_joint 1.695 -J ra_wrist_1_joint -1.395 -J ra_wrist_2_joint -1.584 -J ra_shoulder_lift_joint -1.926 -J ra_wrist_3_joint 1.830"/>
@@ -112,7 +112,7 @@
         <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
         <arg name="robot_description" value="$(arg robot_description)"/>
         <arg name="side" value="$(arg side)"/>
-        <arg name="robot_model" value="$(arg arm_model)"/>
+        <arg name="robot_model" value="$(arg robot_model)"/>
         <arg name="arm_robot_hw" value="$(arg arm_robot_hw)"/>
         <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
         <arg name="arm_position" default="$(arg arm_position)"/>
