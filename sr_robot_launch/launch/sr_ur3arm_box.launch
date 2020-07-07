@@ -33,7 +33,7 @@
   <!-- ARM CONFIG-->
   <arg name="arm_prefix" default="ra"/>
   <arg name="side" default="right"/>
-  <arg name="arm_model" default="ur3"/>
+  <arg name="robot_model" default="ur3"/>
   <arg name="initial_z" default="0.7751" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
@@ -46,8 +46,8 @@
   <param name="description_read_repetitions" value="50"/>
 
   <!-- ROBOT CONFIG-->
-  <arg name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/$(arg arm_model)_with_box.urdf.xacro'"/>
-  <arg name="robot_config_file" default="$(find sr_box_ur10_moveit_config)/config/robot_configs/$(arg side)_$(arg arm_model).yaml"/>
+  <arg name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/$(arg robot_model)_with_box.urdf.xacro'"/>
+  <arg name="robot_config_file" default="$(find sr_box_ur10_moveit_config)/config/robot_configs/$(arg side)_$(arg robot_model).yaml"/>
   <arg name="robot_name" default="ursrbox"/>
 
   <!-- Logging -->
@@ -106,7 +106,7 @@
         <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
         <arg name="robot_description" value="$(arg robot_description)"/>
         <arg name="side" value="$(arg side)"/>
-        <arg name="robot_model" value="$(arg arm_model)"/>
+        <arg name="robot_model" value="$(arg robot_model)"/>
         <arg name="arm_robot_hw" value="$(arg arm_robot_hw)"/>
         <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
         <arg name="arm_position" default="$(arg arm_position)"/>
