@@ -107,7 +107,7 @@
         <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
         <arg name="arm_position" default="$(arg arm_position)"/>
         <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
-        <arg name="hand_ctrl" default="false"/>
+        <arg name="hand" default="false"/>
         <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
         <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       </include>
