@@ -48,6 +48,7 @@
   <!-- ARM CONFIG-->
   <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
+  <!-- You can select ur5 or ur5e -->
   <arg name="robot_model" default="ur5e"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
   <arg name="arm_speed_scale" default="0.5"/>
@@ -62,7 +63,7 @@
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
   <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
-  <arg name="include_wrist_in_arm_controller" default="true"/>
+  <arg name="include_wrist_in_arm_controller" default="false"/>
 
   <include file="$(find sr_robot_launch)/launch/sr_ur_arm_hand.launch">
     <arg name="sim" value="$(arg sim)"/>
