@@ -1,8 +1,7 @@
-<robot xmlns:xacro="http://ros.org/wiki/xacro" name="ur5srh">
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="ur5esrh">
 
-    <!--<xacro:include filename="$(find ur_description)/urdf/gazebo.urdf.xacro" />-->
-    <xacro:include filename="$(find ur_description)/urdf/ur5.urdf.xacro"/>
-    <xacro:arg name="kinematics_config" default="$(find ur_description)/config/ur5_default.yaml"/>
+    <xacro:include filename="$(find ur_e_description)/urdf/ur5e.urdf.xacro"/>
+    <xacro:arg name="kinematics_config" default="$(find ur_e_description)/config/ur5e_default.yaml"/>
     <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
 
     <link name="world"/>
@@ -14,14 +13,13 @@
         <origin xyz="0.0 0.0 $(arg initial_z)" rpy="0.0 0.0 0.0"/>
     </joint>
 
-    <xacro:ur5_robot prefix="ra_" joint_limited="false" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_file="${load_yaml('$(arg kinematics_config)')}"/>
+    <xacro:ur5e_robot prefix="ra_" joint_limited="false" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_file="${load_yaml('$(arg kinematics_config)')}"/>
 
     <xacro:include filename="$(find sr_description)/materials.urdf.xacro"/>
     <xacro:include filename="$(find sr_description)/hand/xacro/hand_lite.urdf.xacro"/>
     <xacro:include filename="$(find sr_description)/other/xacro/gazebo/gazebo.urdf.xacro"/>
 
-    <xacro:shadowhand muscletrans="false" muscle="false" bio="false" bt_sp="false" ubi="false" eli="false" 
-                      reflect="1.0" prefix="rh_" extra_lite="false"/>
+    <xacro:shadowhand muscletrans="false" muscle="false" bio="false" bt_sp="false" ubi="false" eli="false" reflect="1.0" prefix="rh_" extra_lite="false"/>
 
     <joint name="ra_arm_to_hand" type="fixed">
         <parent link="ra_ee_link"/>

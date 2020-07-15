@@ -1,0 +1,47 @@
+robot:
+  name: ur5esrh
+  manipulators:
+    right_manipulator:
+      side: right
+      arm:
+        name: ur5e
+        main_group: manipulator
+        moveit_path:
+          package: sr_multi_moveit_config
+          relative_path: /config/ur
+        extra_groups_config_path: /config
+        group_states:
+          - home
+          - up
+      hand:
+        name: shadowhand_lite.urdf.xacro
+        is_lite: true
+    left_manipulator:
+      side: left
+      arm:
+        name: ur5e
+        main_group: manipulator
+        moveit_path:
+          package: sr_multi_moveit_config
+          relative_path: /config/ur
+        extra_groups_config_path: /config
+        group_states:
+          - home
+          - up
+      hand:
+        name: shadowhand_left_lite.urdf.xacro
+        is_lite: true
+
+ra_sr_ur_robot_hw:
+  # Hand G payload
+  payload_mass_kg: 2.4
+
+  # Hand G payload centre of inertia (estimated, need exact from Hardware)
+  payload_center_of_mass_m: [0.0, 0.0, 0.1]
+
+la_sr_ur_robot_hw:
+  # Hand G payload
+  payload_mass_kg: 2.4
+
+  # Hand G payload centre of inertia (estimated, need exact from Hardware)
+  payload_center_of_mass_m: [0.0, 0.0, 0.1]

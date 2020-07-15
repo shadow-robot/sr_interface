@@ -147,10 +147,11 @@
       </include>
     </group>
     <group if="$(arg hand_ctrl)">
-        <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
-          <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
-          <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
-        </node>
+      <node name="sr_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
+        <param if="$(arg hand_trajectory)" name="controller_group" value="trajectory"/>
+        <param unless="$(arg hand_trajectory)" name="controller_group" value="position"/>
+        <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
+      </node>
     </group>
   </group>
 
@@ -185,8 +186,15 @@
       </include>
     </group>
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->
-    <node if="$(arg scene)" pkg="sr_utilities_common" type="timed_roslaunch.sh" args="8 sr_multi_moveit_config scene.launch
-      scene_file:=$(arg scene_file)" name="timed_publish_moveit_scene" output="screen"/>
+    <group if="$(arg scene)">
+      <node name="conditional_delayed_rostool_bimanual_scene" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
+        <param name="package_name" value="sr_multi_moveit_config" />
+        <param name="executable_name" value="scene.launch" />
+        <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+        <param name="launch_args_list" value="scene_file:=$(arg scene_file)" />
+        <param name="timeout" value="20.0" />
+      </node>
+    </group>
   </group>
 
   <!-- MOVEIT -->

@@ -1,0 +1,143 @@
+controller_configs:
+  rh:
+    rh_trajectory_controller: rh_trajectory_controller.yaml
+  lh:
+    lh_trajectory_controller: lh_trajectory_controller.yaml
+controller_groups:
+  effort:
+    rh:
+      common: []
+      default:
+        - sh_%joint_name%_effort_controller
+      rh_FFJ1:
+        - sh_rh_ffj0_effort_controller
+      rh_FFJ2:
+        - sh_rh_ffj0_effort_controller
+      rh_MFJ1:
+        - sh_rh_mfj0_effort_controller
+      rh_MFJ2:
+        - sh_rh_mfj0_effort_controller
+      rh_RFJ1:
+        - sh_rh_rfj0_effort_controller
+      rh_RFJ2:
+        - sh_rh_rfj0_effort_controller
+      rh_LFJ1:
+        - sh_rh_lfj0_effort_controller
+      rh_LFJ2:
+        - sh_rh_lfj0_effort_controller
+    lh:
+      common: []
+      default:
+        - sh_%joint_name%_effort_controller
+      lh_FFJ1:
+        - sh_lh_ffj0_effort_controller
+      lh_FFJ2:
+        - sh_lh_ffj0_effort_controller
+      lh_MFJ1:
+        - sh_lh_mfj0_effort_controller
+      lh_MFJ2:
+        - sh_lh_mfj0_effort_controller
+      lh_RFJ1:
+        - sh_lh_rfj0_effort_controller
+      lh_RFJ2:
+        - sh_lh_rfj0_effort_controller
+      lh_LFJ1:
+        - sh_lh_lfj0_effort_controller
+      lh_LFJ2:
+        - sh_lh_lfj0_effort_controller
+  grasp:
+    rh:
+      default:
+        - sh_rh_grasp_controller
+    lh:
+      default:
+        - sh_lh_grasp_controller
+  position:
+    rh:
+      common: []
+      default:
+        - sh_%joint_name%_position_controller
+      rh_FFJ1:
+        - sh_rh_ffj0_position_controller
+      rh_FFJ2:
+        - sh_rh_ffj0_position_controller
+      rh_MFJ1:
+        - sh_rh_mfj0_position_controller
+      rh_MFJ2:
+        - sh_rh_mfj0_position_controller
+      rh_RFJ1:
+        - sh_rh_rfj0_position_controller
+      rh_RFJ2:
+        - sh_rh_rfj0_position_controller
+      rh_LFJ1:
+        - sh_rh_lfj0_position_controller
+      rh_LFJ2:
+        - sh_rh_lfj0_position_controller
+    lh:
+      common: []
+      default:
+        - sh_%joint_name%_position_controller
+      lh_FFJ1:
+        - sh_lh_ffj0_position_controller
+      lh_FFJ2:
+        - sh_lh_ffj0_position_controller
+      lh_MFJ1:
+        - sh_lh_mfj0_position_controller
+      lh_MFJ2:
+        - sh_lh_mfj0_position_controller
+      lh_RFJ1:
+        - sh_lh_rfj0_position_controller
+      lh_RFJ2:
+        - sh_lh_rfj0_position_controller
+      lh_LFJ1:
+        - sh_lh_lfj0_position_controller
+      lh_LFJ2:
+        - sh_lh_lfj0_position_controller
+  trajectory:
+    rh:
+      common:
+        - rh_trajectory_controller
+      default:
+        - sh_%joint_name%_position_controller
+      rh_FFJ1:
+        - sh_rh_ffj0_position_controller
+      rh_FFJ2:
+        - sh_rh_ffj0_position_controller
+      rh_MFJ1:
+        - sh_rh_mfj0_position_controller
+      rh_MFJ2:
+        - sh_rh_mfj0_position_controller
+      rh_RFJ1:
+        - sh_rh_rfj0_position_controller
+      rh_RFJ2:
+        - sh_rh_rfj0_position_controller
+      rh_LFJ1:
+        - sh_rh_lfj0_position_controller
+      rh_LFJ2:
+        - sh_rh_lfj0_position_controller
+    lh:
+      common:
+        - lh_trajectory_controller
+      default:
+        - sh_%joint_name%_position_controller
+      lh_FFJ1:
+        - sh_lh_ffj0_position_controller
+      lh_FFJ2:
+        - sh_lh_ffj0_position_controller
+      lh_MFJ1:
+        - sh_lh_mfj0_position_controller
+      lh_MFJ2:
+        - sh_lh_mfj0_position_controller
+      lh_RFJ1:
+        - sh_lh_rfj0_position_controller
+      lh_RFJ2:
+        - sh_lh_rfj0_position_controller
+      lh_LFJ1:
+        - sh_lh_lfj0_position_controller
+      lh_LFJ2:
+        - sh_lh_lfj0_position_controller
+controller_configs:
+  rh:
+    rh_trajectory_controller: rh_trajectory_controller.yaml
+  lh:
+    lh_trajectory_controller: lh_trajectory_controller.yaml
