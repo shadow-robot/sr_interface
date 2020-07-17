@@ -7,9 +7,13 @@
     <arg name="side" value="$(arg side)"/>
   </include>
 
-  <include file="$(find sr_box_ur10_moveit_config)/launch/move_group.launch">
-    <arg name="side" value="$(arg side)"/>
-  </include>
+  <node name="conditional_delayed_rostool_movegroup_box" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen" required="true">
+    <param name="package_name" value="sr_box_ur10_moveit_config" />
+    <param name="executable_name" value="move_group.launch" />
+    <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+    <param name="launch_args_list" value="side:=$(arg side)"/>
+    <param name="timeout" value="20.0" />
+  </node>
 
   <group if="$(arg use_gui)">
     <node name="conditional_delayed_rostool_rviz_multi" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen" required="true">
