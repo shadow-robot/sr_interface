@@ -147,6 +147,11 @@
     <node name="sr_ur_arm_unlock" pkg="sr_robot_launch" type="sr_ur_arm_unlock" output="screen">
       <param name="urcap_program_name" value="$(arg urcap_program_name)"/>
     </node>
+    <group if="$(eval 'e' in arg('robot_model'))">
+      <rosparam command="load" file="$(find sr_robot_launch)/config/ra_force_torque_controller.yaml"/>
+      <rosparam command="load" file="$(find sr_robot_launch)/config/la_force_torque_controller.yaml"/>
+      <node name="ft_sensor_controllers_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="ra_force_torque_sensor_controller la_force_torque_sensor_controller" />
+    </group>
   </group>
 
   <!-- Set rosparam if only bimanual hands and no arms are being used -->

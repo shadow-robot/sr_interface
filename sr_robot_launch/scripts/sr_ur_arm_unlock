@@ -50,7 +50,8 @@ class SrUrUnlock():
                 response = service_call(service_data)
             return response
         except rospy.ServiceException, e:
-            rospy.logerr("Service call to '%s' failed for arm %s. %s", service_name, arm, e)
+            rospy.logerr("Service call to '%s' failed for arm %s. %s", service_name, side, e)
+            raise
 
     def startup_arms(self):
         for arm in self._arms:
