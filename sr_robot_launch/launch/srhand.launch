@@ -132,7 +132,7 @@
       <param name="package_name" value="sr_moveit_hand_config" />
       <param name="executable_name" value="moveit_planning_and_execution.launch" />
       <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
-      <param name="launch_args_list" value="hand_ik_solver_path:=$(arg hand_ik_solver_path)
+      <param name="launch_args_list" value="hand_ik_solver:=$(arg hand_ik_solver)
       gui:=$(arg gui)" />
       <param name="timeout" value="20.0" />
     </node>
