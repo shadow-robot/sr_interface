@@ -128,10 +128,14 @@
 
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
-    <include file="$(find sr_moveit_hand_config)/launch/moveit_planning_and_execution.launch">
-      <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
-      <arg name="gui" value="$(arg gui)"/>
-    </include>
+    <node name="conditional_delayed_rostool_rviz_hand" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen" required="true">
+      <param name="package_name" value="sr_moveit_hand_config" />
+      <param name="executable_name" value="moveit_planning_and_execution.launch" />
+      <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+      <param name="launch_args_list" value="hand_ik_solver_path:=$(arg hand_ik_solver_path)
+      gui:=$(arg gui)" />
+      <param name="timeout" value="20.0" />
+    </node>
     <include file="$(find sr_moveit_hand_config)/launch/default_warehouse_db.launch"/>
   </group>
 
