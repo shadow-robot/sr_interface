@@ -52,6 +52,7 @@ class SrConstructRobotDescription():
         self._process_parameters()
         urdf = self._parse_xacro()
         rospy.set_param('robot_description', urdf)
+        rospy.set_param('robot_description_ready', "true")
 
     def _process_parameters(self):
         node_name = rospy.get_name()
