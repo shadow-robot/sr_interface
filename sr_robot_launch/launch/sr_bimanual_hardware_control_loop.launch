@@ -31,8 +31,8 @@
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
   <!-- The control mode PWM (true) or torque (false) -->
   <arg name="pwm_control" default="true"/>
-  <arg name="hand_trajectory" unless="$(eval hands == 'none')" value="true"/>
-  <arg name="hand_trajectory" if="$(eval hands == 'none')" value="false"/>
+  <arg name="hand_trajectory" unless="$(eval hands == 'none')" default="true"/>
+  <arg name="hand_trajectory" if="$(eval hands == 'none')" default="false"/>
 
   <!-- ARMS CONFIG-->
   <arg name="arm_1_z" default="0.7551"/>
