@@ -143,8 +143,13 @@
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
       <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
-    <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
-    <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
+    <node name="conditional_delayed_rostool_ur_arm_robot" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
+      <param name="package_name" value="sr_robot_launch" />
+      <param name="executable_name" value="ros_control.launch" />
+      <rosparam param="params_list">[/robot_description_ready]</rosparam>
+      <param name="launch_args_list" value="debug:=$(arg debug)" />
+      <param name="timeout" value="30.0" />
+    </node>
   </group>
   <!-- These will be loaded if arm and hand are enabled -->
   <!-- Trajectory mode -->
@@ -155,8 +160,13 @@
         <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller_no_wrist.yaml"/>
       </group>
       <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller_no_wrist.yaml"/>
-      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running $(arg arm_prefix)_trajectory_controller"/>
+      <node name="conditional_delayed_rostool_arm_trajectory_controller_spawner" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
+        <param name="package_name" value="controller_manager" />
+        <param name="executable_name" value="spawner"/>
+        <rosparam param="params_list">[/robot_description_ready]</rosparam>
+        <param name="launch_args_list" value="--wait-for=/$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running $(arg arm_prefix)_trajectory_controller"/>
+        <param name="timeout" value="30.0" />
+      </node>
     </group>
     <!-- Position mode -->
     <group if="$(arg arm_position)">
@@ -165,10 +175,13 @@
         <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_group_position_controller_no_wrist.yaml"/>
       </group>
       <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_group_position_controller_no_wrist.yaml"/>
-      <node if="$(arg hand_ctrl)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_prefix)_arm_ready $(arg arm_prefix)_group_position_controller"/>
-      <node unless="$(arg hand_ctrl)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_prefix)_arm_ready $(arg arm_prefix)_group_position_controller"/>
+      <node name="conditional_delayed_arm_group_position_controller_spawner" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
+        <param name="package_name" value="controller_manager" />
+        <param name="executable_name" value="spawner"/>
+        <rosparam param="params_list">[/robot_description_ready]</rosparam>
+        <param name="launch_args_list" value="--wait-for=/$(arg arm_prefix)_arm_ready $(arg arm_prefix)_group_position_controller"/>
+        <param name="timeout" value="30.0" />
+      </node>
     </group>
   </group>
 </launch>
