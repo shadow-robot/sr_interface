@@ -63,8 +63,10 @@
   <arg name="arm_2_z" default="0.0"/>
   <arg name="arm_x_separation" default="1.0"/>
   <arg name="arm_y_separation" default="1.0"/>
-  <arg name="arm_robot_hw_1" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
-  <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_bimanual_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw_1" if="$(eval arg('robot_model') == 'ur10')" default="$(find sr_robot_launch)/config/right_ur10_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw_1" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/right_ur10e_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw_2" if="$(eval arg('robot_model') == 'ur10')" default="$(find sr_robot_launch)/config/left_bimanual_ur10_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw_2" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/left_bimanual_ur10e_arm_robot_hw.yaml"/>
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
   <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
   <arg name="include_wrist_in_arm_controller" default="true"/>
