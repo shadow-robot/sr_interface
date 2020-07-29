@@ -49,7 +49,7 @@
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="arm_speed_scale" default="0.5"/>
   <arg name="kinematics_config" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find ur_description)/config/ur10_default.yaml"/>
-  <arg name="kinematics_config" if="$(eval arg('robot_model') == 'ur10e')" default="$(find ur_description)/config/ur10e_default.yaml"/>
+  <arg name="kinematics_config" if="$(eval arg('robot_model') == 'ur10e')" default="$(find ur_e_description)/config/ur10e_default.yaml"/>
   <arg name="urcap_program_name" default="external_ctrl.urp"/>
   <arg name="load_robot_description_command" default="xacro $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
 
