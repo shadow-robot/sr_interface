@@ -29,7 +29,7 @@ ra_sr_ur_robot_hw:
   
   headless_mode: true
   
-  servoj_gain: 2000
+  servoj_gain: 1500
   
   servoj_lookahead_time: 0.03
 
