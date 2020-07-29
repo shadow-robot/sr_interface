@@ -3,15 +3,10 @@
   <arg name="hand_id" default="rh"/>
   <!-- Set to hand_e or hand_e_plus -->
   <arg name="hand_type" default="hand_e_plus"/>
-  <!-- Set to "gazebo" to run simulation in Gazebo, "mujoco" to run in Mujoco -->
-  <arg name="sim_type" default="mujoco"/>
-
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="hand_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the hands-->
   <arg name="hand_ctrl" default="true"/>
-  <!-- Serial number of the hand to be used-->
-  <arg name="hand_serial" default="1322"/>
   <!-- Set to true to allow planning trajectories-->
   <arg name="use_moveit" default="true"/>
   <!-- Set to false if you want to start without guis -->
@@ -22,8 +17,8 @@
   <arg name="robot_state_pub_frequency" default="250"/>
   <!-- The joint state publisher publishing frequency  -->
   <arg name="joint_state_pub_frequency" default="125"/>
-
-  <arg name="key_path" default="/home/fotios/mjpro150/bin/mjkey.txt"/>
+  <!-- The path of your mujoco license  -->
+  <arg name="key_path" default="/home/user/mjpro150/bin/mjkey.txt"/>
   <!-- Loads the robot description -->
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_urdf_filename" default="shadowhand_motor"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="robot_urdf_filename" default="shadowhand_motor_plus"/>
@@ -37,19 +32,17 @@
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="mujoco_model_filename" default="$(find sr_description)/mujoco_models/sr_hand_e_plus_environment.xml"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e')" name="mujoco_model_filename" default="$(find sr_description)/mujoco_models/sr_hand_e_left_environment.xml"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e_plus')" name="mujoco_model_filename" default="$(find sr_description)/mujoco_models/sr_hand_e_plus_left_environment.xml"/>
-  <arg name="robot_description_param" default="robot_description"/>
+  
   <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
   
+  
+  <rosparam param="robot_description" command="load" file="$(arg robot_description)"/>
 
-  <param if="$(eval arg('robot_description').endswith('.xacro'))" name="robot_description" command="xacro $(arg robot_description)"/>
-  <rosparam if="$(eval not arg('robot_description').endswith('.xacro'))" param="robot_description" command="load" file="$(arg robot_description)"/>
-    <param name="robot_description" command="xacro $(arg robot_description)"/>
-
+  <arg name="robot_description_param" default="robot_description"/>
   
   <param name="/use_sim_time" value="true"/>
-  <param name="/hand/mapping/$(arg hand_serial)" value="$(arg hand_id)"/>
-  <param name="/hand/joint_prefix/$(arg hand_serial)" value="$(arg hand_id)_"/>
+
   <group if="$(eval arg('hand_type') == 'hand_e_plus')">
     <rosparam unless="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_grasp_controller_gazebo.yaml"/>
