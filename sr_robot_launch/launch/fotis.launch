@@ -1,0 +1,16 @@
+<launch>
+    <arg name="side" default="right"/>
+    <arg name="arm_prefix" value="ra"/>
+  <arg name="initial_z" default="0.3"/>
+  <arg name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/$(arg arm_prefix)_ur10_with_box.urdf.xacro'"/>
+  <param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z)"/>
+  <arg name="key_path" default="/home/fotios/mjpro150/bin/mjkey.txt"/>
+
+  <arg name="robot_description_param" default="robot_description"/>
+   <!-- Launch mujoco ros control -->
+  <node name="mujoco_ros_control" pkg="mujoco_ros_control" type="mujoco_ros_control" output="screen">
+    <param name="robot_model_path" value="$(find sr_description)/mujoco_models/sr_ur_environment.xml"/>
+    <param name="robot_description_param" value="$(arg robot_description_param)"/>
+    <param name="key_path" value="$(arg key_path)"/>
+  </node>
+</launch>
