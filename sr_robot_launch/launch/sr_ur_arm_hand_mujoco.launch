@@ -1,31 +1,12 @@
 <launch>
-  <!-- This launch file is for shadow hand only -->
-  <arg name="hand_id" default="rh"/>
-  <!-- Set to hand_e or hand_e_plus -->
-  <arg name="hand_type" default="hand_e_plus"/>
-  <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
-  <arg name="hand_trajectory" default="true"/>
-  <!-- Set to true to spawn the position controllers for the hands-->
-  <arg name="hand_ctrl" default="true"/>
   <!-- Set to true to allow planning trajectories-->
-  <arg name="use_moveit" default="false"/>
+  <arg name="use_moveit" default="true"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <!--Choose planner library, options are ompl, stomp or sbpl-->
   <arg name="planning" default="ompl"/>
   <!--Should the planner yaml be automatically generated? -->
   <arg name="generate_planning_config" default="true"/>
-    <!-- ARMS CONFIG-->
-    <arg name="side" default="right"/>
-    <arg name="arm_prefix" value="ra"/>
-  <arg name="initial_z" default="0.1"/>
-
-    <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
-  <arg name="arm_trajectory" default="true"/>
-  <!-- Set to true to spawn group position controllers for the arms -->
-  <arg name="arm_position" default="$(eval not arm_trajectory)"/>
-  <!-- Set to true if you want to use grasp controller -->
-  <arg name="grasp_controller" default="false"/>
   <!-- The robot state publisher publishing frequency  -->
   <arg name="robot_state_pub_frequency" default="250"/>
   <!-- The joint state publisher publishing frequency  -->
@@ -33,22 +14,19 @@
   <!-- The path of your mujoco license  -->
   <arg name="key_path" default="/home/fotios/mjpro150/bin/mjkey.txt"/>
   <!-- Loads the robot description -->
-  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_ur10.urdf.xacro'"/>
-  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_ur10.yaml"/>
-
-  <arg name="mujoco_model_filename" default="$(find sr_description)/mujoco_models/sr_ur_hand_e_plus_environment.xml"/>
+  <arg name="robot_description" default="$(find sr_description)/mujoco_models/urdfs/ur10_hand.urdf"/>
+  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
+  <arg name="mujoco_model_filename" default="$(find sr_description)/mujoco_models/sr_ur_hand_e_environment.xml"/>
   
   <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
   
-  
-  <param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z)"/>
-
-
+  <rosparam param="robot_description" command="load" file="$(arg robot_description)"/>
   <arg name="robot_description_param" default="robot_description"/>
   
   <param name="/use_sim_time" value="true"/>
 
+  <rosparam command="load" file="$(find sr_robot_launch)/config/mujoco/ur10_home_pose.yaml"/>
 
   <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
     <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
@@ -65,10 +43,8 @@
     <param name="key_path" value="$(arg key_path)"/>
   </node>
 
-
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
-    
     <include file="$(find sr_multi_moveit_config)/launch/moveit_planning_and_execution.launch">
       <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
       <arg name="load_robot_description" value="true"/>
@@ -76,17 +52,15 @@
       <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
       <arg name="planning" value="$(arg planning)"/>
       <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
-
     </include>
     <include file="$(find sr_moveit_hand_config)/launch/default_warehouse_db.launch"/>
   </group>
 
+  <!--Hand Controller -->
+    <rosparam command="load" file="$(find sr_description)/mujoco_models/rh_trajectory_controller.yaml"/>
+    <node name="spawn_hand_controller" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="rh_trajectory_controller" />
   <!--Arm Controller -->
-
-    <rosparam command="load" file="$(find sr_description)/mujoco_models/$(arg hand_id)_trajectory_controller.yaml"/>
-    <node name="spawn_hand_controller" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg hand_id)_trajectory_controller" />
-
     <rosparam file="$(find mujoco_ros_control)/config/mujoco_ros_control_params.yaml" command="load"/>
-    <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_prefix)_trajectory_controller_no_wrist.yaml" command="load"/>
-    <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="$(arg arm_prefix)_trajectory_controller"/>
+    <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/ra_trajectory_controller_no_wrist.yaml" command="load"/>
+    <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="ra_trajectory_controller"/>
 </launch>
