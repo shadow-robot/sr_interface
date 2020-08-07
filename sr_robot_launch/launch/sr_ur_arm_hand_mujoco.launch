@@ -12,11 +12,11 @@
   <!-- The joint state publisher publishing frequency  -->
   <arg name="joint_state_pub_frequency" default="125"/>
   <!-- The path of your mujoco license  -->
-  <arg name="key_path" default="/home/fotios/mjpro150/bin/mjkey.txt"/>
+  <arg name="key_path" default="/home/user/mjpro150/bin/mjkey.txt"/>
   <!-- Loads the robot description -->
   <arg name="robot_description" default="$(find sr_description)/mujoco_models/urdfs/ur10_hand.urdf"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
-  <arg name="mujoco_model_filename" default="$(find sr_description)/mujoco_models/sr_ur_hand_e_environment.xml"/>
+  <arg name="mujoco_model_filename" default="$(find sr_description)/mujoco_models/sr_ur_hand_e_plus_environment.xml"/>
   
   <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
