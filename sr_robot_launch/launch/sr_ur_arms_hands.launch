@@ -102,14 +102,12 @@
     <group if="$(arg right_hand)">
       <param name="/hand/mapping/$(arg rh_serial)" value="rh"/>
       <param name="/hand/joint_prefix/$(arg rh_serial)" value="rh_"/>
-      <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_description)/hand/config/rh_controller_gazebo.yaml"/>
-      <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_description)/hand/config/rh_controller_gazebo_no_wrist.yaml"/>
+      <rosparam command="load" file="$(find sr_description)/hand/config/rh_controller_gazebo.yaml"/>
     </group>
     <group if="$(arg left_hand)">
       <param name="/hand/mapping/$(arg lh_serial)" value="lh"/>
       <param name="/hand/joint_prefix/$(arg lh_serial)" value="lh_"/>
-      <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_description)/hand/config/lh_controller_gazebo.yaml"/>
-      <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_description)/hand/config/lh_controller_gazebo_no_wrist.yaml"/>
+      <rosparam command="load" file="$(find sr_description)/hand/config/lh_controller_gazebo.yaml"/>
     </group>
     <arg if="$(arg start_home)" name="spawn_model_extra_args" value="-unpause $(arg home_angles)" />
     <arg unless="$(arg start_home)" name="spawn_model_extra_args" value="" />
