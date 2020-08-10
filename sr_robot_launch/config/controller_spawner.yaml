@@ -124,8 +124,8 @@ controller_groups:
       default:
         - sh_%joint_name%_position_controller
       necessary_if_joint_present:
-        - lh_wrj1_position_controller
-        - lh_wrj2_position_controller
+        - sh_lh_wrj1_position_controller
+        - sh_lh_wrj2_position_controller
       lh_FFJ1:
         - sh_lh_ffj0_position_controller
       lh_FFJ2:
