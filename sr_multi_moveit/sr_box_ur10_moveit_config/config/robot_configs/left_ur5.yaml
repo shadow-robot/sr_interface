@@ -7,7 +7,7 @@ robot:
         name: ur5
         main_group: manipulator
         moveit_path: 
-          package: sr_box_ur10_moveit_config
+          package: sr_multi_moveit_config
           relative_path: /config/ur
         extra_groups_config_path: /config
         group_states:
