@@ -49,8 +49,9 @@
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="arm_speed_scale" default="0.5"/>
-  <arg name="kinematics_config" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find ur_description)/config/ur10_default.yaml"/>
-  <arg name="kinematics_config" if="$(eval arg('robot_model') == 'ur10e')" default="$(find ur_e_description)/config/ur10e_default.yaml"/>
+  <arg name="kinematics_config" if="$(eval arg('arm') and not arg('robot_model') == 'ur10e')" default="$(find ur_description)/config/ur10_default.yaml"/>
+  <arg name="kinematics_config" if="$(eval arg('arm') and arg('robot_model') == 'ur10e')" default="$(find ur_e_description)/config/ur10e_default.yaml"/>
+  <arg name="kinematics_config" unless="$(arg arm)" default=""/>
   <arg name="urcap_program_name" default="external_ctrl.urp"/>
   <arg name="load_robot_description_command" default="xacro $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
 
@@ -66,7 +67,7 @@
   </group>
 
   <!-- So that the driver can check we're loading the right calibration -->
-  <rosparam command="load" file="$(arg kinematics_config)" ns="$(arg arm_prefix)_sr_ur_robot_hw"/>
+  <rosparam if="$(arg arm)" command="load" file="$(arg kinematics_config)" ns="$(arg arm_prefix)_sr_ur_robot_hw"/>
 
   <include file="$(find sr_robot_launch)/launch/unimanual_controller_stopper.launch">
     <arg name="side" value="$(arg side)"/>
@@ -134,7 +135,7 @@
   </rosparam>
 
   <!-- These will be loaded if hand is false so UR10 with box will load instead. -->
-  <group unless="$(arg hand)">
+  <group if="$(eval arg('arm') and not arg('hand'))">
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
       <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
