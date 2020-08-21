@@ -96,7 +96,7 @@ In this case 1178 is the serial number of the hand.
 
 To change the hand mapping, you can set the `mapping_path` argument. For example adding:
 ```
-mapping_path:=`rospack find sr_edc_launch`/mappings/default_mappings/rh_E_v3.yaml
+mapping_path:=`rospack find sr_edc_launch`/mappings/default_mappings/rh_E_v4.yaml
 ```
 
 To change the ethernet port used for your hand, you can add the `eth_port` argument, such as:
