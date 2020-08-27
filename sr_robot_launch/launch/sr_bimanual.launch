@@ -10,7 +10,7 @@
   <!--Choose planner library, options are ompl, stomp or sbpl-->
   <arg name="planning" default="ompl"/>
   <!--Should the planner yaml be automatically generated? -->
-  <arg name="generate_planning_config" default="True"/>
+  <arg name="generate_planning_config" default="true"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <arg name="verbose" default="true" />
@@ -21,6 +21,9 @@
   <arg name="robot_description" default="'$(find sr_description)/robots/bimanual_shadowhand_motor_plus.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
   <arg name="robot_name" default="bimanual_shadowhand_motor"/>
+
+  <!-- The name of the rviz config file to load -->
+  <arg name="rviz_config_file" default="$(find sr_multi_moveit_config)/launch/moveit_hands.rviz"/>
 
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="hand_trajectory" default="true"/>
@@ -33,8 +36,8 @@
   <!-- The ethercat serial number for the left hand -->
   <arg name="lh_serial" default="2346"/>
   <!-- the path to the mapping files -->
-  <arg name="rh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
-  <arg name="lh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_E_v3.yaml"/>
+  <arg name="rh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v4.yaml"/>
+  <arg name="lh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_E_v4.yaml"/>
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth1_eth2)"/>
@@ -91,8 +94,9 @@
       <param name="tf_prefix" type="string" value="" />
     </node>
     <group if="$(arg hand_ctrl)">
-        <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
-          <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
+        <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="controller_spawner.py" output="screen">
+          <param if="$(arg hand_trajectory)" name="controller_group" value="trajectory"/>
+          <param unless="$(arg hand_trajectory)" name="controller_group" value="position"/>
           <param name="exclude_wrist" value="false"/>
         </node>
     </group>
@@ -128,6 +132,7 @@
         <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
         <arg name="planning" value="$(arg planning)"/>
         <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
+        <arg name="rviz_config_file" value="$(arg rviz_config_file)"/>
       </include>
       <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
   </group>

@@ -364,12 +364,12 @@ class SRDFRobotGenerator(object):
                             node_attribute.nodeValue = (manipulator.hand.prefix + "WRJ1")
                             newatt = elt.appendChild(node)
                         elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
+                    if group_name == manipulator.arm.main_group and (manipulator.has_hand):
                         elt.setAttribute('name', manipulator.arm.internal_name + "_and_manipulator")
                         for group_element in elt.getElementsByTagName("chain"):
                             node_attribute = group_element.getAttributeNode("tip_link")
                             node_attribute.nodeValue = (manipulator.hand.prefix + "manipulator")
                         elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
-                    if group_name == manipulator.arm.main_group and (manipulator.has_hand):
                         new_group = xml.dom.minidom.Document().createElement('group')
                         new_group.setAttribute("name", manipulator.arm.internal_name + "_and_hand")
                         if manipulator.hand.is_lite:
@@ -467,17 +467,18 @@ class SRDFRobotGenerator(object):
                     elt.setAttribute('parent_group', manipulator.arm.internal_name)
                     elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
                     newElement = deepcopy(elt)
-                    newElement.getAttributeNode("name").nodeValue = manipulator.arm.prefix + "and_wrist_ee"
-                    newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "palm"
-                    newElement.getAttributeNode("group").nodeValue = manipulator.hand.prefix + "fingers"
-                    newElement.setAttribute('parent_group', manipulator.arm.internal_name + "_and_wrist")
-                    newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
-                    newElement = deepcopy(elt)
                     newElement.getAttributeNode("name").nodeValue = manipulator.arm.prefix + "and_manipulator_ee"
                     newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "manipulator"
                     newElement.getAttributeNode("group").nodeValue = manipulator.hand.prefix + "fingers"
                     newElement.setAttribute('parent_group', manipulator.arm.internal_name + "_and_manipulator")
                     newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
+                    if not manipulator.hand.is_lite:
+                        newElement = deepcopy(elt)
+                        newElement.getAttributeNode("name").nodeValue = manipulator.arm.prefix + "and_wrist_ee"
+                        newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "palm"
+                        newElement.getAttributeNode("group").nodeValue = manipulator.hand.prefix + "fingers"
+                        newElement.setAttribute('parent_group', manipulator.arm.internal_name + "_and_wrist")
+                        newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
                 else:
                     elt.getAttributeNode("name").nodeValue = manipulator.arm.internal_name + "_ee"
                     elt.getAttributeNode("parent_link").nodeValue = (manipulator.arm.prefix +

@@ -3,37 +3,24 @@
   <arg name="hand_id" default="rh"/>
   <!-- Set to hand_e or hand_e_plus -->
   <arg name="hand_type" default="hand_e_plus"/>
-  <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
-  <arg name="sim" default="true"/>
-  <!-- Set to "gazebo" to run simulation in Gazebo, "mujoco" to run in Mujoco -->
-  <arg name="sim_type" default="mujoco"/>
-  <!-- Set to true for debugging -->
-  <arg name="debug" default="false"/>
-  <arg name="verbose" default="true" />
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="hand_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the hands-->
   <arg name="hand_ctrl" default="true"/>
-  <!-- The control mode PWM (true) or torque (false) -->
-  <!-- Set to true by default for now as torque control is not available yet -->
-  <arg name="pwm_control" default="true"/>
-  <!-- Serial number of the hand to be used-->
-  <arg name="hand_serial" default="1322"/>
-  <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
-       More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
-  <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
   <!-- Set to true to allow planning trajectories-->
   <arg name="use_moveit" default="true"/>
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
-  <!-- the path to the mapping files -->
-  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
   <!-- The robot state publisher publishing frequency  -->
-  <arg name="robot_state_pub_frequency" default="50"/>
+  <arg name="robot_state_pub_frequency" default="250"/>
   <!-- The joint state publisher publishing frequency  -->
-  <arg name="joint_state_pub_frequency" default="100"/>
+  <arg name="joint_state_pub_frequency" default="125"/>
+  <!-- The path of your mujoco license  -->
+
+  <arg name="key_path" default="/home/user/mjpro150/bin/mjkey.txt"/>
+
   <!-- Loads the robot description -->
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_urdf_filename" default="shadowhand_motor"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="robot_urdf_filename" default="shadowhand_motor_plus"/>
@@ -41,94 +28,65 @@
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e_plus')" name="robot_urdf_filename" default="shadowhand_motor_plus_left"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_g')" name="robot_urdf_filename" default="shadowhand_lite"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_g')" name="robot_urdf_filename" default="shadowhand_left_lite"/>
-  <arg if="$(eval sim_type == 'gazebo')" name="robot_description" default="$(find sr_description)/robots/$(arg robot_urdf_filename).urdf.xacro"/>
-  <arg if="$(eval sim_type == 'mujoco')" name="robot_description" default="$(find sr_description)/mujoco_models/urdfs/$(arg robot_urdf_filename).urdf"/>
+  <arg name="robot_description" default="$(find sr_description)/mujoco_models/urdfs/$(arg robot_urdf_filename).urdf"/>
+
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="mujoco_model_filename" default="$(find sr_description)/mujoco_models/sr_hand_e_environment.xml"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="mujoco_model_filename" default="$(find sr_description)/mujoco_models/sr_hand_e_plus_environment.xml"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e')" name="mujoco_model_filename" default="$(find sr_description)/mujoco_models/sr_hand_e_left_environment.xml"/>
   <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e_plus')" name="mujoco_model_filename" default="$(find sr_description)/mujoco_models/sr_hand_e_plus_left_environment.xml"/>
-    
   
-  <!-- SIMULATED ROBOTS -->
-  <group if="$(arg sim)">
-    <param if="$(eval arg('robot_description').endswith('.xacro'))" name="robot_description" command="xacro --inorder $(arg robot_description)"/>
-    <rosparam if="$(eval not arg('robot_description').endswith('.xacro'))" param="robot_description" command="load" file="$(arg robot_description)"/>
-    <group if="$(eval sim_type == 'gazebo')">
-      <arg name="world_name" value="$(find sr_description_common)/worlds/shadowhand.world"/>
-      <arg name="paused" value="false"/>
-      <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <arg name="world_name" default="$(arg world_name)"/>
-        <arg name="gui" default="$(arg gui)"/>
-        <arg name="paused" value="$(arg paused)"/>
-        <arg name="debug" value="$(arg debug)"/>
-        <arg name="verbose" value="$(arg verbose)" />
-      </include>
-      <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model usrh -z 0.0 "
-            respawn="false" output="screen"/>
-    </group>
-    <param name="/hand/mapping/$(arg hand_serial)" value="$(arg hand_id)"/>
-    <param name="/hand/joint_prefix/$(arg hand_serial)" value="$(arg hand_id)_"/>
-    <group if="$(eval arg('hand_type') == 'hand_e')">
-      <rosparam unless="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
-      <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_grasp_controller_gazebo.yaml"/>
-    </group>
-    <group if="$(eval arg('hand_type') == 'hand_g')">
-      <rosparam unless="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
-      <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_lite_grasp_controller_gazebo.yaml"/>
-    </group>
-    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
-      <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
-    </include>
-    <!-- Robot state publisher -->
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)"/>
-      <param name="tf_prefix" type="string" value="" />
-    </node>
-     <!-- Launch mujoco ros control -->
-    <include if="$(eval sim_type == 'mujoco')" file="$(find mujoco_ros_control)/launch/mujoco_ros_control.launch">
-      <arg name="robot_model_path" value="$(arg mujoco_model_filename)"/>
-    </include>
-  </group>
+  <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
+  <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
+  
+  
+  <rosparam param="robot_description" command="load" file="$(arg robot_description)"/>
 
-  <!-- REAL ROBOTS -->
-  <group unless="$(arg sim)">
-    <include file="$(find sr_edc_launch)/sr_edc_ros_control.launch">
-      <arg name="debug" value="$(arg debug)"/>
-      <arg name="eth_port" value="$(arg eth_port)"/>
-      <arg name="robot_description" value="$(arg robot_description)"/>
-      <arg name="pwm_control" value="$(arg pwm_control)"/>
-      <arg name="hand_serial" value="$(arg hand_serial)"/>
-      <arg name="hand_id" value="$(arg hand_id)"/>
-      <arg name="mapping_path" value="$(arg mapping_path)"/>
-      <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
-      <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
-    </include>
+  <arg name="robot_description_param" default="robot_description"/>
+  
+  <param name="/use_sim_time" value="true"/>
+
+  <group if="$(eval arg('hand_type') == 'hand_e_plus')">
+    <rosparam unless="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
+    <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_grasp_controller_gazebo.yaml"/>
   </group>
+  <group if="$(eval arg('hand_type') == 'hand_g')">
+    <rosparam unless="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
+    <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_lite_grasp_controller_gazebo.yaml"/>
+  </group>
+  <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
+    <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
+  </include>
+  <!-- Robot state publisher -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)"/>
+    <param name="tf_prefix" type="string" value="" />
+  </node>
+   <!-- Launch mujoco ros control -->
+  <node name="mujoco_ros_control" pkg="mujoco_ros_control" type="mujoco_ros_control" output="screen">
+    <param name="robot_model_path" value="$(arg mujoco_model_filename)"/>
+    <param name="robot_description_param" value="$(arg robot_description_param)"/>
+    <param name="key_path" value="$(arg key_path)"/>
+  </node>
+
 
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
-    <node pkg="sr_utilities_common" type="timed_roslaunch.sh" args="15 sr_moveit_hand_config moveit_planning_and_execution.launch
-      gui:=$(arg gui)" name="timed_roslaunch" output="screen"/>
+    <include file="$(find sr_moveit_hand_config)/launch/moveit_planning_and_execution.launch">
+      <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
+      <arg name="gui" value="$(arg gui)"/>
+    </include>
     <include file="$(find sr_moveit_hand_config)/launch/default_warehouse_db.launch"/>
   </group>
 
   <!-- Controller -->
   <group if="$(arg hand_ctrl)">
     <group unless="$(arg grasp_controller)">
-      <group unless="$(eval sim_type == 'mujoco')">
-        <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
-          <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
-          <param name="wait_for" value ="calibrated" unless="$(arg sim)"/>
-        </node>
-      </group>
-      <group if="$(eval sim_type == 'mujoco')">
-        <rosparam command="load" file="$(find sr_description)/mujoco_models/$(arg hand_id)_trajectory_controller.yaml"/>
+      <rosparam command="load" file="$(find sr_description)/mujoco_models/$(arg hand_id)_trajectory_controller.yaml"/>
         <node name="spawn_hand_controller" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg hand_id)_trajectory_controller"/>
-      </group>
     </group>
     <group if="$(arg grasp_controller)">
-      <node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen">
-        <param name="wait_for" value ="calibrated" unless="$(arg sim)"/>
+      <node name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
+        <param name="controller_group" value="grasp"/>
       </node>
     </group>
   </group>

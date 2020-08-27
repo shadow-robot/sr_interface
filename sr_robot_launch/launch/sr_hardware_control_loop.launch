@@ -9,32 +9,43 @@
   <arg name="side_letter" value="$(eval side[0])"/>
   <arg name="hand_id" value="$(arg side_letter)h"/>
   <arg name="arm_prefix" value="$(arg side_letter)a"/>
-  <arg name="arm_ctrl" default="true"/>
-  <arg name="hand_ctrl" default="true"/>
-  <!-- HAND AND ARM -->
-  <arg name="robot_description" if="$(eval arg('hand_ctrl') and arg('arm_ctrl'))" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_ur10_bt_sp_biotacs.urdf.xacro"/>
-  <!-- ARM BUT NO HAND -->
-  <arg name="robot_description" if="$(eval not arg('hand_ctrl') and arg('arm_ctrl'))" default="$(find sr_box_ur10_moveit_config)/config/$(arg side_letter)a_$(arg robot_model)_with_box.urdf.xacro"/>
-  <arg name="robot_config_file" if="$(arg arm_ctrl)" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
+  <!-- Whether there is an arm. -->
+  <arg name="arm" default="true"/>
+  <!-- Whether there is a hand. -->
+  <arg name="hand" default="true"/>
+  <!-- Whether to run arm controllers. -->
+  <arg name="arm_ctrl" default="$(arg arm)"/>
+  <!-- Whether to run hand controllers. -->
+  <arg name="hand_ctrl" default="$(arg hand)"/>
+
+  <!-- Robot description -->
+  <arg if="$(eval arg('hand') and arg('arm'))" name="robot_description" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_ur10_bt_sp_biotacs.urdf.xacro"/>
+  <arg if="$(eval arg('hand') and arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
+  <arg if="$(eval not arg('hand') and arg('arm'))" name="robot_description" default="$(find sr_box_ur10_moveit_config)/config/$(arg side_letter)a_$(arg robot_model)_with_box.urdf.xacro"/>
+  <arg if="$(eval not arg('hand') and arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
+  <arg if="$(eval arg('hand') and arg('hand_id')=='rh' and not arg('arm'))" name="robot_description" default="$(find sr_description)/robots/shadowhand_motor_plus.urdf.xacro"/>
+  <arg if="$(eval arg('hand') and arg('hand_id')=='lh' and not arg('arm'))" name="robot_description" default="$(find sr_description)/robots/shadowhand_left_motor_plus.urdf.xacro"/>
+  <arg if="$(eval arg('hand') and not arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh.yaml"/>
+
+  <!-- Robot config -->
 
   <!-- HANDS CONFIG-->
   <arg name="hand_serial" default="1082"/>
-  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
+  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v4.yaml"/>
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT enp2s0)"/>
   <arg name="pwm_control" default="true"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
   <arg name="hand_trajectory" default="true"/>
-  <!-- RIGHT HAND BUT NO ARM -->
-  <arg name="robot_description" if="$(eval arg('hand_ctrl') and not arg('arm_ctrl') and arg('hand_id')=='rh')" default="$(find sr_description)/robots/shadowhand_motor_plus.urdf.xacro"/>
-  <!-- LEFT HAND BUT NO ARM -->
-  <arg name="robot_description" if="$(eval arg('hand_ctrl') and not arg('arm_ctrl') and arg('hand_id')=='lh')" default="$(find sr_description)/robots/shadowhand_left_motor_plus.urdf.xacro"/>
-  <arg name="robot_config_file" if="$(eval arg('hand_ctrl') and not arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh.yaml"/>
 
   <!-- ARMS CONFIG-->
-  <arg name="initial_z" if="$(arg arm_ctrl)" default="0.7551"/>
-  <arg name="initial_z" unless="$(arg arm_ctrl)" default="0.0"/>
-  <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
+  <arg name="initial_z" if="$(arg arm)" default="0.7551"/>
+  <arg name="initial_z" unless="$(arg arm)" default="0.0"/>
+  <arg name="arm_x_separation" default="0.0"/>
+  <arg name="arm_y_separation" default="0.0"/>
+  <arg name="arm_robot_hw" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/$(arg side)_ur10e_arm_robot_hw.yaml"/>
+  <arg name="force_torque_sensor_hw" default="$(find sr_robot_launch)/config/$(arg arm_prefix)_force_torque_controller.yaml"/>
   <arg name="include_wrist_in_arm_controller" default="$(arg arm_ctrl)"/>
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the arm-->
@@ -44,8 +55,10 @@
   <arg if="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
   <arg unless="$(arg hand_ctrl)" name="arm_payload_mass" default="0.0"/>
   <arg unless="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
-  <arg name="kinematics_config" default="$(find ur_description)/config/ur10_default.yaml"/>
-  <arg name="load_robot_description_command" default="xacro --inorder $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
+  <arg name="kinematics_config" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find ur_description)/config/ur10_default.yaml"/>
+  <arg name="kinematics_config" if="$(eval arg('robot_model') == 'ur10e')" default="$(find ur_e_description)/config/ur10e_default.yaml"/>
+  <arg name="urcap_program_name" default="external_ctrl.urp"/>
+  <arg name="load_robot_description_command" default="xacro $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation) kinematics_config:=$(arg kinematics_config)"/>
 
   <node pkg="rosservice" type="rosservice" name="set_speed_scale" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg arm_speed_scale)'"/>
   <node pkg="rosservice" type="rosservice" name="set_payload" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_payload '{payload: $(arg arm_payload_mass), center_of_gravity: $(arg arm_payload_cog)}'"/>
@@ -66,8 +79,13 @@
     <arg name="side" value="$(arg side)"/>
   </include>
 
+  <!-- Default hand controller groups -->
+  <arg if="$(arg grasp_controller)" name="hand_controller_group" default="grasp"/>
+  <arg if="$(eval hand_trajectory and not grasp_controller)" name="hand_controller_group" default="trajectory"/>
+  <arg if="$(eval not hand_trajectory and not grasp_controller)" name="hand_controller_group" default="position"/>
+
   <!-- Controller -->
-  <group if="$(arg hand_ctrl)">
+  <group if="$(arg hand)">
     <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
     <rosparam file="$(arg robot_config_file)"/>
     <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
@@ -84,19 +102,14 @@
       <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       <arg name="initial_z" value="$(arg initial_z)"/>
+      <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
+      <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
     </include>
-    <group unless="$(arg grasp_controller)">
-      <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
-        <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
-        <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
-        <param name="wait_for" value ="calibrated"/>
-      </node>
-    </group>
-    <group if="$(arg grasp_controller)">
-      <node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen">
-        <param name="wait_for" value ="calibrated"/>
-      </node>
-    </group>
+    <node if="$(arg hand_ctrl)" name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
+      <param name="controller_group" value="$(arg hand_controller_group)"/>
+      <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
+      <param name="wait_for" value ="calibrated"/>
+    </node>
   </group>
 
   <group if="$(arg arm_ctrl)">
@@ -112,9 +125,16 @@
           - la_sr_ur_robot_hw
       </rosparam>
     </group>
+    <node name="sr_ur_arm_unlock" pkg="sr_robot_launch" type="sr_ur_arm_unlock" output="screen">
+      <param name="urcap_program_name" value="$(arg urcap_program_name)"/>
+    </node>
     <rosparam unless="$(arg hand_ctrl)" param="robot_hardware" subst_value="True">[$(arg arm_prefix)_sr_ur_robot_hw]</rosparam>
     <rosparam command="load" file="$(arg arm_robot_hw)"/>
     <param name="$(arg arm_prefix)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
+    <group if="$(eval 'e' in arg('robot_model'))">
+      <rosparam command="load" file="$(arg force_torque_sensor_hw)"/>
+      <node name="ft_sensor_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg arm_prefix)_force_torque_sensor_controller" />
+    </group>
   </group>
 
   <rosparam unless="$(arg arm_ctrl)">
@@ -122,14 +142,14 @@
       - unique_robot_hw
   </rosparam>
 
-  <!-- These will be loaded if hand_ctrl is false so UR10 with box will load instead. -->
-  <group unless="$(arg hand_ctrl)">
+  <!-- These will be loaded if hand is false so UR10 with box will load instead. -->
+  <group unless="$(arg hand)">
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
       <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
     <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
     <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
-    <param name="robot_description" command="xacro --inorder $(arg robot_description) initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
+    <param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
   </group>
   <!-- These will be loaded if arm and hand are enabled -->
   <!-- Trajectory mode -->
