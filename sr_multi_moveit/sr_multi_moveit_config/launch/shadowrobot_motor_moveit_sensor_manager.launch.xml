@@ -1,4 +1,5 @@
 <launch>
-  <rosparam command="load" file="$(find sr_multi_moveit_config)/config/astra_depth.yaml" />
-  <!--rosparam command="load" file="$(find sr_multi_moveit_config)/config/sensors_rgbd.yaml" /-->
+  <arg name="octomap_date_type" default="pointcloud"/>
+  <rosparam if="$(eval arg('octomap_date_type') == 'depthmap')" command="load" file="$(find sr_multi_moveit_config)/config/sensors_rgbd_depth.yaml" />
+  <rosparam if="$(eval arg('octomap_date_type') == 'pointcloud')" command="load" file="$(find sr_multi_moveit_config)/config/sensors_rgbd.yaml" />
 </launch>
