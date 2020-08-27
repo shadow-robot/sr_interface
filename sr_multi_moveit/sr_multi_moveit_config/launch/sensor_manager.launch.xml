@@ -1,5 +1,5 @@
 <launch>
-
+  <!-- 'octomap_date_type' options are 'pointcloud' or 'depthmap' -->
   <arg name="octomap_date_type" default="pointcloud"/>
 
   <!-- This file makes it easy to include the settings for sensor managers -->  
