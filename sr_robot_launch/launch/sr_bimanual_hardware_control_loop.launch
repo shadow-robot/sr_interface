@@ -56,6 +56,11 @@
   <arg name="right_arm_speed_scale" default="0.5"/>
   <arg name="left_arm_speed_scale" default="0.5"/>
 
+  <arg unless="$(eval hands == 'none')" name="arm_payload_mass" default="4.55"/>
+  <arg unless="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
+  <arg if="$(eval hands == 'none')" name="arm_payload_mass" default="0.0"/>
+  <arg if="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
+
   <arg name="kinematics_config_left" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find ur_description)/config/ur10_default.yaml"/>
   <arg name="kinematics_config_left" if="$(eval arg('robot_model') == 'ur10e')" default="$(find ur_e_description)/config/ur10e_default.yaml"/>
   <arg name="kinematics_config_right" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find ur_description)/config/ur10_default.yaml"/>
@@ -65,6 +70,9 @@
 
   <node pkg="rosservice" type="rosservice" name="set_right_speed_scale" args="call --wait /ra_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg right_arm_speed_scale)'"/>
   <node pkg="rosservice" type="rosservice" name="set_left_speed_scale" args="call --wait /la_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg left_arm_speed_scale)'"/>
+
+  <node pkg="rosservice" type="rosservice" name="set_right_arm_payload" args="call --wait /ra_sr_ur_robot_hw/set_payload '{payload: $(arg arm_payload_mass), center_of_gravity: $(arg arm_payload_cog)}'"/>
+  <node pkg="rosservice" type="rosservice" name="set_left_arm_payload" args="call --wait /la_sr_ur_robot_hw/set_payload '{payload: $(arg arm_payload_mass), center_of_gravity: $(arg arm_payload_cog)}'"/>
 
   <!-- Logging local topics -->
   <group ns="control_box">
