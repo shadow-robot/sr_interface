@@ -1,12 +1,12 @@
 robot:
-  name: ur10esrh
+  name: ursrbox
   manipulators:
     right_manipulator:
       side: right
       arm:
         name: ur10e
         main_group: manipulator
-        moveit_path: 
+        moveit_path:
           package: sr_multi_moveit_config
           relative_path: /config/ur
         extra_groups_config_path: /config
