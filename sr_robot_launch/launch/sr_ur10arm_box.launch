@@ -49,6 +49,8 @@
   <arg name="arm_robot_hw" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   <arg name="arm_robot_hw" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/$(arg side)_ur10e_arm_robot_hw.yaml"/>
   <arg name="arm_speed_scale" default="0.5"/>
+  <arg name="arm_payload_mass" default="0"/>
+  <arg name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
 
   <rosparam command="load" file="$(arg kinematics_config)" ns="$(arg arm_prefix)_sr_ur_robot_hw"/>
 
@@ -118,6 +120,8 @@
         <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
         <arg name="arm_position" default="$(arg arm_position)"/>
         <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
+        <arg name="arm_payload_mass" value="$(arg arm_payload_mass)"/>
+        <arg name="arm_payload_cog" value="$(arg arm_payload_cog)"/>
         <arg name="hand" default="false"/>
         <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
         <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
