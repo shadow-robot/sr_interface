@@ -1,3 +1,5 @@
 <launch>
-
+  <arg name="octomap_data_type" default="depthmap"/>
+  <rosparam if="$(eval arg('octomap_data_type') == 'depthmap')" command="load" file="$(find sr_multi_moveit_config)/config/sensors_rgbd_depth.yaml" />
+  <rosparam if="$(eval arg('octomap_data_type') == 'pointcloud')" command="load" file="$(find sr_multi_moveit_config)/config/sensors_rgbd.yaml" />
 </launch>
