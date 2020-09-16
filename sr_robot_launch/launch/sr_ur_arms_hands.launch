@@ -44,8 +44,8 @@
   <!-- HANDS CONFIG-->
   <arg name="rh_serial" default="1290"/>
   <arg name="lh_serial" default="1338"/>
-  <arg name="rh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
-  <arg name="lh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_E_v3.yaml"/>
+  <arg name="rh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v4.yaml"/>
+  <arg name="lh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_E_v4.yaml"/>
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
@@ -70,8 +70,10 @@
   <arg name="arm_2_z" default="0.0"/>
   <arg name="arm_x_separation" default="1.0"/>
   <arg name="arm_y_separation" default="1.0"/>
-  <arg name="arm_robot_hw_1" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
-  <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_bimanual_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw_1" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw_1" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/right_ur10e_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw_2" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/left_bimanual_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw_2" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/left_bimanual_ur10e_arm_robot_hw.yaml"/>
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
   <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
   <arg name="include_wrist_in_arm_controller" default="$(eval hands != 'none')"/>
@@ -83,6 +85,11 @@
   <arg name="arm_ctrl" default="true"/>
   <arg name="right_arm_speed_scale" default="0.5"/>
   <arg name="left_arm_speed_scale" default="0.5"/>
+
+  <arg unless="$(eval hands == 'none')" name="arm_payload_mass" default="4.55"/>
+  <arg unless="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
+  <arg if="$(eval hands == 'none')" name="arm_payload_mass" default="0.0"/>
+  <arg if="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
@@ -183,6 +190,8 @@
         <arg name="arm_position" value="$(arg arm_position)"/>
         <arg name="right_arm_speed_scale" value="$(arg right_arm_speed_scale)"/>
         <arg name="left_arm_speed_scale" value="$(arg left_arm_speed_scale)"/>
+        <arg name="arm_payload_mass" value="$(arg arm_payload_mass)"/>
+        <arg name="arm_payload_cog" value="$(arg arm_payload_cog)"/>
       </include>
     </group>
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->
