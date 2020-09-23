@@ -3,7 +3,7 @@
     <!--<xacro:include filename="$(find ur_description)/urdf/gazebo.urdf.xacro" />-->
     <xacro:include filename="$(find ur_e_description)/urdf/ur10e.urdf.xacro"/>
     <xacro:arg name="kinematics_config" default="$(find ur_e_description)/config/ur10e_default.yaml"/>
-    <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+    <xacro:arg name="transmission_hw_interface" default="hardware_interface/VelocityJointInterface"/>
 
     <link name="world"/>
     <xacro:arg name="initial_z" default="0.0"/>
@@ -23,9 +23,35 @@
     <xacro:shadowhand muscletrans="false" muscle="false" bio="false" bt_sp="false" ubi="false" eli="false"
                       reflect="1.0" prefix="rh_" lf="true" cable_mesh="true"/>
 
+    <!-- We use wrist_3_link instead of ee_link due to a bug in preserveFixedJoint
+         where it currently won't work with links that don't have an inertial component
+         as is the case with ee_link. These links get removed when converting to SDF.
+         See more on this subject in this issue https://github.com/osrf/sdformat/issues/199 -->
     <joint name="ra_arm_to_hand" type="fixed">
-        <parent link="ra_ee_link"/>
+        <parent link="ra_wrist_3_link"/>
         <child link="rh_forearm"/>
-        <origin xyz="0.012 0.0 0.0" rpy="${pi/2.0} ${0.0} ${pi/2.0}"/>
+        <origin xyz="0.0 0.0 0.012" rpy="${0.0} ${0.0} ${pi}"/>
     </joint>
+
+    <gazebo reference="ra_arm_to_hand">
+      <preserveFixedJoint>true</preserveFixedJoint>
+      <sensor name="ra_force_torque" type="force_torque">
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <force_torque>
+          <frame>sensor</frame>
+          <measure_direction>child_to_parent</measure_direction>
+        </force_torque>
+      </sensor>
+
+      <provideFeedback>true</provideFeedback>
+    </gazebo>
+
+    <gazebo>
+      <plugin name="ft_sensor" filename="libgazebo_ros_ft_sensor.so">
+        <updateRate>125.0</updateRate>
+        <topicName>ra_wrench</topicName>
+        <jointName>ra_arm_to_hand</jointName>
+      </plugin>
+    </gazebo>
 </robot>
