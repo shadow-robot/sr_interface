@@ -34,6 +34,8 @@
   <!-- ROBOT CONFIG-->
   <!-- Specify if the system has "both" hands, only "right", only "left" or "none" hands-->
   <arg name="hands" default="both"/>
+  <arg name="left_hand" default="$(eval hands in ['left', 'both'])"/>
+  <arg name="right_hand" default="$(eval hands in ['right', 'both'])"/>
   <arg name="robot_model" default="ur10"/>
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
@@ -52,11 +54,16 @@
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="hand_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the hands-->
-  <arg name="hand_ctrl" unless="$(eval hands == 'none')" default="true"/>
-  <arg name="hand_ctrl" if="$(eval hands == 'none')" value="false"/>
+  <arg name="hand_ctrl" default="$(eval hands != 'none')"/>
   <!-- The control mode PWM (true) or torque (false) -->
   <!-- Set to true by default for now as torque control is not available yet -->
   <arg name="pwm_control" default="true"/>
+  <!-- Set to true if you want to use grasp controller -->
+  <arg name="grasp_controller" default="false"/>
+  <!-- Default hand controller groups -->
+  <arg if="$(arg grasp_controller)" name="hand_controller_group" default="grasp"/>
+  <arg if="$(eval hand_trajectory and not grasp_controller)" name="hand_controller_group" default="trajectory"/>
+  <arg if="$(eval not hand_trajectory and not grasp_controller)" name="hand_controller_group" default="position"/>
 
   <!-- ARMS CONFIG-->
   <arg name="arm_1_z" default="0.0"/>
@@ -69,7 +76,7 @@
   <arg name="arm_robot_hw_2" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/left_bimanual_ur10e_arm_robot_hw.yaml"/>
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
   <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
-  <arg name="include_wrist_in_arm_controller" default="true"/>
+  <arg name="include_wrist_in_arm_controller" default="$(eval hands != 'none')"/>
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn group position controllers for the arms -->
@@ -99,12 +106,12 @@
     </include>
     <param name="robot_description" command="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
     <!-- HAND -->
-    <group if="$(eval hands == 'both' or hands == 'right')">
+    <group if="$(arg right_hand)">
       <param name="/hand/mapping/$(arg rh_serial)" value="rh"/>
       <param name="/hand/joint_prefix/$(arg rh_serial)" value="rh_"/>
       <rosparam command="load" file="$(find sr_description)/hand/config/rh_controller_gazebo.yaml"/>
     </group>
-    <group if="$(eval hands == 'both' or hands == 'left')">
+    <group if="$(arg left_hand)">
       <param name="/hand/mapping/$(arg lh_serial)" value="lh"/>
       <param name="/hand/joint_prefix/$(arg lh_serial)" value="lh_"/>
       <rosparam command="load" file="$(find sr_description)/hand/config/lh_controller_gazebo.yaml"/>
@@ -117,30 +124,22 @@
     </include>
     <!-- ARM -->
     <group if="$(arg arm_trajectory)">
-      <group if="$(arg include_wrist_in_arm_controller)">
-        <rosparam if="$(eval hands == 'both' or hands == 'right')" file="$(find sr_robot_launch)/config/gazebo/controller/ra_trajectory_controller.yaml" command="load"/>
-        <rosparam if="$(eval hands == 'left'or hands == 'none')" file="$(find sr_robot_launch)/config/gazebo/controller/ra_trajectory_controller_no_wrist.yaml" command="load"/>
-        <rosparam if="$(eval hands == 'both' or hands == 'left')" file="$(find sr_robot_launch)/config/gazebo/controller/la_trajectory_controller.yaml" command="load"/>
-        <rosparam if="$(eval hands == 'right' or hands == 'none')" file="$(find sr_robot_launch)/config/gazebo/controller/la_trajectory_controller_no_wrist.yaml" command="load"/>
-      </group>
-      <group unless="$(arg include_wrist_in_arm_controller)">
-        <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/ra_trajectory_controller_no_wrist.yaml" command="load"/>
-        <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/la_trajectory_controller_no_wrist.yaml" command="load"/>
-      </group>
+      <arg if="$(eval include_wrist_in_arm_controller and right_hand)" name="ra_gazebo_trajectory_controller_config" default="ra_trajectory_controller"/>
+      <arg if="$(eval include_wrist_in_arm_controller and left_hand)" name="la_gazebo_trajectory_controller_config" default="la_trajectory_controller"/>
+      <arg unless="$(eval include_wrist_in_arm_controller and right_hand)" name="ra_gazebo_trajectory_controller_config" default="ra_trajectory_controller_no_wrist"/>
+      <arg unless="$(eval include_wrist_in_arm_controller and left_hand)" name="la_gazebo_trajectory_controller_config" default="la_trajectory_controller_no_wrist"/>
+      <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/$(arg ra_gazebo_trajectory_controller_config).yaml" command="load"/>
+      <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/$(arg la_gazebo_trajectory_controller_config).yaml" command="load"/>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="ra_trajectory_controller la_trajectory_controller"/>
     </group>
     <group if="$(arg arm_position)">
-      <group if="$(arg include_wrist_in_arm_controller)">
-        <rosparam if="$(eval hands == 'both' or hands == 'right')" file="$(find sr_robot_launch)/config/gazebo/controller/ra_group_position_controller.yaml" command="load"/>
-        <rosparam if="$(hands == 'left' or hands == 'none')" file="$(find sr_robot_launch)/config/gazebo/controller/ra_group_position_controller_no_wrist.yaml" command="load"/>
-        <rosparam if="$(eval hands == 'both' or hands == 'left')" file="$(find sr_robot_launch)/config/gazebo/controller/la_group_position_controller.yaml" command="load"/>
-        <rosparam if="$(hands == 'right' or hands == 'none')" file="$(find sr_robot_launch)/config/gazebo/controller/la_group_position_controller_no_wrist.yaml" command="load"/>
-      </group>
-      <group unless="$(arg include_wrist_in_arm_controller)">
-        <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/ra_group_position_controller_no_wrist.yaml" command="load"/>
-        <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/la_group_position_controller_no_wrist.yaml" command="load"/>
-      </group>
-      <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="ra_trajectory_controller la_trajectory_controller"/>
+      <arg if="$(eval include_wrist_in_arm_controller and right_hand)" name="ra_gazebo_group_position_controller_config" default="ra_group_position_controller"/>
+      <arg if="$(eval include_wrist_in_arm_controller and left_hand)" name="la_gazebo_group_position_controller_config" default="la_group_position_controller"/>
+      <arg unless="$(eval include_wrist_in_arm_controller and right_hand)" name="ra_gazebo_group_position_controller_config" default="ra_group_position_controller_no_wrist"/>
+      <arg unless="$(eval include_wrist_in_arm_controller and left_hand)" name="la_gazebo_group_position_controller_config" default="la_group_position_controller_no_wrist"/>
+      <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/$(arg ra_gazebo_group_position_controller_config).yaml" command="load"/>
+      <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/$(arg la_gazebo_group_position_controller_config).yaml" command="load"/>
+      <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="ra_group_position_controller la_group_position_controller"/>
     </group>
     <!-- Robot state publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
@@ -155,8 +154,7 @@
     </group>
     <group if="$(arg hand_ctrl)">
       <node name="sr_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
-        <param if="$(arg hand_trajectory)" name="controller_group" value="trajectory"/>
-        <param unless="$(arg hand_trajectory)" name="controller_group" value="position"/>
+        <param name="controller_group" value="$(arg hand_controller_group)"/>
         <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
       </node>
     </group>
@@ -172,6 +170,8 @@
         <arg name="robot_description" value="$(arg robot_description)"/>
         <arg name="robot_config_file" value="$(arg robot_config_file)"/>
         <arg name="hands" value="$(arg hands)"/>
+        <arg name="hand_ctrl" value="$(arg hand_ctrl)"/>
+        <arg name="hand_controller_group" value="$(arg hand_controller_group)"/>
         <arg name="rh_serial" value="$(arg rh_serial)"/>
         <arg name="lh_serial" value="$(arg lh_serial)"/>
         <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
