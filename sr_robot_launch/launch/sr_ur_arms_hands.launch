@@ -207,7 +207,7 @@
         <param name="executable_name" value="scene.launch" />
         <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
         <param name="launch_args_list" value="scene_file:=$(arg scene_file)" />
-        <param name="timeout" value="20.0" />
+        <param name="timeout" value="30.0" />
       </node>
     </group>
   </group>

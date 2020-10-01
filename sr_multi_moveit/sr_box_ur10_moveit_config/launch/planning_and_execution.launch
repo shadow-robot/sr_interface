@@ -14,7 +14,7 @@
     <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
     <rosparam param="topics_list" subst_value="True">$(arg trajectory_controllers_list)</rosparam>
     <param name="launch_args_list" value="side:=$(arg side)"/>
-    <param name="timeout" value="20.0" />
+    <param name="timeout" value="60.0" />
   </node>
 
   <group if="$(arg use_gui)">
@@ -24,7 +24,7 @@
       <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
       <rosparam param="topics_list">[/move_group/monitored_planning_scene]</rosparam>
       <param name="launch_args_list" value="config:=true side:=$(arg side)" />
-      <param name="timeout" value="20.0" />
+      <param name="timeout" value="60.0" />
     </node>
   </group>
   <include if="$(arg warehouse)" file="$(find sr_box_ur10_moveit_config)/launch/default_warehouse_db.launch"/>
