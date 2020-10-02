@@ -136,7 +136,7 @@
     <include file="$(find sr_moveit_hand_config)/launch/moveit_planning_and_execution.launch">
       <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
       <arg name="gui" value="$(arg gui)"/>
-      <arg name="trajectory_controllers_list" default="$(arg trajectory_controllers_list)"/>
+      <arg name="trajectory_controllers_list" value="$(arg trajectory_controllers_list)"/>
     </include>
     <include file="$(find sr_moveit_hand_config)/launch/default_warehouse_db.launch"/>
   </group>

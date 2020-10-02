@@ -222,7 +222,7 @@
         <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
         <arg name="planning" value="$(arg planning)"/>
         <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
-        <arg name="trajectory_controllers_list" default="$(arg trajectory_controllers_list)"/>
+        <arg name="trajectory_controllers_list" value="$(arg trajectory_controllers_list)"/>
       </include>
       <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
   </group>
