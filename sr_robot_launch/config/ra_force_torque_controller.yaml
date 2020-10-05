@@ -1,0 +1,4 @@
+# Publish wrench ----------------------------------
+ra_force_torque_sensor_controller:
+   type:         force_torque_sensor_controller/ForceTorqueSensorController
+   publish_rate: 500

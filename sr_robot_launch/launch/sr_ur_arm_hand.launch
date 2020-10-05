@@ -44,7 +44,7 @@
 
   <!-- HANDS CONFIG-->
   <arg name="hand_serial" default="634"/>
-  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
+  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v4.yaml"/>
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
@@ -62,7 +62,10 @@
 
   <!-- ARMS CONFIG-->
   <arg name="initial_z" default="0.1"/>
-  <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_x_separation" default="0.0"/>
+  <arg name="arm_y_separation" default="0.0"/>
+  <arg name="arm_robot_hw" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/$(arg side)_ur10e_arm_robot_hw.yaml"/>
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
   <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
   <arg name="include_wrist_in_arm_controller" default="true"/>
@@ -73,6 +76,10 @@
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_ctrl" default="true"/>
   <arg name="arm_speed_scale" default="0.5"/>
+  <arg if="$(arg hand_ctrl)" name="arm_payload_mass" default="4.55"/>
+  <arg if="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
+  <arg unless="$(arg hand_ctrl)" name="arm_payload_mass" default="0.0"/>
+  <arg unless="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
@@ -87,7 +94,7 @@
       <arg name="debug" value="$(arg debug)"/>
       <arg name="verbose" value="$(arg verbose)" />
     </include>
-    <param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z)"/>
+    <param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
     <!-- HAND -->
     <param name="/hand/mapping/$(arg hand_serial)" value="$(arg hand_id)"/>
     <param name="/hand/joint_prefix/$(arg hand_serial)" value="$(arg hand_id)_"/>
@@ -122,15 +129,12 @@
       </include>
     </group>
     <group if="$(arg hand_ctrl)">
-      <group unless="$(arg grasp_controller)">
-        <node name="$(arg hand_id)_trajectory_controller" pkg="sr_utilities" type="trajectory_controller_spawner.py" output="screen">
-          <param name="hand_trajectory" value ="$(arg hand_trajectory)"/>
-          <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
-        </node>
-      </group>
-      <group if="$(arg grasp_controller)">
-        <node name="$(arg hand_id)_grasp_controller" pkg="sr_utilities" type="grasp_controller_spawner.py" output="screen"/>
-      </group>
+      <node name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
+        <param if="$(eval hand_trajectory and not grasp_controller)" name="controller_group" value="trajectory"/>
+        <param if="$(eval not hand_trajectory and not grasp_controller)" name="controller_group" value="position"/>
+        <param if="$(arg grasp_controller)" name="controller_group" value="grasp"/>
+        <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
+      </node>
     </group>
   </group>
 
@@ -141,10 +145,14 @@
         <arg name="debug" value="$(arg debug)"/>
         <arg name="initial_z" value="$(arg initial_z)"/>
         <arg name="robot_description" value="$(arg robot_description)"/>
+        <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
+        <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
         <arg name="side" value="$(arg side)"/>
         <arg name="robot_model" value="$(arg robot_model)"/>
         <arg name="arm_robot_hw" value="$(arg arm_robot_hw)"/>
         <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
+        <arg name="arm_payload_mass" value="$(arg arm_payload_mass)"/>
+        <arg name="arm_payload_cog" value="$(arg arm_payload_cog)"/>
         <arg name="hand_serial" value="$(arg hand_serial)"/>
         <arg name="mapping_path" value="$(arg mapping_path)"/>
         <arg name="eth_port" value="$(arg eth_port)"/>
@@ -161,8 +169,15 @@
       </include>
     </group>
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->
-    <node if="$(arg scene)" pkg="sr_utilities_common" type="timed_roslaunch.sh" args="8 sr_multi_moveit_config scene.launch
-      scene_file:=$(arg scene_file)" name="timed_publish_moveit_scene" output="screen"/>
+    <group if="$(arg scene)">
+      <node name="conditional_delayed_rostool_unimanual_scene" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
+        <param name="package_name" value="sr_multi_moveit_config" />
+        <param name="executable_name" value="scene.launch" />
+        <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+        <param name="launch_args_list" value="scene_file:=$(arg scene_file)" />
+        <param name="timeout" value="20.0" />
+      </node>
+    </group>
   </group>
 
   <!-- MOVEIT -->
