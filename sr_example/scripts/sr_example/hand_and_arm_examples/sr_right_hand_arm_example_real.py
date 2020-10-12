@@ -32,8 +32,6 @@ hand_commander = SrHandCommander(name="right_hand")
 arm_commander = SrArmCommander(name="right_arm")
 # How to command the arm and hand together
 robot_commander = SrRobotCommander(name="right_arm_and_hand")
-arm_commander.set_max_velocity_scaling_factor(0.1)
-
 
 
 # Specify goals for hand and arm if not a saved state
@@ -49,10 +47,13 @@ hand_joints_goal_2 = {'rh_FFJ1': 0.35, 'rh_FFJ2': 1.5707, 'rh_FFJ3': 1.5707, 'rh
                       'rh_RFJ1': 0.35, 'rh_RFJ2': 1.5707, 'rh_RFJ3': 1.5707, 'rh_RFJ4': 0.0,
                       'rh_LFJ1': 0.35, 'rh_LFJ2': 1.5707, 'rh_LFJ3': 1.5707, 'rh_LFJ4': 0.0,
                       'rh_THJ1': 0.35, 'rh_THJ2': 0.0, 'rh_THJ3': 0.0, 'rh_THJ4': 0.0, 
-                      'rh_THJ5': 0.0, 'rh_WRJ1': 0.0, 'rh_WRJ2': 0.0}
+                      'rh_THJ5': 0.0, 'rh_WRJ1': 0.52, 'rh_WRJ2': 0.52}
 
-arm_joints_goal_1 = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 0.00,
-                     'ra_shoulder_lift_joint': -33.0, 'ra_wrist_3_joint': 0.00}
+arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
+                     'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733, 'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
+
+arm_joints_goal_1 = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
+                     'ra_shoulder_lift_joint': -1.57, 'ra_wrist_3_joint': 0.00, }
 
 arm_joints_goal_2 = {'ra_shoulder_pan_joint': -0.05, 'ra_elbow_joint': -91.9, 
                      'ra_wrist_1_joint': -53.4, 'ra_shoulder_lift_joint': 8.3, 
@@ -63,9 +64,9 @@ hand_arm_joints_goal_1 = {'rh_FFJ1': 0.35, 'rh_FFJ2': 1.5707, 'rh_FFJ3': 1.5707,
                       'rh_RFJ1': 0.35, 'rh_RFJ2': 1.5707, 'rh_RFJ3': 1.5707, 'rh_RFJ4': 0.0,
                       'rh_LFJ1': 0.35, 'rh_LFJ2': 1.5707, 'rh_LFJ3': 1.5707, 'rh_LFJ4': 0.0,
                       'rh_THJ1': 0.35, 'rh_THJ2': 0.0, 'rh_THJ3': 0.0, 'rh_THJ4': 0.0, 
-                      'rh_THJ5': 0.0, 'rh_WRJ1': 0.0, 'rh_WRJ2': 0.0, 
-                      'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 0.00,
-                      'ra_shoulder_lift_joint': -0.58, 'ra_wrist_3_joint': 0.00}
+                      'rh_THJ5': 0.0, 'rh_WRJ1': 0.6, 'rh_WRJ2': 0.0, 
+                      'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
+                      'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733, 'ra_wrist_2_joint': 1.5708,'ra_wrist_3_joint': 0.00}
 
 # Move through each goal
 # joint states are sent to the commanders, with a time for execution and a flag as to whether
@@ -73,9 +74,9 @@ hand_arm_joints_goal_1 = {'rh_FFJ1': 0.35, 'rh_FFJ2': 1.5707, 'rh_FFJ3': 1.5707,
 
 # Start at home named targets
 # Moving to a stored named target, stored targets can be viewed in MoveIt in the planning tab
-named_target = "ra_home"
-print("Moving arm to named target " + named_target)
-arm_commander.move_to_named_target(named_target)
+joint_goals = arm_home_joints_goal
+rospy.loginfo("Moving arm to joint states\n" + str(joint_goals) + "\n")
+arm_commander.move_to_joint_value_target_unsafe(joint_goals, 3.0, True)
 
 rospy.sleep(2.0)
 
@@ -93,21 +94,21 @@ hand_commander.move_to_named_target("pack")
 # Move arm
 joint_goals = arm_joints_goal_1
 rospy.loginfo("Moving arm to joint states\n" + str(joint_goals) + "\n")
-arm_commander.move_to_joint_value_target_unsafe(joint_goals, 10.0, True, True)
+arm_commander.move_to_joint_value_target_unsafe(joint_goals, 3.0, True)
 
 raw_input("Press Enter to continue...")
 
 # Move hand to open
 joint_goals = hand_joints_goal_1
 rospy.loginfo("Moving hand to joint states\n" + str(joint_goals) + "\n")
-hand_commander.move_to_joint_value_target_unsafe(joint_goals, 10.0, True, True)
+hand_commander.move_to_joint_value_target_unsafe(joint_goals, 3.0, True, True)
 
 raw_input("Press Enter to continue...")
 
 # Move arm
 joint_goals = arm_joints_goal_2
 rospy.loginfo("Moving arm to joint states\n" + str(joint_goals) + "\n")
-arm_commander.move_to_joint_value_target_unsafe(joint_goals, 10.0, True, True)
+arm_commander.move_to_joint_value_target_unsafe(joint_goals, 3.0, True, True)
 
 raw_input("Press Enter to continue...")
 
@@ -124,21 +125,14 @@ raw_input("Press Enter to continue...")
 ### NOT WORKING WITH ARM INCLUDING WRIST!!!#####
 joint_goals = hand_arm_joints_goal_1
 rospy.loginfo("Moving hand and arm to joint states\n" + str(joint_goals) + "\n")
-robot_commander.move_to_joint_value_target_unsafe(joint_goals, 10.0, True, True)
+robot_commander.move_to_joint_value_target_unsafe(joint_goals, 3.0, True)
 
 rospy.sleep(2.0)
 
 raw_input("Press Enter to continue...")
 
-# Finish at named targets
-# Moving to a stored named target, stored targets can be viewed in MoveIt in the planning tab
-print("Moving arm to named target ra_home")
-arm_commander.move_to_named_target("ra_home")
-
-rospy.sleep(2.0)
-
-# Move hand to open
-# Moving to a stored named target, stored targets can be viewed in MoveIt in the planning tab
+# # Move hand to open
+# # Moving to a stored named target, stored targets can be viewed in MoveIt in the planning tab
 rospy.loginfo("Moving hand to joint state: open")
 hand_commander.move_to_named_target("open")
 
