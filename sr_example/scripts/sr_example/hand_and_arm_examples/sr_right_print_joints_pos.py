@@ -73,3 +73,4 @@ arm_joints_state = {
 print("Hand joints position \n " + str(hand_joints_state) + "\n")
 
 print("Arm joints position \n " + str(arm_joints_state) + "\n")
+
