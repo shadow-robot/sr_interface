@@ -22,6 +22,12 @@
 # between the hand and arm are not made!
 # For more information, please see https://dexterous-hand.readthedocs.io/en/latest/user_guide/2_software_description.html#robot-commander
 
+# roslaunch commands used with this script to launch the robot:
+# real robot:
+#     roslaunch sr_right_ur10arm_hand.launch external_control_loop:=true sim:=false scene:=true
+# simulated robot:
+#     roslaunch sr_right_ur10arm_hand.launch sim:=true scene:=true
+
 import rospy
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
