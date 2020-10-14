@@ -3,7 +3,7 @@
     <!--<xacro:include filename="$(find ur_description)/urdf/gazebo.urdf.xacro" />-->
     <xacro:include filename="$(find ur_e_description)/urdf/ur10e.urdf.xacro"/>
     <xacro:arg name="kinematics_config" default="$(find ur_e_description)/config/ur10e_default.yaml"/>
-    <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+    <xacro:arg name="transmission_hw_interface" default="hardware_interface/VelocityJointInterface"/>
 
     <link name="world"/>
     <xacro:arg name="initial_z" default="0.0"/>
