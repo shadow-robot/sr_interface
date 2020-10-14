@@ -1,3 +1,7 @@
+# Settings for ros_control control loop
+hardware_control_loop:
+   loop_hz: &loop_hz 500
+
 ra_trajectory_controller:
    type: velocity_controllers/JointTrajectoryController
    hardware_interface:
@@ -47,8 +51,4 @@ ra_trajectory_controller:
 joint_group_vel_controller:
    type: velocity_controllers/JointGroupVelocityController
    joints: *robot_joints
-
-# Settings for ros_control control loop
-hardware_control_loop:
-   loop_hz: &loop_hz 500
 
