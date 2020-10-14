@@ -16,7 +16,7 @@
 # This example demonstrates how to move the right hand and arm through a sequence of joint goals.
 # At the start and end of the sequence, both the hand and arm will spend 20s in teach mode,
 # This allows the user to manually move the hand and arm. New goals can be easily generated
-# using the script 'sr_print_joints_position.py
+# using the script 'sr_right_print_joints_pos.py
 # PLEASE NOTE: move_to_joint_value_target_unsafe is used in this script, so collision checks
 # between the hand and arm are not made!
 # For more information, please see https://dexterous-hand.readthedocs.io/en/latest/user_guide/2_software_description.html#robot-commander
