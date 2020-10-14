@@ -18,7 +18,8 @@
 # recording those positions with this script. Angles can be printed in radians or degrees, an argument should be added
 # when the script is called of either 'radians' or 'degrees', default is radians
 
-# For more information, please see https://dexterous-hand.readthedocs.io/en/latest/user_guide/2_software_description.html#robot-commander
+# For more information, please see:
+# https://dexterous-hand.readthedocs.io/en/latest/user_guide/2_software_description.html#robot-commander
 
 # roslaunch commands used with this script to launch the robot:
 # real robot with a NUC (or a separate computer with an RT kernel):
@@ -39,7 +40,8 @@ parser = argparse.ArgumentParser(description='A script to print hand and arm joi
                                  add_help=True, usage='%(prog)s [-h] --angle_type ANGLE_TYPE',
                                  formatter_class=argparse.RawTextHelpFormatter)
 
-parser.add_argument('--angle_type', dest='angle_type', default='radians', help="ANGLE_TYPE should be either degrees or radians")
+parser.add_argument('--angle_type', dest='angle_type', 
+                    default='radians', help="ANGLE_TYPE should be either degrees or radians")
 args = parser.parse_args()
 
 angle_type = args.angle_type

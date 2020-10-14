@@ -49,7 +49,7 @@ rospy.sleep(rospy.Duration(1))
 
 # Start arm at home
 arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
-                     'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733, 
+                     'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
                      'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
 rospy.loginfo("Moving arm to joint states\n" + str(arm_home_joints_goal) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(arm_home_joints_goal, 6.0, True)
@@ -115,9 +115,6 @@ raw_input("Press Enter to continue...")
 
 
 # Finish arm at home
-arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
-                     'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733, 
-                     'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
 rospy.loginfo("Moving arm to joint states\n" + str(arm_home_joints_goal) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(arm_home_joints_goal, 6.0, True)
 
