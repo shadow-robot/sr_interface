@@ -40,8 +40,9 @@ parser = argparse.ArgumentParser(description='A script to print hand and arm joi
                                  add_help=True, usage='%(prog)s [-h] --angle_type ANGLE_TYPE',
                                  formatter_class=argparse.RawTextHelpFormatter)
 
-parser.add_argument('--angle_type', dest='angle_type', 
-                    default='radians', help="ANGLE_TYPE should be either degrees or radians")
+parser.add_argument('--angle_type', dest='angle_type',
+                    default='radians',
+                    help="ANGLE_TYPE should be either degrees or radians")
 args = parser.parse_args()
 
 angle_type = args.angle_type

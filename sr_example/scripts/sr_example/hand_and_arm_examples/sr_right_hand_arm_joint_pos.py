@@ -67,8 +67,8 @@ hand_joints_goal_2 = {'rh_FFJ1': 0.35, 'rh_FFJ2': 1.5707, 'rh_FFJ3': 1.5707, 'rh
 arm_joints_goal_1 = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
                      'ra_shoulder_lift_joint': -1.57, 'ra_wrist_3_joint': 0.00}
 
-arm_joints_goal_2 = {'ra_shoulder_pan_joint': -0.05, 'ra_elbow_joint': -91.9, 
-                     'ra_wrist_1_joint': -53.4, 'ra_shoulder_lift_joint': 8.3, 
+arm_joints_goal_2 = {'ra_shoulder_pan_joint': -0.05, 'ra_elbow_joint': -91.9,
+                     'ra_wrist_1_joint': -53.4, 'ra_shoulder_lift_joint': 8.3,
                      'ra_wrist_3_joint': 125.8, 'ra_wrist_2_joint': -0.000}
 
 hand_arm_joints_goal_1 = {'rh_FFJ1': 0.35, 'rh_FFJ2': 1.5707, 'rh_FFJ3': 1.5707, 'rh_FFJ4': 0.0,
@@ -81,7 +81,7 @@ hand_arm_joints_goal_1 = {'rh_FFJ1': 0.35, 'rh_FFJ2': 1.5707, 'rh_FFJ3': 1.5707,
                           'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
                           'ra_shoulder_lift_joint': -0.58, 'ra_wrist_3_joint': 0.00,
                           'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                          'ra_wrist_2_joint': 1.5708,'ra_wrist_3_joint': 0.00}
+                          'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
 
 # Move through each goal
 # joint states are sent to the commanders, with a time for execution and a flag as to whether
@@ -149,7 +149,7 @@ rospy.sleep(2.0)
 
 raw_input("Press Enter to continue...")
 
-# Move arm and hand together back to home 
+# Move arm and hand together back to home
 joint_goals = hand_arm_joints_goal_1
 rospy.loginfo("Moving hand and arm to joint states\n" + str(joint_goals) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(joint_goals, 6.0, True)

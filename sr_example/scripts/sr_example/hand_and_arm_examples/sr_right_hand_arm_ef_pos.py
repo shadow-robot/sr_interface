@@ -15,13 +15,13 @@
 
 # This example demonstrates some of the functions of the arm commander using poses.
 # The arm is moved through a sequence of goals generated via different pose functions in the commander.
-# A pose can be a PoseStamped message, 
-# or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z], 
+# A pose can be a PoseStamped message,
+# or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z],
 # or a list of 7 floats [x, y, z, qx, qy, qz, qw]
 # PLEASE NOTE: move_to_joint_value_target_unsafe is used in this script, so collision checks
 # between the hand and arm are not made!
 
-# For more information, please see: 
+# For more information, please see:
 # https://dexterous-hand.readthedocs.io/en/latest/user_guide/2_software_description.html#robot-commander
 
 # roslaunch commands used with this script to launch the robot:
@@ -50,8 +50,8 @@ arm_commander.set_max_velocity_scaling_factor(0.1)
 rospy.sleep(rospy.Duration(2))
 
 # Start arm at home
-arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00, 
-                        'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733, 
+arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
+                        'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
                         'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
 rospy.loginfo("Moving arm to joint states\n" + str(arm_home_joints_goal) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(arm_home_joints_goal, 6.0, True)

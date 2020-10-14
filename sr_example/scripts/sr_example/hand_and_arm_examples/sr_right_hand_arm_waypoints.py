@@ -18,7 +18,8 @@
 # PLEASE NOTE: move_to_joint_value_target_unsafe is used in this script, so collision checks
 # between the hand and arm are not made!
 
-# For more information, please see https://dexterous-hand.readthedocs.io/en/latest/user_guide/2_software_description.html#robot-commander
+# For more information, please see:
+# https://dexterous-hand.readthedocs.io/en/latest/user_guide/2_software_description.html#robot-commander
 
 # roslaunch commands used with this script to launch the robot:
 # real robot with a NUC (or a separate computer with an RT kernel):
@@ -49,8 +50,8 @@ rospy.sleep(rospy.Duration(1))
 
 # Start arm at home
 arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
-                     'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                     'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
+                        'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
+                        'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
 rospy.loginfo("Moving arm to joint states\n" + str(arm_home_joints_goal) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(arm_home_joints_goal, 6.0, True)
 
@@ -77,7 +78,7 @@ waypoints = []
 # start with the initial position
 initial_pose = arm_commander.get_current_pose()
 
-# Using the method plan_to_waypoints_target, it is possible to specify a set of waypoints 
+# Using the method plan_to_waypoints_target, it is possible to specify a set of waypoints
 # for the end-effector and create a plan to follow it.
 # Specify a set of waypoints for the end-effector and plans.
 # This is a blocking method.
