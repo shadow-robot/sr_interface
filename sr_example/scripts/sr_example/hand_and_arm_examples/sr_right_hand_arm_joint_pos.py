@@ -19,14 +19,23 @@
 # using the script 'sr_print_joints_position.py
 # PLEASE NOTE: move_to_joint_value_target_unsafe is used in this script, so collision checks
 # between the hand and arm are not made!
+# For more information, please see https://dexterous-hand.readthedocs.io/en/latest/user_guide/2_software_description.html#robot-commander
+
+# roslaunch commands used with this script to launch the robot:
+# real robot:
+#     roslaunch sr_right_ur10arm_hand.launch external_control_loop:=true sim:=false scene:=true
+# simulated robot:
+#     roslaunch sr_right_ur10arm_hand.launch sim:=true scene:=true
 
 import rospy
 from sr_robot_commander.sr_arm_commander import SrArmCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
 
-rospy.init_node("hand_arm_example_real", anonymous=True)
+rospy.init_node("right_hand_arm_joint_pos", anonymous=True)
 
+# The constructors for the SrArmCommander, SrHandCommander and SrRobotCommander
+# take a name parameter that should match the group name of the robot to be used.
 # How to command the hand or arm separately
 hand_commander = SrHandCommander(name="right_hand")
 arm_commander = SrArmCommander(name="right_arm")
@@ -89,7 +98,7 @@ hand_arm_joints_goal_1 = {'rh_FFJ1': 0.35, 'rh_FFJ2': 1.5707, 'rh_FFJ3': 1.5707,
 #         """
 
 
-# Start at home named targets
+# Start arm at home
 joint_goals = arm_home_joints_goal
 rospy.loginfo("Moving arm to joint states\n" + str(joint_goals) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(joint_goals, 10.0, True)
@@ -151,7 +160,7 @@ rospy.sleep(2.0)
 
 raw_input("Press Enter to continue...")
 
-# Finish at named targets
+# Finish arm at home
 joint_goals = arm_home_joints_goal
 rospy.loginfo("Moving arm to joint states\n" + str(joint_goals) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(joint_goals, 6.0, True)

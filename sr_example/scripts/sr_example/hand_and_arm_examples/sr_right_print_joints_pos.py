@@ -18,6 +18,14 @@
 # recording those positions with this script. Angles can be printed in radians or degrees, an argument should be added
 # when the script is called of either 'radians' or 'degrees', default is radians
 
+# For more information, please see https://dexterous-hand.readthedocs.io/en/latest/user_guide/2_software_description.html#robot-commander
+
+# roslaunch commands used with this script to launch the robot:
+# real robot:
+#     roslaunch sr_right_ur10arm_hand.launch external_control_loop:=true sim:=false scene:=true
+# simulated robot:
+#     roslaunch sr_right_ur10arm_hand.launch sim:=true scene:=true
+
 import rospy
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from math import pi
@@ -45,12 +53,13 @@ scale = 1
 if angle_type == "degrees":
     scale = 1 * (180/pi)
 
+# The constructors for SrRobotCommander
+# take a name parameter that should match the group name of the robot to be used.
 robot_commander = SrRobotCommander(name="right_arm_and_hand")
 
 print("Joints positions")
 
 all_joints_state = robot_commander.get_joints_position()
-
 
 hand_joints_state = {
     k: (v * scale) for k, v in all_joints_state.items()

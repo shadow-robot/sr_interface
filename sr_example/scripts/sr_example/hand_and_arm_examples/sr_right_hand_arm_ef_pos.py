@@ -18,6 +18,9 @@
 # A pose can be a PoseStamped message, 
 # or a list of 6 floats: [x, y, z, rot_x, rot_y, rot_z], 
 # or a list of 7 floats [x, y, z, qx, qy, qz, qw]
+# PLEASE NOTE: move_to_joint_value_target_unsafe is used in this script, so collision checks
+# between the hand and arm are not made!
+# For more information, please see https://dexterous-hand.readthedocs.io/en/latest/user_guide/2_software_description.html#robot-commander
 
 import rospy
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
@@ -25,8 +28,11 @@ from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_arm_commander import SrArmCommander
 
-rospy.init_node("right_hand_arm_example_pose", anonymous=True)
+rospy.init_node("right_hand_arm_ef_pos", anonymous=True)
 
+# The constructors for the SrArmCommander, SrHandCommander and SrRobotCommander
+# take a name parameter that should match the group name of the robot to be used.
+# How to command the hand or arm separately
 hand_commander = SrHandCommander(name="right_hand")
 arm_commander = SrArmCommander(name="right_arm")
 # How to command the arm and hand together
@@ -35,7 +41,7 @@ arm_commander.set_max_velocity_scaling_factor(0.1)
 
 rospy.sleep(rospy.Duration(2))
 
-# Start at home named targets
+# Start arm at home
 arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
                      'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733, 
                      'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
@@ -94,7 +100,7 @@ raw_input("Press Enter to continue...")
 
 rospy.sleep(2.0)
 
-# Finish at named targets
+# Finish arm at home
 arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
                      'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733, 
                      'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
