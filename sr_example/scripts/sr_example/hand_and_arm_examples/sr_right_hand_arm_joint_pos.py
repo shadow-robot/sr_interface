@@ -19,10 +19,11 @@
 # using the script 'sr_right_print_joints_pos.py
 # PLEASE NOTE: move_to_joint_value_target_unsafe is used in this script, so collision checks
 # between the hand and arm are not made!
+
 # For more information, please see https://dexterous-hand.readthedocs.io/en/latest/user_guide/2_software_description.html#robot-commander
 
 # roslaunch commands used with this script to launch the robot:
-# real robot:
+# real robot with a NUC (or a separate computer with an RT kernel):
 #     roslaunch sr_right_ur10arm_hand.launch external_control_loop:=true sim:=false scene:=true
 # simulated robot:
 #     roslaunch sr_right_ur10arm_hand.launch sim:=true scene:=true
@@ -42,8 +43,6 @@ arm_commander = SrArmCommander(name="right_arm")
 # How to command the arm and hand together
 robot_commander = SrRobotCommander(name="right_arm_and_hand")
 arm_commander.set_max_velocity_scaling_factor(0.1)
-
-
 
 # Specify goals for hand and arm if not a saved state
 arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
@@ -95,8 +94,6 @@ hand_arm_joints_goal_1 = {'rh_FFJ1': 0.35, 'rh_FFJ2': 1.5707, 'rh_FFJ3': 1.5707,
 #         the trajectory controller).
 #         @param wait - should method wait for movement end or not.
 #         @param angle_degrees - are joint_states in degrees or not.
-#         """
-
 
 # Start arm at home
 joint_goals = arm_home_joints_goal

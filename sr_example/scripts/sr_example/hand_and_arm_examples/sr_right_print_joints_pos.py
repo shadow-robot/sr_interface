@@ -21,7 +21,7 @@
 # For more information, please see https://dexterous-hand.readthedocs.io/en/latest/user_guide/2_software_description.html#robot-commander
 
 # roslaunch commands used with this script to launch the robot:
-# real robot:
+# real robot with a NUC (or a separate computer with an RT kernel):
 #     roslaunch sr_right_ur10arm_hand.launch external_control_loop:=true sim:=false scene:=true
 # simulated robot:
 #     roslaunch sr_right_ur10arm_hand.launch sim:=true scene:=true
@@ -59,6 +59,7 @@ robot_commander = SrRobotCommander(name="right_arm_and_hand")
 
 print("Joints positions")
 
+# get_joints_position returns a dictionary with joints poisitions
 all_joints_state = robot_commander.get_joints_position()
 
 hand_joints_state = {

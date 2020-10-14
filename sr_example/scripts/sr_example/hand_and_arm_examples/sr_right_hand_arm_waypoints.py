@@ -17,10 +17,11 @@
 # The arm, hand and robot will be moved through a sequence of goals generated via different functions in the commander.
 # PLEASE NOTE: move_to_joint_value_target_unsafe is used in this script, so collision checks
 # between the hand and arm are not made!
+
 # For more information, please see https://dexterous-hand.readthedocs.io/en/latest/user_guide/2_software_description.html#robot-commander
 
 # roslaunch commands used with this script to launch the robot:
-# real robot:
+# real robot with a NUC (or a separate computer with an RT kernel):
 #     roslaunch sr_right_ur10arm_hand.launch external_control_loop:=true sim:=false scene:=true
 # simulated robot:
 #     roslaunch sr_right_ur10arm_hand.launch sim:=true scene:=true
@@ -62,7 +63,6 @@ hand_commander.move_to_named_target("pack")
 # pose_1 = [1.2, 0.54, 0.92, -0.87, -0.07, -0.03, 0.39]
 pose_1 = [1.1, 0.5, 1.2, -0.9, 0.0, -0.0]
 
-
 print "Moving to initial pose"
 arm_commander.plan_to_pose_target(pose_1)
 arm_commander.execute()
@@ -77,14 +77,18 @@ waypoints = []
 # start with the initial position
 initial_pose = arm_commander.get_current_pose()
 
-
 # Using the method plan_to_waypoints_target, it is possible to specify a set of waypoints 
 # for the end-effector and create a plan to follow it.
-# Parameters:
-#       reference_frame is the reference frame in which the waypoints are given
-#       waypoints is an array of poses of the end-effector.
-#       eef_step indicates that the configurations are goint to be computed for every eef_step meters (0.005 by default)
-#       jump_threshold specify the maximum distance in configuration space between consecutive points in the resulting path (0.0 by default)
+# Specify a set of waypoints for the end-effector and plans.
+# This is a blocking method.
+# plan_to_waypoints_target(swaypoints, reference_frame, eef_step, jump_threshold, custom_start_state):
+#       @param reference_frame - the reference frame in which the waypoints are given.
+#       @param waypoints - an array of poses of end-effector.
+#       @param eef_step - configurations are computed for every eef_step meters.
+#       @param jump_threshold - maximum distance in configuration space between consecutive points in the
+#       resulting path.
+#       @param custom_start_state - specify a start state different than the current state.
+#       @return - motion plan (RobotTrajectory msg) that contains the trajectory to the set wayapoints targets.
 
 wpose = geometry_msgs.msg.Pose()
 wpose.position.x = initial_pose.position.x
