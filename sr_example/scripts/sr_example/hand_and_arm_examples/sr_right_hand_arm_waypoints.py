@@ -127,3 +127,4 @@ rospy.loginfo("Moving hand to joint state: open")
 hand_commander.move_to_named_target("open")
 
 rospy.sleep(rospy.Duration(3))
+
