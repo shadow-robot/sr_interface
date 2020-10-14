@@ -141,3 +141,4 @@ print("Arm joints position:\n" +
       str(arm_commander.get_joints_position()) + "\n")
 print("Arm joints velocities:\n" +
       str(arm_commander.get_joints_velocity()) + "\n")
+
