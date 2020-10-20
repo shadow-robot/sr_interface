@@ -6,7 +6,7 @@
   <arg name="hands" default="both"/>
   <arg name="arm_ctrl" default="true"/>	
   <!-- ROBOT CONFIG-->
-  <arg name="robot_model" default="ur10"/>
+  <arg name="robot_model" default="ur10e"/>
   <!-- HANDS AND ARMS -->
   <arg name="robot_description" if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
