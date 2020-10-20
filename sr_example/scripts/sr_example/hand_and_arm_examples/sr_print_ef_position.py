@@ -30,8 +30,8 @@ import argparse
 rospy.init_node("print_ef_position", anonymous=True)
 
 
-hand_commander = SrHandCommander(name="left_hand")
-arm_commander = SrArmCommander(name="left_arm")
+hand_commander = SrHandCommander(name="right_hand")
+arm_commander = SrArmCommander(name="right_arm")
 
 print("The end effectors:\n")
 
