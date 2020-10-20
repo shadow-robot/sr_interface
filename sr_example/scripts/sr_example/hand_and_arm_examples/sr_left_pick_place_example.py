@@ -27,7 +27,7 @@
 # simulated robot:
 #     roslaunch sr_left_ur10arm_hand.launch sim:=true scene:=true start_home:=true
 
-# PLEASE NOTE: No scene is used in this script and fast movements of the robot. Use on real robot at your own risk. 
+# PLEASE NOTE: No scene is used in this script and fast movements of the robot. Use on real robot at your own risk.
 # It is recommended to run this script in simulation first.
 
 import rospy
