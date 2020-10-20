@@ -1,10 +1,8 @@
 controller_configs:
   rh:
     rh_trajectory_controller: rh_trajectory_controller.yaml
-    sh_rh_hybrid_controller: '%rospack_find_sr_ethercat_hand_config%/controls/host/rh/sr_edc_hybrid_controller_PWM.yaml'
   lh:
     lh_trajectory_controller: lh_trajectory_controller.yaml
-    sh_lh_hybrid_controller: '%rospack_find_sr_ethercat_hand_config%/controls/host/lh/sr_edc_hybrid_controller_PWM.yaml'
 controller_groups:
   effort:
     rh:
