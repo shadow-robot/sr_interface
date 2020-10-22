@@ -28,7 +28,6 @@ class TestHandESim(TestCase):
     Tests the Hand Commander
     """
 
-
     def setUp(self):
         rospy.init_node('test_hand_e_sim', anonymous=True)
         rospy.wait_for_message('/move_group/status', GoalStatusArray)
@@ -45,6 +44,8 @@ class TestHandESim(TestCase):
         self.hand_commander.move_to_joint_value_target(expected_joints_target)
         rospy.sleep(10)
         final_joint_values = self.hand_commander.get_current_state()
+        
+        final_joint_values = final_joint_values
 
         expected_and_final_joint_value_diff = 0
         for expected_value, final_value in zip(expected_joints_target, final_joint_values):
