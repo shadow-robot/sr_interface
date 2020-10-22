@@ -51,7 +51,7 @@
   <arg name="arm_x_separation" default="0.0"/>
   <arg name="arm_y_separation" default="0.0"/>
   <!-- You can select ur10 or ur10e -->
-  <arg name="robot_model" default="ur10"/>
+  <arg name="robot_model" default="ur10e"/>
   <arg name="arm_robot_hw" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/left_ur_arm_robot_hw.yaml"/>
   <arg name="arm_robot_hw" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/left_ur10e_arm_robot_hw.yaml"/>
   <arg name="arm_speed_scale" default="0.5"/>
