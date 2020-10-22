@@ -169,7 +169,8 @@ install(DIRECTORY config/
 
 if (CATKIN_ENABLE_TESTING)
     find_package(rostest REQUIRED)
-    add_rostest(test/test_headless_gazebo.test)
+ #   add_rostest(test/test_headless_gazebo.test)
+    add_rostest(test/test_hand_e_sim.test)
 endif ()
 
 
