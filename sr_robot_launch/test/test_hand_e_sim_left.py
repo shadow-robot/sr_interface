@@ -28,6 +28,7 @@ class TestHandESimLeft(TestCase):
     Tests the Hand Commander
     """
 
+
     def setUp(self):
         rospy.init_node('test_hand_e_sim_left', anonymous=True)
         rospy.wait_for_message('/move_group/status', GoalStatusArray)
@@ -35,11 +36,11 @@ class TestHandESimLeft(TestCase):
 
     def test_hand_e_sim_left(self):
         expected_joints_target = {'lh_FFJ1': 0.0, 'lh_FFJ2': 0.0, 'lh_FFJ3': 0.0, 'lh_FFJ4': 0.0,
-                      'lh_MFJ1': 0.0, 'lh_MFJ2': 0.0, 'lh_MFJ3': 0.0, 'lh_MFJ4': 0.0,
-                      'lh_RFJ1': 0.0, 'lh_RFJ2': 0.0, 'lh_RFJ3': 0.0, 'lh_RFJ4': 0.0,
-                      'lh_LFJ1': 0.0, 'lh_LFJ2': 0.0, 'lh_LFJ3': 0.0, 'lh_LFJ4': 0.0,
-                      'lh_THJ1': 0.0, 'lh_THJ2': 0.0, 'lh_THJ3': 0.0, 'lh_THJ4': 0.0,
-                      'lh_THJ5': 0.0, 'lh_WRJ1': 0.0, 'lh_WRJ2': 0.0}
+                                  'lh_MFJ1': 0.0, 'lh_MFJ2': 0.0, 'lh_MFJ3': 0.0, 'lh_MFJ4': 0.0,
+                                  'lh_RFJ1': 0.0, 'lh_RFJ2': 0.0, 'lh_RFJ3': 0.0, 'lh_RFJ4': 0.0,
+                                  'lh_LFJ1': 0.0, 'lh_LFJ2': 0.0, 'lh_LFJ3': 0.0, 'lh_LFJ4': 0.0,
+                                  'lh_THJ1': 0.0, 'lh_THJ2': 0.0, 'lh_THJ3': 0.0, 'lh_THJ4': 0.0,
+                                  'lh_THJ5': 0.0, 'lh_WRJ1': 0.0, 'lh_WRJ2': 0.0}
 
         self.hand_commander.move_to_joint_value_target(expected_joints_target)
         rospy.sleep(10)
@@ -47,8 +48,9 @@ class TestHandESimLeft(TestCase):
 
         expected_and_final_joint_value_diff = 0
         for expected_value, final_value in zip(expected_joints_target, final_joint_values):
-            expected_and_final_joint_value_diff += abs(expected_joints_target[expected_value] - final_joint_values[final_value])
-            
+            expected_and_final_joint_value_diff += abs(expected_joints_target[expected_value] - 
+                                                       final_joint_values[final_value])
+
         self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, 1)
 
 if __name__ == "__main__":

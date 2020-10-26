@@ -4,5 +4,5 @@
     <arg name="gui" value="false"/>
     <arg name="hand_type" value="hand_e"/>
 </include>
-  <test test-name="test_hand_e_sim" pkg="sr_robot_launch" type="test_hand_e_sim.py" time-limit="1000.0"/>
+  <test test-name="test_hand_e_sim" pkg="sr_robot_launch" type="test_hand_e_sim.py" time-limit="300.0"/>
 </launch>

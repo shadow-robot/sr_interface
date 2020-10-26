@@ -5,5 +5,5 @@
     <arg name="hand_type" value="hand_e"/>
     <arg name="hand_id" value="lh"/>
 </include>
-  <test test-name="test_hand_e_sim_left" pkg="sr_robot_launch" type="test_hand_e_sim_left.py" time-limit="1000.0"/>
+  <test test-name="test_hand_e_sim_left" pkg="sr_robot_launch" type="test_hand_e_sim_left.py" time-limit="300.0"/>
 </launch>
