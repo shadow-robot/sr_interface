@@ -52,6 +52,10 @@ trajectory = [
     {
         'name': 'pack',
         'interpolate_time': 3.0
+    },
+    {
+        'name': 'open',
+        'interpolate_time': 3.0
     }
 ]
 
