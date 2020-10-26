@@ -52,7 +52,7 @@
   <arg name="robot_model" default="ur5e"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/left_ur_arm_robot_hw.yaml"/>
   <arg name="arm_speed_scale" default="0.5"/>
-  <arg name="arm_payload_mass" default="4.55"/>
+  <arg name="arm_payload_mass" default="5.00"/>
   <arg name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
 
   <arg name="side" value="left"/>
