@@ -34,7 +34,7 @@ class TestHandExtraLiteSim(TestCase):
         rospy.wait_for_message('/move_group/status', GoalStatusArray)
         self.hand_commander = SrHandCommander(name='right_hand')
 
-    def test_hand_lite_sim(self):
+    def test_hand_extra_lite_sim(self):
         expected_joints_target = {'rh_FFJ1': 0.0, 'rh_FFJ2': 0.0, 'rh_FFJ3': 0.0, 'rh_FFJ4': 0.0,
                                   'rh_RFJ1': 0.0, 'rh_RFJ2': 0.0, 'rh_RFJ3': 0.0, 'rh_RFJ4': 0.0,
                                   'rh_THJ1': 0.0, 'rh_THJ2': 0.0, 'rh_THJ4': 0.0, 'rh_THJ5': 0.0}

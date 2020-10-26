@@ -180,7 +180,6 @@ if (CATKIN_ENABLE_TESTING)
     add_rostest(test/test_hand_e_plus_sim_left.test)
 
 
-
 endif ()
 
 
