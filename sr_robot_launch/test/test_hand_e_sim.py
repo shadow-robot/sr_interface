@@ -23,11 +23,11 @@ from sr_utilities.hand_finder import HandFinder
 
 PKG = "sr_robot_launch"
 
+
 class TestHandESim(TestCase):
     """
     Tests the Hand Commander
     """
-
 
     def setUp(self):
         rospy.init_node('test_hand_e_sim', anonymous=True)
@@ -48,7 +48,7 @@ class TestHandESim(TestCase):
 
         expected_and_final_joint_value_diff = 0
         for expected_value, final_value in zip(expected_joints_target, final_joint_values):
-            expected_and_final_joint_value_diff += abs(expected_joints_target[expected_value] - 
+            expected_and_final_joint_value_diff += abs(expected_joints_target[expected_value] -
                                                        final_joint_values[final_value])
 
         self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, 1)
