@@ -56,7 +56,7 @@
   <arg name="right_arm_speed_scale" default="0.5"/>
   <arg name="left_arm_speed_scale" default="0.5"/>
 
-  <arg unless="$(eval hands == 'none')" name="arm_payload_mass" default="4.55"/>
+  <arg unless="$(eval hands == 'none')" name="arm_payload_mass" default="5.00"/>
   <arg unless="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_mass" default="0.0"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
