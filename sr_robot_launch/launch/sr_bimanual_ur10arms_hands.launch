@@ -16,10 +16,10 @@
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
   <!-- Set the scene file -->
-  <arg name="scene_file" default="$(find sr_description_common)/scenes/bimanual_demo_space_small.scene"/>
+  <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large_bimanual.scene"/>
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhands_and_arms.world" unless="$(arg scene)"/>
-  <arg name="world" default="$(find sr_description_common)/worlds/bimanual_demo_space_small.world" if="$(arg scene)"/>
+  <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large_bimanual.world" if="$(arg scene)"/>
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="true"/>
   <!-- Definition of "home" position, in joint-angle pairs -->
