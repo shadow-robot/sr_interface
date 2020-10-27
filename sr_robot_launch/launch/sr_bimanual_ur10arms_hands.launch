@@ -57,9 +57,9 @@
   <arg name="pwm_control" default="true"/>
 
   <!-- ARMS CONFIG-->
-  <arg name="arm_1_z" default="0.7551" if="$(arg scene)"/>
+  <arg name="arm_1_z" default="0.7521" if="$(arg scene)"/>
   <arg name="arm_1_z" default="0.01" unless="$(arg scene)"/>
-  <arg name="arm_2_z" default="0.7551" if="$(arg scene)"/>
+  <arg name="arm_2_z" default="0.7521" if="$(arg scene)"/>
   <arg name="arm_2_z" default="0.01" unless="$(arg scene)"/>
   <arg name="arm_x_separation" default="0.0"/>
   <arg name="arm_y_separation" default="1.5"/>
