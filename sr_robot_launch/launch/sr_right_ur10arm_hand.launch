@@ -46,7 +46,7 @@
   <arg name="grasp_controller" default="false"/>
 
   <!-- ARM CONFIG-->
-  <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
+  <arg name="initial_z" default="0.7521" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
   <!-- You can select ur10 or ur10e -->
   <arg name="robot_model" default="ur10e"/>
