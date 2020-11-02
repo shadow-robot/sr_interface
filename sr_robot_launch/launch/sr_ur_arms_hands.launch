@@ -208,10 +208,6 @@
         <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
         <rosparam param="topics_list">[/planning_scene]</rosparam>
         <param name="launch_args_list" value="scene_file:=$(arg scene_file)" />
-<<<<<<< Updated upstream
-        <param name="timeout" value="60.0" />
-=======
->>>>>>> Stashed changes
       </node>
     </group>
   </group>
