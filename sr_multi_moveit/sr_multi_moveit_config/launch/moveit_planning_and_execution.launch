@@ -42,7 +42,6 @@
     pipeline:=$(arg planning)
     generate_planning_config:=$(arg generate_planning_config)
     robot_config_file:=$(arg robot_config_file)"/>
-    <param name="timeout" value="60.0" />
   </node>
 
   <group if="$(arg gui)">
@@ -56,7 +55,6 @@
       debug:=$(arg debug)
       rviz_config_file:=$(arg rviz_config_file)
       robot_config_file:=$(arg robot_config_file)" />
-      <param name="timeout" value="60.0" />
     </node>
   </group>
 
