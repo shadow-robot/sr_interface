@@ -26,7 +26,7 @@ if hand_type == 'hand_e_plus':
     hand_type = 'hand_e'
 hand_id = rospy.get_param('/test_hand_joint_movement/test_sim/hand_id', "rh")
 
-ConfigPack = {
+ConfigFingersPack = {
     'hand_e': {'THJ1': 0.0, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 0.0, 'THJ5': 0.0,
                'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
                'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
@@ -69,19 +69,19 @@ class TestHandJointMovement(TestCase):
             open_joints_target[k] = 0.0
 
         self.hand_commander.move_to_joint_value_target(open_joints_target, wait=True)
-        rospy.sleep(10)
+        rospy.sleep(5)
         final_joint_values = self.hand_commander.get_current_state()
 
         expected_and_final_joint_value_diff = 0
-        for expected_value, final_value in zip(open_joints_target, final_joint_values):
-            expected_and_final_joint_value_diff += abs(open_joints_target[expected_value] -
+        for expected_value, final_value in zip(sorted(open_joints_target), sorted(final_joint_values)):
+            if expected_value == final_value:
+                expected_and_final_joint_value_diff += abs(open_joints_target[expected_value] -
                                                        final_joint_values[final_value])
 
-        #try more decimal places!
-        self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, places=10)
+        self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, delta=0.1)
 
-    def test_hand_pack(self):
-        joints_target = ConfigPack[hand_type]
+    def test_hand_fingers_pack(self):
+        joints_target = ConfigFingersPack[hand_type]
 
         pack_joints_target = {}
 
@@ -89,15 +89,16 @@ class TestHandJointMovement(TestCase):
             pack_joints_target[hand_id + '_' + k] = v
 
         self.hand_commander.move_to_joint_value_target(pack_joints_target, wait=True)
-        rospy.sleep(10)
+        rospy.sleep(5)
         final_joint_values = self.hand_commander.get_current_state()
 
         expected_and_final_joint_value_diff = 0
-        for expected_value, final_value in zip(pack_joints_target, final_joint_values):
-            expected_and_final_joint_value_diff += abs(pack_joints_target[expected_value] -
+        for expected_value, final_value in zip(sorted(pack_joints_target), sorted(final_joint_values)):
+            if expected_value == final_value:
+                expected_and_final_joint_value_diff += abs(pack_joints_target[expected_value] -
                                                        final_joint_values[final_value])
 
-        self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, places=10)
+        self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, delta=0.1)
 
 
 if __name__ == "__main__":
