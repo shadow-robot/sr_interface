@@ -45,7 +45,7 @@ ConfigPack = {
 
 class TestHandJointMovement(TestCase):
     """
-    Tests the Hand Commander 
+    Tests the Hand Commander
     """
     @classmethod
     def setUpClass(cls):
@@ -77,7 +77,8 @@ class TestHandJointMovement(TestCase):
             expected_and_final_joint_value_diff += abs(open_joints_target[expected_value] -
                                                        final_joint_values[final_value])
 
-        self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, places=10) #try more places! (Look up what's better)
+        #try more decimal places!
+        self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, places=10)
 
     def test_hand_pack(self):
         joints_target = ConfigPack[hand_type]
