@@ -78,7 +78,7 @@ class TestHandJointMovement(TestCase):
                 expected_and_final_joint_value_diff += abs(open_joints_target[expected_value] -
                                                        final_joint_values[final_value])
 
-        self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, delta=0.1)
+        self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, places=2)
 
     def test_hand_fingers_pack(self):
         joints_target = ConfigFingersPack[hand_type]
@@ -98,7 +98,7 @@ class TestHandJointMovement(TestCase):
                 expected_and_final_joint_value_diff += abs(pack_joints_target[expected_value] -
                                                        final_joint_values[final_value])
 
-        self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, delta=0.1)
+        self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, places=2)
 
 
 if __name__ == "__main__":
