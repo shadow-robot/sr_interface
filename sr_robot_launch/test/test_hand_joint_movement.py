@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2015 Shadow Robot Company Ltd.
+# Copyright 2020 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -26,18 +26,18 @@ if hand_type == 'hand_e_plus':
     hand_type = 'hand_e'
 hand_id = rospy.get_param('/test_hand_joint_movement/test_sim/hand_id', "rh")
 
-ConfigFingersPack = {
-    'hand_e': {'THJ1': 0.0, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 0.0, 'THJ5': 0.0,
+ConfigPack = {
+    'hand_e': {'THJ1': 0.52, 'THJ2': 0.61, 'THJ3': 0.0, 'THJ4': 1.20, 'THJ5': 0.17,
                'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
                'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
                'RFJ1': 1.5707, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0,
                'LFJ1': 1.5707, 'LFJ2': 1.5707, 'LFJ3': 1.5707, 'LFJ4': 0.0,
                'LFJ5': 0.0, 'WRJ1': 0.0, 'WRJ2': 0.0},
-    'hand_lite': {'THJ1': 0.0, 'THJ2': 0.0, 'THJ4': 0.0, 'THJ5': 0.0,
+    'hand_lite': {'THJ1': 0.52, 'THJ2': 0.61, 'THJ4': 1.20, 'THJ5': 0.17,
                   'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
                   'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
                   'RFJ1': 1.5707, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0},
-    'hand_extra_lite': {'THJ1': 0.0, 'THJ2': 0.0, 'THJ4': 0.0, 'THJ5': 0.0,
+    'hand_extra_lite': {'THJ1': 0.52, 'THJ2': 0.61, 'THJ4': 1.20, 'THJ5': 0.17,
                         'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
                         'RFJ1': 1.5707, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0}
 }
@@ -55,8 +55,6 @@ class TestHandJointMovement(TestCase):
             cls.hand_commander = SrHandCommander(name='right_hand')
         if hand_id == 'lh':
             cls.hand_commander = SrHandCommander(name='left_hand')
-        # else:
-        #     #make it fail - check test to show this
 
     @classmethod
     def tearDownClass(cls):
@@ -74,14 +72,13 @@ class TestHandJointMovement(TestCase):
 
         expected_and_final_joint_value_diff = 0
         for expected_value, final_value in zip(sorted(open_joints_target), sorted(final_joint_values)):
-            if expected_value == final_value:
-                expected_and_final_joint_value_diff += abs(open_joints_target[expected_value] -
+            expected_and_final_joint_value_diff += abs(open_joints_target[expected_value] -
                                                        final_joint_values[final_value])
 
-        self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, places=1)
+        self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, delta=0.1)
 
-    def test_hand_fingers_pack(self):
-        joints_target = ConfigFingersPack[hand_type]
+    def test_hand_pack(self):
+        joints_target = ConfigPack[hand_type]
 
         pack_joints_target = {}
 
@@ -94,11 +91,10 @@ class TestHandJointMovement(TestCase):
 
         expected_and_final_joint_value_diff = 0
         for expected_value, final_value in zip(sorted(pack_joints_target), sorted(final_joint_values)):
-            if expected_value == final_value:
-                expected_and_final_joint_value_diff += abs(pack_joints_target[expected_value] -
+            expected_and_final_joint_value_diff += abs(pack_joints_target[expected_value] -
                                                        final_joint_values[final_value])
 
-        self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, places=1)
+        self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, delta=0.1)
 
 
 if __name__ == "__main__":
