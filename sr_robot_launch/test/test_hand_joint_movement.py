@@ -19,30 +19,25 @@ import rostest
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from actionlib_msgs.msg import GoalStatusArray
 from unittest import TestCase
-# from config import ConfigPack
 
 PKG = "sr_robot_launch"
-hand_type = rospy.get_param('/test_hand_joint_movement/test_sim/hand_type', "hand_e")
+hand_type = rospy.get_param('/test_hand_joint_movement/test_sim/hand_type', "hand_e_plus")
+if hand_type == 'hand_e_plus':
+    hand_type = 'hand_e'
 hand_id = rospy.get_param('/test_hand_joint_movement/test_sim/hand_id', "rh")
 
 ConfigPack = {
-    'hand_e': {'THJ1': 0.52, 'THJ2': 0.61, 'THJ3': 0.0, 'THJ4': 1.20, 'THJ5': 0.17,
+    'hand_e': {'THJ1': 0.0, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 0.0, 'THJ5': 0.0,
                'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
                'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
                'RFJ1': 1.5707, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0,
                'LFJ1': 1.5707, 'LFJ2': 1.5707, 'LFJ3': 1.5707, 'LFJ4': 0.0,
                'LFJ5': 0.0, 'WRJ1': 0.0, 'WRJ2': 0.0},
-    'hand_e_plus': {'THJ1': 0.52, 'THJ2': 0.61, 'THJ3': 0.0, 'THJ4': 1.20, 'THJ5': 0.17,
-                    'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
-                    'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
-                    'RFJ1': 1.5707, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0,
-                    'LFJ1': 1.5707, 'LFJ2': 1.5707, 'LFJ3': 1.5707, 'LFJ4': 0.0,
-                    'LFJ5': 0.0, 'WRJ1': 0.0, 'WRJ2': 0.0},
-    'hand_lite': {'THJ1': 0.52, 'THJ2': 0.61, 'THJ4': 1.20, 'THJ5': 0.17,
+    'hand_lite': {'THJ1': 0.0, 'THJ2': 0.0, 'THJ4': 0.0, 'THJ5': 0.0,
                   'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
                   'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
                   'RFJ1': 1.5707, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0},
-    'hand_extra_lite': {'THJ1': 0.52, 'THJ2': 0.61, 'THJ4': 1.20, 'THJ5': 0.17,
+    'hand_extra_lite': {'THJ1': 0.0, 'THJ2': 0.0, 'THJ4': 0.0, 'THJ5': 0.0,
                         'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
                         'RFJ1': 1.5707, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0}
 }
@@ -50,19 +45,18 @@ ConfigPack = {
 
 class TestHandJointMovement(TestCase):
     """
-    Tests the Hand Commander
+    Tests the Hand Commander 
     """
     @classmethod
     def setUpClass(cls):
-        rospy.loginfo("This is the hand type %s", hand_type)
         rospy.init_node('test_sim', anonymous=True)
         rospy.wait_for_message('/move_group/status', GoalStatusArray)
         if hand_id == 'rh':
             cls.hand_commander = SrHandCommander(name='right_hand')
         if hand_id == 'lh':
             cls.hand_commander = SrHandCommander(name='left_hand')
-        else:
-            rospy.logerr("Hand side not specified correctly")
+        # else:
+        #     #make it fail - check test to show this
 
     @classmethod
     def tearDownClass(cls):
@@ -83,18 +77,15 @@ class TestHandJointMovement(TestCase):
             expected_and_final_joint_value_diff += abs(open_joints_target[expected_value] -
                                                        final_joint_values[final_value])
 
-        self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, places=1)
+        self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, places=10) #try more places! (Look up what's better)
 
     def test_hand_pack(self):
         joints_target = ConfigPack[hand_type]
 
         pack_joints_target = {}
-        if hand_id == 'rh':
-            for k, v in joints_target.items():
-                pack_joints_target['rh_' + k] = v
-        if hand_id == 'lh':
-            for k, v in joints_target.items():
-                pack_joints_target['lh_' + k] = v
+
+        for k, v in joints_target.items():
+            pack_joints_target[hand_id + '_' + k] = v
 
         self.hand_commander.move_to_joint_value_target(pack_joints_target, wait=True)
         rospy.sleep(10)
@@ -105,7 +96,7 @@ class TestHandJointMovement(TestCase):
             expected_and_final_joint_value_diff += abs(pack_joints_target[expected_value] -
                                                        final_joint_values[final_value])
 
-        self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, places=1)
+        self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, places=10)
 
 
 if __name__ == "__main__":
