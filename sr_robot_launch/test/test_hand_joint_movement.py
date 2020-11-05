@@ -23,18 +23,6 @@ from unittest import TestCase
 PKG = "sr_robot_launch"
 
 
-def move_to_target_and_check_error(hand_commander, target):
-    hand_commander.move_to_joint_value_target(target, wait=True)
-    rospy.sleep(5)
-    final_joint_values = hand_commander.get_current_state()
-
-    expected_and_final_joint_value_diff = 0
-    for expected_value, final_value in zip(sorted(target), sorted(final_joint_values)):
-        expected_and_final_joint_value_diff += abs(target[expected_value] -
-                                                   final_joint_values[final_value])
-    return expected_and_final_joint_value_diff
-
-
 class TestHandJointMovement(TestCase):
     """
     Tests the Hand Commander
@@ -45,7 +33,7 @@ class TestHandJointMovement(TestCase):
         if cls.hand_type == 'hand_e':
             cls.hand_type = 'hand_e_plus'
         elif cls.hand_type not in ('hand_e_plus', 'hand_lite', 'hand_extra_lite'):
-            raise Exception("The specified hand_type is incorrect.")
+            raise TypeError("The specified hand_type is incorrect.")
         cls.hand_id = rospy.get_param('~test_sim/hand_id', 'rh')
 
         rospy.wait_for_message('/move_group/status', GoalStatusArray)
@@ -54,18 +42,29 @@ class TestHandJointMovement(TestCase):
         elif cls.hand_id == 'lh':
             cls.hand_commander = SrHandCommander(name='left_hand')
         else:
-            raise Exception("The specified hand_id is incorrect.")
+            raise TypeError("The specified hand_id is incorrect.")
 
     @classmethod
     def tearDownClass(cls):
         pass
+
+    def joints_error_check(self, expected_joint_values, recieved_joint_values):
+        expected_and_final_joint_value_diff = 0
+        for expected_value, recieved_value in zip(sorted(expected_joint_values), sorted(recieved_joint_values)):
+            expected_and_final_joint_value_diff += abs(expected_joint_values[expected_value] -
+                                                       recieved_joint_values[recieved_value])
+        return expected_and_final_joint_value_diff
 
     def test_hand_open(self):
         open_joints_target = self.hand_commander.get_joints_position()
         for key in open_joints_target:
             open_joints_target[key] = 0.0
 
-        expected_and_final_joint_value_diff = move_to_target_and_check_error(self.hand_commander, open_joints_target)
+        self.hand_commander.move_to_joint_value_target(open_joints_target, wait=True)
+        rospy.sleep(5)
+        final_joint_values = self.hand_commander.get_current_state()
+
+        expected_and_final_joint_value_diff = self.joints_error_check(open_joints_target, final_joint_values)
 
         self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, delta=0.1)
 
@@ -91,7 +90,11 @@ class TestHandJointMovement(TestCase):
         for key, value in pack_joints_target_no_id.items():
             pack_joints_target[self.hand_id + '_' + key] = value
 
-        expected_and_final_joint_value_diff = move_to_target_and_check_error(self.hand_commander, pack_joints_target)
+        self.hand_commander.move_to_joint_value_target(pack_joints_target, wait=True)
+        rospy.sleep(5)
+        final_joint_values = self.hand_commander.get_current_state()
+
+        expected_and_final_joint_value_diff = self.joints_error_check(pack_joints_target, final_joint_values)
 
         self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, delta=0.1)
 
