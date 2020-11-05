@@ -22,6 +22,7 @@ from unittest import TestCase
 
 PKG = "sr_robot_launch"
 
+
 def move_to_target_and_check_error(hand_commander, target):
     hand_commander.move_to_joint_value_target(target, wait=True)
     rospy.sleep(5)
@@ -30,8 +31,8 @@ def move_to_target_and_check_error(hand_commander, target):
     expected_and_final_joint_value_diff = 0
     for expected_value, final_value in zip(sorted(target), sorted(final_joint_values)):
         expected_and_final_joint_value_diff += abs(target[expected_value] -
-                                                    final_joint_values[final_value])
-    return expected_and_final_joint_value_diff 
+                                                   final_joint_values[final_value])
+    return expected_and_final_joint_value_diff
 
 
 class TestHandJointMovement(TestCase):
@@ -71,15 +72,15 @@ class TestHandJointMovement(TestCase):
     def test_hand_pack(self):
         hand_pack_joint_targets = {
             'hand_e_plus': {'THJ1': 0.52, 'THJ2': 0.61, 'THJ3': 0.0, 'THJ4': 1.20, 'THJ5': 0.17,
-                    'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
-                    'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
-                    'RFJ1': 1.5707, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0,
-                    'LFJ1': 1.5707, 'LFJ2': 1.5707, 'LFJ3': 1.5707, 'LFJ4': 0.0,
-                    'LFJ5': 0.0, 'WRJ1': 0.0, 'WRJ2': 0.0},
+                            'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
+                            'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
+                            'RFJ1': 1.5707, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0,
+                            'LFJ1': 1.5707, 'LFJ2': 1.5707, 'LFJ3': 1.5707, 'LFJ4': 0.0,
+                            'LFJ5': 0.0, 'WRJ1': 0.0, 'WRJ2': 0.0},
             'hand_lite': {'THJ1': 0.52, 'THJ2': 0.61, 'THJ4': 1.20, 'THJ5': 0.17,
-                        'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
-                        'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
-                        'RFJ1': 1.5707, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0},
+                          'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
+                          'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
+                          'RFJ1': 1.5707, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0},
             'hand_extra_lite': {'THJ1': 0.52, 'THJ2': 0.61, 'THJ4': 1.20, 'THJ5': 0.17,
                                 'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
                                 'RFJ1': 1.5707, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0}
