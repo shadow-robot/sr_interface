@@ -84,6 +84,12 @@
   <arg if="$(eval hands == 'none')" name="arm_payload_mass" default="0.0"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
 
+  <arg if="$(eval not hand_trajectory and not arm_trajectory)" name="trajectory_controllers_list" default="[]"/>
+  <arg if="$(eval hand_trajectory and arm_trajectory)" name="trajectory_controllers_list" 
+       default="[/ra_trajectory_controller/state, /la_trajectory_controller/state, /rh_trajectory_controller/state, /lh_trajectory_controller/state]"/>
+  <arg if="$(eval hand_trajectory and not arm_trajectory)" name="trajectory_controllers_list"
+       default="[/rh_trajectory_controller/state, /lh_trajectory_controller/state]"/>
+
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
     <env name="GAZEBO_MODEL_PATH" value="$(find sr_description_common)/models/" />
@@ -200,8 +206,8 @@
         <param name="package_name" value="sr_multi_moveit_config" />
         <param name="executable_name" value="scene.launch" />
         <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+        <rosparam param="topics_list">[/planning_scene]</rosparam>
         <param name="launch_args_list" value="scene_file:=$(arg scene_file)" />
-        <param name="timeout" value="20.0" />
       </node>
     </group>
   </group>
@@ -216,6 +222,7 @@
         <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
         <arg name="planning" value="$(arg planning)"/>
         <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
+        <arg name="trajectory_controllers_list" value="$(arg trajectory_controllers_list)"/>
       </include>
       <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
   </group>

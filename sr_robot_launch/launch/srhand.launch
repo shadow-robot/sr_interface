@@ -39,6 +39,9 @@
   <!-- Set this to true if you run the hardware loop on a remote computer -->
   <arg name="external_control_loop" default="false"/>
 
+  <arg if="$(eval not hand_trajectory)" name="trajectory_controllers_list" default="[]"/>
+  <arg if="$(eval hand_trajectory)" name="trajectory_controllers_list" default="[/$(arg hand_id)_trajectory_controller/state]"/>
+
   <!-- Logging. -->
   <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch">
     <arg name="node_name" value="server_record"/>
@@ -133,6 +136,7 @@
     <include file="$(find sr_moveit_hand_config)/launch/moveit_planning_and_execution.launch">
       <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
       <arg name="gui" value="$(arg gui)"/>
+      <arg name="trajectory_controllers_list" value="$(arg trajectory_controllers_list)"/>
     </include>
     <include file="$(find sr_moveit_hand_config)/launch/default_warehouse_db.launch"/>
   </group>
