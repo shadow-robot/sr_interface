@@ -43,7 +43,7 @@ class TestHandJointMovement(TestCase):
         cls.hand_type = rospy.get_param('/test_hand_joint_movement/test_sim/hand_type', "hand_e_plus")
         if cls.hand_type == 'hand_e':
             cls.hand_type = 'hand_e_plus'
-        elif cls.hand_type not in  ('hand_e_plus', 'hand_lite', 'hand_extra_lite'):
+        elif cls.hand_type not in ('hand_e_plus', 'hand_lite', 'hand_extra_lite'):
             raise Exception("The specified hand_type is incorrect.")
         cls.hand_id = rospy.get_param('/test_hand_joint_movement/test_sim/hand_id', "rh")
 
