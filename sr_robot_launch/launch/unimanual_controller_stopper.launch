@@ -7,7 +7,7 @@
   <node name="controller_stopper" pkg="controller_stopper" type="node" respawn="false" output="screen">
     <remap from="robot_running" to="$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running"/>
     <rosparam param="consistent_controllers" if="$(eval arg('hand_prefix') == 'rh')">
-       - "force_torque_sensor_controller"
+       - "ra_force_torque_sensor_controller"
        - "joint_state_controller"
        - "sr_rh_tactile_sensor_controller"
        - "rh_trajectory_controller"
@@ -33,7 +33,7 @@
        - "sh_rh_wrj2_position_controller"
     </rosparam>
     <rosparam param="consistent_controllers" if="$(eval arg('hand_prefix') == 'lh')">
-       - "force_torque_sensor_controller"
+       - "la_force_torque_sensor_controller"
        - "joint_state_controller"
        - "sr_lh_tactile_sensor_controller"
        - "lh_trajectory_controller"
