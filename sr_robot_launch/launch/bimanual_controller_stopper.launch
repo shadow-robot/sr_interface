@@ -4,6 +4,7 @@
     <rosparam param="consistent_controllers">
        - "la_trajectory_controller"
        - "la_force_torque_sensor_controller"
+       - "ra_force_torque_sensor_controller"
        - "joint_state_controller"
        - "sr_rh_tactile_sensor_controller"
        - "rh_trajectory_controller"
@@ -57,6 +58,7 @@
     <rosparam param="consistent_controllers">
        - "ra_trajectory_controller"
        - "ra_force_torque_sensor_controller"
+       - "la_force_torque_sensor_controller"
        - "joint_state_controller"
        - "sr_rh_tactile_sensor_controller"
        - "rh_trajectory_controller"
