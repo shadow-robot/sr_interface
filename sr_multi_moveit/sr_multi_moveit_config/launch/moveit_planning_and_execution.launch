@@ -17,7 +17,9 @@
 
   <!-- The name of the rviz config file to load -->
   <arg name="rviz_config_file" default="$(find sr_multi_moveit_config)/launch/moveit.rviz"/>
-  
+
+  <arg name="trajectory_controllers_list" default="[]"/>
+
   <include file="$(find sr_multi_moveit_config)/launch/planning_context.launch">
     <arg name="robot_config_file" value="$(arg robot_config_file)"/>
     <arg name="hand_ik_solver_path" value="$(arg hand_ik_solver_path)"/>
@@ -30,6 +32,7 @@
     <param name="package_name" value="sr_multi_moveit_config" />
     <param name="executable_name" value="move_group.launch" />
     <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+    <rosparam param="topics_list" subst_value="True">$(arg trajectory_controllers_list)</rosparam>
     <param name="launch_args_list" value="hand_ik_solver_path:=$(arg hand_ik_solver_path)
     allow_trajectory_execution:=true
     fake_execution:=false
@@ -39,7 +42,6 @@
     pipeline:=$(arg planning)
     generate_planning_config:=$(arg generate_planning_config)
     robot_config_file:=$(arg robot_config_file)"/>
-    <param name="timeout" value="20.0" />
   </node>
 
   <group if="$(arg gui)">
@@ -47,12 +49,12 @@
       <param name="package_name" value="sr_multi_moveit_config" />
       <param name="executable_name" value="moveit_rviz.launch" />
       <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+      <rosparam param="topics_list">[/move_group/monitored_planning_scene]</rosparam>
       <param name="launch_args_list" value="hand_ik_solver_path:=$(arg hand_ik_solver_path)
       config:=true
       debug:=$(arg debug)
       rviz_config_file:=$(arg rviz_config_file)
       robot_config_file:=$(arg robot_config_file)" />
-      <param name="timeout" value="20.0" />
     </node>
   </group>
 
