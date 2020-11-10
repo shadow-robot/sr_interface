@@ -29,6 +29,8 @@
 # simulated robot:
 #     roslaunch sr_right_ur10arm_hand.launch sim:=true scene:=true
 
+# It is recommended to run this script in simulation first.
+
 import rospy
 from sr_robot_commander.sr_arm_commander import SrArmCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander

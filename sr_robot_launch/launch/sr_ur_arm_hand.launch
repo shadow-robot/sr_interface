@@ -17,7 +17,7 @@
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
   <!-- Set the scene file -->
-  <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large.scene"/>
+  <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large_unimanual.scene"/>
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhands_and_arms.world"/>
   <!-- Set to true if you want the robot to start in the "home" positions -->
@@ -76,10 +76,16 @@
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_ctrl" default="true"/>
   <arg name="arm_speed_scale" default="0.5"/>
-  <arg if="$(arg hand_ctrl)" name="arm_payload_mass" default="4.55"/>
+  <arg if="$(arg hand_ctrl)" name="arm_payload_mass" default="5.00"/>
   <arg if="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
   <arg unless="$(arg hand_ctrl)" name="arm_payload_mass" default="0.0"/>
   <arg unless="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
+
+  <arg if="$(eval not hand_trajectory and not arm_trajectory)" name="trajectory_controllers_list" default="[]"/>
+  <arg if="$(eval hand_trajectory and arm_trajectory)" name="trajectory_controllers_list" 
+       default="[/$(arg arm_prefix)_trajectory_controller/state, /$(arg hand_id)_trajectory_controller/state]"/>
+  <arg if="$(eval hand_trajectory and not arm_trajectory)" name="trajectory_controllers_list"
+       default="[/$(arg hand_id)_trajectory_controller/state]"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
@@ -174,8 +180,8 @@
         <param name="package_name" value="sr_multi_moveit_config" />
         <param name="executable_name" value="scene.launch" />
         <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+        <rosparam param="topics_list">[/planning_scene]</rosparam>
         <param name="launch_args_list" value="scene_file:=$(arg scene_file)" />
-        <param name="timeout" value="20.0" />
       </node>
     </group>
   </group>
@@ -190,6 +196,7 @@
       <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
       <arg name="planning" value="$(arg planning)"/>
       <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
+      <arg name="trajectory_controllers_list" value="$(arg trajectory_controllers_list)"/>
     </include>
     <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
   </group>

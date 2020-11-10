@@ -26,9 +26,9 @@
 
 # roslaunch commands used with this script to launch the robot:
 # real robot with a NUC (or a separate computer with an RT kernel):
-#     roslaunch sr_right_ur10arm_hand.launch external_control_loop:=true sim:=false scene:=true
+#     roslaunch sr_left_ur10arm_hand.launch external_control_loop:=true sim:=false scene:=true start_home:=true
 # simulated robot:
-#     roslaunch sr_right_ur10arm_hand.launch sim:=true scene:=true
+#     roslaunch sr_left_ur10arm_hand.launch sim:=true scene:=true start_home:=true
 
 # It is recommended to run this script in simulation first.
 
@@ -38,23 +38,23 @@ from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_arm_commander import SrArmCommander
 
-rospy.init_node("right_hand_arm_ef_pos", anonymous=True)
+rospy.init_node("left_hand_arm_ef_pos", anonymous=True)
 
 # The constructors for the SrArmCommander, SrHandCommander and SrRobotCommander
 # take a name parameter that should match the group name of the robot to be used.
 # How to command the hand or arm separately
-hand_commander = SrHandCommander(name="right_hand")
-arm_commander = SrArmCommander(name="right_arm")
+hand_commander = SrHandCommander(name="left_hand")
+arm_commander = SrArmCommander(name="left_arm")
 # How to command the arm and hand together
-robot_commander = SrRobotCommander(name="right_arm_and_hand")
+robot_commander = SrRobotCommander(name="left_arm_and_hand")
 arm_commander.set_max_velocity_scaling_factor(0.1)
 
 rospy.sleep(rospy.Duration(2))
 
 # Start arm at home
-arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
-                        'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                        'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
+arm_home_joints_goal = {'la_shoulder_pan_joint': 1.47, 'la_elbow_joint': -1.695,
+                        'la_shoulder_lift_joint': -1.22, 'la_wrist_1_joint': -01.75,
+                        'la_wrist_2_joint': 1.57, 'la_wrist_3_joint': -1.830}
 rospy.loginfo("Moving arm to joint states\n" + str(arm_home_joints_goal) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(arm_home_joints_goal, 6.0, True)
 
@@ -82,7 +82,7 @@ raw_input("Press Enter to continue...")
 #         @param end_effector_link - name of the end effector link.
 #         @param alternative_method - use set_joint_value_target instead of set_pose_target.
 #         @param custom_start_state - specify a start state different than the current state.
-pose_1 = [1.1, 0.5, 1.2, -0.9, 0.0, -0.0]
+pose_1 = [0.6, 0.3, 1.5, -0.7, 0.04, -0.67]
 print("Planning the move to the first pose:\n" + str(pose_1) + "\n")
 arm_commander.plan_to_pose_target(pose_1)
 print("Finished planning, moving the arm now.")
@@ -93,7 +93,7 @@ raw_input("Press Enter to continue...")
 
 rospy.sleep(2.0)
 
-pose_2 = [1.1, -0.1, 1.2, -0.9, 0.0, -0.0]
+pose_2 = [0.6, 0.3, 1.46, -0.7, 0.04, 0.69, 0.08]
 print("Planning the move to the second pose:\n" + str(pose_2) + "\n")
 arm_commander.plan_to_pose_target(pose_2)
 print("Finished planning, moving the arm now.")
@@ -108,7 +108,6 @@ raw_input("Press Enter to continue...")
 #         of 7 floats [x, y, z, qx, qy, qz, qw].
 #         @param end_effector_link - name of the end effector link.
 #         @param wait - should method wait for movement end or not.
-pose_1 = [1.1, 0.5, 1.2, -0.9, 0.0, -0.0]
 print("Moving arm to pose:\n" + str(pose_1) + "\n")
 arm_commander.move_to_pose_target(pose_1, wait=True)
 
@@ -117,7 +116,7 @@ raw_input("Press Enter to continue...")
 rospy.sleep(2.0)
 
 # Here a pose is provided and the arm commander moves the arm to it
-pose_3 = [1.1, 0.5, 1.0, -0.9, 0.1, 0, 0.4]
+pose_3 = [0.69, 0.64, 1.4, -0.71, 0.04, 0.69, 0.08]
 print("Moving arm to pose:\n" + str(pose_3) + "\n")
 arm_commander.move_to_pose_target(pose_3, wait=True)
 

@@ -2,6 +2,7 @@
   <arg name="use_gui" default="true"/>
   <arg name="warehouse" default="true"/>
   <arg name="side" default="right"/>
+  <arg name="trajectory_controllers_list" default="[]"/>
 
   <include file="$(find sr_box_ur10_moveit_config)/launch/planning_context.launch">
     <arg name="side" value="$(arg side)"/>
@@ -11,8 +12,8 @@
     <param name="package_name" value="sr_box_ur10_moveit_config" />
     <param name="executable_name" value="move_group.launch" />
     <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+    <rosparam param="topics_list" subst_value="True">$(arg trajectory_controllers_list)</rosparam>
     <param name="launch_args_list" value="side:=$(arg side)"/>
-    <param name="timeout" value="20.0" />
   </node>
 
   <group if="$(arg use_gui)">
@@ -20,8 +21,8 @@
       <param name="package_name" value="sr_box_ur10_moveit_config" />
       <param name="executable_name" value="moveit_rviz.launch" />
       <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+      <rosparam param="topics_list">[/move_group/monitored_planning_scene]</rosparam>
       <param name="launch_args_list" value="config:=true side:=$(arg side)" />
-      <param name="timeout" value="20.0" />
     </node>
   </group>
   <include if="$(arg warehouse)" file="$(find sr_box_ur10_moveit_config)/launch/default_warehouse_db.launch"/>

@@ -3,7 +3,8 @@
     <remap from="robot_running" to="ra_sr_ur_robot_hw/robot_program_running"/>
     <rosparam param="consistent_controllers">
        - "la_trajectory_controller"
-       - "force_torque_sensor_controller"
+       - "la_force_torque_sensor_controller"
+       - "ra_force_torque_sensor_controller"
        - "joint_state_controller"
        - "sr_rh_tactile_sensor_controller"
        - "rh_trajectory_controller"
@@ -56,7 +57,8 @@
     <remap from="robot_running" to="la_sr_ur_robot_hw/robot_program_running"/>
     <rosparam param="consistent_controllers">
        - "ra_trajectory_controller"
-       - "force_torque_sensor_controller"
+       - "ra_force_torque_sensor_controller"
+       - "la_force_torque_sensor_controller"
        - "joint_state_controller"
        - "sr_rh_tactile_sensor_controller"
        - "rh_trajectory_controller"
