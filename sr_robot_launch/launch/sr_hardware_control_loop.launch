@@ -51,10 +51,10 @@
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="arm_speed_scale" default="0.5"/>
-  <arg if="$(arg hand_ctrl)" name="arm_payload_mass" default="5.00"/>
-  <arg if="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
-  <arg unless="$(arg hand_ctrl)" name="arm_payload_mass" default="0.0"/>
-  <arg unless="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
+  <arg if="$(arg hand)" name="arm_payload_mass" default="5.00"/>
+  <arg if="$(arg hand)" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
+  <arg unless="$(arg hand)" name="arm_payload_mass" default="0.0"/>
+  <arg unless="$(arg hand)" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
   <arg name="kinematics_config" if="$(eval robot_model[-1] == 'e')" default="$(find ur_e_description)/config/$(arg robot_model)_default.yaml"/>
   <arg name="kinematics_config" if="$(eval not robot_model[-1] == 'e')" default="$(find ur_description)/config/$(arg robot_model)_default.yaml"/>
   <arg name="urcap_program_name" default="external_ctrl.urp"/>

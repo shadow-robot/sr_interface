@@ -36,6 +36,7 @@
   <arg name="side_letter" value="$(eval side[0])"/>
   <arg name="hand_id" value="$(arg side_letter)h"/>
   <arg name="arm_prefix" value="$(arg side_letter)a"/>
+  <arg name="hand_type" default="hand_e_plus"/>
 
   <arg name="robot_model" default="ur10e"/>
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
@@ -76,10 +77,17 @@
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_ctrl" default="true"/>
   <arg name="arm_speed_scale" default="0.5"/>
-  <arg if="$(arg hand_ctrl)" name="arm_payload_mass" default="5.00"/>
-  <arg if="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
-  <arg unless="$(arg hand_ctrl)" name="arm_payload_mass" default="0.0"/>
-  <arg unless="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
+  <!-- Sets up right payload -->
+  <group if="$(hand)">
+    <arg if="$(eval arg('hand_type') == 'hand_e')" name="arm_payload_mass" default="5.0'"/>
+    <arg if="$(eval arg('hand_type') == 'hand_e_plus')" name="arm_payload_mass" default="5.0'"/>
+    <arg if="$(eval arg('hand_type') == 'hand_lite')" name="arm_payload_mass" default="2.7'"/>
+    <arg if="$(arg hand)" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
+  </group>
+  <group unless="$(hand)">
+    <arg name="arm_payload_mass" default="0.0"/>
+    <arg name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
+  </group>
 
   <arg if="$(eval not hand_trajectory and not arm_trajectory)" name="trajectory_controllers_list" default="[]"/>
   <arg if="$(eval hand_trajectory and arm_trajectory)" name="trajectory_controllers_list" 

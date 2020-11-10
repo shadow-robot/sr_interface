@@ -44,6 +44,7 @@
   <arg name="pwm_control" default="true"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
+  <arg name="hand_type" default="hand_e_plus"/>
 
   <!-- ARM CONFIG-->
   <arg name="initial_z" default="0.7521" if="$(arg scene)"/>
@@ -82,6 +83,7 @@
     <arg name="mapping_path" value="$(arg mapping_path)"/>
     <arg name="eth_port" value="$(arg eth_port)"/>
     <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
+    <arg name="hand_type" value="$(arg hand_type)"/>
 
     <arg name="initial_z" value="$(arg initial_z)"/>
     <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>

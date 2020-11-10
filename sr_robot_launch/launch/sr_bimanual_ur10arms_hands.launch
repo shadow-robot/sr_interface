@@ -55,6 +55,7 @@
   <!-- The control mode PWM (true) or torque (false) -->
   <!-- Set to true by default for now as torque control is not available yet -->
   <arg name="pwm_control" default="true"/>
+  <arg name="hand_type" default="hand_e_plus"/>
 
   <!-- ARMS CONFIG-->
   <arg name="arm_1_z" default="0.7521" if="$(arg scene)"/>
@@ -77,10 +78,17 @@
   <arg name="right_arm_speed_scale" default="0.5"/>
   <arg name="left_arm_speed_scale" default="0.5"/>
 
-  <arg unless="$(eval hands == 'none')" name="arm_payload_mass" default="5.00"/>
-  <arg unless="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
-  <arg if="$(eval hands == 'none')" name="arm_payload_mass" default="0.0"/>
-  <arg if="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
+  <!-- Sets up right payload -->
+  <group unless="$(eval hands == 'none')">
+    <arg if="$(eval arg('hand_type') == 'hand_e')" name="arm_payload_mass" default="5.0'"/>
+    <arg if="$(eval arg('hand_type') == 'hand_e_plus')" name="arm_payload_mass" default="5.0'"/>
+    <arg if="$(eval arg('hand_type') == 'hand_lite')" name="arm_payload_mass" default="2.7'"/>
+    <arg name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
+  </group>
+  <group if="$(eval hands == 'none')">
+    <arg name="arm_payload_mass" default="0.0"/>
+    <arg name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
+  </group>  
 
   <include file="$(find sr_robot_launch)/launch/sr_ur_arms_hands.launch">
     <arg name="sim" value="$(arg sim)"/>
