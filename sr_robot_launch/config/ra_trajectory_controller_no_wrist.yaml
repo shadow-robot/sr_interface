@@ -1,3 +1,5 @@
+# type: "velocity_controllers/ComplianceController"
+#   type: "velocity_controllers/JointTrajectoryController"
 ra_trajectory_controller:
   type: "velocity_controllers/ComplianceController"
   joints:
@@ -18,7 +20,7 @@ ra_trajectory_controller:
       ra_wrist_2_joint: {trajectory: 0.3, goal: 0.1}
       ra_wrist_3_joint: {trajectory: 0.3, goal: 0.1}
   stop_trajectory_duration: 0.5
-  state_publish_rate:  25
+  state_publish_rate:  250
   action_monitor_rate: 10
   allow_partial_joints_goal: true
   #!!These values have not been optimized!!
@@ -32,9 +34,11 @@ ra_trajectory_controller:
 
   # Use a feedforward term to reduce the size of PID gains
   velocity_ff:
-    ra_shoulder_pan_joint: 1.0
-    ra_shoulder_lift_joint: 1.0
-    ra_elbow_joint: 1.0
-    ra_wrist_1_joint: 1.0
-    ra_wrist_2_joint: 1.0
-    ra_wrist_3_joint: 1.0
+    var: &v_ff 0.8
+    ra_shoulder_pan_joint: *v_ff
+    ra_shoulder_lift_joint: *v_ff
+    ra_elbow_joint: *v_ff
+    ra_wrist_1_joint: *v_ff
+    ra_wrist_2_joint: *v_ff
+    ra_wrist_3_joint: *v_ff
+
