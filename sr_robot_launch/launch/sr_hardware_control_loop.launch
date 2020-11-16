@@ -12,7 +12,7 @@
   <!-- Whether there is an arm. -->
   <arg name="arm" default="true"/>
   <!-- Whether there is a hand. -->
-  <arg name="hand" default="true"/>
+  <arg name="hand" default="false"/>
   <!-- Whether to run arm controllers. -->
   <arg name="arm_ctrl" default="$(arg arm)"/>
   <!-- Whether to run hand controllers. -->
@@ -53,7 +53,7 @@
   <arg name="arm_speed_scale" default="0.5"/>
   <arg if="$(arg hand_ctrl)" name="arm_payload_mass" default="4.55"/>
   <arg if="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
-  <arg unless="$(arg hand_ctrl)" name="arm_payload_mass" default="0.0"/>
+  <arg unless="$(arg hand_ctrl)" name="arm_payload_mass" default="0.012"/>
   <arg unless="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
   <arg name="kinematics_config" if="$(eval robot_model[-1] == 'e')" default="$(find ur_e_description)/config/$(arg robot_model)_default.yaml"/>
   <arg name="kinematics_config" if="$(eval not robot_model[-1] == 'e')" default="$(find ur_description)/config/$(arg robot_model)_default.yaml"/>
