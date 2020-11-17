@@ -29,11 +29,31 @@ class TestHandAndArmSim(TestCase):
     """
     Tests the Robot Commander
     """
+    @classmethod
+    def setUpClass(cls):
+        cls.launch_file = rospy.get_param('~test_sim/launch_file')
+        if 'ur5' in cls.launch_file or 'ur5e' in cls.launch_file:
+            cls.hand_type = 'hand_lite'
+        elif 'ur10' in cls.launch_file or 'ur10e' in cls.launch_file:
+            cls.hand_type = 'hand_e' 
+        if 'right' in cls.launch_file:
+            cls.robot_side = 'right'
+            cls.hand_id = 'rh'
+            cls.arm_id = 'ra'
+        elif 'left' in cls.launch_file:
+            cls.robot_side = 'left'
+            cls.hand_id = 'lh'
+            cls.arm_id = 'la'
 
-    def setUp(self):
-        rospy.init_node('test_hand_and_arm_sim', anonymous=True)
         rospy.wait_for_message('/move_group/status', GoalStatusArray)
-        self.robot_commander = SrRobotCommander(name="right_arm_and_hand")
+        if cls.robot_side == 'right':
+            self.robot_commander = SrRobotCommander(name="right_arm_and_hand")
+        elif cls.robot_side == 'left':
+            cls.robot_commander = SrRobotCommander(name="left_arm_and_hand")
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
 
     def joints_error_check(self, expected_joint_values, recieved_joint_values):
         expected_and_final_joint_value_diff = 0
@@ -42,24 +62,43 @@ class TestHandAndArmSim(TestCase):
                                                        recieved_joint_values[recieved_value])
         return expected_and_final_joint_value_diff
 
-#Test for Arm and Hand E only
     def test_hand_and_arm_sim(self):
-        hand_arm_joints_goal = {'rh_FFJ1': 0.35, 'rh_FFJ2': 1.5707, 'rh_FFJ3': 1.5707, 'rh_FFJ4': 0.0,
-                                'rh_MFJ1': 0.35, 'rh_MFJ2': 1.5707, 'rh_MFJ3': 1.5707, 'rh_MFJ4': 0.0,
-                                'rh_RFJ1': 0.35, 'rh_RFJ2': 1.5707, 'rh_RFJ3': 1.5707, 'rh_RFJ4': 0.0,
-                                'rh_LFJ1': 0.35, 'rh_LFJ2': 1.5707, 'rh_LFJ3': 1.5707, 'rh_LFJ4': 0.0,
-                                'rh_LFJ5': 0.0, 'rh_THJ1': 0.35, 'rh_THJ2': 0.0, 'rh_THJ3': 0.0, 'rh_THJ4': 0.0,
-                                'rh_THJ5': 0.0, 'rh_WRJ1': 0.6, 'rh_WRJ2': 0.0,
-                                'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 0.00,
-                                'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
-                                'ra_shoulder_lift_joint': -0.58, 'ra_wrist_3_joint': 0.00,
-                                'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                                'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
+        hand_joints_target = {
+        'hand_e' = {'FFJ1': 0.35, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
+                    'MFJ1': 0.35, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
+                    'RFJ1': 0.35, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0,
+                    'LFJ1': 0.35, 'LFJ2': 1.5707, 'LFJ3': 1.5707, 'LFJ4': 0.0,
+                    'LFJ5': 0.0, 'THJ1': 0.35, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 0.0,
+                    'THJ5': 0.0, 'WRJ1': 0.6, 'WRJ2': 0.0}
+        'hand_lite' = {'FFJ1': 0.35, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
+                       'MFJ1': 0.35, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
+                       'RFJ1': 0.35, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0,
+                       'THJ1': 0.35, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 0.0,
+                       'THJ5': 0.0, 'WRJ1': 0.6, 'WRJ2': 0.0}}
 
-        self.robot_commander.move_to_joint_value_target_unsafe(hand_arm_joints_goal, 6.0, True)
+        hand_joints_target_no_id = hand_joints_target[self.hand_type]
+        hand_joints_target = {}
+        for key, value in pack_joints_target_no_id.items():
+            hand_joints_target[self.hand_id + '_' + key] = value                                  
+
+        arm_joints_target = {'shoulder_pan_joint': 0.00, 'elbow_joint': 0.00,
+                                  'shoulder_pan_joint': 0.00, 'elbow_joint': 2.00,
+                                  'shoulder_lift_joint': -0.58, 'wrist_3_joint': 0.00,
+                                  'shoulder_lift_joint': -1.25, 'wrist_1_joint': -0.733,
+                                  'wrist_2_joint': 1.5708, 'wrist_3_joint': 0.00}
+
+        arm_joints_target_no_id = arm_joints_target
+        arm_joints_target = {}
+        for key, value in pack_joints_target_no_id.items():
+            arm_joints_target[self.arm_id + '_' + key] = value
+        
+        arm_and_hand_joints_target = {}
+        arm_and_hand_joints_target = dict(hand_joints_target.items() + arm_joints_target.items())
+
+        self.robot_commander.move_to_joint_value_target_unsafe(arm_and_hand_joints_target, 6.0, True)
         rospy.sleep(10)
         final_joint_values = self.robot_commander.get_current_state()
-        expected_and_final_joint_value_diff = self.joints_error_check(hand_arm_joints_goal, final_joint_values)
+        expected_and_final_joint_value_diff = self.joints_error_check(arm_and_hand_joints_target, final_joint_values)
 
         self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, delta=0.2)
 
