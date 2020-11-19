@@ -24,7 +24,7 @@ arm_commander = ()
 #DOES NOT WORK FOR LEFT. CAN'T FIND MOVEIT GROUP
 #currently giving error setting joint target
 
-class TestHandAndArmSim():
+class TestHandAndArmSim(TestCase):
     """
     Tests the Hand and Arm in Sim
     """
@@ -65,6 +65,7 @@ class TestHandAndArmSim():
         for expected_value, recieved_value in zip(sorted(expected_joint_values), sorted(recieved_joint_values)):
             expected_and_final_joint_value_diff += abs(expected_joint_values[expected_value] -
                                                        recieved_joint_values[recieved_value])
+        return expected_and_final_joint_value_diff
 
     def test_hand(self):
         hand_joints_target = {
@@ -77,8 +78,8 @@ class TestHandAndArmSim():
            'hand_lite': {'FFJ1': 0.35, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
                          'MFJ1': 0.35, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
                          'RFJ1': 0.35, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0,
-                         'THJ1': 0.35, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 0.0,
-                         'THJ5': 0.0, 'WRJ1': 0.6, 'WRJ2': 0.0}
+                         'THJ1': 0.35, 'THJ2': 0.0, 'THJ4': 0.0,
+                         'THJ5': 0.0}
                 }
 
         hand_joints_target_no_id = hand_joints_target[self.hand_type]
@@ -93,7 +94,13 @@ class TestHandAndArmSim():
         rospy.sleep(5)
         final_hand_joint_values = self.hand_commander.get_current_state()
 
+        print('final hand joint values')
+        print(final_hand_joint_values
+        )
         expected_and_final_joint_value_diff_hand = self.joints_error_check(hand_joints_target, final_hand_joint_values)
+
+        print('diff for hand')
+        print(expected_and_final_joint_value_diff_hand)
 
         self.assertAlmostEqual(expected_and_final_joint_value_diff_hand, 0, delta=0.2)
         
@@ -113,17 +120,24 @@ class TestHandAndArmSim():
         print('arm joints target')
         print(arm_joints_target)
 
-        self.arm_commander.move_to_pose_target(arm_joints_target, wait=True)
+        self.arm_commander.move_to_joint_value_target(arm_joints_target, wait=True)
         rospy.sleep(5)
         final_arm_joint_values = self.arm_commander.get_current_state()
 
+        print('arm final values')
+        print(final_arm_joint_values)
+
         expected_and_final_joint_value_diff_arm = self.joints_error_check(arm_joints_target, final_arm_joint_values)
+
+        print('arm diff')
+        print(expected_and_final_joint_value_diff_arm)
 
         self.assertAlmostEqual(expected_and_final_joint_value_diff_arm, 0, delta=0.2)
 
 if __name__ == '__main__':
 #initialising and setting everything up
-    TestHandAndArmSim()
+    test = TestHandAndArmSim()
     rospy.sleep(10)
-    TestHandAndArmSim().test_hand()
-    TestHandAndArmSim().test_arm()
+    test.test_hand()
+#    rospy.sleep(5)
+#    test.test_arm()
