@@ -83,6 +83,7 @@
     <arg if="$(eval arg('hand_type') == 'hand_e')" name="arm_payload_mass" default="5.0'"/>
     <arg if="$(eval arg('hand_type') == 'hand_e_plus')" name="arm_payload_mass" default="5.0'"/>
     <arg if="$(eval arg('hand_type') == 'hand_lite')" name="arm_payload_mass" default="2.7'"/>
+    <arg if="$(eval arg('hand_type') == 'hand_extra_lite')" name="arm_payload_mass" default="2.5"/>
     <arg name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
   </group>
   <group if="$(eval hands == 'none')">

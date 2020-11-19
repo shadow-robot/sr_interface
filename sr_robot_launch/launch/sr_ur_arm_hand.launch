@@ -78,16 +78,11 @@
   <arg name="arm_ctrl" default="true"/>
   <arg name="arm_speed_scale" default="0.5"/>
   <!-- Sets up right payload -->
-  <group if="$(hand)">
-    <arg if="$(eval arg('hand_type') == 'hand_e')" name="arm_payload_mass" default="5.0'"/>
-    <arg if="$(eval arg('hand_type') == 'hand_e_plus')" name="arm_payload_mass" default="5.0'"/>
-    <arg if="$(eval arg('hand_type') == 'hand_lite')" name="arm_payload_mass" default="2.7'"/>
-    <arg if="$(arg hand)" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
-  </group>
-  <group unless="$(hand)">
-    <arg name="arm_payload_mass" default="0.0"/>
-    <arg name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
-  </group>
+  <arg if="$(eval arg('hand_type') == 'hand_e')" name="arm_payload_mass" default="5.0"/>
+  <arg if="$(eval arg('hand_type') == 'hand_e_plus')" name="arm_payload_mass" default="5.0"/>
+  <arg if="$(eval arg('hand_type') == 'hand_lite')" name="arm_payload_mass" default="2.7"/>
+  <arg if="$(eval arg('hand_type') == 'hand_extra_lite')" name="arm_payload_mass" default="2.5"/>
+  <arg name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
 
   <arg if="$(eval not hand_trajectory and not arm_trajectory)" name="trajectory_controllers_list" default="[]"/>
   <arg if="$(eval hand_trajectory and arm_trajectory)" name="trajectory_controllers_list" 
@@ -175,7 +170,6 @@
         <arg name="include_wrist_in_arm_controller" value="$(arg include_wrist_in_arm_controller)"/>
         <arg name="arm_trajectory" value="$(arg arm_trajectory)"/>
         <arg name="arm_position" value="$(arg arm_position)"/>
-        <arg name="hand_ctrl" value="$(arg hand_ctrl)"/>
         <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>
         <arg name="arm_ctrl" value="$(arg arm_ctrl)"/>
         <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
