@@ -62,9 +62,14 @@ class TestHandAndArmSim(TestCase):
 
     def test_scene(self):
         scene = ()
-        self.scene = rospy.get_param('/scene')
+        self.scene = rospy.get_param('/test_sim/scene')
         print('scene')
         print(self.scene)
+
+        if self.scene == 'True':
+            print('scene is true')
+        elif self.scene == 'False':
+            print('scene is false')
 
     def test_hand(self):
         hand_joints_target = {
@@ -170,7 +175,8 @@ if __name__ == '__main__':
      rospy.init_node("hand_and_arm_test", anonymous=True)
      test = TestHandAndArmSim()
      rospy.sleep(10)
-     test.test_hand()
-     rospy.sleep(5)
-     test.test_arm()
-     test.test_hand_and_arm()
+     test.test_scene()
+    #  test.test_hand()
+    #  rospy.sleep(5)
+    #  test.test_arm()
+    #  test.test_hand_and_arm()
