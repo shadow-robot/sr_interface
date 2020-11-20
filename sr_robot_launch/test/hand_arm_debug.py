@@ -10,9 +10,6 @@ from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from actionlib_msgs.msg import GoalStatusArray
 from unittest import TestCase
 
-PKG = "sr_robot_launch"
-
-#rospy.init_node("hand_and_arm_test", anonymous=True)
 hand_type = ()
 launch_file = ()
 arm_id = ()
@@ -26,10 +23,6 @@ class TestHandAndArmSim(TestCase):
     Tests the Hand and Arm in Sim
     """
     def __init__(self):
-#        self.launch_file = 'sr_left_ur10arm_hand.launch'
-#        self.launch_file = 'sr_left_ur5arm_hand.launch'
-#        self.launch_file = 'sr_right_ur10arm_hand.launch'
-#        self.launch_file = 'sr_right_ur5arm_hand.launch'
         self.launch_file = rospy.get_param('/test_sim/launch_file')
         print('launch file')
         print(self.launch_file)
@@ -67,9 +60,11 @@ class TestHandAndArmSim(TestCase):
                                                        recieved_joint_values[recieved_value])
         return expected_and_final_joint_value_diff
 
-#    def test_scene(self):
-
-
+    def test_scene(self):
+        scene = ()
+        self.scene = rospy.get_param('/scene')
+        print('scene')
+        print(self.scene)
 
     def test_hand(self):
         hand_joints_target = {
@@ -171,6 +166,8 @@ class TestHandAndArmSim(TestCase):
          print(joint_value_diff_arm_and_hand)
 
 if __name__ == '__main__':
+     PKG = "sr_robot_launch"
+     rospy.init_node("hand_and_arm_test", anonymous=True)
      test = TestHandAndArmSim()
      rospy.sleep(10)
      test.test_hand()
