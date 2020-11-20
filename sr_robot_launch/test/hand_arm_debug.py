@@ -12,7 +12,7 @@ from unittest import TestCase
 
 PKG = "sr_robot_launch"
 
-rospy.init_node("hand_and_arm_test", anonymous=True)
+#rospy.init_node("hand_and_arm_test", anonymous=True)
 hand_type = ()
 launch_file = ()
 arm_id = ()
@@ -27,9 +27,12 @@ class TestHandAndArmSim(TestCase):
     """
     def __init__(self):
 #        self.launch_file = 'sr_left_ur10arm_hand.launch'
-        self.launch_file = 'sr_left_ur5arm_hand.launch'
+#        self.launch_file = 'sr_left_ur5arm_hand.launch'
 #        self.launch_file = 'sr_right_ur10arm_hand.launch'
 #        self.launch_file = 'sr_right_ur5arm_hand.launch'
+        self.launch_file = rospy.get_param('/test_sim/launch_file')
+        print('launch file')
+        print(self.launch_file)
         if 'ur10' in self.launch_file:
             self.hand_type = 'hand_e'
         elif 'ur5' in self.launch_file:
@@ -55,9 +58,7 @@ class TestHandAndArmSim(TestCase):
         elif self.hand_id == 'lh':
             self.robot_commander = SrRobotCommander(name="left_arm_and_hand")
             self.hand_commander = SrHandCommander(name='left_hand')
-            self.arm_commander = SrArmCommander(name='left_arm')
-
-        
+            self.arm_commander = SrArmCommander(name='left_arm')    
 
     def joints_error_check(self, expected_joint_values, recieved_joint_values):
         expected_and_final_joint_value_diff = 0
@@ -65,6 +66,10 @@ class TestHandAndArmSim(TestCase):
             expected_and_final_joint_value_diff += abs(expected_joint_values[expected_value] -
                                                        recieved_joint_values[recieved_value])
         return expected_and_final_joint_value_diff
+
+#    def test_scene(self):
+
+
 
     def test_hand(self):
         hand_joints_target = {
@@ -166,9 +171,9 @@ class TestHandAndArmSim(TestCase):
          print(joint_value_diff_arm_and_hand)
 
 if __name__ == '__main__':
-    test = TestHandAndArmSim()
-    rospy.sleep(10)
-    test.test_hand()
-    rospy.sleep(5)
-    test.test_arm()
-    test.test_hand_and_arm()
+     test = TestHandAndArmSim()
+     rospy.sleep(10)
+     test.test_hand()
+     rospy.sleep(5)
+     test.test_arm()
+     test.test_hand_and_arm()
