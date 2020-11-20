@@ -21,7 +21,6 @@ robot_commander = ()
 hand_commander = ()
 arm_commander = ()
 
-#DOES NOT WORK FOR LEFT. CAN'T FIND MOVEIT GROUP
 #currently giving error setting joint target
 
 class TestHandAndArmSim(TestCase):
@@ -29,9 +28,9 @@ class TestHandAndArmSim(TestCase):
     Tests the Hand and Arm in Sim
     """
     def __init__(self):
-#        self.launch_file = 'sr_left_ur10arm_hand.launch'
+        self.launch_file = 'sr_left_ur10arm_hand.launch'
 #        self.launch_file = 'sr_left_ur5arm_hand.launch'
-        self.launch_file = 'sr_right_ur10arm_hand.launch'
+#        self.launch_file = 'sr_right_ur10arm_hand.launch'
 #        self.launch_file = 'sr_right_ur5arm_hand.launch'
         if 'ur10' in self.launch_file:
             self.hand_type = 'hand_e'
@@ -61,7 +60,6 @@ class TestHandAndArmSim(TestCase):
             self.arm_commander = SrArmCommander(name='left_arm')
 
     def joints_error_check(self, expected_joint_values, recieved_joint_values):
-        expected_and_final_joint_value_diff = 0
         for expected_value, recieved_value in zip(sorted(expected_joint_values), sorted(recieved_joint_values)):
             expected_and_final_joint_value_diff += abs(expected_joint_values[expected_value] -
                                                        recieved_joint_values[recieved_value])
@@ -69,17 +67,16 @@ class TestHandAndArmSim(TestCase):
 
     def test_hand(self):
         hand_joints_target = {
-           'hand_e': {'FFJ1': 0.35, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
-                      'MFJ1': 0.35, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
-                      'RFJ1': 0.35, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0,
-                      'LFJ1': 0.35, 'LFJ2': 1.5707, 'LFJ3': 1.5707, 'LFJ4': 0.0,
-                      'LFJ5': 0.0, 'THJ1': 0.35, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 0.0,
-                      'THJ5': 0.0, 'WRJ1': 0.6, 'WRJ2': 0.0},
-           'hand_lite': {'FFJ1': 0.35, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
-                         'MFJ1': 0.35, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
-                         'RFJ1': 0.35, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0,
-                         'THJ1': 0.35, 'THJ2': 0.0, 'THJ4': 0.0,
-                         'THJ5': 0.0}
+           'hand_e': {'THJ1': 0.52, 'THJ2': 0.61, 'THJ3': 0.0, 'THJ4': 1.20, 'THJ5': 0.17,
+                            'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
+                            'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
+                            'RFJ1': 1.5707, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0,
+                            'LFJ1': 0.0, 'LFJ2': 0.0, 'LFJ3': 0.0, 'LFJ4': 0.0,
+                            'LFJ5': 0.0, 'WRJ1': 0.0, 'WRJ2': 0.0},
+           'hand_lite': {'THJ1': 0.52, 'THJ2': 0.61, 'THJ4': 1.20, 'THJ5': 0.17,
+                          'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
+                          'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
+                          'RFJ1': 0.0, 'RFJ2': 0.0, 'RFJ3': 0.0, 'RFJ4': 0.0},
                 }
 
         hand_joints_target_no_id = hand_joints_target[self.hand_type]
@@ -87,16 +84,10 @@ class TestHandAndArmSim(TestCase):
         for key, value in hand_joints_target_no_id.items():
             hand_joints_target[self.hand_id + '_' + key] = value
 
-        print('hand joints target')
-        print(hand_joints_target)
-
         self.hand_commander.move_to_joint_value_target(hand_joints_target, wait=True)
         rospy.sleep(5)
         final_hand_joint_values = self.hand_commander.get_current_state()
 
-        print('final hand joint values')
-        print(final_hand_joint_values
-        )
         expected_and_final_joint_value_diff_hand = self.joints_error_check(hand_joints_target, final_hand_joint_values)
 
         print('diff for hand')
@@ -117,15 +108,9 @@ class TestHandAndArmSim(TestCase):
         for key, value in arm_joints_target_no_id.items():
             arm_joints_target[self.arm_id + '_' + key] = value
 
-        print('arm joints target')
-        print(arm_joints_target)
-
         self.arm_commander.move_to_joint_value_target(arm_joints_target, wait=True)
         rospy.sleep(5)
         final_arm_joint_values = self.arm_commander.get_current_state()
-
-        print('arm final values')
-        print(final_arm_joint_values)
 
         expected_and_final_joint_value_diff_arm = self.joints_error_check(arm_joints_target, final_arm_joint_values)
 
@@ -139,5 +124,5 @@ if __name__ == '__main__':
     test = TestHandAndArmSim()
     rospy.sleep(10)
     test.test_hand()
-#    rospy.sleep(5)
-#    test.test_arm()
+    rospy.sleep(5)
+    test.test_arm()
