@@ -21,16 +21,14 @@ robot_commander = ()
 hand_commander = ()
 arm_commander = ()
 
-#currently giving error setting joint target
-
 class TestHandAndArmSim(TestCase):
     """
     Tests the Hand and Arm in Sim
     """
     def __init__(self):
 #        self.launch_file = 'sr_left_ur10arm_hand.launch'
-#        self.launch_file = 'sr_left_ur5arm_hand.launch'
-        self.launch_file = 'sr_right_ur10arm_hand.launch'
+        self.launch_file = 'sr_left_ur5arm_hand.launch'
+#        self.launch_file = 'sr_right_ur10arm_hand.launch'
 #        self.launch_file = 'sr_right_ur5arm_hand.launch'
         if 'ur10' in self.launch_file:
             self.hand_type = 'hand_e'
@@ -168,7 +166,6 @@ class TestHandAndArmSim(TestCase):
          print(joint_value_diff_arm_and_hand)
 
 if __name__ == '__main__':
-#initialising and setting everything up
     test = TestHandAndArmSim()
     rospy.sleep(10)
     test.test_hand()
