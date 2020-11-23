@@ -43,7 +43,6 @@ class ChildArmCommander(SrArmCommander):
             pose.header.frame_id = self._robot_commander.get_root_link()
             self._planning_scene.add_box("ground", pose, (3, 3, height))
             return pose.pose.position.z
-            print(pose.pose.position.z)
 
 class TestHandAndArmSim(TestCase):
     """
