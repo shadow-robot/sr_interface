@@ -36,7 +36,6 @@
   <arg name="side_letter" value="$(eval side[0])"/>
   <arg name="hand_id" value="$(arg side_letter)h"/>
   <arg name="arm_prefix" value="$(arg side_letter)a"/>
-  <arg name="hand_type" default="hand_e_plus"/>
 
   <arg name="robot_model" default="ur10e"/>
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
@@ -60,6 +59,7 @@
   <arg name="pwm_control" default="true"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
+  <arg name="hand_type" default="hand_e_plus"/>
 
   <!-- ARMS CONFIG-->
   <arg name="initial_z" default="0.1"/>
