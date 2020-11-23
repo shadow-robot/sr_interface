@@ -20,6 +20,9 @@
 
   <!-- setting this parameter to true allows to load the robot_description from a lower level -->
   <arg name="load_robot_description_at_lower_level" default="false"/>
+  <arg name="load_robot_description"  default="false"/>
+
+  <arg if="$(eval load_robot_description_at_lower_level == 'false')" name="load_robot_description" value="true"/>
 
   <!-- HANDS CONFIG-->
   <arg name="rh_serial" default="1370"/>
@@ -81,7 +84,7 @@
   <include file="$(find sr_robot_launch)/launch/bimanual_controller_stopper.launch"/>
 
   <!-- Constructs robot description string and loads it -->
-  <node if="$(eval arg('hands') == 'none' or not arg('load_robot_description_at_lower_level'))" name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description" output="screen">
+  <node unless="$(arg load_robot_description_at_lower_level)" name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description" output="screen">
     <param name="arm_type" value="$(arg robot_model)"/>
     <param name="robot_description_file" value="$(arg robot_description)"/>
     <param name="arm_1_z" value="$(arg arm_1_z)"/>
@@ -138,7 +141,6 @@
         - ra_sr_ur_robot_hw
         - la_sr_ur_robot_hw
     </rosparam>
-    <param name="robot_description" command="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
       <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
