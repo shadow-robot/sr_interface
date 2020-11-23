@@ -7,6 +7,7 @@ import rostest
 from sr_robot_commander.sr_arm_commander import SrArmCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
+from geometry_msgs.msg import PoseStamped, Pose
 from actionlib_msgs.msg import GoalStatusArray
 from unittest import TestCase
 
@@ -17,6 +18,30 @@ hand_id = ()
 robot_commander = ()
 hand_commander = ()
 arm_commander = ()
+
+class ChildArmCommander(SrArmCommander):
+        """
+        Child class that returns robot pose
+        """
+        def set_ground(self, height=0.1, z_position=-0.1):
+            """
+            Sets a plane for the ground.
+            @param height - specifies the height of the plane
+            @param z_position - position in z to place the plane. Should not collide with the robot.
+            """
+
+            pose = PoseStamped()
+            pose.pose.position.x = 0
+            pose.pose.position.y = 0
+            pose.pose.position.z = z_position - (height/2.0)
+            pose.pose.orientation.x = 0
+            pose.pose.orientation.y = 0
+            pose.pose.orientation.z = 0
+            pose.pose.orientation.w = 1
+            pose.header.stamp = get_rostime()
+            pose.header.frame_id = self._robot_commander.get_root_link()
+            self._planning_scene.add_box("ground", pose, (3, 3, height))
+            return pose.pose.position.z
 
 class TestHandAndArmSim(TestCase):
     """
@@ -66,10 +91,16 @@ class TestHandAndArmSim(TestCase):
         print('scene')
         print(self.scene)
 
-        if self.scene == 'True':
+        if self.scene == True:
             print('scene is true')
-        elif self.scene == 'False':
+        elif self.scene == False:
             print('scene is false')
+        
+        child_arm_commander = ()
+        self.child_arm_commander = ChildArmCommander()
+
+#        print('robot z')
+#        print(self.robot_z)
 
     def test_hand(self):
         hand_joints_target = {
@@ -176,7 +207,7 @@ if __name__ == '__main__':
      test = TestHandAndArmSim()
      rospy.sleep(10)
      test.test_scene()
-    #  test.test_hand()
-    #  rospy.sleep(5)
-    #  test.test_arm()
-    #  test.test_hand_and_arm()
+#     test.test_hand()
+#     rospy.sleep(5)
+#     test.test_arm()
+#     test.test_hand_and_arm()
