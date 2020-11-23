@@ -8,6 +8,7 @@ from sr_robot_commander.sr_arm_commander import SrArmCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from geometry_msgs.msg import PoseStamped, Pose
+from rospy import get_rostime
 from actionlib_msgs.msg import GoalStatusArray
 from unittest import TestCase
 
@@ -42,6 +43,7 @@ class ChildArmCommander(SrArmCommander):
             pose.header.frame_id = self._robot_commander.get_root_link()
             self._planning_scene.add_box("ground", pose, (3, 3, height))
             return pose.pose.position.z
+            print(pose.pose.position.z)
 
 class TestHandAndArmSim(TestCase):
     """
@@ -99,8 +101,8 @@ class TestHandAndArmSim(TestCase):
         child_arm_commander = ()
         self.child_arm_commander = ChildArmCommander()
 
-#        print('robot z')
-#        print(self.robot_z)
+#    def test_home_position(self):
+
 
     def test_hand(self):
         hand_joints_target = {
@@ -207,6 +209,9 @@ if __name__ == '__main__':
      test = TestHandAndArmSim()
      rospy.sleep(10)
      test.test_scene()
+#     hand = ChildArmCommander
+#     print('testing child class')
+#     print(str(hand.set_ground))
 #     test.test_hand()
 #     rospy.sleep(5)
 #     test.test_arm()
