@@ -9,10 +9,7 @@
   <arg name="side_letter" value="$(eval side[0])"/>
   <arg name="hand_id" value="$(arg side_letter)h"/>
   <arg name="arm_prefix" value="$(arg side_letter)a"/>
-  <arg name="load_robot_description_at_lower_level" default="true"/>
-  <arg name="load_robot_description"  default="false"/>
-
-  <arg if="$(eval load_robot_description_at_lower_level == 'false')" name="load_robot_description" value="true"/>
+  <arg name="load_robot_description_at_lower_level" default="false"/>
 
   <!-- Whether there is an arm. -->
   <arg name="arm" default="true"/>
@@ -97,23 +94,27 @@
     <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
     <rosparam file="$(arg robot_config_file)"/>
     <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
-    <include file="$(find sr_edc_launch)/sr_edc_ros_control.launch">
-      <arg name="define_robot_hardware" value="false"/>
-      <arg name="hand_robot_hardware_name" value="unique_robot_hw"/>
-      <arg name="debug" value="$(arg debug)"/>
-      <arg name="eth_port" value="$(arg eth_port)"/>
-      <arg name="load_robot_description_command" value="$(arg load_robot_description_command)"/>
-      <arg name="pwm_control" value="$(arg pwm_control)"/>
-      <arg name="hand_serial" value="$(arg hand_serial)"/>
-      <arg name="hand_id" value="$(arg hand_id)"/>
-      <arg name="mapping_path" value="$(arg mapping_path)"/>
-      <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
-      <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
-      <arg name="initial_z" value="$(arg initial_z)"/>
-      <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
-      <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
-      <arg name="load_robot_description" value="$(arg load_robot_description)"/>
-    </include>
+    <node name="conditional_delayed_rostool_edc_ros_control" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
+      <param name="package_name" value="sr_edc_launch" />
+      <param name="executable_name" value="sr_edc_ros_control.launch" />
+      <rosparam param="params_list">[/robot_description]</rosparam>
+      <param name="launch_args_list" value="define_robot_hardware:=false
+      hand_robot_hardware_name:=unique_robot_hw
+      debug:=$(arg debug)
+      eth_port:=$(arg eth_port)
+      load_robot_description_command:=$(arg load_robot_description_command)
+      pwm_control:=$(arg pwm_control)
+      hand_serial:=$(arg hand_serial)
+      hand_id:=$(arg hand_id)
+      mapping_path:=$(arg mapping_path)
+      robot_state_pub_frequency:=$(arg robot_state_pub_frequency)
+      joint_state_pub_frequency:=$(arg joint_state_pub_frequency)
+      initial_z:=$(arg initial_z)
+      mapping_path:=$(arg mapping_path)
+      arm_x_separation:=$(arg arm_x_separation)
+      arm_y_separation:=$(arg arm_y_separation)
+      load_robot_description_at_lower_level:=$(arg load_robot_description_at_lower_level)" />
+    </node>
     <node if="$(arg hand_ctrl)" name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
       <param name="controller_group" value="$(arg hand_controller_group)"/>
       <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
