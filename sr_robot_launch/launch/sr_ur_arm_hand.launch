@@ -168,6 +168,7 @@
         <arg name="grasp_controller" value="$(arg grasp_controller)"/>
         <arg name="pwm_control" value="$(arg pwm_control)"/>
         <arg name="include_wrist_in_arm_controller" value="$(arg include_wrist_in_arm_controller)"/>
+        <arg name="hand_ctrl" value="$(arg hand_ctrl)"/>
         <arg name="arm_trajectory" value="$(arg arm_trajectory)"/>
         <arg name="arm_position" value="$(arg arm_position)"/>
         <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>
