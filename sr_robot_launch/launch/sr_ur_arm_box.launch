@@ -1,5 +1,5 @@
 <launch>
-  <!-- This launch file is for a ur10 arm and box -->
+  <!-- This launch file is for a ur arm and box -->
 
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
   <arg name="sim" default="true"/>
@@ -15,21 +15,18 @@
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
     <!-- Set the scene file -->
-  <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large.scene"/>
+  <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large_unimanual.scene"/>
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhands_and_arms.world" unless="$(arg scene)"/>
-  <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large.world" if="$(arg scene)"/>
+  <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large_unimanual.world" if="$(arg scene)"/>
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="false"/>
-  <arg name="kinematics_config" default="$(find ur_description)/config/ur10_default.yaml"/>
-
-
 
   <!-- ROBOT CONFIG-->
   <arg name="side" default="right"/>
   <arg name="side_letter" value="$(eval side[0])"/>
   <arg name="arm_prefix" value="$(arg side_letter)a"/>
-  <arg name="robot_model" default="ur10"/>
+  <arg name="robot_model" default="ur10e"/>
   <arg name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/$(arg arm_prefix)_$(arg robot_model)_with_box.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_box_ur10_moveit_config)/config/robot_configs/$(arg side)_$(arg robot_model).yaml"/>
 
@@ -44,12 +41,19 @@
   <arg name="joint_state_pub_frequency" default="125"/>
 
   <!-- ARM CONFIG-->
-  <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
+  <arg name="initial_z" default="0.7521" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
-  <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
-  <arg name="arm_speed_scale" default="0.5"/>
-
+  <arg name="kinematics_config" if="$(eval robot_model[-1] == 'e')" default="$(find ur_e_description)/config/$(arg robot_model)_default.yaml"/>
+  <arg name="kinematics_config" if="$(eval not robot_model[-1] == 'e')" default="$(find ur_description)/config/$(arg robot_model)_default.yaml"/>
   <rosparam command="load" file="$(arg kinematics_config)" ns="$(arg arm_prefix)_sr_ur_robot_hw"/>
+
+  <!-- TODO: check if we need a different tuning for ur5/ur5e  -->
+  <arg name="arm_robot_hw" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/$(arg side)_ur10e_arm_robot_hw.yaml"/>
+
+  <arg name="arm_speed_scale" default="0.5"/>
+  <arg name="arm_payload_mass" default="0"/>
+  <arg name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
 
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
@@ -65,6 +69,9 @@
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
+    <env name="GAZEBO_MODEL_PATH" value="$(find sr_description_common)/models/" />
+    <env name="GAZEBO_MODEL_DATABASE_URI" value="" />
+    <env name="MESH_WORKSPACE_PATH" value="$(find sr_description_common)/models/" />
     <arg name="paused" value="$(arg start_home)"/>
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
       <arg name="world_name" value="$(arg world)"/>
@@ -108,7 +115,7 @@
     <group unless="$(arg external_control_loop)">
       <include file="$(find sr_robot_launch)/launch/sr_hardware_control_loop.launch">
         <arg name="debug" default="$(arg debug)"/>
-        <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
+        <arg name="initial_z" default="0.7521" if="$(arg scene)"/>
         <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
         <arg name="robot_description" value="$(arg robot_description)"/>
         <arg name="side" value="$(arg side)"/>
@@ -117,6 +124,8 @@
         <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
         <arg name="arm_position" default="$(arg arm_position)"/>
         <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
+        <arg name="arm_payload_mass" value="$(arg arm_payload_mass)"/>
+        <arg name="arm_payload_cog" value="$(arg arm_payload_cog)"/>
         <arg name="hand" default="false"/>
         <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
         <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
@@ -147,8 +156,7 @@
       <param name="package_name" value="sr_box_ur10_moveit_config" />
       <param name="executable_name" value="planning_and_execution.launch" />
       <rosparam param="params_list">[/robot_description]</rosparam>
-      <param name="launch_args_list" value="side:=$(arg side)
-        use_gui:=$(arg gui)" />
+      <param name="launch_args_list" value="side:=$(arg side) use_gui:=$(arg gui)" />
       <param name="timeout" value="20.0" />
     </node>
   </group>

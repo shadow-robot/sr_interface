@@ -52,6 +52,17 @@ controller_groups:
     lh:
       default:
         - sh_lh_grasp_controller
+  hybrid:
+    rh:
+      common:
+        - rh_trajectory_controller
+      default:
+        - sh_rh_hybrid_controller
+    lh:
+      common:
+        - lh_trajectory_controller
+      default:
+        - sh_lh_hybrid_controller
   position:
     rh:
       common: []
@@ -99,6 +110,9 @@ controller_groups:
         - rh_trajectory_controller
       default:
         - sh_%joint_name%_position_controller
+      necessary_if_joint_present:
+        - sh_rh_wrj1_position_controller
+        - sh_rh_wrj2_position_controller
       rh_FFJ1:
         - sh_rh_ffj0_position_controller
       rh_FFJ2:
@@ -120,6 +134,9 @@ controller_groups:
         - lh_trajectory_controller
       default:
         - sh_%joint_name%_position_controller
+      necessary_if_joint_present:
+        - sh_lh_wrj1_position_controller
+        - sh_lh_wrj2_position_controller
       lh_FFJ1:
         - sh_lh_ffj0_position_controller
       lh_FFJ2:
@@ -136,8 +153,3 @@ controller_groups:
         - sh_lh_lfj0_position_controller
       lh_LFJ2:
         - sh_lh_lfj0_position_controller
-controller_configs:
-  rh:
-    rh_trajectory_controller: rh_trajectory_controller.yaml
-  lh:
-    lh_trajectory_controller: lh_trajectory_controller.yaml

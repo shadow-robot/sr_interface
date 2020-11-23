@@ -7,11 +7,13 @@
 
     <link name="world"/>
     <xacro:arg name="initial_z" default="0.0"/>
+    <xacro:arg name="arm_x_separation" default="0.0"/>
+    <xacro:arg name="arm_y_separation" default="0.0"/>
 
     <joint name="world_joint" type="fixed">
         <parent link="world"/>
         <child link="la_base_link"/>
-        <origin xyz="0.0 0.0 $(arg initial_z)" rpy="0.0 0.0 ${pi}"/>
+        <origin xyz="$(arg arm_x_separation) $(arg arm_y_separation) $(arg initial_z)" rpy="0.0 0.0 ${pi}"/>
     </joint>
 
     <xacro:ur10e_robot prefix="la_" joint_limited="false" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_file="${load_yaml('$(arg kinematics_config)')}"/>

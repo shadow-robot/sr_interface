@@ -6,7 +6,7 @@
   <arg name="hands" default="both"/>
   <arg name="arm_ctrl" default="true"/>	
   <!-- ROBOT CONFIG-->
-  <arg name="robot_model" default="ur10"/>
+  <arg name="robot_model" default="ur10e"/>
   <!-- HANDS AND ARMS -->
   <arg name="robot_description" if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
@@ -24,8 +24,8 @@
   <!-- HANDS CONFIG-->
   <arg name="rh_serial" default="1370"/>
   <arg name="lh_serial" default="2346"/>
-  <arg name="rh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v3.yaml"/>
-  <arg name="lh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_E_v3.yaml"/>
+  <arg name="rh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v4.yaml"/>
+  <arg name="lh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_E_v4.yaml"/>
   <!-- Allows to specify the ethernet interface/s to be used. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
@@ -40,8 +40,10 @@
   <arg name="arm_x_separation" default="-0.4" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))"/>
   <arg name="arm_x_separation" default="0.0" unless="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))"/>
   <arg name="arm_y_separation" default="1.5"/>
-  <arg name="arm_robot_hw_1" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
-  <arg name="arm_robot_hw_2" default="$(find sr_robot_launch)/config/left_bimanual_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw_1" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw_1" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/right_ur10e_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw_2" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/left_bimanual_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw_2" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/left_bimanual_ur10e_arm_robot_hw.yaml"/>
   <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
   <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
   <arg name="include_wrist_in_arm_controller" default="true" if="$(arg arm_ctrl)"/>
@@ -54,10 +56,18 @@
   <arg name="right_arm_speed_scale" default="0.5"/>
   <arg name="left_arm_speed_scale" default="0.5"/>
 
+  <arg unless="$(eval hands == 'none')" name="arm_payload_mass" default="5.00"/>
+  <arg unless="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
+  <arg if="$(eval hands == 'none')" name="arm_payload_mass" default="0.0"/>
+  <arg if="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
+
   <arg name="load_robot_description_command" default="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
 
   <node pkg="rosservice" type="rosservice" name="set_right_speed_scale" args="call --wait /ra_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg right_arm_speed_scale)'"/>
   <node pkg="rosservice" type="rosservice" name="set_left_speed_scale" args="call --wait /la_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg left_arm_speed_scale)'"/>
+
+  <node pkg="rosservice" type="rosservice" name="set_right_arm_payload" args="call --wait /ra_sr_ur_robot_hw/set_payload '{payload: $(arg arm_payload_mass), center_of_gravity: $(arg arm_payload_cog)}'"/>
+  <node pkg="rosservice" type="rosservice" name="set_left_arm_payload" args="call --wait /la_sr_ur_robot_hw/set_payload '{payload: $(arg arm_payload_mass), center_of_gravity: $(arg arm_payload_cog)}'"/>
 
   <!-- Logging local topics -->
   <group ns="control_box">
@@ -85,22 +95,30 @@
     <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
     <rosparam file="$(arg robot_config_file)"/>
     <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
-      <node name="conditional_delayed_rostool_sr_edc" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
-        <param name="package_name" value="sr_edc_launch" />
-        <param name="executable_name" value="sr_edc_bimanual_ros_control.launch" />
-        <rosparam param="params_list">[/robot_description_ready]</rosparam>
-        <param name="launch_args_list" value="define_robot_hardware:=false debug:=$(arg debug) load_robot_description_command:=$(arg load_robot_description_command) rh_serial:=$(arg rh_serial) lh_serial:=$(arg lh_serial) rh_mapping_path:=$(arg rh_mapping_path) lh_mapping_path:=$(arg lh_mapping_path) eth_port:=$(arg eth_port) pwm_control:=$(arg pwm_control) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation) robot_state_pub_frequency:=$(arg robot_state_pub_frequency) joint_state_pub_frequency:=$(arg joint_state_pub_frequency) load_robot_description:=$(arg load_robot_description)" />
-        <param name="timeout" value="30.0" />
-      </node>
-      <arg if="$(arg hand_trajectory)" name="controller_group" value="trajectory"/>
-      <arg unless="$(arg hand_trajectory)" name="controller_group" value="position"/>
-      <node name="conditional_delayed_rostool_bimanual_trajectory_controller" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
-        <param name="package_name" value="sr_utilities" />
-        <param name="executable_name" value="controller_spawner.py" />
-        <rosparam param="params_list">[/robot_description_ready]</rosparam>
-        <param name="launch_args_list" value="controller_group:=$(arg controller_group) exclude_wrist:=$(arg include_wrist_in_arm_controller) wait_for:=calibrated"/>
-        <param name="timeout" value="30.0" />
-      </node>
+    <include file="$(find sr_edc_launch)/sr_edc_bimanual_ros_control.launch">
+      <arg name="define_robot_hardware" value="false"/>
+      <arg name="debug" value="$(arg debug)"/>
+      <arg name="load_robot_description_command" value="$(arg load_robot_description_command)"/>
+      <arg name="rh_serial" value="$(arg rh_serial)"/>
+      <arg name="lh_serial" value="$(arg lh_serial)"/>
+      <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
+      <arg name="lh_mapping_path" value="$(arg lh_mapping_path)"/>
+      <arg name="eth_port" value="$(arg eth_port)"/>
+      <arg name="pwm_control" value="$(arg pwm_control)"/>
+      <arg name="arm_1_z" value="$(arg arm_1_z)"/>
+      <arg name="arm_2_z" value="$(arg arm_2_z)"/>
+      <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
+      <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
+      <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
+      <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
+      <arg name="load_robot_description" value="$(arg load_robot_description)"/>
+    </include>
+    <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="controller_spawner.py" output="screen">
+      <param if="$(arg hand_trajectory)" name="controller_group" value="trajectory"/>
+      <param unless="$(arg hand_trajectory)" name="controller_group" value="position"/>
+      <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
+      <param name="wait_for" value="calibrated"/>
+    </node>
   </group>
 
   <!-- Set rosparam if both hands and arms are being used -->
@@ -120,15 +138,14 @@
         - ra_sr_ur_robot_hw
         - la_sr_ur_robot_hw
     </rosparam>
+    <param name="robot_description" command="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
       <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
-    <node name="conditional_delayed_rostool_ur_arm_robot" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
-      <param name="package_name" value="sr_robot_launch" />
-      <param name="executable_name" value="ros_control.launch" />
-      <rosparam param="params_list">[/robot_description_ready]</rosparam>
-      <param name="launch_args_list" value="debug:=$(arg debug)" />
-      <param name="timeout" value="30.0" />
+    <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
+    <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+      <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)" />
     </node>
   </group>
 
@@ -168,21 +185,10 @@
       <rosparam file="$(find sr_robot_launch)/config/ra_trajectory_controller_no_wrist.yaml" command="load"/>
       <rosparam file="$(find sr_robot_launch)/config/la_trajectory_controller_no_wrist.yaml" command="load"/>
     </group>
-      <node name="conditional_delayed_rostool_ra_arm_trajectory_controller_spawner" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
-        <param name="package_name" value="controller_manager" />
-        <param name="executable_name" value="spawner"/>
-        <rosparam param="params_list">[/robot_description_ready]</rosparam>
-        <param name="launch_args_list" value="--wait-for=/ra_sr_ur_robot_hw/robot_program_running ra_trajectory_controller"/>
-        <param name="timeout" value="30.0" />
-      </node>
-
-      <node name="conditional_delayed_rostool_la_arm_trajectory_controller_spawner" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
-        <param name="package_name" value="controller_manager" />
-        <param name="executable_name" value="spawner"/>
-        <rosparam param="params_list">[/robot_description_ready]</rosparam>
-        <param name="launch_args_list" value="--wait-for=/la_sr_ur_robot_hw/robot_program_running la_trajectory_controller"/>
-        <param name="timeout" value="30.0" />
-      </node>
+    <node name="ra_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+          args="--wait-for=/ra_sr_ur_robot_hw/robot_program_running ra_trajectory_controller"/>
+    <node name="la_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+          args="--wait-for=/la_sr_ur_robot_hw/robot_program_running la_trajectory_controller"/>
   </group>
 
   <!-- Position mode if arms are being used -->

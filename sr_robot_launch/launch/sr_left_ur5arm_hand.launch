@@ -16,10 +16,10 @@
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
   <!-- Set the scene file -->
-  <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large.scene"/>
+  <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large_unimanual.scene"/>
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhands_and_arms.world" unless="$(arg scene)"/>
-  <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large.world" if="$(arg scene)"/>
+  <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large_unimanual.world" if="$(arg scene)"/>
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="false"/>
   <!-- Definition of "home" position, in joint-angle pairs -->
@@ -33,7 +33,7 @@
 
   <!-- HAND CONFIG-->
   <arg name="hand_serial" default="1082"/>
-  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_E_v3.yaml"/>
+  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_E_v4.yaml"/>
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
@@ -46,12 +46,14 @@
   <arg name="grasp_controller" default="false"/>
 
   <!-- ARM CONFIG-->
-  <arg name="initial_z" default="0.7551" if="$(arg scene)"/>
+  <arg name="initial_z" default="0.7521" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
   <!-- You can select ur5 or ur5e -->
   <arg name="robot_model" default="ur5e"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/left_ur_arm_robot_hw.yaml"/>
   <arg name="arm_speed_scale" default="0.5"/>
+  <arg name="arm_payload_mass" default="5.00"/>
+  <arg name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
 
   <arg name="side" value="left"/>
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_lite_$(arg robot_model).urdf.xacro'"/>
@@ -85,6 +87,8 @@
     <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
     <arg name="arm_position" default="$(arg arm_position)"/>
     <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
+    <arg name="arm_payload_mass" value="$(arg arm_payload_mass)"/>
+    <arg name="arm_payload_cog" value="$(arg arm_payload_cog)"/>
 
     <arg name="side" value="$(arg side)"/>
     <arg name="robot_model" value="$(arg robot_model)"/>

@@ -4,7 +4,7 @@
   <arg name="joint_state_pub_frequency" default="125"/>
 
   <!-- ROBOT CONFIG-->
-  <arg name="robot_model" default="ur10"/>
+  <arg name="robot_model" default="ur10e"/>
   <arg name="side" default="right"/>
   <arg name="side_letter" value="$(eval side[0])"/>
   <arg name="hand_id" value="$(arg side_letter)h"/>
@@ -33,7 +33,7 @@
 
   <!-- HANDS CONFIG-->
   <arg name="hand_serial" default="1082"/>
-  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v3.yaml"/>
+  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v4.yaml"/>
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT enp2s0)"/>
   <arg name="pwm_control" default="true"/>
   <!-- Set to true if you want to use grasp controller -->
@@ -43,17 +43,30 @@
   <!-- ARMS CONFIG-->
   <arg name="initial_z" if="$(arg arm)" default="0.7551"/>
   <arg name="initial_z" unless="$(arg arm)" default="0.0"/>
-  <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_x_separation" default="0.0"/>
+  <arg name="arm_y_separation" default="0.0"/>
+  <arg name="arm_robot_hw" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
+  <arg name="arm_robot_hw" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/$(arg side)_ur10e_arm_robot_hw.yaml"/>
   <arg name="force_torque_sensor_hw" default="$(find sr_robot_launch)/config/$(arg arm_prefix)_force_torque_controller.yaml"/>
   <arg name="include_wrist_in_arm_controller" default="$(arg arm_ctrl)"/>
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="arm_speed_scale" default="0.5"/>
+
   <arg name="urcap_program_name" default="external_ctrl.urp"/>
   <arg name="load_robot_description_command" default="xacro $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z)"/>
+  <arg if="$(arg hand_ctrl)" name="arm_payload_mass" default="5.00"/>
+  <arg if="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
+  <arg unless="$(arg hand_ctrl)" name="arm_payload_mass" default="0.0"/>
+  <arg unless="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
+  <!-- <arg name="kinematics_config" if="$(eval robot_model[-1] == 'e')" default="$(find ur_e_description)/config/$(arg robot_model)_default.yaml"/>
+  <arg name="kinematics_config" if="$(eval not robot_model[-1] == 'e')" default="$(find ur_description)/config/$(arg robot_model)_default.yaml"/>
+  <arg name="urcap_program_name" default="external_ctrl.urp"/>
+  <arg name="load_robot_description_command" default="xacro $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation) kinematics_config:=$(arg kinematics_config)"/> -->
 
   <node pkg="rosservice" type="rosservice" name="set_speed_scale" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg arm_speed_scale)'"/>
+  <node pkg="rosservice" type="rosservice" name="set_payload" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_payload '{payload: $(arg arm_payload_mass), center_of_gravity: $(arg arm_payload_cog)}'"/>
 
   <!-- Logging local topics -->
   <group ns="control_box">
@@ -86,13 +99,22 @@
     <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
     <rosparam file="$(arg robot_config_file)"/>
     <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
-      <node name="conditional_delayed_rostool_sr_edc" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
-        <param name="package_name" value="sr_edc_launch" />
-        <param name="executable_name" value="sr_edc_ros_control.launch" />
-        <rosparam param="params_list">[/robot_description_ready]</rosparam>
-        <param name="launch_args_list" value="define_robot_hardware:=false hand_robot_hardware_name:=unique_robot_hw debug:=$(arg debug) eth_port:=$(arg eth_port) load_robot_description_command:=$(arg load_robot_description_command) load_robot_description:=$(arg load_robot_description_at_lower_level)  pwm_control:=$(arg pwm_control) hand_serial:=$(arg hand_serial) hand_id:=$(arg hand_id) mapping_path:=$(arg mapping_path) robot_state_pub_frequency:=$(arg robot_state_pub_frequency) joint_state_pub_frequency:=$(arg joint_state_pub_frequency) initial_z:=$(arg initial_z)" />
-        <param name="timeout" value="30.0" />
-      </node>
+    <include file="$(find sr_edc_launch)/sr_edc_ros_control.launch">
+      <arg name="define_robot_hardware" value="false"/>
+      <arg name="hand_robot_hardware_name" value="unique_robot_hw"/>
+      <arg name="debug" value="$(arg debug)"/>
+      <arg name="eth_port" value="$(arg eth_port)"/>
+      <arg name="load_robot_description_command" value="$(arg load_robot_description_command)"/>
+      <arg name="pwm_control" value="$(arg pwm_control)"/>
+      <arg name="hand_serial" value="$(arg hand_serial)"/>
+      <arg name="hand_id" value="$(arg hand_id)"/>
+      <arg name="mapping_path" value="$(arg mapping_path)"/>
+      <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
+      <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
+      <arg name="initial_z" value="$(arg initial_z)"/>
+      <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
+      <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
+    </include>
     <node if="$(arg hand_ctrl)" name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
       <param name="controller_group" value="$(arg hand_controller_group)"/>
       <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
@@ -135,13 +157,9 @@
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
       <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
-    <node name="conditional_delayed_rostool_ur_arm_robot" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
-      <param name="package_name" value="sr_robot_launch" />
-      <param name="executable_name" value="ros_control.launch" />
-      <rosparam param="params_list">[/robot_description_ready]</rosparam>
-      <param name="launch_args_list" value="debug:=$(arg debug)" />
-      <param name="timeout" value="30.0" />
-    </node>
+    <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
+    <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
+    <param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
   </group>
   <!-- These will be loaded if arm and hand are enabled -->
   <!-- Trajectory mode -->
@@ -152,13 +170,8 @@
         <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller_no_wrist.yaml"/>
       </group>
       <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller_no_wrist.yaml"/>
-      <node name="conditional_delayed_rostool_arm_trajectory_controller_spawner" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
-        <param name="package_name" value="controller_manager" />
-        <param name="executable_name" value="spawner"/>
-        <rosparam param="params_list">[/robot_description_ready]</rosparam>
-        <param name="launch_args_list" value="--wait-for=/$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running $(arg arm_prefix)_trajectory_controller"/>
-        <param name="timeout" value="30.0" />
-      </node>
+      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+            args="--wait-for=/$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running $(arg arm_prefix)_trajectory_controller"/>
     </group>
     <!-- Position mode -->
     <group if="$(arg arm_position)">
@@ -167,13 +180,10 @@
         <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_group_position_controller_no_wrist.yaml"/>
       </group>
       <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_group_position_controller_no_wrist.yaml"/>
-      <node name="conditional_delayed_arm_group_position_controller_spawner" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
-        <param name="package_name" value="controller_manager" />
-        <param name="executable_name" value="spawner"/>
-        <rosparam param="params_list">[/robot_description_ready]</rosparam>
-        <param name="launch_args_list" value="--wait-for=/$(arg arm_prefix)_arm_ready $(arg arm_prefix)_group_position_controller"/>
-        <param name="timeout" value="30.0" />
-      </node>
+      <node if="$(arg hand_ctrl)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+            args="--wait-for=/$(arg arm_prefix)_arm_ready $(arg arm_prefix)_group_position_controller"/>
+      <node unless="$(arg hand_ctrl)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+            args="--wait-for=/$(arg arm_prefix)_arm_ready $(arg arm_prefix)_group_position_controller"/>
     </group>
   </group>
 </launch>

@@ -81,10 +81,11 @@ class SrUrUnlock():
         fault = False
         for arm in self._arms:
             safety_mode = self.call_arm_service(arm, "get_safety_mode", GetSafetyMode)
-            if SafetyMode.FAULT == safety_mode.safety_mode.mode:
+            if SafetyMode.FAULT == safety_mode.safety_mode.mode or SafetyMode.VIOLATION == safety_mode.safety_mode.mode:
                 fault = True
-                rospy.loginfo("Fault detected on: %s. This can be caused by using the external e-stop.\
-                               Have you released it?", arm)
+                if SafetyMode.FAULT == safety_mode.safety_mode.mode:
+                    rospy.loginfo("Fault detected on: %s. This can be caused by using the external e-stop.\
+                                   Have you released it?", arm)
                 self.call_arm_service(arm, "restart_safety", Trigger)
         return fault
 

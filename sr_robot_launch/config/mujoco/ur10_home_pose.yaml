@@ -1,0 +1,10 @@
+robot_initial_state:
+  ra_shoulder_pan_joint: 0.8 
+  ra_elbow_joint: 1.347
+  ra_wrist_1_joint: -1.195
+  ra_wrist_2_joint: -1.584
+  ra_shoulder_lift_joint: -1.726
+  ra_wrist_3_joint: 1.830
+  
+robot_joints: [ra_shoulder_pan_joint, ra_shoulder_lift_joint, ra_elbow_joint, ra_wrist_1_joint, ra_wrist_2_joint, ra_wrist_3_joint]
+  

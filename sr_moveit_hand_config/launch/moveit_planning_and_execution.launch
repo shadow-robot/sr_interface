@@ -4,6 +4,7 @@
   <arg name="debug" default="false"/>
   <arg name="load_robot_description" default="true"/>
   <arg name="gui" default="true"/>
+  <arg name="trajectory_controllers_list" default="[]"/>
 
   <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
@@ -21,6 +22,7 @@
     <param name="package_name" value="sr_moveit_hand_config" />
     <param name="executable_name" value="move_group.launch" />
     <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+    <rosparam param="topics_list" subst_value="True">$(arg trajectory_controllers_list)</rosparam>
     <param name="launch_args_list" value="hand_ik_solver_path:=$(arg hand_ik_solver_path)
     allow_trajectory_execution:=true
     fake_execution:=false
@@ -28,7 +30,6 @@
     debug:=$(arg debug)
     publish_monitored_planning_scene:=true
     pipeline:=$(arg planning)"/>
-    <param name="timeout" value="20.0" />
   </node>
 
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
@@ -37,10 +38,10 @@
       <param name="package_name" value="sr_moveit_hand_config" />
       <param name="executable_name" value="moveit_rviz.launch" />
       <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+      <rosparam param="topics_list">[/move_group/monitored_planning_scene]</rosparam>
       <param name="launch_args_list" value="hand_ik_solver_path:=$(arg hand_ik_solver_path)
       config:=true
       debug:=$(arg debug)" />
-      <param name="timeout" value="20.0" />
     </node>
   </group>
 
