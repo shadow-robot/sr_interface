@@ -115,10 +115,14 @@
       arm_y_separation:=$(arg arm_y_separation)
       load_robot_description_at_lower_level:=$(arg load_robot_description_at_lower_level)" />
     </node>
-    <node if="$(arg hand_ctrl)" name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
-      <param name="controller_group" value="$(arg hand_controller_group)"/>
-      <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
-      <param name="wait_for" value ="calibrated"/>
+    <node if="$(arg hand_ctrl)" name="conditional_delayed_rostool_hand_ctrl_spawner" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
+      <param name="package_name" value="sr_edc_launch" />
+      <param name="executable_name" value="controller_spawner.py" />
+      <rosparam param="params_list">[/robot_description]</rosparam>
+      <param name="launch_args_list" value="
+      controller_group:=$(arg hand_controller_group)
+      exclude_wrist:=$(arg include_wrist_in_arm_controller)
+      wait_for:=calibrated" />
     </node>
   </group>
 
