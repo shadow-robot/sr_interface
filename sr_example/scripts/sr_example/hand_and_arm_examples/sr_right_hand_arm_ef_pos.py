@@ -26,7 +26,7 @@
 
 # roslaunch commands used with this script to launch the robot:
 # real robot with a NUC (or a separate computer with an RT kernel):
-#     roslaunch sr_robot_launch sr_right_ur10arm_hand.launch 
+#     roslaunch sr_robot_launch sr_right_ur10arm_hand.launch
 #               external_control_loop:=true sim:=false scene:=true include_wrist_in_arm_controller:=false
 # simulated robot:
 #     roslaunch sr_robot_launch sr_right_ur10arm_hand.launch sim:=true scene:=true
