@@ -1,12 +1,11 @@
 ra_sr_ur_robot_hw:
-  hardware_interface:
-    joints: &robot_joints
-      - ra_shoulder_pan_joint
-      - ra_shoulder_lift_joint
-      - ra_elbow_joint
-      - ra_wrist_1_joint
-      - ra_wrist_2_joint
-      - ra_wrist_3_joint
+  joints: &robot_joints
+    - ra_shoulder_pan_joint
+    - ra_shoulder_lift_joint
+    - ra_elbow_joint
+    - ra_wrist_1_joint
+    - ra_wrist_2_joint
+    - ra_wrist_3_joint
 
   type: ur_driver/HardwareInterface
   
@@ -41,6 +40,8 @@ ra_sr_ur_robot_hw:
 
   use_local_hardware_interface_param: true
   
-  non_blocking_read: true
+  non_blocking_read: false
 
   wrench_prefix: right_
+
+  tf_prefix: ra_
