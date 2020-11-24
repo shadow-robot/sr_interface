@@ -57,6 +57,7 @@
   <!-- The control mode PWM (true) or torque (false) -->
   <!-- Set to true by default for now as torque control is not available yet -->
   <arg name="pwm_control" default="true"/>
+  <!-- Set the hand type here: hand_e_plus, hand_e, hand_lite, hand_extra_lite -->
   <arg name="hand_type" default="hand_e_plus"/>
 
   <!-- ARMS CONFIG-->

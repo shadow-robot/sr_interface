@@ -44,7 +44,7 @@
   <arg name="pwm_control" default="true"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
-  <!-- Set the hand type here: hand_e_plus, hand_e, Hand_lite, hand_extra_lite -->
+  <!-- Set the hand type here: hand_e_plus, hand_e, hand_lite, hand_extra_lite -->
   <arg name="hand_type" default="hand_e_plus"/>
 
   <!-- ARM CONFIG-->
