@@ -106,8 +106,6 @@
     <arg name="arm_position" value="$(arg arm_position)"/>
     <arg name="right_arm_speed_scale" value="$(arg right_arm_speed_scale)"/>
     <arg name="left_arm_speed_scale" value="$(arg left_arm_speed_scale)"/>
-    <arg name="arm_payload_mass" value="$(arg arm_payload_mass)"/>
-    <arg name="arm_payload_cog" value="$(arg arm_payload_cog)"/>
     <arg name="hands" value="$(arg hands)"/>
     <arg name="robot_description" value="$(arg robot_description)"/>
     <arg name="robot_config_file" value="$(arg robot_config_file)"/>
