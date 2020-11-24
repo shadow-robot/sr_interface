@@ -120,7 +120,7 @@ raw_input("Press Enter to continue...")
 joint_goals = hand_arm_joints_goal
 rospy.loginfo("Moving hand and arm to joint states\n" + str(joint_goals) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(joint_goals, 6.0, True)
-rospy.sleep(2.0)
+rospy.sleep(5.0)
 
 # Finish arm at home and hand at pack
 raw_input("Press Enter to continue...")
