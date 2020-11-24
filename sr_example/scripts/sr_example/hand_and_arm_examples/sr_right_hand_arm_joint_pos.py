@@ -66,20 +66,20 @@ hand_joints_goal = {'rh_FFJ1': 1.57, 'rh_FFJ2': 1.57, 'rh_FFJ3': 1.574, 'rh_FFJ4
                     'rh_MFJ2': 1.57, 'rh_MFJ4': -0.00, 'rh_WRJ2': -1.29, 'rh_WRJ1': 0.00}
 
 arm_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
-                     'ra_shoulder_lift_joint': -1.57, 'ra_wrist_3_joint': 0.00}
+                   'ra_shoulder_lift_joint': -1.57, 'ra_wrist_3_joint': 0.00}
 
 
 hand_arm_joints_goal = {'rh_FFJ1': 0.35, 'rh_FFJ2': 1.5707, 'rh_FFJ3': 1.5707, 'rh_FFJ4': 0.0,
-                          'rh_MFJ1': 0.35, 'rh_MFJ2': 1.5707, 'rh_MFJ3': 1.5707, 'rh_MFJ4': 0.0,
-                          'rh_RFJ1': 0.35, 'rh_RFJ2': 1.5707, 'rh_RFJ3': 1.5707, 'rh_RFJ4': 0.0,
-                          'rh_LFJ1': 0.35, 'rh_LFJ2': 1.5707, 'rh_LFJ3': 1.5707, 'rh_LFJ4': 0.0,
-                          'rh_THJ1': 0.35, 'rh_THJ2': 0.0, 'rh_THJ3': 0.0, 'rh_THJ4': 0.0,
-                          'rh_THJ5': 0.0, 'rh_WRJ1': 0.6, 'rh_WRJ2': 0.0,
-                          'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 0.00,
-                          'ra_shoulder_pan_joint': 0., 'ra_elbow_joint': 2.00,
-                          'ra_shoulder_lift_joint': -0.58, 'ra_wrist_3_joint': 0.00,
-                          'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                          'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
+                        'rh_MFJ1': 0.35, 'rh_MFJ2': 1.5707, 'rh_MFJ3': 1.5707, 'rh_MFJ4': 0.0,
+                        'rh_RFJ1': 0.35, 'rh_RFJ2': 1.5707, 'rh_RFJ3': 1.5707, 'rh_RFJ4': 0.0,
+                        'rh_LFJ1': 0.35, 'rh_LFJ2': 1.5707, 'rh_LFJ3': 1.5707, 'rh_LFJ4': 0.0,
+                        'rh_THJ1': 0.35, 'rh_THJ2': 0.0, 'rh_THJ3': 0.0, 'rh_THJ4': 0.0,
+                        'rh_THJ5': 0.0, 'rh_WRJ1': 0.6, 'rh_WRJ2': 0.0,
+                        'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 0.00,
+                        'ra_shoulder_pan_joint': 0., 'ra_elbow_joint': 2.00,
+                        'ra_shoulder_lift_joint': -0.58, 'ra_wrist_3_joint': 0.00,
+                        'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
+                        'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
 
 # Move through each goal
 # joint states are sent to the commanders, with a time for execution and a flag as to whether
