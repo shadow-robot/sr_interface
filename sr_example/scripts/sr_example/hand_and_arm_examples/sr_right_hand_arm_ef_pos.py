@@ -48,7 +48,6 @@ arm_commander = SrArmCommander(name="right_arm")
 # How to command the arm and hand together
 robot_commander = SrRobotCommander(name="right_arm_and_hand")
 arm_commander.set_max_velocity_scaling_factor(0.1)
-
 rospy.sleep(rospy.Duration(2))
 
 # Start arm at home and hand at pack
@@ -64,8 +63,6 @@ arm_hand_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.
 rospy.loginfo("Moving arm and hand to joint states\n" + str(arm_hand_home_joints_goal) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(arm_hand_home_joints_goal, 6.0, True)
 
-raw_input("Press Enter to continue...")
-
 # The arm commander generates a plan to a new pose before the pose is executed.
 # plan_to_pose_target(pose, end_effector_link, alternative_method, custom_start_state):
 #         Specify a target pose for the end-effector and plans.
@@ -76,13 +73,13 @@ raw_input("Press Enter to continue...")
 #         @param end_effector_link - name of the end effector link.
 #         @param alternative_method - use set_joint_value_target instead of set_pose_target.
 #         @param custom_start_state - specify a start state different than the current state.
+raw_input("Press Enter to continue...")
 pose_1 = [0.9, 0.16, 0.95, -0.99, 8.27, -0.0, 1.4]
 print("Planning the move to the first pose:\n" + str(pose_1) + "\n")
 arm_commander.plan_to_pose_target(pose_1)
 print("Finished planning, moving the arm now.")
 # Can only execute if a plan has been generated.
 arm_commander.execute()
-
 rospy.sleep(2.0)
 
 # Here a pose is provided and the arm commander moves the arm to it
@@ -93,23 +90,13 @@ rospy.sleep(2.0)
 #         @param end_effector_link - name of the end effector link.
 #         @param wait - should method wait for movement end or not.
 raw_input("Press Enter to continue...")
-
 pose_2 = [0.7, 0.16, 0.95, -0.99, 8.27, -0.0, 1.4]
 print("Moving arm to pose:\n" + str(pose_2) + "\n")
 arm_commander.move_to_pose_target(pose_2, wait=True)
-
 rospy.sleep(2.0)
 
-raw_input("Press Enter to continue...")
-
 # Finish arm at home and hand at pack
+raw_input("Press Enter to continue...")
 rospy.loginfo("Moving arm to joint states\n" + str(arm_hand_home_joints_goal) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(arm_hand_home_joints_goal, 6.0, True)
-
 rospy.sleep(rospy.Duration(3))
-
-# Current positions and velocities are read
-print("Arm joints position:\n" +
-      str(arm_commander.get_joints_position()) + "\n")
-print("Arm joints velocities:\n" +
-      str(arm_commander.get_joints_velocity()) + "\n")

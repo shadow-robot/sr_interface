@@ -64,17 +64,15 @@ rospy.loginfo("Moving arm and hand to joint states\n" + str(arm_hand_home_joints
 robot_commander.move_to_joint_value_target_unsafe(arm_hand_home_joints_goal, 6.0, True)
 
 # Moving arm to initial pose
+raw_input("Press Enter to continue...")
 pose_1 = [0.9, 0.16, 0.95, -0.99, 8.27, -0.0, 1.4]
-
-print "Moving to initial pose"
+print("Moving to initial pose")
 arm_commander.plan_to_pose_target(pose_1)
 arm_commander.execute()
-
 rospy.sleep(rospy.Duration(2))
 
 raw_input("Press Enter to continue...")
-
-print "Following trajectory defined by waypoints"
+print("Following trajectory defined by waypoints")
 waypoints = []
 
 # start with the initial position
@@ -114,17 +112,14 @@ arm_commander.execute()
 
 rospy.sleep(2.0)
 
-raw_input("Press Enter to continue...")
-
 # Finish arm at home and hand at pack
+raw_input("Press Enter to continue...")
 rospy.loginfo("Moving arm to joint states\n" + str(arm_hand_home_joints_goal) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(arm_hand_home_joints_goal, 6.0, True)
-
 rospy.sleep(2.0)
 
 # Move hand to open
 # Moving to a stored named target, stored targets can be viewed in MoveIt in the planning tab
 rospy.loginfo("Moving hand to joint state: open")
 hand_commander.move_to_named_target("open")
-
 rospy.sleep(rospy.Duration(3))
