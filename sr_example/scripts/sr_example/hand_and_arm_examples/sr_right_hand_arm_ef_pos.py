@@ -51,24 +51,18 @@ arm_commander.set_max_velocity_scaling_factor(0.1)
 
 rospy.sleep(rospy.Duration(2))
 
-# Start arm at home
-arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
-                        'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                        'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
-rospy.loginfo("Moving arm to joint states\n" + str(arm_home_joints_goal) + "\n")
-robot_commander.move_to_joint_value_target_unsafe(arm_home_joints_goal, 6.0, True)
-
-# Move hand to open
-# Moving to a stored named target, stored targets can be viewed in MoveIt in the planning tab
-rospy.loginfo("Moving hand to joint state: open")
-hand_commander.move_to_named_target("open")
-
-rospy.sleep(3.0)
-
-# Move hand to pack
-# Moving to a stored named target, stored targets can be viewed in MoveIt in the planning tab
-rospy.loginfo("Moving hand to joint state: pack")
-hand_commander.move_to_named_target("pack")
+# Start arm at home and hand at pack
+arm_hand_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
+                             'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
+                             'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00,
+                             'rh_THJ1': 0.52, 'rh_THJ2': 0.61, 'rh_THJ3': 0.0, 'rh_THJ4': 1.20,
+                             'rh_THJ5': 0.17, 'rh_FFJ1': 1.5707, 'rh_FFJ2': 1.5707, 'rh_FFJ3': 1.5707,
+                             'rh_FFJ4': 0.0, 'rh_MFJ1': 1.5707, 'rh_MFJ2': 1.5707, 'rh_MFJ3': 1.5707,
+                             'rh_MFJ4': 0.0, 'rh_RFJ1': 1.5707, 'rh_RFJ2': 1.5707, 'rh_RFJ3': 1.5707,
+                             'rh_RFJ4': 0.0, 'rh_LFJ1': 1.5707, 'rh_LFJ2': 1.5707, 'rh_LFJ3': 1.5707,
+                             'rh_LFJ4': 0.0, 'rh_LFJ5': 0.0, 'rh_WRJ1': 0.0, 'rh_WRJ2': 0.0}
+rospy.loginfo("Moving arm and hand to joint states\n" + str(arm_hand_home_joints_goal) + "\n")
+robot_commander.move_to_joint_value_target_unsafe(arm_hand_home_joints_goal, 6.0, True)
 
 raw_input("Press Enter to continue...")
 
@@ -82,24 +76,14 @@ raw_input("Press Enter to continue...")
 #         @param end_effector_link - name of the end effector link.
 #         @param alternative_method - use set_joint_value_target instead of set_pose_target.
 #         @param custom_start_state - specify a start state different than the current state.
-pose_1 = [1.1, 0.5, 1.2, -0.9, 0.0, -0.0]
+pose_1 = [0.9, 0.16, 0.95, -0.99, 8.27, -0.0, 1.4]
 print("Planning the move to the first pose:\n" + str(pose_1) + "\n")
 arm_commander.plan_to_pose_target(pose_1)
 print("Finished planning, moving the arm now.")
 # Can only execute if a plan has been generated.
 arm_commander.execute()
 
-raw_input("Press Enter to continue...")
-
 rospy.sleep(2.0)
-
-pose_2 = [1.1, -0.1, 1.2, -0.9, 0.0, -0.0]
-print("Planning the move to the second pose:\n" + str(pose_2) + "\n")
-arm_commander.plan_to_pose_target(pose_2)
-print("Finished planning, moving the arm now.")
-arm_commander.execute()
-
-raw_input("Press Enter to continue...")
 
 # Here a pose is provided and the arm commander moves the arm to it
 # move_to_pose_target(pose, end_effector_link, wait):
@@ -108,31 +92,19 @@ raw_input("Press Enter to continue...")
 #         of 7 floats [x, y, z, qx, qy, qz, qw].
 #         @param end_effector_link - name of the end effector link.
 #         @param wait - should method wait for movement end or not.
-pose_1 = [1.1, 0.5, 1.2, -0.9, 0.0, -0.0]
-print("Moving arm to pose:\n" + str(pose_1) + "\n")
-arm_commander.move_to_pose_target(pose_1, wait=True)
-
 raw_input("Press Enter to continue...")
+
+pose_2 = [0.7, 0.16, 0.95, -0.99, 8.27, -0.0, 1.4]
+print("Moving arm to pose:\n" + str(pose_2) + "\n")
+arm_commander.move_to_pose_target(pose_2, wait=True)
 
 rospy.sleep(2.0)
 
-# Here a pose is provided and the arm commander moves the arm to it
-pose_3 = [1.1, 0.5, 1.0, -0.9, 0.1, 0, 0.4]
-print("Moving arm to pose:\n" + str(pose_3) + "\n")
-arm_commander.move_to_pose_target(pose_3, wait=True)
-
 raw_input("Press Enter to continue...")
 
-rospy.sleep(2.0)
-
-# Finish arm at home
-rospy.loginfo("Moving arm to joint states\n" + str(arm_home_joints_goal) + "\n")
-robot_commander.move_to_joint_value_target_unsafe(arm_home_joints_goal, 6.0, True)
-
-# Move hand to open
-# Moving to a stored named target, stored targets can be viewed in MoveIt in the planning tab
-rospy.loginfo("Moving hand to joint state: open")
-hand_commander.move_to_named_target("open")
+# Finish arm at home and hand at pack
+rospy.loginfo("Moving arm to joint states\n" + str(arm_hand_home_joints_goal) + "\n")
+robot_commander.move_to_joint_value_target_unsafe(arm_hand_home_joints_goal, 6.0, True)
 
 rospy.sleep(rospy.Duration(3))
 
