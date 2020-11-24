@@ -117,9 +117,3 @@ raw_input("Press Enter to continue...")
 rospy.loginfo("Moving arm to joint states\n" + str(arm_hand_home_joints_goal) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(arm_hand_home_joints_goal, 6.0, True)
 rospy.sleep(2.0)
-
-# Move hand to open
-# Moving to a stored named target, stored targets can be viewed in MoveIt in the planning tab
-rospy.loginfo("Moving hand to joint state: open")
-hand_commander.move_to_named_target("open")
-rospy.sleep(rospy.Duration(3))
