@@ -40,9 +40,7 @@ ra_sr_ur_robot_hw:
 
   use_local_hardware_interface_param: true
   
-#  non_blocking_read: true
-
-  non_blocking_read: false
+  non_blocking_read: true
 
   wrench_prefix: right_
 

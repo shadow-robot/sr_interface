@@ -11,8 +11,8 @@ ra_trajectory_controller:
     - ra_wrist_3_joint
   compliance_command_timeout: 1.5
   constraints:
-      goal_time: 0.6
-      stopped_velocity_tolerance: 0.1
+      goal_time: 6.0
+      stopped_velocity_tolerance: 0.05
       ra_shoulder_pan_joint: {trajectory: 0.3, goal: 0.1}
       ra_shoulder_lift_joint: {trajectory: 0.3, goal: 0.1}
       ra_elbow_joint: {trajectory: 0.3, goal: 0.1}
