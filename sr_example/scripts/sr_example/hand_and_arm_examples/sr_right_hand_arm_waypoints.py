@@ -37,7 +37,6 @@ from sr_robot_commander.sr_arm_commander import SrArmCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 import geometry_msgs.msg
 
-
 rospy.init_node("hand_arm_waypoints", anonymous=True)
 
 # The constructors for the SrArmCommander, SrHandCommander and SrRobotCommander
@@ -49,9 +48,8 @@ arm_commander = SrArmCommander(name="right_arm")
 robot_commander = SrRobotCommander(name="right_arm_and_hand")
 arm_commander.set_max_velocity_scaling_factor(0.1)
 
-rospy.sleep(rospy.Duration(1))
+rospy.sleep(1.0)
 
-# Start arm at home and hand at pack
 arm_hand_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
                              'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
                              'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00,
@@ -61,19 +59,23 @@ arm_hand_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.
                              'rh_MFJ4': 0.0, 'rh_RFJ1': 1.5707, 'rh_RFJ2': 1.5707, 'rh_RFJ3': 1.5707,
                              'rh_RFJ4': 0.0, 'rh_LFJ1': 1.5707, 'rh_LFJ2': 1.5707, 'rh_LFJ3': 1.5707,
                              'rh_LFJ4': 0.0, 'rh_LFJ5': 0.0, 'rh_WRJ1': 0.0, 'rh_WRJ2': 0.0}
+
+example_goal_1 = [0.9, 0.16, 0.95, -0.99, 8.27, -0.0, 1.4]
+
+# Start arm at home and hand at pack
 rospy.loginfo("Moving arm and hand to joint states\n" + str(arm_hand_home_joints_goal) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(arm_hand_home_joints_goal, 6.0, True)
 
 # Moving arm to initial pose
 raw_input("Press Enter to continue...")
-pose_1 = [0.9, 0.16, 0.95, -0.99, 8.27, -0.0, 1.4]
-print("Moving to initial pose")
-arm_commander.plan_to_pose_target(pose_1)
+rospy.loginfo("Planning the move to the pose:\n" + str(example_goal_1) + "\n")
+arm_commander.plan_to_pose_target(example_goal_1)
+rospy.loginfo("Finished planning, moving the arm now.")
 arm_commander.execute()
-rospy.sleep(rospy.Duration(2))
+rospy.sleep(2.0)
 
 raw_input("Press Enter to continue...")
-print("Following trajectory defined by waypoints")
+rospy.loginfo("Following trajectory defined by waypoints")
 waypoints = []
 
 # start with the initial position
@@ -81,16 +83,7 @@ initial_pose = arm_commander.get_current_pose()
 
 # Using the method plan_to_waypoints_target, it is possible to specify a set of waypoints
 # for the end-effector and create a plan to follow it.
-# Specify a set of waypoints for the end-effector and plans.
-# This is a blocking method.
-# plan_to_waypoints_target(swaypoints, reference_frame, eef_step, jump_threshold, custom_start_state):
-#       @param reference_frame - the reference frame in which the waypoints are given.
-#       @param waypoints - an array of poses of end-effector.
-#       @param eef_step - configurations are computed for every eef_step meters.
-#       @param jump_threshold - maximum distance in configuration space between consecutive points in the
-#       resulting path.
-#       @param custom_start_state - specify a start state different than the current state.
-#       @return - motion plan (RobotTrajectory msg) that contains the trajectory to the set wayapoints targets.
+# https://github.com/shadow-robot/sr_interface/blob/melodic-devel/sr_robot_commander/src/sr_robot_commander/sr_robot_commander.py#L830
 
 wpose = geometry_msgs.msg.Pose()
 wpose.position.x = initial_pose.position.x

@@ -84,15 +84,7 @@ hand_arm_joints_goal = {'rh_FFJ1': 0.35, 'rh_FFJ2': 1.5707, 'rh_FFJ3': 1.5707, '
 # Move through each goal
 # joint states are sent to the commanders, with a time for execution and a flag as to whether
 # or not the commander should wait for the command to complete before moving to the next command.
-# move_to_joint_value_target_unsafe(joint_states, time, wait, angle_degrees)
-# Set target of the robot's links and moves to it.
-#         @param joint_states - dictionary with joint name and value. It can
-#         contain only joints values of which need to be changed.
-#         @param time - time in s (counting from now) for the robot to reach the
-#         target (it needs to be greater than 0.0 for it not to be rejected by
-#         the trajectory controller).
-#         @param wait - should method wait for movement end or not.
-#         @param angle_degrees - are joint_states in degrees or not.
+# https://github.com/shadow-robot/sr_interface/blob/melodic-devel/sr_robot_commander/src/sr_robot_commander/sr_robot_commander.py#L723
 
 # Start arm at home and hand at pack
 rospy.loginfo("Moving arm and hand to joint states\n" + str(arm_hand_home_joints_goal) + "\n")
@@ -106,25 +98,22 @@ rospy.sleep(2.0)
 
 # Move arm
 raw_input("Press Enter to continue...")
-joint_goals = arm_joints_goal
-rospy.loginfo("Moving arm to joint states\n" + str(joint_goals) + "\n")
-robot_commander.move_to_joint_value_target_unsafe(joint_goals, 6.0, True)
+rospy.loginfo("Moving arm to joint states\n" + str(arm_joints_goal) + "\n")
+robot_commander.move_to_joint_value_target_unsafe(arm_joints_goal, 6.0, True)
 
 # Move hand to open
 raw_input("Press Enter to continue...")
-joint_goals = hand_joints_goal
-rospy.loginfo("Moving hand to joint states\n" + str(joint_goals) + "\n")
-robot_commander.move_to_joint_value_target_unsafe(joint_goals, 6.0, True, True)
+rospy.loginfo("Moving hand to joint states\n" + str(hand_joints_goal) + "\n")
+robot_commander.move_to_joint_value_target_unsafe(hand_joints_goal, 6.0, True, True)
 
 # Move arm and hand together
 raw_input("Press Enter to continue...")
-joint_goals = hand_arm_joints_goal
-rospy.loginfo("Moving hand and arm to joint states\n" + str(joint_goals) + "\n")
-robot_commander.move_to_joint_value_target_unsafe(joint_goals, 6.0, True)
+rospy.loginfo("Moving hand and arm to joint states\n" + str(hand_arm_joints_goal) + "\n")
+robot_commander.move_to_joint_value_target_unsafe(hand_arm_joints_goal, 6.0, True)
 rospy.sleep(2.0)
 
 # Finish arm at home and hand at pack
 raw_input("Press Enter to continue...")
 rospy.loginfo("Moving arm and hand to joint states\n" + str(arm_hand_home_joints_goal) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(arm_hand_home_joints_goal, 6.0, True)
-rospy.sleep(rospy.Duration(3))
+rospy.sleep(3.0)
