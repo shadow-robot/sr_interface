@@ -47,7 +47,7 @@ arm_commander = SrArmCommander(name="right_arm")
 # How to command the arm and hand together
 robot_commander = SrRobotCommander(name="right_arm_and_hand")
 arm_commander.set_max_velocity_scaling_factor(0.1)
-rospy.sleep(2.0))
+rospy.sleep(2.0)
 
 arm_hand_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
                              'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
