@@ -54,7 +54,7 @@
   <arg name="arm_speed_scale" default="0.5"/>
 
   <arg name="urcap_program_name" default="external_ctrl.urp"/>
-  <arg name="load_robot_description_command" default="xacro $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z)"/>
+  <arg if="$(arg load_robot_description_at_lower_level)" name="load_robot_description_command" default="xacro $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z)"/>
   <arg if="$(arg hand_ctrl)" name="arm_payload_mass" default="5.00"/>
   <arg if="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
   <arg unless="$(arg hand_ctrl)" name="arm_payload_mass" default="0.0"/>
