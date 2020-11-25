@@ -47,6 +47,7 @@ arm_commander = SrArmCommander(name="right_arm")
 # How to command the arm and hand together
 robot_commander = SrRobotCommander(name="right_arm_and_hand")
 arm_commander.set_max_velocity_scaling_factor(0.1)
+
 rospy.sleep(2.0)
 
 arm_hand_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
@@ -58,7 +59,7 @@ arm_hand_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.
                              'rh_MFJ4': 0.0, 'rh_RFJ1': 1.5707, 'rh_RFJ2': 1.5707, 'rh_RFJ3': 1.5707,
                              'rh_RFJ4': 0.0, 'rh_LFJ1': 1.5707, 'rh_LFJ2': 1.5707, 'rh_LFJ3': 1.5707,
                              'rh_LFJ4': 0.0, 'rh_LFJ5': 0.0, 'rh_WRJ1': 0.0, 'rh_WRJ2': 0.0}
-                             
+
 example_goal_1 = [0.9, 0.16, 0.95, -0.99, 8.27, -0.0, 1.4]
 
 example_goal_2 = [0.7, 0.16, 0.95, -0.99, 8.27, -0.0, 1.4]
