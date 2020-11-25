@@ -71,7 +71,6 @@ robot_commander.move_to_joint_value_target_unsafe(arm_hand_home_joints_goal, 6.0
 # The arm commander generates a plan to a new pose before the pose is executed.
 # https://github.com/shadow-robot/sr_interface/blob/melodic-devel/sr_robot_commander/src/sr_robot_commander/sr_robot_commander.py#L668
 raw_input("Press Enter to continue...")
-
 rospy.loginfo("Planning the move to the first pose:\n" + str(example_goal_1) + "\n")
 arm_commander.plan_to_pose_target(example_goal_1)
 rospy.loginfo("Finished planning, moving the arm now.")
