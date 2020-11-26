@@ -40,7 +40,6 @@ hand_commander = SrHandCommander(name="left_hand", prefix="lh")
 arm_commander = SrArmCommander(name="left_arm", set_ground=False)
 
 # Specify goals for hand and arm
-
 hand_joint_goals_1 = {'lh_RFJ2': 1.59, 'lh_RFJ3': 1.49, 'lh_RFJ1': 1.47, 'lh_RFJ4': -0.01, 'lh_LFJ4': 0.02,
                       'lh_LFJ5': 0.061, 'lh_LFJ1': 1.41, 'lh_LFJ2': 1.60, 'lh_LFJ3': 1.49, 'lh_THJ2': 0.64,
                       'lh_THJ3': -0.088, 'lh_THJ1': 0.43, 'lh_THJ4': 0.49, 'lh_THJ5': 0.35, 'lh_FFJ4': -0.02,

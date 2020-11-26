@@ -37,6 +37,8 @@
   <arg name="pwm_control" default="true"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
+  <!-- Set to true if you want to use hybrid controller -->
+  <arg name="hybrid_controller" default="false"/>
   <arg name="hand_trajectory" default="true"/>
 
   <!-- ARMS CONFIG-->
@@ -52,13 +54,14 @@
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="arm_speed_scale" default="0.5"/>
-
+  <arg if="$(arg hand)" name="arm_payload_mass" default="5.00"/>
+  <arg if="$(arg hand)" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
+  <arg unless="$(arg hand)" name="arm_payload_mass" default="0.0"/>
+  <arg unless="$(arg hand)" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
+  <arg name="kinematics_config" if="$(eval robot_model[-1] == 'e')" default="$(find ur_e_description)/config/$(arg robot_model)_default.yaml"/>
+  <arg name="kinematics_config" if="$(eval not robot_model[-1] == 'e')" default="$(find ur_description)/config/$(arg robot_model)_default.yaml"/>
   <arg name="urcap_program_name" default="external_ctrl.urp"/>
-  <arg name="load_robot_description_command" default="xacro $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z)"/>
-  <arg if="$(arg hand_ctrl)" name="arm_payload_mass" default="5.00"/>
-  <arg if="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
-  <arg unless="$(arg hand_ctrl)" name="arm_payload_mass" default="0.0"/>
-  <arg unless="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
+  <arg name="load_robot_description_command" default="xacro $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation) kinematics_config:=$(arg kinematics_config)"/>
 
   <node pkg="rosservice" type="rosservice" name="set_speed_scale" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg arm_speed_scale)'"/>
   <node pkg="rosservice" type="rosservice" name="set_payload" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_payload '{payload: $(arg arm_payload_mass), center_of_gravity: $(arg arm_payload_cog)}'"/>
@@ -86,8 +89,9 @@
   
   <!-- Default hand controller groups -->
   <arg if="$(arg grasp_controller)" name="hand_controller_group" default="grasp"/>
-  <arg if="$(eval hand_trajectory and not grasp_controller)" name="hand_controller_group" default="trajectory"/>
-  <arg if="$(eval not hand_trajectory and not grasp_controller)" name="hand_controller_group" default="position"/>
+  <arg if="$(arg hybrid_controller)" name="hand_controller_group" default="hybrid"/>
+  <arg if="$(eval hand_trajectory and not grasp_controller and not hybrid_controller)" name="hand_controller_group" default="trajectory"/>
+  <arg if="$(eval not hand_trajectory and not grasp_controller and not hybrid_controller)" name="hand_controller_group" default="position"/>
 
   <!-- Controller -->
   <group if="$(arg hand)">

@@ -59,6 +59,10 @@
   <arg name="pwm_control" default="true"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
+  <!-- Set to true if you want to use hybrid controller -->
+  <arg name="hybrid_controller" default="false"/>
+  <!-- Set the hand type here: hand_e_plus, hand_e, hand_lite, hand_extra_lite -->
+  <arg name="hand_type" default="hand_e_plus"/>
 
   <!-- ARMS CONFIG-->
   <arg name="initial_z" default="0.1"/>
@@ -76,10 +80,12 @@
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_ctrl" default="true"/>
   <arg name="arm_speed_scale" default="0.5"/>
-  <arg if="$(arg hand_ctrl)" name="arm_payload_mass" default="5.00"/>
-  <arg if="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
-  <arg unless="$(arg hand_ctrl)" name="arm_payload_mass" default="0.0"/>
-  <arg unless="$(arg hand_ctrl)" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
+  <!-- Sets up right payload -->
+  <arg if="$(eval arg('hand_type') == 'hand_e')" name="arm_payload_mass" default="5.0"/>
+  <arg if="$(eval arg('hand_type') == 'hand_e_plus')" name="arm_payload_mass" default="5.0"/>
+  <arg if="$(eval arg('hand_type') == 'hand_lite')" name="arm_payload_mass" default="2.7"/>
+  <arg if="$(eval arg('hand_type') == 'hand_extra_lite')" name="arm_payload_mass" default="2.5"/>
+  <arg name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
 
   <arg if="$(eval not hand_trajectory and not arm_trajectory)" name="trajectory_controllers_list" default="[]"/>
   <arg if="$(eval hand_trajectory and arm_trajectory)" name="trajectory_controllers_list" 
@@ -107,8 +113,9 @@
     <arg if="$(arg start_home)" name="spawn_model_extra_args" value="-unpause $(arg home_angles)" />
     <arg unless="$(arg start_home)" name="spawn_model_extra_args" value="" />
     <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name) $(arg spawn_model_extra_args)" respawn="false" output="screen"/>
-    <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_grasp_controller_gazebo.yaml" if="$(arg grasp_controller)"/>
-    <rosparam command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml" unless="$(arg grasp_controller)"/>
+    <rosparam if="$(eval not grasp_controller and not hybrid_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
+    <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_grasp_controller_gazebo.yaml"/>
+    <rosparam if="$(arg hybrid_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_hybrid_controller_gazebo.yaml"/>
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
       <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
@@ -135,10 +142,12 @@
       </include>
     </group>
     <group if="$(arg hand_ctrl)">
+      <arg if="$(arg grasp_controller)" name="hand_controller_group" default="grasp"/>
+      <arg if="$(arg hybrid_controller)" name="hand_controller_group" default="hybrid"/>
+      <arg if="$(eval hand_trajectory and not grasp_controller and not hybrid_controller)" name="hand_controller_group" default="trajectory"/>
+      <arg if="$(eval not hand_trajectory and not grasp_controller and not hybrid_controller)" name="hand_controller_group" default="position"/>
       <node name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
-        <param if="$(eval hand_trajectory and not grasp_controller)" name="controller_group" value="trajectory"/>
-        <param if="$(eval not hand_trajectory and not grasp_controller)" name="controller_group" value="position"/>
-        <param if="$(arg grasp_controller)" name="controller_group" value="grasp"/>
+        <param name="controller_group" value="$(arg hand_controller_group)"/>
         <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
       </node>
     </group>
@@ -163,11 +172,12 @@
         <arg name="mapping_path" value="$(arg mapping_path)"/>
         <arg name="eth_port" value="$(arg eth_port)"/>
         <arg name="grasp_controller" value="$(arg grasp_controller)"/>
+        <arg name="hybrid_controller" value="$(arg hybrid_controller)"/>
         <arg name="pwm_control" value="$(arg pwm_control)"/>
         <arg name="include_wrist_in_arm_controller" value="$(arg include_wrist_in_arm_controller)"/>
+        <arg name="hand_ctrl" value="$(arg hand_ctrl)"/>
         <arg name="arm_trajectory" value="$(arg arm_trajectory)"/>
         <arg name="arm_position" value="$(arg arm_position)"/>
-        <arg name="hand_ctrl" value="$(arg hand_ctrl)"/>
         <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>
         <arg name="arm_ctrl" value="$(arg arm_ctrl)"/>
         <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
