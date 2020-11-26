@@ -75,6 +75,14 @@
   <include file="$(find sr_robot_launch)/launch/unimanual_controller_stopper.launch">
     <arg name="side" value="$(arg side)"/>
   </include>
+
+  <!-- Constructs robot description string and loads it -->
+  <node unless="$(arg load_robot_description_at_lower_level)" name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description" output="screen">
+    <param name="arm_type" value="$(arg robot_model)"/>
+    <param name="robot_description_file" value="$(arg robot_description)"/>
+    <param name="initial_z" value="$(arg initial_z)"/>
+    <param name="prefix" value="$(arg hand_id)_"/>
+  </node>
   
   <!-- Default hand controller groups -->
   <arg if="$(arg grasp_controller)" name="hand_controller_group" default="grasp"/>
