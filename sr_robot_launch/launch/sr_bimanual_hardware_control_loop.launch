@@ -97,7 +97,7 @@
     <include file="$(find sr_edc_launch)/sr_edc_bimanual_ros_control.launch">
       <arg name="define_robot_hardware" value="false"/>
       <arg name="debug" value="$(arg debug)"/>
-      <arg name="load_robot_description_at_lower_level" value="$(arg load_robot_description_command)"/>
+      <arg name="load_robot_description_at_lower_level" value="$(arg load_robot_description_at_lower_level)"/>
       <arg name="load_robot_description_command" value="$(arg load_robot_description_command)"/>
       <arg name="rh_serial" value="$(arg rh_serial)"/>
       <arg name="lh_serial" value="$(arg lh_serial)"/>

@@ -99,7 +99,7 @@
       <arg name="hand_robot_hardware_name" value="unique_robot_hw"/>
       <arg name="debug" value="$(arg debug)"/>
       <arg name="eth_port" value="$(arg eth_port)"/>
-      <arg name="load_robot_description_at_lower_level" value="$(arg load_robot_description_command)"/>
+      <arg name="load_robot_description_at_lower_level" value="$(arg load_robot_description_at_lower_level)"/>
       <arg name="load_robot_description_command" value="$(arg load_robot_description_command)"/>
       <arg name="pwm_control" value="$(arg pwm_control)"/>
       <arg name="hand_serial" value="$(arg hand_serial)"/>
