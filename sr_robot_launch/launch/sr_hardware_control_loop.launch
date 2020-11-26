@@ -36,6 +36,8 @@
   <arg name="pwm_control" default="true"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
+  <!-- Set to true if you want to use hybrid controller -->
+  <arg name="hybrid_controller" default="false"/>
   <arg name="hand_trajectory" default="true"/>
 
   <!-- ARMS CONFIG-->
@@ -81,8 +83,9 @@
 
   <!-- Default hand controller groups -->
   <arg if="$(arg grasp_controller)" name="hand_controller_group" default="grasp"/>
-  <arg if="$(eval hand_trajectory and not grasp_controller)" name="hand_controller_group" default="trajectory"/>
-  <arg if="$(eval not hand_trajectory and not grasp_controller)" name="hand_controller_group" default="position"/>
+  <arg if="$(arg hybrid_controller)" name="hand_controller_group" default="hybrid"/>
+  <arg if="$(eval hand_trajectory and not grasp_controller and not hybrid_controller)" name="hand_controller_group" default="trajectory"/>
+  <arg if="$(eval not hand_trajectory and not grasp_controller and not hybrid_controller)" name="hand_controller_group" default="position"/>
 
   <!-- Controller -->
   <group if="$(arg hand)">
