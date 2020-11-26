@@ -32,35 +32,28 @@ from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from math import pi
 import argparse
 
-
 rospy.init_node("print_joints_position", anonymous=True)
-
 
 parser = argparse.ArgumentParser(description='A script to print hand and arm joint positions. ',
                                  add_help=True, usage='%(prog)s [-h] --angle_type ANGLE_TYPE',
                                  formatter_class=argparse.RawTextHelpFormatter)
-
 parser.add_argument('--angle_type', dest='angle_type',
                     default='radians',
                     help="ANGLE_TYPE should be either degrees or radians")
 args = parser.parse_args()
 
 angle_type = args.angle_type
-
 if angle_type not in ['radians', 'degrees']:
     parser.print_help()
     exit(1)
 
 scale = 1
-
 if angle_type == "degrees":
     scale = 1 * (180/pi)
 
-# The constructors for SrRobotCommander
+# The constructor for SrRobotCommander
 # take a name parameter that should match the group name of the robot to be used.
 robot_commander = SrRobotCommander(name="right_arm_and_hand")
-
-print("Joints positions")
 
 # get_joints_position returns a dictionary with joints poisitions
 all_joints_state = robot_commander.get_joints_position()
@@ -72,7 +65,6 @@ arm_joints_state = {
     k: (v * scale) for k, v in all_joints_state.items()
     if k.startswith("ra_") or k.startswith("rh_W")}
 
-
-print("Hand joints position \n " + str(hand_joints_state) + "\n")
-
-print("Arm joints position \n " + str(arm_joints_state) + "\n")
+rospy.loginfo("Joints positions:")
+rospy.loginfo("Hand joints position \n " + str(hand_joints_state) + "\n")
+rospy.loginfo("Arm joints position \n " + str(arm_joints_state) + "\n")

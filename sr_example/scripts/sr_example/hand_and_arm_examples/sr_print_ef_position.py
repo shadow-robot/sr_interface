@@ -18,7 +18,6 @@
 # For more information, please see:
 # https://dexterous-hand.readthedocs.io/en/latest/user_guide/2_software_description.html#robot-commander
 
-
 import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_arm_commander import SrArmCommander
@@ -26,19 +25,15 @@ from sr_utilities.hand_finder import HandFinder
 from math import pi
 import argparse
 
-
 rospy.init_node("print_ef_position", anonymous=True)
-
 
 hand_commander = SrHandCommander(name="right_hand")
 arm_commander = SrArmCommander(name="right_arm")
 
-print("The end effectors:\n")
+rospy.loginfo("The end effectors:\n")
 
 eff_pose_arm = arm_commander.get_current_pose()
-
-print("The arm end effector pose:\n" + str(eff_pose_arm))
+rospy.loginfo("The arm end effector pose:\n" + str(eff_pose_arm))
 
 eff_pose_hand = arm_commander.get_current_pose("rh_palm")
-
-print("The hand end effector pose:\n" + str(eff_pose_hand))
+rospy.loginfo("The hand end effector pose:\n" + str(eff_pose_hand))
