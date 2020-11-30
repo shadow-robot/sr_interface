@@ -48,9 +48,9 @@ robot_commander.set_max_velocity_scaling_factor(0.4)
 rospy.sleep(2.0)
 
 arm_hand_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
-                            'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                            'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00,
-                            'rh_WRJ1': 0.0, 'rh_WRJ2': 0.0}
+                             'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
+                             'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00,
+                             'rh_WRJ1': 0.0, 'rh_WRJ2': 0.0}
 
 example_goal_1 = [1.18773740212, 0.175152574887,
                   1.00722873872, -0.509149713327,
