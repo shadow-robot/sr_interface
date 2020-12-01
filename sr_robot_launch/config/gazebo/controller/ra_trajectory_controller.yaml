@@ -7,8 +7,6 @@ ra_trajectory_controller:
     - ra_wrist_1_joint
     - ra_wrist_2_joint
     - ra_wrist_3_joint
-    - rh_WRJ1
-    - rh_WRJ2
   constraints:
       goal_time: 0.6
       stopped_velocity_tolerance: 1.0
