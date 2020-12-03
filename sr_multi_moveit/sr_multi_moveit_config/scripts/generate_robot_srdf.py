@@ -439,8 +439,6 @@ class SRDFRobotGenerator(object):
                 for index, group_element in enumerate(elt.getElementsByTagName("joint")):
                     attribute_name = group_element.getAttribute("name")
                     attribute_name = attribute_name.split("_")[1]
-                    if attribute_name in ["WRJ1", "WRJ2"] and manipulator.has_arm:
-                        group_element.parentNode.removeChild(group_element)
                 elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
             previous = elt
             elt = next_element(previous)

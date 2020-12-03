@@ -7,8 +7,6 @@ la_trajectory_controller:
     - la_wrist_1_joint
     - la_wrist_2_joint
     - la_wrist_3_joint
-    - lh_WRJ1
-    - lh_WRJ2
   constraints:
       goal_time: 0.6
       stopped_velocity_tolerance: 0.05
@@ -18,8 +16,6 @@ la_trajectory_controller:
       la_wrist_1_joint: {trajectory: 0.3, goal: 0.1}
       la_wrist_2_joint: {trajectory: 0.3, goal: 0.1}
       la_wrist_3_joint: {trajectory: 0.3, goal: 0.1}
-      lh_WRJ1: {trajectory: 0.9, goal: 0.4}
-      lh_WRJ2: {trajectory: 0.9, goal: 0.4}
   stop_trajectory_duration: 0.5
   state_publish_rate:  25
   action_monitor_rate: 10

@@ -7,5 +7,4 @@ la_group_position_controller:
     - la_wrist_1_joint
     - la_wrist_2_joint
     - la_wrist_3_joint
-    - lh_WRJ1
-    - lh_WRJ2
+    
