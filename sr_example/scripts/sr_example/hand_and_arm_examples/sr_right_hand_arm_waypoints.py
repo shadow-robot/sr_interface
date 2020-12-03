@@ -80,7 +80,6 @@ if eval_arm_home_plan_quality != 'good':
                    "For safety please refer to the hand and arm documentation " +
                    "for where to start the arm " +
                    "to ensure no unexpected movements during plan and execute.")
-    rospy.loginfo("Exiting the script... ")
     sys.exit("Exiting script to allow for the arm to be manually moved to better start position ...")
 
 # Execute arm to home plan
