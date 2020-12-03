@@ -69,7 +69,7 @@ plan = robot_commander.plan_to_joint_value_target(arm_manipulator_home_joints_go
 plan_quality = robot_commander.evaluate_given_plan(plan)
 eval_plan_quality = robot_commander.evaluate_plan_quality(plan_quality)
 
-if eval_plan_quality == 'poor':
+if eval_plan_quality != 'good':
     rospy.logfatal("Plan quality to the home position is poor! " +
                    "For safety please refer to the hand and arm documentation " +
                    "for where to start the arm " +

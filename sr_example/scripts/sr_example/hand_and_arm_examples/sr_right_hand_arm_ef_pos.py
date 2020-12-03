@@ -77,7 +77,7 @@ arm_to_home_plan = arm_commander.plan_to_joint_value_target(arm_home_joints_goal
 arm_to_home_plan_quality = arm_commander.evaluate_given_plan(arm_to_home_plan)
 eval_arm_home_plan_quality = arm_commander.evaluate_plan_quality(arm_to_home_plan_quality)
 
-if eval_arm_home_plan_quality == 'poor':
+if eval_arm_home_plan_quality != 'good':
     rospy.logfatal("Plan quality to the home position is poor! " +
                    "For safety please refer to the hand and arm documentation " +
                    "for where to start the arm " +
