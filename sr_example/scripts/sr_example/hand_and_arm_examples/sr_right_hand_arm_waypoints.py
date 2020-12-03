@@ -69,17 +69,17 @@ example_goal_1 = [0.9, 0.16, 0.95, -0.99, 8.27, -0.0, 1.4]
 
 # Evaluate the plan quality from starting position of robot.
 # https://github.com/shadow-robot/sr_interface/blob/melodic-devel/sr_robot_commander/src/sr_robot_commander/sr_robot_commander.py#L263-L310
-# This is to confirm that the arm is in a safe place to move to the home joints goal, 
+# This is to confirm that the arm is in a safe place to move to the home joints goal,
 # if the outcome is poor please refer to the readthedocs of where the start arm home position is.
 arm_to_home_plan = arm_commander.plan_to_joint_value_target(arm_home_joints_goal)
 arm_to_home_plan_quality = arm_commander.evaluate_given_plan(arm_to_home_plan)
 eval_arm_home_plan_quality = arm_commander.evaluate_plan_quality(arm_to_home_plan_quality)
 
 if eval_arm_home_plan_quality == 'poor':
-    rospy.logfatal("Plan quality to the home position is poor! " + 
-                 "For safety please refer to the hand and arm documentation " +
-                 "for where to start the arm " +
-                 "to ensure no unexpected movements during plan and execute.")
+    rospy.logfatal("Plan quality to the home position is poor! " +
+                   "For safety please refer to the hand and arm documentation " +
+                   "for where to start the arm " +
+                   "to ensure no unexpected movements during plan and execute.")
     rospy.loginfo("Exiting the script... ")
     sys.exit()
 

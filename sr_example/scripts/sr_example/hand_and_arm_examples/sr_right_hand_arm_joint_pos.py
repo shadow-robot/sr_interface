@@ -76,7 +76,7 @@ hand_arm_joints_goal_1 = {'rh_FFJ1': 1.57, 'rh_FFJ2': 1.57, 'rh_FFJ3': 1.574, 'r
 hand_arm_joints_goal_2 = {'rh_FFJ1': -0.00, 'rh_FFJ2': 1.31, 'rh_FFJ3': 1.36, 'rh_FFJ4': -0.00,
                           'rh_MFJ1': 0.42, 'rh_MFJ2': 1.57, 'rh_MFJ3': 1.21, 'rh_MFJ4': 0.0,
                           'rh_RFJ1': -0.00, 'rh_RFJ2': 1.5707, 'rh_RFJ3': 1.41, 'rh_RFJ4': -0.00,
-                          'rh_LFJ1': 1.57, 'rh_LFJ2': 0.84, 'rh_LFJ3': 0.36, 'rh_LFJ4': 0.22, 
+                          'rh_LFJ1': 1.57, 'rh_LFJ2': 0.84, 'rh_LFJ3': 0.36, 'rh_LFJ4': 0.22,
                           'rh_LFJ5': 0.19, 'rh_THJ1': 0.0, 'rh_THJ2': 0.0, 'rh_THJ3': 0.0,
                           'rh_THJ4': 0.0, 'rh_THJ5': 0.0, 'rh_WRJ1': 0.6, 'rh_WRJ2': 0.0,
                           'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.10,
@@ -85,17 +85,17 @@ hand_arm_joints_goal_2 = {'rh_FFJ1': -0.00, 'rh_FFJ2': 1.31, 'rh_FFJ3': 1.36, 'r
 
 # Evaluate the plan quality from starting position of robot.
 # https://github.com/shadow-robot/sr_interface/blob/melodic-devel/sr_robot_commander/src/sr_robot_commander/sr_robot_commander.py#L263-L310
-# This is to confirm that the arm is in a safe place to move to the home joints goal, 
+# This is to confirm that the arm is in a safe place to move to the home joints goal,
 # if the outcome is poor please refer to the readthedocs of where the start arm home position is.
 arm_to_home_plan = arm_commander.plan_to_joint_value_target(arm_home_joints_goal)
 arm_to_home_plan_quality = arm_commander.evaluate_given_plan(arm_to_home_plan)
 eval_arm_home_plan_quality = arm_commander.evaluate_plan_quality(arm_to_home_plan_quality)
 
 if eval_arm_home_plan_quality == 'poor':
-    rospy.logfatal("Plan quality to the home position is poor! " + 
-                 "For safety please refer to the hand and arm documentation " +
-                 "for where to start the arm " +
-                 "to ensure no unexpected movements during plan and execute.")
+    rospy.logfatal("Plan quality to the home position is poor! " +
+                   "For safety please refer to the hand and arm documentation " +
+                   "for where to start the arm " +
+                   "to ensure no unexpected movements during plan and execute.")
     rospy.loginfo("Exiting the script... ")
     sys.exit()
 
@@ -114,7 +114,7 @@ rospy.loginfo("Moving hand to joint state: open")
 hand_commander.move_to_named_target("open")
 rospy.sleep(2.0)
 
-# Move hand to open and arm 
+# Move arm and hand together
 raw_input("Press Enter to continue...")
 rospy.loginfo("Moving hand to joint states\n" + str(hand_arm_joints_goal_1) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(hand_arm_joints_goal_1, 6.0, True)

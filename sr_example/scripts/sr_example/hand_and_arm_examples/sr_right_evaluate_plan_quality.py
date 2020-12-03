@@ -41,9 +41,9 @@ robot_commander.set_max_velocity_scaling_factor(0.4)
 rospy.sleep(2.0)
 
 arm_manipulator_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
-                             'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                             'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00,
-                             'rh_WRJ1': 0.0, 'rh_WRJ2': 0.0}
+                                    'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
+                                    'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00,
+                                    'rh_WRJ1': 0.0, 'rh_WRJ2': 0.0}
 
 example_goal_1 = [1.18773740212, 0.175152574887,
                   1.00722873872, -0.509149713327,
@@ -62,7 +62,7 @@ example_goal_3 = [1.18972252888, 0.174200052352,
 
 # Evaluate the plan quality from starting position of robot.
 # https://github.com/shadow-robot/sr_interface/blob/melodic-devel/sr_robot_commander/src/sr_robot_commander/sr_robot_commander.py#L263-L310
-# This is to confirm that the arm is in a safe place to move to the home joints goal, 
+# This is to confirm that the arm is in a safe place to move to the home joints goal,
 # if the outcome is poor please refer to the readthedocs of where the start arm home position is.
 rospy.loginfo("Planning to move arm and manipulator to joint states\n" + str(arm_manipulator_home_joints_goal) + "\n")
 plan = robot_commander.plan_to_joint_value_target(arm_manipulator_home_joints_goal)
@@ -70,10 +70,10 @@ plan_quality = robot_commander.evaluate_given_plan(plan)
 eval_plan_quality = robot_commander.evaluate_plan_quality(plan_quality)
 
 if eval_plan_quality == 'poor':
-    rospy.logfatal("Plan quality to the home position is poor! " + 
-                 "For safety please refer to the hand and arm documentation " +
-                 "for where to start the arm " +
-                 "to ensure no unexpected movements during plan and execute.")
+    rospy.logfatal("Plan quality to the home position is poor! " +
+                   "For safety please refer to the hand and arm documentation " +
+                   "for where to start the arm " +
+                   "to ensure no unexpected movements during plan and execute.")
     rospy.loginfo("Exiting the script... ")
     sys.exit()
 
