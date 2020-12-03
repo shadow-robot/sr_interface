@@ -49,7 +49,6 @@
   <arg name="arm_robot_hw" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   <arg name="arm_robot_hw" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/$(arg side)_ur10e_arm_robot_hw.yaml"/>
   <arg name="force_torque_sensor_hw" default="$(find sr_robot_launch)/config/$(arg arm_prefix)_force_torque_controller.yaml"/>
-  <arg name="include_wrist_in_arm_controller" default="$(arg arm_ctrl)"/>
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
@@ -117,7 +116,6 @@
     </include>
     <node if="$(arg hand_ctrl)" name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
       <param name="controller_group" value="$(arg hand_controller_group)"/>
-      <param name="exclude_wrist" value="$(arg include_wrist_in_arm_controller)"/>
       <param name="wait_for" value ="calibrated"/>
     </node>
   </group>
@@ -165,20 +163,18 @@
   <group if="$(arg arm_ctrl)">
     <group if="$(arg arm_trajectory)">
       <group if="$(arg hand_ctrl)">
-        <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller.yaml"/>
-        <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller_no_wrist.yaml"/>
+        <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller.yaml"/>
       </group>
-      <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller_no_wrist.yaml"/>
+      <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller.yaml"/>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
             args="--wait-for=/$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running $(arg arm_prefix)_trajectory_controller"/>
     </group>
     <!-- Position mode -->
     <group if="$(arg arm_position)">
       <group if="$(arg hand_ctrl)">
-        <rosparam if="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_group_position_controller.yaml"/>
-        <rosparam unless="$(arg include_wrist_in_arm_controller)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_group_position_controller_no_wrist.yaml"/>
+        <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_group_position_controller.yaml"/>
       </group>
-      <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_group_position_controller_no_wrist.yaml"/>
+      <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_group_position_controller.yaml"/>
       <node if="$(arg hand_ctrl)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
             args="--wait-for=/$(arg arm_prefix)_arm_ready $(arg arm_prefix)_group_position_controller"/>
       <node unless="$(arg hand_ctrl)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
