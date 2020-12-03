@@ -31,6 +31,7 @@
 # It is recommended to run this script in simulation first.
 
 import rospy
+import sys
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from sr_robot_commander.sr_arm_commander import SrArmCommander
