@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2019 Shadow Robot Company Ltd.
+# Copyright 2020 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -38,7 +38,7 @@ from sr_robot_commander.sr_arm_commander import SrArmCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
 
-rospy.init_node("right_hand_arm_joint_pos", anonymous=True)
+rospy.init_node("right_hand_arm_joint_pos", anonymous=True, disable_signals=True)
 
 # The constructors for the SrArmCommander, SrHandCommander and SrRobotCommander
 # take a name parameter that should match the group name of the robot to be used.
@@ -91,13 +91,12 @@ arm_to_home_plan = arm_commander.plan_to_joint_value_target(arm_home_joints_goal
 arm_to_home_plan_quality = arm_commander.evaluate_given_plan(arm_to_home_plan)
 eval_arm_home_plan_quality = arm_commander.evaluate_plan_quality(arm_to_home_plan_quality)
 
-if eval_arm_home_plan_quality == 'poor':
+if eval_arm_home_plan_quality != 'good':
     rospy.logfatal("Plan quality to the home position is poor! " +
                    "For safety please refer to the hand and arm documentation " +
                    "for where to start the arm " +
                    "to ensure no unexpected movements during plan and execute.")
-    rospy.loginfo("Exiting the script... ")
-    sys.exit()
+    sys.exit("Exiting script to allow for the arm to be manually moved to better start position ...")
 
 # Execute arm to home plan
 rospy.loginfo("Planning and moving arm to home joint states\n" + str(arm_home_joints_goal) + "\n")

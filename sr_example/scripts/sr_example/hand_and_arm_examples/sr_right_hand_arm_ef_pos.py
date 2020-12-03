@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2019 Shadow Robot Company Ltd.
+# Copyright 2020 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -83,7 +83,7 @@ if eval_arm_home_plan_quality == 'poor':
                    "for where to start the arm " +
                    "to ensure no unexpected movements during plan and execute.")
     rospy.loginfo("Exiting the script... ")
-    sys.exit()
+    sys.exit("Exiting script to allow for the arm to be manually moved to better start position ...")
 
 # Execute arm to home plan
 rospy.loginfo("Planning and moving arm to home joint states\n" + str(arm_home_joints_goal) + "\n")
