@@ -38,7 +38,7 @@ from sr_robot_commander.sr_arm_commander import SrArmCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
 
-rospy.init_node("right_hand_arm_joint_pos", anonymous=True, disable_signals=True)
+rospy.init_node("right_hand_arm_joint_pos", anonymous=True)
 
 # The constructors for the SrArmCommander, SrHandCommander and SrRobotCommander
 # take a name parameter that should match the group name of the robot to be used.
