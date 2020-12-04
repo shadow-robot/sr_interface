@@ -4,6 +4,7 @@
 # Unauthorized copying of the content in this file, via any medium is strictly prohibited.
 import rospy
 import rostest
+from moveit_msgs.msg import PlanningScene
 from sr_robot_commander.sr_arm_commander import SrArmCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
@@ -19,30 +20,6 @@ hand_id = ()
 robot_commander = ()
 hand_commander = ()
 arm_commander = ()
-
-class ChildArmCommander(SrArmCommander):
-        """
-        Child class that returns robot pose
-        """
-        def set_ground(self, height=0.1, z_position=-0.1):
-            """
-            Sets a plane for the ground.
-            @param height - specifies the height of the plane
-            @param z_position - position in z to place the plane. Should not collide with the robot.
-            """
-
-            pose = PoseStamped()
-            pose.pose.position.x = 0
-            pose.pose.position.y = 0
-            pose.pose.position.z = z_position - (height/2.0)
-            pose.pose.orientation.x = 0
-            pose.pose.orientation.y = 0
-            pose.pose.orientation.z = 0
-            pose.pose.orientation.w = 1
-            pose.header.stamp = get_rostime()
-            pose.header.frame_id = self._robot_commander.get_root_link()
-            self._planning_scene.add_box("ground", pose, (3, 3, height))
-            return pose.pose.position.z
 
 class TestHandAndArmSim(TestCase):
     """
@@ -73,11 +50,12 @@ class TestHandAndArmSim(TestCase):
         if self.hand_id == 'rh':
             self.robot_commander = SrRobotCommander(name="right_arm_and_hand")
             self.hand_commander = SrHandCommander(name='right_hand')
-            self.arm_commander = SrArmCommander(name='right_arm')
+            self.arm_commander = SrArmCommander(name='right_arm', set_ground=False)
         elif self.hand_id == 'lh':
             self.robot_commander = SrRobotCommander(name="left_arm_and_hand")
             self.hand_commander = SrHandCommander(name='left_hand')
-            self.arm_commander = SrArmCommander(name='left_arm')    
+            self.arm_commander = SrArmCommander(name='left_arm')
+        rospy.Subscriber('/move_group/monitored_planning_scene', PlanningScene, self.scene_data_cb)    
 
     def joints_error_check(self, expected_joint_values, recieved_joint_values):
         expected_and_final_joint_value_diff = 0
@@ -85,6 +63,22 @@ class TestHandAndArmSim(TestCase):
             expected_and_final_joint_value_diff += abs(expected_joint_values[expected_value] -
                                                        recieved_joint_values[recieved_value])
         return expected_and_final_joint_value_diff
+
+    def scene_data_cb(self, result):
+        scene_data = ()
+        self.scene_data = result.world.collision_objects
+        print('scene data')
+        print(self.scene_data)
+
+    #doesn't work because message is always being published, needs to read topic.world.collision_objects
+    def wait_for_topic_with_scene(self, data, timeout=3):
+        counter = 0
+        while counter < timeout:
+            current_value = rospy.wait_for_message(topic, PlanningScene)
+            if current_value == none:
+                return
+            rospy.sleep(1)
+            counter += 1
 
     def test_scene(self):
         scene = ()
@@ -97,8 +91,7 @@ class TestHandAndArmSim(TestCase):
         elif self.scene == False:
             print('scene is false')
         
-        child_arm_commander = ()
-        self.child_arm_commander = ChildArmCommander()
+        self.wait_for_topic_with_scene('/move_group/monitored_planning_scene')
 
 #    def test_home_position(self):
 
@@ -207,7 +200,9 @@ if __name__ == '__main__':
      rospy.init_node("hand_and_arm_test", anonymous=True)
      test = TestHandAndArmSim()
      rospy.sleep(10)
+     test.scene_data_cb()
      test.test_scene()
+     
 #     hand = ChildArmCommander
 #     print('testing child class')
 #     print(str(hand.set_ground))
