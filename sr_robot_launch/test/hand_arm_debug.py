@@ -20,6 +20,8 @@ hand_id = ()
 robot_commander = ()
 hand_commander = ()
 arm_commander = ()
+current_value = ()
+scene_value = ()
 
 class TestHandAndArmSim(TestCase):
     """
@@ -68,35 +70,29 @@ class TestHandAndArmSim(TestCase):
         scene_data = ()
         self.scene_data = result.world.collision_objects
 
-    #doesn't work doing rospy.wait_for_message because message is always being published, needs to read topic.world.collision_objects
-    def wait_for_topic_with_scene(self, timeout=100):
+    def wait_for_topic_with_scene(self, timeout=80):
         counter = 0
         while counter < timeout:
             current_value = self.scene_data
-            print('current topic length')
-            print(len(current_value))
-
             if len(current_value) != 0:
-                print('final readout IS POPULATED')
-                return
+                return current_value
+            else:
+                current_value == 0
+                return current_value
             rospy.sleep(0.1)
             counter += 1
 
     def test_scene(self):
         scene = ()
         self.scene = rospy.get_param('/test_sim/scene')
-        print('scene')
-        print(self.scene)
-
+        self.scene_value = self.wait_for_topic_with_scene()
         if self.scene == True:
-            print('scene is true')
+            self.assertNotEqual(len(self.scene_value), 0)
+        #using assertAlmostEqual because assertEqual tries to call an addTpeEqualityFunc() here
         elif self.scene == False:
-            print('scene is false')
-        
-        self.wait_for_topic_with_scene('/move_group/monitored_planning_scene')
+            self.assertAlmostEqual(len(self.scene_value), 0, 0)
 
 #    def test_home_position(self):
-
 
     def test_hand(self):
         hand_joints_target = {
@@ -202,8 +198,12 @@ if __name__ == '__main__':
      rospy.init_node("hand_and_arm_test", anonymous=True)
      test = TestHandAndArmSim()
      rospy.sleep(10)
-     #test.scene_data_cb()
-     test.wait_for_topic_with_scene()
-     #test.test_scene()
+     test.test_scene()
+     rospy.sleep(10)
+     test.test_arm()
+    #  rospy.sleep(10)
+    #  test.test_hand()
+     rospy.sleep(10)
+     test.test_hand_and_arm()
      
 
