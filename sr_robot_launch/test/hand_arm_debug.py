@@ -67,15 +67,20 @@ class TestHandAndArmSim(TestCase):
     def scene_data_cb(self, result):
         scene_data = ()
         self.scene_data = result.world.collision_objects
-        print('scene data')
-        print(self.scene_data)
 
-    #doesn't work because message is always being published, needs to read topic.world.collision_objects
-    def wait_for_topic_with_scene(self, data, timeout=3):
+    #doesn't work doing rospy.wait_for_message because message is always being published, needs to read topic.world.collision_objects
+    def wait_for_topic_with_scene(self, timeout=100):
         counter = 0
         while counter < timeout:
-            current_value = rospy.wait_for_message(topic, PlanningScene)
-            if current_value == none:
+            current_value = self.scene_data
+            print('current topic length')
+            print(len(current_value))
+
+            if len(current_value) != 0:
+                if len(current_value) == 0:
+                     print('final readout IS NONE')
+                else:
+                     print('final readout IS POPULATED')
                 return
             rospy.sleep(1)
             counter += 1
@@ -200,13 +205,8 @@ if __name__ == '__main__':
      rospy.init_node("hand_and_arm_test", anonymous=True)
      test = TestHandAndArmSim()
      rospy.sleep(10)
-     test.scene_data_cb()
-     test.test_scene()
+     #test.scene_data_cb()
+     test.wait_for_topic_with_scene()
+     #test.test_scene()
      
-#     hand = ChildArmCommander
-#     print('testing child class')
-#     print(str(hand.set_ground))
-#     test.test_hand()
-#     rospy.sleep(5)
-#     test.test_arm()
-#     test.test_hand_and_arm()
+
