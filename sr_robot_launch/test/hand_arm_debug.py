@@ -77,12 +77,9 @@ class TestHandAndArmSim(TestCase):
             print(len(current_value))
 
             if len(current_value) != 0:
-                if len(current_value) == 0:
-                     print('final readout IS NONE')
-                else:
-                     print('final readout IS POPULATED')
+                print('final readout IS POPULATED')
                 return
-            rospy.sleep(1)
+            rospy.sleep(0.1)
             counter += 1
 
     def test_scene(self):
