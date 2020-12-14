@@ -44,6 +44,8 @@
   <arg name="pwm_control" default="true"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
+  <!-- Set the hand type here: hand_e_plus, hand_e, hand_lite, hand_extra_lite -->
+  <arg name="hand_type" default="hand_e_plus"/>
 
   <!-- ARM CONFIG-->
   <arg name="initial_z" default="0.7521" if="$(arg scene)"/>
@@ -52,8 +54,6 @@
   <arg name="robot_model" default="ur5e"/>
   <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/left_ur_arm_robot_hw.yaml"/>
   <arg name="arm_speed_scale" default="0.5"/>
-  <arg name="arm_payload_mass" default="5.00"/>
-  <arg name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
 
   <arg name="side" value="left"/>
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_lite_$(arg robot_model).urdf.xacro'"/>
@@ -63,9 +63,6 @@
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn group position controllers for the arms -->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
-  <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
-  <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
-  <arg name="include_wrist_in_arm_controller" default="false"/>
 
   <include file="$(find sr_robot_launch)/launch/sr_ur_arm_hand.launch">
     <arg name="sim" value="$(arg sim)"/>
@@ -80,15 +77,13 @@
     <arg name="mapping_path" value="$(arg mapping_path)"/>
     <arg name="eth_port" value="$(arg eth_port)"/>
     <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
+    <arg name="hand_type" value="$(arg hand_type)"/>
 
     <arg name="initial_z" value="$(arg initial_z)"/>
     <arg name="arm_robot_hw" value="$(arg arm_robot_hw)"/>
-    <arg name="include_wrist_in_arm_controller" value="$(arg include_wrist_in_arm_controller)"/>
     <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
     <arg name="arm_position" default="$(arg arm_position)"/>
     <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
-    <arg name="arm_payload_mass" value="$(arg arm_payload_mass)"/>
-    <arg name="arm_payload_cog" value="$(arg arm_payload_cog)"/>
 
     <arg name="side" value="$(arg side)"/>
     <arg name="robot_model" value="$(arg robot_model)"/>
