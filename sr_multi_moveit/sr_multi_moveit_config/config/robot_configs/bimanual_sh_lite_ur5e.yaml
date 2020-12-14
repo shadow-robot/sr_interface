@@ -12,6 +12,7 @@ robot:
         extra_groups_config_path: /config
         group_states:
           - home
+          - down
           - up
       hand:
         name: shadowhand_lite.urdf.xacro
@@ -27,6 +28,7 @@ robot:
         extra_groups_config_path: /config
         group_states:
           - home
+          - down
           - up
       hand:
         name: shadowhand_left_lite.urdf.xacro

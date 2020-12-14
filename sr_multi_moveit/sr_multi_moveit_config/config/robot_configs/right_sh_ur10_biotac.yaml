@@ -12,6 +12,7 @@ robot:
         extra_groups_config_path: /config
         group_states:
           - home
+          - down
           - up
       hand:
         name: shadowhand_motor_biotac.urdf.xacro
