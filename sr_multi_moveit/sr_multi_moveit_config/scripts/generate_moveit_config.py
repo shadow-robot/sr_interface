@@ -77,9 +77,6 @@ def generate_fake_controllers(robot, robot_config, output_path=None, ns_=None):
             output_str += "    joints:\n"
             for joint in arm_yamldoc["controller_list"][0]["joints"]:
                 output_str += "     - " + manipulator.arm.prefix + joint + "\n"
-            if manipulator.has_hand and not manipulator.hand.is_lite:
-                output_str += "     - " + manipulator.hand.prefix + "WRJ2" + "\n"
-                output_str += "     - " + manipulator.hand.prefix + "WRJ1" + "\n"
 
         if manipulator.has_hand:
             sh_group = None
@@ -94,11 +91,7 @@ def generate_fake_controllers(robot, robot_config, output_path=None, ns_=None):
             else:
                 for joint in group.joints:
                     if joint.name[-3:] != "tip":
-                        if manipulator.has_arm:
-                            if joint.name[len(manipulator.hand.prefix):] not in ["WRJ1", "WRJ2"]:
-                                output_str += "      - " + joint.name + "\n"
-                        else:
-                            output_str += "      - " + joint.name + "\n"
+                        output_str += "      - " + joint.name + "\n"
 
     # load on param server or output to file
     upload_output_params(output_str, output_path, ns_)
@@ -120,9 +113,6 @@ def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
             output_str += "    joints:\n"
             for joint in arm_yamldoc["controller_list"][0]["joints"]:
                 output_str += "     - " + manipulator.arm.prefix + joint + "\n"
-            if manipulator.has_hand and not manipulator.hand.is_lite:
-                output_str += "     - " + manipulator.hand.prefix + "WRJ2" + "\n"
-                output_str += "     - " + manipulator.hand.prefix + "WRJ1" + "\n"
 
         if manipulator.has_hand:
             sh_group = None
@@ -141,11 +131,7 @@ def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
             else:
                 for joint in group.joints:
                     if joint.name[-3:] != "tip":
-                        if manipulator.has_arm:
-                            if joint.name[len(manipulator.hand.prefix):] not in ["WRJ1", "WRJ2"]:
-                                output_str += "      - " + joint.name + "\n"
-                        else:
-                            output_str += "      - " + joint.name + "\n"
+                        output_str += "      - " + joint.name + "\n"
 
     # load on param server or output to file
     upload_output_params(output_str, output_path, ns_)
