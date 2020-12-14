@@ -388,7 +388,7 @@ class SRDFRobotGenerator(object):
                 group_name = elt.getAttribute('group')
                 if group_state_name in manipulator.arm.group_states and (group_name == manipulator.arm.main_group or
                                                                          group_name in manipulator.arm.other_groups):
-                    elt.setAttribute('name', manipulator.arm.prefix + group_state_name)
+                    elt.setAttribute('name', group_state_name)
                     if group_name == manipulator.arm.main_group:
                         elt.setAttribute('group', manipulator.arm.internal_name)
                     else:

@@ -11,9 +11,8 @@ robot:
           relative_path: /config/ur
         extra_groups_config_path: /config
         group_states:
-          - home
-          - down
-          - up
+          - ra_home
+          - ra_up
       hand:
         name: shadowhand_motor_btsp.urdf.xacro
 

@@ -13,9 +13,8 @@ robot:
           relative_path: /config/ur
         extra_groups_config_path: /config
         group_states:
-          - home
-          - down
-          - up
+          - ra_home
+          - ra_up
     left_manipulator:
       side: left
       arm:
@@ -28,8 +27,8 @@ robot:
           relative_path: /config/ur
         extra_groups_config_path: /config
         group_states:
-          - home
-          - up
+          - la_home
+          - la_up
 
 ra_sr_ur_robot_hw:
   # No hand

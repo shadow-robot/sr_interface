@@ -11,9 +11,8 @@ robot:
           relative_path: /config/ur
         extra_groups_config_path: /config
         group_states:
-          - home
-          - down
-          - up
+          - ra_home
+          - ra_up
       hand:
         name: shadowhand_motor_btsp.urdf.xacro
     left_manipulator:
@@ -28,9 +27,8 @@ robot:
           relative_path: /config/ur
         extra_groups_config_path: /config
         group_states:
-          - home
-          - down
-          - up
+          - la_home
+          - la_up
 
 ra_sr_ur_robot_hw:
   # Hand E payload
