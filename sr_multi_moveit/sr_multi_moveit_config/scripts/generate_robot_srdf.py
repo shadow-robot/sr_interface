@@ -226,6 +226,7 @@ class SRDFRobotGenerator(object):
             # Add groups and group states
             if manipulator.has_arm:
                 self.parse_arm_groups(manipulator_id, manipulator)
+                self.add_more_arm_groups(manipulator)
             if manipulator.has_hand:
                 self.parse_hand_groups(manipulator_id, manipulator)
 
@@ -408,6 +409,51 @@ class SRDFRobotGenerator(object):
                     elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
             previous = elt
             elt = next_element(previous)
+
+    def add_more_arm_groups(self, manipulator):
+        new_group = xml.dom.minidom.Document().createElement('group_state')
+        new_group.setAttribute("group", manipulator.arm.internal_name)
+        new_group.setAttribute("name", manipulator.arm.prefix + "start")
+        if manipulator.side == "right":
+            joint = xml.dom.minidom.Document().createElement(
+                'joint name="' + manipulator.arm.prefix + 'elbow_joint" value="2.0"')
+            new_group.appendChild(joint)
+            joint = xml.dom.minidom.Document().createElement(
+                'joint name="' + manipulator.arm.prefix + 'shoulder_lift_joint" value="-1.25"')
+            new_group.appendChild(joint)
+            joint = xml.dom.minidom.Document().createElement(
+                'joint name="' + manipulator.arm.prefix + 'shoulder_pan_joint" value="0.0"')
+            new_group.appendChild(joint)
+            joint = xml.dom.minidom.Document().createElement(
+                'joint name="' + manipulator.arm.prefix + 'wrist_1_joint" value="-0.733"')
+            new_group.appendChild(joint)
+            joint = xml.dom.minidom.Document().createElement(
+                'joint name="' + manipulator.arm.prefix + 'wrist_2_joint" value="1.5708"')
+            new_group.appendChild(joint)
+            joint = xml.dom.minidom.Document().createElement(
+                'joint name="' + manipulator.arm.prefix + 'wrist_3_joint" value="3.1416"')
+            new_group.appendChild(joint)
+            new_group.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
+        else:
+            joint = xml.dom.minidom.Document().createElement(
+                'joint name="' + manipulator.arm.prefix + 'elbow_joint" value="-2.0"')
+            new_group.appendChild(joint)
+            joint = xml.dom.minidom.Document().createElement(
+                'joint name="' + manipulator.arm.prefix + 'shoulder_lift_joint" value="-1.89"')
+            new_group.appendChild(joint)
+            joint = xml.dom.minidom.Document().createElement(
+                'joint name="' + manipulator.arm.prefix + 'shoulder_pan_joint" value="0.0"')
+            new_group.appendChild(joint)
+            joint = xml.dom.minidom.Document().createElement(
+                'joint name="' + manipulator.arm.prefix + 'wrist_1_joint" value="-2.4"')
+            new_group.appendChild(joint)
+            joint = xml.dom.minidom.Document().createElement(
+                'joint name="' + manipulator.arm.prefix + 'wrist_2_joint" value="-1.5708"')
+            new_group.appendChild(joint)
+            joint = xml.dom.minidom.Document().createElement(
+                'joint name="' + manipulator.arm.prefix + 'wrist_3_joint" value="3.1416"')
+            new_group.appendChild(joint)
+            new_group.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
 
     def add_bimanual_arm_groups(self, group_1, group_2, hands=True):
         new_group = xml.dom.minidom.Document().createElement('group')
