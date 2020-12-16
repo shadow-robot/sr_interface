@@ -1,0 +1,106 @@
+#!/usr/bin/python
+
+# Copyright 2019, 2020 Shadow Robot Company Ltd.
+#
+# This program is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation version 2 of the License.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program. If not, see <http://www.gnu.org/licenses/>.
+
+import os
+import rospy
+import rospkg
+from subprocess import check_output
+from sr_ur_arm_calibration_loader.sr_ur_arm_calibration_loader import SrUrLoadCalibration
+
+
+class SrRobotDescriptionExceptions(Exception):
+    pass
+
+
+class PrefixNotCorrect(SrRobotDescriptionExceptions):
+    pass
+
+
+class SrConstructRobotDescription():
+    def __init__(self):
+        self._robot_description_file = rospy.get_param("~robot_description_file")
+        CONST_ARM_TYPE = rospy.get_param("~arm_type")
+        self._side = ''
+        self._robot_description_params = {}
+        self._CONST_RA_ARM = {'prefix': 'ra', 'ip_address': '10.8.1.1', 'arm_type': CONST_ARM_TYPE}
+        self._CONST_LA_ARM = {'prefix': 'la', 'ip_address': '10.8.2.1', 'arm_type': CONST_ARM_TYPE}
+
+        if 'bimanual' in self._robot_description_file:
+            self._side = 'both'
+        else:
+            prefix = rospy.get_param("~prefix")
+            if 'rh' in prefix:
+                self._side = 'right'
+            elif 'lh' in prefix:
+                self._side = 'left'
+            else:
+                raise PrefixNotCorrect("'prefix' param not specified correctly")
+
+        self._process_parameters()
+        urdf = self._parse_xacro()
+        rospy.set_param('robot_description', urdf)
+        rospy.set_param('robot_description_ready', "true")
+
+    def _process_parameters(self):
+        node_name = rospy.get_name()
+        robot_description_param_names = [param for param in rospy.get_param_names()
+                                         if node_name in param and
+                                         'robot_description_file' not in param and
+                                         'arm_type' not in param]
+        for name in robot_description_param_names:
+            self._robot_description_params[name.rsplit('/', 1)[1]] = rospy.get_param(name)
+        kinematics_configs = self._get_kinematics_config()
+        if not 'both' == self._side:
+            self._robot_description_params['kinematics_config'] = kinematics_configs[0]
+        else:
+            self._robot_description_params['kinematics_config_right'] = kinematics_configs[0]
+            self._robot_description_params['kinematics_config_left'] = kinematics_configs[1]
+
+    def _get_kinematics_config(self):
+        kinematics_configs = []
+        if 'both' == self._side:
+            self._sr_ur_load_calibration = SrUrLoadCalibration([self._CONST_RA_ARM, self._CONST_LA_ARM])
+        elif 'right' == self._side:
+            self._sr_ur_load_calibration = SrUrLoadCalibration([self._CONST_RA_ARM])
+        elif 'left' == self._side:
+            self._sr_ur_load_calibration = SrUrLoadCalibration([self._CONST_LA_ARM])
+        arms_info = self._sr_ur_load_calibration.get_calibration_files()
+        if 'both' != self._side:
+            kinematics_configs.append(arms_info[0]['kinematics_config'])
+        else:
+            for arm in arms_info:
+                kinematics_configs.append(arm['kinematics_config'])
+        return kinematics_configs
+
+    def _parse_xacro(self):
+        xacro_commands = []
+        xacro_commands.append("xacro")
+        xacro_commands.append(self._robot_description_file)
+        for key, value in self._robot_description_params.items():
+            xacro_commands.append(key + ':=' + str(value))
+        return self._generate_urdf(xacro_commands)
+
+    def _generate_urdf(self, xacro_commands):
+        clean_commands = []
+        for xacro_command in xacro_commands:
+            clean_commands.append(xacro_command.strip('\''))
+        out = check_output(clean_commands)
+        return out
+
+
+if __name__ == "__main__":
+    rospy.init_node("sr_construct_robot_description")
+    sr_construct_robot_description = SrConstructRobotDescription()
