@@ -431,7 +431,7 @@ class SRDFRobotGenerator(object):
                 'joint name="' + manipulator.arm.prefix + 'wrist_2_joint" value="1.5708"')
             new_group.appendChild(joint)
             joint = xml.dom.minidom.Document().createElement(
-                'joint name="' + manipulator.arm.prefix + 'wrist_3_joint" value="3.1416"')
+                'joint name="' + manipulator.arm.prefix + 'wrist_3_joint" value="-3.1416"')
             new_group.appendChild(joint)
             new_group.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
         else:
