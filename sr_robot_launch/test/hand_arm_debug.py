@@ -22,6 +22,7 @@ hand_commander = ()
 arm_commander = ()
 current_value = ()
 scene_value = ()
+expected_home_angles = ()
 
 class TestHandAndArmSim(TestCase):
     """
@@ -57,7 +58,7 @@ class TestHandAndArmSim(TestCase):
             self.robot_commander = SrRobotCommander(name="left_arm_and_hand")
             self.hand_commander = SrHandCommander(name='left_hand')
             self.arm_commander = SrArmCommander(name='left_arm')
-        rospy.Subscriber('/move_group/monitored_planning_scene', PlanningScene, self.scene_data_cb)    
+        rospy.Subscriber('/move_group/monitored_planning_scene', PlanningScene, self.scene_data_cb)
 
     def joints_error_check(self, expected_joint_values, recieved_joint_values):
         expected_and_final_joint_value_diff = 0
@@ -82,6 +83,44 @@ class TestHandAndArmSim(TestCase):
             rospy.sleep(0.1)
             counter += 1
 
+    def test_home_position(self):
+        self.start_home = rospy.get_param('/test_sim/start_home')
+        start_arm_angles = self.arm_commander.get_current_state()
+        print('start angles')
+        print(start_arm_angles)
+
+        if self.arm_id == 'ra':
+            self.expected_home_angles = {'shoulder_pan_joint': 1.147, 'elbow_joint': 1.695,
+                                             'shoulder_lift_joint': -1.926, 'wrist_3_joint': 0.00,
+                                             'wrist_1_joint': -1.395, 'wrist_2_joint': -1.584, 
+                                             'wrist_3_joint': 1.830}
+        elif self.arm_id == 'la':
+            self.expected_home_angles = {'shoulder_pan_joint': 1.147, 'elbow_joint': -1.695,
+                                             'shoulder_lift_joint': -1.22, 'wrist_3_joint': 0.00,
+                                             'wrist_1_joint': -1.75, 'wrist_2_joint': 1.57, 
+                                             'wrist_3_joint': -1.830}
+
+        if self.start_home == False:
+            self.expected_home_angles = {'shoulder_pan_joint': 0.00, 'elbow_joint': 0.00,
+                                             'shoulder_lift_joint': 0.00, 'wrist_3_joint': 0.00,
+                                             'wrist_1_joint': 0.00, 'wrist_2_joint': 0.00, 
+                                             'wrist_3_joint': 0.00}
+        elif self.start_home == True:
+            self.expected_home_angles = self.expected_home_angles
+
+        home_angles_no_id = self.expected_home_angles
+        expected_start_angles = {}
+        for key, value in home_angles_no_id.items():
+            expected_start_angles[self.arm_id + '_' + key] = value
+
+        print('expected angles')
+        print(expected_start_angles)
+
+        expected_and_actual_home_angles = self.joints_error_check(expected_start_angles, start_arm_angles)
+
+        self.assertAlmostEqual(expected_and_actual_home_angles, 0, delta=0.2)
+
+
     def test_scene(self):
         scene = ()
         self.scene = rospy.get_param('/test_sim/scene')
@@ -91,8 +130,6 @@ class TestHandAndArmSim(TestCase):
         #using assertAlmostEqual because assertEqual tries to call an addTpeEqualityFunc() here
         elif self.scene == False:
             self.assertAlmostEqual(len(self.scene_value), 0, 0)
-
-#    def test_home_position(self):
 
     def test_hand(self):
         hand_joints_target = {
@@ -198,11 +235,13 @@ if __name__ == '__main__':
      rospy.init_node("hand_and_arm_test", anonymous=True)
      test = TestHandAndArmSim()
      rospy.sleep(10)
+     test.test_home_position()
+     rospy.sleep(10)
      test.test_scene()
      rospy.sleep(10)
      test.test_arm()
-    #  rospy.sleep(10)
-    #  test.test_hand()
+     rospy.sleep(10)
+     test.test_hand()
      rospy.sleep(10)
      test.test_hand_and_arm()
      
