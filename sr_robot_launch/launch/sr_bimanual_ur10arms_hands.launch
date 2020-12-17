@@ -91,7 +91,7 @@
     <arg name="lh_mapping_path" value="$(arg lh_mapping_path)"/>
     <arg name="eth_port" value="$(arg eth_port)"/>
     <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
-    <arg name="hand_type" value="$(arg hand_type"/>
+    <arg name="hand_type" value="$(arg hand_type)"/>
     <arg name="arm_1_z" value="$(arg arm_1_z)"/>
     <arg name="arm_2_z" value="$(arg arm_2_z)"/>
     <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
