@@ -163,7 +163,9 @@
       </group>
       <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller.yaml"/>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running $(arg arm_prefix)_trajectory_controller --stopped $(arg arm_prefix)_compliant_trajectory_controller"/>
+            args="--wait-for=/$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running $(arg arm_prefix)_trajectory_controller"/>
+      <node name="compliant_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+            args="--wait-for=/$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running --stopped $(arg arm_prefix)_compliant_trajectory_controller"/>
     </group>
     <!-- Position mode -->
     <group if="$(arg arm_position)">
