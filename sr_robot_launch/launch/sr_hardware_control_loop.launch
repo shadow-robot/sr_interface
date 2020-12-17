@@ -39,7 +39,7 @@
   <arg name="hand_trajectory" default="true"/>
 
   <!-- ARMS CONFIG-->
-  <arg name="arm_compliance_control" default="false"/>
+  <arg name="arm_compliance_control" default="true"/>
   <arg if="$(arg arm_compliance_control)" name="trajectory_controller_type" default="$(arg arm_prefix)_compliant_trajectory_controller"/>
   <arg unless="$(arg arm_compliance_control)" name="trajectory_controller_type" default="$(arg arm_prefix)_trajectory_controller"/>
   <arg name="initial_z" if="$(arg arm)" default="0.7551"/>
