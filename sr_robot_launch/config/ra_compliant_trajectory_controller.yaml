@@ -1,6 +1,6 @@
 # type: "velocity_controllers/ComplianceController"
 #   type: "velocity_controllers/JointTrajectoryController"
-ra_trajectory_controller:
+ra_compliant_trajectory_controller:
   type: "velocity_controllers/ComplianceController"
   joints:
     - ra_shoulder_pan_joint
