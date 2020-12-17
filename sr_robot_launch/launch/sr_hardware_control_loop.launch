@@ -142,6 +142,8 @@
     robot_hardware:
       - unique_robot_hw
   </rosparam>
+  
+  <include if="$(arg arm_compliance_control)" file="$(find wrench_to_joint_vel_pub)/launch/ur_compliance.launch">
 
   <!-- These will be loaded if hand is false so UR10 with box will load instead. -->
   <group unless="$(arg hand)">
@@ -159,7 +161,7 @@
       <group if="$(arg hand_ctrl)">
         <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg trajectory_controller_type).yaml"/>
       </group>
-      <group unless="$(arg hand_ctrl)"/>
+      <group unless="$(arg hand_ctrl)">
         <rosparam unless="$(arg arm_compliance_control)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller.yaml"/>
         <rosparam if="$(arg arm_compliance_control)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_compliant_trajectory_controller.yaml"/>
         <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
