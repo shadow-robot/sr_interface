@@ -121,7 +121,7 @@ planner_configs:
     dense_delta_fraction: 0.001  # delta fraction for interface detection. default: 0.001
     max_failures: 5000  # maximum consecutive failure limit. default: 5000
 wrist:
-  default_planner_config: BiTRRT
+  default_planner_config: RRTConnect
   planner_configs:
     - SBL
     - EST
@@ -149,7 +149,7 @@ wrist:
   projection_evaluator: joints(WRJ2,WRJ1)
   longest_valid_segment_fraction: 0.05
 first_finger:
-  default_planner_config: BiTRRT
+  default_planner_config: RRTConnect
   planner_configs:
     - SBL
     - EST
@@ -177,7 +177,7 @@ first_finger:
   projection_evaluator: joints(FFJ4,FFJ3)
   longest_valid_segment_fraction: 0.01
 middle_finger:
-  default_planner_config: BiTRRT
+  default_planner_config: RRTConnect
   planner_configs:
     - SBL
     - EST
@@ -205,7 +205,7 @@ middle_finger:
   projection_evaluator: joints(MFJ4,MFJ3)
   longest_valid_segment_fraction: 0.01
 ring_finger:
-  default_planner_config: BiTRRT
+  default_planner_config: RRTConnect
   planner_configs:
     - SBL
     - EST
@@ -233,7 +233,7 @@ ring_finger:
   projection_evaluator: joints(RFJ4,RFJ3)
   longest_valid_segment_fraction: 0.01
 little_finger:
-  default_planner_config: BiTRRT
+  default_planner_config: RRTConnect
   planner_configs:
     - SBL
     - EST
@@ -261,7 +261,7 @@ little_finger:
   projection_evaluator: joints(LFJ5,LFJ4)
   longest_valid_segment_fraction: 0.01
 thumb:
-  default_planner_config: BiTRRT
+  default_planner_config: RRTConnect
   planner_configs:
     - SBL
     - EST
@@ -289,7 +289,7 @@ thumb:
   projection_evaluator: joints(THJ5,THJ4)
   longest_valid_segment_fraction: 0.01
 fingers:
-  default_planner_config: BiTRRT
+  default_planner_config: RRTConnect
   planner_configs:
     - SBL
     - EST
@@ -317,7 +317,7 @@ fingers:
   projection_evaluator: joints(FFJ4,FFJ3)
   longest_valid_segment_fraction: 0.002
 hand:
-  default_planner_config: BiTRRT
+  default_planner_config: RRTConnect
   planner_configs:
     - SBL
     - EST
