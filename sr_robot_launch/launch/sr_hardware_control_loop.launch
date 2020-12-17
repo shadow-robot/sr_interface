@@ -40,8 +40,6 @@
 
   <!-- ARMS CONFIG-->
   <arg name="arm_compliance_control" default="true"/>
-  <arg if="$(arg arm_compliance_control)" name="trajectory_controller_type" default="$(arg arm_prefix)_compliant_trajectory_controller"/>
-  <arg unless="$(arg arm_compliance_control)" name="trajectory_controller_type" default="$(arg arm_prefix)_trajectory_controller"/>
   <arg name="initial_z" if="$(arg arm)" default="0.7551"/>
   <arg name="initial_z" unless="$(arg arm)" default="0.0"/>
   <arg name="arm_x_separation" default="0.0"/>
@@ -161,11 +159,12 @@
       <group if="$(arg hand_ctrl)">
         <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg trajectory_controller_type).yaml"/>
       </group>
-      <rosparam unless="$(arg hand_ctrl)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller.yaml"/>
-      <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running $(arg arm_prefix)_trajectory_controller"/>
-      <node name="compliant_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-            args="--wait-for=/$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running --stopped $(arg arm_prefix)_compliant_trajectory_controller"/>
+      <group unless="$(arg hand_ctrl)"/>
+        <rosparam unless="$(arg arm_compliance_control)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller.yaml"/>
+        <rosparam if="$(arg arm_compliance_control)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_compliant_trajectory_controller.yaml"/>
+        <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+              args="--wait-for=/$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running $(arg arm_prefix)_trajectory_controller"/>
+      </group>
     </group>
     <!-- Position mode -->
     <group if="$(arg arm_position)">

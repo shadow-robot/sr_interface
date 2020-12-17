@@ -1,14 +1,15 @@
-# type: "velocity_controllers/ComplianceController"
-#   type: "velocity_controllers/JointTrajectoryController"
-ra_compliant_trajectory_controller:
+
+joints: &robot_joints
+  - ra_shoulder_pan_joint
+  - ra_shoulder_lift_joint
+  - ra_elbow_joint
+  - ra_wrist_1_joint
+  - ra_wrist_2_joint
+  - ra_wrist_3_joint
+
+ra_trajectory_controller:
   type: "velocity_controllers/ComplianceController"
-  joints:
-    - ra_shoulder_pan_joint
-    - ra_shoulder_lift_joint
-    - ra_elbow_joint
-    - ra_wrist_1_joint
-    - ra_wrist_2_joint
-    - ra_wrist_3_joint
+  joints: *robot_joints
   compliance_command_timeout: 1.5
   constraints:
       goal_time: 6.0
