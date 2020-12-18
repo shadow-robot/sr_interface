@@ -16,10 +16,10 @@
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
   <!-- Set the scene file -->
-  <arg name="scene_file" default="$(find sr_description_common)/scenes/bimanual_demo_space_small.scene"/>
+  <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large_bimanual.scene"/>
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhands_and_arms.world" unless="$(arg scene)"/>
-  <arg name="world" default="$(find sr_description_common)/worlds/bimanual_demo_space_small.world" if="$(arg scene)"/>
+  <arg name="world" default="$(find sr_description_common)/worlds/demo_space_large_bimanual.world" if="$(arg scene)"/>
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="true"/>
   <!-- Definition of "home" position, in joint-angle pairs -->
@@ -36,7 +36,7 @@
   <arg name="hands" default="both"/>
   <!-- Specify if the system has arms or is only a hand bimanual system -->
   <arg name="arms" default="true"/>
-  <arg name="robot_model" default="ur10"/>
+  <arg name="robot_model" default="ur10e"/>
   <arg name="robot_description" unless="$(eval arg('hands') == 'none')" default="'$(find sr_multi_description)/urdf/bimanual_srhand_plus_bt_sp_biotacs_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_description" if="$(eval arg('hands') == 'none')" default="'$(find sr_multi_description)/urdf/bimanual_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_config_file" unless="$(eval arg('hands') == 'none')" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
@@ -55,11 +55,13 @@
   <!-- The control mode PWM (true) or torque (false) -->
   <!-- Set to true by default for now as torque control is not available yet -->
   <arg name="pwm_control" default="true"/>
+  <!-- Set the hand type here: hand_e_plus, hand_e, hand_lite, hand_extra_lite -->
+  <arg name="hand_type" default="hand_e_plus"/>
 
   <!-- ARMS CONFIG-->
-  <arg name="arm_1_z" default="0.7551" if="$(arg scene)"/>
+  <arg name="arm_1_z" default="0.7521" if="$(arg scene)"/>
   <arg name="arm_1_z" default="0.01" unless="$(arg scene)"/>
-  <arg name="arm_2_z" default="0.7551" if="$(arg scene)"/>
+  <arg name="arm_2_z" default="0.7521" if="$(arg scene)"/>
   <arg name="arm_2_z" default="0.01" unless="$(arg scene)"/>
   <arg name="arm_x_separation" default="0.0"/>
   <arg name="arm_y_separation" default="1.5"/>
@@ -71,16 +73,8 @@
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn group position controllers for the arms -->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
-  <!-- When cyberglove is used set "include_wrist_in_arm_controller:=false" as the wrist joints are part of the arm by default-->
-  <!-- This will include the wrist joints in the hand controller and exclude them from the arm one -->
-  <arg name="include_wrist_in_arm_controller" default="true"/>
   <arg name="right_arm_speed_scale" default="0.5"/>
   <arg name="left_arm_speed_scale" default="0.5"/>
-
-  <arg unless="$(eval hands == 'none')" name="arm_payload_mass" default="4.55"/>
-  <arg unless="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
-  <arg if="$(eval hands == 'none')" name="arm_payload_mass" default="0.0"/>
-  <arg if="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
 
   <include file="$(find sr_robot_launch)/launch/sr_ur_arms_hands.launch">
     <arg name="sim" value="$(arg sim)"/>
@@ -97,20 +91,17 @@
     <arg name="lh_mapping_path" value="$(arg lh_mapping_path)"/>
     <arg name="eth_port" value="$(arg eth_port)"/>
     <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
-
+    <arg name="hand_type" value="$(arg hand_type"/>
     <arg name="arm_1_z" value="$(arg arm_1_z)"/>
     <arg name="arm_2_z" value="$(arg arm_2_z)"/>
     <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
     <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
     <arg name="arm_robot_hw_1" value="$(arg arm_robot_hw_1)"/>
     <arg name="arm_robot_hw_2" value="$(arg arm_robot_hw_2)"/>
-    <arg name="include_wrist_in_arm_controller" value="$(arg include_wrist_in_arm_controller)"/>
     <arg name="arm_trajectory" value="$(arg arm_trajectory)"/>
     <arg name="arm_position" value="$(arg arm_position)"/>
     <arg name="right_arm_speed_scale" value="$(arg right_arm_speed_scale)"/>
     <arg name="left_arm_speed_scale" value="$(arg left_arm_speed_scale)"/>
-    <arg name="arm_payload_mass" value="$(arg arm_payload_mass)"/>
-    <arg name="arm_payload_cog" value="$(arg arm_payload_cog)"/>
     <arg name="hands" value="$(arg hands)"/>
     <arg name="robot_description" value="$(arg robot_description)"/>
     <arg name="robot_config_file" value="$(arg robot_config_file)"/>

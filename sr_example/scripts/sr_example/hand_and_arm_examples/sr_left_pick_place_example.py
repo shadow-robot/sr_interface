@@ -13,10 +13,22 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-# This example demonstrates how to move the right hand and arm through a sequence of joint goals that
+# This example demonstrates how to move the left hand and arm through a sequence of joint goals that
 # comprise a simple 'pick and place' demo.
 # PLEASE NOTE: move_to_joint_value_target_unsafe is used in this script, so collision checks
 # between the hand and arm are not made!
+
+# For more information, please see:
+# https://dexterous-hand.readthedocs.io/en/latest/user_guide/2_software_description.html#robot-commander
+
+# roslaunch commands used with this script to launch the robot:
+# real robot with a NUC (or a separate computer with an RT kernel):
+#     roslaunch sr_left_ur10arm_hand.launch external_control_loop:=true sim:=false scene:=true start_home:=true
+# simulated robot:
+#     roslaunch sr_left_ur10arm_hand.launch sim:=true scene:=true start_home:=true
+
+# PLEASE NOTE: No scene is used in this script and fast movements of the robot. Use on real robot at your own risk.
+# It is recommended to run this script in simulation first.
 
 import rospy
 from sr_robot_commander.sr_arm_commander import SrArmCommander
@@ -28,7 +40,6 @@ hand_commander = SrHandCommander(name="left_hand", prefix="lh")
 arm_commander = SrArmCommander(name="left_arm", set_ground=False)
 
 # Specify goals for hand and arm
-
 hand_joint_goals_1 = {'lh_RFJ2': 1.59, 'lh_RFJ3': 1.49, 'lh_RFJ1': 1.47, 'lh_RFJ4': -0.01, 'lh_LFJ4': 0.02,
                       'lh_LFJ5': 0.061, 'lh_LFJ1': 1.41, 'lh_LFJ2': 1.60, 'lh_LFJ3': 1.49, 'lh_THJ2': 0.64,
                       'lh_THJ3': -0.088, 'lh_THJ1': 0.43, 'lh_THJ4': 0.49, 'lh_THJ5': 0.35, 'lh_FFJ4': -0.02,
@@ -143,3 +154,14 @@ arm_commander.move_to_joint_value_target_unsafe(joint_goals, 3.0, False)
 joint_goals = hand_joint_goals_5
 rospy.loginfo("Moving hand to joint states\n" + str(joint_goals) + "\n")
 hand_commander.move_to_joint_value_target_unsafe(joint_goals, 3.0, True)
+
+# Moving to a stored named target, stored targets can be viewed in MoveIt in the planning tab
+named_target = "la_home"
+print("Moving arm to named target " + named_target)
+arm_commander.move_to_named_target(named_target)
+
+rospy.sleep(2.0)
+
+# Moving to a stored named target, stored targets can be viewed in MoveIt in the planning tab
+rospy.loginfo("Moving hand to joint state: open")
+hand_commander.move_to_named_target("open")
