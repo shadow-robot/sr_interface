@@ -158,7 +158,7 @@
   </rosparam>
   
   <!--include if="$(arg arm_compliance_control)" file="$(find wrench_to_joint_vel_pub)/launch/ur_compliance.launch"/-->
-  <node if="$(arg arm_compliance_control)" name="conditional_delayed_rostool_wrench_to_joint_vel_pub" pkg="sr_utilities_common" type="conditional_delayed_rostool_2.py" output="screen">
+  <node if="$(arg arm_compliance_control)" name="conditional_delayed_rostool_wrench_to_joint_vel_pub" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
     <param name="package_name" value="wrench_to_joint_vel_pub" />
     <param name="executable_name" value="ur_compliance.launch" />
     <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
