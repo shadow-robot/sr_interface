@@ -17,8 +17,9 @@
   <arg name="robot_description" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="'$(find sr_description)/robots/bimanual_shadowhand_motor_plus.urdf.xacro'"/>
   <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
 
-  <!-- setting this parameter to true allows to load the robot_description from a lower level -->
-  <arg name="load_robot_description_at_lower_level" default="false"/>
+  <!-- If the arm is available the automatic calibration script will load the robot_description,
+       otherwise the robot description is loaded at lower level -->
+  <arg name="load_robot_description_at_lower_level" default="$(eval not arm_ctrl)"/>
 
   <!-- HANDS CONFIG-->
   <arg name="rh_serial" default="1370"/>

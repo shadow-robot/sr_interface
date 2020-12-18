@@ -9,10 +9,14 @@
   <arg name="side_letter" value="$(eval side[0])"/>
   <arg name="hand_id" value="$(arg side_letter)h"/>
   <arg name="arm_prefix" value="$(arg side_letter)a"/>
-  <arg name="load_robot_description_at_lower_level" default="false"/>
 
   <!-- Whether there is an arm. -->
   <arg name="arm" default="true"/>
+  
+  <!-- If the arm is available the automatic calibration script will load the robot_description,
+       otherwise the robot description is loaded at lower level -->
+  <arg name="load_robot_description_at_lower_level" value="$(eval not arm)"/>
+
   <!-- Whether there is a hand. -->
   <arg name="hand" default="true"/>
   <!-- Whether to run arm controllers. -->
