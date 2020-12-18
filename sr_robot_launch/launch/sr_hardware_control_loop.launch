@@ -143,7 +143,7 @@
       - unique_robot_hw
   </rosparam>
   
-  <include if="$(arg arm_compliance_control)" file="$(find wrench_to_joint_vel_pub)/launch/ur_compliance.launch">
+  <include if="$(arg arm_compliance_control)" file="$(find wrench_to_joint_vel_pub)/launch/ur_compliance.launch"/>
 
   <!-- These will be loaded if hand is false so UR10 with box will load instead. -->
   <group unless="$(arg hand)">
