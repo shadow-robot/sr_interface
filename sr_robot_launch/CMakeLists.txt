@@ -179,7 +179,7 @@ if (CATKIN_ENABLE_TESTING)
 #    add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_lite hand_id:=lh)
 #    add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_extra_lite hand_id:=rh)
 #    add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_extra_lite hand_id:=lh)
-    add_rostest(test/test_hand_and_arm.test ARGS launhc_file:=sr_right_ur5arm_hand.launch)
+    add_rostest(test/test_hand_and_arm_sim.test)
 
 endif ()
 
