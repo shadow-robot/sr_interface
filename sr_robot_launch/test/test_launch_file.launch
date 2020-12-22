@@ -4,12 +4,12 @@
      <param name="/test_sim/launch_file" value="$( arg launch_file)"/>
      <arg name="scene" default="false"/>
      <param name="/test_sim/scene" value="$( arg scene)"/>
-     <arg name="start_home" default="false"/>
+     <arg name="start_home" default="true"/>
      <param name="/test_sim/start_home" value="$( arg start_home)"/>
 
 <include file="$(find sr_robot_launch)/launch/$(arg launch_file)">
      <arg name="sim" value="true"/>
-     <arg name="gui" value="false"/>
+     <arg name="gui" value="true"/>
      <arg name="scene" value="$( arg scene)"/>
      <arg name="start_home" value="$( arg start_home)"/>
 </include>
