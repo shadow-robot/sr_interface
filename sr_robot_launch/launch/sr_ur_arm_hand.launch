@@ -23,7 +23,7 @@
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="false"/>
   <!-- home_angles must be input at the launch -->
-  <arg if="$(arg start_home)" name="home_angles"/>
+  <arg name="home_angles" default=""/>
   <!-- Set this to true if you run the hardware loop on a remote computer -->
   <arg name="external_control_loop" default="false"/>
   <!-- The robot state publisher publishing frequency  -->
