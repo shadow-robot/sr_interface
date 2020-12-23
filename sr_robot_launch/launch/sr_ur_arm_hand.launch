@@ -17,13 +17,13 @@
   <!-- Set whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
   <!-- Set the scene file -->
-  <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large_unimanual.scene"/>
+  <arg name="scene_file" default="$(find sr_description_common)/scenes/demo_space_large_bimanual.scene"/>
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhands_and_arms.world"/>
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="false"/>
   <!-- home_angles must be input at the launch -->
-  <arg if="$(arg start_home)" name="home_angles"/>
+  <arg name="home_angles" default=""/>
   <!-- Set this to true if you run the hardware loop on a remote computer -->
   <arg name="external_control_loop" default="false"/>
   <!-- The robot state publisher publishing frequency  -->
