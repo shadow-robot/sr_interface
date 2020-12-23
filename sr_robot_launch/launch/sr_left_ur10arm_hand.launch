@@ -51,7 +51,9 @@
   <arg name="initial_z" default="0.7521" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
   <arg name="arm_x_separation" default="0.0"/>
-  <arg name="arm_y_separation" default="0.0"/>
+  <arg name="arm_y_separation" default="1.5" if="$(arg scene)"/>
+  <arg name="arm_y_separation" default="0.1" unless="$(arg scene)"/>
+
   <!-- You can select ur10 or ur10e -->
   <arg name="robot_model" default="ur10e"/>
   <arg name="arm_robot_hw" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/left_ur_arm_robot_hw.yaml"/>
