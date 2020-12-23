@@ -48,6 +48,8 @@ class TestHandAndArmSim(TestCase):
         elif self.hand_id == 'lh':
             self.arm_id = 'la'
             self.robot_commander = SrRobotCommander(name="left_arm_and_hand")
+            self.robot_commander.set_max_velocity_scaling_factor(0.1)
+            self.robot_commander.set_max_acceleration_scaling_factor(0.1)
             self.hand_commander = SrHandCommander(name='left_hand')
             self.arm_commander = SrArmCommander(name='left_arm', set_ground=False)
 
@@ -212,6 +214,7 @@ class TestHandAndArmSim(TestCase):
         for key, value in hand_joints_target_no_id.items():
              hand_joints_target[self.hand_id + '_' + key] = value
 
+        #change arm angles to not point so high up - left collapses under gravity/collides
         arm_joints_target = {'shoulder_pan_joint': 0.00, 'elbow_joint': 0.00,
                                    'shoulder_lift_joint': -0.58, 'wrist_3_joint': 0.00,
                                    'shoulder_lift_joint': -1.25, 'wrist_1_joint': -0.733,
@@ -225,9 +228,11 @@ class TestHandAndArmSim(TestCase):
         hand_and_arm_joints_target = dict(hand_joints_target.items() + arm_joints_target.items())
         print('hand and arm targets')
         print(hand_and_arm_joints_target)
+        self.robot_commander.move_to_joint_value_target_unsafe(hand_and_arm_joints_target, 10.0, True)
 
-        self.robot_commander.move_to_joint_value_target_unsafe(hand_and_arm_joints_target, 6.0, True)
+
         rospy.sleep(5)
+
         final_hand_and_arm_joint_values = self.robot_commander.get_current_state()
         print('hand and arm actual')
         print(final_hand_and_arm_joint_values)
@@ -249,6 +254,7 @@ if __name__ == '__main__':
     # rospy.sleep(10)
     # test.test_hand()
     # rospy.sleep(10)
-     test.test_arm()
-     rospy.sleep(10)
+    #  test.test_hand()
+    #  test.test_arm()
+    #  rospy.sleep(10)
      test.test_hand_and_arm()
