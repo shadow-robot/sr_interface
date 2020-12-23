@@ -97,8 +97,13 @@ class TestHandAndArmSim(TestCase):
                                              'shoulder_lift_joint': -1.926, 'wrist_3_joint': 0.00,
                                              'wrist_1_joint': -1.395, 'wrist_2_joint': -1.584, 
                                              'wrist_3_joint': 1.830}
+        # elif self.arm_id == 'la':
+        #     self.expected_home_angles = {'shoulder_pan_joint': 1.147, 'elbow_joint': -1.695,
+        #                                      'shoulder_lift_joint': -1.22, 'wrist_3_joint': 0.00,
+        #                                      'wrist_1_joint': -1.75, 'wrist_2_joint': 1.57, 
+        #                                      'wrist_3_joint': -1.830}
         elif self.arm_id == 'la':
-            self.expected_home_angles = {'shoulder_pan_joint': 1.147, 'elbow_joint': -1.695,
+            self.expected_home_angles = {'shoulder_pan_joint': 0.6, 'elbow_joint': 0.3,
                                              'shoulder_lift_joint': -1.22, 'wrist_3_joint': 0.00,
                                              'wrist_1_joint': -1.75, 'wrist_2_joint': 1.57, 
                                              'wrist_3_joint': -1.830}
@@ -208,7 +213,6 @@ class TestHandAndArmSim(TestCase):
              hand_joints_target[self.hand_id + '_' + key] = value
 
         arm_joints_target = {'shoulder_pan_joint': 0.00, 'elbow_joint': 0.00,
-                                   'shoulder_pan_joint': 0.00, 'elbow_joint': 0.0,
                                    'shoulder_lift_joint': -0.58, 'wrist_3_joint': 0.00,
                                    'shoulder_lift_joint': -1.25, 'wrist_1_joint': -0.733,
                                    'wrist_2_joint': 1.5708, 'wrist_3_joint': 0.00}
@@ -225,6 +229,8 @@ class TestHandAndArmSim(TestCase):
         self.robot_commander.move_to_joint_value_target_unsafe(hand_and_arm_joints_target, 6.0, True)
         rospy.sleep(5)
         final_hand_and_arm_joint_values = self.robot_commander.get_current_state()
+        print('hand and arm actual')
+        print(final_hand_and_arm_joint_values)
 
         joint_value_diff_arm_and_hand = self.joints_error_check(hand_and_arm_joints_target, final_hand_and_arm_joint_values)
 
@@ -238,10 +244,11 @@ if __name__ == '__main__':
      rospy.init_node("hand_and_arm_test", anonymous=True)
      test = TestHandAndArmSim()
      rospy.sleep(10)
-     #test.test_home_position()
-    #  test.test_scene()
-    #  rospy.sleep(10)
-    #  test.test_hand()
-    #  rospy.sleep(10)
-    #  test.test_arm()
+    # test.test_home_position()
+    # test.test_scene()
+    # rospy.sleep(10)
+    # test.test_hand()
+    # rospy.sleep(10)
+     test.test_arm()
+     rospy.sleep(10)
      test.test_hand_and_arm()
