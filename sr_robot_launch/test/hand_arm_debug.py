@@ -60,10 +60,6 @@ class TestHandAndArmSim(TestCase):
             self.arm_commander = SrArmCommander(name='left_arm')
         rospy.Subscriber('/move_group/monitored_planning_scene', PlanningScene, self.scene_data_cb)
 
-        self.hand_type = rospy.get_param('~hand_type')
-        print('hand type from param server')
-        print(self.hand_type)
-
     def joints_error_check(self, expected_joint_values, recieved_joint_values):
         expected_and_final_joint_value_diff = 0
         for expected_value, recieved_value in zip(sorted(expected_joint_values), sorted(recieved_joint_values)):
@@ -239,14 +235,14 @@ if __name__ == '__main__':
      rospy.init_node("hand_and_arm_test", anonymous=True)
      test = TestHandAndArmSim()
      rospy.sleep(10)
-     test.test_home_position()
+    #  test.test_home_position()
     #  rospy.sleep(10)
-    #  test.test_scene()
-    #  rospy.sleep(10)
-    #  test.test_arm()
-    #  rospy.sleep(10)
-    #  test.test_hand()
-    #  rospy.sleep(10)
-    #  test.test_hand_and_arm()
+     test.test_scene()
+     rospy.sleep(10)
+     test.test_arm()
+     rospy.sleep(10)
+     test.test_hand()
+     rospy.sleep(10)
+     test.test_hand_and_arm()
      
 
