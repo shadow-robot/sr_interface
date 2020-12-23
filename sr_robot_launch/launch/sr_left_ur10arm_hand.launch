@@ -52,7 +52,7 @@
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
   <arg name="arm_x_separation" default="0.0"/>
   <arg name="arm_y_separation" default="1.5" if="$(arg scene)"/>
-  <arg name="arm_y_separation" default="0.1" unless="$(arg scene)"/>
+  <arg name="arm_y_separation" default="0.0" unless="$(arg scene)"/>
 
   <!-- You can select ur10 or ur10e -->
   <arg name="robot_model" default="ur10e"/>
