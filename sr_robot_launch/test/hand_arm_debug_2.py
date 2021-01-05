@@ -48,8 +48,6 @@ class TestHandAndArmSim(TestCase):
         elif self.hand_id == 'lh':
             self.arm_id = 'la'
             self.robot_commander = SrRobotCommander(name="left_arm_and_hand")
-            self.robot_commander.set_max_velocity_scaling_factor(0.1)
-            self.robot_commander.set_max_acceleration_scaling_factor(0.1)
             self.hand_commander = SrHandCommander(name='left_hand')
             self.arm_commander = SrArmCommander(name='left_arm', set_ground=False)
 
@@ -75,48 +73,43 @@ class TestHandAndArmSim(TestCase):
         scene_data = ()
         self.scene_data = result.world.collision_objects
 
-    def wait_for_topic_with_scene(self, timeout=80):
+    def wait_for_topic_with_scene(self, timeout=50):
         counter = 0
         while counter < timeout:
             current_value = self.scene_data
+            print(self.scene_data)
             if len(current_value) != 0:
-                return current_value
-            else:
-                current_value == 0
                 return current_value
             rospy.sleep(0.1)
             counter += 1
-    
-    # change this to get home angles from the param
+
     def test_home_position(self):
-        self.start_home = rospy.get_param('/test_sim/start_home')
+        # self.start_home = rospy.get_param('/test_sim/start_home')
         start_arm_angles = self.arm_commander.get_current_state()
         print('start angles')
         print(start_arm_angles)
 
         if self.arm_id == 'ra':
-            self.expected_home_angles = {'shoulder_pan_joint': 1.147, 'elbow_joint': 1.695,
-                                             'shoulder_lift_joint': -1.926, 'wrist_3_joint': 0.00,
-                                             'wrist_1_joint': -1.395, 'wrist_2_joint': -1.584, 
-                                             'wrist_3_joint': 1.830}
-        # elif self.arm_id == 'la':
-        #     self.expected_home_angles = {'shoulder_pan_joint': 1.147, 'elbow_joint': -1.695,
-        #                                      'shoulder_lift_joint': -1.22, 'wrist_3_joint': 0.00,
-        #                                      'wrist_1_joint': -1.75, 'wrist_2_joint': 1.57, 
-        #                                      'wrist_3_joint': -1.830}
-        elif self.arm_id == 'la':
-            self.expected_home_angles = {'shoulder_pan_joint': 0.6, 'elbow_joint': 0.3,
-                                             'shoulder_lift_joint': -1.22, 'wrist_3_joint': 0.00,
-                                             'wrist_1_joint': -1.75, 'wrist_2_joint': 1.57, 
-                                             'wrist_3_joint': -1.830}
+            #right arm home
+            self.expected_home_angles = {'shoulder_pan_joint': 0.00, 'elbow_joint': 2.0,
+                                             'shoulder_lift_joint': -1.25,'wrist_1_joint': -0.733, 
+                                             'wrist_2_joint': 1.578, 'wrist_3_joint': -3.1416}
 
-        if self.start_home == False:
-            self.expected_home_angles = {'shoulder_pan_joint': 0.00, 'elbow_joint': 0.00,
-                                             'shoulder_lift_joint': 0.00, 'wrist_3_joint': 0.00,
-                                             'wrist_1_joint': 0.00, 'wrist_2_joint': 0.00, 
-                                             'wrist_3_joint': 0.00}
-        elif self.start_home == True:
-            self.expected_home_angles = self.expected_home_angles
+        elif self.arm_id == 'la':
+            #left arm home
+            self.expected_home_angles = {'shoulder_pan_joint': 0.0, 'elbow_joint': -2.0,
+                                             'shoulder_lift_joint': -1.89,'wrist_1_joint': -2.4, 
+                                             'wrist_2_joint': -1.5708, 'wrist_3_joint': 3.1416}
+
+        # use if the start_home param is relevant. We don't use this for the UR10/5 specific launch files.
+
+        # if self.start_home == False:
+        #     self.expected_home_angles = {'shoulder_pan_joint': 0.00, 'elbow_joint': 0.00,
+        #                                      'shoulder_lift_joint': 0.00, 'wrist_3_joint': 0.00,
+        #                                      'wrist_1_joint': 0.00, 'wrist_2_joint': 0.00, 
+        #                                      'wrist_3_joint': 0.00}
+        # elif self.start_home == True:
+        #     self.expected_home_angles = self.expected_home_angles
 
         home_angles_no_id = self.expected_home_angles
         expected_start_angles = {}
@@ -134,11 +127,12 @@ class TestHandAndArmSim(TestCase):
         scene = ()
         self.scene = rospy.get_param('/test_sim/scene')
         self.scene_value = self.wait_for_topic_with_scene()
+        print('scene value from topic')
+        print(self.scene_value)
         if self.scene == True:
             self.assertNotEqual(len(self.scene_value), 0)
-       #using assertAlmostEqual because assertEqual tries to call an addTpeEqualityFunc() here
         elif self.scene == False:
-            self.assertAlmostEqual(len(self.scene_value), 0, 0)
+            self.assertTrue(self.scene_value == None)
         print('scene check complete')
         
     def test_hand(self):
@@ -153,9 +147,11 @@ class TestHandAndArmSim(TestCase):
                             'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
                             'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
                             'RFJ1': 0.0, 'RFJ2': 0.0, 'RFJ3': 0.0, 'RFJ4': 0.0},
+
+         'hand_extra_lite': {'THJ1': 0.52, 'THJ2': 0.61, 'THJ4': 1.20, 'THJ5': 0.17,
+                             'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
+                             'RFJ1': 0.0, 'RFJ2': 0.0, 'RFJ3': 0.0, 'RFJ4': 0.0}
                     }
-        #add goals for hand_extra_lite
-        #check goals for hand_lite
 
         hand_joints_target_no_id = hand_joints_target[self.hand_type]
         hand_joints_target = {}
@@ -173,11 +169,17 @@ class TestHandAndArmSim(TestCase):
         self.assertAlmostEqual(expected_and_final_joint_value_diff_hand, 0, delta=0.2)
     
     def test_arm(self):
-        arm_joints_target = {'shoulder_pan_joint': 0.00, 'elbow_joint': 0.00,
-                                  'shoulder_pan_joint': 0.00, 'elbow_joint': 0.00,
-                                  'shoulder_lift_joint': 0.00, 'wrist_3_joint': 0.00,
-                                  'shoulder_lift_joint': 0.00, 'wrist_1_joint': 0.00,
-                                  'wrist_2_joint': 0.00, 'wrist_3_joint': 0.00}
+
+        if self.arm_id == 'la':
+            #left arm near home
+            arm_joints_target = {'shoulder_pan_joint': 0.00, 'elbow_joint': -1.43,
+                                'shoulder_lift_joint': -1.82, 'wrist_1_joint': 3.24,
+                                'wrist_2_joint': -1.57, 'wrist_3_joint': 3.13}
+        elif self.arm_id == 'ra':
+            #right arm near home
+            arm_joints_target = {'shoulder_pan_joint': 0.00, 'elbow_joint': 1.43,
+                                'shoulder_lift_joint': -1.27, 'wrist_1_joint': -0.1,
+                                'wrist_2_joint': 1.57, 'wrist_3_joint': 3.13}
 
         arm_joints_target_no_id = arm_joints_target
         arm_joints_target = {}
@@ -207,6 +209,9 @@ class TestHandAndArmSim(TestCase):
                            'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
                            'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
                            'RFJ1': 0.0, 'RFJ2': 0.0, 'RFJ3': 0.0, 'RFJ4': 0.0},
+            'hand_extra_lite': {'THJ1': 0.52, 'THJ2': 0.61, 'THJ4': 1.20, 'THJ5': 0.17,
+                           'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
+                           'RFJ1': 0.0, 'RFJ2': 0.0, 'RFJ3': 0.0, 'RFJ4': 0.0}
                  }
 
         hand_joints_target_no_id = hand_joints_target[self.hand_type]
@@ -214,11 +219,17 @@ class TestHandAndArmSim(TestCase):
         for key, value in hand_joints_target_no_id.items():
              hand_joints_target[self.hand_id + '_' + key] = value
 
-        #change arm angles to not point so high up - left collapses under gravity/collides
-        arm_joints_target = {'shoulder_pan_joint': 0.00, 'elbow_joint': 0.00,
-                                   'shoulder_lift_joint': -0.58, 'wrist_3_joint': 0.00,
-                                   'shoulder_lift_joint': -1.25, 'wrist_1_joint': -0.733,
-                                   'wrist_2_joint': 1.5708, 'wrist_3_joint': 0.00}
+        if self.arm_id == 'ra':
+            #right arm home
+            arm_joints_target = {'shoulder_pan_joint': 0.00, 'elbow_joint': 2.0,
+                                             'shoulder_lift_joint': -1.25,'wrist_1_joint': -0.733, 
+                                             'wrist_2_joint': 1.578, 'wrist_3_joint': -3.1416}
+
+        elif self.arm_id == 'la':
+            #left arm home
+            arm_joints_target = {'shoulder_pan_joint': 0.0, 'elbow_joint': -2.0,
+                                             'shoulder_lift_joint': -1.89,'wrist_1_joint': -2.4, 
+                                             'wrist_2_joint': -1.5708, 'wrist_3_joint': 3.1416}
 
         arm_joints_target_no_id = arm_joints_target
         arm_joints_target = {}
@@ -229,7 +240,6 @@ class TestHandAndArmSim(TestCase):
         print('hand and arm targets')
         print(hand_and_arm_joints_target)
         self.robot_commander.move_to_joint_value_target_unsafe(hand_and_arm_joints_target, 10.0, True)
-
 
         rospy.sleep(5)
 
@@ -248,13 +258,13 @@ if __name__ == '__main__':
      PKG = "sr_robot_launch"
      rospy.init_node("hand_and_arm_test", anonymous=True)
      test = TestHandAndArmSim()
-     rospy.sleep(10)
-    # test.test_home_position()
-    # test.test_scene()
-    # rospy.sleep(10)
-    # test.test_hand()
-    # rospy.sleep(10)
-    #  test.test_hand()
-    #  test.test_arm()
     #  rospy.sleep(10)
+    #  test.test_home_position()
+     rospy.sleep(10)
+     test.test_scene()
+     rospy.sleep(10)
+     test.test_hand()
+     rospy.sleep(10)
+     test.test_arm()
+     rospy.sleep(10)
      test.test_hand_and_arm()
