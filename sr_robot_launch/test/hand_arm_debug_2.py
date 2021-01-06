@@ -206,7 +206,7 @@ class TestHandAndArmSim(TestCase):
                              'LFJ1': 0.0, 'LFJ2': 0.0, 'LFJ3': 0.0, 'LFJ4': 0.0,
                              'LFJ5': 0.0, 'WRJ1': 0.0, 'WRJ2': 0.0},
             'hand_lite': {'THJ1': 0.52, 'THJ2': 0.61, 'THJ4': 1.20, 'THJ5': 0.17,
-                           'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
+                           'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 0.0, 'FFJ4': 0.0,
                            'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
                            'RFJ1': 0.0, 'RFJ2': 0.0, 'RFJ3': 0.0, 'RFJ4': 0.0},
             'hand_extra_lite': {'THJ1': 0.52, 'THJ2': 0.61, 'THJ4': 1.20, 'THJ5': 0.17,
@@ -228,7 +228,7 @@ class TestHandAndArmSim(TestCase):
         elif self.arm_id == 'la':
             #left arm home
             arm_joints_target = {'shoulder_pan_joint': 0.0, 'elbow_joint': -2.0,
-                                             'shoulder_lift_joint': -1.89,'wrist_1_joint': -2.4, 
+                                             'shoulder_lift_joint': -1.89,'wrist_1_joint': 3.8, 
                                              'wrist_2_joint': -1.5708, 'wrist_3_joint': 3.1416}
 
         arm_joints_target_no_id = arm_joints_target

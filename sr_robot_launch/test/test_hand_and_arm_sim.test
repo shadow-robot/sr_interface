@@ -1,21 +1,21 @@
 <launch>
      <!-- Find launch file-->
-     <arg name="launch_file" default="sr_right_ur10arm_hand.launch"/>
-     <param name="/test_sim/launch_file" value="$( arg launch_file)"/>
      <!-- <arg name="scene" default="false"/> -->
      <!-- <param name="/test_sim/scene" value="$( arg scene)"/> -->
-     <!-- <arg name="start_home" default="false"/> -->
-     <!-- <param name="/test_sim/start_home" value="$( arg start_home)"/> -->
 
-<include file="$(find sr_robot_launch)/launch/$(arg launch_file)">
+     <!-- <arg name="hand_type" default="hand_e"/> -->
+     <!-- <param name="/test_sim/hand_type" value="$( arg hand_type)"/> -->
+
+<include file="$(find sr_robot_launch)/launch/sr_right_ur10arm_hand.launch">
      <arg name="sim" value="true"/>
-     <arg name="gui" value="true"/>
+     <arg name="gui" value="false"/>
      <!-- <arg name="scene" value="$( arg scene)"/> -->
-     <!-- <arg name="start_home" value="$( arg start_home)"/> -->
 </include>
 
 <!-- Test script -->
   <test test-name="test_hand_and_arm_sim" pkg="sr_robot_launch" type="test_hand_and_arm_sim.py" time-limit="300.0">
+  <param name="/test_sim/hand_type" value="$( arg hand_type)"/>
+  <param name="/test_sim/scene" value="$( arg scene)"/>
   </test>
 
 </launch>
