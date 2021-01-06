@@ -40,7 +40,7 @@ class SrConstructRobotDescription():
         self._right_arm_ip = '10.8.1.1'
         self._left_arm_ip = '10.8.2.1'
 
-        self.wait_for_arm_ip_params(TIMEOUT_WAIT_FOR_PARAMS_IN_SECS)
+        self._wait_for_arm_ip_params(TIMEOUT_WAIT_FOR_PARAMS_IN_SECS)
 
         self._right_arm_params = {'prefix': 'ra', 'ip_address': self._right_arm_ip, 'arm_type': CONST_ARM_TYPE}
         self._left_arm_params = {'prefix': 'la', 'ip_address': self._left_arm_ip, 'arm_type': CONST_ARM_TYPE}
@@ -61,7 +61,7 @@ class SrConstructRobotDescription():
         rospy.set_param('robot_description', urdf)
         rospy.set_param('robot_description_ready', "true")
 
-    def wait_for_arm_ip_params(self, timeout_in_secs):
+    def _wait_for_arm_ip_params(self, timeout_in_secs):
         start_time = rospy.get_time()
         while not rospy.has_param("/la_sr_ur_robot_hw/robot_ip") and not rospy.has_param("/ra_sr_ur_robot_hw/robot_ip"):
             if (rospy.get_time() - start_time > timeout_in_secs):
