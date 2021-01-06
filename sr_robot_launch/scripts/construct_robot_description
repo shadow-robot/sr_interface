@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-
 import os
 import rospy
 import rospkg
@@ -36,7 +35,7 @@ class SrConstructRobotDescription():
         CONST_ARM_TYPE = rospy.get_param("~arm_type")
         self._side = ''
         self._robot_description_params = {}
-        TIMEOUT_WAIT_FOR_PARAMS_IN_SECS = 1.0
+        TIMEOUT_WAIT_FOR_PARAMS_IN_SECS = 60.0
 
         self._right_arm_ip = '10.8.1.1'
         self._left_arm_ip = '10.8.2.1'
