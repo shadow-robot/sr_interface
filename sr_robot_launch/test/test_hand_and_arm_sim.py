@@ -55,18 +55,18 @@ class TestHandAndArmSim(TestCase):
 
         rospy.wait_for_message('/move_group/status', GoalStatusArray)
 
-        if self.hand_id == 'rh':
-            self.arm_id = 'ra'
-            self.robot_commander = SrRobotCommander(name="right_arm_and_hand")
-            self.hand_commander = SrHandCommander(name='right_hand')
-            self.arm_commander = SrArmCommander(name='right_arm', set_ground=False)
-        elif self.hand_id == 'lh':
-            self.arm_id = 'la'
-            self.robot_commander = SrRobotCommander(name="left_arm_and_hand")
-            self.hand_commander = SrHandCommander(name='left_hand')
-            self.arm_commander = SrArmCommander(name='left_arm', set_ground=False)
+        if cls.hand_id == 'rh':
+            cls.arm_id = 'ra'
+            cls.robot_commander = SrRobotCommander(name="right_arm_and_hand")
+            cls.hand_commander = SrHandCommander(name='right_hand')
+            cls.arm_commander = SrArmCommander(name='right_arm', set_ground=False)
+        elif cls.hand_id == 'lh':
+            cls.arm_id = 'la'
+            cls.robot_commander = SrRobotCommander(name="left_arm_and_hand")
+            cls.hand_commander = SrHandCommander(name='left_hand')
+            cls.arm_commander = SrArmCommander(name='left_arm', set_ground=False)
 
-        rospy.Subscriber('/move_group/monitored_planning_scene', PlanningScene, self.scene_data_cb)
+        #rospy.Subscriber('/move_group/monitored_planning_scene', PlanningScene, self.scene_data_cb)
 
         rospy.sleep(10)
 
@@ -114,13 +114,9 @@ class TestHandAndArmSim(TestCase):
         print(expected_and_final_joint_value_diff_hand)
         self.assertAlmostEqual(expected_and_final_joint_value_diff_hand, 0, delta=0.2)
 
-# if __name__ == "__main__":
-#     PKGNAME = 'sr_robot_launch'
-#     NODENAME = 'test_hand_and_arm_sim'
-
-#     rospy.init_node(NODENAME, anonymous=True)
-#     rostest.rosrun(PKGNAME, NODENAME, TestHandAndArmSim)
-
 if __name__ == "__main__":
-    rospy.init_node('test_hand_and_arm_sim', anonymous=True)
-    rostest.rosrun(PKG, "test_hand_and_arm_sim", TestHandAndArmSim)
+    PKGNAME = 'sr_robot_launch'
+    NODENAME = 'test_hand_and_arm_sim'
+
+    rospy.init_node(NODENAME, anonymous=True)
+    rostest.rosrun(PKGNAME, NODENAME, TestHandAndArmSim)
