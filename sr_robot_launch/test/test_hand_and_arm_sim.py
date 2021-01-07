@@ -25,21 +25,6 @@ from rospy import get_rostime
 from actionlib_msgs.msg import GoalStatusArray
 from unittest import TestCase
 
-hand_type = ()
-launch_file = ()
-arm_id = ()
-hand_id = ()
-robot_commander = ()
-hand_commander = ()
-arm_commander = ()
-current_value = ()
-scene_value = ()
-expected_home_angles = ()
-hand_side = ()
-hand_side_from_param = ()
-robot_name = ()
-
-PKG = "sr_robot_launch"
 
 class TestHandAndArmSim(TestCase):
     """
@@ -47,13 +32,12 @@ class TestHandAndArmSim(TestCase):
     """
     @classmethod
     def setUpClass(cls):
-        cls.hand_type = rospy.get_param('test_sim/hand_type')
-        cls.scene = rospy.get_param('/test_sim/scene')
+        rospy.wait_for_message('/move_group/status', GoalStatusArray)
+        cls.hand_type = rospy.get_param('~test_hand_and_arm_sim/hand_type')
+        cls.scene = rospy.get_param('~test_hand_and_arm_sim/scene')
 
         #for phantom hand tests use hand finder
         cls.hand_id = rospy.get_param('/hand/mapping/1082')
-
-        rospy.wait_for_message('/move_group/status', GoalStatusArray)
 
         if cls.hand_id == 'rh':
             cls.arm_id = 'ra'
