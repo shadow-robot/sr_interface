@@ -50,7 +50,7 @@ class SrStateSaverUnsafe(object):
         elif hand_or_arm == 'hand':
             if side != "bimanual":
                 prefix = "rh" if side == "right" else "lh"
-                self._commander = SrHandCommander()
+                self._commander = SrHandCommander(side + '_hand')
             else:
                 self._commander = SrRobotCommander('two_hands')
         elif hand_or_arm == 'both':
