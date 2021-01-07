@@ -23,13 +23,13 @@
   </joint>
 
   <!-- Box representation of hand -->
-  <!--xacro:include filename="$(find sr_box_ur10_moveit_config)/config/hand_box.xacro" />
-  <xacro:hand_box name="hand_box" width="0.22" depth="0.17" height="0.24"/-->
+  <xacro:include filename="$(find sr_box_ur10_moveit_config)/config/hand_box.xacro" />
+  <xacro:hand_box name="hand_box" width="0.22" depth="0.17" height="0.24"/>
 
   <!-- Join arm and hand -->
-  <!--joint name="ra_arm_to_hand" type="fixed">
+  <joint name="ra_arm_to_hand" type="fixed">
     <parent link="ra_ee_link"/>
     <child link="hand_base_attach"/>
     <origin rpy="1.570796325 3.14159265 1.570796325" xyz="0.012 0.0 0.0"/>
-  </joint-->
+  </joint>
 </robot>

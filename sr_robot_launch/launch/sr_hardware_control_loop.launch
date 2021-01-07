@@ -18,7 +18,7 @@
   <arg name="load_robot_description_at_lower_level" value="$(eval not arm)"/>
 
   <!-- Whether there is a hand. -->
-  <arg name="hand" default="false"/>
+  <arg name="hand" default="true"/>
   <!-- Whether to run arm controllers. -->
   <arg name="arm_ctrl" default="$(arg arm)"/>
   <!-- Whether to run hand controllers. -->
@@ -67,6 +67,8 @@
   <arg name="kinematics_config" if="$(eval robot_model[-1] == 'e')" default="$(find ur_e_description)/config/$(arg robot_model)_default.yaml"/>
   <arg name="kinematics_config" if="$(eval not robot_model[-1] == 'e')" default="$(find ur_description)/config/$(arg robot_model)_default.yaml"/>
   <arg name="urcap_program_name" default="external_ctrl.urp"/>
+  <arg if="$(arg arm_compliance_control)" name="trajectory_controller_config" default="$(arg arm_prefix)_compliant_trajectory_controller.yaml"/>
+  <arg unless="$(arg arm_compliance_control)" name="trajectory_controller_config" default="$(arg arm_prefix)_trajectory_controller.yaml"/>
   <arg name="load_robot_description_command" default="xacro $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation) kinematics_config:=$(arg kinematics_config) transmission_hw_interface:=$(arg arm_transmission_interface)"/>
 
   <node pkg="rosservice" type="rosservice" name="set_speed_scale" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg arm_speed_scale)'"/>
@@ -156,8 +158,7 @@
     robot_hardware:
       - unique_robot_hw
   </rosparam>
-  
-  <!--include if="$(arg arm_compliance_control)" file="$(find wrench_to_joint_vel_pub)/launch/ur_compliance.launch"/-->
+
   <node if="$(arg arm_compliance_control)" name="conditional_delayed_rostool_wrench_to_joint_vel_pub" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
     <param name="package_name" value="wrench_to_joint_vel_pub" />
     <param name="executable_name" value="ur_compliance.launch" />
@@ -173,22 +174,14 @@
     <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
     <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
 
-    <!--param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config) transmission_hw_interface:=$(arg arm_transmission_interface)"/-->
-
   </group>
   <!-- These will be loaded if arm and hand are enabled -->
   <!-- Trajectory mode -->
   <group if="$(arg arm_ctrl)">
     <group if="$(arg arm_trajectory)">
-      <group if="$(arg hand_ctrl)">
-        <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg trajectory_controller_type).yaml"/>
-      </group>
-      <group unless="$(arg hand_ctrl)">
-        <rosparam unless="$(arg arm_compliance_control)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller.yaml"/>
-        <rosparam if="$(arg arm_compliance_control)" command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_compliant_trajectory_controller.yaml"/>
-        <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-              args="--wait-for=/$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running $(arg arm_prefix)_trajectory_controller"/>
-      </group>
+      <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg trajectory_controller_config)"/>
+      <node unless="$(arg hand_ctrl)" name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+            args="--wait-for=/$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running $(arg arm_prefix)_trajectory_controller"/>
     </group>
     <!-- Position mode -->
     <group if="$(arg arm_position)">

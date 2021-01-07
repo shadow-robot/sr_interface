@@ -14,11 +14,11 @@ ra_sr_ur_robot_hw:
   
   # for sending robot programs
   # aurora (https://github.com/shadow-robot/aurora) uses sed to replace this IP with the user-defined IP
-  robot_ip: 192.168.1.1
+  robot_ip: 10.8.1.1
   
   # for the server that moves the robot
   # aurora (https://github.com/shadow-robot/aurora) uses sed to replace this IP with the user-defined IP
-  control_pc_ip_address: 192.168.1.100
+  control_pc_ip_address: 10.8.1.100
   
   input_recipe_file: /home/user/projects/shadow_robot/base/src/Universal_Robots_ROS_Driver/ur_robot_driver/resources/rtde_input_recipe.txt
   
