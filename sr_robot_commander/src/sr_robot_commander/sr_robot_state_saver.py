@@ -27,7 +27,7 @@ from controller_manager_msgs.srv import ListControllers
 from control_msgs.msg import JointTrajectoryControllerState
 from threading import Lock
 
-#### NEED TO TEST SAVE_TARGET = TRUE AND ADD TWO_HANDS PLANNING GROUP TO MOVEIT ####
+
 class SrStateSaverUnsafe(object):
     def __init__(self, name, hand_or_arm="both", side="right", save_target=False):
 
@@ -90,14 +90,14 @@ class SrStateSaverUnsafe(object):
             if self._save_bimanual:
                 if self._save_hand:
                     self.r_hand_subscriber = rospy.Subscriber("/ra_trajectory_controller/state",
-                                                            JointTrajectoryControllerState, self._target_cb)
+                                                              JointTrajectoryControllerState, self._target_cb)
                     self.l_hand_subscriber = rospy.Subscriber("/la_trajectory_controller/state",
-                                                            JointTrajectoryControllerState, self._target_cb)
+                                                              JointTrajectoryControllerState, self._target_cb)
                 if self._save_arm:                                         
                     self.r_arm_subscriber = rospy.Subscriber("/ra_trajectory_controller/state",
-                                                            JointTrajectoryControllerState, self._target_cb)
+                                                             JointTrajectoryControllerState, self._target_cb)
                     self.l_arm_subscriber = rospy.Subscriber("/la_trajectory_controller/state",
-                                                            JointTrajectoryControllerState, self._target_cb)
+                                                             JointTrajectoryControllerState, self._target_cb)
 
         current_dict = {}
         rospy.loginfo("Getting current")
