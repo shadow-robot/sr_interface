@@ -481,9 +481,9 @@ class SRDFRobotGenerator(object):
     def add_bimanual_hand_groups(self, group_1, group_2):
         new_group = xml.dom.minidom.Document().createElement('group')
         new_group.setAttribute("name", "two_hands")
-        arm_group_1 = xml.dom.minidom.Document().createElement('group name="' + group_1 + '"')
+        hand_group_1 = xml.dom.minidom.Document().createElement('group name="' + group_1 + '"')
         new_group.appendChild(arm_group_1)
-        arm_group_2 = xml.dom.minidom.Document().createElement('group name="' + group_2 + '"')
+        hand_group_2 = xml.dom.minidom.Document().createElement('group name="' + group_2 + '"')
         new_group.appendChild(arm_group_2)
         new_group.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
 
