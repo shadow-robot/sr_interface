@@ -93,7 +93,7 @@ class SrStateSaverUnsafe(object):
                                                               JointTrajectoryControllerState, self._target_cb)
                     self.l_hand_subscriber = rospy.Subscriber("/la_trajectory_controller/state",
                                                               JointTrajectoryControllerState, self._target_cb)
-                if self._save_arm:                                         
+                if self._save_arm:
                     self.r_arm_subscriber = rospy.Subscriber("/ra_trajectory_controller/state",
                                                              JointTrajectoryControllerState, self._target_cb)
                     self.l_arm_subscriber = rospy.Subscriber("/la_trajectory_controller/state",
