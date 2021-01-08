@@ -47,7 +47,7 @@ class SrStateSaverUnsafe(object):
                 prefix = "ra" if side == "right" else "la"
                 self._commander = SrArmCommander(side + '_arm')
                 if not self._commander.arm_found():
-                    double_error.append("Group "side + "_arm not found.")
+                    double_error.append("Group " + side + "_arm not found.")
             else:
                 self._commander = SrRobotCommander('two_arms')
         elif hand_or_arm == 'hand':
