@@ -41,10 +41,13 @@ class SrStateSaverUnsafe(object):
             raise ValueError("Cannot save with empty name.")
 
         prefix = ""
+        double_error = []
         if hand_or_arm == "arm":
             if side != "bimanual":
                 prefix = "ra" if side == "right" else "la"
                 self._commander = SrArmCommander(side + '_arm')
+                if not self._commander.arm_found():
+                    double_error.append("Group "side + "_arm not found.")
             else:
                 self._commander = SrRobotCommander('two_arms')
         elif hand_or_arm == 'hand':
@@ -58,20 +61,9 @@ class SrStateSaverUnsafe(object):
                 self._commander = SrRobotCommander(side + '_arm_and_hand')
             else:
                 self._commander = SrRobotCommander('two_arms_and_hands')
-        else:
-            double_error = []
-            try:
-                self._commander = SrHandCommander()
-            except Exception as e:
-                double_error.append(str(e))
 
-            self._arm_commander = SrArmCommander()
-
-            if not self._arm_commander.arm_found():
-                double_error.append("'No arm found.'")
-
-            if len(double_error) != 0:
-                raise ValueError(" ".join(double_error))
+        if len(double_error) != 0:
+            raise ValueError(" ".join(double_error))
 
         self._save_hand = (hand_or_arm == "hand" or hand_or_arm == "both")
         self._save_arm = (hand_or_arm == "arm" or hand_or_arm == "both")
