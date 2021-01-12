@@ -338,7 +338,7 @@ class SrRobotCommander(object):
             try:
                 self._move_group_commander.set_joint_value_target(js)
             except Exception as e:
-                print(e)
+                rospy.loginfo(e)
         else:
             rospy.logerr("Unknown named state '%s'..." % name)
             return False
