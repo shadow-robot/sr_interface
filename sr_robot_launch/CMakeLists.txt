@@ -171,7 +171,7 @@ install(DIRECTORY config/
 if (CATKIN_ENABLE_TESTING)
     find_package(rostest REQUIRED)
 #    add_rostest(test/test_headless_gazebo.test)
-#   add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_e hand_id:=rh)
+#    add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_e hand_id:=rh)
 #    add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_e hand_id:=lh)
 #    add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_e_plus hand_id:=rh)
 #    add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_e_plus hand_id:=lh)
@@ -179,14 +179,30 @@ if (CATKIN_ENABLE_TESTING)
 #    add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_lite hand_id:=lh)
 #    add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_extra_lite hand_id:=rh)
 #    add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_extra_lite hand_id:=lh)
-    add_rostest(test/test_ur10_right.test)
-    add_rostest(test/test_ur10_right.test ARGS scene:=true)
-    add_rostest(test/test_ur10_left.test)
-    add_rostest(test/test_ur10_left.test ARGS scene:=true)
-    add_rostest(test/test_ur5_right.test)
-    add_rostest(test/test_ur5_right.test ARGS scene:=true)
-    add_rostest(test/test_ur5_left.test)
-    add_rostest(test/test_ur5_left.test ARGS scene:=true)
+#    add_rostest(test/test_ur10_right.test)
+#    add_rostest(test/test_ur10_right.test ARGS scene:=true)
+#    add_rostest(test/test_ur10_left.test)
+#    add_rostest(test/test_ur10_left.test ARGS scene:=true)
+#    add_rostest(test/test_ur5_right.test)
+#    add_rostest(test/test_ur5_right.test ARGS scene:=true)
+#    add_rostest(test/test_ur5_left.test)
+#    add_rostest(test/test_ur5_left.test ARGS scene:=true)
+
+#FAILS BECAUSE FILE NAM TOO LONG FOR ARG
+    add_rostest(test/test_hand_and_arm_generic.test
+                ARGS
+                robot_description:=/home/user/projects/shadow_robot/base/src/sr_interface/sr_multi_description/urdf/left_srhand_lite_ur5e.urdf.xacro
+                robot_config_file:=/home/user/projects/shadow_robot/base/src/sr_interface/sr_multi_moveit/sr_multi_moveit_config/config/robot_configs/left_sh_lite_ur5e.yaml
+                side:=left
+                hand_type:=hand_lite
+                scene:=false)
+    add_rostest(test/test_hand_and_arm_generic.test
+                ARGS
+                robot_description:=/home/user/projects/shadow_robot/base/src/sr_interface/sr_multi_description/urdf/left_srhand_lite_ur5e.urdf.xacro
+                robot_config_file:=/home/user/projects/shadow_robot/base/src/sr_interface/sr_multi_moveit/sr_multi_moveit_config/config/robot_configs/left_sh_lite_ur5e.yaml
+                side:=left
+                hand_type:=hand_lite
+                scene:=true)
 
 endif ()
 

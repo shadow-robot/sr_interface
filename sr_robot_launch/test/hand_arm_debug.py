@@ -34,9 +34,20 @@ class TestHandAndArmSim(TestCase):
     def __init__(self):
         self.hand_type = rospy.get_param('test_sim/hand_type')
         self.scene = rospy.get_param('/test_sim/scene')
-
+        
         #for phantom hand tests use hand finder
-        self.hand_id = rospy.get_param('/hand/mapping/1082')
+
+        #ur-specific launch files do not accept 'side' param as it is already set
+        try:
+            self.side = rospy.get_param('/test_sim/side')
+            if self.side == 'right':
+                self.hand_id = 'rh'
+            elif self.side == 'left':
+                self.hand_id = 'lh'
+        except:
+            rospy.loginfo("No side param for this test type")
+            self.hand_id = rospy.get_param('/hand/mapping/1082')
+        
 
         rospy.wait_for_message('/move_group/status', GoalStatusArray)
 
@@ -258,13 +269,13 @@ if __name__ == '__main__':
      PKG = "sr_robot_launch"
      rospy.init_node("hand_and_arm_test", anonymous=True)
      test = TestHandAndArmSim()
+    #  rospy.sleep(10)
+    #  test.test_home_position()
      rospy.sleep(10)
-     test.test_home_position()
-    #  rospy.sleep(10)
-    #  test.test_scene()
-    #  rospy.sleep(10)
-    #  test.test_hand()
-    #  rospy.sleep(10)
-    #  test.test_arm()
-    #  rospy.sleep(10)
-    #  test.test_hand_and_arm()
+     test.test_scene()
+     rospy.sleep(10)
+     test.test_hand()
+     rospy.sleep(10)
+     test.test_arm()
+     rospy.sleep(10)
+     test.test_hand_and_arm()
