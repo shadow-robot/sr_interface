@@ -335,7 +335,12 @@ class SrRobotCommander(object):
             for n, this_name in enumerate(joints):
                 if this_name in active_names:
                     js[this_name] = positions[n]
-            self._move_group_commander.set_joint_value_target(js)
+            rospy.loginfo("state to move: \n")
+            rospy.loginfo(js)
+            try:
+                self._move_group_commander.set_joint_value_target(js)
+            except Exception as e:
+                print(e)
         else:
             rospy.logerr("Unknown named state '%s'..." % name)
             return False
