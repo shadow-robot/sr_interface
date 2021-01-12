@@ -41,7 +41,7 @@ class SrConstructRobotDescription():
         left_arm_ip = '10.8.2.1'
 
         if (self._arm_ip_params_loaded_before_timeout(TIMEOUT_IN_SECS)):
-            right_arm_ip, left_arm_ip = self._get_arm_ip_params()
+            right_arm_ip, left_arm_ip = self._get_arm_ip_params(right_arm_ip, left_arm_ip)
         else:
             rospy.logwarn("No arm ip param was found on param server, using the following default arm ips:\n \
                            right arm ip: {} - left arm ip: {}".format(right_arm_ip, left_arm_ip))
@@ -73,12 +73,12 @@ class SrConstructRobotDescription():
                 return False
         return True
 
-    def _get_arm_ip_params(self):
-        if rospy.has_param("/la_sr_ur_robot_hw/robot_ip"):
-            left_arm_ip = rospy.get_param("/la_sr_ur_robot_hw/robot_ip")
+    def _get_arm_ip_params(self, right_arm_ip, left_arm_ip):
         if rospy.has_param("/ra_sr_ur_robot_hw/robot_ip"):
             right_arm_ip = rospy.get_param("/ra_sr_ur_robot_hw/robot_ip")
-        return left_arm_ip, right_arm_ip
+        if rospy.has_param("/la_sr_ur_robot_hw/robot_ip"):
+            left_arm_ip = rospy.get_param("/la_sr_ur_robot_hw/robot_ip")
+        return right_arm_ip, left_arm_ip
 
     def _process_parameters(self):
         node_name = rospy.get_name()
