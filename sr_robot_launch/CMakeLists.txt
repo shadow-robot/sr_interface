@@ -187,22 +187,9 @@ if (CATKIN_ENABLE_TESTING)
 #    add_rostest(test/test_ur5_right.test ARGS scene:=true)
 #    add_rostest(test/test_ur5_left.test)
 #    add_rostest(test/test_ur5_left.test ARGS scene:=true)
-
-#FAILS BECAUSE FILE NAM TOO LONG FOR ARG
-    add_rostest(test/test_hand_and_arm_generic.test
-                ARGS
-                robot_description:=/home/user/projects/shadow_robot/base/src/sr_interface/sr_multi_description/urdf/left_srhand_lite_ur5e.urdf.xacro
-                robot_config_file:=/home/user/projects/shadow_robot/base/src/sr_interface/sr_multi_moveit/sr_multi_moveit_config/config/robot_configs/left_sh_lite_ur5e.yaml
-                side:=left
-                hand_type:=hand_lite
-                scene:=false)
-    add_rostest(test/test_hand_and_arm_generic.test
-                ARGS
-                robot_description:=/home/user/projects/shadow_robot/base/src/sr_interface/sr_multi_description/urdf/left_srhand_lite_ur5e.urdf.xacro
-                robot_config_file:=/home/user/projects/shadow_robot/base/src/sr_interface/sr_multi_moveit/sr_multi_moveit_config/config/robot_configs/left_sh_lite_ur5e.yaml
-                side:=left
-                hand_type:=hand_lite
-                scene:=true)
+# FAILS BECAUSE FILE NAME TOO LONG FOR ARG
+    add_rostest(test/test_hand_and_arm_generic.test ARGS robot_description:=left_srhand_lite_ur5e.urdf.xacro robot_config_file:=left_sh_lite_ur5e.yaml side:=left hand_type:=hand_lite scene:=false)
+    add_rostest(test/test_hand_and_arm_generic.test ARGS robot_description:=left_srhand_lite_ur5e.urdf.xacro robot_config_file:=left_sh_lite_ur5e.yaml side:=left hand_type:=hand_lite scene:=true)
 
 endif ()
 
