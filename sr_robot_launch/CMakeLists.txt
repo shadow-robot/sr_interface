@@ -188,8 +188,8 @@ if (CATKIN_ENABLE_TESTING)
 #    add_rostest(test/test_ur5_left.test)
 #    add_rostest(test/test_ur5_left.test ARGS scene:=true)
 # FAILS BECAUSE FILE NAME TOO LONG FOR ARG
-    add_rostest(test/test_hand_and_arm_generic.test ARGS robot_description:=left_srhand_lite_ur5e.urdf.xacro robot_config_file:=left_sh_lite_ur5e.yaml side:=left hand_type:=hand_lite scene:=false)
-    add_rostest(test/test_hand_and_arm_generic.test ARGS robot_description:=left_srhand_lite_ur5e.urdf.xacro robot_config_file:=left_sh_lite_ur5e.yaml side:=left hand_type:=hand_lite scene:=true)
+    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=left_srhand_lite_ur5e.urdf.xacro robot_config_file:=left_sh_lite_ur5e.yaml side:=left hand_type:=hand_lite)
+    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=left_srhand_lite_ur5e.urdf.xacro robot_config_file:=left_sh_lite_ur5e.yaml side:=left hand_type:=hand_lite robot_model:=ur5e)
 
 endif ()
 
