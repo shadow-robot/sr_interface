@@ -64,6 +64,9 @@
   <!-- ROBOT CONFIG-->
   <arg name="robot_name" default="ursrbox"/>
 
+  <!-- The prefix used by the robot_state_publisher -->
+  <arg name="tf_prefix" default="" />
+
   <!-- Logging -->
   <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch"/>
 
@@ -97,9 +100,13 @@
     <node if="$(arg arm_position)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="$(arg arm_prefix)_group_position_controller"/>
 
     <!-- Robot state publisher -->
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)"/>
-      <param name="tf_prefix" type="string" value=""/>
+    <node name="conditional_delayed_rostool_robot_state_publisher" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
+      <param name="package_name" value="robot_state_publisher" />
+      <param name="executable_name" value="robot_state_publisher" />
+      <rosparam param="params_list">[/robot_description]</rosparam>
+      <param name="launch_args_list" value="
+      publish_frequency=$(arg robot_state_pub_frequency)
+      tf_prefix=$(arg tf_prefix)"/>
     </node>
 
     <!-- Set scene for robot - restrains movement -->
@@ -132,10 +139,16 @@
       </include>
     </group>
 
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)"/>
-      <param name="tf_prefix" type="string" value="" />
+    <!-- Robot state publisher -->
+    <node name="conditional_delayed_rostool_robot_state_publisher" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
+      <param name="package_name" value="robot_state_publisher" />
+      <param name="executable_name" value="robot_state_publisher" />
+      <rosparam param="params_list">[/robot_description]</rosparam>
+      <param name="launch_args_list" value="
+      publish_frequency=$(arg robot_state_pub_frequency)
+      tf_prefix=$(arg tf_prefix)"/>
     </node>
+
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->
     <group if="$(arg scene)">
       <node name="conditional_delayed_rostool_arm_scene" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
