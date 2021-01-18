@@ -9,7 +9,7 @@
     <joint name="world_joint" type="fixed">
         <parent link="world"/>
         <child link="la_base_link"/>
-        <origin xyz="0.0 0.0 $(arg initial_z)" rpy="0.0 0.0 {pi}"/>
+        <origin xyz="0.0 0.0 $(arg initial_z)" rpy="0.0 0.0 ${pi}"/>
     </joint>
 
     <xacro:arg name="kinematics_config" default="$(find ur_description)/config/ur5_default.yaml"/>
