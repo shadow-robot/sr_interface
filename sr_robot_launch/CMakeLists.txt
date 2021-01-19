@@ -171,6 +171,8 @@ install(DIRECTORY config/
 if (CATKIN_ENABLE_TESTING)
     find_package(rostest REQUIRED)
 #    add_rostest(test/test_headless_gazebo.test)
+
+#HAND TESTS
 #    add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_e hand_id:=rh)
 #    add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_e hand_id:=lh)
 #    add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_e_plus hand_id:=rh)
@@ -179,6 +181,8 @@ if (CATKIN_ENABLE_TESTING)
 #    add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_lite hand_id:=lh)
 #    add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_extra_lite hand_id:=rh)
 #    add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_extra_lite hand_id:=lh)
+
+#HAND AND ARM TESTS - SPECIFIC LAUNCH FILES
 #    add_rostest(test/test_ur10_right.test)
 #    add_rostest(test/test_ur10_right.test ARGS scene:=true)
 #    add_rostest(test/test_ur10_left.test)
@@ -187,6 +191,8 @@ if (CATKIN_ENABLE_TESTING)
 #    add_rostest(test/test_ur5_right.test ARGS scene:=true)
 #    add_rostest(test/test_ur5_left.test)
 #    add_rostest(test/test_ur5_left.test ARGS scene:=true)
+
+#HAND AND ARM TESTS - GENERIC LAUNCH FILE
 
 #    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=left_srhand_lite_ur5e.urdf.xacro robot_config_file:=left_sh_lite_ur5e.yaml side:=left hand_type:=hand_lite)
 #    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=left_srhand_lite_ur5e.urdf.xacro robot_config_file:=left_sh_lite_ur5e.yaml side:=left hand_type:=hand_lite robot_model:=ur5e)
@@ -200,7 +206,7 @@ if (CATKIN_ENABLE_TESTING)
 #    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=left_srhand_ur10e.urdf.xacro robot_config_file:=left_sh_ur10e.yaml side:=left hand_type:=hand_e)
 #    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=left_srhand_ur10e.urdf.xacro robot_config_file:=left_sh_ur10e.yaml side:=left hand_type:=hand_e robot_model:=ur10e)
 
-#XACRO ALL SCREWED UP
+#FAILS WITH SCENE - LAUNCHES IN COLLISION
 #    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=left_srhand_ur5.urdf.xacro robot_config_file:=left_sh_ur5.yaml side:=left hand_type:=hand_e)
 #    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=left_srhand_ur5.urdf.xacro robot_config_file:=left_sh_ur5.yaml side:=left hand_type:=hand_e robot_model:=ur5)
 
@@ -213,8 +219,32 @@ if (CATKIN_ENABLE_TESTING)
 #    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_lite_ur5e.urdf.xacro robot_config_file:=right_sh_lite_ur5e.yaml side:=right hand_type:=hand_lite)
 #    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_lite_ur5e.urdf.xacro robot_config_file:=right_sh_lite_ur5e.yaml side:=right hand_type:=hand_lite robot_model:=ur5e)
 
-    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_stand_ur10.urdf.xacro robot_config_file:=right_sh_ur10.yaml side:=right hand_type:=hand_e)
-    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_stand_ur10.urdf.xacro robot_config_file:=right_sh_ur10.yaml side:=right hand_type:=hand_e robot_model:=ur10)
+#    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_stand_ur10.urdf.xacro robot_config_file:=right_sh_ur10.yaml side:=right hand_type:=hand_e)
+
+#    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_stand_ur10_bt_sp_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_btsp_biotac.yaml side:=right hand_type:=hand_e)
+
+#    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_ur10.urdf.xacro robot_config_file:=right_sh_ur10.yaml side:=right hand_type:=hand_e)
+#    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10.urdf.xacro robot_config_file:=right_sh_ur10.yaml side:=right hand_type:=hand_e robot_model:=ur10) 
+
+#FAILS - broken/outdated xacro does not display biotacs correctly
+#    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_ur10_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_biotac.yaml side:=right hand_type:=hand_e)
+#    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_biotac.yaml side:=right hand_type:=hand_e robot_model:=ur10)
+
+#    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_ur10_bt_sp_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_btsp_biotac.yaml side:=right hand_type:=hand_e)
+#    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10_bt_sp_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_btsp_biotac.yaml side:=right hand_type:=hand_e robot_model:=ur10)
+
+#    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_ur10e.urdf.xacro robot_config_file:=right_sh_ur10e.yaml side:=right hand_type:=hand_e)
+#    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10e.urdf.xacro robot_config_file:=right_sh_ur10e.yaml side:=right hand_type:=hand_e robot_model:=ur10e)
+
+#    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_ur10e_bt_sp_biotacs.urdf.xacro robot_config_file:=right_sh_ur10e_btsp_biotac.yaml side:=right hand_type:=hand_e)
+#    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10e_bt_sp_biotacs.urdf.xacro robot_config_file:=right_sh_ur10e_btsp_biotac.yaml side:=right hand_type:=hand_e robot_model:=ur10e)
+
+#SCENE TEST FAILS - launches in collision
+#    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_ur5.urdf.xacro robot_config_file:=right_sh_ur5.yaml side:=right hand_type:=hand_e)
+#    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur5.urdf.xacro robot_config_file:=right_sh_ur5.yaml side:=right hand_type:=hand_e robot_model:=ur5)
+
+    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_ur5.urdf.xacro robot_config_file:=right_sh_ur5.yaml side:=right hand_type:=hand_e)
+    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur5.urdf.xacro robot_config_file:=right_sh_ur5.yaml side:=right hand_type:=hand_e robot_model:=ur5)  
 
 
 
