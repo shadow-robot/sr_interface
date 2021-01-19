@@ -207,12 +207,14 @@ if (CATKIN_ENABLE_TESTING)
 #    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=left_srhand_ur5e.urdf.xacro robot_config_file:=left_sh_ur5e.yaml side:=left hand_type:=hand_e)
 #    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=left_srhand_ur5e.urdf.xacro robot_config_file:=left_sh_ur5e.yaml side:=left hand_type:=hand_e robot_model:=ur5e)
 
-#GIVES LAUNCH ERROR
 #    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_lite_ur10e.urdf.xacro robot_config_file:=right_sh_lite_ur10e.yaml side:=right hand_type:=hand_lite)
 #    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_lite_ur10e.urdf.xacro robot_config_file:=right_sh_lite_ur10e.yaml side:=right hand_type:=hand_lite robot_model:=ur10e)
 
-    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_lite_ur5.urdf.xacro robot_config_file:=right_sh_lite_ur10e.yaml side:=right hand_type:=hand_lite)
-    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_lite_ur10e.urdf.xacro robot_config_file:=right_sh_lite_ur10e.yaml side:=right hand_type:=hand_lite robot_model:=ur10e)
+#    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_lite_ur5e.urdf.xacro robot_config_file:=right_sh_lite_ur5e.yaml side:=right hand_type:=hand_lite)
+#    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_lite_ur5e.urdf.xacro robot_config_file:=right_sh_lite_ur5e.yaml side:=right hand_type:=hand_lite robot_model:=ur5e)
+
+    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_stand_ur10.urdf.xacro robot_config_file:=right_sh_ur10.yaml side:=right hand_type:=hand_e)
+    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_stand_ur10.urdf.xacro robot_config_file:=right_sh_ur10.yaml side:=right hand_type:=hand_e robot_model:=ur10)
 
 
 
