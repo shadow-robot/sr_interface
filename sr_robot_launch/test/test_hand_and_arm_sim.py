@@ -28,7 +28,7 @@ from unittest import TestCase
 
 class TestHandAndArmSim(TestCase):
     """
-    Tests the Hand and Arm in Sim 
+    Tests the Hand and Arm in Sim
     """
     @classmethod
     def setUpClass(cls):
@@ -36,8 +36,8 @@ class TestHandAndArmSim(TestCase):
         cls.hand_type = rospy.get_param('~test_hand_and_arm_sim/hand_type')
         cls.scene = rospy.get_param('~test_hand_and_arm_sim/scene')
 
-    #ur-specific launch files do not accept 'side' param as it is already set
-    #for phantom hands use hand finder
+    # ur-specific launch files do not accept 'side' param as it is already set
+    # for phantom hands use hand finder
         try:
             cls.side = rospy.get_param('~test_hand_and_arm_sim/side')
             if cls.side == 'right':
@@ -108,9 +108,9 @@ class TestHandAndArmSim(TestCase):
 
         # if self.start_home == False:
         #     self.expected_home_angles = {'shoulder_pan_joint': 0.00, 'elbow_joint': 0.00,
-        #                                      'shoulder_lift_joint': 0.00, 'wrist_3_joint': 0.00,
-        #                                      'wrist_1_joint': 0.00, 'wrist_2_joint': 0.00,
-        #                                      'wrist_3_joint': 0.00}
+        #                                  'shoulder_lift_joint': 0.00, 'wrist_3_joint': 0.00,
+        #                                  'wrist_1_joint': 0.00, 'wrist_2_joint': 0.00,
+        #                                  'wrist_3_joint': 0.00}
         # elif self.start_home == True:
         #     self.expected_home_angles = self.expected_home_angles
 
@@ -127,10 +127,10 @@ class TestHandAndArmSim(TestCase):
         scene = ()
         self.scene = rospy.get_param('~test_hand_and_arm_sim/scene')
         self.scene_value = self.wait_for_topic_with_scene()
-        if self.scene == True:
+        if self.scene is True:
             self.assertNotEqual(len(self.scene_value), 0)
-        elif self.scene == False:
-            self.assertTrue(self.scene_value == None)
+        elif self.scene is False:
+            self.assertTrue(self.scene_value is None)
 
     def test_4_hand(self):
         hand_joints_target = {
@@ -210,17 +210,17 @@ class TestHandAndArmSim(TestCase):
 
         if self.arm_id == 'ra':
             arm_joints_target = {'shoulder_pan_joint': 0.00, 'elbow_joint': 2.0,
-                                 'shoulder_lift_joint': -1.25,'wrist_1_joint': -0.733,
+                                 'shoulder_lift_joint': -1.25, 'wrist_1_joint': -0.733,
                                  'wrist_2_joint': 1.578, 'wrist_3_joint': -3.1416}
         elif self.arm_id == 'la':
             arm_joints_target = {'shoulder_pan_joint': 0.0, 'elbow_joint': -2.0,
-                                 'shoulder_lift_joint': -1.89,'wrist_1_joint': 3.8,
+                                 'shoulder_lift_joint': -1.89, 'wrist_1_joint': 3.8,
                                  'wrist_2_joint': -1.5708, 'wrist_3_joint': 3.1416}
 
         arm_joints_target_no_id = arm_joints_target
         arm_joints_target = {}
         for key, value in arm_joints_target_no_id.items():
-             arm_joints_target[self.arm_id + '_' + key] = value
+            arm_joints_target[self.arm_id + '_' + key] = value
 
         hand_and_arm_joints_target = dict(hand_joints_target.items() + arm_joints_target.items())
         self.robot_commander.move_to_joint_value_target_unsafe(hand_and_arm_joints_target, 10.0, True)
@@ -229,7 +229,8 @@ class TestHandAndArmSim(TestCase):
 
         final_hand_and_arm_joint_values = self.robot_commander.get_current_state()
 
-        joint_value_diff_arm_and_hand = self.joints_error_check(hand_and_arm_joints_target, final_hand_and_arm_joint_values)
+        joint_value_diff_arm_and_hand = self.joints_error_check(hand_and_arm_joints_target,
+                                                                final_hand_and_arm_joint_values)
 
         self.assertAlmostEqual(joint_value_diff_arm_and_hand, 0, delta=0.4)
 
