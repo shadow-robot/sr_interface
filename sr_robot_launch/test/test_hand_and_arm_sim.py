@@ -206,7 +206,7 @@ class TestHandAndArmSim(TestCase):
         hand_joints_target_no_id = hand_joints_target[self.hand_type]
         hand_joints_target = {}
         for key, value in hand_joints_target_no_id.items():
-             hand_joints_target[self.hand_id + '_' + key] = value
+            hand_joints_target[self.hand_id + '_' + key] = value
 
         if self.arm_id == 'ra':
             arm_joints_target = {'shoulder_pan_joint': 0.00, 'elbow_joint': 2.0,
