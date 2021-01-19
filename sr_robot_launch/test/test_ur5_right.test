@@ -14,5 +14,4 @@
   <param name="/test_hand_and_arm_sim/hand_type" value="$(arg hand_type)"/>
   <param name="/test_hand_and_arm_sim/scene" value="$(arg scene)"/>
   </test>
-
 </launch>

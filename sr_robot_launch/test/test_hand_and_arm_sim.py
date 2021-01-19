@@ -88,7 +88,7 @@ class TestHandAndArmSim(TestCase):
             rospy.sleep(0.1)
             counter += 1
 
-    # HOME POSITION TEST CURRENTLY FAILING DUE TO KNOWN BUG
+    # HOME POSITION TEST CURRENTLY FAILING DUE TO KNOWN ERROR
 
     # def test_1_home_position(self):
         # self.start_home = rospy.get_param('/test_sim/start_home')
@@ -96,7 +96,7 @@ class TestHandAndArmSim(TestCase):
 
         # if self.arm_id == 'ra':
         #     self.expected_home_angles = {'shoulder_pan_joint': 0.00, 'elbow_joint': 2.0,
-        #                                  'shoulder_lift_joint': -1.25,'wrist_1_joint': -0.733, 
+        #                                  'shoulder_lift_joint': -1.25,'wrist_1_joint': -0.733,
         #                                  'wrist_2_joint': 1.578, 'wrist_3_joint': -3.1416}
 
         # elif self.arm_id == 'la':
@@ -109,7 +109,7 @@ class TestHandAndArmSim(TestCase):
         # if self.start_home == False:
         #     self.expected_home_angles = {'shoulder_pan_joint': 0.00, 'elbow_joint': 0.00,
         #                                      'shoulder_lift_joint': 0.00, 'wrist_3_joint': 0.00,
-        #                                      'wrist_1_joint': 0.00, 'wrist_2_joint': 0.00, 
+        #                                      'wrist_1_joint': 0.00, 'wrist_2_joint': 0.00,
         #                                      'wrist_3_joint': 0.00}
         # elif self.start_home == True:
         #     self.expected_home_angles = self.expected_home_angles
