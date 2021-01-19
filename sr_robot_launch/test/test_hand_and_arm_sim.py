@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2015 Shadow Robot Company Ltd.
+# Copyright 2020 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -212,7 +212,6 @@ class TestHandAndArmSim(TestCase):
             arm_joints_target = {'shoulder_pan_joint': 0.00, 'elbow_joint': 2.0,
                                  'shoulder_lift_joint': -1.25,'wrist_1_joint': -0.733,
                                  'wrist_2_joint': 1.578, 'wrist_3_joint': -3.1416}
-
         elif self.arm_id == 'la':
             arm_joints_target = {'shoulder_pan_joint': 0.0, 'elbow_joint': -2.0,
                                  'shoulder_lift_joint': -1.89,'wrist_1_joint': 3.8,
