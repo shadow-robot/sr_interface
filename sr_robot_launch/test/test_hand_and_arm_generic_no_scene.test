@@ -6,7 +6,7 @@
      <arg name="robot_config_file" default="right_sh_ur10.yaml"/>
      <arg name="side" default="right"/>
      <arg name="robot_model" default="ur10"/>
-
+     <arg name="start_home" default="false"/>
 
 <include file="$(find sr_robot_launch)/launch/sr_ur_arm_hand.launch">
      <arg name="sim" value="true"/>
@@ -15,7 +15,9 @@
      <arg name="robot_description" value="$( find sr_multi_description)/urdf/$( arg robot_description)"/>
      <arg name="robot_config_file" value="$( find sr_multi_moveit_config)/config/robot_configs/$( arg robot_config_file)"/>
      <arg name="side" value="$( arg side)"/>
-
+     <arg if="$(eval arg('side') == 'right')" name="home_angles" value="-J ra_shoulder_pan_joint 0.0 -J ra_elbow_joint 2.0 -J ra_wrist_1_joint -0.733 -J ra_wrist_2_joint 1.5708 -J ra_shoulder_lift_joint -1.25 -J ra_wrist_3_joint -3.1416"/>
+     <arg if="$(eval arg('side') == 'left')" name="home_angles" value="-J la_shoulder_pan_joint 0.0 -J la_elbow_joint -2.0 -J la_wrist_1_joint -2.4 -J la_wrist_2_joint -1.5708 -J la_shoulder_lift_joint -1.89 -J la_wrist_3_joint 3.1416"/> 
+     <arg name="start_home" value="$( arg start_home)"/>
 </include>
 
 <!-- Test script -->
