@@ -89,7 +89,7 @@
     <param name="robot_description_file" value="$(arg robot_description)"/>
     <param name="initial_z" value="$(arg initial_z)"/>
     <param name="prefix" value="$(arg hand_id)_"/>
-    <param name="sim" value="$(sim arg)"/>
+    <param name="sim" value="$(arg sim)"/>
   </node>
   
   <!-- Default hand controller groups -->
