@@ -136,6 +136,7 @@
         <arg name="hand" default="false"/>
         <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
         <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
+        <arg name="sim" value="$(arg sim)"/>
       </include>
     </group>
 

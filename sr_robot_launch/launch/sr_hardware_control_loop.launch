@@ -1,4 +1,5 @@
 <launch>
+  <arg name="sim" default="true"/>
   <arg name="debug" default="false"/>
   <arg name="robot_state_pub_frequency" default="250"/>
   <arg name="joint_state_pub_frequency" default="125"/>
@@ -88,6 +89,7 @@
     <param name="robot_description_file" value="$(arg robot_description)"/>
     <param name="initial_z" value="$(arg initial_z)"/>
     <param name="prefix" value="$(arg hand_id)_"/>
+    <param name="sim" value="$(sim arg)"/>
   </node>
   
   <!-- Default hand controller groups -->
