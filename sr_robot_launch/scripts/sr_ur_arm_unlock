@@ -31,11 +31,14 @@ class SrUrUnlock():
         if 0 == len(self._arms):
             rospy.logerr("No arms detected, shutting down %s", rospy.get_name())
             rospy.signal_shutdown("No arms detected")
-        rospy.Subscriber("/sr_arm/release", Bool, self.unlock_subscriber)
+        rospy.Subscriber("/sr_arm/release_or_break", Bool, self.unlock_subscriber)
 
     def unlock_subscriber(self, message):
         if message.data:
-            self.release_arm()
+            if self.check_arms_robot_mode():
+                self.release_arm()
+            else:
+                self.break_arms()
 
     def call_arm_service(self, side, service_name, service_type, dashboard=True, service_data=""):
         if dashboard:
@@ -164,6 +167,15 @@ class SrUrUnlock():
         except rospy.ServiceException, e:
             for arm in self._arms:
                 rospy.logerr("Arm checking/restarting failed for arm: %s. %s", arm, e)
+
+    def break_arms(self):
+        rospy.loginfo("Break arm(s) signal received.")
+        try:
+            for arm in self._arms:
+                self.call_arm_service(arm, "power_off", Trigger)
+        except rospy.ServiceException, e:
+            for arm in self._arms:
+                rospy.logerr("Arm breaking failed for arm: %s. %s", arm, e)
 
 
 if __name__ == "__main__":
