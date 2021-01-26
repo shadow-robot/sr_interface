@@ -34,7 +34,6 @@ class SrUrUnlock():
         rospy.Subscriber("/sr_arm/release_or_brake", Bool, self.unlock_subscriber)
 
     def unlock_subscriber(self, message):
-        print("DIO PORCO CANE MAAIALE DI DIO")
         if message.data:
             if self.check_arms_needs_starting():
                 self.release_arm()
