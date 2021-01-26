@@ -47,19 +47,17 @@ class SrUrUnlock():
                         self.call_arm_service(arm, "resend_robot_program", Trigger, dashboard=False)
 
     def is_arm_controller_running(self, arm):
-        controller_is_running = False
         try:
             rospy.wait_for_service('controller_manager/list_controllers', 5.0)
             list_controllers = rospy.ServiceProxy('controller_manager/list_controllers', ListControllers)
             loaded_controller = list_controllers()
-        except rospy.ServiceException as e:
+            for controller in loaded_controller.controller:
+                if arm + "_trajectory_controller" in controller.name:
+                    if controller.state == "running":
+                        return True
+        except rospy.ServiceException, e:
             rospy.logerr("Could not get controllers list: %s", e)
-
-        for controller in loaded_controller.controller:
-            if arm + "_trajectory_controller" in controller.name:
-                if controller.state == "running":
-                    controller_is_running = True
-                    return controller_is_running
+        return False
 
     def call_arm_service(self, side, service_name, service_type, dashboard=True, service_data=""):
         if dashboard:

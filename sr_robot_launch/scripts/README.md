@@ -16,4 +16,4 @@ Msg type: std_msgs/Bool
 
 - If the arm has stopped as a consequence of emergency stop or protective stop or user braking decision, it will restart the arm and the trajectory controller.
 
-- If the arm is enable but the trajectory controller is stopped, it will resend the robot program to restart the trajectory controller.
+- If the arm is enabled but the trajectory controller is stopped, it will resend the robot program to restart the trajectory controller.
