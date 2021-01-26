@@ -31,14 +31,15 @@ class SrUrUnlock():
         if 0 == len(self._arms):
             rospy.logerr("No arms detected, shutting down %s", rospy.get_name())
             rospy.signal_shutdown("No arms detected")
-        rospy.Subscriber("/sr_arm/release_or_break", Bool, self.unlock_subscriber)
+        rospy.Subscriber("/sr_arm/release_or_brake", Bool, self.unlock_subscriber)
 
     def unlock_subscriber(self, message):
+        print("DIO PORCO CANE MAAIALE DI DIO")
         if message.data:
-            if self.check_arms_robot_mode():
+            if self.check_arms_needs_starting():
                 self.release_arm()
             else:
-                self.break_arms()
+                self.brake_arms()
 
     def call_arm_service(self, side, service_name, service_type, dashboard=True, service_data=""):
         if dashboard:
@@ -92,7 +93,7 @@ class SrUrUnlock():
                 self.call_arm_service(arm, "restart_safety", Trigger)
         return fault
 
-    def check_arms_robot_mode(self):
+    def check_arms_needs_starting(self):
         arm_needs_starting = False
         for arm in self._arms:
             robot_mode = self.call_arm_service(arm, "get_robot_mode", GetRobotMode)
@@ -156,7 +157,7 @@ class SrUrUnlock():
             rospy.loginfo("Closing popups ...")
             self.clear_arms_popups()
             rospy.loginfo("Checking robot mode ...")
-            if self.check_arms_robot_mode():
+            if self.check_arms_needs_starting():
                 self.startup_arms()
             rospy.loginfo("Checking if program is loaded ...")
             if self.load_arms_program_if_unloaded():
@@ -168,15 +169,13 @@ class SrUrUnlock():
             for arm in self._arms:
                 rospy.logerr("Arm checking/restarting failed for arm: %s. %s", arm, e)
 
-    def break_arms(self):
-        rospy.loginfo("Break arm(s) signal received.")
-        try:
-            for arm in self._arms:
+    def brake_arms(self):
+        rospy.loginfo("Brake arm(s) signal received.")
+        for arm in self._arms:
+            try:
                 self.call_arm_service(arm, "power_off", Trigger)
-        except rospy.ServiceException, e:
-            for arm in self._arms:
+            except rospy.ServiceException, e:
                 rospy.logerr("Arm breaking failed for arm: %s. %s", arm, e)
-
 
 if __name__ == "__main__":
     rospy.init_node("sr_ur_arm_unlock")
