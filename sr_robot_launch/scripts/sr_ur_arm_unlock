@@ -33,7 +33,6 @@ class SrUrUnlock():
             rospy.logerr("No arms detected, shutting down %s", rospy.get_name())
             rospy.signal_shutdown("No arms detected")
         rospy.Subscriber("/sr_arm/release_or_brake", Bool, self.release_or_brake_arm_cb)
-        rospy.wait_for_service('controller_manager/list_controllers', 5.0)
 
     def release_or_brake_arm_cb(self, message):
         if message.data:
@@ -50,9 +49,10 @@ class SrUrUnlock():
     def is_arm_controller_running(self, arm):
         controller_is_running = False
         try:
+            rospy.wait_for_service('controller_manager/list_controllers', 5.0)
             list_controllers = rospy.ServiceProxy('controller_manager/list_controllers', ListControllers)
             loaded_controller = list_controllers()
-        except rospy.ServiceException, e:
+        except rospy.ServiceException as e:
             rospy.logerr("Could not get controllers list: %s", e)
 
         for controller in loaded_controller.controller:
@@ -193,7 +193,7 @@ class SrUrUnlock():
         rospy.loginfo("Brake arm signal received.")
         try:
             self.call_arm_service(arm, "power_off", Trigger)
-        except rospy.ServiceException, e:
+        except rospy.ServiceException as e:
             rospy.logerr("Arm braking failed for arm: %s. %s", arm, e)
 
 if __name__ == "__main__":
