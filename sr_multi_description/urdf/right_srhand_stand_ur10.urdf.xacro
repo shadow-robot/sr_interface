@@ -17,7 +17,6 @@
         <parent link="table_link"/>
         <child link="ra_base_link"/>
         <origin xyz="0.0 0.0 0.001" rpy="0.0 0.0 0.0"/>
-
     </joint>
 
     <xacro:arg name="kinematics_config" default="$(find ur_description)/config/ur10_default.yaml"/>
