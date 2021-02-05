@@ -43,7 +43,7 @@
 
 
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
-  <node name="conditional_delayed_rostool_rviz_hand" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen" required="true">
+  <node name="conditional_delayed_rostool_rviz_hand" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
     <param name="package_name" value="sr_moveit_hand_config" />
     <param name="executable_name" value="moveit_rviz.launch" />
     <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
