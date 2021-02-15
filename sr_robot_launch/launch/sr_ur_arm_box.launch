@@ -43,9 +43,6 @@
   <!-- ARM CONFIG-->
   <arg name="initial_z" default="0.7521" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
-  <arg name="arm_x_separation" default="0.0"/>
-  <arg name="arm_y_separation" default="1.5" if="$(arg scene)"/>
-  <arg name="arm_y_separation" default="0.0" unless="$(arg scene)"/>
   <arg name="kinematics_config" if="$(eval robot_model[-1] == 'e')" default="$(find ur_e_description)/config/$(arg robot_model)_default.yaml"/>
   <arg name="kinematics_config" if="$(eval not robot_model[-1] == 'e')" default="$(find ur_description)/config/$(arg robot_model)_default.yaml"/>
   <rosparam command="load" file="$(arg kinematics_config)" ns="$(arg arm_prefix)_sr_ur_robot_hw"/>
@@ -67,6 +64,9 @@
   <!-- ROBOT CONFIG-->
   <arg name="robot_name" default="ursrbox"/>
 
+  <!-- The prefix used by the robot_state_publisher -->
+  <arg name="tf_prefix" default="" />
+
   <!-- Logging -->
   <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch"/>
 
@@ -83,7 +83,7 @@
       <arg name="debug" value="$(arg debug)"/>
       <arg name="verbose" value="$(arg verbose)"/>
     </include>
-    <param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation) kinematics_config:=$(arg kinematics_config)"/>
+    <param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
 
     <arg if="$(arg start_home)" name="spawn_model_extra_args" value="-unpause $(arg home_angles)" />
     <arg unless="$(arg start_home)" name="spawn_model_extra_args" value="" />
@@ -100,9 +100,13 @@
     <node if="$(arg arm_position)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="$(arg arm_prefix)_group_position_controller"/>
 
     <!-- Robot state publisher -->
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)"/>
-      <param name="tf_prefix" type="string" value=""/>
+    <node name="conditional_delayed_rostool_robot_state_publisher" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
+      <param name="package_name" value="robot_state_publisher" />
+      <param name="executable_name" value="robot_state_publisher" />
+      <rosparam param="params_list">[/robot_description]</rosparam>
+      <param name="launch_args_list" value="
+      publish_frequency=$(arg robot_state_pub_frequency)
+      tf_prefix=$(arg tf_prefix)"/>
     </node>
 
     <!-- Set scene for robot - restrains movement -->
@@ -120,8 +124,6 @@
         <arg name="debug" default="$(arg debug)"/>
         <arg name="initial_z" default="0.7521" if="$(arg scene)"/>
         <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
-        <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
-        <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
         <arg name="robot_description" value="$(arg robot_description)"/>
         <arg name="side" value="$(arg side)"/>
         <arg name="robot_model" value="$(arg robot_model)"/>
@@ -137,10 +139,16 @@
       </include>
     </group>
 
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)"/>
-      <param name="tf_prefix" type="string" value="" />
+    <!-- Robot state publisher -->
+    <node name="conditional_delayed_rostool_robot_state_publisher" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
+      <param name="package_name" value="robot_state_publisher" />
+      <param name="executable_name" value="robot_state_publisher" />
+      <rosparam param="params_list">[/robot_description]</rosparam>
+      <param name="launch_args_list" value="
+      publish_frequency=$(arg robot_state_pub_frequency)
+      tf_prefix=$(arg tf_prefix)"/>
     </node>
+
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->
     <group if="$(arg scene)">
       <node name="conditional_delayed_rostool_arm_scene" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
@@ -157,7 +165,7 @@
 
   <!-- Launch moveit configuration after delay to wait for robot description to be avalible -->
   <group if="$(arg use_moveit)">
-    <node name="conditional_delayed_rostool_rviz_multi" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen" required="true">
+    <node name="conditional_delayed_rostool_rviz_multi" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
       <param name="package_name" value="sr_box_ur10_moveit_config" />
       <param name="executable_name" value="planning_and_execution.launch" />
       <rosparam param="params_list">[/robot_description]</rosparam>
