@@ -85,11 +85,13 @@
   <arg if="$(eval arg('hand_type') == 'hand_extra_lite')" name="arm_payload_mass" default="2.5"/>
   <arg name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
 
-  <arg if="$(eval not hand_trajectory and not arm_trajectory)" name="trajectory_controllers_list" default="[]"/>
-  <arg if="$(eval hand_trajectory and arm_trajectory)" name="trajectory_controllers_list" 
+  <arg if="$(eval hand_ctrl and arm_trajectory)" name="trajectory_controllers_list" 
        default="[/ra_trajectory_controller/state, /la_trajectory_controller/state, /rh_trajectory_controller/state, /lh_trajectory_controller/state]"/>
-  <arg if="$(eval hand_trajectory and not arm_trajectory)" name="trajectory_controllers_list"
-       default="[/rh_trajectory_controller/state, /lh_trajectory_controller/state]"/>
+  <arg if="$(eval not hand_ctrl and not arm_trajectory)" name="trajectory_controllers_list" value="[]"/>
+  <arg if="$(eval hand_ctrl and not arm_trajectory)" name="trajectory_controllers_list"
+       value="[/rh_trajectory_controller/state, /lh_trajectory_controller/state]"/>
+  <arg if="$(eval not hand_ctrl and arm_trajectory)" name="trajectory_controllers_list"
+       value="[/ra_trajectory_controller/state, /la_trajectory_controller/state]"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
