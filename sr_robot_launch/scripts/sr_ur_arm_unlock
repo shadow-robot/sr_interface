@@ -115,7 +115,9 @@ class SrUrUnlock():
         arm_needs_starting = False
         for arm in self._arms:
             robot_mode = self.call_arm_service(arm, "get_robot_mode", GetRobotMode)
-            if RobotMode.IDLE == robot_mode.robot_mode.mode or RobotMode.POWER_OFF == robot_mode.robot_mode.mode:
+            safety_mode = self.call_arm_service(arm, "get_safety_mode", GetSafetyMode)
+            if RobotMode.IDLE == robot_mode.robot_mode.mode or RobotMode.POWER_OFF == robot_mode.robot_mode.mode
+                                 or SafetyMode.PROTECTIVE_STOP == safety_mode.safety_mode.mode:
                 rospy.loginfo("Starting arm: %s", arm)
                 arm_needs_starting = True
         return arm_needs_starting
