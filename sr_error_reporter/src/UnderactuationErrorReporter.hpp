@@ -7,6 +7,7 @@
 #define SR_INTERFACE_SR_ERROR_REPORTER_SRC_UNDERACTUATIONERRORREPORTER_HPP_
 
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -35,6 +36,14 @@ class UnderactuationErrorReporter
    * MoveIt link name to radians. From /[lh|rh]_trajectory_controller/command topic.
    */
   std::map<std::string, double> desired_joint_angles;
+
+  std::set<std::string> include_fingers =
+  {
+    "FF",
+    "MF",
+    "RF",
+    "LF"
+  };
 
   std::vector<std::string> joint_names =
   {

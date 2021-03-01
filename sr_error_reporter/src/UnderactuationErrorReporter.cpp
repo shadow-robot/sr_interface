@@ -56,20 +56,24 @@ void UnderactuationErrorReporter::update_joint_position(
   std::string name,
   double position)
 {
-  if (name.size() >= 7)
+  if (name.size() < 7)
   {
-    std::string side = name.substr(0, 3);
-    std::string finger_name = name.substr(3, 2);
-    std::transform(finger_name.begin(), finger_name.end(), finger_name.begin(), [](unsigned char c)
-    {
-      return std::tolower(c);
-    });
-    // TODO: filter out thumb and wrist
-    int joint_index = std::atoi(name.substr(6, 1).c_str()) - 1;
-    if (joint_index >= 0 && joint_index <= 4)
-    {
-      joint_positions[side + finger_name + joint_names[joint_index]] = position;
-    }
+    return;
+  }
+  std::string finger_name = name.substr(3, 2);
+  if (include_fingers.find(finger_name) == include_fingers.end())
+  {
+    return;
+  }
+  std::transform(finger_name.begin(), finger_name.end(), finger_name.begin(), [](unsigned char c)
+  {
+    return std::tolower(c);
+  });
+  std::string side = name.substr(0, 3);
+  int joint_index = std::atoi(name.substr(6, 1).c_str());
+  if (joint_index > 0 && joint_index <= 4)
+  {
+    joint_positions[side + finger_name + joint_names[joint_index]] = position;
   }
 }
 
