@@ -24,10 +24,11 @@ class UnderactuationErrorReporter
  public:
   explicit UnderactuationErrorReporter(ros::NodeHandle& node_handle);
  private:
-  const ros::NodeHandle& node_handle_;
+  ros::NodeHandle& node_handle_;
   robot_model_loader::RobotModelLoaderPtr robot_model_loader_;
   moveit::core::RobotStatePtr robot_state_;
   ros::Subscriber joints_subsriber_, trajectory_subsriber_left_, trajectory_subsriber_right_;
+  std::map<std::string, ros::Publisher> error_publishers_;
 
   /**
    * MoveIt link name to radians. From /joint_states topic.
@@ -75,6 +76,8 @@ class UnderactuationErrorReporter
     "proximal",
     "knuckle"
   };
+
+  void add_side(std::string side);
 
   void update_kinematic_model(
     std::map<std::string, double>& joint_positions,

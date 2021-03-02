@@ -10,6 +10,12 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <depend>roscpp</depend>
+  <depend>geometry_msgs</depend>
   <depend>moveit_core</depend>
   <depend>moveit_ros_planning_interface</depend>
+  <depend>std_msgs</depend>
+  <build_depend>message_generation</build_depend>
+
+  <exec_depend>message_runtime</exec_depend>
 </package>

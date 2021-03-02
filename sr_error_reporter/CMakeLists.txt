@@ -5,20 +5,34 @@ project(sr_error_reporter)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  geometry_msgs
   eigen_conversions
   genmsg
   moveit_core
-  moveit_ros_planning_interface)
+  moveit_ros_planning_interface
+  message_generation)
 
-## Declare ROS messages and services
-#add_message_files(DIRECTORY msg FILES Num.msg)
-#add_service_files(DIRECTORY srv FILES AddTwoInts.srv)
-
-## Generate added messages and services
-#generate_messages(DEPENDENCIES std_msgs)
+  add_message_files(
+    FILES
+    UnderactuationError.msg
+  )
+  
+  generate_messages(
+    DEPENDENCIES
+    std_msgs
+    geometry_msgs
+  )
 
 ## Declare a catkin package
-catkin_package()
+catkin_package(
+  LIBRARIES ${PROJECT_NAME}
+  CATKIN_DEPENDS
+    roscpp
+    std_msgs
+    geometry_msgs
+    moveit_core
+    moveit_ros_planning_interface
+    message_runtime)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 

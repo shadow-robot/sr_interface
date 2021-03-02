@@ -4,6 +4,8 @@
 */
 
 #include <eigen_conversions/eigen_msg.h>
+#include "sr_error_reporter/UnderactuationError.h"
+#include "std_msgs/String.h"
 
 #include "UnderactuationErrorReporter.hpp"
 
@@ -16,11 +18,24 @@ UnderactuationErrorReporter::UnderactuationErrorReporter(ros::NodeHandle& node_h
     &UnderactuationErrorReporter::trajectory_callback, this, ros::TransportHints().tcpNoDelay());
   trajectory_subsriber_right_ = node_handle.subscribe("/rh_trajectory_controller/command", 1,
     &UnderactuationErrorReporter::trajectory_callback, this, ros::TransportHints().tcpNoDelay());
-  ROS_ERROR_STREAM("callback added");
 
   robot_model_loader_.reset(new robot_model_loader::RobotModelLoader("robot_description"));
   robot_state_.reset(new robot_state::RobotState(robot_model_loader_->getModel()));
   robot_state_->setToDefaultValues();
+}
+
+void UnderactuationErrorReporter::add_side(std::string side)
+{
+  auto result = sides_.insert(side);
+  /*if (result.second)
+  {
+    for (auto& finger : include_fingers_)
+    {
+      std::string link_name = side + finger.first + "tip";
+      std::string topic = "/underactuation_error/" + link_name;
+      error_publishers_[link_name] = node_handle_.advertise<sr_error_reporter::UnderactuationError>(topic, 1);
+    }
+  }*/
 }
 
 void UnderactuationErrorReporter::update_kinematic_model(
@@ -65,14 +80,25 @@ void UnderactuationErrorReporter::publish_error()
     ROS_ERROR_STREAM("\t" << joint.first << ": " << joint.second);
   }
   for (auto& actual : actual_tip_transforms_) {
-    auto desired = desired_tip_transforms_.find(actual.first);
+    std::string link_name = actual.first;
+    auto desired = desired_tip_transforms_.find(link_name);
     if (desired != desired_tip_transforms_.end()) {
       double x = actual.second.translation.x - desired->second.translation.x;
       double y = actual.second.translation.y - desired->second.translation.y;
       double z = actual.second.translation.z - desired->second.translation.z;
       double error = std::sqrt(x * x + y * y + z * z);
-      ROS_ERROR_STREAM("Error for " << actual.first << ": " << error);
-      // TODO: publish error
+      ROS_ERROR_STREAM("Error for " << link_name << ": " << error);
+      auto publisher = error_publishers_.find(link_name);
+      if (publisher == error_publishers_.end())
+      {
+        error_publishers_[link_name] = node_handle_.advertise<sr_error_reporter::UnderactuationError>(
+          "/underactuation_error/" + link_name, 1);
+        publisher = error_publishers_.find(link_name);
+      }
+      sr_error_reporter::UnderactuationError underactuation_error;
+      underactuation_error.header.stamp = ros::Time::now();
+      underactuation_error.error = error;
+      publisher->second.publish(underactuation_error);
     }
   }
 }
@@ -101,7 +127,7 @@ void UnderactuationErrorReporter::update_joint_position(
   if (joint_index > 0 && joint_index <= 4)
   {
     std::string side = name.substr(0, 3);
-    sides_.insert(side);
+    add_side(side);
     joint_positions[side + finger_name + joint_names_[joint_index]] = position;
   }
 }
