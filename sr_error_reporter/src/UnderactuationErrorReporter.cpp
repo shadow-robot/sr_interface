@@ -1,13 +1,24 @@
 /*
-* Copyright (C) 2021 Shadow Robot Company Ltd - All Rights Reserved. Proprietary and Confidential.
-* Unauthorized copying of the content in this file, via any medium is strictly prohibited.
+* Copyright 2021 Shadow Robot Company Ltd.
+*
+* This program is free software: you can redistribute it and/or modify it
+* under the terms of the GNU General Public License as published by the Free
+* Software Foundation version 2 of the License.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+* more details.
+*
+* You should have received a copy of the GNU General Public License along
+* with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <eigen_conversions/eigen_msg.h>
 #include "sr_error_reporter/UnderactuationError.h"
 #include "std_msgs/String.h"
 
-#include "UnderactuationErrorReporter.hpp"
+#include "sr_error_reporter/UnderactuationErrorReporter.hpp"
 
 UnderactuationErrorReporter::UnderactuationErrorReporter(ros::NodeHandle& node_handle)
   : node_handle_(node_handle)
@@ -24,18 +35,17 @@ UnderactuationErrorReporter::UnderactuationErrorReporter(ros::NodeHandle& node_h
   robot_state_->setToDefaultValues();
 }
 
-void UnderactuationErrorReporter::add_side(std::string side)
+ros::Publisher UnderactuationErrorReporter::get_or_create_publisher(std::string link_name)
 {
-  auto result = sides_.insert(side);
-  /*if (result.second)
+  auto iterator = error_publishers_.find(link_name);
+  if (iterator != error_publishers_.end())
   {
-    for (auto& finger : include_fingers_)
-    {
-      std::string link_name = side + finger.first + "tip";
-      std::string topic = "/underactuation_error/" + link_name;
-      error_publishers_[link_name] = node_handle_.advertise<sr_error_reporter::UnderactuationError>(topic, 1);
-    }
-  }*/
+    return iterator->second;
+  }
+  ros::Publisher publister = node_handle_.advertise<sr_error_reporter::UnderactuationError>(
+    "/underactuation_error/" + link_name, 1);
+  error_publishers_[link_name] = publister;
+  return publister;
 }
 
 void UnderactuationErrorReporter::update_kinematic_model(
@@ -69,16 +79,6 @@ void UnderactuationErrorReporter::update_kinematic_model(
 
 void UnderactuationErrorReporter::publish_error()
 {
-  ROS_ERROR_STREAM("Actual:");
-  for (auto& joint : actual_joint_angles_)
-  {
-    ROS_ERROR_STREAM("\t" << joint.first << ": " << joint.second);
-  }
-  ROS_ERROR_STREAM("Desired:");
-  for (auto& joint : desired_joint_angles_)
-  {
-    ROS_ERROR_STREAM("\t" << joint.first << ": " << joint.second);
-  }
   for (auto& actual : actual_tip_transforms_) {
     std::string link_name = actual.first;
     auto desired = desired_tip_transforms_.find(link_name);
@@ -87,18 +87,11 @@ void UnderactuationErrorReporter::publish_error()
       double y = actual.second.translation.y - desired->second.translation.y;
       double z = actual.second.translation.z - desired->second.translation.z;
       double error = std::sqrt(x * x + y * y + z * z);
-      ROS_ERROR_STREAM("Error for " << link_name << ": " << error);
-      auto publisher = error_publishers_.find(link_name);
-      if (publisher == error_publishers_.end())
-      {
-        error_publishers_[link_name] = node_handle_.advertise<sr_error_reporter::UnderactuationError>(
-          "/underactuation_error/" + link_name, 1);
-        publisher = error_publishers_.find(link_name);
-      }
+      
       sr_error_reporter::UnderactuationError underactuation_error;
       underactuation_error.header.stamp = ros::Time::now();
       underactuation_error.error = error;
-      publisher->second.publish(underactuation_error);
+      get_or_create_publisher(link_name).publish(underactuation_error);
     }
   }
 }
@@ -127,7 +120,7 @@ void UnderactuationErrorReporter::update_joint_position(
   if (joint_index > 0 && joint_index <= 4)
   {
     std::string side = name.substr(0, 3);
-    add_side(side);
+    sides_.insert(side);
     joint_positions[side + finger_name + joint_names_[joint_index]] = position;
   }
 }
