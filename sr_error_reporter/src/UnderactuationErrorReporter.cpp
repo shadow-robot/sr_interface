@@ -14,7 +14,12 @@
 * with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <eigen_conversions/eigen_msg.h>
+#include <algorithm>
+#include <map>
+#include <string>
+#include <vector>
+
+#include "eigen_conversions/eigen_msg.h"
 #include "sr_error_reporter/UnderactuationError.h"
 #include "std_msgs/String.h"
 
@@ -79,15 +84,17 @@ void UnderactuationErrorReporter::update_kinematic_model(
 
 void UnderactuationErrorReporter::publish_error()
 {
-  for (auto& actual : actual_tip_transforms_) {
+  for (auto& actual : actual_tip_transforms_)
+  {
     std::string link_name = actual.first;
     auto desired = desired_tip_transforms_.find(link_name);
-    if (desired != desired_tip_transforms_.end()) {
+    if (desired != desired_tip_transforms_.end())
+    {
       double x = actual.second.translation.x - desired->second.translation.x;
       double y = actual.second.translation.y - desired->second.translation.y;
       double z = actual.second.translation.z - desired->second.translation.z;
       double error = std::sqrt(x * x + y * y + z * z);
-      
+
       sr_error_reporter::UnderactuationError underactuation_error;
       underactuation_error.header.stamp = ros::Time::now();
       underactuation_error.error = error;
@@ -110,7 +117,8 @@ void UnderactuationErrorReporter::update_joint_position(
   std::transform(finger_name.begin(), finger_name.end(), finger_name.begin(), [](unsigned char c)
   {
     return std::tolower(c);
-  });
+  }
+  );
   if (include_fingers_.find(finger_name) == include_fingers_.end())
   {
     return;
@@ -127,7 +135,8 @@ void UnderactuationErrorReporter::update_joint_position(
 
 void UnderactuationErrorReporter::joints_callback(const sensor_msgs::JointStateConstPtr& msg)
 {
-  for (int i = 0; i < msg->name.size(); i++) {
+  for (int i = 0; i < msg->name.size(); i++)
+  {
     update_joint_position(actual_joint_angles_, msg->name[i], msg->position[i]);
   }
   update_kinematic_model(actual_joint_angles_, actual_tip_transforms_);
@@ -135,8 +144,10 @@ void UnderactuationErrorReporter::joints_callback(const sensor_msgs::JointStateC
 }
 
 void UnderactuationErrorReporter::trajectory_callback(const trajectory_msgs::JointTrajectory& msg) {
-  for (int i = 0; i < msg.joint_names.size(); i++) {
-    if (msg.points.size() > 0) {
+  for (int i = 0; i < msg.joint_names.size(); i++)
+  {
+    if (msg.points.size() > 0)
+    {
       update_joint_position(desired_joint_angles_, msg.joint_names[i], msg.points[0].positions[i]);
     }
   }
