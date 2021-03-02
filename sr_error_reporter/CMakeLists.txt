@@ -5,6 +5,7 @@ project(sr_error_reporter)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  eigen_conversions
   genmsg
   moveit_core
   moveit_ros_planning_interface)
