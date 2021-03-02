@@ -117,7 +117,7 @@ void UnderactuationErrorReporter::update_joint_position(
   std::transform(finger_name.begin(), finger_name.end(), finger_name.begin(), [](unsigned char c)
   {
     return std::tolower(c);
-  });
+  });  // NOLINT Our lint doesn't seem to support lambdas
   if (include_fingers_.find(finger_name) == include_fingers_.end())
   {
     return;
