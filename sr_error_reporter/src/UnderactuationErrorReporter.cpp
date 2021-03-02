@@ -22,7 +22,7 @@
 #include "eigen_conversions/eigen_msg.h"
 #include "sr_error_reporter/UnderactuationError.h"
 #include "std_msgs/String.h"
-
+#include "sr_error_reporter/UnderactuationError.h"
 #include "sr_error_reporter/UnderactuationErrorReporter.hpp"
 
 UnderactuationErrorReporter::UnderactuationErrorReporter(ros::NodeHandle& node_handle)
