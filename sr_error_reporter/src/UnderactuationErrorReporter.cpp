@@ -117,8 +117,7 @@ void UnderactuationErrorReporter::update_joint_position(
   std::transform(finger_name.begin(), finger_name.end(), finger_name.begin(), [](unsigned char c)
   {
     return std::tolower(c);
-  }
-  );
+  });
   if (include_fingers_.find(finger_name) == include_fingers_.end())
   {
     return;
@@ -143,7 +142,8 @@ void UnderactuationErrorReporter::joints_callback(const sensor_msgs::JointStateC
   publish_error();
 }
 
-void UnderactuationErrorReporter::trajectory_callback(const trajectory_msgs::JointTrajectory& msg) {
+void UnderactuationErrorReporter::trajectory_callback(const trajectory_msgs::JointTrajectory& msg)
+{
   for (int i = 0; i < msg.joint_names.size(); i++)
   {
     if (msg.points.size() > 0)
