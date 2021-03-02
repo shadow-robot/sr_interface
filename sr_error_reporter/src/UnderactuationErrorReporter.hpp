@@ -44,12 +44,27 @@ class UnderactuationErrorReporter
 
   std::set<std::string> sides_;
 
-  std::set<std::string> include_fingers_ =
+  std::map<std::string, std::string> include_fingers_ =
   {
-    "ff",
-    "mf",
-    "rf",
-    "lf"
+    {
+      "ff",
+      "first_finger"
+    }
+    ,
+    {
+      "mf",
+      "middle_finger"
+    }
+    ,
+    {
+      "rf",
+      "ring_finger"
+    }
+    ,
+    {
+      "lf",
+      "little_finger"
+    }
   };
 
   std::vector<std::string> joint_names_ =

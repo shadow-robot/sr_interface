@@ -21,22 +21,6 @@ UnderactuationErrorReporter::UnderactuationErrorReporter(ros::NodeHandle& node_h
   robot_model_loader_.reset(new robot_model_loader::RobotModelLoader("robot_description"));
   robot_state_.reset(new robot_state::RobotState(robot_model_loader_->getModel()));
   robot_state_->setToDefaultValues();
-
-  /*if (kinematic_model_ == NULL)
-  {
-    ROS_ERROR("No robot description found");
-  }
-  else
-  {
-    ROS_ERROR("ROBOT FOUND!");
-    for (auto& group_name : kinematic_model_->getJointModelGroupNames()) {
-      ROS_ERROR_STREAM("Group name: " << group_name);
-      const robot_model::JointModelGroup *group = kinematic_model_->getJointModelGroup(group_name);
-      for (auto& link_name : group->getLinkModelNames()) {
-        ROS_ERROR_STREAM("\tLink name: " << link_name);
-      }
-    }
-  }*/
 }
 
 void UnderactuationErrorReporter::update_kinematic_model(
@@ -48,17 +32,18 @@ void UnderactuationErrorReporter::update_kinematic_model(
   {
     for (auto& finger : include_fingers_)
     {
-      std::vector<double> positions = {0, 0, 0.3, 0.4};
-      ROS_ERROR_STREAM("setJointGroupPositions START");
-      robot_state_->setJointGroupPositions("rh_first_finger", positions);
-      ROS_ERROR_STREAM("setJointGroupPositions END");
+      auto j1 = joint_positions.find(side + finger.first + "distal");
+      auto j2 = joint_positions.find(side + finger.first + "middle");
+      std::vector<double> positions = {0, 0, j2->second, j1->second};
+      robot_state_->setJointGroupPositions(side + finger.second, positions);
     }
   }
   for (auto& side : sides_)
   {
     for (auto& finger : include_fingers_)
     {
-      std::string link_name = side + finger + "tip";
+      std::string link_name = side + finger.first + "tip";
+      // Forward kinemetics
       const Eigen::Affine3d &end_effector_state = robot_state_->getGlobalLinkTransform(link_name);
       geometry_msgs::Transform transform;
       tf::transformEigenToMsg(end_effector_state, transform);
