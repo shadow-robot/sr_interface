@@ -64,7 +64,17 @@ void UnderactuationErrorReporter::publish_error()
   {
     ROS_ERROR_STREAM("\t" << joint.first << ": " << joint.second);
   }
-  // TODO: calculate and publish error
+  for (auto& actual : actual_tip_transforms_) {
+    auto desired = desired_tip_transforms_.find(actual.first);
+    if (desired != desired_tip_transforms_.end()) {
+      double x = actual.second.translation.x - desired->second.translation.x;
+      double y = actual.second.translation.y - desired->second.translation.y;
+      double z = actual.second.translation.z - desired->second.translation.z;
+      double error = std::sqrt(x * x + y * y + z * z);
+      ROS_ERROR_STREAM("Error for " << actual.first << ": " << error);
+      // TODO: publish error
+    }
+  }
 }
 
 void UnderactuationErrorReporter::update_joint_position(
