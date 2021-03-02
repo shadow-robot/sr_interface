@@ -41,3 +41,4 @@ add_executable(error_reporter
   src/error_reporter.cpp
   src/UnderactuationErrorReporter.cpp)
 target_link_libraries(error_reporter ${catkin_LIBRARIES})
+add_dependencies(error_reporter error_reporter_generate_messages_cpp)
