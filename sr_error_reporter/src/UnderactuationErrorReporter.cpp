@@ -34,9 +34,18 @@ UnderactuationErrorReporter::UnderactuationErrorReporter(ros::NodeHandle& node_h
   trajectory_subscriber_right_ = node_handle.subscribe("/rh_trajectory_controller/command", 1,
     &UnderactuationErrorReporter::trajectory_callback, this, ros::TransportHints().tcpNoDelay());
 
-  robot_model_loader_.reset(new robot_model_loader::RobotModelLoader("robot_description"));
-  robot_state_.reset(new robot_state::RobotState(robot_model_loader_->getModel()));
-  robot_state_->setToDefaultValues();
+  while (ros::ok())
+  {
+    std::string robot_description;
+    if (node_handle.searchParam("robot_description_semantic", robot_description))
+    {
+      robot_model_loader_.reset(new robot_model_loader::RobotModelLoader("robot_description"));
+      robot_state_.reset(new robot_state::RobotState(robot_model_loader_->getModel()));
+      break;
+    }
+    ROS_INFO("Waiting for robot description");
+    ros::Duration(1).sleep();
+  }
 }
 
 ros::Publisher UnderactuationErrorReporter::get_or_create_publisher(std::string link_name)
