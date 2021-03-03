@@ -27,11 +27,11 @@
 UnderactuationErrorReporter::UnderactuationErrorReporter(ros::NodeHandle& node_handle)
   : node_handle_(node_handle)
 {
-  joints_subsriber_ = node_handle.subscribe("/joint_states", 1,
+  joints_subscriber_ = node_handle.subscribe("/joint_states", 1,
     &UnderactuationErrorReporter::joints_callback, this, ros::TransportHints().tcpNoDelay());
-  trajectory_subsriber_left_ = node_handle.subscribe("/lh_trajectory_controller/command", 1,
+  trajectory_subscriber_left_ = node_handle.subscribe("/lh_trajectory_controller/command", 1,
     &UnderactuationErrorReporter::trajectory_callback, this, ros::TransportHints().tcpNoDelay());
-  trajectory_subsriber_right_ = node_handle.subscribe("/rh_trajectory_controller/command", 1,
+  trajectory_subscriber_right_ = node_handle.subscribe("/rh_trajectory_controller/command", 1,
     &UnderactuationErrorReporter::trajectory_callback, this, ros::TransportHints().tcpNoDelay());
 
   robot_model_loader_.reset(new robot_model_loader::RobotModelLoader("robot_description"));
@@ -46,10 +46,10 @@ ros::Publisher UnderactuationErrorReporter::get_or_create_publisher(std::string 
   {
     return iterator->second;
   }
-  ros::Publisher publister = node_handle_.advertise<sr_error_reporter::UnderactuationError>(
+  ros::Publisher publisher = node_handle_.advertise<sr_error_reporter::UnderactuationError>(
     "/underactuation_error/" + link_name, 1);
-  error_publishers_[link_name] = publister;
-  return publister;
+  error_publishers_[link_name] = publisher;
+  return publisher;
 }
 
 void UnderactuationErrorReporter::update_kinematic_model(
@@ -62,15 +62,18 @@ void UnderactuationErrorReporter::update_kinematic_model(
     for (auto& finger : include_fingers_)
     {
       auto j1 = joint_positions.find(side + finger.first + "distal");
+      if (j1 == joint_positions.end())
+      {
+        continue;
+      }
       auto j2 = joint_positions.find(side + finger.first + "middle");
+      if (j2 == joint_positions.end())
+      {
+        continue;
+      }
       std::vector<double> positions = {0, 0, j2->second, j1->second};
       robot_state_->setJointGroupPositions(side + finger.second, positions);
-    }
-  }
-  for (auto& side : sides_)
-  {
-    for (auto& finger : include_fingers_)
-    {
+
       std::string link_name = side + finger.first + "tip";
       // Forward kinemetics
       const Eigen::Affine3d &end_effector_state = robot_state_->getGlobalLinkTransform(link_name);
@@ -107,6 +110,7 @@ void UnderactuationErrorReporter::update_joint_position(
   std::string name,
   double position)
 {
+  // Expect 7 characters for example: rh_LFJ1
   if (name.size() < 7)
   {
     return;

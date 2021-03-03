@@ -38,7 +38,7 @@ class UnderactuationErrorReporter
   ros::NodeHandle& node_handle_;
   robot_model_loader::RobotModelLoaderPtr robot_model_loader_;
   moveit::core::RobotStatePtr robot_state_;
-  ros::Subscriber joints_subsriber_, trajectory_subsriber_left_, trajectory_subsriber_right_;
+  ros::Subscriber joints_subscriber_, trajectory_subscriber_left_, trajectory_subscriber_right_;
   std::map<std::string, ros::Publisher> error_publishers_;
 
   /**
