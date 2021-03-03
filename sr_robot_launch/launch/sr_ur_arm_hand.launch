@@ -207,13 +207,4 @@
     <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
   </group>
 
-  <arg name="record_hand_data" value="$(optenv SR_RECORD_HAND_DATA disabled)"/>
-  <arg name="log_directory" value="$(optenv HOME)/shadow_bag_storage/"/>
-  <arg name="log_split_size" default="1024"/>
-  <arg name="log_topics" value='-e ".*(controller|debug_etherCAT_data).*" /joint_states /rosout /diagnostics /mechanism_statistics /journalctl_log'/>
-
-  <group if="$(eval arg('record_hand_data') == 'enabled')">
-    <node pkg="rosbag" type="record" args='-o $(arg log_directory) --lz4 --split --size $(arg log_split_size) $(arg log_topics) ' name="record_hand_bags"/>
-  </group>
-
 </launch>
