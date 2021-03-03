@@ -23,6 +23,7 @@
 #include "std_msgs/String.h"
 #include "sr_error_reporter/UnderactuationError.h"
 #include "sr_error_reporter/UnderactuationErrorReporter.hpp"
+#include "sr_utilities_common/wait_for_param.h"
 
 UnderactuationErrorReporter::UnderactuationErrorReporter(ros::NodeHandle& node_handle)
   : node_handle_(node_handle)
@@ -34,17 +35,14 @@ UnderactuationErrorReporter::UnderactuationErrorReporter(ros::NodeHandle& node_h
   trajectory_subscriber_right_ = node_handle.subscribe("/rh_trajectory_controller/command", 1,
     &UnderactuationErrorReporter::trajectory_callback, this, ros::TransportHints().tcpNoDelay());
 
-  while (ros::ok())
+  if (wait_for_param(node_handle, "robot_description_semantic"))
   {
-    std::string robot_description;
-    if (node_handle.searchParam("robot_description_semantic", robot_description))
-    {
-      robot_model_loader_.reset(new robot_model_loader::RobotModelLoader("robot_description"));
-      robot_state_.reset(new robot_state::RobotState(robot_model_loader_->getModel()));
-      break;
-    }
-    ROS_INFO("Waiting for robot description");
-    ros::Duration(1).sleep();
+    robot_model_loader_.reset(new robot_model_loader::RobotModelLoader("robot_description"));
+    robot_state_.reset(new robot_state::RobotState(robot_model_loader_->getModel()));
+  }
+  else
+  {
+    ROS_ERROR("UnderactuationErrorReporter did't find robot_description_semantic on parameter server");
   }
 }
 

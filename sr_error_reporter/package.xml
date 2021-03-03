@@ -15,6 +15,8 @@
   <depend>moveit_core</depend>
   <depend>moveit_ros_planning_interface</depend>
   <depend>std_msgs</depend>
+  <depend>sr_utilities_common</depend>
+
   <build_depend>message_generation</build_depend>
 
   <exec_depend>message_runtime</exec_depend>

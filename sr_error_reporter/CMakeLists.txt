@@ -10,7 +10,8 @@ find_package(catkin REQUIRED COMPONENTS
   genmsg
   moveit_core
   moveit_ros_planning_interface
-  message_generation)
+  message_generation
+  sr_utilities_common)
 
 add_message_files(
   FILES
