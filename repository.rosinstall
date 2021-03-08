@@ -36,7 +36,7 @@
 - git:
     local-name: gazebo2rviz
     uri: https://github.com/shadow-robot/gazebo2rviz.git
-    version: F_add_moveit_funtionallity
+    version: noetic-devel
 
 - git:
     local-name: pysdf
