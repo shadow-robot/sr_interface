@@ -18,7 +18,6 @@
 #define SR_INTERFACE_SR_ERROR_REPORTER_SRC_UNDERACTUATIONERRORREPORTER_HPP_
 
 #include <map>
-#include <set>
 #include <string>
 #include <vector>
 
@@ -85,7 +84,7 @@ class UnderactuationErrorReporter
 
   /**
    * Update given joint position map with new value if joint name
-   * if for underactuated finger.
+   * is for underactuated finger.
    *
    * @param joint_positions Map of link name to position for updating.
    * @param name For example "rh_FFJ2".
