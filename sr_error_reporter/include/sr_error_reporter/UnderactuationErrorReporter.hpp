@@ -27,8 +27,7 @@
 #include <moveit/robot_model/robot_model.h>
 #include <moveit/robot_state/robot_state.h>
 #include <ros/ros.h>
-#include <sensor_msgs/JointState.h>
-#include <trajectory_msgs/JointTrajectory.h>
+#include <control_msgs/JointTrajectoryControllerState.h>
 
 class UnderactuationErrorReporter
 {
@@ -38,23 +37,8 @@ class UnderactuationErrorReporter
   ros::NodeHandle& node_handle_;
   robot_model_loader::RobotModelLoaderPtr robot_model_loader_;
   moveit::core::RobotStatePtr robot_state_;
-  ros::Subscriber joints_subscriber_, trajectory_subscriber_left_, trajectory_subscriber_right_;
+  ros::Subscriber trajectory_subscriber_left_, trajectory_subscriber_right_;
   std::map<std::string, ros::Publisher> error_publishers_;
-
-  /**
-   * MoveIt link name to radians. From /joint_states topic.
-   */
-  std::map<std::string, double> actual_joint_angles_;
-
-  /**
-   * MoveIt link name to radians. From /[lh|rh]_trajectory_controller/command topic.
-   */
-  std::map<std::string, double> desired_joint_angles_;
-
-  std::map<std::string, geometry_msgs::Transform> actual_tip_transforms_;
-  std::map<std::string, geometry_msgs::Transform> desired_tip_transforms_;
-
-  std::set<std::string> sides_;
 
   std::map<std::string, std::string> include_fingers_ =
   {
@@ -91,10 +75,13 @@ class UnderactuationErrorReporter
   ros::Publisher get_or_create_publisher(std::string link_name);
 
   void update_kinematic_model(
+    std::string side,
     std::map<std::string, double>& joint_positions,
     std::map<std::string, geometry_msgs::Transform>& transforms);
 
-  void publish_error();
+  void publish_error(
+    std::map<std::string, geometry_msgs::Transform> actual_tip_transforms,
+    std::map<std::string, geometry_msgs::Transform> desired_tip_transforms);
 
   /**
    * Update given joint position map with new value if joint name
@@ -109,8 +96,13 @@ class UnderactuationErrorReporter
     std::string name,
     double position);
 
-  void joints_callback(const sensor_msgs::JointStateConstPtr& msg);
-  void trajectory_callback(const trajectory_msgs::JointTrajectory& msg);
+  void trajectory_callback_left(
+    const control_msgs::JointTrajectoryControllerState& msg);
+  void trajectory_callback_right(
+    const control_msgs::JointTrajectoryControllerState& msg);
+  void handle_trajectory_message(
+    std::string side,
+    const control_msgs::JointTrajectoryControllerState& msg);
 };
 
 #endif  // SR_INTERFACE_SR_ERROR_REPORTER_SRC_UNDERACTUATIONERRORREPORTER_HPP_

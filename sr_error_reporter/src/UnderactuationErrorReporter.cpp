@@ -28,12 +28,10 @@
 UnderactuationErrorReporter::UnderactuationErrorReporter(ros::NodeHandle& node_handle)
   : node_handle_(node_handle)
 {
-  joints_subscriber_ = node_handle.subscribe("/joint_states", 1,
-    &UnderactuationErrorReporter::joints_callback, this, ros::TransportHints().tcpNoDelay());
-  trajectory_subscriber_left_ = node_handle.subscribe("/lh_trajectory_controller/command", 1,
-    &UnderactuationErrorReporter::trajectory_callback, this, ros::TransportHints().tcpNoDelay());
-  trajectory_subscriber_right_ = node_handle.subscribe("/rh_trajectory_controller/command", 1,
-    &UnderactuationErrorReporter::trajectory_callback, this, ros::TransportHints().tcpNoDelay());
+  trajectory_subscriber_left_ = node_handle.subscribe("/lh_trajectory_controller/state", 1,
+    &UnderactuationErrorReporter::trajectory_callback_left, this, ros::TransportHints().tcpNoDelay());
+  trajectory_subscriber_right_ = node_handle.subscribe("/rh_trajectory_controller/state", 1,
+    &UnderactuationErrorReporter::trajectory_callback_right, this, ros::TransportHints().tcpNoDelay());
 
   if (wait_for_param(node_handle, "robot_description_semantic"))
   {
@@ -60,44 +58,44 @@ ros::Publisher UnderactuationErrorReporter::get_or_create_publisher(std::string 
 }
 
 void UnderactuationErrorReporter::update_kinematic_model(
+  std::string side,
   std::map<std::string, double>& joint_positions,
   std::map<std::string, geometry_msgs::Transform>& transforms)
 {
   robot_state_->setToDefaultValues();
-  for (auto& side : sides_)
+  for (auto& finger : include_fingers_)
   {
-    for (auto& finger : include_fingers_)
+    auto j1 = joint_positions.find(side + finger.first + "distal");
+    if (j1 == joint_positions.end())
     {
-      auto j1 = joint_positions.find(side + finger.first + "distal");
-      if (j1 == joint_positions.end())
-      {
-        continue;
-      }
-      auto j2 = joint_positions.find(side + finger.first + "middle");
-      if (j2 == joint_positions.end())
-      {
-        continue;
-      }
-      std::vector<double> positions = {0, 0, j2->second, j1->second};
-      robot_state_->setJointGroupPositions(side + finger.second, positions);
-
-      std::string link_name = side + finger.first + "tip";
-      // Forward kinemetics
-      const Eigen::Affine3d &end_effector_state = robot_state_->getGlobalLinkTransform(link_name);
-      geometry_msgs::Transform transform;
-      tf::transformEigenToMsg(end_effector_state, transform);
-      transforms[link_name] = transform;
+      continue;
     }
+    auto j2 = joint_positions.find(side + finger.first + "middle");
+    if (j2 == joint_positions.end())
+    {
+      continue;
+    }
+    std::vector<double> positions = {0, 0, j2->second, j1->second};
+    robot_state_->setJointGroupPositions(side + finger.second, positions);
+
+    std::string link_name = side + finger.first + "tip";
+    // Forward kinemetics
+    const Eigen::Affine3d &end_effector_state = robot_state_->getGlobalLinkTransform(link_name);
+    geometry_msgs::Transform transform;
+    tf::transformEigenToMsg(end_effector_state, transform);
+    transforms[link_name] = transform;
   }
 }
 
-void UnderactuationErrorReporter::publish_error()
+void UnderactuationErrorReporter::publish_error(
+  std::map<std::string, geometry_msgs::Transform> actual_tip_transforms,
+  std::map<std::string, geometry_msgs::Transform> desired_tip_transforms)
 {
-  for (auto& actual : actual_tip_transforms_)
+  for (auto& actual : actual_tip_transforms)
   {
     std::string link_name = actual.first;
-    auto desired = desired_tip_transforms_.find(link_name);
-    if (desired != desired_tip_transforms_.end())
+    auto desired = desired_tip_transforms.find(link_name);
+    if (desired != desired_tip_transforms.end())
     {
       double x = actual.second.translation.x - desired->second.translation.x;
       double y = actual.second.translation.y - desired->second.translation.y;
@@ -137,30 +135,36 @@ void UnderactuationErrorReporter::update_joint_position(
   if (joint_index > 0 && joint_index <= 4)
   {
     std::string side = name.substr(0, 3);
-    sides_.insert(side);
     joint_positions[side + finger_name + joint_names_[joint_index]] = position;
   }
 }
 
-void UnderactuationErrorReporter::joints_callback(const sensor_msgs::JointStateConstPtr& msg)
+void UnderactuationErrorReporter::trajectory_callback_left(
+  const control_msgs::JointTrajectoryControllerState& msg)
 {
-  for (int i = 0; i < msg->name.size(); i++)
-  {
-    update_joint_position(actual_joint_angles_, msg->name[i], msg->position[i]);
-  }
-  update_kinematic_model(actual_joint_angles_, actual_tip_transforms_);
-  publish_error();
+  handle_trajectory_message("lh_", msg);
 }
 
-void UnderactuationErrorReporter::trajectory_callback(const trajectory_msgs::JointTrajectory& msg)
+void UnderactuationErrorReporter::trajectory_callback_right(
+  const control_msgs::JointTrajectoryControllerState& msg)
 {
+  handle_trajectory_message("rh_", msg);
+}
+
+void UnderactuationErrorReporter::handle_trajectory_message(
+  std::string side,
+  const control_msgs::JointTrajectoryControllerState& msg)
+{
+  std::map<std::string, double> actual_joint_angles;
+  std::map<std::string, double> desired_joint_angles;
   for (int i = 0; i < msg.joint_names.size(); i++)
   {
-    if (msg.points.size() > 0)
-    {
-      update_joint_position(desired_joint_angles_, msg.joint_names[i], msg.points[0].positions[i]);
-    }
+    update_joint_position(actual_joint_angles, msg.joint_names[i], msg.actual.positions[i]);
+    update_joint_position(desired_joint_angles, msg.joint_names[i], msg.desired.positions[i]);
   }
-  update_kinematic_model(desired_joint_angles_, desired_tip_transforms_);
-  publish_error();
+  std::map<std::string, geometry_msgs::Transform> actual_tip_transforms;
+  std::map<std::string, geometry_msgs::Transform> desired_tip_transforms;
+  update_kinematic_model(side, actual_joint_angles, actual_tip_transforms);
+  update_kinematic_model(side, desired_joint_angles, desired_tip_transforms);
+  publish_error(actual_tip_transforms, desired_tip_transforms);
 }
