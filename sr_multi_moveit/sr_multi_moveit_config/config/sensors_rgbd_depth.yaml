@@ -6,8 +6,8 @@ sensors:
     near_clipping_plane_distance: 0.3
     far_clipping_plane_distance: 5.0
     shadow_threshold: 0.2
-    padding_scale: 1.0
-    padding_offset: 0.00
+    padding_scale: 3.0
+    padding_offset: 0.12
     max_update_rate: 1.0
     filtered_cloud_topic: filtered_cloud
 
