@@ -17,7 +17,11 @@ only J1 and J2 joints for underactuated fingers are set to either actual or
 desired values. Then fingertip position is calculated by running forward
 kinematics. Cartesian distance between actual and desired fingertips is
 calculated and published to a topic per finger:
-* /underactuation_error/rh_fftip
-* /underactuation_error/rh_lftip
-* /underactuation_error/rh_mftip
-* /underactuation_error/rh_rftip
+* /sh_lh_ffj0_position_controller/underactuation_cartesian_error
+* /sh_lh_mfj0_position_controller/underactuation_cartesian_error
+* /sh_lh_rfj0_position_controller/underactuation_cartesian_error
+* /sh_lh_lfj0_position_controller/underactuation_cartesian_error
+* /sh_rh_ffj0_position_controller/underactuation_cartesian_error
+* /sh_rh_mfj0_position_controller/underactuation_cartesian_error
+* /sh_rh_rfj0_position_controller/underactuation_cartesian_error
+* /sh_rh_lfj0_position_controller/underactuation_cartesian_error

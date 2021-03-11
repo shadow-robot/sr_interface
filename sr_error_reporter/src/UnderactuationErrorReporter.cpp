@@ -44,16 +44,19 @@ UnderactuationErrorReporter::UnderactuationErrorReporter(ros::NodeHandle& node_h
   }
 }
 
-ros::Publisher UnderactuationErrorReporter::get_or_create_publisher(std::string link_name)
+ros::Publisher UnderactuationErrorReporter::get_or_create_publisher(
+  std::string side,
+  std::string finger_name)
 {
-  auto iterator = error_publishers_.find(link_name);
+  std::string key = side + finger_name;
+  auto iterator = error_publishers_.find(key);
   if (iterator != error_publishers_.end())
   {
     return iterator->second;
   }
   ros::Publisher publisher = node_handle_.advertise<sr_error_reporter::UnderactuationError>(
-    "/underactuation_error/" + link_name, 1);
-  error_publishers_[link_name] = publisher;
+    "/sh_" + side + finger_name + "j0_position_controller/underactuation_cartesian_error", 1);
+  error_publishers_[key] = publisher;
   return publisher;
 }
 
@@ -88,6 +91,7 @@ void UnderactuationErrorReporter::update_kinematic_model(
 }
 
 void UnderactuationErrorReporter::publish_error(
+  std::string side,
   std::map<std::string, geometry_msgs::Transform> actual_tip_transforms,
   std::map<std::string, geometry_msgs::Transform> desired_tip_transforms)
 {
@@ -105,7 +109,9 @@ void UnderactuationErrorReporter::publish_error(
       sr_error_reporter::UnderactuationError underactuation_error;
       underactuation_error.header.stamp = ros::Time::now();
       underactuation_error.error = error;
-      get_or_create_publisher(link_name).publish(underactuation_error);
+      std::string finger_name = link_name.substr(3, 2);
+      get_or_create_publisher(side, finger_name)
+        .publish(underactuation_error);
     }
   }
 }
@@ -166,5 +172,5 @@ void UnderactuationErrorReporter::handle_trajectory_message(
   std::map<std::string, geometry_msgs::Transform> desired_tip_transforms;
   update_kinematic_model(side, actual_joint_angles, actual_tip_transforms);
   update_kinematic_model(side, desired_joint_angles, desired_tip_transforms);
-  publish_error(actual_tip_transforms, desired_tip_transforms);
+  publish_error(side, actual_tip_transforms, desired_tip_transforms);
 }

@@ -71,7 +71,9 @@ class UnderactuationErrorReporter
     "knuckle"
   };
 
-  ros::Publisher get_or_create_publisher(std::string link_name);
+  ros::Publisher get_or_create_publisher(
+    std::string side,
+    std::string finger_name);
 
   void update_kinematic_model(
     std::string side,
@@ -79,6 +81,7 @@ class UnderactuationErrorReporter
     std::map<std::string, geometry_msgs::Transform>& transforms);
 
   void publish_error(
+    std::string side,
     std::map<std::string, geometry_msgs::Transform> actual_tip_transforms,
     std::map<std::string, geometry_msgs::Transform> desired_tip_transforms);
 
