@@ -30,47 +30,41 @@ class TestHandAndArmSim(TestCase):
     """
     Tests the Hand and Arm in Sim
     """
-    @classmethod
-    def setUpClass(cls):
+    def __init__(self):
         rospy.wait_for_message('/move_group/status', GoalStatusArray)
-        cls.hand_type = rospy.get_param('~test_hand_and_arm_sim/hand_type')
-        cls.scene = rospy.get_param('~test_hand_and_arm_sim/scene')
+        self.hand_type = rospy.get_param('/test_sim/hand_type')
+        self.scene = rospy.get_param('/test_sim/scene')
 
     # ur-specific launch files do not accept 'side' param as it is already set
     # for phantom hands use hand finder
         try:
-            cls.side = rospy.get_param('~test_hand_and_arm_sim/side')
-            if cls.side == 'right':
-                cls.hand_id = 'rh'
-            elif cls.side == 'left':
-                cls.hand_id = 'lh'
+            self.side = rospy.get_param('/test_sim/side')
+            if self.side == 'right':
+                self.hand_id = 'rh'
+            elif self.side == 'left':
+                self.hand_id = 'lh'
         except:
             rospy.loginfo("No side param for this test type")
-            cls.hand_id = rospy.get_param('/hand/mapping/1082')
+            self.hand_id = rospy.get_param('/hand/mapping/1082')
 
-        if cls.hand_id == 'rh':
-            cls.arm_id = 'ra'
-            cls.robot_commander = SrRobotCommander(name="right_arm_and_hand")
-            cls.hand_commander = SrHandCommander(name='right_hand')
-            cls.arm_commander = SrArmCommander(name='right_arm', set_ground=False)
-        elif cls.hand_id == 'lh':
-            cls.arm_id = 'la'
-            cls.robot_commander = SrRobotCommander(name="left_arm_and_hand")
-            cls.hand_commander = SrHandCommander(name='left_hand')
-            cls.arm_commander = SrArmCommander(name='left_arm', set_ground=False)
+        if self.hand_id == 'rh':
+            self.arm_id = 'ra'
+            self.robot_commander = SrRobotCommander(name="right_arm_and_hand")
+            self.hand_commander = SrHandCommander(name='right_hand')
+            self.arm_commander = SrArmCommander(name='right_arm', set_ground=False)
+        elif self.hand_id == 'lh':
+            self.arm_id = 'la'
+            self.robot_commander = SrRobotCommander(name="left_arm_and_hand")
+            self.hand_commander = SrHandCommander(name='left_hand')
+            self.arm_commander = SrArmCommander(name='left_arm', set_ground=False)
 
-        rospy.Subscriber('/move_group/monitored_planning_scene', PlanningScene, cls.scene_data_cb)
+        rospy.Subscriber('/move_group/monitored_planning_scene', PlanningScene, self.scene_data_cb)
 
         rospy.sleep(10)
 
-    @classmethod
-    def tearDownClass(cls):
-        pass
-
-    @classmethod
-    def scene_data_cb(cls, result):
+    def scene_data_cb(self, result):
         scene_data = ()
-        cls.scene_data = result.world.collision_objects
+        self.scene_data = result.world.collision_objects
 
     def joints_error_check(self, expected_joint_values, recieved_joint_values):
         expected_and_final_joint_value_diff = 0
@@ -126,7 +120,7 @@ class TestHandAndArmSim(TestCase):
 
     def test_2_scene(self):
         scene = ()
-        self.scene = rospy.get_param('~test_hand_and_arm_sim/scene')
+        self.scene = rospy.get_param('/test_sim/scene')
         self.scene_value = self.wait_for_topic_with_scene()
         if self.scene is True:
             self.assertNotEqual(len(self.scene_value), 0)
@@ -236,8 +230,17 @@ class TestHandAndArmSim(TestCase):
         self.assertAlmostEqual(joint_value_diff_arm_and_hand, 0, delta=0.4)
 
 if __name__ == "__main__":
-    PKGNAME = 'sr_robot_launch'
-    NODENAME = 'test_hand_and_arm_sim'
-
-    rospy.init_node(NODENAME, anonymous=True)
-    rostest.rosrun(PKGNAME, NODENAME, TestHandAndArmSim)
+    PKG = "sr_robot_launch"
+    rospy.init_node("hand_and_arm_test", anonymous=True)
+    test = TestHandAndArmSim()
+    rospy.sleep(10)
+    test.test_1_home_position()
+    rospy.sleep(10)
+    test.test_2_scene()
+    rospy.sleep(10)
+    test.test_3_arm()
+    rospy.sleep(10)
+    test.test_4_hand()
+    rospy.sleep(10)
+    test.test_5_hand_and_arm()
+    rospy.sleep(10)
