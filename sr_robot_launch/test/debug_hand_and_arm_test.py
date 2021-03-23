@@ -82,10 +82,7 @@ class TestHandAndArmSim(TestCase):
             rospy.sleep(0.1)
             counter += 1
 
-    # HOME POSITION TEST CURRENTLY FAILING DUE TO KNOWN ERROR
-
     def test_1_home_position(self):
-        self.start_home = rospy.get_param('/test_sim/start_home')
         start_arm_angles = self.arm_commander.get_current_state()
 
         if self.arm_id == 'ra':
@@ -97,16 +94,6 @@ class TestHandAndArmSim(TestCase):
             self.expected_home_angles = {'shoulder_pan_joint': 0.0, 'elbow_joint': -2.0,
                                          'shoulder_lift_joint': -1.89,'wrist_1_joint': -2.1,
                                          'wrist_2_joint': -1.5708, 'wrist_3_joint': 2}
-
-    #     use if the start_home param is relevant. We don't use this for the UR10/5 specific launch files.
-
-        if self.start_home == False:
-            self.expected_home_angles = {'shoulder_pan_joint': 0.00, 'elbow_joint': 0.00,
-                                         'shoulder_lift_joint': 0.00, 'wrist_3_joint': 0.00,
-                                         'wrist_1_joint': 0.00, 'wrist_2_joint': 0.00,
-                                         'wrist_3_joint': 0.00}
-        elif self.start_home == True:
-            self.expected_home_angles = self.expected_home_angles
 
         home_angles_no_id = self.expected_home_angles
         expected_start_angles = {}
@@ -167,6 +154,8 @@ class TestHandAndArmSim(TestCase):
             arm_joints_target = {'shoulder_pan_joint': 0.00, 'elbow_joint': 1.43,
                                  'shoulder_lift_joint': -1.27, 'wrist_1_joint': -0.1,
                                  'wrist_2_joint': 1.57, 'wrist_3_joint': 3.13}
+
+
 
         arm_joints_target_no_id = arm_joints_target
         arm_joints_target = {}

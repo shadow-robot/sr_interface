@@ -88,10 +88,7 @@ class TestHandAndArmSim(TestCase):
             rospy.sleep(0.1)
             counter += 1
 
-    # HOME POSITION TEST CURRENTLY FAILING DUE TO KNOWN ERROR
-
     def test_1_home_position(self):
-        self.start_home = rospy.get_param('/test_sim/start_home')
         start_arm_angles = self.arm_commander.get_current_state()
 
         if self.arm_id == 'ra':
@@ -104,24 +101,12 @@ class TestHandAndArmSim(TestCase):
                                          'shoulder_lift_joint': -1.89,'wrist_1_joint': -2.1,
                                          'wrist_2_joint': -1.5708, 'wrist_3_joint': 2}
 
-    #     use if the start_home param is relevant. We don't use this for the UR10/5 specific launch files.
-
-        if self.start_home == False:
-            self.expected_home_angles = {'shoulder_pan_joint': 0.00, 'elbow_joint': 0.00,
-                                         'shoulder_lift_joint': 0.00, 'wrist_3_joint': 0.00,
-                                         'wrist_1_joint': 0.00, 'wrist_2_joint': 0.00,
-                                         'wrist_3_joint': 0.00}
-        elif self.start_home == True:
-            self.expected_home_angles = self.expected_home_angles
-
         home_angles_no_id = self.expected_home_angles
         expected_start_angles = {}
         for key, value in home_angles_no_id.items():
             expected_start_angles[self.arm_id + '_' + key] = value
 
         expected_and_actual_home_angles = self.joints_error_check(expected_start_angles, start_arm_angles)
-        print('home test result')
-        print(expected_and_actual_home_angles)
         self.assertAlmostEqual(expected_and_actual_home_angles, 0, delta=0.2)
 
     def test_2_scene(self):
@@ -161,7 +146,7 @@ class TestHandAndArmSim(TestCase):
 
         expected_and_final_joint_value_diff_hand = self.joints_error_check(hand_joints_target, final_hand_joint_values)
 
-        self.assertAlmostEqual(expected_and_final_joint_value_diff_hand, 0, delta=0.3)
+        self.assertAlmostEqual(expected_and_final_joint_value_diff_hand, 0, delta=0.4)
 
     def test_3_arm(self):
 
