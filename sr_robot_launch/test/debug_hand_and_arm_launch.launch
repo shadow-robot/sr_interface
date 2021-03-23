@@ -24,7 +24,6 @@
      <arg name="robot_model" value="$( arg robot_model)"/>
      <arg if="$(eval arg('side') == 'right')" name="home_angles" value="-J ra_shoulder_pan_joint 0.0 -J ra_elbow_joint 2.0 -J ra_wrist_1_joint -1 -J ra_wrist_2_joint 1.5708 -J ra_shoulder_lift_joint -1.25 -J ra_wrist_3_joint -2"/>
      <arg if="$(eval arg('side') == 'left')" name="home_angles" value="-J la_shoulder_pan_joint 0.0 -J la_elbow_joint -2.0 -J la_wrist_1_joint -2.1 -J la_wrist_2_joint -1.5708 -J la_shoulder_lift_joint -1.89 -J la_wrist_3_joint 2"/>
-
      <arg name="start_home" value="$( arg start_home)"/>
 
 </include>
