@@ -25,6 +25,7 @@ from rospy import get_rostime
 from actionlib_msgs.msg import GoalStatusArray
 from unittest import TestCase
 
+
 class TestBiHandAndArmSim(TestCase):
     """
     Tests the Hand and Arm in Sim
@@ -68,11 +69,11 @@ class TestBiHandAndArmSim(TestCase):
 
     def test_1_home_position(self):
         start_arm_angles = self.arm_commander.get_current_state()
-        self.expected_home_angles = {'la_shoulder_pan_joint': 0.0, 'la_elbow_joint': -2.0,
-                                     'la_shoulder_lift_joint': -1.89,'la_wrist_1_joint': -2.1,
-                                     'la_wrist_2_joint': -1.5708, 'la_wrist_3_joint': 2,
-                                     'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.0,
-                                     'ra_shoulder_lift_joint': -1.25,'ra_wrist_1_joint': -1,
+        self.expected_home_angles = {'la_shoulder_pan_joint': 0.0, 'la_elbow_joint': -2.0, 
+                                     'la_shoulder_lift_joint': -1.89,'la_wrist_1_joint': -2.1, 
+                                     'la_wrist_2_joint': -1.5708, 'la_wrist_3_joint': 2, 
+                                     'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.0, 
+                                     'ra_shoulder_lift_joint': -1.25,'ra_wrist_1_joint': -1, 
                                      'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': -2}
 
         expected_and_actual_home_angles = self.joints_error_check(self.expected_home_angles, start_arm_angles)
@@ -90,7 +91,7 @@ class TestBiHandAndArmSim(TestCase):
     def test_3_arms(self):
         arm_joints_target = {'la_shoulder_pan_joint': 0.00, 'la_elbow_joint': -1.43,
                              'la_shoulder_lift_joint': -1.82, 'la_wrist_1_joint': 3.24,
-                             'la_wrist_2_joint': -1.57, 'la_wrist_3_joint': 3.13, 
+                             'la_wrist_2_joint': -1.57, 'la_wrist_3_joint': 3.13,
                              'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 1.43,
                              'ra_shoulder_lift_joint': -1.27, 'ra_wrist_1_joint': -0.1,
                              'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 3.13}
@@ -105,11 +106,11 @@ class TestBiHandAndArmSim(TestCase):
 
     def test_4_hands(self):
         hand_joints_target = {'THJ1': 0.52, 'THJ2': 0.61, 'THJ3': 0.0, 'THJ4': 1.20, 'THJ5': 0.17,
-                    'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
-                    'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
-                    'RFJ1': 1.5707, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0,
-                    'LFJ1': 0.0, 'LFJ2': 0.0, 'LFJ3': 0.0, 'LFJ4': 0.0,
-                    'LFJ5': 0.0, 'WRJ1': 0.0, 'WRJ2': 0.0}
+                              'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
+                              'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
+                              'RFJ1': 1.5707, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0,
+                              'LFJ1': 0.0, 'LFJ2': 0.0, 'LFJ3': 0.0, 'LFJ4': 0.0,
+                              'LFJ5': 0.0, 'WRJ1': 0.0, 'WRJ2': 0.0}
 
         hand_joints_target_no_id = hand_joints_target
 
@@ -157,7 +158,7 @@ class TestBiHandAndArmSim(TestCase):
         for key, value in hand_joints_target_no_id.items():
             hand_joints_target_right['rh' + '_' + key] = value
 
-        hands_and_arms_joints_target = dict(hand_joints_target_right.items() + arm_joints_target_right.items() + 
+        hands_and_arms_joints_target = dict(hand_joints_target_right.items() + arm_joints_target_right.items() +
                                             hand_joints_target_left.items() + arm_joints_target_left.items())
 
         self.robot_commander.move_to_joint_value_target_unsafe(hands_and_arms_joints_target, 10.0, True)
@@ -175,4 +176,4 @@ if __name__ == "__main__":
     NODENAME = 'test_bimanual_hand_and_arm'
 
     rospy.init_node(NODENAME, anonymous=True)
-    rostest.rosrun(PKGNAME, NODENAME, TestBiHandAndArmSim)    
+    rostest.rosrun(PKGNAME, NODENAME, TestBiHandAndArmSim)
