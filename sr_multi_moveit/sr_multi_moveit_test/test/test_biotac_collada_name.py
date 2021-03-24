@@ -40,9 +40,7 @@ class TestBiotacColladaName(TestCase):
         with open(hand_urdf_path, 'r') as hand_urdf_xacro_file:
             hand_urdf_xml = parse(hand_urdf_xacro_file)
         macros = {}
-        xacro.grab_macros(hand_urdf_xml, macros)
         symbols = xacro.Table()
-        xacro.grab_properties(hand_urdf_xml, symbols)
         xacro.eval_all(hand_urdf_xml.documentElement, macros, symbols)
 
         hand_urdf = hand_urdf_xml.toprettyxml(indent='  ')
