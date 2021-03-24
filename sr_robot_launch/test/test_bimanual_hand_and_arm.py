@@ -69,11 +69,11 @@ class TestBiHandAndArmSim(TestCase):
 
     def test_1_home_position(self):
         start_arm_angles = self.arm_commander.get_current_state()
-        self.expected_home_angles = {'la_shoulder_pan_joint': 0.0, 'la_elbow_joint': -2.0, 
-                                     'la_shoulder_lift_joint': -1.89,'la_wrist_1_joint': -2.1, 
-                                     'la_wrist_2_joint': -1.5708, 'la_wrist_3_joint': 2, 
-                                     'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.0, 
-                                     'ra_shoulder_lift_joint': -1.25,'ra_wrist_1_joint': -1, 
+        self.expected_home_angles = {'la_shoulder_pan_joint': 0.0, 'la_elbow_joint': -2.0,
+                                     'la_shoulder_lift_joint': -1.89, 'la_wrist_1_joint': -2.1,
+                                     'la_wrist_2_joint': -1.5708, 'la_wrist_3_joint': 2,
+                                     'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.0,
+                                     'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -1,
                                      'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': -2}
 
         expected_and_actual_home_angles = self.joints_error_check(self.expected_home_angles, start_arm_angles)
@@ -134,11 +134,11 @@ class TestBiHandAndArmSim(TestCase):
 
     def test_5_arms_and_hands(self):
         hand_joints_target = {'THJ1': 0.52, 'THJ2': 0.61, 'THJ3': 0.0, 'THJ4': 1.20, 'THJ5': 0.17,
-                       'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
-                       'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
-                       'RFJ1': 0.0, 'RFJ2': 0.0, 'RFJ3': 0.0, 'RFJ4': 0.0,
-                       'LFJ1': 0.0, 'LFJ2': 0.0, 'LFJ3': 0.0, 'LFJ4': 0.0,
-                       'LFJ5': 0.0, 'WRJ1': 0.0, 'WRJ2': 0.0}
+                              'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
+                              'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
+                              'RFJ1': 0.0, 'RFJ2': 0.0, 'RFJ3': 0.0, 'RFJ4': 0.0,
+                              'LFJ1': 0.0, 'LFJ2': 0.0, 'LFJ3': 0.0, 'LFJ4': 0.0,
+                              'LFJ5': 0.0, 'WRJ1': 0.0, 'WRJ2': 0.0}
 
         arm_joints_target_right = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.0,
                                    'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,

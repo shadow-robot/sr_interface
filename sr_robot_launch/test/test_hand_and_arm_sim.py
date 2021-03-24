@@ -93,12 +93,12 @@ class TestHandAndArmSim(TestCase):
 
         if self.arm_id == 'ra':
             self.expected_home_angles = {'shoulder_pan_joint': 0.00, 'elbow_joint': 2.0,
-                                         'shoulder_lift_joint': -1.25,'wrist_1_joint': -1, 
+                                         'shoulder_lift_joint': -1.25, 'wrist_1_joint': -1,
                                          'wrist_2_joint': 1.5708, 'wrist_3_joint': -2}
 
         elif self.arm_id == 'la':
             self.expected_home_angles = {'shoulder_pan_joint': 0.0, 'elbow_joint': -2.0,
-                                         'shoulder_lift_joint': -1.89,'wrist_1_joint': -2.1, 
+                                         'shoulder_lift_joint': -1.89, 'wrist_1_joint': -2.1,
                                          'wrist_2_joint': -1.5708, 'wrist_3_joint': 2}
 
         home_angles_no_id = self.expected_home_angles
