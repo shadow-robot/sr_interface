@@ -49,7 +49,7 @@ class TestBiHandAndArmSim(TestCase):
     def scene_data_cb(cls, result):
         scene_data = ()
         cls.scene_data = result.world.collision_objects
-    
+
     def joints_error_check(self, expected_joint_values, recieved_joint_values):
         expected_and_final_joint_value_diff = 0
         for expected_value, recieved_value in zip(sorted(expected_joint_values), sorted(recieved_joint_values)):
@@ -74,7 +74,7 @@ class TestBiHandAndArmSim(TestCase):
                                      'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.0,
                                      'ra_shoulder_lift_joint': -1.25,'ra_wrist_1_joint': -1,
                                      'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': -2}
-        
+
         expected_and_actual_home_angles = self.joints_error_check(self.expected_home_angles, start_arm_angles)
         self.assertAlmostEqual(expected_and_actual_home_angles, 0, delta=0.2)
 
@@ -110,7 +110,7 @@ class TestBiHandAndArmSim(TestCase):
                     'RFJ1': 1.5707, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0,
                     'LFJ1': 0.0, 'LFJ2': 0.0, 'LFJ3': 0.0, 'LFJ4': 0.0,
                     'LFJ5': 0.0, 'WRJ1': 0.0, 'WRJ2': 0.0}
-        
+
         hand_joints_target_no_id = hand_joints_target
 
         hand_joints_target_left = {}
@@ -122,14 +122,14 @@ class TestBiHandAndArmSim(TestCase):
             hand_joints_target_right['rh' + '_' + key] = value
 
         hands_joints_target = dict(hand_joints_target_right.items() + hand_joints_target_left.items())
-            
+
         self.hand_commander.move_to_joint_value_target(hands_joints_target, wait=True)
         rospy.sleep(15)
         final_hand_joint_values = self.hand_commander.get_current_state()
 
         expected_and_final_joint_value_diff_hand = self.joints_error_check(hands_joints_target, final_hand_joint_values)
 
-        self.assertAlmostEqual(expected_and_final_joint_value_diff_hand, 0, delta=0.4)
+        self.assertAlmostEqual(expected_and_final_joint_value_diff_hand, 0, delta=0.5)
 
     def test_5_arms_and_hands(self):
         hand_joints_target = {'THJ1': 0.52, 'THJ2': 0.61, 'THJ3': 0.0, 'THJ4': 1.20, 'THJ5': 0.17,
@@ -142,11 +142,11 @@ class TestBiHandAndArmSim(TestCase):
         arm_joints_target_right = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.0,
                                    'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
                                    'ra_wrist_2_joint': 1.578, 'ra_wrist_3_joint': -3.1416}
-        
+
         arm_joints_target_left = {'la_shoulder_pan_joint': 0.0, 'la_elbow_joint': -2.0,
                                   'la_shoulder_lift_joint': -1.89, 'la_wrist_1_joint': 3.8,
                                   'la_wrist_2_joint': -1.5708, 'la_wrist_3_joint': 3.1416}
-        
+
         hand_joints_target_no_id = hand_joints_target
 
         hand_joints_target_left = {}
@@ -156,10 +156,10 @@ class TestBiHandAndArmSim(TestCase):
         hand_joints_target_right = {}
         for key, value in hand_joints_target_no_id.items():
             hand_joints_target_right['rh' + '_' + key] = value
-        
+
         hands_and_arms_joints_target = dict(hand_joints_target_right.items() + arm_joints_target_right.items() + 
                                             hand_joints_target_left.items() + arm_joints_target_left.items())
-        
+
         self.robot_commander.move_to_joint_value_target_unsafe(hands_and_arms_joints_target, 10.0, True)
 
         rospy.sleep(5)
@@ -167,9 +167,9 @@ class TestBiHandAndArmSim(TestCase):
         final_hand_and_arm_joint_values = self.robot_commander.get_current_state()
         joint_value_diff_arm_and_hand = self.joints_error_check(hands_and_arms_joints_target,
                                                                 final_hand_and_arm_joint_values)
-        
+
         self.assertAlmostEqual(joint_value_diff_arm_and_hand, 0, delta=0.4)
-    
+
 if __name__ == "__main__":
     PKGNAME = 'sr_robot_launch'
     NODENAME = 'test_bimanual_hand_and_arm'

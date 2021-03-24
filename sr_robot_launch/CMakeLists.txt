@@ -205,14 +205,13 @@ if (CATKIN_ENABLE_TESTING)
 
 #KEEP THESE?
     add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_stand_ur10.urdf.xacro robot_config_file:=right_sh_ur10.yaml side:=right hand_type:=hand_e)
-    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_stand_ur10_bt_sp_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_btsp_biotac.yaml side:=right hand_type:=hand_e)
-
-    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10.urdf.xacro robot_config_file:=right_sh_ur10.yaml side:=right hand_type:=hand_e robot_model:=ur10) 
+    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_stand_ur10_bt_sp_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_btsp_biotac.yaml side:=right hand_type:=hand_e) 
 
 #FAILS - broken/outdated xacro does not display biotacs correctly
 #    add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_ur10_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_biotac.yaml side:=right hand_type:=hand_e)
 #    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_biotac.yaml side:=right hand_type:=hand_e robot_model:=ur10)
 
+    add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10.urdf.xacro robot_config_file:=right_sh_ur10.yaml side:=right hand_type:=hand_e robot_model:=ur10)
     add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10_bt_sp_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_btsp_biotac.yaml side:=right hand_type:=hand_e robot_model:=ur10)
     add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10e.urdf.xacro robot_config_file:=right_sh_ur10e.yaml side:=right hand_type:=hand_e robot_model:=ur10e)
     add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10e_bt_sp_biotacs.urdf.xacro robot_config_file:=right_sh_ur10e_btsp_biotac.yaml side:=right hand_type:=hand_e robot_model:=ur10e)
