@@ -205,7 +205,6 @@ class SRDFRobotGenerator(object):
                 arm_srdf_path = manipulator.arm.moveit_path + "/" + manipulator.arm.name + ".srdf"
                 with open(arm_srdf_path, 'r') as stream:
                     self.arm_srdf_xmls.append(parse(stream))
-                xacro.process_includes(self.arm_srdf_xmls[manipulator_id], os.path.dirname(sys.argv[0]))
                 xacro.process_doc(self.arm_srdf_xmls[manipulator_id])
 
             if manipulator.has_hand:
@@ -213,7 +212,6 @@ class SRDFRobotGenerator(object):
                 hand_urdf_path = self.rospack.get_path('sr_description') + "/robots/" + manipulator.hand.name
                 with open(hand_urdf_path, 'r') as hand_urdf_xacro_file:
                     hand_urdf_xml = parse(hand_urdf_xacro_file)
-                xacro.process_includes(hand_urdf_xml, os.path.dirname(sys.argv[0]))
                 xacro.process_doc(hand_urdf_xml)
 
                 hand_urdf = hand_urdf_xml.toprettyxml(indent='  ')
