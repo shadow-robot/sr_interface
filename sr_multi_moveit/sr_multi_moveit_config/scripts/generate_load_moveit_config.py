@@ -66,7 +66,7 @@ if __name__ == '__main__':
             sh_config_path = rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/"
 
             with open(robot_config_file, "r") as stream:
-                yamldoc = yaml.load(stream)
+                yamldoc = yaml.safe_load(stream)
             robot_config = generate_robot_srdf.Robot()
             robot_config.set_parameters(yamldoc)
             output_path = None

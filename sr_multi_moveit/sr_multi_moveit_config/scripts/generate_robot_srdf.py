@@ -191,7 +191,7 @@ class SRDFRobotGenerator(object):
         self.robot = Robot()
 
         with open(description_file, "r") as stream:
-            yamldoc = yaml.load(stream)
+            yamldoc = yaml.safe_load(stream)
 
         self.robot.set_parameters(yamldoc)
         self.arm_srdf_xmls = []
