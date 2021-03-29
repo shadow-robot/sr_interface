@@ -8,6 +8,8 @@ la_trajectory_controller:
       - la_wrist_1_joint
       - la_wrist_2_joint
       - la_wrist_3_joint
+      - lh_WRJ1
+      - lh_WRJ2
   joints: *robot_joints
   constraints:
       goal_time: 0.6
@@ -18,5 +20,7 @@ la_trajectory_controller:
       la_wrist_1_joint: {trajectory: 0.3, goal: 0.1}
       la_wrist_2_joint: {trajectory: 0.3, goal: 0.1}
       la_wrist_3_joint: {trajectory: 0.3, goal: 0.1}
+      lh_WRJ1: {trajectory: 2.0, goal: 2.1}
+      lh_WRJ2: {trajectory: 2.0, goal: 2.1}
   stop_trajectory_duration: 0.5
   allow_partial_joints_goal: true
