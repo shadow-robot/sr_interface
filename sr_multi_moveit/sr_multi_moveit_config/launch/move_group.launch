@@ -18,7 +18,7 @@
   <arg name="allow_trajectory_execution" default="true"/> 
   <arg name="fake_execution" default="false"/>
   <arg name="max_safe_path_cost" default="1"/>
-  <arg name="jiggle_fraction" default="0.05" />
+  <arg name="jiggle_fraction" default="0.00" />
   <arg name="publish_monitored_planning_scene" default="true"/>
 
   <!--Should the planner yaml be automatically generated? -->
@@ -53,7 +53,7 @@
   </include>
 
   <!-- Start the actual move_group node/action server -->
-  <node name="conditional_delayed_rostool_action_multi" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen" required="true">
+  <node name="conditional_delayed_rostool_action_multi" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
     <param name="package_name" value="sr_multi_moveit_config" />
     <param name="executable_name" value="move_group_action_server.launch" />
     <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>

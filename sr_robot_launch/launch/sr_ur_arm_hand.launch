@@ -90,6 +90,8 @@
        default="[/$(arg arm_prefix)_trajectory_controller/state, /$(arg hand_id)_trajectory_controller/state]"/>
   <arg if="$(eval hand_trajectory and not arm_trajectory)" name="trajectory_controllers_list"
        default="[/$(arg hand_id)_trajectory_controller/state]"/>
+  <arg if="$(eval not hand_trajectory and arm_trajectory)" name="trajectory_controllers_list"
+       default="[/$(arg arm_prefix)_trajectory_controller/state]"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
@@ -204,5 +206,8 @@
     </include>
     <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
   </group>
+
+  <!-- Publish underactuation error -->
+  <node name="error_reporter" pkg="sr_error_reporter" type="error_reporter" output="screen"/>
 
 </launch>

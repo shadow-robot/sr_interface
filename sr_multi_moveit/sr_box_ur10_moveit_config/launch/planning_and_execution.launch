@@ -8,7 +8,7 @@
     <arg name="side" value="$(arg side)"/>
   </include>
 
-  <node name="conditional_delayed_rostool_movegroup_box" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen" required="true">
+  <node name="conditional_delayed_rostool_movegroup_box" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
     <param name="package_name" value="sr_box_ur10_moveit_config" />
     <param name="executable_name" value="move_group.launch" />
     <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
@@ -17,7 +17,7 @@
   </node>
 
   <group if="$(arg use_gui)">
-    <node name="conditional_delayed_rostool_rviz_multi" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen" required="true">
+    <node name="conditional_delayed_rostool_rviz_multi" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
       <param name="package_name" value="sr_box_ur10_moveit_config" />
       <param name="executable_name" value="moveit_rviz.launch" />
       <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>

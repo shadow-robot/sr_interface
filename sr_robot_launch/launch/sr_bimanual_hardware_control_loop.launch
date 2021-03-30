@@ -141,8 +141,12 @@
     </include>
     <node if="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="gdb -ex run -args"/>
     <node unless="$(arg debug)" name="ur_arm_robot" pkg="ros_control_robot" type="ros_control_robot" args="" output="screen" launch-prefix="ethercat_grant"/>
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)" />
+    <node name="conditional_delayed_rostool_robot_state_publisher" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
+      <param name="package_name" value="robot_state_publisher" />
+      <param name="executable_name" value="robot_state_publisher" />
+      <rosparam param="params_list">[/robot_description]</rosparam>
+      <param name="launch_args_list" value="
+      publish_frequency=$(arg robot_state_pub_frequency)" />
     </node>
   </group>
 

@@ -91,6 +91,8 @@
   <node unless="$(arg load_robot_description_at_lower_level)" name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description" output="screen">
     <param name="arm_type" value="$(arg robot_model)"/>
     <param name="robot_description_file" value="$(arg robot_description)"/>
+    <param name="arm_x_separation" value="$(arg arm_x_separation)"/>
+    <param name="arm_y_separation" value="$(arg arm_y_separation)"/>
     <param name="initial_z" value="$(arg initial_z)"/>
     <param name="prefix" value="$(arg hand_id)_"/>
   </node>
