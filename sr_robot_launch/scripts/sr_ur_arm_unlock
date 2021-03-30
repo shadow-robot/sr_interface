@@ -41,7 +41,7 @@ class SrUrUnlock():
                     self.brake_arm(arm)
                 return
             else:
-                release_arm(self)
+                self.release_arm()
                 for arm in self._arms:
                     if not self.is_arm_controller_running(arm):
                         rospy.loginfo("Controller is stopped, resending robot program to arm: %s", arm)
