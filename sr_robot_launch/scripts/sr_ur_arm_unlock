@@ -42,11 +42,18 @@ class SrUrUnlock():
                 return
             else:
                 self.release_arm()
-                rospy.sleep(2)
-                for arm in self._arms:
-                    if not self.is_arm_controller_running(arm):
-                        rospy.loginfo("Controller is stopped, resending robot program to arm: %s", arm)
-                        self.call_arm_service(arm, "resend_robot_program", Trigger, dashboard=False)
+                while not self.are_all_arm_controllers_running():
+                    for arm in self._arms:
+                        if not self.is_arm_controller_running(arm):
+                            rospy.loginfo("Controller is stopped, resending robot program to arm: %s", arm)
+                            self.call_arm_service(arm, "resend_robot_program", Trigger, dashboard=False)
+                    rospy.sleep(1)
+
+    def are_all_arm_controllers_running(self):
+        for arm in self._arms:
+            if not self.is_arm_controller_running(arm):
+                    return False
+        return True
 
     def is_arm_controller_running(self, arm):
         try:
