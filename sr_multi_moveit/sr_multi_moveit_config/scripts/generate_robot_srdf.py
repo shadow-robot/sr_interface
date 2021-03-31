@@ -235,19 +235,15 @@ class SRDFRobotGenerator(object):
             if self.robot.manipulators[0].has_arm and self.robot.manipulators[1].has_arm:
                 if self.robot.manipulators[0].has_hand and self.robot.manipulators[1].has_hand:
                     comment = ["Bimanual groups with hands"]
+                    self.add_comments(comment)
                     self.add_bimanual_arm_groups(self.robot.manipulators[0].arm.internal_name,
                                                  self.robot.manipulators[1].arm.internal_name)
                 else:
                     comment = ["Bimanual groups without hands"]
+                    self.add_comments(comment)
                     self.add_bimanual_arm_groups(self.robot.manipulators[0].arm.internal_name,
                                                  self.robot.manipulators[1].arm.internal_name,
                                                  False)
-                self.add_comments(comment)
-            if self.robot.manipulators[0].has_hand and self.robot.manipulators[1].has_hand:
-                comment = ["Bimanual groups with hands"]
-                self.add_bimanual_hand_groups(self.robot.manipulators[0].hand.internal_name,
-                                              self.robot.manipulators[1].hand.internal_name)
-                self.add_comments(comment)
 
         for manipulator_id, manipulator in enumerate(self.robot.manipulators):
 
@@ -473,8 +469,16 @@ class SRDFRobotGenerator(object):
             new_group = xml.dom.minidom.Document().createElement('group')
             new_group.setAttribute("name", "two_arms_and_hands")
             arm_group_1 = xml.dom.minidom.Document().createElement('group name="' + group_1 + '_and_hand"')
-            new_group.appendChild(arm_group_1)
             arm_group_2 = xml.dom.minidom.Document().createElement('group name="' + group_2 + '_and_hand"')
+            new_group.appendChild(arm_group_1)
+            new_group.appendChild(arm_group_2)
+            new_group.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
+
+            new_group = xml.dom.minidom.Document().createElement('group')
+            new_group.setAttribute("name", "two_arms_and_wrists")
+            arm_group_1 = xml.dom.minidom.Document().createElement('group name="' + group_1 + '_and_wrist"')
+            arm_group_2 = xml.dom.minidom.Document().createElement('group name="' + group_2 + '_and_wrist"')
+            new_group.appendChild(arm_group_1)
             new_group.appendChild(arm_group_2)
             new_group.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
 

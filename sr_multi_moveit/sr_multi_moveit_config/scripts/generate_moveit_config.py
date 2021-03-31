@@ -271,8 +271,26 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
                 with open(arm_yaml_extra_groups_path, 'r') as stream:
                     arm_yamldoc_extra_groups = yaml.load(stream)
             prefix = manipulator.arm.prefix
+
             for group in robot.groups:
                 group_name = group.name
+
+                if group_name in arm_yamldoc_extra_groups:
+                    kinematics_config = arm_yamldoc_extra_groups[group_name]
+                    if prefix:
+                        if "tip_name" in kinematics_config:
+                            tip_name = kinematics_config["tip_name"]
+                            kinematics_config["tip_name"] = prefix + tip_name
+                        if "root_name" in kinematics_config:
+                            root_name = kinematics_config["root_name"]
+                            kinematics_config["root_name"] = prefix + root_name
+
+                    output_str += group.name + ":\n"
+                    output_str += yaml_reindent(yaml.dump(kinematics_config,
+                                                          default_flow_style=False,
+                                                          allow_unicode=True), 2)
+                    output_str += "\n"
+
                 if group_name == manipulator.arm.internal_name:
                     group_name = manipulator.arm.main_group
                     group_prefix = prefix
