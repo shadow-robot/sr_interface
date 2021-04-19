@@ -93,6 +93,21 @@
   <arg if="$(eval not hand_ctrl and arm_trajectory)" name="trajectory_controllers_list"
        value="[/ra_trajectory_controller/state, /la_trajectory_controller/state]"/>
 
+   <!-- LOGGING WEAR DATA -->
+  <include file="$(find sr_wear_logger)/launch/sr_wear_logger.launch">
+      <arg name="hand_serial" default="$(arg lh_serial)"/>
+      <arg name="hand_id" default="lh"/>
+      <arg name="aws_save_period" default="10"/>
+      <arg name="local_save_period" default="2"/>
+  </include>
+
+  <include file="$(find sr_wear_logger)/launch/sr_wear_logger.launch">
+      <arg name="hand_serial" default="$(arg rh_serial)"/>
+      <arg name="hand_id" default="rh"/>
+      <arg name="aws_save_period" default="10"/>
+      <arg name="local_save_period" default="2"/>
+  </include>
+
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
     <env name="GAZEBO_MODEL_PATH" value="$(find sr_description_common)/models/" />
