@@ -97,8 +97,8 @@
   <include file="$(find sr_wear_logger)/launch/sr_wear_logger.launch">
       <arg name="hand_serial" default="$(arg hand_serial)"/>
       <arg name="hand_id" default="$(arg hand_id)"/>
-      <arg name="aws_save_period" default="10"/>
-      <arg name="local_save_period" default="2"/>
+      <arg name="aws_save_period" default="36000"/>
+      <arg name="local_save_period" default="5"/>
   </include>
 
   <!-- SIMULATED ROBOTS -->
