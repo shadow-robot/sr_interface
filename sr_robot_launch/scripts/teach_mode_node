@@ -16,6 +16,7 @@
 from controller_manager_msgs.srv import (ListControllers, LoadController,
                                          SwitchController, SwitchControllerRequest)
 import rospy
+from sr_utilities.hand_finder import HandFinder
 from sr_robot_msgs.msg import ControlType
 from sr_robot_msgs.srv import (ChangeControlType, RobotTeachMode,
                                RobotTeachModeRequest, RobotTeachModeResponse, SetTeachMode)
@@ -123,14 +124,20 @@ class ControllerHelper(object):
         it will block for time_to_reload_params secs to allow hand_controllers parameters to be updated
         """
         success = True
+        hand_finder = HandFinder()
         for hand_id in self.robot_ids:
+            if len(hand_finder.get_hand_parameters().joint_prefix) == 2:
+                hand_robot_prefix = 'sr_bimanual_hands_robot/'
+            else:
+                hand_robot_prefix = 'sr_hand_robot/'
             change_control_type = rospy.ServiceProxy(
-                'sr_hand_robot/' + hand_id + '/change_control_type', ChangeControlType)
+                hand_robot_prefix + hand_id + '/change_control_type', ChangeControlType)
             try:
                 resp1 = change_control_type(chng_type_msg)
                 if resp1.result.control_type != chng_type_msg.control_type:
                     success = False
-            except rospy.ServiceException:
+            except (rospy.ServiceException, rospy.ROSException), e:
+                rospy.logerr("Service call failed: %s" % (e,))
                 success = False
 
         # Allow some time to reload parameters
