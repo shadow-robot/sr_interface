@@ -125,11 +125,12 @@ class ControllerHelper(object):
         """
         success = True
         hand_finder = HandFinder()
+        if len(hand_finder.get_hand_parameters().joint_prefix) == 2:
+            hand_robot_prefix = 'sr_bimanual_hands_robot/'
+        else:
+            hand_robot_prefix = 'sr_hand_robot/'
+            
         for hand_id in self.robot_ids:
-            if len(hand_finder.get_hand_parameters().joint_prefix) == 2:
-                hand_robot_prefix = 'sr_bimanual_hands_robot/'
-            else:
-                hand_robot_prefix = 'sr_hand_robot/'
             change_control_type = rospy.ServiceProxy(
                 hand_robot_prefix + hand_id + '/change_control_type', ChangeControlType)
             try:
