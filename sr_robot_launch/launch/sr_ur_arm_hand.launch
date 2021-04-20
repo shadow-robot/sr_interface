@@ -30,6 +30,8 @@
   <arg name="robot_state_pub_frequency" default="250"/>
   <!-- The joint state publisher publishing frequency  -->
   <arg name="joint_state_pub_frequency" default="125"/>
+  <!-- Logging wear data  -->
+  <arg name="wear_logging" default="true"/>
 
   <!-- ROBOT CONFIG-->
   <arg name="side" default="right"/>
@@ -94,12 +96,14 @@
        default="[/$(arg arm_prefix)_trajectory_controller/state]"/>
   
   <!-- LOGGING WEAR DATA -->
-  <include file="$(find sr_wear_logger)/launch/sr_wear_logger.launch">
-      <arg name="hand_serial" default="$(arg hand_serial)"/>
-      <arg name="hand_id" default="$(arg hand_id)"/>
-      <arg name="aws_save_period" default="36000"/>
-      <arg name="local_save_period" default="5"/>
-  </include>
+  <group if="$(arg wear_logging)">
+    <include file="$(find sr_wear_logger)/launch/sr_wear_logger.launch">
+        <arg name="hand_serial" default="$(arg hand_serial)"/>
+        <arg name="hand_id" default="$(arg hand_id)"/>
+        <arg name="aws_save_period" default="36000"/>
+        <arg name="local_save_period" default="5"/>
+    </include>
+  </group>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
