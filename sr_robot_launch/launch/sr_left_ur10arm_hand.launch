@@ -23,7 +23,7 @@
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="true"/>
   <!-- Definition of "home" position, in joint-angle pairs -->
-  <arg name="home_angles" default="-J la_shoulder_pan_joint 0.0 -J la_elbow_joint -2.0 -J la_wrist_1_joint -2.4 -J la_wrist_2_joint -1.5708 -J la_shoulder_lift_joint -1.89 -J la_wrist_3_joint 3.1416"/>
+  <arg name="home_angles" default="-J la_shoulder_pan_joint 0.0 -J la_elbow_joint -2.0 -J la_wrist_1_joint -2.1 -J la_wrist_2_joint -1.5708 -J la_shoulder_lift_joint -1.89 -J la_wrist_3_joint 2"/>
   <!-- Set this to true if you run the hardware loop on a remote computer -->
   <arg name="external_control_loop" default="false"/>
   <!-- The robot state publisher publishing frequency  -->
@@ -51,7 +51,8 @@
   <arg name="initial_z" default="0.7521" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
   <arg name="arm_x_separation" default="0.0"/>
-  <arg name="arm_y_separation" default="0.0"/>
+  <arg name="arm_y_separation" default="1.5" if="$(arg scene)"/>
+  <arg name="arm_y_separation" default="0.0" unless="$(arg scene)"/>
   <!-- You can select ur10 or ur10e -->
   <arg name="robot_model" default="ur10e"/>
   <arg name="arm_robot_hw" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/left_ur_arm_robot_hw.yaml"/>
