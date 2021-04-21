@@ -28,7 +28,7 @@
   <!-- Broadcast static tf for robot root -->
   <!--node name="virtual_joint_broadcaster" pkg="sr_multi_moveit_config" type="virtual_joint_broadcaster.py" output="screen" /-->
 
-  <node name="conditional_delayed_rostool_movegroup_multi" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen" required="true">
+  <node name="conditional_delayed_rostool_movegroup_multi" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
     <param name="package_name" value="sr_multi_moveit_config" />
     <param name="executable_name" value="move_group.launch" />
     <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
@@ -45,7 +45,7 @@
   </node>
 
   <group if="$(arg gui)">
-    <node name="conditional_delayed_rostool_rviz_multi" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen" required="true">
+    <node name="conditional_delayed_rostool_rviz_multi" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
       <param name="package_name" value="sr_multi_moveit_config" />
       <param name="executable_name" value="moveit_rviz.launch" />
       <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
