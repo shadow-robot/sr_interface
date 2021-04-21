@@ -125,10 +125,13 @@ class ControllerHelper(object):
         """
         success = True
         hand_finder = HandFinder()
-        if len(hand_finder.get_hand_parameters().joint_prefix) == 2:
+        hand_quantity = len(hand_finder.get_hand_parameters().joint_prefix)
+        if hand_quantity == 2:
             hand_robot_prefix = 'sr_bimanual_hands_robot/'
-        else:
+        elif hand_quantity == 1:
             hand_robot_prefix = 'sr_hand_robot/'
+        else:
+            raise ValueError('Hand Finder did not find a correct number of hands')
 
         for hand_id in self.robot_ids:
             change_control_type = rospy.ServiceProxy(
