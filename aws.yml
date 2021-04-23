@@ -1,6 +1,5 @@
 settings:
   machine_type: medium
-  docker_images: ecr
   ubuntu:
     version: focal
   ros:
