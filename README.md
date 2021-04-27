@@ -9,4 +9,3 @@ Code Coverage|[<img src="https://codebuild.eu-west-2.amazonaws.com/badges?uuid=e
 
 # Shadow Robot Interface packages
 This repository contains the high level interface and its dependencies for interacting simply with our robots.
-
