@@ -30,14 +30,15 @@ class TestHandAndArmSim(TestCase):
     """
     Tests the Hand and Arm in Sim
     """
+
     @classmethod
     def setUpClass(cls):
         rospy.wait_for_message('/move_group/status', GoalStatusArray)
         cls.hand_type = rospy.get_param('~test_hand_and_arm_sim/hand_type')
         cls.scene = rospy.get_param('~test_hand_and_arm_sim/scene')
 
-    # ur-specific launch files do not accept 'side' param as it is already set
-    # for phantom hands use hand finder
+        # ur-specific launch files do not accept 'side' param as it is already set
+        # for phantom hands use hand finder
         try:
             cls.side = rospy.get_param('~test_hand_and_arm_sim/side')
             if cls.side == 'right':

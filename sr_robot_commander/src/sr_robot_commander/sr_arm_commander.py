@@ -56,7 +56,7 @@ class SrArmCommander(SrRobotCommander):
         pose = PoseStamped()
         pose.pose.position.x = 0
         pose.pose.position.y = 0
-        pose.pose.position.z = z_position - (height/2.0)
+        pose.pose.position.z = z_position - (height / 2.0)
         pose.pose.orientation.x = 0
         pose.pose.orientation.y = 0
         pose.pose.orientation.z = 0

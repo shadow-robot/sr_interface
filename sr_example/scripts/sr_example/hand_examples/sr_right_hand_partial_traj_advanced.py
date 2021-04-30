@@ -19,7 +19,7 @@
 import numpy as np
 
 import rospy
-from control_msgs.msg import JointTrajectoryControllerState,\
+from control_msgs.msg import JointTrajectoryControllerState, \
     FollowJointTrajectoryActionResult, FollowJointTrajectoryActionGoal
 import matplotlib.pyplot as plt
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
@@ -83,8 +83,8 @@ class PartialTrajListener():
             self.rfj3_vel_error.append(state.error.velocities[self.rfj3_index])
 
     def callback_result(self, result):
-        print ("Trajectory Goal: " + result.status.goal_id.id +
-               " finished with status: " + str(result.status.status))
+        print("Trajectory Goal: " + result.status.goal_id.id +
+              " finished with status: " + str(result.status.status))
 
     def callback_goal(self, goal):
         self.start_goals = True
@@ -329,8 +329,8 @@ if __name__ == '__main__':
 
     # Do not exit until graphs closed
     while not rospy.is_shutdown():
-        if len(listener.joints_time) > 5 and\
-                (listener.joints_time[-1] - listener.joints_time[0]) > 15 and\
+        if len(listener.joints_time) > 5 and \
+                (listener.joints_time[-1] - listener.joints_time[0]) > 15 and \
                 not graphs_finished:
             listener.finish_goals = True
             listener.graph()

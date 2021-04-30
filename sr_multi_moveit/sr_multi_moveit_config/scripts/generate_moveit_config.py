@@ -31,7 +31,6 @@
 # Author: Guillaume Walck <gwalck@techfak.uni-bielefeld.de>
 # Author: Shadow Robot Software Team <software@shadowrobot.com>
 
-
 import argparse
 import yaml
 import re

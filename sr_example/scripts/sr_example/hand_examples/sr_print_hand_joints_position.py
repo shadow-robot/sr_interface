@@ -26,7 +26,6 @@ from numpy import arange
 from math import pi
 import argparse
 
-
 rospy.init_node("print_hand_joints_position", anonymous=True)
 
 parser = argparse.ArgumentParser(description='A script to print hand joint positions. ',
@@ -47,7 +46,7 @@ hand_serial = hand_parameters.mapping.keys()
 scale = 1
 
 if angle_type == "degrees":
-    scale = 1 * (180/pi)
+    scale = 1 * (180 / pi)
 
 for i in arange(0, len(prefix)):
     hand_commander = SrHandCommander(hand_parameters=hand_parameters, hand_serial=hand_serial[i])

@@ -49,7 +49,7 @@ if angle_type not in ['radians', 'degrees']:
 
 scale = 1
 if angle_type == "degrees":
-    scale = 1 * (180/pi)
+    scale = 1 * (180 / pi)
 
 # The constructor for SrRobotCommander
 # take a name parameter that should match the group name of the robot to be used.
@@ -60,7 +60,7 @@ all_joints_state = robot_commander.get_joints_position()
 
 hand_joints_state = {
     k: (v * scale) for k, v in all_joints_state.items()
-    if k.startswith("rh_")and not k.startswith("rh_W")}
+    if k.startswith("rh_") and not k.startswith("rh_W")}
 arm_joints_state = {
     k: (v * scale) for k, v in all_joints_state.items()
     if k.startswith("ra_") or k.startswith("rh_W")}

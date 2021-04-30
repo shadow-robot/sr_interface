@@ -29,8 +29,6 @@ hand_serial = hand_parameters.mapping.keys()[0]
 
 hand_commander = SrHandCommander(hand_parameters=hand_parameters,
                                  hand_serial=hand_serial)
-
-
 # Define trajectory. Interpolate time (time to move to each point from previous posture)
 # must be specified. Pause time is optional. Names are either the default poses defined
 # in SRDF or are states stored in the warehouse.
@@ -58,7 +56,6 @@ trajectory = [
         'interpolate_time': 3.0
     }
 ]
-
 
 # Run trajectory via moveit
 hand_commander.run_named_trajectory(trajectory)

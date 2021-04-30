@@ -29,6 +29,7 @@ class TestSrRobotStateExporter(TestCase):
     """
     Tests the Robot State Exporter
     """
+
     @classmethod
     def setUpClass(cls):
         if not os.path.exists("/tmp/test_exporter"):

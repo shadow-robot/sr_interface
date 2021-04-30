@@ -41,10 +41,10 @@ def _fix_j0(joints):
     Useful if using joint_states to get grasp joint positions.
     """
     for finger in ['FFJ', 'LFJ', 'MFJ', 'RFJ']:
-        if finger+'1' in joints and finger+'2' in joints:
-            joints[finger+'0'] = joints[finger+'1'] + joints[finger+'2']
-            del joints[finger+'1']
-            del joints[finger+'2']
+        if finger + '1' in joints and finger + '2' in joints:
+            joints[finger + '0'] = joints[finger + '1'] + joints[finger + '2']
+            del joints[finger + '1']
+            del joints[finger + '2']
 
 
 def mk_grasp(joints, pre_joints=None, fix_j0=False):

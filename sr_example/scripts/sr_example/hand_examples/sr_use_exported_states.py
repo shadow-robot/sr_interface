@@ -17,7 +17,6 @@ import rospy
 
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_state_exporter import SrRobotStateExporter
-
 # It's assumed that a module containing states and named named exported_states.py has already
 # been exported and is found somewhere on the path (e.g. in the same directory as this script).
 # Let's assume it contains two states, 'state_1' and 'state_2'
@@ -68,8 +67,6 @@ state_exporter = SrRobotStateExporter(warehouse_states)
 converted_trajectory = state_exporter.convert_trajectory(trajectory)
 
 hand_commander.run_named_trajectory(converted_trajectory)
-
-
 # Or we could repopulate the warehouse with the exported states:
 
 state_exporter = SrRobotStateExporter(warehouse_states)

@@ -35,6 +35,7 @@ import roslib
 import rospy
 import tf
 from geometry_msgs.msg import Vector3
+from __future__ import absolute_import
 
 roslib.load_manifest('hand_kinematics')
 
@@ -82,7 +83,7 @@ if __name__ == '__main__':
             except (tf.LookupException, tf.ConnectivityException):
                 continue
             tip_pos_pub[4].publish(Vector3(trans[0], trans[1], trans[2]))
-        except:
+        except rospy.ROSInterruptException:
             continue
 
         rate.sleep()

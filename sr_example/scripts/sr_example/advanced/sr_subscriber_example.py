@@ -26,6 +26,7 @@ import roslib
 import rospy
 import math
 from sensor_msgs.msg import JointState
+from __future__ import absolute_import
 
 roslib.load_manifest('sr_example')
 
@@ -56,6 +57,7 @@ def listener():
     rospy.Subscriber("joint_states", JointState, callback)
 
     rospy.spin()
+
 
 if __name__ == '__main__':
     listener()

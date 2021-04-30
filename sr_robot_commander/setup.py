@@ -6,4 +6,4 @@ setup_args = generate_distutils_setup(
     packages=['sr_robot_commander'],
     package_dir={'': 'src'})
 
-setup(**setup_args)
+setup( ** setup_args)

@@ -30,6 +30,7 @@ class TestBiHandAndArmSim(TestCase):
     """
     Tests the Hand and Arm in Sim
     """
+
     @classmethod
     def setUpClass(cls):
         rospy.wait_for_message('/move_group/status', GoalStatusArray)

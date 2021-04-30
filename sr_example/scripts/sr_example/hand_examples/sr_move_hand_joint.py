@@ -17,8 +17,6 @@
 import rospy
 from copy import deepcopy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
-
-
 ####################
 # POSE DEFINITIONS #
 ####################

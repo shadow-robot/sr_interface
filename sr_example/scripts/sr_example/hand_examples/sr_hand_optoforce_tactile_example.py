@@ -33,5 +33,6 @@ def listener():
         rospy.Subscriber("optoforce_" + str(sensor_num), WrenchStamped, callback)
     rospy.spin()
 
+
 if __name__ == '__main__':
     listener()

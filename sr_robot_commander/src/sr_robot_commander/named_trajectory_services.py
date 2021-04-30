@@ -71,7 +71,7 @@ class WaypointNamedServices(object):
         return False
 
     def __list_named_trajectories(self, req):
-        return [map(lambda x:x["name"], self.service_mapping)]
+        return [map(lambda x: x["name"], self.service_mapping)]
 
     def define_services(self):
         plan_service_name = rospy.get_param("~plan_named_trajectory_service")

@@ -27,6 +27,7 @@ class TestHandJointMovement(TestCase):
     """
     Tests the Hand Commander
     """
+
     @classmethod
     def setUpClass(cls):
         cls.hand_type = rospy.get_param('~test_sim/hand_type', 'hand_e_plus')

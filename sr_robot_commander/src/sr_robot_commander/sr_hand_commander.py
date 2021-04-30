@@ -88,7 +88,7 @@ class SrHandCommander(SrRobotCommander):
         self._hand_serial = hand_serial
 
     def get_hand_serial(self):
-            return self._hand_serial
+        return self._hand_serial
 
     def get_joints_effort(self):
         """
@@ -106,7 +106,7 @@ class SrHandCommander(SrRobotCommander):
 
         if not self.__set_force_srv.get(joint_name):
             service_name = "sr_hand_robot/" + self._topic_prefix + \
-                           "change_force_PID_"+joint_name.upper()
+                           "change_force_PID_" + joint_name.upper()
             self.__set_force_srv[joint_name] = \
                 rospy.ServiceProxy(service_name,
                                    ForceController)

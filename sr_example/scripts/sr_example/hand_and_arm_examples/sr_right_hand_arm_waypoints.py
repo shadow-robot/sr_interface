@@ -101,7 +101,6 @@ waypoints = []
 
 # start with the initial position
 initial_pose = arm_commander.get_current_pose()
-
 # Using the method plan_to_waypoints_target, it is possible to specify a set of waypoints
 # for the end-effector and create a plan to follow it.
 # https://github.com/shadow-robot/sr_interface/blob/melodic-devel/sr_robot_commander/src/sr_robot_commander/sr_robot_commander.py#L830

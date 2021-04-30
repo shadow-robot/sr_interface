@@ -76,14 +76,14 @@ class Grasp(moveit_msgs.msg.Grasp):
         Set the positions for a point (default 0) in the pre-grasp to a dict of
         joint positions.
         """
-        self._set_posture_point(self.pre_grasp_posture, *args, **kwargs)
+        self._set_posture_point(self.pre_grasp_posture, * args, ** kwargs)
 
     def set_grasp_point(self, *args, **kwargs):
         """
         Set the positions for a point (default 0) in the grasp to a dict of
         joint positions.
         """
-        self._set_posture_point(self.grasp_posture, *args, **kwargs)
+        self._set_posture_point(self.grasp_posture, * args, ** kwargs)
 
     def _set_posture_point(self, posture, positions, point=0):
         """Set the posture positions using a dict of joint positions."""

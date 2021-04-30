@@ -57,7 +57,6 @@ class TestGraspContact(unittest.TestCase):
                 jtp.positions.append(0.0)
         grasp.grasp_posture.points.append(jtp)
         return grasp
-
     # Tests
     ########
 
