@@ -158,7 +158,7 @@ class GraspStash(object):
     def load_yaml_file(self, fname):
         """Load a set of grasps from a YAML file."""
         try:
-            data = yaml.load(file(fname))
+            data = yaml.safe_load(file(fname))
             self.load_yaml(data)
         except Exception as e:
             logerr("Failed to load YAML grasp file: %s error:%s" % (fname, e))

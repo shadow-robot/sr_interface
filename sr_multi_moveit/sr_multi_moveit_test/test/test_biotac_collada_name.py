@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Copyright 2019 Shadow Robot Company Ltd.
 #
@@ -39,11 +39,8 @@ class TestBiotacColladaName(TestCase):
     def check_name(self, hand_urdf_path):
         with open(hand_urdf_path, 'r') as hand_urdf_xacro_file:
             hand_urdf_xml = parse(hand_urdf_xacro_file)
-        xacro.process_includes(hand_urdf_xml, os.path.dirname(sys.argv[0]))
         macros = {}
-        xacro.grab_macros(hand_urdf_xml, macros)
         symbols = xacro.Table()
-        xacro.grab_properties(hand_urdf_xml, symbols)
         xacro.eval_all(hand_urdf_xml.documentElement, macros, symbols)
 
         hand_urdf = hand_urdf_xml.toprettyxml(indent='  ')

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2015, CITEC, Bielefeld University
@@ -188,7 +188,7 @@ def generate_ompl_planning(robot,
     output_str = ""
 
     stream = open(template_path, 'r')
-    yamldoc = yaml.load(stream)
+    yamldoc = yaml.safe_load(stream)
     output_str += "planner_configs:\n"
     output_str += yaml_reindent(yaml.dump(
         yamldoc["planner_configs"],
@@ -261,7 +261,7 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
 
     # open template file
     stream = open(template_path, 'r')
-    yamldoc = yaml.load(stream)
+    yamldoc = yaml.safe_load(stream)
     stream.close()
 
     if 'kinematics_template' in template_path:
@@ -270,7 +270,7 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
             'sr_moveit_hand_config') + "/config/kinematics_" + default_solver_for_fixed_joint + "_template.yaml"
 
         with open(fixed_joint_template_path, 'r') as stream:
-            yamldoc_fixed_joint = yaml.load(stream)
+            yamldoc_fixed_joint = yaml.safe_load(stream)
     else:
         yamldoc_fixed_joint = deepcopy(yamldoc)
 
@@ -355,7 +355,7 @@ def generate_joint_limits(robot,
     """
     output_str = ""
     stream = open(template_path, 'r')
-    yamldoc = yaml.load(stream)
+    yamldoc = yaml.safe_load(stream)
     output_str += "joint_limits:\n"
     group_name = None
     # find full hand key name
