@@ -33,6 +33,7 @@
 
 # It is recommended to run this script in simulation first.
 
+from __future__ import absolute_import
 import rospy
 import sys
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
@@ -91,7 +92,7 @@ rospy.sleep(2.0)
 
 # The arm commander generates a plan to a new pose before the pose is executed.
 # https://github.com/shadow-robot/sr_interface/blob/melodic-devel/sr_robot_commander/src/sr_robot_commander/sr_robot_commander.py#L668
-raw_input("Press Enter to continue...")
+input("Press Enter to continue...")
 rospy.loginfo("Planning the move to the first pose:\n" + str(example_goal_1) + "\n")
 arm_commander.plan_to_pose_target(example_goal_1)
 rospy.loginfo("Finished planning, moving the arm now.")
@@ -101,13 +102,13 @@ rospy.sleep(2.0)
 
 # Here a pose is provided and the arm commander moves the arm to it
 # https://github.com/shadow-robot/sr_interface/blob/melodic-devel/sr_robot_commander/src/sr_robot_commander/sr_robot_commander.py#L655
-raw_input("Press Enter to continue...")
+input("Press Enter to continue...")
 rospy.loginfo("Moving arm to pose:\n" + str(example_goal_2) + "\n")
 arm_commander.move_to_pose_target(example_goal_2, wait=True)
 rospy.sleep(2.0)
 
 # Finish arm at home and hand at pack
-raw_input("Press Enter to continue...")
+input("Press Enter to continue...")
 rospy.loginfo("Moving arm to joint states\n" + str(arm_hand_home_joints_goal) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(arm_hand_home_joints_goal, 6.0, True)
 rospy.sleep(3.0)

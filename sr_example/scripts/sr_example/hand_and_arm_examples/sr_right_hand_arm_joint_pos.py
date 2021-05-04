@@ -32,6 +32,7 @@
 
 # It is recommended to run this script in simulation first.
 
+from __future__ import absolute_import
 import rospy
 import sys
 from sr_robot_commander.sr_arm_commander import SrArmCommander
@@ -114,19 +115,19 @@ hand_commander.move_to_named_target("open")
 rospy.sleep(2.0)
 
 # Move arm and hand together
-raw_input("Press Enter to continue...")
+input("Press Enter to continue...")
 rospy.loginfo("Moving hand to joint states\n" + str(hand_arm_joints_goal_1) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(hand_arm_joints_goal_1, 6.0, True)
 rospy.sleep(2.0)
 
 # Move arm and hand together
-raw_input("Press Enter to continue...")
+input("Press Enter to continue...")
 rospy.loginfo("Moving hand and arm to joint states\n" + str(hand_arm_joints_goal_2) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(hand_arm_joints_goal_2, 6.0, True)
 rospy.sleep(2.0)
 
 # Finish arm at home and hand at pack
-raw_input("Press Enter to continue...")
+input("Press Enter to continue...")
 rospy.loginfo("Moving arm and hand to joint states\n" + str(arm_hand_home_joints_goal) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(arm_hand_home_joints_goal, 6.0, True)
 rospy.sleep(2.0)

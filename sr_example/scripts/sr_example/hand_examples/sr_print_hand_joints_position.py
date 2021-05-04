@@ -19,6 +19,7 @@
 # recording those positions with this script. Angles can be printed in radians or degrees, an argument should be added
 # when the script is called of either 'radians' or 'degrees', default is radians
 
+from __future__ import absolute_import
 import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder

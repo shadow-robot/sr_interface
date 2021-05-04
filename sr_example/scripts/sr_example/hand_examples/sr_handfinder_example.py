@@ -17,6 +17,7 @@
 # are read and it is detected whether the hand is left or right and if there are tactiles present.
 # The correct prefix and parameters are then configured.
 
+from __future__ import absolute_import
 import sys
 import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander

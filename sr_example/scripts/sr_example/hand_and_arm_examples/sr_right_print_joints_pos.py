@@ -27,6 +27,7 @@
 # simulated robot:
 #     roslaunch sr_right_ur10arm_hand.launch sim:=true scene:=true
 
+from __future__ import absolute_import
 import rospy
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from math import pi

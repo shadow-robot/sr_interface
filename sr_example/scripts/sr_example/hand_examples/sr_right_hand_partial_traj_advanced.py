@@ -16,6 +16,7 @@
 # This example gives a more advanced use case for sending partial trajectories.
 # A plot is generated to show the output of the desired and achieved positions and velocities.
 
+from __future__ import absolute_import
 import numpy as np
 
 import rospy
@@ -203,6 +204,7 @@ def construct_trajectory_point(posture, duration):
     for key in joint_trajectory.joint_names:
         trajectory_point.positions.append(posture[key])
     return trajectory_point
+
 
 # 6 position goals are specified
 open_hand = {'rh_FFJ1': 0.0, 'rh_FFJ2': 0.0, 'rh_FFJ3': 0.0, 'rh_FFJ4': 0.0,

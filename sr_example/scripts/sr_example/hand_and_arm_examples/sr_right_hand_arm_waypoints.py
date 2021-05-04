@@ -30,6 +30,7 @@
 
 # It is recommended to run this script in simulation first.
 
+from __future__ import absolute_import
 import rospy
 import sys
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
@@ -88,14 +89,14 @@ arm_commander.execute_plan(arm_to_home_plan)
 rospy.sleep(2.0)
 
 # Moving arm to initial pose
-raw_input("Press Enter to continue...")
+input("Press Enter to continue...")
 rospy.loginfo("Planning the move to the pose:\n" + str(example_goal_1) + "\n")
 arm_commander.plan_to_pose_target(example_goal_1)
 rospy.loginfo("Finished planning, moving the arm now.")
 arm_commander.execute()
 rospy.sleep(2.0)
 
-raw_input("Press Enter to continue...")
+input("Press Enter to continue...")
 rospy.loginfo("Following trajectory defined by waypoints")
 waypoints = []
 
@@ -127,7 +128,7 @@ arm_commander.execute()
 rospy.sleep(2.0)
 
 # Finish arm at home and hand at pack
-raw_input("Press Enter to continue...")
+input("Press Enter to continue...")
 rospy.loginfo("Moving arm to joint states\n" + str(arm_hand_home_joints_goal) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(arm_hand_home_joints_goal, 6.0, True)
 rospy.sleep(2.0)

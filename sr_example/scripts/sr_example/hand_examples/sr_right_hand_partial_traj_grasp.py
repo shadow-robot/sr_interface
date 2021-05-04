@@ -34,6 +34,7 @@ def construct_trajectory_point(posture, duration):
         trajectory_point.positions.append(posture[key])
     return trajectory_point
 
+
 hand_finder = HandFinder()
 
 hand_parameters = hand_finder.get_hand_parameters()

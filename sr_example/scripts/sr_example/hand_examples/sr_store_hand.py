@@ -15,6 +15,7 @@
 
 # This example demonstrates how you can send a trajectory created from named poses.
 
+from __future__ import absolute_import
 import rospy
 
 from sr_robot_commander.sr_hand_commander import SrHandCommander

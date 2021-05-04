@@ -22,11 +22,11 @@ To view the joint_states, type the following in a terminal:
 
 """
 
+from __future__ import absolute_import
 import roslib
 import rospy
 import math
 from sensor_msgs.msg import JointState
-from __future__ import absolute_import
 
 roslib.load_manifest('sr_example')
 

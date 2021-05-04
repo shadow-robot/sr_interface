@@ -23,8 +23,8 @@ the data.
 
 """
 
-import rospy
 from __future__ import absolute_import
+import rospy
 import time
 from std_msgs.msg import Float64
 
