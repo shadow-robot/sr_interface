@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 import rospy
 from moveit_msgs.srv import CheckIfRobotStateExistsInWarehouse as HasState
 from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
@@ -46,6 +47,7 @@ def mock_save_state_callback(req):
         return True
     else:
         return False
+
 
 if __name__ == "__main__":
     rospy.init_node('mock_services', anonymous=True)

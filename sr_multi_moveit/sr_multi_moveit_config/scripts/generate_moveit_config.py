@@ -31,6 +31,7 @@
 # Author: Guillaume Walck <gwalck@techfak.uni-bielefeld.de>
 # Author: Shadow Robot Software Team <software@shadowrobot.com>
 
+from __future__ import absolute_import
 import argparse
 import yaml
 import re
@@ -177,7 +178,7 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
                         if "projection_evaluator" in group_config:
                             proj_eval = group_config["projection_evaluator"]
                             proj_eval.strip()
-                            proj_eval_striped = re.split('\W+', proj_eval)
+                            proj_eval_striped = re.split(r'\W+', proj_eval)
                             joints = [word for word in proj_eval_striped if word not in ["joints", ""]]
                             proj_eval_new = "joints("
                             for joint in joints:
@@ -197,7 +198,7 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
                         if "projection_evaluator" in group_config:
                             proj_eval = group_config["projection_evaluator"]
                             proj_eval.strip()
-                            proj_eval_striped = re.split('\W+', proj_eval)
+                            proj_eval_striped = re.split(r'\W+', proj_eval)
                             joints = [word for word in proj_eval_striped if word not in ["joints", ""]]
                             proj_eval_new = "joints("
                             for joint in joints:
@@ -419,6 +420,7 @@ def generate_joint_limits(robot, robot_config, hand_template_path="joint_limits_
 
     # load on param server or output to file
     upload_output_params(output_str, output_path, ns_)
+
 
 if __name__ == '__main__':
 

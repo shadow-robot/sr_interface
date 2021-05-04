@@ -38,6 +38,7 @@ import sys
 from sr_robot_commander.sr_arm_commander import SrArmCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
+from builtins import input
 
 rospy.init_node("right_hand_arm_joint_pos", anonymous=True)
 

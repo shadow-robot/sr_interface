@@ -39,6 +39,7 @@ import sys
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from sr_robot_commander.sr_arm_commander import SrArmCommander
+from builtins import input
 
 rospy.init_node("right_hand_arm_ef_pos", anonymous=True)
 

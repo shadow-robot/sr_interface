@@ -39,6 +39,7 @@ generate_moveit_config provides:
     generate_joint_limits : generate joint limits config file
 """
 
+from __future__ import absolute_import
 import argparse
 import yaml
 import re

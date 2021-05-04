@@ -36,4 +36,4 @@ for name, g in parser.grasps.iteritems():
     grasps.grasps.append(ng)
 
 # print grasps # oddly fails, but this works.
-print genpy.message.strify_message(grasps.grasps)
+print(genpy.message.strify_message(grasps.grasps))

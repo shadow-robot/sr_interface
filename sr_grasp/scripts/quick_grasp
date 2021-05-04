@@ -18,6 +18,7 @@
 #
 #
 
+from __future__ import absolute_import
 import os
 import unittest
 import rospy
@@ -73,6 +74,7 @@ class QuickGraspNode(object):
         grasp.set_grasp_point(positions=positions)
         self.stash.put_grasp(grasp)
         node.grasp = grasp
+
 
 if __name__ == '__main__':
     rospy.init_node("quick_grasp")

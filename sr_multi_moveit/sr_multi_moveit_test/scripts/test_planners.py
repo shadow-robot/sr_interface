@@ -16,6 +16,7 @@
 
 # A script to test planners, to be run on the command line with group name as the argument (left_arm or right_arm)
 
+from __future__ import absolute_import
 import rospy
 import sys
 import numpy
@@ -340,6 +341,7 @@ def main():
                     "RRTstarkConfigDefault"]
     for planner in planner_list:
         TestPlanners(group_id, planner)
+
 
 if __name__ == "__main__":
     main()

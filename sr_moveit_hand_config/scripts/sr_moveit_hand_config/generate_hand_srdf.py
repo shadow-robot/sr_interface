@@ -35,6 +35,7 @@
     syntax  generate_hand_srdf [output filename]
 """
 
+from __future__ import absolute_import
 import sys
 import os
 from xml.dom.minidom import parse
@@ -157,6 +158,7 @@ class SRDFHandGenerator(object):
 
     def get_hand_srdf(self):
         return self.srdf_xacro_xml
+
 
 if __name__ == '__main__':
     rospy.init_node('hand_srdf_generator', anonymous=True)

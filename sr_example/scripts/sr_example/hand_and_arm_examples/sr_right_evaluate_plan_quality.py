@@ -33,6 +33,7 @@ import rospy
 import sys
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
+from builtins import input
 
 rospy.init_node("right_hand_manipulator_plan_quality", anonymous=True)
 
