@@ -97,7 +97,8 @@ int main(int argc, char **argv)
    * init the publisher on the child joint controller command topic
    * publishing messages of the type std_msgs::Float64.
    */
-  pub = node.advertise<std_msgs::Float64>(std::string("sh_") + child_name + controller_type + std::string("/command"), 2);
+  pub = node.advertise<std_msgs::Float64>(std::string("sh_") + child_name + controller_type + 
+                                          std::string("/command"), 2);
 
   // subscribe until interrupted.
   while (ros::ok())
