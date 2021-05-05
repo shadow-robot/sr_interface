@@ -121,7 +121,7 @@ class GraspStash(object):
 
     def get_all(self):
         """Return list of all grasps."""
-        return self._store.values()
+        return self._store
 
     def get_grasp_array(self):
         arr = GraspArray()

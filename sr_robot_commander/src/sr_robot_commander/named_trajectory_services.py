@@ -22,6 +22,7 @@ from sr_robot_msgs.srv import ExecutePlannedTrajectory as ExecutePlan
 from sr_robot_msgs.srv import PlanNamedTrajectory as PlanNamed
 from sr_robot_msgs.srv import ListNamedTrajectories as ListNamed
 from functools import partial
+from builtins import map
 from copy import deepcopy
 
 

@@ -193,7 +193,7 @@ class SrUrUnlock():
             rospy.loginfo("Checking if program is running ...")
             if self.start_arms_program_if_stopped():
                 rospy.sleep(5)
-        except rospy.ServiceException, e:
+        except rospy.ServiceException as e:
             for arm in self._arms:
                 rospy.logerr("Arm checking/restarting failed for arm: %s. %s", arm, e)
 
