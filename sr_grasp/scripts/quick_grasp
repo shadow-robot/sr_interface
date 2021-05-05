@@ -29,7 +29,7 @@ from sr_robot_msgs.msg import GraspAction, GraspGoal
 from sr_hand.shadowhand_ros import ShadowHand_ROS
 from sr_grasp.utils import mk_grasp
 from sr_grasp import Grasp, GraspStash
-
+from builtins import input
 
 class QuickGraspNode(object):
 
@@ -69,7 +69,7 @@ class QuickGraspNode(object):
         grasp = Grasp()
         grasp.id = name
         positions = self.hand.read_all_current_positions()
-        for k, v in positions.iteritems():
+        for k, v in positions.items():
             positions[k] = radians(v)
         grasp.set_grasp_point(positions=positions)
         self.stash.put_grasp(grasp)
@@ -103,7 +103,7 @@ if __name__ == '__main__':
         elif act == "g":
             node.run_grasp()
         elif act == "n":
-            name = raw_input("Enter name: ")
+            name = input("Enter name: ")
             node.new_grasp(name=name)
         elif act == "s":
             node.stash.save_yaml_file()

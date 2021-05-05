@@ -45,11 +45,11 @@
 #include <control_msgs/JointControllerState.h>
 
 /// the name of the parent joint
-std::string parent_name = "rh_ffj3";
+const char* parent_name = "rh_ffj3";
 /// the name of the child joint to link to the parent
-std::string child_name = "rh_mfj3";
+const char* child_name = "rh_mfj3";
 /// Controller that controls joint position
-std::string controller_type = "_position_controller";
+const char* controller_type = "_position_controller";
 
 // a ros subscriber (will be instantiated later on)
 ros::Subscriber sub;

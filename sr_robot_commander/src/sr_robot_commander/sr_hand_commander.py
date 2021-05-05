@@ -137,7 +137,7 @@ class SrHandCommander(SrRobotCommander):
                                              motor_settings["sign"],
                                              motor_settings["torque_limit"],
                                              motor_settings["torque_limiter_gain"])
-        except rospy.ServiceException, e:
+        except rospy.ServiceException as e:
             rospy.logerr("Couldn't set the max force for joint " +
                          joint_name + ": " + str(e))
 

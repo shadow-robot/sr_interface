@@ -64,7 +64,7 @@ class SrUrUnlock():
                 if arm + "_trajectory_controller" in controller.name:
                     if controller.state == "running":
                         return True
-        except rospy.ServiceException, e:
+        except rospy.ServiceException as e:
             rospy.logerr("Could not get controllers list: %s", e)
         return False
 

@@ -62,9 +62,9 @@
 
 using std::string;
 
-static const std::string IK_WITH_COLLISION_SERVICE = "get_constraint_aware_ik";
-static const std::string IK_SERVICE = "get_ik";
-static const std::string FK_SERVICE = "get_fk";
+static const char IK_WITH_COLLISION_SERVICE = "get_constraint_aware_ik";
+static const char IK_SERVICE = "get_ik";
+static const char FK_SERVICE = "get_fk";
 
 #define IK_EPS  1e-5
 
