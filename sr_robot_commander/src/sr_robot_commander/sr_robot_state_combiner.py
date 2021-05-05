@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 import rospy
 from moveit_msgs.srv import SaveRobotStateToWarehouse as SaveState
 from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
@@ -46,7 +47,7 @@ class SrRobotStateCombiner(object):
         name = []
         position = []
         for n, pos in zip(state.state.joint_state.name, state.state.joint_state.position):
-            if (remove_arm and all(s not in n for s in self._arm_joints))\
+            if (remove_arm and all(s not in n for s in self._arm_joints)) \
                     or (not remove_arm and any(s in n for s in self._arm_joints)):
                 name.append(n)
                 position.append(pos)

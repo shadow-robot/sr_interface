@@ -14,11 +14,11 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 import rospy
 from copy import deepcopy
+from builtins import input
 from sr_robot_commander.sr_hand_commander import SrHandCommander
-
-
 ####################
 # POSE DEFINITIONS #
 ####################
@@ -59,7 +59,7 @@ ext_th = {"rh_THJ1": 0, "rh_THJ2": 0, "rh_THJ3": 0, "rh_THJ4": 0, "rh_THJ5": 0}
 def select_finger():
     flex = dict()
     extend = dict()
-    finger = raw_input("select which finger to move (options: ff, mf, rf, lf, th  default: ff): ")
+    finger = input("select which finger to move (options: ff, mf, rf, lf, th  default: ff): ")
     if finger == "ff":
         finger = "FF"
         flex = deepcopy(flex_ff)
@@ -89,7 +89,7 @@ def select_finger():
     correct_joint_number = False
     while not correct_joint_number:
         correct_joint_number = True
-        joint_number_str = raw_input("select joint number to move: ")
+        joint_number_str = input("select joint number to move: ")
         joint_number_int = int(joint_number_str)
         if finger == "FF" or finger == "MF" or finger == "RF":
             if joint_number_int not in range(5):
@@ -113,7 +113,7 @@ def sequence_ff():
             joint_2 = "rh_" + finger + "J2"
         else:
             joint = "rh_" + finger + "J" + joint_number_str
-        flex_degrees = raw_input("Select flex position in degrees (default 180): ")
+        flex_degrees = input("Select flex position in degrees (default 180): ")
         try:
             if flex_degrees:
                 flex_degrees_float = float(flex_degrees)
@@ -132,7 +132,7 @@ def sequence_ff():
             rospy.logerr("You didn't give a valid value")
             continue
 
-        ext_degrees = raw_input("Select extension position in degrees (default 0): ")
+        ext_degrees = input("Select extension position in degrees (default 0): ")
         try:
             if ext_degrees:
                 ext_degrees_float = float(ext_degrees)
@@ -151,7 +151,7 @@ def sequence_ff():
             rospy.logerr("You didn't give a valid value")
             continue
 
-        time_raw = raw_input("Select the time for each movement in seconds (default 1.0): ")
+        time_raw = input("Select the time for each movement in seconds (default 1.0): ")
         try:
             if time_raw:
                 time = float(time_raw)
@@ -166,7 +166,7 @@ def sequence_ff():
             rospy.sleep(1.0)
             hand_commander.move_to_joint_value_target_unsafe(extend, time, True, angle_degrees=True)
 
-            user_input = raw_input(
+            user_input = input(
                 "Press return to run again, 'change' to change parameters or 'exit' to exit the program: ")
             if user_input == 'exit':
                 return

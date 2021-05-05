@@ -18,6 +18,7 @@
 #
 #
 
+from __future__ import absolute_import
 import rospy
 
 from sr_grasp.utils import mk_grasp

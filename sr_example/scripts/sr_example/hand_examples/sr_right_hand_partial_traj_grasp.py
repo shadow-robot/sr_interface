@@ -17,6 +17,7 @@
 # The partial trajectory can then be run during an existing motion and define a new goal for
 # the joints specified in this sub list
 
+from __future__ import absolute_import
 import rospy
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
@@ -33,6 +34,7 @@ def construct_trajectory_point(posture, duration):
     for key in joint_trajectory.joint_names:
         trajectory_point.positions.append(posture[key])
     return trajectory_point
+
 
 hand_finder = HandFinder()
 

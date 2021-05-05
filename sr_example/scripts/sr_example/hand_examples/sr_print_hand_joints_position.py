@@ -19,13 +19,13 @@
 # recording those positions with this script. Angles can be printed in radians or degrees, an argument should be added
 # when the script is called of either 'radians' or 'degrees', default is radians
 
+from __future__ import absolute_import
 import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
 from numpy import arange
 from math import pi
 import argparse
-
 
 rospy.init_node("print_hand_joints_position", anonymous=True)
 
@@ -47,7 +47,7 @@ hand_serial = hand_parameters.mapping.keys()
 scale = 1
 
 if angle_type == "degrees":
-    scale = 1 * (180/pi)
+    scale = 1 * (180 / pi)
 
 for i in arange(0, len(prefix)):
     hand_commander = SrHandCommander(hand_parameters=hand_parameters, hand_serial=hand_serial[i])

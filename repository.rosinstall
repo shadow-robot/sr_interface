@@ -47,8 +47,4 @@
     local-name: trac_ik
     uri: https://{{github_login}}:{{github_password}}@github.com/shadow-robot/trac_ik.git
     version: master
-    
-- git:
-    local-name: ethercat_grant
-    uri: https://github.com/shadow-robot/ethercat_grant.git
-    version: noetic-devel
+   

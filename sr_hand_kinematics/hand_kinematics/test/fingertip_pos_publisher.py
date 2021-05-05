@@ -31,6 +31,7 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+from __future__ import absolute_import
 import roslib
 import rospy
 import tf
@@ -82,7 +83,7 @@ if __name__ == '__main__':
             except (tf.LookupException, tf.ConnectivityException):
                 continue
             tip_pos_pub[4].publish(Vector3(trans[0], trans[1], trans[2]))
-        except:
+        except rospy.ROSInterruptException:
             continue
 
         rate.sleep()

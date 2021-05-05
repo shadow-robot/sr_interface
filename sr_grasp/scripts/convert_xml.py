@@ -19,6 +19,7 @@
 # rosrun sr_grasp convert_xml.py sr_hand/scripts/sr_hand/grasps.xml > converted.yaml
 #
 
+from __future__ import absolute_import
 import sys
 import genpy
 from sr_hand.grasps_parser import GraspParser
@@ -29,11 +30,11 @@ parser = GraspParser()
 parser.parse_tree(xml_filename=sys.argv[1])
 
 grasps = GraspArray()
-for name, g in parser.grasps.iteritems():
+for name, g in parser.grasps.items():
     ng = sr_grasp.Grasp()
     ng.id = name
     ng.set_grasp_point(positions=g.joints_and_positions)
     grasps.grasps.append(ng)
 
 # print grasps # oddly fails, but this works.
-print genpy.message.strify_message(grasps.grasps)
+print(genpy.message.strify_message(grasps.grasps))

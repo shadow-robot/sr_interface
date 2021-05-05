@@ -31,6 +31,7 @@
 # Author: Guillaume Walck <gwalck@techfak.uni-bielefeld.de>
 # Author: Shadow Robot Software Team <software@shadowrobot.com>
 
+from __future__ import absolute_import
 import sys
 import time
 import yaml

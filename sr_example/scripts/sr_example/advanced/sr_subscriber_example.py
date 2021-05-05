@@ -22,6 +22,7 @@ To view the joint_states, type the following in a terminal:
 
 """
 
+from __future__ import absolute_import
 import roslib
 import rospy
 import math
@@ -56,6 +57,7 @@ def listener():
     rospy.Subscriber("joint_states", JointState, callback)
 
     rospy.spin()
+
 
 if __name__ == '__main__':
     listener()

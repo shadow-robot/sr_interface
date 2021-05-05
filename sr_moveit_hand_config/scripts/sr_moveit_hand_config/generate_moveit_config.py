@@ -39,6 +39,7 @@ generate_moveit_config provides:
     generate_joint_limits : generate joint limits config file
 """
 
+from __future__ import absolute_import
 import argparse
 import yaml
 import re
@@ -204,7 +205,7 @@ def generate_ompl_planning(robot,
     for group in robot.groups:
         # strip prefix if any
         group_name = group.name
-        if re.match("^"+str(prefix), group.name) is not None:
+        if re.match("^" + str(prefix), group.name) is not None:
             group_name = group.name[len(prefix):]
         elif group.name in ["left_hand", "right_hand"]:
             group_name = "hand"

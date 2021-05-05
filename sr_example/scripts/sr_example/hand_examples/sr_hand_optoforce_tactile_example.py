@@ -15,6 +15,7 @@
 
 # Reading the optoforce tactiles from the hand.
 
+from __future__ import absolute_import
 import rospy
 from geometry_msgs.msg import WrenchStamped
 
@@ -32,6 +33,7 @@ def listener():
     for sensor_num in range(num_sensors):
         rospy.Subscriber("optoforce_" + str(sensor_num), WrenchStamped, callback)
     rospy.spin()
+
 
 if __name__ == '__main__':
     listener()

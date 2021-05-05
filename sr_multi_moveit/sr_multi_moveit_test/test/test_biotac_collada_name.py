@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 import sys
 import os
 from xml.dom.minidom import parse
@@ -59,24 +60,25 @@ class TestBiotacColladaName(TestCase):
         return is_biotac
 
     def test_motor_hand(self):
-        hand_urdf_path = self.rospack.get_path('sr_description')+"/robots/" + "shadowhand_motor.urdf.xacro"
+        hand_urdf_path = self.rospack.get_path('sr_description') + "/robots/" + "shadowhand_motor.urdf.xacro"
         is_biotac = self.check_name(hand_urdf_path)
         self.assertFalse(is_biotac, msg="Wrong biotac hand")
 
     def test_motor_biotac_hand(self):
-        hand_urdf_path = self.rospack.get_path('sr_description')+"/robots/" + "shadowhand_motor_biotac.urdf.xacro"
+        hand_urdf_path = self.rospack.get_path('sr_description') + "/robots/" + "shadowhand_motor_biotac.urdf.xacro"
         is_biotac = self.check_name(hand_urdf_path)
         self.assertTrue(is_biotac, msg="No file name is called biotac_decimated.dae")
 
     def test_motor_ff_biotac_hand(self):
-        hand_urdf_path = self.rospack.get_path('sr_description')+"/robots/" + "shadowhand_motor_ff_biotac.urdf.xacro"
+        hand_urdf_path = self.rospack.get_path('sr_description') + "/robots/" + "shadowhand_motor_ff_biotac.urdf.xacro"
         is_biotac = self.check_name(hand_urdf_path)
         self.assertTrue(is_biotac, msg="No file name is called biotac_decimated.dae")
 
     def test_muscle_biotac_hand(self):
-        hand_urdf_path = self.rospack.get_path('sr_description')+"/robots/" + "shadowhand_muscle_biotac.urdf.xacro"
+        hand_urdf_path = self.rospack.get_path('sr_description') + "/robots/" + "shadowhand_muscle_biotac.urdf.xacro"
         is_biotac = self.check_name(hand_urdf_path)
         self.assertTrue(is_biotac, msg="No file name is called biotac_decimated.dae")
+
 
 if __name__ == "__main__":
     import rostest

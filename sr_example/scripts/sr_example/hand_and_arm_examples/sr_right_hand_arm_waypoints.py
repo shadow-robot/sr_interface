@@ -30,6 +30,7 @@
 
 # It is recommended to run this script in simulation first.
 
+from __future__ import absolute_import
 import rospy
 import sys
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
@@ -37,6 +38,7 @@ from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from sr_robot_commander.sr_arm_commander import SrArmCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 import geometry_msgs.msg
+from builtins import input
 
 rospy.init_node("hand_arm_waypoints", anonymous=True)
 
@@ -88,20 +90,19 @@ arm_commander.execute_plan(arm_to_home_plan)
 rospy.sleep(2.0)
 
 # Moving arm to initial pose
-raw_input("Press Enter to continue...")
+input("Press Enter to continue...")
 rospy.loginfo("Planning the move to the pose:\n" + str(example_goal_1) + "\n")
 arm_commander.plan_to_pose_target(example_goal_1)
 rospy.loginfo("Finished planning, moving the arm now.")
 arm_commander.execute()
 rospy.sleep(2.0)
 
-raw_input("Press Enter to continue...")
+input("Press Enter to continue...")
 rospy.loginfo("Following trajectory defined by waypoints")
 waypoints = []
 
 # start with the initial position
 initial_pose = arm_commander.get_current_pose()
-
 # Using the method plan_to_waypoints_target, it is possible to specify a set of waypoints
 # for the end-effector and create a plan to follow it.
 # https://github.com/shadow-robot/sr_interface/blob/melodic-devel/sr_robot_commander/src/sr_robot_commander/sr_robot_commander.py#L830
@@ -128,7 +129,7 @@ arm_commander.execute()
 rospy.sleep(2.0)
 
 # Finish arm at home and hand at pack
-raw_input("Press Enter to continue...")
+input("Press Enter to continue...")
 rospy.loginfo("Moving arm to joint states\n" + str(arm_hand_home_joints_goal) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(arm_hand_home_joints_goal, 6.0, True)
 rospy.sleep(2.0)

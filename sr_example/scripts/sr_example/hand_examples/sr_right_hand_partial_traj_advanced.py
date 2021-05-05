@@ -16,10 +16,11 @@
 # This example gives a more advanced use case for sending partial trajectories.
 # A plot is generated to show the output of the desired and achieved positions and velocities.
 
+from __future__ import absolute_import
 import numpy as np
 
 import rospy
-from control_msgs.msg import JointTrajectoryControllerState,\
+from control_msgs.msg import JointTrajectoryControllerState, \
     FollowJointTrajectoryActionResult, FollowJointTrajectoryActionGoal
 import matplotlib.pyplot as plt
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
@@ -83,8 +84,8 @@ class PartialTrajListener():
             self.rfj3_vel_error.append(state.error.velocities[self.rfj3_index])
 
     def callback_result(self, result):
-        print ("Trajectory Goal: " + result.status.goal_id.id +
-               " finished with status: " + str(result.status.status))
+        print("Trajectory Goal: " + result.status.goal_id.id +
+              " finished with status: " + str(result.status.status))
 
     def callback_goal(self, goal):
         self.start_goals = True
@@ -203,6 +204,7 @@ def construct_trajectory_point(posture, duration):
     for key in joint_trajectory.joint_names:
         trajectory_point.positions.append(posture[key])
     return trajectory_point
+
 
 # 6 position goals are specified
 open_hand = {'rh_FFJ1': 0.0, 'rh_FFJ2': 0.0, 'rh_FFJ3': 0.0, 'rh_FFJ4': 0.0,
@@ -329,8 +331,8 @@ if __name__ == '__main__':
 
     # Do not exit until graphs closed
     while not rospy.is_shutdown():
-        if len(listener.joints_time) > 5 and\
-                (listener.joints_time[-1] - listener.joints_time[0]) > 15 and\
+        if len(listener.joints_time) > 5 and \
+                (listener.joints_time[-1] - listener.joints_time[0]) > 15 and \
                 not graphs_finished:
             listener.finish_goals = True
             listener.graph()

@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-
+from __future__ import absolute_import
 import unittest
 import rospy
 import rostest
@@ -56,7 +56,6 @@ class TestGrasp(unittest.TestCase):
                 jtp.positions.append(0.0)
         grasp.grasp_posture.points.append(jtp)
         return grasp
-
     # Tests
     ########
 

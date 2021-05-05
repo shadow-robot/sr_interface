@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 import rospy
 import sys
 import os
@@ -29,6 +30,7 @@ class TestSrRobotStateExporter(TestCase):
     """
     Tests the Robot State Exporter
     """
+
     @classmethod
     def setUpClass(cls):
         if not os.path.exists("/tmp/test_exporter"):

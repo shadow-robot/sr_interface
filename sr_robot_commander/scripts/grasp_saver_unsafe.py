@@ -13,12 +13,12 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 from sys import argv
 
 import rospy
 
 from sr_robot_commander.sr_robot_state_saver import SrStateSaverUnsafe
-
 
 """
 ***DISCLAIMER***

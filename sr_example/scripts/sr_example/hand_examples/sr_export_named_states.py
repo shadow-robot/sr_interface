@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 import rospy
 from sr_robot_commander.sr_robot_state_exporter import SrRobotStateExporter
 
@@ -26,7 +27,6 @@ Once states have been extracted, the resulting dictionary can be exported to
  a specified file location. The generated file can then be used as a modules
 for importing into subsequent scripts.
 """
-
 # Below is a named trajectory, of the sort used by SrRobotCommander. It is
 # assumed that the states "state_1" and "state_2" exist in the warehouse.
 

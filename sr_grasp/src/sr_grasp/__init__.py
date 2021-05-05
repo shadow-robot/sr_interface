@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from copy import deepcopy
 import os
 import yaml
@@ -14,9 +15,9 @@ def reindent(s, numSpaces):
     """
     http://code.activestate.com/recipes/66055-changing-the-indentation-of-a-multi-line-string/
     """
-    s = string.split(s, '\n')
+    s = str.split(s, '\n')
     s = [(numSpaces * ' ') + line for line in s]
-    s = string.join(s, '\n')
+    s = str.join(s, '\n')
     return s
 
 
@@ -76,14 +77,14 @@ class Grasp(moveit_msgs.msg.Grasp):
         Set the positions for a point (default 0) in the pre-grasp to a dict of
         joint positions.
         """
-        self._set_posture_point(self.pre_grasp_posture, *args, **kwargs)
+        self._set_posture_point(self.pre_grasp_posture, * args, ** kwargs)
 
     def set_grasp_point(self, *args, **kwargs):
         """
         Set the positions for a point (default 0) in the grasp to a dict of
         joint positions.
         """
-        self._set_posture_point(self.grasp_posture, *args, **kwargs)
+        self._set_posture_point(self.grasp_posture, * args, ** kwargs)
 
     def _set_posture_point(self, posture, positions, point=0):
         """Set the posture positions using a dict of joint positions."""
@@ -98,7 +99,7 @@ class Grasp(moveit_msgs.msg.Grasp):
 
         # Update the point in place
         jtp = JointTrajectoryPoint()
-        for _, pos in positions.iteritems():
+        for _, pos in positions.items():
             jtp.positions.append(pos)
         posture.points[point] = jtp
 
@@ -120,7 +121,7 @@ class GraspStash(object):
 
     def get_all(self):
         """Return list of all grasps."""
-        return self._store.values()
+        return self._store
 
     def get_grasp_array(self):
         arr = GraspArray()

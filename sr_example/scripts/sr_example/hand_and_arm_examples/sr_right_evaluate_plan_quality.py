@@ -28,10 +28,12 @@
 #
 # It is recommended to run this script in simulation first.
 
+from __future__ import absolute_import
 import rospy
 import sys
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
+from builtins import input
 
 rospy.init_node("right_hand_manipulator_plan_quality", anonymous=True)
 
@@ -76,7 +78,7 @@ if eval_plan_quality != 'good':
                    "to ensure no unexpected movements during plan and execute.")
     sys.exit("Exiting script to allow for the arm to be manually moved to better start position ...")
 
-raw_input("Press Enter to execute plan...")
+input("Press Enter to execute plan...")
 robot_commander.execute_plan(plan)
 
 rospy.loginfo("Planning the move to the first pose:\n" + str(example_goal_1) + "\n")
@@ -84,7 +86,7 @@ plan2 = robot_commander.plan_to_pose_target(example_goal_1)
 plan_quality = robot_commander.evaluate_given_plan(plan2)
 eval_plan_quality = robot_commander.evaluate_plan_quality(plan_quality)
 
-raw_input("Press Enter to execute plan...")
+input("Press Enter to execute plan...")
 robot_commander.execute_plan(plan2)
 rospy.sleep(2.0)
 
@@ -93,7 +95,7 @@ plan3 = robot_commander.plan_to_pose_target(example_goal_2)
 plan_quality = robot_commander.evaluate_given_plan(plan3)
 eval_plan_quality = robot_commander.evaluate_plan_quality(plan_quality)
 
-raw_input("Press Enter to execute plan...")
+input("Press Enter to execute plan...")
 robot_commander.execute_plan(plan3)
 rospy.sleep(2.0)
 
@@ -102,6 +104,6 @@ plan4 = robot_commander.plan_to_pose_target(example_goal_3)
 plan_quality = robot_commander.evaluate_given_plan(plan4)
 eval_plan_quality = robot_commander.evaluate_plan_quality(plan_quality)
 
-raw_input("Press Enter to execute plan...")
+input("Press Enter to execute plan...")
 robot_commander.execute_plan(plan4)
 rospy.sleep(2.0)
