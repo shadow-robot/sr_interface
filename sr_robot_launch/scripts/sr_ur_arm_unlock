@@ -80,7 +80,7 @@ class SrUrUnlock():
             else:
                 response = service_call(service_data)
             return response
-        except rospy.ServiceException, e:
+        except rospy.ServiceException as e:
             rospy.logerr("Service call to '%s' failed for arm %s. %s", service_name, side, e)
             raise
 

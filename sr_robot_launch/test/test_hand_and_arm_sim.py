@@ -210,7 +210,7 @@ class TestHandAndArmSim(TestCase):
         for key, value in arm_joints_target_no_id.items():
             arm_joints_target[self.arm_id + '_' + key] = value
 
-        hand_and_arm_joints_target = dict(hand_joints_target.items() + arm_joints_target.items())
+        hand_and_arm_joints_target = {**hand_joints_target.items, **arm_joints_target}
         self.robot_commander.move_to_joint_value_target_unsafe(hand_and_arm_joints_target, 10.0, True)
 
         rospy.sleep(5)
