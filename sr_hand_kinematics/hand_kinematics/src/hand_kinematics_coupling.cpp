@@ -64,8 +64,8 @@
 
 using std::string;
 
-static const char IK_SERVICE = "get_ik";
-static const char FK_SERVICE = "get_fk";
+static const char IK_SERVICE[] = "get_ik";
+static const char FK_SERVICE[] = "get_fk";
 
 #define IK_EPS  1e-5
 

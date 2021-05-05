@@ -91,13 +91,13 @@ int main(int argc, char **argv)
    * parent joint controller topic using the callback function
    * callback()
    */
-  sub = node.subscribe("sh_" + parent_name + controller_type + "/state", 2, callback);
+  sub = node.subscribe(std::string("sh_") + parent_name + controller_type + std::string("/state"), 2, callback);
 
   /**
    * init the publisher on the child joint controller command topic
    * publishing messages of the type std_msgs::Float64.
    */
-  pub = node.advertise<std_msgs::Float64>("sh_" + child_name + controller_type + "/command", 2);
+  pub = node.advertise<std_msgs::Float64>(std::string("sh_") + child_name + controller_type + std::string("/command"), 2);
 
   // subscribe until interrupted.
   while (ros::ok())
