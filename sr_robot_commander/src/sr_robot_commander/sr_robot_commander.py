@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 import threading
 
 import rospy
@@ -553,7 +554,7 @@ class SrRobotCommander(object):
             elif 'joint_angles' in wp.keys():
                 joint_positions = copy.deepcopy(wp['joint_angles'])
                 if 'degrees' in wp.keys() and wp['degrees']:
-                    for joint, angle in joint_positions.iteritems():
+                    for joint, angle in joint_positions.items():
                         joint_positions[joint] = radians(angle)
 
             if joint_positions is None:

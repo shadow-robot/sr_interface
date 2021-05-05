@@ -17,6 +17,7 @@
 # The partial trajectory can then be run during an existing motion and define a new goal for
 # the joints specified in this sub list
 
+from __future__ import absolute_import
 import rospy
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 

@@ -46,7 +46,7 @@ class TestHandAndArmSim(TestCase):
                 cls.hand_id = 'rh'
             elif cls.side == 'left':
                 cls.hand_id = 'lh'
-        except:
+        except rospy.ROSException:
             rospy.loginfo("No side param for this test type")
             cls.hand_id = rospy.get_param('/hand/mapping/1082')
 
@@ -221,6 +221,7 @@ class TestHandAndArmSim(TestCase):
                                                                 final_hand_and_arm_joint_values)
 
         self.assertAlmostEqual(joint_value_diff_arm_and_hand, 0, delta=0.4)
+
 
 if __name__ == "__main__":
     PKGNAME = 'sr_robot_launch'

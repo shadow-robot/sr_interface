@@ -52,7 +52,7 @@ class SrUrUnlock():
     def are_all_arm_controllers_running(self):
         for arm in self._arms:
             if not self.is_arm_controller_running(arm):
-                    return False
+                return False
         return True
 
     def is_arm_controller_running(self, arm):
@@ -203,6 +203,7 @@ class SrUrUnlock():
             self.call_arm_service(arm, "power_off", Trigger)
         except rospy.ServiceException as e:
             rospy.logerr("Arm braking failed for arm: %s. %s", arm, e)
+
 
 if __name__ == "__main__":
     rospy.init_node("sr_ur_arm_unlock")

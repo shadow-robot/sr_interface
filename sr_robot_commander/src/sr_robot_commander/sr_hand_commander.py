@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 import rospy
 
 from sr_robot_commander import SrRobotCommander, SrRobotCommanderException
@@ -116,7 +117,7 @@ class SrHandCommander(SrRobotCommander):
         try:
             motor_settings = rospy.get_param(self._topic_prefix +
                                              joint_name.lower() + "/pid")
-        except KeyError, e:
+        except KeyError as e:
             rospy.logerr("Couldn't get the motor parameters for joint " +
                          joint_name + " -> " + str(e))
 

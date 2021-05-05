@@ -17,6 +17,7 @@
 from __future__ import absolute_import
 import rospy
 from copy import deepcopy
+from builtins import input
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 ####################
 # POSE DEFINITIONS #

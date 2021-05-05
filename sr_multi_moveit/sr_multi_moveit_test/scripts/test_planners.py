@@ -327,7 +327,7 @@ def main():
 
     try:
         rospy.get_master().getPid()
-    except:
+    except Exception:
         print("Please launch robot.")
         sys.exit()
 

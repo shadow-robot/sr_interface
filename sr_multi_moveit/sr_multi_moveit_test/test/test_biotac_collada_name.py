@@ -79,6 +79,7 @@ class TestBiotacColladaName(TestCase):
         is_biotac = self.check_name(hand_urdf_path)
         self.assertTrue(is_biotac, msg="No file name is called biotac_decimated.dae")
 
+
 if __name__ == "__main__":
     import rostest
     rostest.rosrun(PKG, "test_biotac_collada_name", TestBiotacColladaName)

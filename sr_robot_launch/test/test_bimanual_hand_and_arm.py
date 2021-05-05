@@ -173,6 +173,7 @@ class TestBiHandAndArmSim(TestCase):
 
         self.assertAlmostEqual(joint_value_diff_arm_and_hand, 0, delta=0.4)
 
+
 if __name__ == "__main__":
     PKGNAME = 'sr_robot_launch'
     NODENAME = 'test_bimanual_hand_and_arm'

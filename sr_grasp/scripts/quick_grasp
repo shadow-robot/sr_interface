@@ -80,13 +80,13 @@ if __name__ == '__main__':
     rospy.init_node("quick_grasp")
     node = QuickGraspNode()
     while node:
-        print ""
-        print "Grasps:"
+        print("")
+        print("Grasps:")
         for i, g in enumerate(node.stash.get_all()):
-            print str(i) + " - " + g.id
-        print "Current grasp: %s" % node.grasp.id
-        print "Number select grasp, z zero hand, g grasp, p pre-grasp, n new grasp, s save grasps, q quit"
-        act = raw_input(": ")
+            print(str(i) + " - " + g.id)
+        print("Current grasp: %s" % node.grasp.id)
+        print("Number select grasp, z zero hand, g grasp, p pre-grasp, n new grasp, s save grasps, q quit")
+        act = input(": ")
         num = None
         try:
             num = int(act)
@@ -110,4 +110,4 @@ if __name__ == '__main__':
         elif act == "q":
             break
         else:
-            print "Unknown action %s" % act
+            print("Unknown action %s" % act)
