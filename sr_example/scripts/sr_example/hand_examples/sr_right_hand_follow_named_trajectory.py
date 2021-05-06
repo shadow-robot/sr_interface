@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Copyright 2019 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
@@ -16,6 +16,7 @@
 
 # This example demonstrates how you can send a trajectory created from named poses.
 
+from __future__ import absolute_import
 import rospy
 
 from sr_robot_commander.sr_hand_commander import SrHandCommander
@@ -29,8 +30,6 @@ hand_serial = hand_parameters.mapping.keys()[0]
 
 hand_commander = SrHandCommander(hand_parameters=hand_parameters,
                                  hand_serial=hand_serial)
-
-
 # Define trajectory. Interpolate time (time to move to each point from previous posture)
 # must be specified. Pause time is optional. Names are either the default poses defined
 # in SRDF or are states stored in the warehouse.
@@ -58,7 +57,6 @@ trajectory = [
         'interpolate_time': 3.0
     }
 ]
-
 
 # Run trajectory via moveit
 hand_commander.run_named_trajectory(trajectory)

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Copyright 2014 Shadow Robot Company Ltd.
 #
@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 import rospy
 from moveit_msgs.msg import Grasp
 from trajectory_msgs.msg import JointTrajectoryPoint
@@ -41,10 +42,10 @@ def _fix_j0(joints):
     Useful if using joint_states to get grasp joint positions.
     """
     for finger in ['FFJ', 'LFJ', 'MFJ', 'RFJ']:
-        if finger+'1' in joints and finger+'2' in joints:
-            joints[finger+'0'] = joints[finger+'1'] + joints[finger+'2']
-            del joints[finger+'1']
-            del joints[finger+'2']
+        if finger + '1' in joints and finger + '2' in joints:
+            joints[finger + '0'] = joints[finger + '1'] + joints[finger + '2']
+            del joints[finger + '1']
+            del joints[finger + '2']
 
 
 def mk_grasp(joints, pre_joints=None, fix_j0=False):

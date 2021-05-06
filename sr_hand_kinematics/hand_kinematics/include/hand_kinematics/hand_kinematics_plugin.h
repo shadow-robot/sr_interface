@@ -185,7 +185,6 @@ KDL::ChainIkSolverPos_NR_JL_coupling *ik_solver_pos;
 KDL::ChainIkSolverVel_wdls_coupling *ik_solver_vel;
 moveit_msgs::KinematicSolverInfo solver_info_;
 
-std::string finger_base_name;
 int dimension_;
 boost::shared_ptr<KDL::ChainFkSolverPos_recursive> jnt_to_pose_solver_;
 

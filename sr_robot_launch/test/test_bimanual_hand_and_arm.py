@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 import rospy
 import rostest
 from moveit_msgs.msg import PlanningScene
@@ -30,6 +31,7 @@ class TestBiHandAndArmSim(TestCase):
     """
     Tests the Hand and Arm in Sim
     """
+
     @classmethod
     def setUpClass(cls):
         rospy.wait_for_message('/move_group/status', GoalStatusArray)
@@ -122,7 +124,7 @@ class TestBiHandAndArmSim(TestCase):
         for key, value in hand_joints_target_no_id.items():
             hand_joints_target_right['rh' + '_' + key] = value
 
-        hands_joints_target = dict(hand_joints_target_right.items() + hand_joints_target_left.items())
+        hands_joints_target = {**hand_joints_target, **arm_joints_target}
 
         self.hand_commander.move_to_joint_value_target(hands_joints_target, wait=True)
         rospy.sleep(15)
@@ -158,8 +160,8 @@ class TestBiHandAndArmSim(TestCase):
         for key, value in hand_joints_target_no_id.items():
             hand_joints_target_right['rh' + '_' + key] = value
 
-        hands_and_arms_joints_target = dict(hand_joints_target_right.items() + arm_joints_target_right.items() +
-                                            hand_joints_target_left.items() + arm_joints_target_left.items())
+        hands_and_arms_joints_target = {**hand_joints_target_right, **arm_joints_target_right,
+                                        **hand_joints_target_left, **arm_joints_target_left}
 
         self.robot_commander.move_to_joint_value_target_unsafe(hands_and_arms_joints_target, 10.0, True)
 
@@ -170,6 +172,7 @@ class TestBiHandAndArmSim(TestCase):
                                                                 final_hand_and_arm_joint_values)
 
         self.assertAlmostEqual(joint_value_diff_arm_and_hand, 0, delta=0.4)
+
 
 if __name__ == "__main__":
     PKGNAME = 'sr_robot_launch'

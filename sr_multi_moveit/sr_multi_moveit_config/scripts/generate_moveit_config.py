@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2015, CITEC, Bielefeld University
@@ -31,7 +31,7 @@
 # Author: Guillaume Walck <gwalck@techfak.uni-bielefeld.de>
 # Author: Shadow Robot Software Team <software@shadowrobot.com>
 
-
+from __future__ import absolute_import
 import argparse
 import yaml
 import re
@@ -71,7 +71,7 @@ def generate_fake_controllers(robot, robot_config, output_path=None, ns_=None):
             # Read arm srdf
             arm_yaml_path = manipulator.arm.moveit_path + "/" + "fake_controllers.yaml"
             with open(arm_yaml_path, 'r') as stream:
-                arm_yamldoc = yaml.load(stream)
+                arm_yamldoc = yaml.safe_load(stream)
 
             output_str += "  - name: fake_" + manipulator.arm.prefix + "controller" + "\n"
             output_str += "    joints:\n"
@@ -104,7 +104,7 @@ def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
             # Read arm srdf
             arm_yaml_path = manipulator.arm.moveit_path + "/" + "controllers.yaml"
             with open(arm_yaml_path, 'r') as stream:
-                arm_yamldoc = yaml.load(stream)
+                arm_yamldoc = yaml.safe_load(stream)
 
             output_str += "  - name: " + manipulator.arm.prefix + "trajectory_controller\n"
             output_str += "    action_ns: follow_joint_trajectory\n"
@@ -140,7 +140,7 @@ def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
 def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_planning_template.yaml",
                            output_path=None, ns_=None):
     with open(hand_template_path, 'r') as stream:
-        hand_yamldoc = yaml.load(stream)
+        hand_yamldoc = yaml.safe_load(stream)
     output_str = ""
     output_str += "planner_configs:\n"
     output_str += yaml_reindent(yaml.dump(hand_yamldoc["planner_configs"],
@@ -151,12 +151,12 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
         if manipulator.has_arm:
             arm_yaml_path = manipulator.arm.moveit_path + "/" + "ompl_planning.yaml"
             with open(arm_yaml_path, 'r') as stream:
-                arm_yamldoc = yaml.load(stream)
+                arm_yamldoc = yaml.safe_load(stream)
             if manipulator.arm.extra_groups_config_path:
                 arm_yaml_extra_groups_path = (manipulator.arm.extra_groups_config_path + "/" +
                                               "ompl_planning_extra_groups.yaml")
                 with open(arm_yaml_extra_groups_path, 'r') as stream:
-                    arm_yamldoc_extra_groups = yaml.load(stream)
+                    arm_yamldoc_extra_groups = yaml.safe_load(stream)
             prefix = manipulator.arm.prefix
             for group in robot.groups:
                 group_name = group.name
@@ -178,7 +178,7 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
                         if "projection_evaluator" in group_config:
                             proj_eval = group_config["projection_evaluator"]
                             proj_eval.strip()
-                            proj_eval_striped = re.split('\W+', proj_eval)
+                            proj_eval_striped = re.split(r'\W+', proj_eval)
                             joints = [word for word in proj_eval_striped if word not in ["joints", ""]]
                             proj_eval_new = "joints("
                             for joint in joints:
@@ -198,7 +198,7 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
                         if "projection_evaluator" in group_config:
                             proj_eval = group_config["projection_evaluator"]
                             proj_eval.strip()
-                            proj_eval_striped = re.split('\W+', proj_eval)
+                            proj_eval_striped = re.split(r'\W+', proj_eval)
                             joints = [word for word in proj_eval_striped if word not in ["joints", ""]]
                             proj_eval_new = "joints("
                             for joint in joints:
@@ -213,7 +213,7 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
 
         if manipulator.has_hand:
             with open(hand_template_path, 'r') as stream:
-                hand_yamldoc = yaml.load(stream)
+                hand_yamldoc = yaml.safe_load(stream)
             prefix = manipulator.hand.prefix
             if prefix:
                 proj_eval_re = re.compile(r'joints\(([TFMRLW][FHR]J[0-5]),([TFMRLW][FHR]J[0-5])\)')
@@ -264,12 +264,12 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
         if manipulator.has_arm:
             arm_yaml_path = manipulator.arm.moveit_path + "/" + "kinematics.yaml"
             with open(arm_yaml_path, 'r') as stream:
-                arm_yamldoc = yaml.load(stream)
+                arm_yamldoc = yaml.safe_load(stream)
             if manipulator.arm.extra_groups_config_path:
                 arm_yaml_extra_groups_path = (manipulator.arm.extra_groups_config_path + "/" +
                                               "kinematics_extra_groups.yaml")
                 with open(arm_yaml_extra_groups_path, 'r') as stream:
-                    arm_yamldoc_extra_groups = yaml.load(stream)
+                    arm_yamldoc_extra_groups = yaml.safe_load(stream)
             prefix = manipulator.arm.prefix
             for group in robot.groups:
                 group_name = group.name
@@ -317,14 +317,14 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
         if manipulator.has_hand:
             # open hand template files
             with open(hand_template_path, 'r') as stream:
-                hand_yamldoc = yaml.load(stream)
+                hand_yamldoc = yaml.safe_load(stream)
 
             if 'kinematics_template' in hand_template_path:
                 default_solver_for_fixed_joint = "trac_ik"
                 fixed_joint_template_path = rospkg.RosPack().get_path(
                     'sr_moveit_hand_config') + "/config/kinematics_" + default_solver_for_fixed_joint + "_template.yaml"
                 with open(fixed_joint_template_path, 'r') as stream:
-                    hand_yamldoc_fixed_joint = yaml.load(stream)
+                    hand_yamldoc_fixed_joint = yaml.safe_load(stream)
             else:
                 hand_yamldoc_fixed_joint = deepcopy(hand_yamldoc)
 
@@ -389,7 +389,7 @@ def generate_joint_limits(robot, robot_config, hand_template_path="joint_limits_
             # Read arm srdf
             arm_yaml_path = manipulator.arm.moveit_path + "/" + "joint_limits.yaml"
             with open(arm_yaml_path, 'r') as stream:
-                arm_yamldoc = yaml.load(stream)
+                arm_yamldoc = yaml.safe_load(stream)
             for joint in arm_yamldoc["joint_limits"]:
                 joint_limits_config = arm_yamldoc["joint_limits"][joint]
                 output_str += "  " + manipulator.arm.prefix + joint + ":\n"
@@ -401,7 +401,7 @@ def generate_joint_limits(robot, robot_config, hand_template_path="joint_limits_
                 output_str += "\n"
         if manipulator.has_hand:
             with open(hand_template_path, 'r') as stream:
-                hand_yamldoc = yaml.load(stream)
+                hand_yamldoc = yaml.safe_load(stream)
             group_name = manipulator.hand.internal_name
             if group_name is not None:
                 # for each joint in full hand group
@@ -420,6 +420,7 @@ def generate_joint_limits(robot, robot_config, hand_template_path="joint_limits_
 
     # load on param server or output to file
     upload_output_params(output_str, output_path, ns_)
+
 
 if __name__ == '__main__':
 
