@@ -31,7 +31,7 @@
   <!-- The joint state publisher publishing frequency  -->
   <arg name="joint_state_pub_frequency" default="125"/>
   <!-- Logging wear data  -->
-  <arg name="wear_logging" default="true"/>
+  <arg name="wear_logging" default="false"/>
 
   <!-- ROBOT CONFIG-->
   <arg name="side" default="right"/>
