@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Copyright 2019 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
@@ -15,6 +15,8 @@
 
 # Example where two joints are specified and move with a sinusoidal trajectory, with a pi/4 phase difference
 
+from __future__ import absolute_import
+from __future__ import division
 import rospy
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sr_robot_commander.sr_hand_commander import SrHandCommander

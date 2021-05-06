@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # Copyright 2011 Shadow Robot Company Ltd.
 #
@@ -23,8 +23,8 @@ the data.
 
 """
 
+from __future__ import absolute_import
 import rospy
-
 import time
 from std_msgs.msg import Float64
 
@@ -105,15 +105,15 @@ class LatchingExample(object):
 
         for _ in range(4):
             self.publish_pose(wave_1_pose)
-            time.sleep(self.sleep_time/2)
+            time.sleep(self.sleep_time / 2)
             self.publish_pose(wave_2_pose)
-            time.sleep(self.sleep_time/2)
+            time.sleep(self.sleep_time / 2)
 
     def publish_pose(self, pose):
         """
         Publish a given pose.
         """
-        for joint, pos in pose.iteritems():
+        for joint, pos in pose.items():
             self.hand_publishers[joint].publish(pos)
 
     def create_hand_publishers(self, keys_prefixed):

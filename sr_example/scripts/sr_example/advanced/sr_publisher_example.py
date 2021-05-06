@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # Copyright 2011 Shadow Robot Company Ltd.
 #
@@ -27,7 +27,7 @@ plugins > Shadow Robot > Change controllers
 
 """
 
-
+from __future__ import absolute_import
 import roslib
 import rospy
 import time
@@ -35,7 +35,6 @@ import math
 from std_msgs.msg import Float64
 
 roslib.load_manifest('sr_example')
-
 
 # Controller that controls joint position
 controller_type = "_position_controller"
@@ -63,9 +62,9 @@ def talker():
     new_target_2 = math.radians(20)
 
     time.sleep(1)
-    print ("publishing:")
-    print (joint1 + " to " + str(math.degrees(new_target_1)) + " degrees\n" +
-           joint2 + " to " + str(math.degrees(new_target_2)) + " degrees")
+    print("publishing:")
+    print(joint1 + " to " + str(math.degrees(new_target_1)) + " degrees\n" +
+          joint2 + " to " + str(math.degrees(new_target_2)) + " degrees")
 
     # This will move the joint rh_ffj0 to the defined target (20 degrees)
     pub1.publish(new_target_1)

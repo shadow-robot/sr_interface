@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2015, CITEC, Bielefeld University
@@ -31,6 +31,7 @@
 # Author: Guillaume Walck <gwalck@techfak.uni-bielefeld.de>
 # Author: Shadow Robot Software Team <software@shadowrobot.com>
 
+from __future__ import absolute_import
 import sys
 import time
 import yaml
@@ -66,7 +67,7 @@ if __name__ == '__main__':
             sh_config_path = rospkg.RosPack().get_path('sr_moveit_hand_config') + "/config/"
 
             with open(robot_config_file, "r") as stream:
-                yamldoc = yaml.load(stream)
+                yamldoc = yaml.safe_load(stream)
             robot_config = generate_robot_srdf.Robot()
             robot_config.set_parameters(yamldoc)
             output_path = None

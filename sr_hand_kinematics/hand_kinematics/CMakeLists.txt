@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0.2)
 project(hand_kinematics)
 find_package(catkin REQUIRED COMPONENTS roscpp rostest tf urdf kdl_parser kdl_coupling sensor_msgs tf_conversions
         moveit_core geometry_msgs pluginlib moveit_msgs moveit_ros_planning sr_utilities)
@@ -11,7 +11,7 @@ catkin_package(
         INCLUDE_DIRS include
         LIBRARIES hand_kinematics hand_kinematics_coupling_lib
 )
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++17)
 
 add_library(hand_kinematics src/hand_kinematics_coupling_plugin.cpp
         src/hand_kinematics_utils.cpp)

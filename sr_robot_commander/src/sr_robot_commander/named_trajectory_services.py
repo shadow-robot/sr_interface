@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Copyright 2019 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 import rospy
 
 from sr_robot_msgs.srv import PlanTrajectoryFromList as PlanFromList
@@ -21,6 +22,7 @@ from sr_robot_msgs.srv import ExecutePlannedTrajectory as ExecutePlan
 from sr_robot_msgs.srv import PlanNamedTrajectory as PlanNamed
 from sr_robot_msgs.srv import ListNamedTrajectories as ListNamed
 from functools import partial
+from builtins import map
 from copy import deepcopy
 
 
@@ -71,7 +73,7 @@ class WaypointNamedServices(object):
         return False
 
     def __list_named_trajectories(self, req):
-        return [map(lambda x:x["name"], self.service_mapping)]
+        return [map(lambda x: x["name"], self.service_mapping)]
 
     def define_services(self):
         plan_service_name = rospy.get_param("~plan_named_trajectory_service")
@@ -81,6 +83,7 @@ class WaypointNamedServices(object):
                                            self.__plan_named_trajectory)
         self.__list_server = rospy.Service(list_service_name, ListNamed,
                                            self.__list_named_trajectories)
+
 
 if __name__ == "__main__":
     sf = WaypointNamedServices()

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2008, Willow Garage, Inc.
@@ -31,6 +31,7 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+from __future__ import absolute_import
 import rospy
 import tf
 from urdf_parser_py.urdf import URDF
@@ -50,8 +51,9 @@ def publish_world_to_base_transform():
         while not rospy.is_shutdown():
             br = tf.TransformBroadcaster()
             br.sendTransform((0.0, 0.0, 0.0), (0.0, 0.0, 0.0, 1.0),
-                             rospy.Time.now(),  robot_root, "world")
+                             rospy.Time.now(), robot_root, "world")
             rate.sleep()
+
 
 if __name__ == '__main__':
     rospy.init_node('virtual_joint_broadcaster', anonymous=True)

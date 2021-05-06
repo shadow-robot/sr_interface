@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 import rospy
 from std_msgs.msg import Bool
 from ur_dashboard_msgs.srv import GetSafetyMode, GetProgramState, GetRobotMode, Load
@@ -52,7 +53,7 @@ class SrUrUnlock():
     def are_all_arm_controllers_running(self):
         for arm in self._arms:
             if not self.is_arm_controller_running(arm):
-                    return False
+                return False
         return True
 
     def is_arm_controller_running(self, arm):
@@ -64,7 +65,7 @@ class SrUrUnlock():
                 if arm + "_trajectory_controller" in controller.name:
                     if controller.state == "running":
                         return True
-        except rospy.ServiceException, e:
+        except rospy.ServiceException as e:
             rospy.logerr("Could not get controllers list: %s", e)
         return False
 
@@ -80,7 +81,7 @@ class SrUrUnlock():
             else:
                 response = service_call(service_data)
             return response
-        except rospy.ServiceException, e:
+        except rospy.ServiceException as e:
             rospy.logerr("Service call to '%s' failed for arm %s. %s", service_name, side, e)
             raise
 
@@ -193,7 +194,7 @@ class SrUrUnlock():
             rospy.loginfo("Checking if program is running ...")
             if self.start_arms_program_if_stopped():
                 rospy.sleep(5)
-        except rospy.ServiceException, e:
+        except rospy.ServiceException as e:
             for arm in self._arms:
                 rospy.logerr("Arm checking/restarting failed for arm: %s. %s", arm, e)
 
@@ -203,6 +204,7 @@ class SrUrUnlock():
             self.call_arm_service(arm, "power_off", Trigger)
         except rospy.ServiceException as e:
             rospy.logerr("Arm braking failed for arm: %s. %s", arm, e)
+
 
 if __name__ == "__main__":
     rospy.init_node("sr_ur_arm_unlock")

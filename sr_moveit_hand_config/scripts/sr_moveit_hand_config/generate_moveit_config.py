@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2015, CITEC, Bielefeld University
@@ -39,6 +39,7 @@ generate_moveit_config provides:
     generate_joint_limits : generate joint limits config file
 """
 
+from __future__ import absolute_import
 import argparse
 import yaml
 import re
@@ -188,7 +189,7 @@ def generate_ompl_planning(robot,
     output_str = ""
 
     stream = open(template_path, 'r')
-    yamldoc = yaml.load(stream)
+    yamldoc = yaml.safe_load(stream)
     output_str += "planner_configs:\n"
     output_str += yaml_reindent(yaml.dump(
         yamldoc["planner_configs"],
@@ -204,7 +205,7 @@ def generate_ompl_planning(robot,
     for group in robot.groups:
         # strip prefix if any
         group_name = group.name
-        if re.match("^"+str(prefix), group.name) is not None:
+        if re.match("^" + str(prefix), group.name) is not None:
             group_name = group.name[len(prefix):]
         elif group.name in ["left_hand", "right_hand"]:
             group_name = "hand"
@@ -261,7 +262,7 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
 
     # open template file
     stream = open(template_path, 'r')
-    yamldoc = yaml.load(stream)
+    yamldoc = yaml.safe_load(stream)
     stream.close()
 
     if 'kinematics_template' in template_path:
@@ -270,7 +271,7 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
             'sr_moveit_hand_config') + "/config/kinematics_" + default_solver_for_fixed_joint + "_template.yaml"
 
         with open(fixed_joint_template_path, 'r') as stream:
-            yamldoc_fixed_joint = yaml.load(stream)
+            yamldoc_fixed_joint = yaml.safe_load(stream)
     else:
         yamldoc_fixed_joint = deepcopy(yamldoc)
 
@@ -355,7 +356,7 @@ def generate_joint_limits(robot,
     """
     output_str = ""
     stream = open(template_path, 'r')
-    yamldoc = yaml.load(stream)
+    yamldoc = yaml.safe_load(stream)
     output_str += "joint_limits:\n"
     group_name = None
     # find full hand key name

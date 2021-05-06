@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Copyright 2019 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
@@ -30,6 +30,7 @@
 # PLEASE NOTE: No scene is used in this script and fast movements of the robot. Use on real robot at your own risk.
 # It is recommended to run this script in simulation first.
 
+from __future__ import absolute_import
 import rospy
 from sr_robot_commander.sr_arm_commander import SrArmCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
