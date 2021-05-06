@@ -30,6 +30,8 @@
   <arg name="robot_state_pub_frequency" default="250"/>
   <!-- The joint state publisher publishing frequency  -->
   <arg name="joint_state_pub_frequency" default="125"/>
+  <!-- Logging wear data  -->
+  <arg name="wear_logging" default="false"/>
 
   <!-- ROBOT CONFIG-->
   <!-- Specify if the system has "both" hands, only "right", only "left" or "none" hands-->
@@ -92,6 +94,22 @@
        value="[/rh_trajectory_controller/state, /lh_trajectory_controller/state]"/>
   <arg if="$(eval not hand_ctrl and arm_trajectory)" name="trajectory_controllers_list"
        value="[/ra_trajectory_controller/state, /la_trajectory_controller/state]"/>
+
+   <!-- LOGGING WEAR DATA -->
+  <group if="$(arg wear_logging)">
+    <include file="$(find sr_wear_logger)/launch/sr_wear_logger.launch">
+        <arg name="hand_serial" default="$(arg lh_serial)"/>
+        <arg name="hand_id" default="lh"/>
+        <arg name="aws_save_period" default="36000"/>
+        <arg name="local_save_period" default="5"/>
+    </include>
+    <include file="$(find sr_wear_logger)/launch/sr_wear_logger.launch">
+        <arg name="hand_serial" default="$(arg rh_serial)"/>
+        <arg name="hand_id" default="rh"/>
+        <arg name="aws_save_period" default="36000"/>
+        <arg name="local_save_period" default="5"/>
+    </include>
+  </group>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
