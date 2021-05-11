@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Copyright 2020 Shadow Robot Company Ltd.
 #
@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 import rospy
 import rostest
 from moveit_msgs.msg import PlanningScene
@@ -30,21 +31,22 @@ class TestHandAndArmSim(TestCase):
     """
     Tests the Hand and Arm in Sim
     """
+
     @classmethod
     def setUpClass(cls):
         rospy.wait_for_message('/move_group/status', GoalStatusArray)
         cls.hand_type = rospy.get_param('~test_hand_and_arm_sim/hand_type')
         cls.scene = rospy.get_param('~test_hand_and_arm_sim/scene')
 
-    # ur-specific launch files do not accept 'side' param as it is already set
-    # for phantom hands use hand finder
+        # ur-specific launch files do not accept 'side' param as it is already set
+        # for phantom hands use hand finder
         try:
             cls.side = rospy.get_param('~test_hand_and_arm_sim/side')
             if cls.side == 'right':
                 cls.hand_id = 'rh'
             elif cls.side == 'left':
                 cls.hand_id = 'lh'
-        except:
+        except rospy.ROSException:
             rospy.loginfo("No side param for this test type")
             cls.hand_id = rospy.get_param('/hand/mapping/1082')
 
@@ -88,40 +90,26 @@ class TestHandAndArmSim(TestCase):
             rospy.sleep(0.1)
             counter += 1
 
-    # HOME POSITION TEST CURRENTLY FAILING DUE TO KNOWN ERROR
+    def test_1_home_position(self):
+        start_arm_angles = self.arm_commander.get_current_state()
 
-    # def test_1_home_position(self):
-        # self.start_home = rospy.get_param('/test_sim/start_home')
-        # start_arm_angles = self.arm_commander.get_current_state()
+        if self.arm_id == 'ra':
+            self.expected_home_angles = {'shoulder_pan_joint': 0.00, 'elbow_joint': 2.0,
+                                         'shoulder_lift_joint': -1.25, 'wrist_1_joint': -1,
+                                         'wrist_2_joint': 1.5708, 'wrist_3_joint': -2}
 
-        # if self.arm_id == 'ra':
-        #     self.expected_home_angles = {'shoulder_pan_joint': 0.00, 'elbow_joint': 2.0,
-        #                                  'shoulder_lift_joint': -1.25,'wrist_1_joint': -0.733,
-        #                                  'wrist_2_joint': 1.578, 'wrist_3_joint': -3.1416}
+        elif self.arm_id == 'la':
+            self.expected_home_angles = {'shoulder_pan_joint': 0.0, 'elbow_joint': -2.0,
+                                         'shoulder_lift_joint': -1.89, 'wrist_1_joint': -2.1,
+                                         'wrist_2_joint': -1.5708, 'wrist_3_joint': 2}
 
-        # elif self.arm_id == 'la':
-        #     self.expected_home_angles = {'shoulder_pan_joint': 0.0, 'elbow_joint': -2.0,
-        #                                  'shoulder_lift_joint': -1.89,'wrist_1_joint': -2.4,
-        #                                  'wrist_2_joint': -1.5708, 'wrist_3_joint': 3.1416}
+        home_angles_no_id = self.expected_home_angles
+        expected_start_angles = {}
+        for key, value in home_angles_no_id.items():
+            expected_start_angles[self.arm_id + '_' + key] = value
 
-        # use if the start_home param is relevant. We don't use this for the UR10/5 specific launch files.
-
-        # if self.start_home == False:
-        #     self.expected_home_angles = {'shoulder_pan_joint': 0.00, 'elbow_joint': 0.00,
-        #                                  'shoulder_lift_joint': 0.00, 'wrist_3_joint': 0.00,
-        #                                  'wrist_1_joint': 0.00, 'wrist_2_joint': 0.00,
-        #                                  'wrist_3_joint': 0.00}
-        # elif self.start_home == True:
-        #     self.expected_home_angles = self.expected_home_angles
-
-        # home_angles_no_id = self.expected_home_angles
-        # expected_start_angles = {}
-        # for key, value in home_angles_no_id.items():
-        #     expected_start_angles[self.arm_id + '_' + key] = value
-
-        # expected_and_actual_home_angles = self.joints_error_check(expected_start_angles, start_arm_angles)
-
-        # self.assertAlmostEqual(expected_and_actual_home_angles, 0, delta=0.2)
+        expected_and_actual_home_angles = self.joints_error_check(expected_start_angles, start_arm_angles)
+        self.assertAlmostEqual(expected_and_actual_home_angles, 0, delta=0.2)
 
     def test_2_scene(self):
         scene = ()
@@ -160,7 +148,7 @@ class TestHandAndArmSim(TestCase):
 
         expected_and_final_joint_value_diff_hand = self.joints_error_check(hand_joints_target, final_hand_joint_values)
 
-        self.assertAlmostEqual(expected_and_final_joint_value_diff_hand, 0, delta=0.3)
+        self.assertAlmostEqual(expected_and_final_joint_value_diff_hand, 0, delta=0.4)
 
     def test_3_arm(self):
 
@@ -222,7 +210,7 @@ class TestHandAndArmSim(TestCase):
         for key, value in arm_joints_target_no_id.items():
             arm_joints_target[self.arm_id + '_' + key] = value
 
-        hand_and_arm_joints_target = dict(hand_joints_target.items() + arm_joints_target.items())
+        hand_and_arm_joints_target = {**hand_joints_target.items, **arm_joints_target}
         self.robot_commander.move_to_joint_value_target_unsafe(hand_and_arm_joints_target, 10.0, True)
 
         rospy.sleep(5)
@@ -233,6 +221,7 @@ class TestHandAndArmSim(TestCase):
                                                                 final_hand_and_arm_joint_values)
 
         self.assertAlmostEqual(joint_value_diff_arm_and_hand, 0, delta=0.4)
+
 
 if __name__ == "__main__":
     PKGNAME = 'sr_robot_launch'

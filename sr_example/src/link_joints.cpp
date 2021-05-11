@@ -45,11 +45,11 @@
 #include <control_msgs/JointControllerState.h>
 
 /// the name of the parent joint
-std::string parent_name = "rh_ffj3";
+const char* parent_name = "rh_ffj3";
 /// the name of the child joint to link to the parent
-std::string child_name = "rh_mfj3";
+const char* child_name = "rh_mfj3";
 /// Controller that controls joint position
-std::string controller_type = "_position_controller";
+const char* controller_type = "_position_controller";
 
 // a ros subscriber (will be instantiated later on)
 ros::Subscriber sub;
@@ -91,13 +91,13 @@ int main(int argc, char **argv)
    * parent joint controller topic using the callback function
    * callback()
    */
-  sub = node.subscribe("sh_" + parent_name + controller_type + "/state", 2, callback);
+  sub = node.subscribe(std::string("sh_") + parent_name + controller_type + "/state", 2, callback);
 
   /**
    * init the publisher on the child joint controller command topic
    * publishing messages of the type std_msgs::Float64.
    */
-  pub = node.advertise<std_msgs::Float64>("sh_" + child_name + controller_type + "/command", 2);
+  pub = node.advertise<std_msgs::Float64>(std::string("sh_") + child_name + controller_type + "/command", 2);
 
   // subscribe until interrupted.
   while (ros::ok())

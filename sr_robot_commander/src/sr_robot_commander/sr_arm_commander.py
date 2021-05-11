@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 from sr_robot_commander import SrRobotCommander
 from geometry_msgs.msg import PoseStamped, Pose
 from rospy import get_rostime
@@ -56,7 +57,7 @@ class SrArmCommander(SrRobotCommander):
         pose = PoseStamped()
         pose.pose.position.x = 0
         pose.pose.position.y = 0
-        pose.pose.position.z = z_position - (height/2.0)
+        pose.pose.position.z = z_position - (height / 2.0)
         pose.pose.orientation.x = 0
         pose.pose.orientation.y = 0
         pose.pose.orientation.z = 0

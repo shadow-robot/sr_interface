@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Copyright 2015 Shadow Robot Company Ltd.
 #
@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 import rospy
 
 from sr_robot_commander import SrRobotCommander, SrRobotCommanderException
@@ -88,7 +89,7 @@ class SrHandCommander(SrRobotCommander):
         self._hand_serial = hand_serial
 
     def get_hand_serial(self):
-            return self._hand_serial
+        return self._hand_serial
 
     def get_joints_effort(self):
         """
@@ -106,7 +107,7 @@ class SrHandCommander(SrRobotCommander):
 
         if not self.__set_force_srv.get(joint_name):
             service_name = "sr_hand_robot/" + self._topic_prefix + \
-                           "change_force_PID_"+joint_name.upper()
+                           "change_force_PID_" + joint_name.upper()
             self.__set_force_srv[joint_name] = \
                 rospy.ServiceProxy(service_name,
                                    ForceController)
@@ -116,7 +117,7 @@ class SrHandCommander(SrRobotCommander):
         try:
             motor_settings = rospy.get_param(self._topic_prefix +
                                              joint_name.lower() + "/pid")
-        except KeyError, e:
+        except KeyError as e:
             rospy.logerr("Couldn't get the motor parameters for joint " +
                          joint_name + " -> " + str(e))
 
@@ -136,7 +137,7 @@ class SrHandCommander(SrRobotCommander):
                                              motor_settings["sign"],
                                              motor_settings["torque_limit"],
                                              motor_settings["torque_limiter_gain"])
-        except rospy.ServiceException, e:
+        except rospy.ServiceException as e:
             rospy.logerr("Couldn't set the max force for joint " +
                          joint_name + ": " + str(e))
 

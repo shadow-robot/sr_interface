@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2015, CITEC, Bielefeld University
@@ -40,6 +40,7 @@
     joint_limits (template required)
     """
 
+from __future__ import absolute_import
 import sys
 import time
 

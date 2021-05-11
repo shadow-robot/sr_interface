@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2008, Willow Garage, Inc.
@@ -31,6 +31,7 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+from __future__ import absolute_import
 import sys
 import os
 from xml.dom.minidom import parse
@@ -191,7 +192,7 @@ class SRDFRobotGenerator(object):
         self.robot = Robot()
 
         with open(description_file, "r") as stream:
-            yamldoc = yaml.load(stream)
+            yamldoc = yaml.safe_load(stream)
 
         self.robot.set_parameters(yamldoc)
         self.arm_srdf_xmls = []
@@ -205,7 +206,6 @@ class SRDFRobotGenerator(object):
                 arm_srdf_path = manipulator.arm.moveit_path + "/" + manipulator.arm.name + ".srdf"
                 with open(arm_srdf_path, 'r') as stream:
                     self.arm_srdf_xmls.append(parse(stream))
-                xacro.process_includes(self.arm_srdf_xmls[manipulator_id], os.path.dirname(sys.argv[0]))
                 xacro.process_doc(self.arm_srdf_xmls[manipulator_id])
 
             if manipulator.has_hand:
@@ -213,7 +213,6 @@ class SRDFRobotGenerator(object):
                 hand_urdf_path = self.rospack.get_path('sr_description') + "/robots/" + manipulator.hand.name
                 with open(hand_urdf_path, 'r') as hand_urdf_xacro_file:
                     hand_urdf_xml = parse(hand_urdf_xacro_file)
-                xacro.process_includes(hand_urdf_xml, os.path.dirname(sys.argv[0]))
                 xacro.process_doc(hand_urdf_xml)
 
                 hand_urdf = hand_urdf_xml.toprettyxml(indent='  ')

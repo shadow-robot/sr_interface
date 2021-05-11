@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Copyright 2019 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
@@ -15,6 +15,7 @@
 
 # Reading the tactiles from the hand.
 
+from __future__ import absolute_import
 import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
@@ -30,5 +31,5 @@ hand_commander = SrHandCommander(hand_parameters=hand_parameters,
 
 rospy.sleep(1.0)
 
-print "Tactile type: ", hand_commander.get_tactile_type()
-print "Tactile state: ", hand_commander.get_tactile_state()
+print("Tactile type: ", hand_commander.get_tactile_type())
+print("Tactile state: ", hand_commander.get_tactile_state())

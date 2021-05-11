@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Copyright 2019 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
@@ -32,7 +32,9 @@
 
 # It is recommended to run this script in simulation first.
 
+from __future__ import absolute_import
 import rospy
+from builtins import input
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
@@ -76,7 +78,7 @@ rospy.loginfo("Moving hand to joint state: pack")
 hand_commander.move_to_named_target("pack")
 
 # The arm commander generates a plan to a new pose before the pose is executed.
-raw_input("Press Enter to continue...")
+input("Press Enter to continue...")
 rospy.loginfo("Planning the move to the first pose:\n" + str(example_pose_1) + "\n")
 arm_commander.plan_to_pose_target(example_pose_1)
 rospy.loginfo("Finished planning, moving the arm now.")
@@ -84,26 +86,26 @@ rospy.loginfo("Finished planning, moving the arm now.")
 arm_commander.execute()
 rospy.sleep(2.0)
 
-raw_input("Press Enter to continue...")
+input("Press Enter to continue...")
 rospy.loginfo("Planning the move to the second pose:\n" + str(example_pose_2) + "\n")
 arm_commander.plan_to_pose_target(example_pose_2)
 rospy.loginfo("Finished planning, moving the arm now.")
 arm_commander.execute()
 
 # Here a pose is provided and the arm commander moves the arm to it
-raw_input("Press Enter to continue...")
+input("Press Enter to continue...")
 rospy.loginfo("Moving arm to pose:\n" + str(example_pose_1) + "\n")
 arm_commander.move_to_pose_target(example_pose_1, wait=True)
 rospy.sleep(2.0)
 
 # Here a pose is provided and the arm commander moves the arm to it
-raw_input("Press Enter to continue...")
+input("Press Enter to continue...")
 rospy.loginfo("Moving arm to pose:\n" + str(example_pose_3) + "\n")
 arm_commander.move_to_pose_target(example_pose_3, wait=True)
 rospy.sleep(2.0)
 
 # Finish arm at home
-raw_input("Press Enter to continue...")
+input("Press Enter to continue...")
 rospy.loginfo("Moving arm to joint states\n" + str(arm_home_joints_goal) + "\n")
 robot_commander.move_to_joint_value_target_unsafe(arm_home_joints_goal, 6.0, True)
 

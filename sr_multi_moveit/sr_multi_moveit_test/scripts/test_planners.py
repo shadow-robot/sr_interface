@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Copyright 2019 Shadow Robot Company Ltd.
 #
@@ -16,6 +16,7 @@
 
 # A script to test planners, to be run on the command line with group name as the argument (left_arm or right_arm)
 
+from __future__ import absolute_import
 import rospy
 import sys
 import numpy
@@ -94,7 +95,6 @@ class TestPlanners(object):
         p.pose.orientation.z = 0.0
         p.pose.orientation.w = 0.707107
         self.scene.add_box("wall_left", p, (0.8, 2, 0.01))
-
         # rospy.sleep(1)
 
     def _check_plan(self, plan):
@@ -114,7 +114,7 @@ class TestPlanners(object):
 
     def test_trajectories_rotating_each_joint(self):
         # test_joint_values = [numpy.pi/2.0, numpy.pi-0.33, -numpy.pi/2]
-        test_joint_values = [numpy.pi/2.0]
+        test_joint_values = [numpy.pi / 2.0]
         joints = [0.0, 0.0, 0.0, -numpy.pi / 2.0, 0.0, 0.0]
         # Joint 4th is colliding with the hand
         # for joint in range(6):
@@ -199,7 +199,7 @@ class TestPlanners(object):
 
         # Should fail because it is in self-collision
         joints = [
-            -0.289797803762, 2.37263860495, 2.69118483159,  1.65486712181, 1.04235601797,
+            -0.289797803762, 2.37263860495, 2.69118483159, 1.65486712181, 1.04235601797,
             -1.69730925867, 0.0, 0.0]
         if not self._plan_joints(joints):
             self.fail_list.append("Failed: test_trajectories_empty_environment, " + self.planner +
@@ -327,7 +327,7 @@ def main():
 
     try:
         rospy.get_master().getPid()
-    except:
+    except Exception:
         print("Please launch robot.")
         sys.exit()
 
@@ -341,6 +341,7 @@ def main():
                     "RRTstarkConfigDefault"]
     for planner in planner_list:
         TestPlanners(group_id, planner)
+
 
 if __name__ == "__main__":
     main()

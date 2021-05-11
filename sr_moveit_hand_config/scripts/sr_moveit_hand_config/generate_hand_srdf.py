@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2015, CITEC, Bielefeld University
@@ -35,6 +35,7 @@
     syntax  generate_hand_srdf [output filename]
 """
 
+from __future__ import absolute_import
 import sys
 import os
 from xml.dom.minidom import parse
@@ -126,7 +127,6 @@ class SRDFHandGenerator(object):
         self.srdf_xacro_xml = parse(srdf_xacro_file)
 
         # expand the xacro
-        xacro.process_includes(self.srdf_xacro_xml, os.path.dirname(sys.argv[0]))
         xacro.process_doc(self.srdf_xacro_xml, mappings=mappings)
 
         if len(sys.argv) > 1:
@@ -145,12 +145,12 @@ class SRDFHandGenerator(object):
                             self.srdf_xacro_xml.toprettyxml(indent='  '))
         if save:
             OUTPUT_PATH = package_path + "/config/generated_shadowhand.srdf"
-            FW = open(OUTPUT_PATH, "wb")
+            FW = open(OUTPUT_PATH, "w")
             FW.write(self.srdf_xacro_xml.toprettyxml(indent='  '))
             FW.close()
 
             OUTPUT_PATH = package_path + "/config/generated_shadowhand.urdf"
-            FW = open(OUTPUT_PATH, "wb")
+            FW = open(OUTPUT_PATH, "w")
             FW.write(urdf_str)
             FW.close()
 
@@ -158,6 +158,7 @@ class SRDFHandGenerator(object):
 
     def get_hand_srdf(self):
         return self.srdf_xacro_xml
+
 
 if __name__ == '__main__':
     rospy.init_node('hand_srdf_generator', anonymous=True)

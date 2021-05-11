@@ -188,4 +188,14 @@
     <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
           args="ra_trajectory_controller la_trajectory_controller"/>
   </group>
+
+  <arg name="record_hand_data" value="$(optenv SR_RECORD_HAND_DATA disabled)"/>
+  <arg name="log_directory" value="$(optenv HOME)/shadow_bag_storage/sr_record_all_hand_data"/>
+  <arg name="log_split_size" default="64"/>
+  <arg name="log_topics" value='-e ".*(diagnostics|jog_arm|joint|rh|lh|sh_|tf).*" /mechanism_statistics /ros_ethercat/motors_halted /sr_watchdog'/>
+
+  <group if="$(eval arg('record_hand_data') == 'enabled')">
+    <node pkg="rosbag" type="record" args='-o $(arg log_directory) --lz4 --split --size $(arg log_split_size) $(arg log_topics) ' name="record_hand_bags"/>
+  </group>
+
 </launch>
