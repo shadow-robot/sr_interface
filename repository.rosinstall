@@ -38,10 +38,12 @@
     uri: https://github.com/shadow-robot/gazebo2rviz.git
     version: noetic-devel
 
+# change back to upstream whenever it's fixed for python3
 - git:
     local-name: pysdf
-    uri: https://github.com/andreasBihlmaier/pysdf.git
+    uri: https://github.com/shadow-robot/pysdf.git
     version: master
+
 #temporary until we have debians
 - git:
     local-name: trac_ik
