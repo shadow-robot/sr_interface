@@ -33,6 +33,11 @@ UnderactuationErrorReporter::UnderactuationErrorReporter(ros::NodeHandle& node_h
   trajectory_subscriber_right_ = node_handle.subscribe("/rh_trajectory_controller/state", 1,
     &UnderactuationErrorReporter::trajectory_callback_right, this, ros::TransportHints().tcpNoDelay());
 
+  if (!wait_for_param(node_handle, "robot_description"))
+  {
+    ROS_ERROR("UnderactuationErrorReporter did't find robot_description on parameter server");
+  }
+
   if (wait_for_param(node_handle, "robot_description_semantic"))
   {
     robot_model_loader_.reset(new robot_model_loader::RobotModelLoader("robot_description"));
