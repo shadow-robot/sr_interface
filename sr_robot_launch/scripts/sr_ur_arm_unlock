@@ -89,7 +89,6 @@ class SrUrUnlock():
         fault = False
         for arm in self._arms:
             safety_mode = self.call_arm_service(arm, "get_safety_mode", GetSafetyMode)
-            
             if SafetyMode.FAULT == safety_mode.safety_mode.mode or SafetyMode.VIOLATION == safety_mode.safety_mode.mode:
                 fault = True
                 if SafetyMode.FAULT == safety_mode.safety_mode.mode:
