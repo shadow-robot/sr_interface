@@ -15,7 +15,7 @@
 
 import rospy
 from std_msgs.msg import Bool
-from ur_dashboard_msgs.srv import GetSafetyMode, GetProgramState, GetRobotMode, Load
+from ur_dashboard_msgs.srv import GetSafetyMode, GetProgramState, GetRobotMode, Load, IsProgramRunning
 from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
 from std_srvs.srv import Trigger
 from controller_manager_msgs.srv import ListControllers
@@ -35,38 +35,15 @@ class SrUrUnlock():
         rospy.Subscriber("/sr_arm/release_or_brake", Bool, self.release_or_brake_arm_cb)
 
     def release_or_brake_arm_cb(self, message):
-        if message.data:
-            if not self.check_arms_needs_starting():
-                for arm in self._arms:
-                    self.brake_arm(arm)
-                return
-            else:
-                self.release_arm()
-                while not self.are_all_arm_controllers_running():
-                    for arm in self._arms:
-                        if not self.is_arm_controller_running(arm):
-                            rospy.loginfo("Controller is stopped, resending robot program to arm: %s", arm)
-                            self.call_arm_service(arm, "resend_robot_program", Trigger, dashboard=False)
-                    rospy.sleep(1)
+        if not message.data:
+            return
 
-    def are_all_arm_controllers_running(self):
-        for arm in self._arms:
-            if not self.is_arm_controller_running(arm):
-                    return False
-        return True
+        if self.check_arms_needs_starting():
+            self.release_arm()
+            return
 
-    def is_arm_controller_running(self, arm):
-        try:
-            rospy.wait_for_service('controller_manager/list_controllers', 5.0)
-            list_controllers = rospy.ServiceProxy('controller_manager/list_controllers', ListControllers)
-            loaded_controller = list_controllers()
-            for controller in loaded_controller.controller:
-                if arm + "_trajectory_controller" in controller.name:
-                    if controller.state == "running":
-                        return True
-        except rospy.ServiceException, e:
-            rospy.logerr("Could not get controllers list: %s", e)
-        return False
+        self.brake_arm()
+        rospy.sleep(1)
 
     def call_arm_service(self, side, service_name, service_type, dashboard=True, service_data=""):
         if dashboard:
@@ -124,8 +101,9 @@ class SrUrUnlock():
         for arm in self._arms:
             robot_mode = self.call_arm_service(arm, "get_robot_mode", GetRobotMode)
             safety_mode = self.call_arm_service(arm, "get_safety_mode", GetSafetyMode)
+            program_running = self.call_arm_service(arm, "program_running", IsProgramRunning)
             if RobotMode.IDLE == robot_mode.robot_mode.mode or RobotMode.POWER_OFF == robot_mode.robot_mode.mode \
-               or SafetyMode.PROTECTIVE_STOP == safety_mode.safety_mode.mode:
+               or SafetyMode.PROTECTIVE_STOP == safety_mode.safety_mode.mode or not program_running.program_running:
                 rospy.loginfo("Starting arm: %s", arm)
                 return True
         return False
@@ -197,12 +175,13 @@ class SrUrUnlock():
             for arm in self._arms:
                 rospy.logerr("Arm checking/restarting failed for arm: %s. %s", arm, e)
 
-    def brake_arm(self, arm):
+    def brake_arm(self):
         rospy.loginfo("Brake arm signal received.")
-        try:
-            self.call_arm_service(arm, "power_off", Trigger)
-        except rospy.ServiceException as e:
-            rospy.logerr("Arm braking failed for arm: %s. %s", arm, e)
+        for arm in self._arms:
+            try:
+                self.call_arm_service(arm, "power_off", Trigger)
+            except rospy.ServiceException as e:
+                rospy.logerr("Arm braking failed for arm: %s. %s", arm, e)
 
 if __name__ == "__main__":
     rospy.init_node("sr_ur_arm_unlock")
