@@ -23,6 +23,8 @@ class STATE(object):
         self.ROBOT_MODE = GetRobotModeResponse()
         self.SAFETY_MODE = GetSafetyModeResponse()
         self.PROGRAM_STATE = GetProgramStateResponse()
+        self.PROGRAM_STATE.program_name = "<unnamed>"
+        self.PROGRAM_STATE.success = True
         self.PROGRAM_RUNNING = IsProgramRunningResponse()
         self.update_state(start_state)
 
@@ -46,7 +48,7 @@ class STATE(object):
         if mode == "IDLE":
             self.ROBOT_MODE.robot_mode.mode = RobotMode.IDLE
             self.ROBOT_MODE.answer = "Robotmode: IDLE"
-        if mode == "POWER_OFF":
+        if mode == "POWER_OFF" or mode == "STOPPED":
             self.ROBOT_MODE.robot_mode.mode = RobotMode.POWER_OFF
             self.ROBOT_MODE.answer = "Robotmode: POWER_OFF"
         if mode == "RUNNING":
@@ -70,6 +72,9 @@ class STATE(object):
 
     def get_program_running(self):
         return self.PROGRAM_RUNNING
+
+    def get_program_state(self):
+        return self.PROGRAM_STATE
 
     def restart_safety(self):
         self.set_safety_mode('NORMAL')
@@ -184,10 +189,14 @@ class MockUrRobotHW(object):
         resend_robot_program_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/resend_robot_program',
                                                      Trigger, self.handle_resend_robot_program)
 
+    def reinitialize(self):
+        self.robot_state = STATE()
+
     def handle_get_safety_mode(self, request):
         return self.robot_state.get_safety_mode()
 
     def handle_get_program_state(self, request):
+        return self.robot_state.get_program_state()
         response = GetProgramStateResponse()
         if 'RUNNING' in self.state:
             response.state = ProgramState.RUNNING
@@ -249,10 +258,3 @@ class MockUrRobotHW(object):
     def set_fault(self):
         self.robot_state.fault()
         return self.trigger_response()
-
-
-if __name__ == '__main__':
-    rospy.init_node('mock_ur_robot_hw')
-    server = MockUrRobotHW('right')
-    server = MockUrRobotHW('left')
-    rospy.spin()
