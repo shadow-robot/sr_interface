@@ -116,8 +116,8 @@ class TestSrUrUnlock(TestCase):
         self.assertTrue(self.mock_dashboard['right'].robot_state.get_safety_mode().safety_mode.mode == SafetyMode.FAULT)
         self.assertTrue(self.mock_dashboard['left'].robot_state.get_safety_mode().safety_mode.mode == SafetyMode.FAULT)
         self.press_pedal()
-        self.assertFalse(self.mock_dashboard['right'].robot_state.get_safety_mode().robot_mode.mode == SafetyMode.FAULT)
-        self.assertFalse(self.mock_dashboard['left'].robot_state.get_safety_mode().robot_mode.mode == SafetyMode.FAULT)
+        self.assertFalse(self.mock_dashboard['right'].robot_state.get_safety_mode().safety_mode.mode == SafetyMode.FAULT)
+        self.assertFalse(self.mock_dashboard['left'].robot_state.get_safety_mode().safety_mode.mode == SafetyMode.FAULT)
         self.assertTrue(self.get_program_running('right'))
         self.assertTrue(self.get_program_running('left'))
 
