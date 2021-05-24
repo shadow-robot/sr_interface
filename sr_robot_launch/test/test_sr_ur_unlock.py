@@ -35,7 +35,7 @@ class TestSrUrUnlock(TestCase):
     def setUpClass(cls):
         cls.service_string = {}
         cls.service_string['right'] = '/ra_sr_ur_robot_hw/dashboard/program_running'
-        cls.service_string['left']  = '/la_sr_ur_robot_hw/dashboard/program_running'
+        cls.service_string['left'] = '/la_sr_ur_robot_hw/dashboard/program_running'
         cls.sr_ur_arm_unlock = SrUrUnlock()
         cls.mock_dashboard = {}
         cls.mock_dashboard['left'] = MockUrRobotHW('left')
@@ -56,68 +56,94 @@ class TestSrUrUnlock(TestCase):
     def test_arm_power_cycle_bimanual(self):
         self.assertFalse(self.get_program_running('right'))
         self.assertFalse(self.get_program_running('left'))
-        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.POWER_OFF)
-        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.POWER_OFF)
+        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.POWER_OFF)
+        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.POWER_OFF)
         self.press_pedal()
-        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.RUNNING)
-        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.RUNNING)
+        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.RUNNING)
+        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.RUNNING)
         self.assertTrue(self.get_program_running('right'))
         self.assertTrue(self.get_program_running('left'))
         self.press_pedal()
-        self.assertFalse(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.RUNNING)
-        self.assertFalse(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.RUNNING)
+        self.assertFalse(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode ==
+                         RobotMode.RUNNING)
+        self.assertFalse(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode ==
+                         RobotMode.RUNNING)
 
     def test_arm_fault_bimanual_left(self):
         self.assertFalse(self.get_program_running('right'))
         self.assertFalse(self.get_program_running('left'))
-        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.POWER_OFF)
-        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.POWER_OFF)
+        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.POWER_OFF)
+        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.POWER_OFF)
         self.press_pedal()
-        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.RUNNING)
-        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.RUNNING)
+        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.RUNNING)
+        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.RUNNING)
         self.assertTrue(self.get_program_running('right'))
         self.assertTrue(self.get_program_running('left'))
         self.mock_dashboard['left'].robot_state.fault()
-        self.assertTrue(self.mock_dashboard['left'].robot_state.get_safety_mode().safety_mode.mode == SafetyMode.FAULT)
+        self.assertTrue(self.mock_dashboard['left'].robot_state.get_safety_mode().safety_mode.mode ==
+                        SafetyMode.FAULT)
         self.press_pedal()
-        self.assertFalse(self.mock_dashboard['left'].robot_state.get_safety_mode().safety_mode.mode == SafetyMode.FAULT)
+        self.assertFalse(self.mock_dashboard['left'].robot_state.get_safety_mode().safety_mode.mode ==
+                         SafetyMode.FAULT)
         self.assertTrue(self.get_program_running('right'))
         self.assertTrue(self.get_program_running('left'))
 
     def test_arm_fault_bimanual_right(self):
         self.assertFalse(self.get_program_running('right'))
         self.assertFalse(self.get_program_running('left'))
-        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.POWER_OFF)
-        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.POWER_OFF)
+        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.POWER_OFF)
+        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.POWER_OFF)
         self.press_pedal()
-        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.RUNNING)
-        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.RUNNING)
+        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.RUNNING)
+        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.RUNNING)
         self.assertTrue(self.get_program_running('right'))
         self.assertTrue(self.get_program_running('left'))
         self.mock_dashboard['right'].robot_state.fault()
-        self.assertTrue(self.mock_dashboard['right'].robot_state.get_safety_mode().safety_mode.mode == SafetyMode.FAULT)
+        self.assertTrue(self.mock_dashboard['right'].robot_state.get_safety_mode().safety_mode.mode ==
+                        SafetyMode.FAULT)
         self.press_pedal()
-        self.assertFalse(self.mock_dashboard['right'].robot_state.get_safety_mode().safety_mode.mode == SafetyMode.FAULT)
+        self.assertFalse(self.mock_dashboard['right'].robot_state.get_safety_mode().safety_mode.mode ==
+                         SafetyMode.FAULT)
         self.assertTrue(self.get_program_running('right'))
         self.assertTrue(self.get_program_running('left'))
 
     def test_arm_fault_bimanual(self):
         self.assertFalse(self.get_program_running('right'))
         self.assertFalse(self.get_program_running('left'))
-        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.POWER_OFF)
-        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.POWER_OFF)
+        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.POWER_OFF)
+        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.POWER_OFF)
         self.press_pedal()
-        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.RUNNING)
-        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.RUNNING)
+        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.RUNNING)
+        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.RUNNING)
         self.assertTrue(self.get_program_running('right'))
         self.assertTrue(self.get_program_running('left'))
         self.mock_dashboard['right'].robot_state.fault()
         self.mock_dashboard['left'].robot_state.fault()
-        self.assertTrue(self.mock_dashboard['right'].robot_state.get_safety_mode().safety_mode.mode == SafetyMode.FAULT)
-        self.assertTrue(self.mock_dashboard['left'].robot_state.get_safety_mode().safety_mode.mode == SafetyMode.FAULT)
+        self.assertTrue(self.mock_dashboard['right'].robot_state.get_safety_mode().safety_mode.mode ==
+                        SafetyMode.FAULT)
+        self.assertTrue(self.mock_dashboard['left'].robot_state.get_safety_mode().safety_mode.mode ==
+                        SafetyMode.FAULT)
         self.press_pedal()
-        self.assertFalse(self.mock_dashboard['right'].robot_state.get_safety_mode().safety_mode.mode == SafetyMode.FAULT)
-        self.assertFalse(self.mock_dashboard['left'].robot_state.get_safety_mode().safety_mode.mode == SafetyMode.FAULT)
+        self.assertFalse(self.mock_dashboard['right'].robot_state.get_safety_mode().safety_mode.mode ==
+                         SafetyMode.FAULT)
+        self.assertFalse(self.mock_dashboard['left'].robot_state.get_safety_mode().safety_mode.mode ==
+                         SafetyMode.FAULT)
         self.assertTrue(self.get_program_running('right'))
         self.assertTrue(self.get_program_running('left'))
 
@@ -126,23 +152,29 @@ class TestSrUrUnlock(TestCase):
 
     def test_fault_right(self):
         self.press_pedal()
-        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.RUNNING)
+        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.RUNNING)
         self.assertTrue(self.get_program_running('right'))
         self.mock_dashboard['right'].robot_state.fault()
-        self.assertTrue(self.mock_dashboard['right'].robot_state.get_safety_mode().safety_mode.mode == SafetyMode.FAULT)
+        self.assertTrue(self.mock_dashboard['right'].robot_state.get_safety_mode().safety_mode.mode ==
+                        SafetyMode.FAULT)
         self.assertFalse(self.get_program_running('right'))
         self.press_pedal()
-        self.assertTrue(self.mock_dashboard['right'].robot_state.get_safety_mode().safety_mode.mode == SafetyMode.NORMAL)
+        self.assertTrue(self.mock_dashboard['right'].robot_state.get_safety_mode().safety_mode.mode ==
+                        SafetyMode.NORMAL)
         self.assertTrue(self.get_program_running('right'))
 
     def test_arm_power_cycle_right(self):
-        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.POWER_OFF)
+        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.POWER_OFF)
         self.assertFalse(self.get_program_running('right'))
         self.press_pedal()
-        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.RUNNING)
+        self.assertTrue(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.RUNNING)
         self.assertTrue(self.get_program_running('right'))
         self.press_pedal()
-        self.assertFalse(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.RUNNING)
+        self.assertFalse(self.mock_dashboard['right'].robot_state.get_robot_mode().robot_mode.mode ==
+                         RobotMode.RUNNING)
         self.assertFalse(self.get_program_running('right'))
 
     def test_arm_mock_right(self):
@@ -153,23 +185,29 @@ class TestSrUrUnlock(TestCase):
 
     def test_fault_left(self):
         self.press_pedal()
-        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.RUNNING)
+        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.RUNNING)
         self.assertTrue(self.get_program_running('left'))
         self.mock_dashboard['left'].robot_state.fault()
-        self.assertTrue(self.mock_dashboard['left'].robot_state.get_safety_mode().safety_mode.mode == SafetyMode.FAULT)
+        self.assertTrue(self.mock_dashboard['left'].robot_state.get_safety_mode().safety_mode.mode ==
+                        SafetyMode.FAULT)
         self.assertFalse(self.get_program_running('left'))
         self.press_pedal()
-        self.assertTrue(self.mock_dashboard['left'].robot_state.get_safety_mode().safety_mode.mode == SafetyMode.NORMAL)
+        self.assertTrue(self.mock_dashboard['left'].robot_state.get_safety_mode().safety_mode.mode ==
+                        SafetyMode.NORMAL)
         self.assertTrue(self.get_program_running('left'))
 
     def test_arm_power_cycle_left(self):
-        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.POWER_OFF)
+        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.POWER_OFF)
         self.assertFalse(self.get_program_running('left'))
         self.press_pedal()
-        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.RUNNING)
+        self.assertTrue(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.RUNNING)
         self.assertTrue(self.get_program_running('left'))
         self.press_pedal()
-        self.assertFalse(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode == RobotMode.RUNNING)
+        self.assertFalse(self.mock_dashboard['left'].robot_state.get_robot_mode().robot_mode.mode ==
+                         RobotMode.RUNNING)
         self.assertFalse(self.get_program_running('left'))
 
     def test_arm_startup_left(self):
@@ -191,9 +229,9 @@ class TestSrUrUnlock(TestCase):
     def press_pedal(self):
         self.sr_ur_arm_unlock.release_or_brake_arm_cb(Bool(True))
 
+
 if __name__ == "__main__":
     PKGNAME = 'sr_robot_launch'
     NODENAME = 'test_sr_ur_unlock'
     rospy.init_node(NODENAME, anonymous=True)
     rostest.rosrun(PKGNAME, NODENAME, TestSrUrUnlock)
-
