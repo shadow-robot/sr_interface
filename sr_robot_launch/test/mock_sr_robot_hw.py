@@ -9,40 +9,25 @@ import actionlib_tutorials.msg
 import control_msgs
 from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryResult
 from std_msgs.msg import Bool
-from ur_dashboard_msgs.srv import GetSafetyMode, GetSafetyModeResponse, GetProgramState, GetRobotMode, Load, IsProgramRunning, GetProgramStateResponse, GetRobotModeResponse, LoadResponse, IsProgramRunningResponse
+from ur_dashboard_msgs.srv import (GetSafetyMode, GetSafetyModeResponse, GetProgramState,
+                                   GetRobotMode, Load, IsProgramRunning, GetProgramStateResponse,
+                                   GetRobotModeResponse, LoadResponse, IsProgramRunningResponse)
 from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
 from std_srvs.srv import Trigger, TriggerResponse
 
-'''
-"get_robot_mode", GetRobotMode)
-"get_safety_mode", GetSafetyMode)
-"program_running", IsProgramRunning)
-"power_on", Trigger)
-"power_off", Trigger)
-"brake_release", Trigger)
-"restart_safety", Trigger)
-"close_safety_popup", Trigger)
-"close_popup", Trigger)
-"unlock_protective_stop", Trigger)
-"play", Trigger)
 
-"program_state", GetProgramState)
-"load_program", Load, service_data=self._external_control_program_name)
-
-"resend_robot_program", Trigger, dashboard=False)
-
-'''
-
-class STATE():
-    def __init__(self, start_state):
-        self.states = ['ROBOT_STOPPED', 'ROBOT_IDLE', 'ROBOT_RUNNING', 'PROTECTIVE_STOP', 'EMERGENCY-STOP', 'PROGRAM_RUNNING']
+class STATE(object):
+    def __init__(self, start_state='ROBOT_STOPPED'):
+        self.states = ['ROBOT_STOPPED', 'ROBOT_IDLE', 'ROBOT_RUNNING', 'PROTECTIVE_STOP',
+                       'EMERGENCY-STOP', 'PROGRAM_RUNNING']
         self.ROBOT_MODE = GetRobotModeResponse()
         self.SAFETY_MODE = GetSafetyModeResponse()
-	self.PROGRAM_STATE = GetProgramStateResponse()
-	self.PROGRAM_RUNNING = IsProgramRunningResponse()
+        self.PROGRAM_STATE = GetProgramStateResponse()
+        self.PROGRAM_RUNNING = IsProgramRunningResponse()
         self.update_state(start_state)
 
     def set_safety_mode(self, mode):
+        self.SAFETY_MODE.success = True
         if mode == "NORMAL":
             self.SAFETY_MODE.safety_mode.mode = SafetyMode.NORMAL
             self.SAFETY_MODE.answer = "Safetymode: NORMAL"
@@ -57,6 +42,7 @@ class STATE():
             self.SAFETY_MODE.answer = "Safetymode: FAULT"
 
     def set_robot_mode(self, mode):
+        self.ROBOT_MODE.success = True
         if mode == "IDLE":
             self.ROBOT_MODE.robot_mode.mode = RobotMode.IDLE
             self.ROBOT_MODE.answer = "Robotmode: IDLE"
@@ -121,7 +107,8 @@ class STATE():
         self.set_program_running(False)
 
     def resend_robot_program(self):
-        if self.get_safety_mode().safety_mode.mode == SafetyMode.NORMAL and self.get_robot_mode().robot_mode.mode == RobotMode.RUNNING:
+        if (self.get_safety_mode().safety_mode.mode == SafetyMode.NORMAL and
+                self.get_robot_mode().robot_mode.mode == RobotMode.RUNNING):
             self.set_program_running(True)
         else:
             self.set_program_running(False)
@@ -161,34 +148,41 @@ class STATE():
             self.set_program_running(True)
 
 
-
 class MockUrRobotHW(object):
-    def __init__(self, side='right', state='RUNNING'):
+    def __init__(self, side='right'):
         if 'left' not in side and 'right' not in side:
             rospy.logerr("side: %s not valid. Valid sides are 'left, 'right'", side)
             exit(0)
         self.side = side
         self.arm_prefix = side[0] + 'a'
-        self.state = state
-        valid_states = ['E-STOP', 'PROTECTIVE-STOP', 'RUNNING', 'PAUSED', 'STOPPED']
-        if state not in valid_states:
-            rospy.logerr("State %s not valid. Valid states are: %s", state, [x for x in valid_states])
-            exit(0)
-        self.robot_state = STATE('ROBOT_STOPPED')
-        get_safety_mode_service        =  rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/get_safety_mode',       GetSafetyMode, self.handle_get_safety_mode)
-        get_robot_mode_service         =  rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/get_robot_mode',        GetRobotMode, self.handle_get_robot_mode)
-        is_program_running             =  rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/program_running',       IsProgramRunning, self.handle_is_program_running)
-        load_program_service           =  rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/load',                  Load, self.handle_load_program)
-        program_state_service          =  rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/program_state',         GetProgramState, self.handle_get_program_state)
-        power_on_service               =  rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/power_on',              Trigger, self.handle_power_on)
-        power_off_service              =  rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/power_off',             Trigger, self.handle_power_off)
-        brake_release_service          =  rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/brake_release',         Trigger, self.handle_brake_release)
-        restart_safety_service         =  rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/restart_safety',        Trigger, self.handle_restart_safety)
-        close_safety_popup_service     =  rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/close_safety_popup',    Trigger, self.handle_close_safety_popup)
-        close_popup_service            =  rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/close_popup',           Trigger, self.handle_close_popup)
-        unlock_protective_stop_service =  rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/unlock_protective_stop',Trigger, self.handle_unlock_protective_stop)
-        resend_robot_program_service   =  rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/resend_robot_program',            Trigger, self.handle_resend_robot_program)
-
+        self.robot_state = STATE()
+        get_safety_mode_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/get_safety_mode',
+                                                GetSafetyMode, self.handle_get_safety_mode)
+        get_robot_mode_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/get_robot_mode',
+                                               GetRobotMode, self.handle_get_robot_mode)
+        is_program_running = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/program_running',
+                                           IsProgramRunning, self.handle_is_program_running)
+        load_program_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/load',
+                                             Load, self.handle_load_program)
+        program_state_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/program_state',
+                                              GetProgramState, self.handle_get_program_state)
+        power_on_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/power_on',
+                                         Trigger, self.handle_power_on)
+        power_off_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/power_off',
+                                          Trigger, self.handle_power_off)
+        brake_release_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/brake_release',
+                                              Trigger, self.handle_brake_release)
+        restart_safety_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/restart_safety',
+                                               Trigger, self.handle_restart_safety)
+        close_safety_popup_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/close_safety_popup',
+                                                   Trigger, self.handle_close_safety_popup)
+        close_popup_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/close_popup',
+                                            Trigger, self.handle_close_popup)
+        unlock_protective_stop_service = rospy.Service(self.arm_prefix +
+                                                       '_sr_ur_robot_hw/dashboard/unlock_protective_stop',
+                                                       Trigger, self.handle_unlock_protective_stop)
+        resend_robot_program_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/resend_robot_program',
+                                                     Trigger, self.handle_resend_robot_program)
 
     def handle_get_safety_mode(self, request):
         return self.robot_state.get_safety_mode()
@@ -257,9 +251,8 @@ class MockUrRobotHW(object):
         return self.trigger_response()
 
 
-
-
 if __name__ == '__main__':
     rospy.init_node('mock_ur_robot_hw')
-    server = MockUrRobotHW()
+    server = MockUrRobotHW('right')
+    server = MockUrRobotHW('left')
     rospy.spin()
