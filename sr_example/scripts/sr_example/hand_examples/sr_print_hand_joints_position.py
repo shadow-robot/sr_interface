@@ -21,6 +21,7 @@
 
 import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
+from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from sr_utilities.hand_finder import HandFinder
 from numpy import arange
 from math import pi
@@ -60,3 +61,28 @@ for i in arange(0, len(prefix)):
         k: (v * scale) for k, v in all_joints_state.items() if k.startswith(prefix[i] + "_")}
 
     print("Hand joints position \n " + str(hand_joints_state) + "\n")
+
+ff = SrHandCommander(name="rh_first_finger")
+current_pose = ff.get_current_pose(reference_frame="rh_palm")
+rospy.loginfo(str(ff.get_end_effector_link()))
+rospy.loginfo(str(current_pose))
+
+th = SrHandCommander(name="rh_thumb")
+current_pose = th.get_current_pose(reference_frame="rh_palm")
+rospy.loginfo(str(th.get_end_effector_link()))
+rospy.loginfo(str(current_pose))
+
+mf = SrHandCommander(name="rh_middle_finger")
+current_pose = mf.get_current_pose(reference_frame="rh_palm")
+rospy.loginfo(str(mf.get_end_effector_link()))
+rospy.loginfo(str(current_pose))
+
+rf = SrHandCommander(name="rh_ring_finger")
+current_pose = rf.get_current_pose(reference_frame="rh_palm")
+rospy.loginfo(str(rf.get_end_effector_link()))
+rospy.loginfo(str(current_pose))
+
+lf = SrHandCommander(name="rh_little_finger")
+current_pose = lf.get_current_pose(reference_frame="rh_palm")
+rospy.loginfo(str(lf.get_end_effector_link()))
+rospy.loginfo(str(current_pose))
