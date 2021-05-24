@@ -77,10 +77,10 @@ class STATE():
             self.PROGRAM_RUNNING.answer = "STOPPED"
 
     def get_robot_mode(self):
-        return self.ROBOT_MODE.robot_mode.mode
+        return self.ROBOT_MODE
 
     def get_safety_mode(self):
-        return self.SAFETY_MODE.safety_mode.mode
+        return self.SAFETY_MODE
 
     def get_program_running(self):
         return self.PROGRAM_RUNNING
@@ -120,10 +120,11 @@ class STATE():
         self.set_robot_mode('IDLE')
         self.set_program_running(False)
 
-    def full_start(self):
-        self.set_safety_mode('NORMAL')
-        self.set_robot_mode('RUNNING')
-        self.set_program_running(True)
+    def resend_robot_program(self):
+        if self.get_safety_mode().safety_mode.mode == SafetyMode.NORMAL and self.get_robot_mode().robot_mode.mode == RobotMode.RUNNING:
+            self.set_program_running(True)
+        else:
+            self.set_program_running(False)
 
     def fault(self):
         self.set_safety_mode('FAULT')
@@ -190,9 +191,7 @@ class MockUrRobotHW(object):
 
 
     def handle_get_safety_mode(self, request):
-        response = GetSafetyModeResponse()
-        response.safety_mode.mode = self.robot_state.get_safety_mode()
-        return response
+        return self.robot_state.get_safety_mode()
 
     def handle_get_program_state(self, request):
         response = GetProgramStateResponse()
@@ -205,9 +204,7 @@ class MockUrRobotHW(object):
         return response
 
     def handle_get_robot_mode(self, request):
-        response = GetRobotModeResponse()
-        response.robot_mode.mode = self.robot_state.get_robot_mode()
-        return response
+        return self.robot_state.get_robot_mode()
 
     def handle_load_program(self, request):
         response = LoadResponse()
@@ -252,7 +249,7 @@ class MockUrRobotHW(object):
         return self.trigger_response()
 
     def handle_resend_robot_program(self, request):
-        self.robot_state.full_start()
+        self.robot_state.resend_robot_program()
         return self.trigger_response()
 
     def set_fault(self):
