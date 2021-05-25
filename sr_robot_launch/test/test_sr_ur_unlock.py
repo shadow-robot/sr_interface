@@ -184,12 +184,6 @@ class TestSrUrUnlock(TestCase):
     def test_arm_startup_right_again(self):
         self.arm_setup('right')
 
-    def test_fault_left(self):
-        self.fault('left')
-
-    def test_fault_right(self):
-        self.fault('right')
-
     def arm_setup(self, side):
         self.press_pedal()
         self.assertTrue(self.get_program_running(side))
