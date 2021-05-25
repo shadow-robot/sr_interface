@@ -2,5 +2,5 @@
   <param name="ra_sr_ur_robot_hw/headless_mode" value="true"/>
   <param name="la_sr_ur_robot_hw/headless_mode" value="true"/>
 
-  <test test-name="test_sr_ur_unlock" pkg="sr_robot_launch" type="test_sr_ur_unlock.py" time-limit="2000.0"/>
+  <test test-name="test_sr_ur_unlock" pkg="sr_robot_launch" type="test_sr_ur_unlock.py" time-limit="700.0"/>
 </launch>
