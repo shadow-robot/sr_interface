@@ -28,75 +28,7 @@ from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
 import sys
 
 
-
-
-
-class TestSrUrUnlock(TestCase):
-    """
-    Tests sr_ur_arm_unlock
-    """
-    @classmethod
-    def setUpClass(cls):
-        cls.service_string = {}
-        cls.service_string['right'] = '/ra_sr_ur_robot_hw/dashboard/program_running'
-        cls.service_string['left'] = '/la_sr_ur_robot_hw/dashboard/program_running'
-        cls.sr_ur_arm_unlock = SrUrUnlock()
-        cls.mock_dashboard = {}
-        cls.mock_dashboard['left'] = MockUrRobotHW('left')
-        cls.mock_dashboard['right'] = MockUrRobotHW('right')
-        #tests = ArmTests(cls, 'right')
-
-    def setUp(self):
-        for key, value in self.mock_dashboard.iteritems():
-            value.reinitialize()
-
-    def tearDown(self):
-        for key, value in self.mock_dashboard.iteritems():
-            value.reinitialize()
-
-    @classmethod
-    def tearDownClass(cls):
-        pass
-
-    def test_arm_fault_bimanual_left(self):
-        self.arm_fault_bimanual(['left'])
-
-    def test_arm_fault_bimanual_right(self):
-        self.arm_fault_bimanual(['right'])
-
-    def test_arm_fault_bimanual_both(self):
-        self.arm_fault_bimanual(['right', 'left'])
-
-    def test_arm_startup_left(self):
-        self.arm_setup('left')
-
-    def test_arm_startup_right(self):
-        self.arm_setup('right')
-
-    def test_fault_left(self):
-        self.fault('left')
-
-    def test_fault_right(self):
-        self.fault('right')
-
-    def test_arm_power_cycle_left(self):
-        self.arm_power_cycle('left')
-
-    def test_arm_power_cycle_right(self):
-        self.arm_power_cycle('right')
-
-    def test_arm_mock_left(self):
-        self.arm_mock('left')
-
-    def test_arm_mock_right(self):
-        self.arm_mock('right')
-
-    def test_arm_startup_left_again(self):
-        self.arm_setup('left')
-
-    def test_arm_startup_right_again(self):
-        self.arm_setup('right')
-
+class CommonTests:
     def arm_setup(self, side):
         self.press_pedal()
         self.assertTrue(self.get_program_running(side))
@@ -155,13 +87,81 @@ class TestSrUrUnlock(TestCase):
         self.assertTrue(self.get_program_running('left'))
         for side in sides:
             self.mock_dashboard[side].robot_state.fault()
-        self.assertTrue(self.mock_dashboard['right'].robot_state.get_safety_mode().safety_mode.mode ==
-                        SafetyMode.FAULT)
+        for side in sides:
+            self.assertTrue(self.mock_dashboard[side].robot_state.get_safety_mode().safety_mode.mode ==
+                            SafetyMode.FAULT)
         self.press_pedal()
-        self.assertFalse(self.mock_dashboard['right'].robot_state.get_safety_mode().safety_mode.mode ==
-                         SafetyMode.FAULT)
+        for side in sides:
+            self.assertFalse(self.mock_dashboard[side].robot_state.get_safety_mode().safety_mode.mode ==
+                             SafetyMode.FAULT)
         self.assertTrue(self.get_program_running('right'))
         self.assertTrue(self.get_program_running('left'))
+
+
+class TestSrUrUnlock(TestCase, CommonTests):
+    """
+    Tests sr_ur_arm_unlock
+    """
+    @classmethod
+    def setUpClass(cls):
+        cls.service_string = {}
+        cls.service_string['right'] = '/ra_sr_ur_robot_hw/dashboard/program_running'
+        cls.service_string['left'] = '/la_sr_ur_robot_hw/dashboard/program_running'
+        cls.sr_ur_arm_unlock = SrUrUnlock()
+        cls.mock_dashboard = {}
+        cls.mock_dashboard['left'] = MockUrRobotHW('left')
+        cls.mock_dashboard['right'] = MockUrRobotHW('right')
+
+    def setUp(self):
+        for key, value in self.mock_dashboard.iteritems():
+            value.reinitialize()
+
+    def tearDown(self):
+        for key, value in self.mock_dashboard.iteritems():
+            value.reinitialize()
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
+
+    def test_arm_fault_bimanual_left(self):
+        self.arm_fault_bimanual(['left'])
+
+    def test_arm_fault_bimanual_right(self):
+        self.arm_fault_bimanual(['right'])
+
+    def test_arm_fault_bimanual_both(self):
+        self.arm_fault_bimanual(['right', 'left'])
+
+    def test_arm_startup_left(self):
+        self.arm_setup('left')
+
+    def test_arm_startup_right(self):
+        self.arm_setup('right')
+
+    def test_fault_left(self):
+        self.fault('left')
+
+    def test_fault_right(self):
+        self.fault('right')
+
+    def test_arm_power_cycle_left(self):
+        self.arm_power_cycle('left')
+
+    def test_arm_power_cycle_right(self):
+        self.arm_power_cycle('right')
+
+    def test_arm_mock_left(self):
+        self.arm_mock('left')
+
+    def test_arm_mock_right(self):
+        self.arm_mock('right')
+
+    def test_arm_startup_left_again(self):
+        self.arm_setup('left')
+
+    def test_arm_startup_right_again(self):
+        self.arm_setup('right')
 
 
 if __name__ == "__main__":
@@ -169,4 +169,3 @@ if __name__ == "__main__":
     NODENAME = 'test_sr_ur_unlock'
     rospy.init_node(NODENAME, anonymous=True)
     rostest.rosrun(PKGNAME, NODENAME, TestSrUrUnlock)
-
