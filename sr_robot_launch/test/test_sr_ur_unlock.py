@@ -25,7 +25,6 @@ from ur_dashboard_msgs.srv import IsProgramRunning
 from sr_robot_launch.sr_ur_arm_unlock import SrUrUnlock
 from sr_robot_launch.mock_sr_ur_robot_hw import MockUrRobotHW
 from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
-
 import sys
 
 
@@ -36,11 +35,6 @@ class TestSrUrUnlock(TestCase):
     """
     Tests sr_ur_arm_unlock
     """
-    #def __init__(self, *args):
-    #    super(TestSrUrUnlock, self).__init__(*args)
-        #self.addTest(ArmTests('left'))
-        #self.run(self.addTest(ArmTests('right')))
-
     @classmethod
     def setUpClass(cls):
         cls.service_string = {}
@@ -263,7 +257,5 @@ if __name__ == "__main__":
     PKGNAME = 'sr_robot_launch'
     NODENAME = 'test_sr_ur_unlock'
     rospy.init_node(NODENAME, anonymous=True)
-    # rostest.rosrun(PKGNAME, NODENAME, ArmTests)
     rostest.rosrun(PKGNAME, NODENAME, TestSrUrUnlock)
-    #rostest.rosrun(PKGNAME, NODENAME, 'test.test_sr_ur_unlock.TestSrUrUnlock')
 
