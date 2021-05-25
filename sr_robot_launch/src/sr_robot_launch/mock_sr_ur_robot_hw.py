@@ -197,14 +197,6 @@ class MockUrRobotHW(object):
 
     def handle_get_program_state(self, request):
         return self.robot_state.get_program_state()
-        response = GetProgramStateResponse()
-        if 'RUNNING' in self.state:
-            response.state = ProgramState.RUNNING
-        if 'PAUSED' in self.state:
-            response.state = ProgramState.RUNNING
-        if 'STOPPED' in self.state:
-            response.state = ProgramState.STOPPED
-        return response
 
     def handle_get_robot_mode(self, request):
         return self.robot_state.get_robot_mode()
