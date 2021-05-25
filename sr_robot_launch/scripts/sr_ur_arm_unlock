@@ -22,4 +22,3 @@ if __name__ == "__main__":
     rospy.init_node('sr_ur_arm_unlock')
     sr_ur_unlock = SrUrUnlock()
     rospy.spin()
-
