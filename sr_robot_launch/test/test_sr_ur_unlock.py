@@ -33,7 +33,7 @@ class CommonTests:
         self.press_pedal()
         self.assertTrue(self.get_program_running(side))
 
-    def arm_mock(self, side):
+    def arm_mock_dashboard_server(self, side):
         self.assertFalse(self.get_program_running(side))
 
     def fault(self, side):
@@ -151,11 +151,11 @@ class TestSrUrUnlock(TestCase, CommonTests):
     def test_arm_power_cycle_right(self):
         self.arm_power_cycle('right')
 
-    def test_arm_mock_left(self):
-        self.arm_mock('left')
+    def test_arm_mock_dashboard_server_left(self):
+        self.arm_mock_dashboard_server('left')
 
-    def test_arm_mock_right(self):
-        self.arm_mock('right')
+    def test_arm_mock_dashboard_server_right(self):
+        self.arm_mock_dashboard_server('right')
 
     def test_arm_startup_left_again(self):
         self.arm_setup('left')
