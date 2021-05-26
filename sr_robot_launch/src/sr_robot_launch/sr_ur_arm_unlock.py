@@ -140,7 +140,7 @@ class SrUrUnlock(object):
         for arm in self._arms:
             try:
                 headless_mode = rospy.get_param("/" + arm + "_sr_ur_robot_hw/headless_mode")
-            except:
+            except KeyError:
                 headless_mode = False
             if not headless_mode:
                 play_msg = self.call_arm_service(arm, "program_state", GetProgramState)
