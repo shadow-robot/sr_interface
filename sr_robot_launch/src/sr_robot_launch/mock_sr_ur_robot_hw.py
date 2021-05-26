@@ -3,6 +3,7 @@
 # Copyright (C) 2021 Shadow Robot Company Ltd - All Rights Reserved. Proprietary and Confidential.
 # Unauthorized copying of the content in this file, via any medium is strictly prohibited.
 
+from __future__ import absolute_import
 import rospy
 import actionlib
 import actionlib_tutorials.msg
