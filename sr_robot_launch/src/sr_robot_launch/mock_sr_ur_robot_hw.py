@@ -16,65 +16,71 @@ from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
 from std_srvs.srv import Trigger, TriggerResponse
 
 
-class STATE(object):
-    def __init__(self, start_state='ROBOT_STOPPED'):
-        self.states = ['ROBOT_STOPPED', 'ROBOT_IDLE', 'ROBOT_RUNNING', 'PROTECTIVE_STOP',
-                       'EMERGENCY-STOP', 'PROGRAM_RUNNING']
-        self.ROBOT_MODE = GetRobotModeResponse()
-        self.SAFETY_MODE = GetSafetyModeResponse()
-        self.PROGRAM_STATE = GetProgramStateResponse()
-        self.PROGRAM_STATE.program_name = "<unnamed>"
-        self.PROGRAM_STATE.success = True
-        self.PROGRAM_RUNNING = IsProgramRunningResponse()
-        self.update_state(start_state)
+class IllegalArgumentError(ValueError):
+    pass
+
+
+class State(object):
+    def __init__(self):
+        self.robot_mode = GetRobotModeResponse()
+        self.safety_mode = GetSafetyModeResponse()
+        self.program_state = GetProgramStateResponse()
+        self.program_state.program_name = "<unnamed>"
+        self.program_state.success = True
+        self.program_running = IsProgramRunningResponse()
+        self.power_off()
 
     def set_safety_mode(self, mode):
-        self.SAFETY_MODE.success = True
+        self.safety_mode.success = True
         if mode == "NORMAL":
-            self.SAFETY_MODE.safety_mode.mode = SafetyMode.NORMAL
-            self.SAFETY_MODE.answer = "Safetymode: NORMAL"
-        if mode == "PROTECTIVE_STOP":
-            self.SAFETY_MODE.safety_mode.mode = SafetyMode.PROTECTIVE_STOP
-            self.SAFETY_MODE.answer = "Safetymode: PROTECTIVE_STOP"
-        if mode == "ROBOT_EMERGENCY_STOP":
-            self.SAFETY_MODE.safety_mode.mode = SafetyMode.ROBOT_EMERGENCY_STOP
-            self.SAFETY_MODE.answer = "Safetymode: ROBOT_EMERGENCY_STOP"
-        if mode == "FAULT":
-            self.SAFETY_MODE.safety_mode.mode = SafetyMode.FAULT
-            self.SAFETY_MODE.answer = "Safetymode: FAULT"
+            self.safety_mode.safety_mode.mode = SafetyMode.NORMAL
+            self.safety_mode.answer = "Safetymode: NORMAL"
+        elif mode == "PROTECTIVE_STOP":
+            self.safety_mode.safety_mode.mode = SafetyMode.PROTECTIVE_STOP
+            self.safety_mode.answer = "Safetymode: PROTECTIVE_STOP"
+        elif mode == "ROBOT_EMERGENCY_STOP":
+            self.safety_mode.safety_mode.mode = SafetyMode.ROBOT_EMERGENCY_STOP
+            self.safety_mode.answer = "Safetymode: ROBOT_EMERGENCY_STOP"
+        elif mode == "FAULT":
+            self.safety_mode.safety_mode.mode = SafetyMode.FAULT
+            self.safety_mode.answer = "Safetymode: FAULT"
+        else:
+            self.safety_mode.success = False
 
     def set_robot_mode(self, mode):
-        self.ROBOT_MODE.success = True
+        self.robot_mode.success = True
         if mode == "IDLE":
-            self.ROBOT_MODE.robot_mode.mode = RobotMode.IDLE
-            self.ROBOT_MODE.answer = "Robotmode: IDLE"
-        if mode == "POWER_OFF" or mode == "STOPPED":
-            self.ROBOT_MODE.robot_mode.mode = RobotMode.POWER_OFF
-            self.ROBOT_MODE.answer = "Robotmode: POWER_OFF"
-        if mode == "RUNNING":
-            self.ROBOT_MODE.robot_mode.mode = RobotMode.RUNNING
-            self.ROBOT_MODE.answer = "Robotmode: RUNNING"
+            self.robot_mode.robot_mode.mode = RobotMode.IDLE
+            self.robot_mode.answer = "Robotmode: IDLE"
+        elif mode == "POWER_OFF" or mode == "STOPPED":
+            self.robot_mode.robot_mode.mode = RobotMode.POWER_OFF
+            self.robot_mode.answer = "Robotmode: POWER_OFF"
+        elif mode == "RUNNING":
+            self.robot_mode.robot_mode.mode = RobotMode.RUNNING
+            self.robot_mode.answer = "Robotmode: RUNNING"
+        else:
+            self.robot_mode.success = False
 
     def set_program_running(self, running):
-        self.PROGRAM_RUNNING.success = True
+        self.program_running.success = True
         if running:
-            self.PROGRAM_RUNNING.program_running = True
-            self.PROGRAM_RUNNING.answer = "RUNNING"
+            self.program_running.program_running = True
+            self.program_running.answer = "RUNNING"
         else:
-            self.PROGRAM_RUNNING.program_running = False
-            self.PROGRAM_RUNNING.answer = "STOPPED"
+            self.program_running.program_running = False
+            self.program_running.answer = "STOPPED"
 
     def get_robot_mode(self):
-        return self.ROBOT_MODE
+        return self.robot_mode
 
     def get_safety_mode(self):
-        return self.SAFETY_MODE
+        return self.safety_mode
 
     def get_program_running(self):
-        return self.PROGRAM_RUNNING
+        return self.program_running
 
     def get_program_state(self):
-        return self.PROGRAM_STATE
+        return self.program_state
 
     def restart_safety(self):
         self.set_safety_mode('NORMAL')
@@ -123,44 +129,16 @@ class STATE(object):
         self.set_robot_mode('STOPPED')
         self.set_program_running(False)
 
-    def update_state(self, state):
-        if state not in self.states:
-            rospy.logwarn("Invalid state: %s valid states are: %s", state, str(self.states))
-            return
-        if state == 'ROBOT_STOPPED':
-            self.set_safety_mode('NORMAL')
-            self.set_robot_mode('POWER_OFF')
-            self.set_program_running(False)
-        if state == 'ROBOT_IDLE':
-            self.set_safety_mode('NORMAL')
-            self.set_robot_mode('IDLE')
-            self.set_program_running(False)
-        if state == 'ROBOT_RUNNING':
-            self.set_safety_mode('NORMAL')
-            self.set_robot_mode('RUNNING')
-            self.set_program_running(False)
-        if state == 'PROTECTIVE_STOP':
-            self.set_safety_mode('PROTECTIVE_STOP')
-            self.set_robot_mode('RUNNING')
-            self.set_program_running(False)
-        if state == 'EMERGENCY-STOP':
-            self.set_safety_mode('ROBOT_EMERGENCY_STOP')
-            self.set_robot_mode('IDLE')
-            self.set_program_running(False)
-        if state == 'PROGRAM_RUNNING':
-            self.set_safety_mode('NORMAL')
-            self.set_robot_mode('RUNNING')
-            self.set_program_running(True)
-
 
 class MockUrRobotHW(object):
     def __init__(self, side='right'):
         if 'left' not in side and 'right' not in side:
             rospy.logerr("side: %s not valid. Valid sides are 'left, 'right'", side)
-            exit(0)
+            raise IllegalArgumentError
+            exit(1)
         self.side = side
         self.arm_prefix = side[0] + 'a'
-        self.robot_state = STATE()
+        self.robot_state = State()
         get_safety_mode_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/get_safety_mode',
                                                 GetSafetyMode, self.handle_get_safety_mode)
         get_robot_mode_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/get_robot_mode',
@@ -190,7 +168,7 @@ class MockUrRobotHW(object):
                                                      Trigger, self.handle_resend_robot_program)
 
     def reinitialize(self):
-        self.robot_state = STATE()
+        self.robot_state = State()
 
     def handle_get_safety_mode(self, request):
         return self.robot_state.get_safety_mode()
