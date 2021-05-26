@@ -42,7 +42,7 @@ class ArmState(object):
         self._program_running = IsProgramRunningResponse()
         self.power_off()
 
-    def set_safety_mode(self, mode):
+    def _set_safety_mode(self, mode):
         self._safety_mode.success = True
         if mode == "NORMAL":
             self._safety_mode.safety_mode.mode = SafetyMode.NORMAL
@@ -59,7 +59,7 @@ class ArmState(object):
         else:
             self._safety_mode.success = False
 
-    def set_robot_mode(self, mode):
+    def _set_robot_mode(self, mode):
         self._robot_mode.success = True
         if mode == "IDLE":
             self._robot_mode.robot_mode.mode = RobotMode.IDLE
@@ -73,7 +73,7 @@ class ArmState(object):
         else:
             self._robot_mode.success = False
 
-    def set_program_running(self, running):
+    def _set_program_running(self, running):
         self._program_running.success = True
         if running:
             self._program_running.program_running = True
@@ -95,51 +95,51 @@ class ArmState(object):
         return self._program_state
 
     def restart_safety(self):
-        self.set_safety_mode('NORMAL')
-        self.set_robot_mode('POWER_OFF')
-        self.set_program_running(False)
+        self._set_safety_mode('NORMAL')
+        self._set_robot_mode('POWER_OFF')
+        self._set_program_running(False)
 
     def power_on(self):
-        self.set_safety_mode('NORMAL')
-        self.set_robot_mode('IDLE')
-        self.set_program_running(False)
+        self._set_safety_mode('NORMAL')
+        self._set_robot_mode('IDLE')
+        self._set_program_running(False)
 
     def brake_release(self):
-        self.set_safety_mode('NORMAL')
-        self.set_robot_mode('RUNNING')
-        self.set_program_running(False)
+        self._set_safety_mode('NORMAL')
+        self._set_robot_mode('RUNNING')
+        self._set_program_running(False)
 
     def unlock_protective_stop(self):
-        self.set_safety_mode('NORMAL')
-        self.set_robot_mode('RUNNING')
-        self.set_program_running(False)
+        self._set_safety_mode('NORMAL')
+        self._set_robot_mode('RUNNING')
+        self._set_program_running(False)
 
     def power_off(self):
-        self.set_safety_mode('NORMAL')
-        self.set_robot_mode('POWER_OFF')
-        self.set_program_running(False)
+        self._set_safety_mode('NORMAL')
+        self._set_robot_mode('POWER_OFF')
+        self._set_program_running(False)
 
     def protective_stop(self):
-        self.set_safety_mode('PROTECTIVE_STOP')
-        self.set_robot_mode('RUNNING')
-        self.set_program_running(False)
+        self._set_safety_mode('PROTECTIVE_STOP')
+        self._set_robot_mode('RUNNING')
+        self._set_program_running(False)
 
     def emergency_stop(self):
-        self.set_safety_mode('ROBOT_EMERGENCY_STOP')
-        self.set_robot_mode('IDLE')
-        self.set_program_running(False)
+        self._set_safety_mode('ROBOT_EMERGENCY_STOP')
+        self._set_robot_mode('IDLE')
+        self._set_program_running(False)
 
     def resend_robot_program(self):
         if (self.get_safety_mode().safety_mode.mode == SafetyMode.NORMAL and
                 self.get_robot_mode().robot_mode.mode == RobotMode.RUNNING):
-            self.set_program_running(True)
+            self._set_program_running(True)
         else:
-            self.set_program_running(False)
+            self._set_program_running(False)
 
     def fault(self):
-        self.set_safety_mode('FAULT')
-        self.set_robot_mode('STOPPED')
-        self.set_program_running(False)
+        self._set_safety_mode('FAULT')
+        self._set_robot_mode('STOPPED')
+        self._set_program_running(False)
 
 
 class MockUrRobotHW(object):
