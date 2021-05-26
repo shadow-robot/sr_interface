@@ -16,7 +16,6 @@
 
 import rospy
 import rostest
-from sr_robot_commander.sr_hand_commander import SrHandCommander
 from actionlib_msgs.msg import GoalStatusArray
 from unittest import TestCase
 from std_msgs.msg import Bool
@@ -113,11 +112,11 @@ class TestSrUrUnlock(TestCase, CommonTests):
         cls.mock_dashboard['right'] = MockUrRobotHW('right')
 
     def setUp(self):
-        for key, value in self.mock_dashboard.iteritems():
+        for key, value in self.mock_dashboard.items():
             value.reinitialize()
 
     def tearDown(self):
-        for key, value in self.mock_dashboard.iteritems():
+        for key, value in self.mock_dashboard.items():
             value.reinitialize()
 
     @classmethod

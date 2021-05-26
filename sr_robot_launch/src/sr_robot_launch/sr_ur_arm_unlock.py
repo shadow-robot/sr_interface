@@ -57,7 +57,7 @@ class SrUrUnlock(object):
             else:
                 response = service_call(service_data)
             return response
-        except rospy.ServiceException, e:
+        except rospy.ServiceException as e:
             rospy.logerr("Service call to '%s' failed for arm %s. %s", service_name, side, e)
             raise
 
@@ -179,7 +179,7 @@ class SrUrUnlock(object):
             rospy.loginfo("Checking if program is running ...")
             if self.start_arms_program_if_stopped():
                 rospy.sleep(5)
-        except rospy.ServiceException, e:
+        except rospy.ServiceException as e:
             for arm in self._arms:
                 rospy.logerr("Arm checking/restarting failed for arm: %s. %s", arm, e)
 
