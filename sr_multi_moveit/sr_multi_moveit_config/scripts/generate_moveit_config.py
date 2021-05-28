@@ -271,10 +271,8 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
                 with open(arm_yaml_extra_groups_path, 'r') as stream:
                     arm_yamldoc_extra_groups = yaml.safe_load(stream)
             prefix = manipulator.arm.prefix
-
             for group in robot.groups:
                 group_name = group.name
-
                 if group_name == manipulator.arm.internal_name:
                     group_name = manipulator.arm.main_group
                     group_prefix = prefix
@@ -287,7 +285,6 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
                 else:
                     group_name = group.name[len(prefix):]
                     group_prefix = group.name[:len(prefix)]
- 
                 if group_name in arm_yamldoc and group_prefix == prefix:
                     kinematics_config = arm_yamldoc[group_name]
                     if prefix:
@@ -318,7 +315,6 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
                                                           default_flow_style=False,
                                                           allow_unicode=True), 2)
                     output_str += "\n"
-            rospy.logwarn(output_str)
 
         if manipulator.has_hand:
             # open hand template files
