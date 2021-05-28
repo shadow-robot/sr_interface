@@ -285,6 +285,7 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
                 else:
                     group_name = group.name[len(prefix):]
                     group_prefix = group.name[:len(prefix)]
+
                 if group_name in arm_yamldoc and group_prefix == prefix:
                     kinematics_config = arm_yamldoc[group_name]
                     if prefix:
