@@ -145,7 +145,7 @@ class ArmState(object):
 class MockUrRobotHW(object):
     def __init__(self, side='right'):
         if 'left' not in side and 'right' not in side:
-            rospy.logerr("side: %s not valid. Valid sides are 'left, 'right'", side)
+            rospy.logerr("side: %s not valid. Valid sides are: 'left, 'right'", side)
             raise IllegalArgumentError
             exit(1)
         arm_prefix = side[0] + 'a'
