@@ -16,7 +16,6 @@
 
 import rospy
 import rostest
-from sr_robot_commander.sr_hand_commander import SrHandCommander
 from actionlib_msgs.msg import GoalStatusArray
 from unittest import TestCase
 from std_msgs.msg import Bool
