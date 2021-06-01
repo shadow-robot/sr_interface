@@ -148,35 +148,34 @@ class MockUrRobotHW(object):
             rospy.logerr("side: %s not valid. Valid sides are 'left, 'right'", side)
             raise IllegalArgumentError
             exit(1)
-        self.side = side
-        self.arm_prefix = side[0] + 'a'
+        arm_prefix = side[0] + 'a'
         self.robot_state = ArmState()
-        get_safety_mode_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/get_safety_mode',
+        get_safety_mode_service = rospy.Service(arm_prefix + '_sr_ur_robot_hw/dashboard/get_safety_mode',
                                                 GetSafetyMode, self.handle_get_safety_mode)
-        get_robot_mode_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/get_robot_mode',
+        get_robot_mode_service = rospy.Service(arm_prefix + '_sr_ur_robot_hw/dashboard/get_robot_mode',
                                                GetRobotMode, self.handle_get_robot_mode)
-        is_program_running = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/program_running',
+        is_program_running = rospy.Service(arm_prefix + '_sr_ur_robot_hw/dashboard/program_running',
                                            IsProgramRunning, self.handle_is_program_running)
-        load_program_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/load',
+        load_program_service = rospy.Service(arm_prefix + '_sr_ur_robot_hw/dashboard/load',
                                              Load, self.handle_load_program)
-        program_state_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/program_state',
+        program_state_service = rospy.Service(arm_prefix + '_sr_ur_robot_hw/dashboard/program_state',
                                               GetProgramState, self.handle_get_program_state)
-        power_on_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/power_on',
+        power_on_service = rospy.Service(arm_prefix + '_sr_ur_robot_hw/dashboard/power_on',
                                          Trigger, self.handle_power_on)
-        power_off_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/power_off',
+        power_off_service = rospy.Service(arm_prefix + '_sr_ur_robot_hw/dashboard/power_off',
                                           Trigger, self.handle_power_off)
-        brake_release_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/brake_release',
+        brake_release_service = rospy.Service(arm_prefix + '_sr_ur_robot_hw/dashboard/brake_release',
                                               Trigger, self.handle_brake_release)
-        restart_safety_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/restart_safety',
+        restart_safety_service = rospy.Service(arm_prefix + '_sr_ur_robot_hw/dashboard/restart_safety',
                                                Trigger, self.handle_restart_safety)
-        close_safety_popup_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/close_safety_popup',
+        close_safety_popup_service = rospy.Service(arm_prefix + '_sr_ur_robot_hw/dashboard/close_safety_popup',
                                                    Trigger, self.handle_close_safety_popup)
-        close_popup_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/dashboard/close_popup',
+        close_popup_service = rospy.Service(arm_prefix + '_sr_ur_robot_hw/dashboard/close_popup',
                                             Trigger, self.handle_close_popup)
-        unlock_protective_stop_service = rospy.Service(self.arm_prefix +
+        unlock_protective_stop_service = rospy.Service(arm_prefix +
                                                        '_sr_ur_robot_hw/dashboard/unlock_protective_stop',
                                                        Trigger, self.handle_unlock_protective_stop)
-        resend_robot_program_service = rospy.Service(self.arm_prefix + '_sr_ur_robot_hw/resend_robot_program',
+        resend_robot_program_service = rospy.Service(arm_prefix + '_sr_ur_robot_hw/resend_robot_program',
                                                      Trigger, self.handle_resend_robot_program)
 
     def reinitialize(self):
