@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # Copyright 2019, 2020 Shadow Robot Company Ltd.
 #
@@ -63,7 +63,8 @@ class SrConstructRobotDescription():
 
         self._process_parameters()
         urdf = self._parse_xacro()
-        rospy.set_param('robot_description', urdf)
+
+        rospy.set_param('robot_description', urdf.decode("utf-8"))
         rospy.set_param('robot_description_ready', "true")
 
     def _arm_ip_params_loaded_before_timeout(self, timeout_in_secs):
