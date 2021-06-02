@@ -19,6 +19,12 @@ from sr_robot_launch.sr_ur_arm_unlock import SrUrUnlock
 
 
 if __name__ == "__main__":
-    rospy.init_node('sr_ur_arm_unlock')
-    sr_ur_unlock = SrUrUnlock()
-    rospy.spin()
+
+
+import rospy
+from sr_robot_launch.sr_ur_arm_unlock import SrUrUnlock
+from sr_robot_launch.mock_sr_ur_robot_hw import MockUrRobotHW
+rospy.init_node('sr_ur_arm_unlock')
+s = SrUrUnlock()
+
+
