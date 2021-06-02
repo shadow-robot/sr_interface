@@ -64,15 +64,19 @@ class SrUrUnlock(object):
     def startup_arms(self):
         for arm in self._arms:
             self.call_arm_service(arm, "power_on", Trigger)
-        while self.wait_for_mode(RobotMode.IDLE):
+        while self.wait_for_robot_mode(RobotMode.IDLE):
              pass
         for arm in self._arms:
             self.call_arm_service(arm, "brake_release", Trigger)
-        while self.wait_for_mode(RobotMode.RUNNING):
+        while self.wait_for_robot_mode(RobotMode.RUNNING):
              pass
 
-    def wait_for_mode(self, mode):
-        arms_ready = [mode == self.call_arm_service(arm, "get_robot_mode", GetRobotMode) for arm in self.arms]
+    def wait_for_robot_mode(self, mode):
+        arms_ready = [mode == self.call_arm_service(arm, "get_robot_mode", GetRobotMode) for arm in self._arms]
+        return all(arms_ready)
+
+    def wait_for_safety_mode(self, mode):
+        arms_ready = [mode == self.call_arm_service(arm, "get_safety_mode", GetSafetyMode) for arm in self._arms]
         return all(arms_ready)
 
     def check_arms_e_stops(self):
@@ -171,7 +175,8 @@ class SrUrUnlock(object):
             rospy.loginfo("Checking for faults ...")
             if self.unlock_arms_if_fault():
                 rospy.loginfo("Resetting robot safety, please wait approximately 15 seconds...")
-                rospy.sleep(15)
+                while not self.wait_for_safety_mode(SafetyMode.NORMAL):
+                    pass
             rospy.loginfo("Checking protective stops again ...")
             self.unlock_arms_if_protective_stop()
             rospy.loginfo("Closing popups ...")
