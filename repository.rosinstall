@@ -43,10 +43,3 @@
     local-name: pysdf
     uri: https://github.com/shadow-robot/pysdf.git
     version: master
-
-#temporary until we have debians
-- git:
-    local-name: trac_ik
-    uri: https://{{github_login}}:{{github_password}}@github.com/shadow-robot/trac_ik.git
-    version: master
-   
