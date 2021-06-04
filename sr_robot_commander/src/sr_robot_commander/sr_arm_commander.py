@@ -14,7 +14,7 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
-from sr_robot_commander import SrRobotCommander
+from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from geometry_msgs.msg import PoseStamped, Pose
 from rospy import get_rostime
 import rospy
