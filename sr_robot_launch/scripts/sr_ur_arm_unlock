@@ -68,7 +68,6 @@ class SrUrUnlock(object):
             self.call_arm_service(arm, "brake_release", Trigger)
         self.wait_for_mode('robot', RobotMode.RUNNING)
 
-
     def wait_for_mode(self, mode_type, mode, timeout=15):
         now = rospy.rostime.Time().now().secs
         while not self.is_robot_in_mode(mode_type, mode):
@@ -78,9 +77,11 @@ class SrUrUnlock(object):
 
     def is_robot_in_mode(self, mode_type, mode):
         if mode_type == 'robot':
-            arms_ready = [mode == self.call_arm_service(arm, "get_robot_mode", GetRobotMode).robot_mode.mode for arm in self._arms]
+            arms_ready = [mode == self.call_arm_service(arm, "get_robot_mode",
+                                                        GetRobotMode).robot_mode.mode for arm in self._arms]
         elif mode_type == 'safety':
-            arms_ready = [mode == self.call_arm_service(arm, "get_safety_mode", GetSafetyMode).safety_mode.mode for arm in self._arms]
+            arms_ready = [mode == self.call_arm_service(arm, "get_safety_mode",
+                                                        GetSafetyMode).safety_mode.mode for arm in self._arms]
         return all(arms_ready)
 
     def check_arms_e_stops(self):
@@ -103,7 +104,8 @@ class SrUrUnlock(object):
         fault = False
         for arm in self._arms:
             safety_mode = self.call_arm_service(arm, "get_safety_mode", GetSafetyMode)
-            if SafetyMode.FAULT == safety_mode.safety_mode.mode or SafetyMode.VIOLATION == safety_mode.safety_mode.mode:
+            if (SafetyMode.FAULT == safety_mode.safety_mode.mode or
+                    SafetyMode.VIOLATION == safety_mode.safety_mode.mode):
                 fault = True
                 if SafetyMode.FAULT == safety_mode.safety_mode.mode:
                     rospy.loginfo("Fault detected on: %s. This can be caused by using the external e-stop.\
@@ -189,10 +191,10 @@ class SrUrUnlock(object):
                 self.startup_arms()
             rospy.loginfo("Checking if program is loaded ...")
             if self.load_arms_program_if_unloaded():
-                pass # rospy.sleep(2)
+                pass  # rospy.sleep(2)
             rospy.loginfo("Checking if program is running ...")
             if self.start_arms_program_if_stopped():
-                pass # rospy.sleep(5)
+                pass  # rospy.sleep(5)
         except rospy.ServiceException, e:
             for arm in self._arms:
                 rospy.logerr("Arm checking/restarting failed for arm: %s. %s", arm, e)
