@@ -35,6 +35,34 @@ class CommonTests:
     def arm_mock_dashboard_server(self, side):
         self.assertFalse(self.get_program_running(side))
 
+    def e_stop(self, side, release_estop_before_pedal=True):
+        self.assertFalse(self.get_program_running(side))
+        self.assertFalse(self.mock_dashboard[side].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.RUNNING)
+        self.press_pedal()
+        self.assertTrue(self.mock_dashboard[side].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.RUNNING)
+        self.assertTrue(self.get_program_running(side))
+        self.mock_dashboard[side].robot_state.emergency_stop(latch=True)
+        self.assertTrue(self.mock_dashboard[side].robot_state.get_safety_mode().safety_mode.mode ==
+                        SafetyMode.ROBOT_EMERGENCY_STOP)
+        self.assertFalse(self.get_program_running(side))
+        self.assertFalse(self.mock_dashboard[side].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.RUNNING)
+        if release_estop_before_pedal:
+            self.mock_dashboard[side].robot_state.emergency_stop(latch=False)
+            self.press_pedal()
+        else:
+            self.press_pedal()
+            self.assertTrue(self.mock_dashboard[side].robot_state.get_safety_mode().safety_mode.mode ==
+                            SafetyMode.ROBOT_EMERGENCY_STOP)
+            self.mock_dashboard[side].robot_state.emergency_stop(latch=False)
+            self.assertFalse(self.mock_dashboard[side].robot_state.get_safety_mode().safety_mode.mode ==
+                            SafetyMode.ROBOT_EMERGENCY_STOP)
+        self.assertTrue(self.mock_dashboard[side].robot_state.get_robot_mode().robot_mode.mode ==
+                        RobotMode.RUNNING)
+        self.assertTrue(self.get_program_running(side))
+
     def fault(self, side):
         self.press_pedal()
         self.assertTrue(self.mock_dashboard[side].robot_state.get_robot_mode().robot_mode.mode ==
@@ -143,6 +171,18 @@ class TestSrUrUnlock(TestCase, CommonTests):
 
     def test_fault_right(self):
         self.fault('right')
+
+    def test_e_stop_right_1(self):
+        self.e_stop('right', release_estop_before_pedal=True)
+
+    def test_e_stop_left_1(self):
+        self.e_stop('left', release_estop_before_pedal=True)
+
+    def test_e_stop_right_2(self):
+        self.e_stop('right', release_estop_before_pedal=False)
+
+    def test_e_stop_left_2(self):
+        self.e_stop('left', release_estop_before_pedal=False)
 
     def test_arm_power_cycle_left(self):
         self.arm_power_cycle('left')
