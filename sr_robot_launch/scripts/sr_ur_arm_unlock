@@ -62,6 +62,9 @@ class SrUrUnlock(object):
 
     def startup_arms(self):
         for arm in self._arms:
+            self.call_arm_service(arm, "power_off", Trigger)
+        self.wait_for_mode('robot', RobotMode.POWER_OFF)
+        for arm in self._arms:
             self.call_arm_service(arm, "power_on", Trigger)
         self.wait_for_mode('robot', RobotMode.IDLE)
         for arm in self._arms:
@@ -91,7 +94,7 @@ class SrUrUnlock(object):
                 while SafetyMode.ROBOT_EMERGENCY_STOP == safety_mode.safety_mode.mode:
                     rospy.logwarn("Emergency stop button is still pressed for arm %s, please release", arm)
                     safety_mode = self.call_arm_service(arm, "get_safety_mode", GetSafetyMode)
-                    # rospy.sleep(2)
+                    rospy.sleep(0.01)
 
     def unlock_arms_if_protective_stop(self):
         for arm in self._arms:
@@ -127,10 +130,8 @@ class SrUrUnlock(object):
     def clear_arms_popups(self):
         for arm in self._arms:
             self.call_arm_service(arm, "close_safety_popup", Trigger)
-        # rospy.sleep(2)
         for arm in self._arms:
             self.call_arm_service(arm, "close_popup", Trigger)
-        # rospy.sleep(2)
 
     def load_arms_program_if_unloaded(self):
         sleep_time = False
@@ -190,11 +191,9 @@ class SrUrUnlock(object):
             if self.check_arms_needs_starting():
                 self.startup_arms()
             rospy.loginfo("Checking if program is loaded ...")
-            if self.load_arms_program_if_unloaded():
-                pass  # rospy.sleep(2)
+            self.load_arms_program_if_unloaded()
             rospy.loginfo("Checking if program is running ...")
-            if self.start_arms_program_if_stopped():
-                pass  # rospy.sleep(5)
+            self.start_arms_program_if_stopped()
         except rospy.ServiceException, e:
             for arm in self._arms:
                 rospy.logerr("Arm checking/restarting failed for arm: %s. %s", arm, e)
