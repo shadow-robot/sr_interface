@@ -17,7 +17,7 @@
 from __future__ import absolute_import
 import rospy
 
-from sr_robot_commander import SrRobotCommander, SrRobotCommanderException
+from sr_robot_commander.sr_robot_commander import SrRobotCommander, SrRobotCommanderException
 from sr_robot_msgs.srv import ForceController
 from sr_hand.tactile_receiver import TactileReceiver
 from sr_utilities.hand_finder import HandFinder
