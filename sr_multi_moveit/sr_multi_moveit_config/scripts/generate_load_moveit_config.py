@@ -99,8 +99,9 @@ if __name__ == '__main__':
                     hand_template_path = None
                 if save_file:
                     output_path = (rospkg.RosPack().get_path('sr_multi_moveit_config') + "/config/" + "kinematics.yaml")
-                generate_kinematics(robot, robot_config, hand_template_path, output_path=output_path,
-                                    kinematics_file=kinematics_file_name, kinematics_extra_file=kinematics_extra_file_name, ns_=NS)
+                generate_kinematics(robot, robot_config, hand_template_path,
+                                    output_path=output_path, kinematics_file=kinematics_file_name,
+                                    kinematics_extra_file=kinematics_extra_file_name, ns_=NS)
             elif command == "joint_limits":
                 hand_template_path = sh_config_path + "joint_limits_template.yaml"
                 if save_file:
