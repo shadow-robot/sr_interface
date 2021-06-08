@@ -61,13 +61,15 @@ class SrUrUnlock(object):
             raise
 
     def startup_arms(self):
+        # for arm in self._arms:
+        #    self.call_arm_service(arm, "power_off", Trigger)
+        # self.wait_for_mode('robot', RobotMode.POWER_OFF)
         for arm in self._arms:
             self.call_arm_service(arm, "power_on", Trigger)
         self.wait_for_mode('robot', RobotMode.IDLE)
         for arm in self._arms:
             self.call_arm_service(arm, "brake_release", Trigger)
         self.wait_for_mode('robot', RobotMode.RUNNING)
-
 
     def wait_for_mode(self, mode_type, mode, timeout=15):
         now = rospy.rostime.Time().now().secs
@@ -78,19 +80,24 @@ class SrUrUnlock(object):
 
     def is_robot_in_mode(self, mode_type, mode):
         if mode_type == 'robot':
-            arms_ready = [mode == self.call_arm_service(arm, "get_robot_mode", GetRobotMode).robot_mode.mode for arm in self._arms]
+            arms_ready = [mode == self.call_arm_service(arm, "get_robot_mode",
+                                                        GetRobotMode).robot_mode.mode for arm in self._arms]
         elif mode_type == 'safety':
-            arms_ready = [mode == self.call_arm_service(arm, "get_safety_mode", GetSafetyMode).safety_mode.mode for arm in self._arms]
+            arms_ready = [mode == self.call_arm_service(arm, "get_safety_mode",
+                                                        GetSafetyMode).safety_mode.mode for arm in self._arms]
         return all(arms_ready)
 
     def check_arms_e_stops(self):
         for arm in self._arms:
             safety_mode = self.call_arm_service(arm, "get_safety_mode", GetSafetyMode)
             if SafetyMode.ROBOT_EMERGENCY_STOP == safety_mode.safety_mode.mode:
+                # self.call_arm_service(arm, "power_off", Trigger)
+                # self.wait_for_mode('robot', RobotMode.POWER_OFF)
+                # # self.wait_for_mode('safety', SafetyMode.ROBOT_EMERGENCY_STOP)
                 while SafetyMode.ROBOT_EMERGENCY_STOP == safety_mode.safety_mode.mode:
                     rospy.logwarn("Emergency stop button is still pressed for arm %s, please release", arm)
                     safety_mode = self.call_arm_service(arm, "get_safety_mode", GetSafetyMode)
-                    # rospy.sleep(2)
+                    rospy.sleep(0.01)
 
     def unlock_arms_if_protective_stop(self):
         for arm in self._arms:
@@ -103,7 +110,8 @@ class SrUrUnlock(object):
         fault = False
         for arm in self._arms:
             safety_mode = self.call_arm_service(arm, "get_safety_mode", GetSafetyMode)
-            if SafetyMode.FAULT == safety_mode.safety_mode.mode or SafetyMode.VIOLATION == safety_mode.safety_mode.mode:
+            if (SafetyMode.FAULT == safety_mode.safety_mode.mode or
+                    SafetyMode.VIOLATION == safety_mode.safety_mode.mode):
                 fault = True
                 if SafetyMode.FAULT == safety_mode.safety_mode.mode:
                     rospy.loginfo("Fault detected on: %s. This can be caused by using the external e-stop.\
@@ -116,8 +124,11 @@ class SrUrUnlock(object):
             robot_mode = self.call_arm_service(arm, "get_robot_mode", GetRobotMode)
             safety_mode = self.call_arm_service(arm, "get_safety_mode", GetSafetyMode)
             program_running = self.call_arm_service(arm, "program_running", IsProgramRunning)
-            if RobotMode.IDLE == robot_mode.robot_mode.mode or RobotMode.POWER_OFF == robot_mode.robot_mode.mode \
-               or SafetyMode.PROTECTIVE_STOP == safety_mode.safety_mode.mode or not program_running.program_running:
+            if RobotMode.IDLE == robot_mode.robot_mode.mode or RobotMode.POWER_OFF == robot_mode.robot_mode.mode:
+                self.call_arm_service(arm, "restart_safety", Trigger)
+                rospy.loginfo("Starting arm: %s", arm)
+                return True
+            if SafetyMode.PROTECTIVE_STOP == safety_mode.safety_mode.mode or not program_running.program_running:
                 rospy.loginfo("Starting arm: %s", arm)
                 return True
         return False
@@ -125,10 +136,8 @@ class SrUrUnlock(object):
     def clear_arms_popups(self):
         for arm in self._arms:
             self.call_arm_service(arm, "close_safety_popup", Trigger)
-        # rospy.sleep(2)
         for arm in self._arms:
             self.call_arm_service(arm, "close_popup", Trigger)
-        # rospy.sleep(2)
 
     def load_arms_program_if_unloaded(self):
         sleep_time = False
@@ -188,11 +197,9 @@ class SrUrUnlock(object):
             if self.check_arms_needs_starting():
                 self.startup_arms()
             rospy.loginfo("Checking if program is loaded ...")
-            if self.load_arms_program_if_unloaded():
-                pass # rospy.sleep(2)
+            self.load_arms_program_if_unloaded()
             rospy.loginfo("Checking if program is running ...")
-            if self.start_arms_program_if_stopped():
-                pass # rospy.sleep(5)
+            self.start_arms_program_if_stopped()
         except rospy.ServiceException, e:
             for arm in self._arms:
                 rospy.logerr("Arm checking/restarting failed for arm: %s. %s", arm, e)
@@ -204,3 +211,4 @@ class SrUrUnlock(object):
                 self.call_arm_service(arm, "power_off", Trigger)
             except rospy.ServiceException as e:
                 rospy.logerr("Arm braking failed for arm: %s. %s", arm, e)
+

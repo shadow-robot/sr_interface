@@ -39,6 +39,8 @@ class ArmState(object):
         self._program_state = GetProgramStateResponse()
         self._program_state.program_name = "<unnamed>"
         self._program_state.success = True
+        self._reboot_required = False
+        self._e_stop_active = False
         self._program_running = IsProgramRunningResponse()
         self.power_off()
 
@@ -95,19 +97,32 @@ class ArmState(object):
         return self._program_state
 
     def restart_safety(self):
+        if self._e_stop_active:
+            self.emergency_stop()
+            return
         self._set_safety_mode('NORMAL')
         self._set_robot_mode('POWER_OFF')
         self._set_program_running(False)
+        self._reboot_required = False
 
     def power_on(self):
+        if self._e_stop_active:
+            self.emergency_stop()
+            return
         self._set_safety_mode('NORMAL')
         self._set_robot_mode('IDLE')
         self._set_program_running(False)
 
     def brake_release(self):
-        self._set_safety_mode('NORMAL')
-        self._set_robot_mode('RUNNING')
-        self._set_program_running(False)
+        if self._e_stop_active:
+            self.emergency_stop()
+            return
+        if not self._reboot_required:
+            self._set_safety_mode('NORMAL')
+            self._set_robot_mode('RUNNING')
+            self._set_program_running(False)
+        else:
+            self.fault()
 
     def unlock_protective_stop(self):
         self._set_safety_mode('NORMAL')
@@ -118,18 +133,32 @@ class ArmState(object):
         self._set_safety_mode('NORMAL')
         self._set_robot_mode('POWER_OFF')
         self._set_program_running(False)
+        self._reboot_required = False
 
     def protective_stop(self):
         self._set_safety_mode('PROTECTIVE_STOP')
         self._set_robot_mode('RUNNING')
         self._set_program_running(False)
 
-    def emergency_stop(self):
-        self._set_safety_mode('ROBOT_EMERGENCY_STOP')
-        self._set_robot_mode('IDLE')
-        self._set_program_running(False)
+    def check_e_stop(self):
+        return self._e_stop_active
+
+    def emergency_stop(self, latch=True):
+        self._e_stop_active = latch
+        if latch:
+            self._set_safety_mode('ROBOT_EMERGENCY_STOP')
+            self._set_robot_mode('IDLE')
+            self._set_program_running(False)
+        else:
+            self._set_safety_mode('NORMAL')
+            self._set_robot_mode('IDLE')
+            self._set_program_running(False)
+            self._reboot_required = True
 
     def resend_robot_program(self):
+        if self._e_stop_active:
+            self.emergency_stop()
+            return
         if (self.get_safety_mode().safety_mode.mode == SafetyMode.NORMAL and
                 self.get_robot_mode().robot_mode.mode == RobotMode.RUNNING):
             self._set_program_running(True)
