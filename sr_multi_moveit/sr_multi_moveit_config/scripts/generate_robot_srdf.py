@@ -243,6 +243,12 @@ class SRDFRobotGenerator(object):
                                                  False)
                     self.add_comments(comment)
 
+            if self.robot.manipulators[0].has_hand and self.robot.manipulators[1].has_hand:
+                comment = ["Bimanual groups with hands"]
+                self.add_bimanual_hand_groups(self.robot.manipulators[0].hand.internal_name,
+                                              self.robot.manipulators[1].hand.internal_name)
+                self.add_comments(comment)
+
         for manipulator_id, manipulator in enumerate(self.robot.manipulators):
 
             # Add end effectors
