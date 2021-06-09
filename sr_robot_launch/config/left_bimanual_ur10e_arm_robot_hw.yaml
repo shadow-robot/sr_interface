@@ -11,6 +11,7 @@ la_sr_ur_robot_hw:
 
   # ra for right side arm la for left side arm
   robot_id: la
+
   tf_prefix: la_
   
   # for sending robot programs
