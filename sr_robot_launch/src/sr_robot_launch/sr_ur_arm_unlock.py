@@ -233,3 +233,11 @@ class SrUrUnlock(object):
         except rospy.ServiceException, e:
             for arm in self._arms:
                 rospy.logerr("Arm checking/restarting failed for arm: %s. %s", arm, e)
+
+    def brake_arm(self):
+        rospy.loginfo("Brake arm signal received.")
+        for arm in self._arms:
+            try:
+                self.call_arm_service(arm, "power_off", Trigger)
+            except rospy.ServiceException as e:
+                rospy.logerr("Arm braking failed for arm: %s. %s", arm, e)
