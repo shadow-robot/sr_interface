@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Copyright 2020 Shadow Robot Company Ltd.
 #
@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
 import rospy
 import rostest
 from sr_robot_commander.sr_hand_commander import SrHandCommander
@@ -28,7 +27,6 @@ class TestHandJointMovement(TestCase):
     """
     Tests the Hand Commander
     """
-
     @classmethod
     def setUpClass(cls):
         cls.hand_type = rospy.get_param('~test_sim/hand_type', 'hand_e_plus')

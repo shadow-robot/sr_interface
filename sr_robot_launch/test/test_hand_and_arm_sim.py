@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Copyright 2020 Shadow Robot Company Ltd.
 #
@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
 import rospy
 import rostest
 from moveit_msgs.msg import PlanningScene
@@ -31,22 +30,21 @@ class TestHandAndArmSim(TestCase):
     """
     Tests the Hand and Arm in Sim
     """
-
     @classmethod
     def setUpClass(cls):
         rospy.wait_for_message('/move_group/status', GoalStatusArray)
         cls.hand_type = rospy.get_param('~test_hand_and_arm_sim/hand_type')
         cls.scene = rospy.get_param('~test_hand_and_arm_sim/scene')
 
-        # ur-specific launch files do not accept 'side' param as it is already set
-        # for phantom hands use hand finder
+    # ur-specific launch files do not accept 'side' param as it is already set
+    # for phantom hands use hand finder
         try:
             cls.side = rospy.get_param('~test_hand_and_arm_sim/side')
             if cls.side == 'right':
                 cls.hand_id = 'rh'
             elif cls.side == 'left':
                 cls.hand_id = 'lh'
-        except rospy.ROSException:
+        except:
             rospy.loginfo("No side param for this test type")
             cls.hand_id = rospy.get_param('/hand/mapping/1082')
 
@@ -210,7 +208,7 @@ class TestHandAndArmSim(TestCase):
         for key, value in arm_joints_target_no_id.items():
             arm_joints_target[self.arm_id + '_' + key] = value
 
-        hand_and_arm_joints_target = {**hand_joints_target.items, **arm_joints_target}
+        hand_and_arm_joints_target = dict(hand_joints_target.items() + arm_joints_target.items())
         self.robot_commander.move_to_joint_value_target_unsafe(hand_and_arm_joints_target, 10.0, True)
 
         rospy.sleep(5)
@@ -221,7 +219,6 @@ class TestHandAndArmSim(TestCase):
                                                                 final_hand_and_arm_joint_values)
 
         self.assertAlmostEqual(joint_value_diff_arm_and_hand, 0, delta=0.4)
-
 
 if __name__ == "__main__":
     PKGNAME = 'sr_robot_launch'
