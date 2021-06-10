@@ -38,7 +38,7 @@ class CommonTests:
     def e_stop(self, side, release_estop_before_pedal=True):
         self.assertFalse(self.get_program_running(side))
         self.assertFalse(self.mock_dashboard[side].robot_state.get_robot_mode().robot_mode.mode ==
-                        RobotMode.RUNNING)
+                         RobotMode.RUNNING)
         self.press_pedal()
         rospy.sleep(0.01)
         self.assertTrue(self.mock_dashboard[side].robot_state.get_robot_mode().robot_mode.mode ==
@@ -49,10 +49,10 @@ class CommonTests:
                         SafetyMode.ROBOT_EMERGENCY_STOP)
         self.assertFalse(self.get_program_running(side))
         self.assertFalse(self.mock_dashboard[side].robot_state.get_robot_mode().robot_mode.mode ==
-                        RobotMode.RUNNING)
+                         RobotMode.RUNNING)
         self.mock_dashboard[side].robot_state.emergency_stop(latch=False)
         self.assertFalse(self.mock_dashboard[side].robot_state.get_safety_mode().safety_mode.mode ==
-                        SafetyMode.ROBOT_EMERGENCY_STOP)
+                         SafetyMode.ROBOT_EMERGENCY_STOP)
         self.press_pedal()
         self.assertTrue(self.mock_dashboard[side].robot_state.get_safety_mode().safety_mode.mode ==
                         SafetyMode.NORMAL)

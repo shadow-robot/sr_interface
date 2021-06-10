@@ -27,6 +27,7 @@ from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
 from sr_robot_launch.common_sr_ur_unlock_tests import CommonTests
 import sys
 
+
 class TestSrUrUnlockRight(TestCase, CommonTests):
     """
     Tests sr_ur_arm_unlock

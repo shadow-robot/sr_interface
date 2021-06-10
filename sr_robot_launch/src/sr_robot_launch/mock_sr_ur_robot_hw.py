@@ -35,7 +35,8 @@ class IllegalArgumentError(ValueError):
 class ArmState(object):
     def __init__(self, arm_prefix):
         self._arm_prefix = arm_prefix
-        self._safety_mode_publisher = rospy.Publisher('/' + arm_prefix + '_sr_ur_robot_hw/safety_mode', SafetyMode, queue_size=1)
+        self._safety_mode_publisher = rospy.Publisher('/' + arm_prefix + '_sr_ur_robot_hw/safety_mode',
+                                                      SafetyMode, queue_size=1)
         self._robot_mode = GetRobotModeResponse()
         self._safety_mode = GetSafetyModeResponse()
         self._program_state = GetProgramStateResponse()
