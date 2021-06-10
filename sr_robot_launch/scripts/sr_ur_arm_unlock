@@ -23,15 +23,25 @@ from std_srvs.srv import Trigger
 class RobotSafetyMonitor(object):
     def __init__(self, name):
         self.name = name
+        self.substring = None
         self.subscriber = None
         self.estop_pressed = False
         self.mode = None
+
+    def setup_subscriber(self):
+        self.subscriber = rospy.Subscriber(self.substring, SafetyMode,
+                                           self.safety_mode_callback)
 
     def press_estop(self):
         self.estop_pressed = True
 
     def release_estop(self):
         self.estop_pressed = False
+
+    def safety_mode_callback(self, message):
+        self.mode = message.mode
+        if message.mode == SafetyMode.ROBOT_EMERGENCY_STOP:
+            self.press_estop()
 
 
 class SrUrUnlock(object):
@@ -52,14 +62,8 @@ class SrUrUnlock(object):
     def setup_robot_mode_subscribers(self):
         for arm in self._arms:
             robot_safety_monitor = RobotSafetyMonitor(arm)
-
-            def safety_mode_callback(message):
-                robot_safety_monitor.mode = message.mode
-                if message.mode == SafetyMode.ROBOT_EMERGENCY_STOP:
-                    robot_safety_monitor.press_estop()
-
-            robot_safety_monitor.subscriber = rospy.Subscriber('/' + arm + '_sr_ur_robot_hw/safety_mode', SafetyMode,
-                                                               safety_mode_callback)
+            robot_safety_monitor.substring = '/' + arm + '_sr_ur_robot_hw/safety_mode'
+            robot_safety_monitor.setup_subscriber()
             self._robot_state_monitors[arm] = robot_safety_monitor
 
     def release_or_brake_arm_cb(self, message):
