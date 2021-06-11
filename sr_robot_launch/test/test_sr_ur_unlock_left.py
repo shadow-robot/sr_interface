@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-
+#!/usr/bin/env python3
 # Copyright 2021 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
@@ -14,6 +13,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 import rospy
 import rostest
 from actionlib_msgs.msg import GoalStatusArray
