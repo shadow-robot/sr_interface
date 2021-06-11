@@ -48,7 +48,7 @@ class TestSrUrUnlockBimanual(TestCase, CommonTests):
         cls.mock_dashboard['right'] = MockUrRobotHW('right')
 
     def setUp(self):
-        for key, value in self.mock_dashboard.iteritems():
+        for key, value in self.mock_dashboard.items():
             value.reinitialize()
 
     def tearDown(self):
