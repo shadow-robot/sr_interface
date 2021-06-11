@@ -35,17 +35,12 @@ class TeachModeManager(object):
             "thj1", "thj2", "thj3", "thj4", "thj5",
             "wrj1", "wrj2"]
         self.s = rospy.Service('teach_mode', RobotTeachMode, self.teach_mode)
-        self.ctrl_helpers = {"right_hand":
-                             ControllerHelper(
-                                 ["rh"], ["rh_"], robot_joint_names),
-                             "left_hand":
-                             ControllerHelper(
-                                 ["lh"], ["lh_"], robot_joint_names),
-                             "right_arm":
-                             ControllerHelper(
-                                 ["ra"], ["ra_"], robot_joint_names),
-                             "left_arm":
-                             ControllerHelper(["la"], ["la_"], robot_joint_names)}
+        self.ctrl_helpers = {
+            "right_hand": ControllerHelper(["rh"], ["rh_"], robot_joint_names),
+            "left_hand": ControllerHelper(["lh"], ["lh_"], robot_joint_names),
+            "right_arm": ControllerHelper(["ra"], ["ra_"], robot_joint_names),
+            "left_arm": ControllerHelper(["la"], ["la_"], robot_joint_names)
+        }
 
         self.modes = ["TRAJECTORY_MODE", "TEACH_MODE", "POSITION_MODE", "GRASP_MODE"]
 
