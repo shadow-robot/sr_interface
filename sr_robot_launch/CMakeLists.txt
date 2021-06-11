@@ -192,6 +192,9 @@ if (CATKIN_ENABLE_TESTING)
     add_rostest(test/test_ur5_left.test ARGS scene:=true)
     add_rostest(test/test_bimanual_hand_and_arm.test)
     add_rostest(test/test_bimanual_hand_and_arm.test ARGS scene:=true)
+    
+#ARM UNLOCK/BRAKE/RELEASE TESTS
+    add_rostest(test/test_sr_ur_unlock.test)
 
 #HAND AND ARM TESTS - GENERIC LAUNCH FILE
     add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=left_srhand_lite_ur5e.urdf.xacro robot_config_file:=left_sh_lite_ur5e.yaml side:=left hand_type:=hand_lite robot_model:=ur5e)
