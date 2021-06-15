@@ -23,14 +23,10 @@ from std_srvs.srv import Trigger
 
 class RobotSafetyMonitor(object):
     def __init__(self, name):
-        self._topic_string = '/' + name + '_sr_ur_robot_hw/safety_mode'
-        self._subscriber = None
+        topic_string = '/' + name + '_sr_ur_robot_hw/safety_mode'
         self.estop_pressed = False
-        self._setup_subscriber()
-
-    def _setup_subscriber(self):
-        self._subscriber = rospy.Subscriber(self._topic_string, SafetyMode,
-                                            self._safety_mode_callback)
+        self._subscriber = rospy.Subscriber(topic_string, SafetyMode,
+                                            self._safety_mode_callback) 
 
     def press_estop(self):
         self.estop_pressed = True
