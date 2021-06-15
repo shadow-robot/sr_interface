@@ -28,7 +28,7 @@ from sr_robot_msgs.srv import (ChangeControlType, RobotTeachMode,
 class TeachModeManager(object):
 
     def __init__(self):
-        robot_joint_names = ["ffj0", "ffj3", "ffj4",
+        hand_joint_names = ["ffj0", "ffj3", "ffj4",
                              "mfj0", "mfj3", "mfj4",
                              "rfj0", "rfj3", "rfj4",
                              "lfj0", "lfj3", "lfj4", "lfj5",
@@ -36,10 +36,10 @@ class TeachModeManager(object):
                              "wrj1", "wrj2"]
         self.s = rospy.Service('teach_mode', RobotTeachMode, self.teach_mode)
         self.ctrl_helpers = {
-            "right_hand": ControllerHelper(["rh"], ["rh_"], robot_joint_names),
-            "left_hand": ControllerHelper(["lh"], ["lh_"], robot_joint_names),
-            "right_arm": ControllerHelper(["ra"], ["ra_"], robot_joint_names),
-            "left_arm": ControllerHelper(["la"], ["la_"], robot_joint_names)
+            "right_hand": ControllerHelper(["rh"], ["rh_"], hand_joint_names),
+            "left_hand": ControllerHelper(["lh"], ["lh_"], hand_joint_names),
+            "right_arm": ControllerHelper(["ra"], ["ra_"], hand_joint_names),
+            "left_arm": ControllerHelper(["la"], ["la_"], hand_joint_names)
         }
 
         self.modes = ["TRAJECTORY_MODE", "TEACH_MODE", "POSITION_MODE", "GRASP_MODE"]
