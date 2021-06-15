@@ -93,8 +93,6 @@ class TeachModeManager(object):
                 rospy.loginfo("Changing %s Control mode to PWM", req.robot)
                 self.ctrl_helpers[
                     req.robot].change_force_ctrl_type(change_type_msg)
-                rospy.loginfo("Changing %s controllers to position", req.robot)
-                self.ctrl_helpers[req.robot].change_hand_ctrl("position")
 
                 if req.teach_mode == RobotTeachModeRequest.POSITION_MODE:
                     rospy.loginfo(
@@ -112,10 +110,6 @@ class TeachModeManager(object):
                 rospy.loginfo("Changing %s Control mode to FORCE", req.robot)
                 self.ctrl_helpers[
                     req.robot].change_force_ctrl_type(change_type_msg)
-                rospy.loginfo("Changing %s controllers to effort", req.robot)
-                self.ctrl_helpers[req.robot].change_hand_ctrl("effort")
-                rospy.loginfo(
-                    "Changing %s trajectory controllers to STOP", req.robot)
                 self.ctrl_helpers[req.robot].change_trajectory_ctrl("stop")
 
                 return RobotTeachModeResponse(RobotTeachModeResponse.SUCCESS)
