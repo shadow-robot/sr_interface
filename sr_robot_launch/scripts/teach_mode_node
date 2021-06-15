@@ -29,11 +29,11 @@ class TeachModeManager(object):
 
     def __init__(self):
         hand_joint_names = ["ffj0", "ffj3", "ffj4",
-                             "mfj0", "mfj3", "mfj4",
-                             "rfj0", "rfj3", "rfj4",
-                             "lfj0", "lfj3", "lfj4", "lfj5",
-                             "thj1", "thj2", "thj3", "thj4", "thj5",
-                             "wrj1", "wrj2"]
+                            "mfj0", "mfj3", "mfj4",
+                            "rfj0", "rfj3", "rfj4",
+                            "lfj0", "lfj3", "lfj4", "lfj5",
+                            "thj1", "thj2", "thj3", "thj4", "thj5",
+                            "wrj1", "wrj2"]
         self.s = rospy.Service('teach_mode', RobotTeachMode, self.teach_mode)
         self.ctrl_helpers = {
             "right_hand": ControllerHelper(["rh"], ["rh_"], hand_joint_names),
