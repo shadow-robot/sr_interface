@@ -26,7 +26,7 @@ class RobotSafetyMonitor(object):
         topic_string = '/' + name + '_sr_ur_robot_hw/safety_mode'
         self.estop_pressed = False
         self._subscriber = rospy.Subscriber(topic_string, SafetyMode,
-                                            self._safety_mode_callback) 
+                                            self._safety_mode_callback)
 
     def press_estop(self):
         self.estop_pressed = True
