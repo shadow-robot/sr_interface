@@ -185,7 +185,6 @@ class MockUrRobotHW(object):
         if 'left' not in side and 'right' not in side:
             rospy.logerr("side: %s not valid. Valid sides are: 'left, 'right'", side)
             raise IllegalArgumentError
-            exit(1)
         self._arm_prefix = side[0] + 'a'
         self.robot_state = ArmState(self._arm_prefix)
         get_safety_mode_service = rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/get_safety_mode',

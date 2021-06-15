@@ -21,5 +21,4 @@ from sr_robot_launch.sr_ur_arm_unlock import SrUrUnlock
 if __name__ == "__main__":
     rospy.init_node('sr_ur_arm_unlock')
     sr_ur_unlock = SrUrUnlock()
-    while not rospy.is_shutdown():
-        rospy.spin()
+    rospy.spin()
