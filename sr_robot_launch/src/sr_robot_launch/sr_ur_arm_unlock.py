@@ -22,15 +22,10 @@ from std_srvs.srv import Trigger
 
 class RobotSafetyMonitor(object):
     def __init__(self, name):
-        self.name = name
-        self.substring = None
-        self.subscriber = None
+        topic_string = '/' + name + '_sr_ur_robot_hw/safety_mode'
         self.estop_pressed = False
-        self.mode = None
-
-    def setup_subscriber(self):
-        self.subscriber = rospy.Subscriber(self.substring, SafetyMode,
-                                           self.safety_mode_callback)
+        self._subscriber = rospy.Subscriber(topic_string, SafetyMode,
+                                            self._safety_mode_callback)
 
     def press_estop(self):
         self.estop_pressed = True
@@ -38,7 +33,7 @@ class RobotSafetyMonitor(object):
     def release_estop(self):
         self.estop_pressed = False
 
-    def safety_mode_callback(self, message):
+    def _safety_mode_callback(self, message):
         self.mode = message.mode
         if message.mode == SafetyMode.ROBOT_EMERGENCY_STOP:
             self.press_estop()
@@ -62,8 +57,6 @@ class SrUrUnlock(object):
     def setup_robot_mode_subscribers(self):
         for arm in self._arms:
             robot_safety_monitor = RobotSafetyMonitor(arm)
-            robot_safety_monitor.substring = '/' + arm + '_sr_ur_robot_hw/safety_mode'
-            robot_safety_monitor.setup_subscriber()
             self._robot_state_monitors[arm] = robot_safety_monitor
 
     def release_or_brake_arm_cb(self, message):
@@ -88,7 +81,7 @@ class SrUrUnlock(object):
             else:
                 response = service_call(service_data)
             return response
-        except rospy.ServiceException, e:
+        except rospy.ServiceException as e:
             rospy.logerr("Service call to '%s' failed for arm %s. %s", service_name, side, e)
             raise
 
@@ -178,7 +171,7 @@ class SrUrUnlock(object):
         for arm in self._arms:
             try:
                 headless_mode = rospy.get_param("/" + arm + "_sr_ur_robot_hw/headless_mode")
-            except:
+            except KeyError:
                 headless_mode = False
             if not headless_mode:
                 play_msg = self.call_arm_service(arm, "program_state", GetProgramState)
@@ -196,7 +189,7 @@ class SrUrUnlock(object):
         for arm in self._arms:
             try:
                 headless_mode = rospy.get_param("/" + arm + "_sr_ur_robot_hw/headless_mode")
-            except:
+            except KeyError:
                 headless_mode = False
             if not headless_mode:
                 play_msg = self.call_arm_service(arm, "program_state", GetProgramState)
@@ -234,7 +227,7 @@ class SrUrUnlock(object):
             self.load_arms_program_if_unloaded()
             rospy.loginfo("Checking if program is running ...")
             self.start_arms_program_if_stopped()
-        except rospy.ServiceException, e:
+        except rospy.ServiceException as e:
             for arm in self._arms:
                 rospy.logerr("Arm checking/restarting failed for arm: %s. %s", arm, e)
 
