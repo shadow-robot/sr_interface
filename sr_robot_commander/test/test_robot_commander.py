@@ -10,6 +10,7 @@ import rostest
 from unittest import TestCase
 from sr_robot_commander.sr_robot_commander import SrRobotCommander, MoveGroupCommander, PlanningSceneInterface
 from moveit_msgs.msg import RobotState
+from moveit_msgs.srv import GetPositionFK
 from std_msgs.msg import Header
 from sensor_msgs.msg import JointState
 
@@ -19,13 +20,8 @@ PKG = "sr_robot_commander"
 class TestSrRobotCommander(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.robot_commander = SrRobotCommander("right_hand")
+        cls.robot_commander = SrRobotCommander("right_arm")
         print("start")
-
-    @classmethod
-    def setUp(cls):
-        cls._last_request = None
-        rospy.sleep(1)
     
     def test_mvgr_get_and_set_planner_id(self):
         planner_list = ["BKPIECEkConfigDefault", "ESTkConfigDefault", "KPIECEkConfigDefault", "LBKPIECEkConfigDefault",
@@ -53,48 +49,27 @@ class TestSrRobotCommander(TestCase):
 
 
     #def get_end_effector_pose_from_named_state(self, name):
+
     
-    def test_mvgr_get_end_effector_pose_from_state(self):      
+    def test_mvgr_get_end_effector_pose_from_state(self):   
 
-        d  = {'rh_WRJ2': 0.1745340287580568,
-                'rh_WRJ1': 0.488692040221113,
-                'rh_FFJ4': -0.12370829534925232,
-                'rh_FFJ3': 0.04498799811400733,
-                'rh_FFJ2': 0.016694409745289462,
-                'rh_FFJ1': 0.00012700937002119161,
-                'rh_LFJ5': 0.08430645146960725,
-                'rh_LFJ4': 0.12166385051603079,
-                'rh_LFJ3': 0.05330174206790339,
-                'rh_LFJ2': 0.019320504252301696,
-                'rh_LFJ1': 0.00013192817694029912,
-                'rh_MFJ4': -0.12241554547398614,
-                'rh_MFJ3': 0.04350528336593573,
-                'rh_MFJ2': 0.016265098966647074,
-                'rh_MFJ1': -6.230829582953845e-06,
-                'rh_RFJ4': 0.12232543595297685,
-                'rh_RFJ3': 0.04469699140779948,
-                'rh_RFJ2': 0.016575470880908938,
-                'rh_RFJ1': 0.0001891606132202739,
-                'rh_THJ5': -0.008792838897692334,
-                'rh_THJ4': 0.25618694160585687,
-                'rh_THJ3': 0.013972368249145717,
-                'rh_THJ2': -0.6981317670242566,
-                'rh_THJ1': -0.07812434355592579}   
+        d = {'ra_shoulder_pan_joint': 0.5157461682721474,
+                 'ra_elbow_joint': 0.6876824920327893,
+                 'ra_wrist_1_joint': -0.7695210732233582,
+                 'ra_wrist_2_joint': 0.2298871642157314,
+                 'ra_shoulder_lift_joint': -0.9569080092786892,
+                 'ra_wrist_3_joint': -0.25991215955733704} 
 
-        rospy.logwarn(self.robot_commander._move_group_commander.get_end_effector_link())
-        rospy.logwarn(self.robot_commander._move_group_commander.get_pose_reference_frame())
+        #rospy.logwarn(self.robot_commander._move_group_commander.get_end_effector_link())
+        #rospy.logwarn(self.robot_commander._move_group_commander.get_pose_reference_frame())
 
-        rs = RobotState()
-        rs.joint_state = JointState()
-        rs.joint_state.header = Header()
-        rs.joint_state.name = d.keys()
-        rs.joint_state.position = d.values()
+        rs = RobotState()        
+        for key, value in d.items():
+            rs.joint_state.name.append(key)
+            rs.joint_state.position.append(value)
 
+        pose = self.robot_commander.get_end_effector_pose_from_state(rs)
 
-        x = self.robot_commander.get_end_effector_pose_from_state(rs)
-        rospy.logwarn(x)
-
-    '''
     def test_mvgr_get_planning_frame(self):
         raised = False
         try:
@@ -103,10 +78,15 @@ class TestSrRobotCommander(TestCase):
             raised = True
         self.assertFalse(raised)
 
-    def set_pose_reference_frame(self, reference_frame):
+    def test_mvgr_set_and_get_pose_reference_frame(self):
+        reference_frame = "world"
+        self.robot_commander._move_group_commander.set_pose_reference_frame(reference_frame)
+        self.assertTrue(self.robot_commander._move_group_commander.get_pose_reference_frame() == reference_frame)
 
-    def get_group_name(self):
+    def test_get_group_name(self):   
+        self.assertTrue(self.robot_commander._name == self.robot_commander.get_group_name())
 
+    '''
     def refresh_named_targets(self):
 
     def set_max_velocity_scaling_factor(self, value):
@@ -158,13 +138,19 @@ class TestSrRobotCommander(TestCase):
     def plan_to_named_target(self, name, custom_start_state=None):
 
     def get_named_targets(self):
+    '''
+    def test_get_joints_position(self):
+        ret_val = self.robot_commander.get_joints_position()
+        self.assertTrue(type(ret_val) == dict)
 
-    def get_joints_position(self):
+    def test_get_joints_velocity(self):
+        ret_val = self.robot_commander.get_joints_velocity()
+        self.assertTrue(type(ret_val) == dict)
 
-    def get_joints_velocity(self):
-
-    def get_joints_state(self):
-
+    def test_get_joints_state(self):
+        ret_val = self.robot_commander.get_joints_state()
+        self.assertTrue(type(ret_val) == JointState)
+    '''
     def run_joint_trajectory(self, joint_trajectory):
 
     def make_named_trajectory(self, trajectory):
@@ -183,17 +169,9 @@ class TestSrRobotCommander(TestCase):
 
     def plan_to_pose_target(self, pose, end_effector_link="", alternative_method=False, custom_start_state=None):
 
-    def _joint_states_callback(self, joint_state):
-
-    def _set_up_action_client(self, controller_list):
-
     def move_to_joint_value_target_unsafe(self, joint_states, time=0.002, wait=True, angle_degrees=False):
 
     def action_is_running(self, controller=None):
-
-    def _action_done_cb(self, controller, terminal_state, result):
-
-    def _call_action(self, goals):
 
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
 
