@@ -452,6 +452,8 @@ class SrRobotCommander(object):
             self._move_group_commander.set_start_state(custom_start_state)
         if self.set_named_target(name):
             self.__plan = self._move_group_commander.plan()[1]
+        else:
+            rospy.logwarn("Named target does not exist")
 
     def __get_warehouse_names(self):
         try:
