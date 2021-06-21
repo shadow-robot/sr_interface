@@ -1,4 +1,4 @@
-<launch>
+f<launch>
   <arg name="debug" default="false"/>
   <arg name="robot_state_pub_frequency" default="250"/>
   <arg name="joint_state_pub_frequency" default="125"/>
@@ -31,6 +31,8 @@
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
   <!-- The control mode PWM (true) or torque (false) -->
   <arg name="pwm_control" default="true"/>
+  <!-- Set to true if you want to use hybrid controller -->
+  <arg name="hybrid_controller" default="false"/>
   <arg name="hand_trajectory" unless="$(eval hands == 'none')" default="true"/>
   <arg name="hand_trajectory" if="$(eval hands == 'none')" default="false"/>
 
@@ -86,6 +88,11 @@
     <param name="arm_y_separation" value="$(arg arm_y_separation)"/>
   </node>
 
+  <!-- Default hand controller groups -->
+  <arg if="$(arg hybrid_controller)" name="hand_controller_group" default="hybrid"/>
+  <arg if="$(eval hand_trajectory and not hybrid_controller)" name="hand_controller_group" default="trajectory"/>
+  <arg if="$(eval not hand_trajectory and not hybrid_controller)" name="hand_controller_group" default="position"/>
+
   <!-- Controller -->
   <group unless="$(eval hands == 'none')">
     <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
@@ -110,8 +117,7 @@
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
     </include>
     <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="controller_spawner.py" output="screen">
-      <param if="$(arg hand_trajectory)" name="controller_group" value="trajectory"/>
-      <param unless="$(arg hand_trajectory)" name="controller_group" value="position"/>
+      <param name="controller_group" value="$(arg hand_controller_group)"/>
       <param name="wait_for" value="calibrated"/>
     </node>
   </group>
