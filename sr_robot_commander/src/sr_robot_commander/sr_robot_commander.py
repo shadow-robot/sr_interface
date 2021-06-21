@@ -451,7 +451,7 @@ class SrRobotCommander(object):
         else:
             self._move_group_commander.set_start_state(custom_start_state)
         if self.set_named_target(name):
-            self.__plan = self._move_group_commander.plan()
+            self.__plan = self._move_group_commander.plan()[1]
 
     def __get_warehouse_names(self):
         try:
@@ -654,7 +654,7 @@ class SrRobotCommander(object):
         else:
             self._move_group_commander.set_start_state(custom_start_state)
         self._move_group_commander.set_position_target(xyz, end_effector_link)
-        self.__plan = self._move_group_commander.plan()
+        self.__plan = self._move_group_commander.plan()[1]
 
     def move_to_pose_target(self, pose, end_effector_link="", wait=True):
         """
@@ -688,7 +688,7 @@ class SrRobotCommander(object):
             self._move_group_commander.set_joint_value_target(pose, end_effector_link)
         else:
             self._move_group_commander.set_pose_target(pose, end_effector_link)
-        self.__plan = self._move_group_commander.plan()
+        self.__plan = self._move_group_commander.plan()[1]
         return self.__plan
 
     def _joint_states_callback(self, joint_state):
