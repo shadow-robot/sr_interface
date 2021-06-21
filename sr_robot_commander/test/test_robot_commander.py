@@ -5,14 +5,16 @@
 
 from __future__ import absolute_import
 
+import collections
 import rospy
 import rostest
 from unittest import TestCase
 from sr_robot_commander.sr_robot_commander import SrRobotCommander, MoveGroupCommander, PlanningSceneInterface
-from moveit_msgs.msg import RobotState
+from moveit_msgs.msg import RobotState, RobotTrajectory
 from moveit_msgs.srv import GetPositionFK
 from std_msgs.msg import Header
 from sensor_msgs.msg import JointState
+from moveit_commander.exception import MoveItCommanderException
 
 PKG = "sr_robot_commander"
 
@@ -86,26 +88,123 @@ class TestSrRobotCommander(TestCase):
     def test_get_group_name(self):   
         self.assertTrue(self.robot_commander._name == self.robot_commander.get_group_name())
 
+    def test_refresh_named_targets(self):
+        self.robot_commander.refresh_named_targets()        
+        condition_1 = type(self.robot_commander._srdf_names) == list
+        condition_2 = type(self.robot_commander._warehouse_names) == list
+        self.assertTrue(condition_1 and condition_2)
+
+    
+    def test_set_max_velocity_scaling_factor_range_ok(self):
+
+        raised = False
+        try:
+            self.robot_commander.set_max_velocity_scaling_factor(0.2)
+        except Exception:
+            raised = True
+        self.assertFalse(raised)
+        
+    def test_set_max_velocity_scaling_factor_range_not_ok(self):
+        raised = False
+        try:
+            self.robot_commander.set_max_velocity_scaling_factor(3)
+        except Exception:
+            raised = True
+        self.assertTrue(raised)
+
+    def test_set_max_acceleration_scaling_factor_range_ok(self):
+
+        raised = False
+        try:
+            self.robot_commander.set_max_acceleration_scaling_factor(0.2)
+        except Exception:
+            raised = True
+        self.assertFalse(raised)
+        
+    def test_set_max_acceleration_scaling_factor_range_not_ok(self):
+        raised = False
+        try:
+            self.robot_commander.set_max_acceleration_scaling_factor(3)
+        except Exception:
+            raised = True
+        self.assertTrue(raised)
+        
+
+    def test_allow_looking(self):
+        self.robot_commander.allow_looking(True)
+        self.robot_commander.allow_looking(False)
+    
+    def test_allow_replanning(self):
+        self.robot_commander.allow_replanning(True)
+        self.robot_commander.allow_replanning(False)
+    
+    def test_plan_to_joint_value_target(self):
+        
+        arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
+                                'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
+                                'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
+
+        self.robot_commander.plan_to_joint_value_target(arm_home_joints_goal, 
+                                                        angle_degrees=False, custom_start_state=None)
+
+        self.assertTrue(type(self.robot_commander._SrRobotCommander__plan) == RobotTrajectory)
+       
+    def test_check_plan_is_valid_ok(self):
+        arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
+                                'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
+                                'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
+        self.robot_commander.plan_to_joint_value_target(arm_home_joints_goal, 
+                                                        angle_degrees=False, custom_start_state=None)
+        self.assertTrue(self.robot_commander.check_plan_is_valid())
+    
+    def test_check_plan_is_valid_not_ok(self):
+        self.assertFalse(self.robot_commander.check_plan_is_valid())
+
+    def test_execute(self):
+        arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
+                                'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
+                                'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
+
+        self.robot_commander.plan_to_joint_value_target(arm_home_joints_goal, 
+                                                        angle_degrees=False, custom_start_state=None)                                             
+        self.robot_commander.execute()
+        executed_joints = self.robot_commander.get_current_state()
+        
+        diffs = []
+        for key in arm_home_joints_goal:
+            if key in executed_joints:
+                diffs.append(arm_home_joints_goal[key] - executed_joints[key])
+
+        condition_1 = all(i < 0.05 for i in diffs)
+        condition_2 = self.robot_commander._SrRobotCommander__plan == None
+
+        self.assertTrue(condition_1 and condition_2)
+
+    def test_execute_plan(self):
+        arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
+                                'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
+                                'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
+
+        plan = self.robot_commander.plan_to_joint_value_target(arm_home_joints_goal, 
+                                                               angle_degrees=False, custom_start_state=None)                                             
+        self.robot_commander.execute_plan(plan)
+
+        executed_joints = self.robot_commander.get_current_state()
+        
+        diffs = []
+        for key in arm_home_joints_goal:
+            if key in executed_joints:
+                diffs.append(arm_home_joints_goal[key] - executed_joints[key])
+
+        condition_1 = all(i < 0.05 for i in diffs)
+        condition_2 = self.robot_commander._SrRobotCommander__plan == None
+
+        self.assertTrue(condition_1 and condition_2)
+
     '''
-    def refresh_named_targets(self):
-
-    def set_max_velocity_scaling_factor(self, value):
-
-    def set_max_acceleration_scaling_factor(self, value):
-
-    def allow_looking(self, value):
-
-    def allow_replanning(self, value):
-
-    def execute(self):
-
     def execute_plan(self, plan):
 
     def move_to_joint_value_target(self, joint_states, wait=True, angle_degrees=False):
-
-    def plan_to_joint_value_target(self, joint_states, angle_degrees=False, custom_start_state=None):
-
-    def check_plan_is_valid(self):
 
     def check_given_plan_is_valid(self, plan):
 
