@@ -366,35 +366,59 @@ class TestSrRobotCommander(TestCase):
         diffs = [end_state[key] - current_state[key] for key in end_state if key in current_state]
         self.assertTrue(all(abs(diff) < 0.1 for diff in diffs))
 
-    def test_make_named_trajectory(self):
+    # this isnt used and is 
+    def test_make_named_trajectory(self):        
         trajectory = []
-        waypoint_1 = {"joint_angles": {'ra_shoulder_pan_joint': 0.5157467, 'ra_elbow_joint': 0.24920327},
-                      "interpolate_time": 1.0, "pause_time": 1.0, "degrees": False}
-        waypoint_2 = {"joint_angles": {'ra_shoulder_pan_joint': 0.2721474, 'ra_elbow_joint': 0.49203278},
-                      "interpolate_time": 0.5, "pause_time": 0.3, "degrees": False}
-        waypoint_3 = {"joint_angles": {'ra_shoulder_pan_joint': 0.5121474, 'ra_elbow_joint': 0.82492032},
-                      "interpolate_time": 0.8, "pause_time": 0.6, "degrees": False}
-        waypoint_4 = {"joint_angles": {'ra_shoulder_pan_joint': 0.4616827, 'ra_elbow_joint': 0.49203278},
-                      "interpolate_time": 0.5, "pause_time": 0.7, "degrees": False}
-
-        trajectory.append(waypoint_1)
-        trajectory.append(waypoint_2)
-        trajectory.append(waypoint_3)
-        trajectory.append(waypoint_4)
-
+        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.5157467, 'ra_elbow_joint': 0.24920327},
+                           "interpolate_time": 1.0, "pause_time": 1.0, "degrees": False})
+        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.2721474, 'ra_elbow_joint': 0.49203278},
+                           "interpolate_time": 0.5, "pause_time": 0.3, "degrees": False})
+        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.5121474, 'ra_elbow_joint': 0.82492032},
+                           "interpolate_time": 0.8, "pause_time": 0.6, "degrees": False})
+        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.4616827, 'ra_elbow_joint': 0.49203278},
+                           "interpolate_time": 0.5, "pause_time": 0.7, "degrees": False})
         t = self.robot_commander.make_named_trajectory(trajectory)
-        rospy.logerr(t)
+        all_positions = []
 
+        for i in range(0,len(t.points)):
+            all_positions.append(t.points[i].positions)
+        # this should check if all waypoints are in the trajectory
         for wp in trajectory:
             for key in wp["joint_angles"].keys():
-                x = any(wp["joint_angles"][key] in sublist for sublist in t.points[:].positions)
+                if not any(wp["joint_angles"][key] in sublist for sublist in all_positions):
+                    self.fail()
 
-        condition_1 = type(self.robot_commander.make_named_trajectory(trajectory)) == JointTrajectory
-        rospy.logwarn(self.robot_commander.make_named_trajectory(trajectory))
+        self.assertTrue(type(self.robot_commander.make_named_trajectory(trajectory)) == JointTrajectory)
+
+    def test_send_stop_trajectory_unsafe(self):  
+        self.robot_commander.set_max_velocity_scaling_factor(0.1)      
+        current_joints = copy.deepcopy(self.robot_commander.get_joints_position())
+        end_joints = copy.deepcopy(self.robot_commander.get_joints_position())
+
+        js = JointState()
+        js.header = Header()
+        js.name = list(current_joints.keys())
+        js.position = list(current_joints.values())
+        rs = RobotState()
+        rs.joint_state = js
+  
+        end_joints['ra_shoulder_pan_joint'] += 3.14
+        end_joints['ra_elbow_joint'] += -0.7
+
+        plan = self.robot_commander.plan_to_joint_value_target(end_joints,
+                                                               angle_degrees=False, custom_start_state=rs)
+        self.robot_commander.execute_plan(plan)
+        rospy.sleep(0.5)
+        self.robot_commander.send_stop_trajectory_unsafe()
+        current_joints = self.robot_commander.get_current_state()
+
+        diffs = [end_joints[key] - current_joints[key] for key in end_joints
+                 if key in current_joints]
+
+        rospy.logerr(diffs)
+        self.assertTrue(any(abs(diff) > 0.01 for diff in diffs))
 
     '''
-    def send_stop_trajectory_unsafe(self):
-
     def run_named_trajectory_unsafe(self, trajectory, wait=False):
 
     def run_named_trajectory(self, trajectory):
