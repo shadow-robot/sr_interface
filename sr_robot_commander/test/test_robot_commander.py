@@ -27,7 +27,7 @@ class TestSrRobotCommander(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.robot_commander = SrRobotCommander("right_arm")
-    
+
     def test_mvgr_get_and_set_planner_id(self):
         planner_list = ["BKPIECEkConfigDefault", "ESTkConfigDefault", "KPIECEkConfigDefault",
                         "LBKPIECEkConfigDefault", "PRMkConfigDefault", "RRTkConfigDefault",
@@ -38,7 +38,7 @@ class TestSrRobotCommander(TestCase):
             self.assertTrue(id == self.robot_commander._move_group_commander.get_planner_id())
 
     def test_mvgr_get_and_set_planning_time(self):
-        time_test_values = [1,2,3,4,5]
+        time_test_values = [1, 2, 3, 4, 5]
         for time in time_test_values:
             self.robot_commander.set_planning_time(time)
             self.assertTrue(time == self.robot_commander._move_group_commander.get_planning_time())
@@ -52,10 +52,10 @@ class TestSrRobotCommander(TestCase):
         self.assertFalse(raised)
 
 
-    #def get_end_effector_pose_from_named_state(self, name):
+    # def get_end_effector_pose_from_named_state(self, name):
 
-    
-    def test_mvgr_get_end_effector_pose_from_state(self):   
+
+    def test_mvgr_get_end_effector_pose_from_state(self):
         state = {'ra_shoulder_pan_joint': 0.5157461682721474,
                  'ra_elbow_joint': 0.6876824920327893,
                  'ra_wrist_1_joint': -0.7695210732233582,
@@ -89,7 +89,7 @@ class TestSrRobotCommander(TestCase):
         condition_1 = type(self.robot_commander._srdf_names) == list
         condition_2 = type(self.robot_commander._warehouse_names) == list
         self.assertTrue(condition_1 and condition_2)
-    
+
     def test_set_max_velocity_scaling_factor__range_ok(self):
         raised = False
         try:
@@ -97,7 +97,7 @@ class TestSrRobotCommander(TestCase):
         except Exception:
             raised = True
         self.assertFalse(raised)
-        
+
     def test_set_max_velocity_scaling_factor__range_not_ok(self):
         raised = False
         try:
@@ -113,7 +113,7 @@ class TestSrRobotCommander(TestCase):
         except Exception:
             raised = True
         self.assertFalse(raised)
-        
+
     def test_set_max_acceleration_scaling_factor__range_not_ok(self):
         raised = False
         try:
@@ -125,12 +125,12 @@ class TestSrRobotCommander(TestCase):
     def test_allow_looking(self):
         self.robot_commander.allow_looking(True)
         self.robot_commander.allow_looking(False)
-    
+
     def test_allow_replanning(self):
         self.robot_commander.allow_replanning(True)
         self.robot_commander.allow_replanning(False)
-    
-    def test_plan_to_joint_value_target(self):        
+
+    def test_plan_to_joint_value_target(self):
         arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
                                 'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
                                 'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
@@ -146,9 +146,10 @@ class TestSrRobotCommander(TestCase):
                                                         angle_degrees=False, custom_start_state=None)
         self.robot_commander.execute()
         executed_joints = self.robot_commander.get_current_state()
-        diffs = [arm_home_joints_goal[key]  - executed_joints[key] for key in arm_home_joints_goal if key in executed_joints]
+        diffs = [arm_home_joints_goal[key] - executed_joints[key] for key in arm_home_joints_goal
+                                                                  if key in executed_joints]
         condition_1 = all(diff < 0.05 for diff in diffs)
-        condition_2 = self.robot_commander._SrRobotCommander__plan == None
+        condition_2 = self.robot_commander._SrRobotCommander__plan is None
         self.assertTrue(condition_1 and condition_2)
 
     def test_execute_plan(self):
@@ -157,12 +158,13 @@ class TestSrRobotCommander(TestCase):
                                 'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
 
         plan = self.robot_commander.plan_to_joint_value_target(arm_home_joints_goal,
-                                                               angle_degrees=False, custom_start_state=None)                                             
+                                                               angle_degrees=False, custom_start_state=None)
         self.robot_commander.execute_plan(plan)
-        executed_joints = self.robot_commander.get_current_state()        
-        diffs = [arm_home_joints_goal[key]  - executed_joints[key] for key in arm_home_joints_goal if key in executed_joints]
+        executed_joints = self.robot_commander.get_current_state()
+        diffs = [arm_home_joints_goal[key] - executed_joints[key] for key in arm_home_joints_goal 
+                                                                  if key in executed_joints]
         condition_1 = all(diff < 0.05 for diff in diffs)
-        condition_2 = self.robot_commander._SrRobotCommander__plan == None
+        condition_2 = self.robot_commander._SrRobotCommander__plan is None
         self.assertTrue(condition_1 and condition_2)
 
     '''
@@ -177,11 +179,11 @@ class TestSrRobotCommander(TestCase):
         self.robot_commander.plan_to_joint_value_target(arm_home_joints_goal, angle_degrees=False,
                                                         custom_start_state=None)
         self.assertTrue(self.robot_commander.check_plan_is_valid())
-    
+
     def test_check_plan_is_valid__not_ok(self):
         self.robot_commander._SrRobotCommander__plan = None
         self.assertFalse(self.robot_commander.check_plan_is_valid())
-    
+
     def test_check_given_plan_is_valid__ok(self):
         arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
                                 'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
@@ -189,7 +191,7 @@ class TestSrRobotCommander(TestCase):
         plan = self.robot_commander.plan_to_joint_value_target(arm_home_joints_goal, angle_degrees=False,
                                                                custom_start_state=None)
         self.assertTrue(self.robot_commander.check_given_plan_is_valid(plan))
-    
+
     def test_check_given_plan_is_valid__not_ok(self):
         arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 3.00,
                                 'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
@@ -197,11 +199,11 @@ class TestSrRobotCommander(TestCase):
         plan = self.robot_commander.plan_to_joint_value_target(arm_home_joints_goal, angle_degrees=False,
                                                                custom_start_state=None)
         self.assertFalse(self.robot_commander.check_given_plan_is_valid(plan))
-    
+
     def test_evaluate_given_plan__none(self):
         plan = None
         evaluation = self.robot_commander.evaluate_given_plan(plan)
-        self.assertTrue(evaluation == None)
+        self.assertTrue(evaluation is None)
 
     def test_evaluate_given_plan__low_quality(self):
         current_joints = self.robot_commander.get_joints_position()
@@ -210,7 +212,6 @@ class TestSrRobotCommander(TestCase):
         planned_joints['ra_shoulder_lift_joint'] = planned_joints['ra_shoulder_lift_joint'] + 1.36
         plan = self.robot_commander.plan_to_joint_value_target(planned_joints, angle_degrees=False,
                                                                custom_start_state=None)
-
         evaluation = self.robot_commander.evaluate_given_plan(plan)
         self.assertTrue(evaluation > 10)
 
@@ -222,16 +223,16 @@ class TestSrRobotCommander(TestCase):
                                                                custom_start_state=None)
         evaluation = self.robot_commander.evaluate_given_plan(plan)
         self.assertTrue(evaluation < 1)
-    
-    #def test_evaluate_plan(self):
-        #is covered by evaluate_given_plan
+
+    # def test_evaluate_plan(self):
+        # is covered by evaluate_given_plan
 
     def test_evaluate_plan_quality(self):
         condition_1 = 'good' == self.robot_commander.evaluate_plan_quality(7)
         condition_2 = 'medium' == self.robot_commander.evaluate_plan_quality(32)
-        condition_3 = 'poor' == self.robot_commander.evaluate_plan_quality(60)    
+        condition_3 = 'poor' == self.robot_commander.evaluate_plan_quality(60)
         self.assertTrue(condition_1 and condition_2 and condition_3)
-    
+
     def test_get_robot_name(self):
         self.assertTrue(self.robot_commander.get_robot_name() == self.robot_commander._robot_name)
 
@@ -239,15 +240,15 @@ class TestSrRobotCommander(TestCase):
         test_names = ['lifted', 'flat']
         failed = False
         for name in test_names:
-            if self.robot_commander.named_target_in_srdf(name) == False:
+            if self.robot_commander.named_target_in_srdf(name) is False:
                 failed = True
         self.assertFalse(failed)
-    
+
     def test_named_target_in_srdf__not_exist(self):
         test_names = ['xf24ga']
         failed = False
         for name in test_names:
-            if self.robot_commander.named_target_in_srdf(name) == False:
+            if self.robot_commander.named_target_in_srdf(name) is False:
                 failed = True
         self.assertTrue(failed)
 
@@ -259,7 +260,7 @@ class TestSrRobotCommander(TestCase):
     def test_set_named_target__false_name(self):
         result = self.robot_commander.set_named_target("test_test")
         self.assertFalse(result)
-    
+
     def test_get_named_target_joint__values_srdf(self):
         test_names = self.robot_commander._srdf_names
         if len(test_names) > 0:
@@ -275,11 +276,11 @@ class TestSrRobotCommander(TestCase):
     def test_get_named_target_joint__values_no_target(self):
         test_names = "no_target"
         output = self.robot_commander.get_named_target_joint_values(test_names[0])
-        self.assertTrue(output == None)
-    
+        self.assertTrue(output is None)
+
     def test_get_end_effector_link(self):
         self.assertTrue(type(self.robot_commander.get_end_effector_link()) == str)
-    
+
     def test_get_current_pose_frame(self):
         pose = self.robot_commander.get_current_pose(reference_frame="world")
         self.assertTrue(type(pose) == Pose)
@@ -290,7 +291,7 @@ class TestSrRobotCommander(TestCase):
 
     def test_get_current_pose_frame__wrong(self):
         pose = self.robot_commander.get_current_pose(reference_frame="test_test")
-        self.assertTrue(pose == None)
+        self.assertTrue(pose is None)
 
     def test_get_current_state(self):
         self.assertTrue(type(self.robot_commander.get_current_state()) == dict)
@@ -310,7 +311,7 @@ class TestSrRobotCommander(TestCase):
         if len(target_names) > 0:
             self.robot_commander.plan_to_named_target(target_names[0], None)
         self.assertTrue(type(self.robot_commander._SrRobotCommander__plan) == RobotTrajectory)
-    
+
     def test_plan_to_named_target__custom_start_state_exists(self):
         target_names = self.robot_commander.get_named_targets()
         if len(target_names) > 1:
@@ -342,7 +343,7 @@ class TestSrRobotCommander(TestCase):
 
     def get_named_targets(self):
         self.assertTrue(type(self.robot_commander.get_named_targets()) == list)
-    
+
     def test_get_joints_position(self):
         ret_val = self.robot_commander.get_joints_position()
         self.assertTrue(type(ret_val) == dict)
@@ -425,6 +426,7 @@ class TestSrRobotCommander(TestCase):
 
     def move_to_pose_value_target_unsafe(self, target_pose, avoid_collisions=False, time=0.002, wait=True, ik_constraints=None):
     '''
+
 
 if __name__ == "__main__":
     rospy.init_node('test_sr_robot_commander', anonymous=True)
