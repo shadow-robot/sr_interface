@@ -538,11 +538,11 @@ class SrRobotCommander(object):
         current = self.get_current_state_bounded()
 
         joint_trajectory = JointTrajectory()
-        joint_names = current.keys()
+        joint_names = list(current.keys())
         joint_trajectory.joint_names = joint_names
 
         start = JointTrajectoryPoint()
-        start.positions = current.values()
+        start.positions = list(current.values())
         start.time_from_start = rospy.Duration.from_sec(0.001)
         joint_trajectory.points.append(start)
 
@@ -595,12 +595,12 @@ class SrRobotCommander(object):
         current = self.get_current_state_bounded()
 
         trajectory_point = JointTrajectoryPoint()
-        trajectory_point.positions = current.values()
+        trajectory_point.positions = list(current.values())
         trajectory_point.time_from_start = rospy.Duration.from_sec(0.1)
 
         trajectory = JointTrajectory()
         trajectory.points.append(trajectory_point)
-        trajectory.joint_names = current.keys()
+        trajectory.joint_names = list(current.keys())
 
         self.run_joint_trajectory_unsafe(trajectory)
 
