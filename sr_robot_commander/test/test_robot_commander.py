@@ -51,9 +51,7 @@ class TestSrRobotCommander(TestCase):
             raised = True
         self.assertFalse(raised)
 
-
     # def get_end_effector_pose_from_named_state(self, name):
-
 
     def test_mvgr_get_end_effector_pose_from_state(self):
         state = {'ra_shoulder_pan_joint': 0.5157461682721474,
@@ -120,7 +118,7 @@ class TestSrRobotCommander(TestCase):
             self.robot_commander.set_max_acceleration_scaling_factor(3)
         except Exception:
             raised = True
-        self.assertTrue(raised)        
+        self.assertTrue(raised)
 
     def test_allow_looking(self):
         self.robot_commander.allow_looking(True)
@@ -147,7 +145,7 @@ class TestSrRobotCommander(TestCase):
         self.robot_commander.execute()
         executed_joints = self.robot_commander.get_current_state()
         diffs = [arm_home_joints_goal[key] - executed_joints[key] for key in arm_home_joints_goal
-                                                                  if key in executed_joints]
+                 if key in executed_joints]
         condition_1 = all(diff < 0.05 for diff in diffs)
         condition_2 = self.robot_commander._SrRobotCommander__plan is None
         self.assertTrue(condition_1 and condition_2)
@@ -161,8 +159,8 @@ class TestSrRobotCommander(TestCase):
                                                                angle_degrees=False, custom_start_state=None)
         self.robot_commander.execute_plan(plan)
         executed_joints = self.robot_commander.get_current_state()
-        diffs = [arm_home_joints_goal[key] - executed_joints[key] for key in arm_home_joints_goal 
-                                                                  if key in executed_joints]
+        diffs = [arm_home_joints_goal[key] - executed_joints[key] for key in arm_home_joints_goal
+                 if key in executed_joints]
         condition_1 = all(diff < 0.05 for diff in diffs)
         condition_2 = self.robot_commander._SrRobotCommander__plan is None
         self.assertTrue(condition_1 and condition_2)
@@ -318,7 +316,7 @@ class TestSrRobotCommander(TestCase):
             state = {'ra_shoulder_pan_joint': 0.5157461682721474, 'ra_elbow_joint': 0.6876824920327893,
                      'ra_wrist_1_joint': -0.7695210732233582, 'ra_wrist_2_joint': 0.2298871642157314,
                      'ra_shoulder_lift_joint': -0.9569080092786892, 'ra_wrist_3_joint': -0.25991215955733704}
-            rs = RobotState()        
+            rs = RobotState()
             for key, value in state.items():
                 rs.joint_state.name.append(key)
                 rs.joint_state.position.append(value)
@@ -332,7 +330,7 @@ class TestSrRobotCommander(TestCase):
 
         points_count = len(plan_before.joint_trajectory.points)
         i = 0
-        for i in range(0,len(plan_before.joint_trajectory.points)):
+        for i in range(0, len(plan_before.joint_trajectory.points)):
             for j in range(0, len(plan_before.joint_trajectory.points[0].positions)):
                 pb = plan_before.joint_trajectory.points[i].positions[j]
                 pa = plan_after.joint_trajectory.points[i].positions[j]
@@ -356,8 +354,8 @@ class TestSrRobotCommander(TestCase):
         ret_val = self.robot_commander.get_joints_state()
         self.assertTrue(type(ret_val) == JointState)
 
-    # whats the point of this? 
-    def test_run_joint_trajectory(self):     
+    # whats the point of this?
+    def test_run_joint_trajectory(self):
         end_state = {'ra_shoulder_pan_joint': 0.5157461682721474, 'ra_elbow_joint': 0.6876824920327893,
                      'ra_wrist_1_joint': -0.7695210732233582, 'ra_wrist_2_joint': 0.2298871642157314,
                      'ra_shoulder_lift_joint': -0.9569080092786892, 'ra_wrist_3_joint': -0.25991215955733704}
@@ -365,7 +363,7 @@ class TestSrRobotCommander(TestCase):
                                                                      custom_start_state=None).joint_trajectory
         self.robot_commander.run_joint_trajectory(trajectory)
         current_state = copy.deepcopy(self.robot_commander.get_current_state())
-        diffs = [end_state[key] - current_state[key] for key in end_state if key in current_state]        
+        diffs = [end_state[key] - current_state[key] for key in end_state if key in current_state]
         self.assertTrue(all(abs(diff) < 0.1 for diff in diffs))
 
     def test_make_named_trajectory(self):
@@ -378,7 +376,7 @@ class TestSrRobotCommander(TestCase):
                       "interpolate_time": 0.8, "pause_time": 0.6, "degrees": False}
         waypoint_4 = {"joint_angles": {'ra_shoulder_pan_joint': 0.4616827, 'ra_elbow_joint': 0.49203278},
                       "interpolate_time": 0.5, "pause_time": 0.7, "degrees": False}
-        
+
         trajectory.append(waypoint_1)
         trajectory.append(waypoint_2)
         trajectory.append(waypoint_3)
@@ -387,7 +385,6 @@ class TestSrRobotCommander(TestCase):
         t = self.robot_commander.make_named_trajectory(trajectory)
         rospy.logerr(t)
 
-        for pos in t.points:
         for wp in trajectory:
             for key in wp["joint_angles"].keys():
                 x = any(wp["joint_angles"][key] in sublist for sublist in t.points[:].positions)
@@ -416,7 +413,8 @@ class TestSrRobotCommander(TestCase):
 
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
 
-    def plan_to_waypoints_target(self, waypoints, reference_frame=None, eef_step=0.005, jump_threshold=0.0, custom_start_state=None):   
+    def plan_to_waypoints_target(self, waypoints, reference_frame=None, eef_step=0.005, jump_threshold=0.0,
+                                 custom_start_state=None):   
 
     def set_teach_mode(self, teach):
 
@@ -424,7 +422,8 @@ class TestSrRobotCommander(TestCase):
 
     def get_ik(self, target_pose, avoid_collisions=False, joint_states=None, ik_constraints=None):
 
-    def move_to_pose_value_target_unsafe(self, target_pose, avoid_collisions=False, time=0.002, wait=True, ik_constraints=None):
+    def move_to_pose_value_target_unsafe(self, target_pose, avoid_collisions=False, time=0.002, wait=True,
+                                         ik_constraints=None):
     '''
 
 
