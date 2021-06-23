@@ -122,11 +122,9 @@ class TestSrRobotCommander(TestCase):
 
     def test_allow_looking(self):
         self.robot_commander.allow_looking(True)
-        self.robot_commander.allow_looking(False)
 
     def test_allow_replanning(self):
         self.robot_commander.allow_replanning(True)
-        self.robot_commander.allow_replanning(False)
 
     def test_plan_to_joint_value_target(self):
         arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
@@ -366,8 +364,8 @@ class TestSrRobotCommander(TestCase):
         diffs = [end_state[key] - current_state[key] for key in end_state if key in current_state]
         self.assertTrue(all(abs(diff) < 0.1 for diff in diffs))
 
-    # this isnt used and is 
-    def test_make_named_trajectory(self):        
+    # this isnt used and is
+    def test_make_named_trajectory(self):
         trajectory = []
         trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.5157467, 'ra_elbow_joint': 0.24920327},
                            "interpolate_time": 1.0, "pause_time": 1.0, "degrees": False})
@@ -380,18 +378,17 @@ class TestSrRobotCommander(TestCase):
         t = self.robot_commander.make_named_trajectory(trajectory)
         all_positions = []
 
-        for i in range(0,len(t.points)):
+        for i in range(0, len(t.points)):
             all_positions.append(t.points[i].positions)
         # this should check if all waypoints are in the trajectory
         for wp in trajectory:
             for key in wp["joint_angles"].keys():
                 if not any(wp["joint_angles"][key] in sublist for sublist in all_positions):
                     self.fail()
-
         self.assertTrue(type(self.robot_commander.make_named_trajectory(trajectory)) == JointTrajectory)
 
-    def test_send_stop_trajectory_unsafe(self):  
-        self.robot_commander.set_max_velocity_scaling_factor(0.1)      
+    def test_send_stop_trajectory_unsafe(self):
+        self.robot_commander.set_max_velocity_scaling_factor(0.1)
         current_joints = copy.deepcopy(self.robot_commander.get_joints_position())
         end_joints = copy.deepcopy(self.robot_commander.get_joints_position())
 
@@ -401,7 +398,7 @@ class TestSrRobotCommander(TestCase):
         js.position = list(current_joints.values())
         rs = RobotState()
         rs.joint_state = js
-  
+
         end_joints['ra_shoulder_pan_joint'] += 3.14
         end_joints['ra_elbow_joint'] += -0.7
 
@@ -418,9 +415,21 @@ class TestSrRobotCommander(TestCase):
         rospy.logerr(diffs)
         self.assertTrue(any(abs(diff) > 0.01 for diff in diffs))
 
-    '''
-    def run_named_trajectory_unsafe(self, trajectory, wait=False):
+    def self_run_named_trajectory_unsafe(self):
+        trajectory = []
+        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.5157467, 'ra_elbow_joint': 0.24920327},
+                           "interpolate_time": 1.0, "pause_time": 1.0, "degrees": False})
+        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.2721474, 'ra_elbow_joint': 0.49203278},
+                           "interpolate_time": 0.5, "pause_time": 0.3, "degrees": False})
+        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.5121474, 'ra_elbow_joint': 0.82492032},
+                           "interpolate_time": 0.8, "pause_time": 0.6, "degrees": False})
+        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.4616827, 'ra_elbow_joint': 0.49203278},
+                           "interpolate_time": 0.5, "pause_time": 0.7, "degrees": False})
 
+        self.robot_commander.run_named_trajectory_unsafe(self, trajectory, wait=False)
+
+
+    '''
     def run_named_trajectory(self, trajectory):
 
     def move_to_position_target(self, xyz, end_effector_link="", wait=True):
@@ -438,9 +447,10 @@ class TestSrRobotCommander(TestCase):
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
 
     def plan_to_waypoints_target(self, waypoints, reference_frame=None, eef_step=0.005, jump_threshold=0.0,
-                                 custom_start_state=None):   
-
-    def set_teach_mode(self, teach):
+                                 custom_start_state=None):
+    
+    def test_set_teach_mode(self):
+        self.robot_commander.set_teach_mode(False)
 
     def move_to_trajectory_start(self, trajectory, wait=True):
 

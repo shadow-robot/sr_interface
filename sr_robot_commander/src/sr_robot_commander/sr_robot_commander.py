@@ -615,7 +615,7 @@ class SrRobotCommander(object):
                             - pause_time -> time to wait at this wp
         """
         joint_trajectory = self.make_named_trajectory(trajectory)
-        if joint_trajectory is not None:
+        if type(joint_trajectory) == JointTrajectory:
             self.run_joint_trajectory_unsafe(joint_trajectory, wait)
 
     def run_named_trajectory(self, trajectory):
@@ -629,7 +629,7 @@ class SrRobotCommander(object):
                           - pause_time -> time to wait at this wp
         """
         joint_trajectory = self.make_named_trajectory(trajectory)
-        if joint_trajectory is not None:
+        if type(joint_trajectory) == JointTrajectory:
             self.run_joint_trajectory(joint_trajectory)
 
     def move_to_position_target(self, xyz, end_effector_link="", wait=True):
