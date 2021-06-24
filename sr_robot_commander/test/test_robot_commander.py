@@ -428,7 +428,6 @@ class TestSrRobotCommander(TestCase):
 
         self.robot_commander.run_named_trajectory_unsafe(self, trajectory, wait=False)
 
-
     '''
     def run_named_trajectory(self, trajectory):
 
@@ -448,7 +447,7 @@ class TestSrRobotCommander(TestCase):
 
     def plan_to_waypoints_target(self, waypoints, reference_frame=None, eef_step=0.005, jump_threshold=0.0,
                                  custom_start_state=None):
-    
+
     def test_set_teach_mode(self):
         self.robot_commander.set_teach_mode(False)
 
