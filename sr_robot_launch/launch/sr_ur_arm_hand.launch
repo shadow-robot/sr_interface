@@ -93,6 +93,9 @@
   <arg if="$(eval not hand_trajectory and arm_trajectory)" name="trajectory_controllers_list"
        default="[/$(arg arm_prefix)_trajectory_controller/state]"/>
 
+  <!-- Whether to include hand wrist in arm controller. -->
+  <arg name="include_wrist_in_arm_controller" default="false"/>
+
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
     <env name="GAZEBO_MODEL_PATH" value="$(find sr_description_common)/models/" />
@@ -101,7 +104,7 @@
     <arg name="paused" value="$(arg start_home)"/>
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
       <arg name="world_name" default="$(arg world)"/>
-      <arg name="gui" default="$(arg gui)"/>
+      <arg name="gui" value="$(arg gui)"/>
       <arg name="paused" value="$(arg paused)"/>
       <arg name="debug" value="$(arg debug)"/>
       <arg name="verbose" value="$(arg verbose)" />
@@ -121,7 +124,8 @@
     </include>
     <!-- ARM -->
     <group if="$(arg arm_trajectory)">
-      <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_prefix)_trajectory_controller.yaml" command="load"/>
+      <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_prefix)_trajectory_controller.yaml" command="load" unless="$(arg include_wrist_in_arm_controller)"/>
+      <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_prefix)_trajectory_controller_wrist.yaml" command="load" if="$(arg include_wrist_in_arm_controller)"/>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="$(arg arm_prefix)_trajectory_controller"/>
     </group>
     <group if="$(arg arm_position)">
@@ -144,6 +148,8 @@
       <arg if="$(arg hybrid_controller)" name="hand_controller_group" default="hybrid"/>
       <arg if="$(eval hand_trajectory and not grasp_controller and not hybrid_controller)" name="hand_controller_group" default="trajectory"/>
       <arg if="$(eval not hand_trajectory and not grasp_controller and not hybrid_controller)" name="hand_controller_group" default="position"/>
+      <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg hand_id)_trajectory_controller.yaml" unless="$(arg include_wrist_in_arm_controller)"/>
+      <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg hand_id)_trajectory_controller_no_wrist.yaml" if="$(arg include_wrist_in_arm_controller)"/>
       <node name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
         <param name="controller_group" value="$(arg hand_controller_group)"/>
       </node>
