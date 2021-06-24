@@ -252,7 +252,8 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
 
 
 def generate_kinematics(robot, robot_config, hand_template_path="kinematics_template.yaml",
-                        output_path=None, ns_=None):
+                        output_path=None, kinematics_file="kinematics.yaml",
+                        kinematics_extra_file="kinematics_extra_groups.yaml", ns_=None):
     output_str = ""
     while not rospy.has_param('/robot_description'):
         rospy.sleep(0.5)
@@ -262,12 +263,12 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
 
     for manipulator in robot_config.manipulators:
         if manipulator.has_arm:
-            arm_yaml_path = manipulator.arm.moveit_path + "/" + "kinematics.yaml"
+            arm_yaml_path = manipulator.arm.moveit_path + "/" + kinematics_file
             with open(arm_yaml_path, 'r') as stream:
                 arm_yamldoc = yaml.safe_load(stream)
             if manipulator.arm.extra_groups_config_path:
                 arm_yaml_extra_groups_path = (manipulator.arm.extra_groups_config_path + "/" +
-                                              "kinematics_extra_groups.yaml")
+                                              kinematics_extra_file)
                 with open(arm_yaml_extra_groups_path, 'r') as stream:
                     arm_yamldoc_extra_groups = yaml.safe_load(stream)
             prefix = manipulator.arm.prefix
@@ -278,6 +279,9 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
                     group_prefix = prefix
                 elif manipulator.arm.internal_name in group_name:
                     group_prefix, group_name = group_name.split("_", 1)
+                    group_prefix = prefix
+                elif group_name.startswith("two"):
+                    group_name = group.name
                     group_prefix = prefix
                 else:
                     group_name = group.name[len(prefix):]
@@ -442,7 +446,9 @@ if __name__ == '__main__':
                                output_path="ompl_planning.yaml")
         generate_kinematics(ROBOT,
                             "kinematics_template.yaml",
-                            output_path="kinematics.yaml")
+                            output_path="kinematics.yaml",
+                            kinematics_file="kinematics.yaml",
+                            kinematics_extra_file="kinematics_extra_groups.yaml")
         generate_joint_limits(ROBOT,
                               "joint_limits_template.yaml",
                               output_path="joint_limits.yaml")

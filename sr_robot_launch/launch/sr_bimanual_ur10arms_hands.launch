@@ -59,6 +59,9 @@
   <!-- Set the hand type here: hand_e_plus, hand_e, hand_lite, hand_extra_lite -->
   <arg name="hand_type" default="hand_e_plus"/>
 
+  <!-- Whether to include hand wrist in arm controller. -->
+  <arg name="include_wrist_in_arm_controller" default="false"/>
+
   <!-- ARMS CONFIG-->
   <arg name="arm_1_z" default="0.7521" if="$(arg scene)"/>
   <arg name="arm_1_z" default="0.01" unless="$(arg scene)"/>
@@ -109,6 +112,7 @@
     <arg name="robot_model" value="$(arg robot_model)"/>
     <arg name="robot_name" value="$(arg robot_model)srh"/>
     <arg name="external_control_loop" value="$(arg external_control_loop)"/>
+    <arg name="include_wrist_in_arm_controller" value="$(arg include_wrist_in_arm_controller)"/>
 
     <arg name="pwm_control" value="$(arg pwm_control)"/>
 
