@@ -21,6 +21,9 @@
        otherwise the robot description is loaded at lower level -->
   <arg name="load_robot_description_at_lower_level" default="$(eval not arm_ctrl)"/>
 
+  <!-- Whether to include hand wrist in arm controller. -->
+  <arg name="include_wrist_in_arm_controller" default="false"/>
+
   <!-- HANDS CONFIG-->
   <arg name="rh_serial" default="1370"/>
   <arg name="lh_serial" default="2346"/>
@@ -116,6 +119,10 @@
       <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
     </include>
+    <rosparam command="load" file="$(find sr_robot_launch)/config/rh_trajectory_controller.yaml" unless="$(arg include_wrist_in_arm_controller)"/>
+    <rosparam command="load" file="$(find sr_robot_launch)/config/lh_trajectory_controller.yaml" unless="$(arg include_wrist_in_arm_controller)"/>
+    <rosparam command="load" file="$(find sr_robot_launch)/config/rh_trajectory_controller_no_wrist.yaml" if="$(arg include_wrist_in_arm_controller)"/>
+    <rosparam command="load" file="$(find sr_robot_launch)/config/lh_trajectory_controller_no_wrist.yaml" if="$(arg include_wrist_in_arm_controller)"/>
     <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="controller_spawner.py" output="screen">
       <param name="controller_group" value="$(arg hand_controller_group)"/>
       <param name="wait_for" value="calibrated"/>
@@ -179,8 +186,10 @@
 
   <!-- Trajectory mode if arms are being used -->
   <group if="$(eval arg('arm_trajectory') and arg('arm_ctrl'))">
-    <rosparam file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml" command="load"/>
-    <rosparam file="$(find sr_robot_launch)/config/la_trajectory_controller.yaml" command="load"/>
+    <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml" unless="$(arg include_wrist_in_arm_controller)"/>
+    <rosparam command="load" file="$(find sr_robot_launch)/config/la_trajectory_controller.yaml" unless="$(arg include_wrist_in_arm_controller)"/>
+    <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller_wrist.yaml" if="$(arg include_wrist_in_arm_controller)"/>
+    <rosparam command="load" file="$(find sr_robot_launch)/config/la_trajectory_controller_wrist.yaml" if="$(arg include_wrist_in_arm_controller)"/>
     <node name="ra_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
           args="--wait-for=/ra_sr_ur_robot_hw/robot_program_running ra_trajectory_controller"/>
     <node name="la_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
