@@ -246,7 +246,7 @@ class SrRobotCommander(object):
         else:
             self._move_group_commander.set_start_state(custom_start_state)
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
-        self.__plan = self._move_group_commander.plan()[1]
+        self.__plan = self._move_group_commander.plan()
         return self.__plan
 
     def check_plan_is_valid(self):
@@ -451,9 +451,7 @@ class SrRobotCommander(object):
         else:
             self._move_group_commander.set_start_state(custom_start_state)
         if self.set_named_target(name):
-            self.__plan = self._move_group_commander.plan()[1]
-        else:
-            rospy.logwarn("Named target does not exist")
+            self.__plan = self._move_group_commander.plan()
 
     def __get_warehouse_names(self):
         try:
@@ -538,11 +536,11 @@ class SrRobotCommander(object):
         current = self.get_current_state_bounded()
 
         joint_trajectory = JointTrajectory()
-        joint_names = list(current.keys())
+        joint_names = current.keys()
         joint_trajectory.joint_names = joint_names
 
         start = JointTrajectoryPoint()
-        start.positions = list(current.values())
+        start.positions = current.values()
         start.time_from_start = rospy.Duration.from_sec(0.001)
         joint_trajectory.points.append(start)
 
@@ -595,12 +593,12 @@ class SrRobotCommander(object):
         current = self.get_current_state_bounded()
 
         trajectory_point = JointTrajectoryPoint()
-        trajectory_point.positions = list(current.values())
+        trajectory_point.positions = current.values()
         trajectory_point.time_from_start = rospy.Duration.from_sec(0.1)
 
         trajectory = JointTrajectory()
         trajectory.points.append(trajectory_point)
-        trajectory.joint_names = list(current.keys())
+        trajectory.joint_names = current.keys()
 
         self.run_joint_trajectory_unsafe(trajectory)
 
@@ -615,7 +613,7 @@ class SrRobotCommander(object):
                             - pause_time -> time to wait at this wp
         """
         joint_trajectory = self.make_named_trajectory(trajectory)
-        if type(joint_trajectory) == JointTrajectory:
+        if joint_trajectory is not None:
             self.run_joint_trajectory_unsafe(joint_trajectory, wait)
 
     def run_named_trajectory(self, trajectory):
@@ -629,7 +627,7 @@ class SrRobotCommander(object):
                           - pause_time -> time to wait at this wp
         """
         joint_trajectory = self.make_named_trajectory(trajectory)
-        if type(joint_trajectory) == JointTrajectory:
+        if joint_trajectory is not None:
             self.run_joint_trajectory(joint_trajectory)
 
     def move_to_position_target(self, xyz, end_effector_link="", wait=True):
@@ -656,7 +654,7 @@ class SrRobotCommander(object):
         else:
             self._move_group_commander.set_start_state(custom_start_state)
         self._move_group_commander.set_position_target(xyz, end_effector_link)
-        self.__plan = self._move_group_commander.plan()[1]
+        self.__plan = self._move_group_commander.plan()
 
     def move_to_pose_target(self, pose, end_effector_link="", wait=True):
         """
@@ -690,7 +688,7 @@ class SrRobotCommander(object):
             self._move_group_commander.set_joint_value_target(pose, end_effector_link)
         else:
             self._move_group_commander.set_pose_target(pose, end_effector_link)
-        self.__plan = self._move_group_commander.plan()[1]
+        self.__plan = self._move_group_commander.plan()
         return self.__plan
 
     def _joint_states_callback(self, joint_state):
