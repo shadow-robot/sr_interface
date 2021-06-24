@@ -83,7 +83,16 @@ void UnderactuationErrorReporter::update_kinematic_model(
     {
       continue;
     }
-    std::vector<double> positions = {0, 0, j2->second, j1->second};
+    // Set all joint angles to 0
+    std::vector<double> positions = {0, 0};
+    if (finger.first == "lf")
+    {
+      // Little finger has 5 joints instead of 4
+      positions.push_back(0);
+    }
+    // except for underactuated joins which we want to measure
+    positions.push_back(j2->second);
+    positions.push_back(j1->second);
     robot_state_->setJointGroupPositions(side + finger.second, positions);
 
     std::string link_name = side + finger.first + "tip";
