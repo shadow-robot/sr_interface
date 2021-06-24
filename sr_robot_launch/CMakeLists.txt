@@ -4,7 +4,7 @@ project(sr_robot_launch)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS rospy)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -13,7 +13,7 @@ find_package(catkin REQUIRED)
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
-# catkin_python_setup()
+catkin_python_setup()
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -192,6 +192,9 @@ if (CATKIN_ENABLE_TESTING)
     add_rostest(test/test_ur5_left.test ARGS scene:=true)
     add_rostest(test/test_bimanual_hand_and_arm.test)
     add_rostest(test/test_bimanual_hand_and_arm.test ARGS scene:=true)
+    
+#ARM UNLOCK/BRAKE/RELEASE TESTS
+    add_rostest(test/test_sr_ur_unlock.test)
 
 #HAND AND ARM TESTS - GENERIC LAUNCH FILE
     add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=left_srhand_lite_ur5e.urdf.xacro robot_config_file:=left_sh_lite_ur5e.yaml side:=left hand_type:=hand_lite robot_model:=ur5e)
