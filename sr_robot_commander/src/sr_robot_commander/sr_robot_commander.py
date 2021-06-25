@@ -115,14 +115,14 @@ class SrRobotCommander(object):
             for k in required_keys:
                 if "|" in k:
                     optional = k.split("|")
-                    if len(set(optional).intersection(set(trajectory[0].keys())))==0:
+                    if len(set(optional).intersection(set(trajectory[0].keys()))) == 0:
                         error_message = "Trajectory is missing one of {} keys".format(optional)
                 else:
                     if k not in list(trajectory[0].keys()):
                         error_message = "Trajectory waypoint missing {}".format(k)
-        if error_message != None:
+        if error_message is not None:
             print(error_message)
-        return error_message == None
+        return error_message is None
 
     def set_planner_id(self, planner_id):
         """
@@ -553,9 +553,9 @@ class SrRobotCommander(object):
                           - degrees -> set to true if joint_angles is specified in degrees. Assumed false if absent.
         """
 
-        if not self._is_trajectory_valid(trajectory, ["name|joint_angles", "interpolate_time", "pause_time"])
+        if not self._is_trajectory_valid(trajectory, ["name|joint_angles", "interpolate_time", "pause_time"]):
             return
-    
+
         current = self.get_current_state_bounded()
 
         joint_trajectory = JointTrajectory()
@@ -569,7 +569,7 @@ class SrRobotCommander(object):
 
         time_from_start = 0.0
 
-        if not self._is_trajectory_valid(trajectory, ['interpolate_time', 'pause_time'])
+        if not self._is_trajectory_valid(trajectory, ['interpolate_time', 'pause_time']):
             return
 
         for wp in trajectory:
@@ -639,8 +639,8 @@ class SrRobotCommander(object):
                             - pause_time -> time to wait at this wp
         """
 
-        if self._is_trajectory_valid(trajectory, ['name', 'interpolate_time', 'pause_time'])
-            joint_trajectory = self.make_named_trajectory(trajectory)            
+        if self._is_trajectory_valid(trajectory, ['name', 'interpolate_time', 'pause_time']):
+            joint_trajectory = self.make_named_trajectory(trajectory)
             self.run_joint_trajectory_unsafe(joint_trajectory, wait)
 
     def run_named_trajectory(self, trajectory):
@@ -653,8 +653,8 @@ class SrRobotCommander(object):
                           - interpolate_time -> time to move from last wp
                           - pause_time -> time to wait at this wp
         """
-        if self._is_trajectory_valid(trajectory, ['name', 'interpolate_time', 'pause_time'])
-            joint_trajectory = self.make_named_trajectory(trajectory)  
+        if self._is_trajectory_valid(trajectory, ['name', 'interpolate_time', 'pause_time']):
+            joint_trajectory = self.make_named_trajectory(trajectory)
             self.run_joint_trajectory(joint_trajectory)
 
     def move_to_position_target(self, xyz, end_effector_link="", wait=True):
