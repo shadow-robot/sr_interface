@@ -21,6 +21,9 @@
        otherwise the robot description is loaded at lower level -->
   <arg name="load_robot_description_at_lower_level" default="$(eval not arm_ctrl)"/>
 
+  <!-- Whether to include hand wrist in arm controller. -->
+  <arg name="include_wrist_in_arm_controller" default="false"/>
+
   <!-- HANDS CONFIG-->
   <arg name="rh_serial" default="1370"/>
   <arg name="lh_serial" default="2346"/>
@@ -31,6 +34,8 @@
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
   <!-- The control mode PWM (true) or torque (false) -->
   <arg name="pwm_control" default="true"/>
+  <!-- Set to true if you want to use hybrid controller -->
+  <arg name="hybrid_controller" default="false"/>
   <arg name="hand_trajectory" unless="$(eval hands == 'none')" default="true"/>
   <arg name="hand_trajectory" if="$(eval hands == 'none')" default="false"/>
 
@@ -86,6 +91,11 @@
     <param name="arm_y_separation" value="$(arg arm_y_separation)"/>
   </node>
 
+  <!-- Default hand controller groups -->
+  <arg if="$(arg hybrid_controller)" name="hand_controller_group" default="hybrid"/>
+  <arg if="$(eval hand_trajectory and not hybrid_controller)" name="hand_controller_group" default="trajectory"/>
+  <arg if="$(eval not hand_trajectory and not hybrid_controller)" name="hand_controller_group" default="position"/>
+
   <!-- Controller -->
   <group unless="$(eval hands == 'none')">
     <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
@@ -109,9 +119,12 @@
       <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
     </include>
+    <rosparam command="load" file="$(find sr_robot_launch)/config/rh_trajectory_controller.yaml" unless="$(arg include_wrist_in_arm_controller)"/>
+    <rosparam command="load" file="$(find sr_robot_launch)/config/lh_trajectory_controller.yaml" unless="$(arg include_wrist_in_arm_controller)"/>
+    <rosparam command="load" file="$(find sr_robot_launch)/config/rh_trajectory_controller_no_wrist.yaml" if="$(arg include_wrist_in_arm_controller)"/>
+    <rosparam command="load" file="$(find sr_robot_launch)/config/lh_trajectory_controller_no_wrist.yaml" if="$(arg include_wrist_in_arm_controller)"/>
     <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="controller_spawner.py" output="screen">
-      <param if="$(arg hand_trajectory)" name="controller_group" value="trajectory"/>
-      <param unless="$(arg hand_trajectory)" name="controller_group" value="position"/>
+      <param name="controller_group" value="$(arg hand_controller_group)"/>
       <param name="wait_for" value="calibrated"/>
     </node>
   </group>
@@ -173,8 +186,10 @@
 
   <!-- Trajectory mode if arms are being used -->
   <group if="$(eval arg('arm_trajectory') and arg('arm_ctrl'))">
-    <rosparam file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml" command="load"/>
-    <rosparam file="$(find sr_robot_launch)/config/la_trajectory_controller.yaml" command="load"/>
+    <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller.yaml" unless="$(arg include_wrist_in_arm_controller)"/>
+    <rosparam command="load" file="$(find sr_robot_launch)/config/la_trajectory_controller.yaml" unless="$(arg include_wrist_in_arm_controller)"/>
+    <rosparam command="load" file="$(find sr_robot_launch)/config/ra_trajectory_controller_wrist.yaml" if="$(arg include_wrist_in_arm_controller)"/>
+    <rosparam command="load" file="$(find sr_robot_launch)/config/la_trajectory_controller_wrist.yaml" if="$(arg include_wrist_in_arm_controller)"/>
     <node name="ra_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
           args="--wait-for=/ra_sr_ur_robot_hw/robot_program_running ra_trajectory_controller"/>
     <node name="la_arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"

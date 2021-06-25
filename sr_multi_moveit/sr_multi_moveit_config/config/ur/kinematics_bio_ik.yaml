@@ -1,0 +1,5 @@
+manipulator:
+  kinematics_solver: bio_ik/BioIKKinematicsPlugin
+  kinematics_solver_search_resolution: 0.005
+  kinematics_solver_timeout: 2.0
+  mode: gd_c
