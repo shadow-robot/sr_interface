@@ -108,21 +108,24 @@ class SrRobotCommander(object):
         threading.Thread(None, rospy.spin)
 
     def _is_trajectory_valid(trajectory, required_keys):
-        error_message = None
-        if type(trajectory) != list:
-            error_message = "Trajectory is not a list of waypoints"
-        else:
-            for k in required_keys:
-                if "|" in k:
-                    optional = k.split("|")
-                    if len(set(optional).intersection(set(trajectory[0].keys()))) == 0:
-                        error_message = "Trajectory is missing one of {} keys".format(optional)
-                else:
-                    if k not in list(trajectory[0].keys()):
-                        error_message = "Trajectory waypoint missing {}".format(k)
-        if error_message is not None:
-            print(error_message)
-        return error_message is None
+
+        if type(trajectory) != list:            
+            rospy.logerr("Trajectory is not a list of waypoints")
+            return False
+
+        no_error = True
+        for k in required_keys:
+            if "|" in k:
+                optional = k.split("|")
+                if len(set(optional).intersection(set(trajectory[0].keys()))) == 0:
+                    rospy.logerr("Trajectory is missing both of {} keys".format(optional))
+                    no_error = False
+            else:
+                if k not in list(trajectory[0].keys()):
+                    rospy.logerr("Trajectory waypoint missing {}".format(k))
+                    no_error = False
+
+        return no_error
 
     def set_planner_id(self, planner_id):
         """
@@ -568,9 +571,6 @@ class SrRobotCommander(object):
         joint_trajectory.points.append(start)
 
         time_from_start = 0.0
-
-        if not self._is_trajectory_valid(trajectory, ['interpolate_time', 'pause_time']):
-            return
 
         for wp in trajectory:
 
