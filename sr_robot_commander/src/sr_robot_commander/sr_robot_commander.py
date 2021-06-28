@@ -108,7 +108,7 @@ class SrRobotCommander(object):
         threading.Thread(None, rospy.spin)
 
     def _is_trajectory_valid(trajectory, required_keys):
-        if type(trajectory) != list:            
+        if type(trajectory) != list:
             rospy.logerr("Trajectory is not a list of waypoints")
             return False
 
