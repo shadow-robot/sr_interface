@@ -55,7 +55,7 @@ class SrHandCommander(SrRobotCommander):
 
         elif hand_parameters is not None:
             # extracting the name and prefix from the hand finder parameters
-            if len(hand_parameters.mapping) is 0:
+            if len(hand_parameters.mapping) == 0:
                 rospy.logfatal("No hand detected")
                 raise SrRobotCommanderException("No hand found.")
 
