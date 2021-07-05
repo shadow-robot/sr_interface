@@ -107,7 +107,7 @@ class SrRobotCommander(object):
 
         threading.Thread(None, rospy.spin)
 
-    def _is_trajectory_valid(trajectory, required_keys):
+    def _is_trajectory_valid(self, trajectory, required_keys):
         if type(trajectory) != list:
             rospy.logerr("Trajectory is not a list of waypoints")
             return False
@@ -551,11 +551,12 @@ class SrRobotCommander(object):
                           - name -> the name of the way point
                           - joint_angles -> a dict of joint names and angles
                           - interpolate_time -> time to move from last wp
+                            OPTIONAL:
                           - pause_time -> time to wait at this wp
                           - degrees -> set to true if joint_angles is specified in degrees. Assumed false if absent.
         """
 
-        if not self._is_trajectory_valid(trajectory, ["name|joint_angles", "interpolate_time", "pause_time"]):
+        if not self._is_trajectory_valid(trajectory, ["name|joint_angles", "interpolate_time"]):
             return
 
         current = self.get_current_state_bounded()
@@ -635,10 +636,11 @@ class SrRobotCommander(object):
                             the following elements:
                             - name -> the name of the way point
                             - interpolate_time -> time to move from last wp
+                              OPTIONAL:
                             - pause_time -> time to wait at this wp
         """
 
-        if self._is_trajectory_valid(trajectory, ['name', 'interpolate_time', 'pause_time']):
+        if self._is_trajectory_valid(trajectory, ['name|joint_angles', 'interpolate_time']):
             joint_trajectory = self.make_named_trajectory(trajectory)
             self.run_joint_trajectory_unsafe(joint_trajectory, wait)
 
@@ -650,9 +652,10 @@ class SrRobotCommander(object):
                             the following elements:
                           - name -> the name of the way point
                           - interpolate_time -> time to move from last wp
+                            OPTIONAL:
                           - pause_time -> time to wait at this wp
         """
-        if self._is_trajectory_valid(trajectory, ['name', 'interpolate_time', 'pause_time']):
+        if self._is_trajectory_valid(trajectory, ['name|joint_angles', 'interpolate_time']):
             joint_trajectory = self.make_named_trajectory(trajectory)
             self.run_joint_trajectory(joint_trajectory)
 
