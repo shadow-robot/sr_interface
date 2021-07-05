@@ -551,6 +551,7 @@ class SrRobotCommander(object):
                           - name -> the name of the way point
                           - joint_angles -> a dict of joint names and angles
                           - interpolate_time -> time to move from last wp
+                            OPTIONAL:
                           - pause_time -> time to wait at this wp
                           - degrees -> set to true if joint_angles is specified in degrees. Assumed false if absent.
         """
@@ -635,6 +636,7 @@ class SrRobotCommander(object):
                             the following elements:
                             - name -> the name of the way point
                             - interpolate_time -> time to move from last wp
+                              OPTIONAL:
                             - pause_time -> time to wait at this wp
         """
 
@@ -650,6 +652,7 @@ class SrRobotCommander(object):
                             the following elements:
                           - name -> the name of the way point
                           - interpolate_time -> time to move from last wp
+                            OPTIONAL:
                           - pause_time -> time to wait at this wp
         """
         if self._is_trajectory_valid(trajectory, ['name|joint_angles', 'interpolate_time']):
