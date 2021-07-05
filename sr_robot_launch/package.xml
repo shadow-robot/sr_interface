@@ -26,7 +26,6 @@
   <run_depend>ros_control_robot</run_depend>
   <run_depend>sr_utilities_common</run_depend>
   <test_depend>rostest</test_depend>
-  <build_depend>mongodb-server-core</build_depend>
-  <build_depend>ros-noetic-warehouse-ros</build_depend>
-  <build_depend>ros-noetic-warehouse-ros-mongo</build_depend>
+  <test_depend>warehouse_ros</test_depend>
+  <test_depend>warehouse_ros_mongo</test_depend>
 </package>
