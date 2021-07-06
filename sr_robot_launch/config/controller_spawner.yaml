@@ -149,7 +149,8 @@ controller_groups:
       lh_LFJ2:
         - sh_lh_lfj0_position_controller
 
-# its also possible to load yaml files from here, like below...
-# controller_configs:
-#   rh:
-#     rh_trajectory_controller: rh_trajectory_controller.yaml
+controller_configs:
+  rh:
+    rh_trajectory_controller: rh_trajectory_controller.yaml
+  lh:
+    lh_trajectory_controller: lh_trajectory_controller.yaml

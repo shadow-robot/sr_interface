@@ -23,8 +23,6 @@
   <arg name="arm_ctrl" default="$(arg arm)"/>
   <!-- Whether to run hand controllers. -->
   <arg name="hand_ctrl" default="$(arg hand)"/>
-  <!-- Whether to include hand wrist in arm controller. -->
-  <arg name="include_wrist_in_arm_controller" default="false"/>
 
   <!-- Robot description -->
   <arg if="$(eval arg('hand') and arg('arm'))" name="robot_description" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_ur10_bt_sp_biotacs.urdf.xacro"/>
@@ -122,8 +120,6 @@
       <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
       <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
     </include>
-    <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg hand_id)_trajectory_controller.yaml" unless="$(arg include_wrist_in_arm_controller)"/>
-    <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg hand_id)_trajectory_controller_no_wrist.yaml" if="$(arg include_wrist_in_arm_controller)"/>
     <node if="$(arg hand_ctrl)" name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
       <param name="controller_group" value="$(arg hand_controller_group)"/>
       <param name="wait_for" value ="calibrated"/>
@@ -172,8 +168,7 @@
   <!-- Trajectory mode -->
   <group if="$(arg arm_ctrl)">
     <group if="$(arg arm_trajectory)">
-      <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller.yaml" unless="$(arg include_wrist_in_arm_controller)"/>
-      <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller_wrist.yaml" if="$(arg include_wrist_in_arm_controller)"/>
+      <rosparam command="load" file="$(find sr_robot_launch)/config/$(arg arm_prefix)_trajectory_controller.yaml"/>
       <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen"
             args="--wait-for=/$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running $(arg arm_prefix)_trajectory_controller"/>
     </group>

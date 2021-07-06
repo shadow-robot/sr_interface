@@ -106,7 +106,6 @@
     </node>
     <!-- Controller -->
     <group if="$(arg hand_ctrl)">
-      <rosparam file="$(find sr_robot_launch)/config/$(arg hand_id)_trajectory_controller.yaml" command="load"/>
       <node name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
         <param name="controller_group" value="$(arg hand_controller_group)"/>
       </node>
