@@ -2,7 +2,7 @@
 
   <arg name="pipeline" default="ompl"/>
   <!-- GDB Debug Option -->
-  <arg name="debug" default="false" />
+  <arg name="debug" default="true" />
   <arg unless="$(arg debug)" name="launch_prefix" value="" />
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
@@ -17,6 +17,17 @@
   <arg name="max_safe_path_cost" default="1"/>
   <arg name="jiggle_fraction" default="0.05" />
   <arg name="publish_monitored_planning_scene" default="true"/>
+  
+  <!-- MoveGroup capabilities to load -->
+  <arg name="move_group_capabilities" value="move_group/MoveGroupCartesianPathService
+                                             move_group/MoveGroupExecuteTrajectoryAction
+                                             move_group/MoveGroupKinematicsService
+				                                     move_group/MoveGroupMoveAction
+				                                     move_group/MoveGroupPickPlaceAction
+				                                     move_group/MoveGroupPlanService
+                                             move_group/MoveGroupQueryPlannersService
+                                             move_group/MoveGroupStateValidationService
+                                             move_group/MoveGroupGetPlanningSceneService"/>
 
   <!-- ik solver path -->
   <arg name="hand_ik_solver_path" default="$(find sr_moveit_hand_config)/config/kinematics_template.yaml"/>
@@ -45,9 +56,21 @@
 
   <!-- Start the actual move_group node/action server -->
   <node name="conditional_delayed_rostool_move_group" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
-    <param name="package_name" value="sr_moveit_hand_config" />
-    <param name="executable_name" value="move_group_actual.launch" />
+    <!-- Set the display variable, in case OpenGL code is used internally -->
+    <env name="DISPLAY" value="$(optenv DISPLAY :0)" />
+
+    <param name="package_name" value="moveit_ros_move_group" />
+    <param name="executable_name" value="move_group" />
     <rosparam param="params_list">[/move_group/controller_list]</rosparam>
+    <param name="launch_args_list" value="_allow_trajectory_execution:=$(arg allow_trajectory_execution)
+                                          _max_safe_path_cost:=$(arg max_safe_path_cost)
+                                          _jiggle_fraction:=$(arg jiggle_fraction)
+                                          _capabilities:='$(arg move_group_capabilities)'
+				                                  _planning_scene_monitor/publish_planning_scene:=$(arg publish_monitored_planning_scene)
+                                          _planning_scene_monitor/publish_geometry_updates:=$(arg publish_monitored_planning_scene)
+                                          _planning_scene_monitor/publish_state_updates:=$(arg publish_monitored_planning_scene)
+                                          _planning_scene_monitor/publish_transforms_updates:=$(arg publish_monitored_planning_scene)"/>
+    <param name="launch_prefix" value="$(arg launch_prefix)" />
   </node>
-  
+
 </launch>

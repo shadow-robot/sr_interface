@@ -56,7 +56,7 @@
   <node name="conditional_delayed_rostool_action_multi" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
     <param name="package_name" value="sr_multi_moveit_config" />
     <param name="executable_name" value="move_group_action_server.launch" />
-    <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+    <rosparam param="params_list">[/robot_description, /robot_description_semantic, /move_group/controller_list]</rosparam>
     <param name="launch_args_list" value="allow_trajectory_execution:=$(arg allow_trajectory_execution)
     max_safe_path_cost:=$(arg max_safe_path_cost)
     jiggle_fraction:=$(arg jiggle_fraction)
