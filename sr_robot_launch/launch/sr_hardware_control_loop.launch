@@ -27,7 +27,7 @@
   <arg name="include_wrist_in_arm_controller" default="false"/>
 
   <!-- Robot description -->
-  <arg if="$(eval arg('hand') and arg('arm'))" name="robot_description" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_ur10_bt_sp_biotacs.urdf.xacro"/>
+  <arg if="$(eval arg('hand') and arg('arm'))" name="robot_description" default="$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model)_bt_sp_biotacs.urdf.xacro"/>
   <arg if="$(eval arg('hand') and arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
   <arg if="$(eval not arg('hand') and arg('arm'))" name="robot_description" default="$(find sr_box_ur10_moveit_config)/config/$(arg side_letter)a_$(arg robot_model)_with_box.urdf.xacro"/>
   <arg if="$(eval not arg('hand') and arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
