@@ -94,8 +94,6 @@
       <param name="tf_prefix" type="string" value="" />
     </node>
     <group if="$(arg hand_ctrl)">
-        <rosparam file="$(find sr_robot_launch)/config/lh_trajectory_controller.yaml" command="load"/>
-        <rosparam file="$(find sr_robot_launch)/config/rh_trajectory_controller.yaml" command="load"/>
         <node name="bimanual_trajectory_controller" pkg="sr_utilities" type="controller_spawner.py" output="screen">
           <param if="$(arg hand_trajectory)" name="controller_group" value="trajectory"/>
           <param unless="$(arg hand_trajectory)" name="controller_group" value="position"/>
