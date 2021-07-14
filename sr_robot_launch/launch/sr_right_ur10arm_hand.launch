@@ -65,7 +65,7 @@
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
 
   <!-- Whether to include hand wrist in arm controller. -->
-  <arg name="include_wrist_in_arm_controller" default="false"/>
+  <arg name="include_wrist_in_arm_controller" default="true"/>
 
   <include file="$(find sr_robot_launch)/launch/sr_ur_arm_hand.launch">
     <arg name="sim" value="$(arg sim)"/>

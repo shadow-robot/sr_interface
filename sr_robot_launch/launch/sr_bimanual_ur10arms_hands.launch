@@ -60,7 +60,7 @@
   <arg name="hand_type" default="hand_e_plus"/>
 
   <!-- Whether to include hand wrist in arm controller. -->
-  <arg name="include_wrist_in_arm_controller" default="false"/>
+  <arg name="include_wrist_in_arm_controller" default="true"/>
 
   <!-- ARMS CONFIG-->
   <arg name="arm_1_z" default="0.7521" if="$(arg scene)"/>
