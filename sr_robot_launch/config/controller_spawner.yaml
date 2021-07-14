@@ -1,8 +1,3 @@
-controller_configs:
-  rh:
-    rh_trajectory_controller: rh_trajectory_controller.yaml
-  lh:
-    lh_trajectory_controller: lh_trajectory_controller.yaml
 controller_groups:
   effort:
     rh:
@@ -153,3 +148,9 @@ controller_groups:
         - sh_lh_lfj0_position_controller
       lh_LFJ2:
         - sh_lh_lfj0_position_controller
+
+controller_configs:
+  rh:
+    rh_trajectory_controller: rh_trajectory_controller.yaml
+  lh:
+    lh_trajectory_controller: lh_trajectory_controller.yaml
