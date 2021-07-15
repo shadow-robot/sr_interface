@@ -19,7 +19,7 @@
 
   <!-- If the arm is available the automatic calibration script will load the robot_description,
        otherwise the robot description is loaded at lower level -->
-  <arg name="load_robot_description_at_lower_level" default="$(eval not arm_ctrl)"/>
+  <arg name="load_robot_description_at_lower_level" default="false"/>
 
   <!-- HANDS CONFIG-->
   <arg name="rh_serial" default="1370"/>
@@ -79,7 +79,7 @@
   <include file="$(find sr_robot_launch)/launch/bimanual_controller_stopper.launch"/>
 
   <!-- Constructs robot description string and loads it -->
-  <node unless="$(arg load_robot_description_at_lower_level)" name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description" output="screen">
+  <node if="$(arg arm_ctrl)" name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description" output="screen">
     <param name="arm_type" value="$(arg robot_model)"/>
     <param name="robot_description_file" value="$(arg robot_description)"/>
     <param name="arm_1_z" value="$(arg arm_1_z)"/>
@@ -87,6 +87,9 @@
     <param name="arm_x_separation" value="$(arg arm_x_separation)"/>
     <param name="arm_y_separation" value="$(arg arm_y_separation)"/>
   </node>
+
+  <!-- Loads the robot description unless requested to be done at lower lever -->
+  <param if="$(eval not arg('arm_ctrl') and not arg('load_robot_description_at_lower_level'))" name="robot_description" command="$(arg load_robot_description_command)"/>
 
   <!-- Default hand controller groups -->
   <arg if="$(arg hybrid_controller)" name="hand_controller_group" default="hybrid"/>

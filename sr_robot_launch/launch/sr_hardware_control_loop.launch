@@ -12,11 +12,8 @@
 
   <!-- Whether there is an arm. -->
   <arg name="arm" default="true"/>
-  
-  <!-- If the arm is available the automatic calibration script will load the robot_description,
-       otherwise the robot description is loaded at lower level -->
-  <arg name="load_robot_description_at_lower_level" value="$(eval not arm)"/>
-
+  <!-- Whether to load robot description at lower level. -->
+  <arg name="load_robot_description_at_lower_level" value="false"/>
   <!-- Whether there is a hand. -->
   <arg name="hand" default="true"/>
   <!-- Whether to run arm controllers. -->
@@ -33,17 +30,18 @@
   <arg if="$(eval arg('hand') and arg('hand_id')=='lh' and not arg('arm'))" name="robot_description" default="$(find sr_description)/robots/shadowhand_left_motor_plus.urdf.xacro"/>
   <arg if="$(eval arg('hand') and not arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh.yaml"/>
 
-  <!-- Robot config -->
+  <arg name="load_robot_description_command" default="xacro $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation) kinematics_config:=$(arg kinematics_config)"/>
+
   <!-- HANDS CONFIG-->
   <arg name="hand_serial" default="1082"/>
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v4.yaml"/>
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT enp2s0)"/>
   <arg name="pwm_control" default="true"/>
+  <arg name="hand_trajectory" default="true"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
   <!-- Set to true if you want to use hybrid controller -->
   <arg name="hybrid_controller" default="false"/>
-  <arg name="hand_trajectory" default="true"/>
 
   <!-- ARMS CONFIG-->
   <arg name="initial_z" if="$(arg arm)" default="0.7551"/>
@@ -64,7 +62,6 @@
   <arg name="kinematics_config" if="$(eval robot_model[-1] == 'e')" default="$(find ur_e_description)/config/$(arg robot_model)_default.yaml"/>
   <arg name="kinematics_config" if="$(eval not robot_model[-1] == 'e')" default="$(find ur_description)/config/$(arg robot_model)_default.yaml"/>
   <arg name="urcap_program_name" default="external_ctrl.urp"/>
-  <arg name="load_robot_description_command" default="xacro $(arg robot_description) prefix:=$(arg hand_id)_ initial_z:=$(arg initial_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation) kinematics_config:=$(arg kinematics_config)"/>
 
   <node pkg="rosservice" type="rosservice" name="set_speed_scale" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg arm_speed_scale)'"/>
   <node pkg="rosservice" type="rosservice" name="set_payload" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_payload '{payload: $(arg arm_payload_mass), center_of_gravity: $(arg arm_payload_cog)}'"/>
@@ -83,7 +80,7 @@
   </include>
 
   <!-- Constructs robot description string and loads it -->
-  <node unless="$(arg load_robot_description_at_lower_level)" name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description" output="screen">
+  <node if="$(arg arm)" name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description" output="screen">
     <param name="arm_type" value="$(arg robot_model)"/>
     <param name="robot_description_file" value="$(arg robot_description)"/>
     <param name="arm_x_separation" value="$(arg arm_x_separation)"/>
@@ -91,6 +88,9 @@
     <param name="initial_z" value="$(arg initial_z)"/>
     <param name="prefix" value="$(arg hand_id)_"/>
   </node>
+
+  <!-- Loads the robot description unless requested to be done at lower lever -->
+  <param if="$(eval not arg('arm') and not arg('load_robot_description_at_lower_level'))" name="robot_description" command="$(arg load_robot_description_command)"/>
   
   <!-- Default hand controller groups -->
   <arg if="$(arg grasp_controller)" name="hand_controller_group" default="grasp"/>
