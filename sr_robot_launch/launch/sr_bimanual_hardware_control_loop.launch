@@ -5,6 +5,9 @@
   <!-- Specify if the system has "both" hands, only "right", only "left", or "none"-->
   <arg name="hands" default="both"/>
   <arg name="arm_ctrl" default="true"/>	
+  <!-- Whether to load robot description at lower level. -->
+  <arg name="load_robot_description_at_lower_level" default="false"/>
+
   <!-- ROBOT CONFIG-->
   <arg name="robot_model" default="ur10e"/>
   <!-- HANDS AND ARMS -->
@@ -17,9 +20,7 @@
   <arg name="robot_description" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="'$(find sr_description)/robots/bimanual_shadowhand_motor_plus.urdf.xacro'"/>
   <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
 
-  <!-- If the arm is available the automatic calibration script will load the robot_description,
-       otherwise the robot description is loaded at lower level -->
-  <arg name="load_robot_description_at_lower_level" default="false"/>
+  <arg name="load_robot_description_command" default="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
 
   <!-- HANDS CONFIG-->
   <arg name="rh_serial" default="1370"/>
@@ -58,8 +59,6 @@
   <arg unless="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_mass" default="0.0"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
-
-  <arg name="load_robot_description_command" default="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
 
   <node pkg="rosservice" type="rosservice" name="set_right_speed_scale" args="call --wait /ra_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg right_arm_speed_scale)'"/>
   <node pkg="rosservice" type="rosservice" name="set_left_speed_scale" args="call --wait /la_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg left_arm_speed_scale)'"/>
