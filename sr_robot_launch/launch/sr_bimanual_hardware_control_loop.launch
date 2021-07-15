@@ -5,8 +5,6 @@
   <!-- Specify if the system has "both" hands, only "right", only "left", or "none"-->
   <arg name="hands" default="both"/>
   <arg name="arm_ctrl" default="true"/>	
-  <!-- Whether to load robot description at lower level. -->
-  <arg name="load_robot_description_at_lower_level" default="false"/>
 
   <!-- ROBOT CONFIG-->
   <arg name="robot_model" default="ur10e"/>
@@ -88,7 +86,7 @@
   </node>
 
   <!-- Loads the robot description unless requested to be done at lower lever -->
-  <param if="$(eval not arg('arm_ctrl') and not arg('load_robot_description_at_lower_level'))" name="robot_description" command="$(arg load_robot_description_command)"/>
+  <param unless="$(arg arm_ctrl)" name="robot_description" command="$(arg load_robot_description_command)"/>
 
   <!-- Default hand controller groups -->
   <arg if="$(arg hybrid_controller)" name="hand_controller_group" default="hybrid"/>
@@ -102,9 +100,8 @@
     <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
     <include file="$(find sr_edc_launch)/sr_edc_bimanual_ros_control.launch">
       <arg name="define_robot_hardware" value="false"/>
+      <arg name="load_robot_description" value="false"/>
       <arg name="debug" value="$(arg debug)"/>
-      <arg name="load_robot_description" value="$(arg load_robot_description_at_lower_level)"/>
-      <arg name="load_robot_description_command" value="$(arg load_robot_description_command)"/>
       <arg name="rh_serial" value="$(arg rh_serial)"/>
       <arg name="lh_serial" value="$(arg lh_serial)"/>
       <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
