@@ -11,7 +11,7 @@ import rospy
 import rostest
 from unittest import TestCase
 from sr_robot_commander.sr_robot_commander import SrRobotCommander, MoveGroupCommander, PlanningSceneInterface
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pose, PoseStamped
 from moveit_msgs.msg import RobotState, RobotTrajectory
 from moveit_msgs.srv import GetPositionFK
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
@@ -29,19 +29,16 @@ class TestSrRobotCommander(TestCase):
         cls.robot_commander = SrRobotCommander("right_arm")
 
     def test_mvgr_get_and_set_planner_id(self):
-        planner_list = ["BKPIECEkConfigDefault", "ESTkConfigDefault", "KPIECEkConfigDefault",
-                        "LBKPIECEkConfigDefault", "PRMkConfigDefault", "RRTkConfigDefault",
-                        "SBLkConfigDefault", "PRMstarkConfigDefault", "RRTstarkConfigDefault"]
-
-        for id in planner_list:
-            self.robot_commander.set_planner_id(id)
-            self.assertTrue(id == self.robot_commander._move_group_commander.get_planner_id())
+        planner_id = "BKPIECEkConfigDefault"
+        self.robot_commander.set_planner_id(planner_id)
+        #st = planner_id + " " + str(self.robot_commander._move_group_commander.get_planner_id())
+        #rospy.logwarn(st)
+        self.assertEqual(planner_id, self.robot_commander._move_group_commander.get_planner_id())
 
     def test_mvgr_get_and_set_planning_time(self):
-        time_test_values = [1, 2, 3, 4, 5]
-        for time in time_test_values:
-            self.robot_commander.set_planning_time(time)
-            self.assertTrue(time == self.robot_commander._move_group_commander.get_planning_time())
+        time_test_value = 3
+        self.robot_commander.set_planning_time(time_test_value)
+        self.assertEqual(time_test_value, self.robot_commander._move_group_commander.get_planning_time())
 
     def test_mvgr_set_num_planning_attempts(self):
         raised = False
@@ -64,7 +61,9 @@ class TestSrRobotCommander(TestCase):
         for key, value in state.items():
             rs.joint_state.name.append(key)
             rs.joint_state.position.append(value)
-        pose = self.robot_commander.get_end_effector_pose_from_state(rs)
+
+        pose = self.robot_commander.get_end_effector_pose_from_state(rs)        
+        self.assertIsInstance(pose, PoseStamped)
 
     def test_mvgr_get_planning_frame(self):
         raised = False
@@ -77,10 +76,10 @@ class TestSrRobotCommander(TestCase):
     def test_mvgr_set_and_get_pose_reference_frame(self):
         reference_frame = "world"
         self.robot_commander._move_group_commander.set_pose_reference_frame(reference_frame)
-        self.assertTrue(self.robot_commander._move_group_commander.get_pose_reference_frame() == reference_frame)
+        self.assertEqual(self.robot_commander._move_group_commander.get_pose_reference_frame(), reference_frame)
 
     def test_get_group_name(self):
-        self.assertTrue(self.robot_commander._name == self.robot_commander.get_group_name())
+        self.assertEqual(self.robot_commander._name, self.robot_commander.get_group_name())
 
     def test_refresh_named_targets(self):
         self.robot_commander.refresh_named_targets()
@@ -89,36 +88,16 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition_1 and condition_2)
 
     def test_set_max_velocity_scaling_factor__range_ok(self):
-        raised = False
-        try:
-            self.robot_commander.set_max_velocity_scaling_factor(0.2)
-        except Exception:
-            raised = True
-        self.assertFalse(raised)
+        self.robot_commander.set_max_velocity_scaling_factor(0.2)
 
     def test_set_max_velocity_scaling_factor__range_not_ok(self):
-        raised = False
-        try:
-            self.robot_commander.set_max_velocity_scaling_factor(3)
-        except Exception:
-            raised = True
-        self.assertTrue(raised)
+        self.assertRaises(MoveItCommanderException, self.robot_commander.set_max_velocity_scaling_factor, 3)
 
     def test_set_max_acceleration_scaling_factor__range_ok(self):
-        raised = False
-        try:
-            self.robot_commander.set_max_acceleration_scaling_factor(0.2)
-        except Exception:
-            raised = True
-        self.assertFalse(raised)
+        self.robot_commander.set_max_acceleration_scaling_factor(0.2)
 
     def test_set_max_acceleration_scaling_factor__range_not_ok(self):
-        raised = False
-        try:
-            self.robot_commander.set_max_acceleration_scaling_factor(3)
-        except Exception:
-            raised = True
-        self.assertTrue(raised)
+        self.assertRaises(MoveItCommanderException, self.robot_commander.set_max_acceleration_scaling_factor, 3)
 
     def test_allow_looking(self):
         self.robot_commander.allow_looking(True)
@@ -128,12 +107,27 @@ class TestSrRobotCommander(TestCase):
 
     def test_plan_to_joint_value_target(self):
         arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
-                                'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                                'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
-        self.robot_commander.plan_to_joint_value_target(arm_home_joints_goal,
-                                                        angle_degrees=False, custom_start_state=None)
-        self.assertTrue(type(self.robot_commander._SrRobotCommander__plan) == RobotTrajectory)
+                                'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.73,
+                                'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 0.00}
+        plan  = self.robot_commander.plan_to_joint_value_target(arm_home_joints_goal,
+                                                             angle_degrees=False, custom_start_state=None)
+        
+        last_point = list(plan.joint_trajectory.points[-1].positions)
+        for i in range(0,len(last_point)):
+            last_point[i] = round(last_point[i], 2)
+            if last_point[i] == -0.00:
+                last_point[i] = 0.00        
+        last_point.sort()
 
+        arm_home_joints_goal_list = list(arm_home_joints_goal.values())
+        arm_home_joints_goal_list.sort()
+        
+        condition_1 = type(plan) == RobotTrajectory
+        condition_2 = last_point == arm_home_joints_goal_list
+        
+        self.assertTrue(condition_1 and condition_2)
+
+    '''
     def test_execute(self):
         arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
                                 'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
@@ -144,7 +138,7 @@ class TestSrRobotCommander(TestCase):
         executed_joints = self.robot_commander.get_current_state()
         diffs = [arm_home_joints_goal[key] - executed_joints[key] for key in arm_home_joints_goal
                  if key in executed_joints]
-        condition_1 = all(diff < 0.05 for diff in diffs)
+        condition_1 = all(diff < 0.01 for diff in diffs)
         condition_2 = self.robot_commander._SrRobotCommander__plan is None
         self.assertTrue(condition_1 and condition_2)
 
@@ -159,14 +153,14 @@ class TestSrRobotCommander(TestCase):
         executed_joints = self.robot_commander.get_current_state()
         diffs = [arm_home_joints_goal[key] - executed_joints[key] for key in arm_home_joints_goal
                  if key in executed_joints]
-        condition_1 = all(diff < 0.05 for diff in diffs)
+        condition_1 = all(diff < 0.01 for diff in diffs)
         condition_2 = self.robot_commander._SrRobotCommander__plan is None
         self.assertTrue(condition_1 and condition_2)
 
-    '''
-    def test_move_to_joint_value_target(self):
-        self.robot_commander.move_to_joint_value_target(self, joint_states, wait=True, angle_degrees=False):
-    '''
+    
+    #def test_move_to_joint_value_target(self):
+        #self.robot_commander.move_to_joint_value_target(self, joint_states, wait=True, angle_degrees=False):
+
 
     def test_check_plan_is_valid__ok(self):
         arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
@@ -204,12 +198,12 @@ class TestSrRobotCommander(TestCase):
     def test_evaluate_given_plan__low_quality(self):
         current_joints = self.robot_commander.get_joints_position()
         planned_joints = copy.deepcopy(current_joints)
-        planned_joints['ra_shoulder_pan_joint'] = planned_joints['ra_shoulder_pan_joint'] + 3.14
+        planned_joints['ra_shoulder_pan_joint'] = planned_joints['ra_shoulder_pan_joint'] + 2.14
         planned_joints['ra_shoulder_lift_joint'] = planned_joints['ra_shoulder_lift_joint'] + 1.36
         plan = self.robot_commander.plan_to_joint_value_target(planned_joints, angle_degrees=False,
                                                                custom_start_state=None)
         evaluation = self.robot_commander.evaluate_given_plan(plan)
-        self.assertTrue(evaluation > 10)
+        self.assertGreater(evaluation, 10)
 
     def test_evaluate_given_plan__high_quality(self):
         current_joints = self.robot_commander.get_joints_position()
@@ -218,7 +212,7 @@ class TestSrRobotCommander(TestCase):
         plan = self.robot_commander.plan_to_joint_value_target(planned_joints, angle_degrees=False,
                                                                custom_start_state=None)
         evaluation = self.robot_commander.evaluate_given_plan(plan)
-        self.assertTrue(evaluation < 1)
+        self.assertLess(evaluation, 1)
 
     # def test_evaluate_plan(self):
         # is covered by evaluate_given_plan
@@ -298,10 +292,9 @@ class TestSrRobotCommander(TestCase):
     def test_get_robot_state_bounded(self):
         self.assertTrue(type(self.robot_commander.get_current_state_bounded()) == dict)
 
-    '''
-    def move_to_named_target(self, name, wait=True):
+    #def move_to_named_target(self, name, wait=True):
 
-    '''
+    
     def test_plan_to_named_target__custom_start_state_none(self):
         target_names = self.robot_commander.get_named_targets()
         if len(target_names) > 0:
@@ -412,7 +405,6 @@ class TestSrRobotCommander(TestCase):
         diffs = [end_joints[key] - current_joints[key] for key in end_joints
                  if key in current_joints]
 
-        rospy.logerr(diffs)
         self.assertTrue(any(abs(diff) > 0.01 for diff in diffs))
 
     def self_run_named_trajectory_unsafe(self):
@@ -428,7 +420,7 @@ class TestSrRobotCommander(TestCase):
 
         self.robot_commander.run_named_trajectory_unsafe(self, trajectory, wait=False)
 
-    '''
+    
     def run_named_trajectory(self, trajectory):
 
     def move_to_position_target(self, xyz, end_effector_link="", wait=True):
@@ -457,6 +449,7 @@ class TestSrRobotCommander(TestCase):
 
     def move_to_pose_value_target_unsafe(self, target_pose, avoid_collisions=False, time=0.002, wait=True,
                                          ik_constraints=None):
+
     '''
 
 
