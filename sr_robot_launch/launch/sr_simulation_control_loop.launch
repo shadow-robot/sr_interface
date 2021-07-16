@@ -5,6 +5,8 @@
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <arg name="verbose" default="true" />
+  <!-- Set whether to load a scene to restrain the movement of the robot -->
+  <arg name="scene" default="false"/>
 
   <!-- ROBOT CONFIG-->
   <arg name="side" default="right"/>
@@ -16,6 +18,8 @@
   <arg name="arm" default="true"/>
   <!-- Whether there is a hand. -->
   <arg name="hand" default="true"/>
+  <!-- Set to true if you want the robot to start in the "home" positions -->
+  <arg name="start_home" default="false"/>
   <!-- Whether to run arm controllers. -->
   <arg name="arm_ctrl" default="$(arg arm)"/>
   <!-- Whether to run hand controllers. -->
@@ -29,28 +33,44 @@
   <!-- Set to true if you want to use hybrid controller -->
   <arg name="hybrid_controller" default="false"/>
 
-  <!-- Loads the robot description -->
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_motor.urdf.xacro'"/>
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_motor.urdf.xacro'"/>
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_lite')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_lite.urdf.xacro'"/>
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_lite')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_lite.urdf.xacro'"/>
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_extra_lite')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_extra_lite.urdf.xacro'"/>
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_extra_lite')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_extra_lite.urdf.xacro'"/>
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_motor_plus.urdf.xacro'"/>
-  <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e_plus')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_motor_plus.urdf.xacro'"/>
+  <arg if="$(arg arm)" name="robot_model" default="ur10e"/>
+  <arg if="$(arg arm)" name="robot_name" default="$(arg robot_model)srh"/>
+  <arg if="$(arg arm)" name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
+  <arg if="$(arg arm)" name="initial_z" default="0.1"/>
+  <arg if="$(arg arm)" name="arm_x_separation" default="0.0"/>
+  <arg if="$(arg arm)" name="arm_y_separation" default="0.0"/>
+  <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
+  <arg name="arm_trajectory" default="$(arg arm)"/>
+  <!-- Set to true to spawn group position controllers for the arms -->
+  <arg name="arm_position" default="$(eval not arm_trajectory)"/>
 
-  <!-- Default hand controller groups -->
-  <arg if="$(arg grasp_controller)" name="hand_controller_group" default="grasp"/>
-  <arg if="$(arg hybrid_controller)" name="hand_controller_group" default="hybrid"/>
-  <arg if="$(eval hand_trajectory and not grasp_controller and not hybrid_controller)" name="hand_controller_group" default="trajectory"/>
-  <arg if="$(eval not hand_trajectory and not grasp_controller and not hybrid_controller)" name="hand_controller_group" default="position"/>
 
-  <param name="/use_sim_time" value="true"/>
+  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_motor.urdf.xacro'"/>
+  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_motor.urdf.xacro'"/>
+  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_lite')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_lite.urdf.xacro'"/>
+  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_lite')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_lite.urdf.xacro'"/>
+  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_extra_lite')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_extra_lite.urdf.xacro'"/>
+  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_extra_lite')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_extra_lite.urdf.xacro'"/>
+  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_motor_plus.urdf.xacro'"/>
+  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e_plus')" name="robot_description" default="'$(find sr_description)/robots/shadowhand_left_motor_plus.urdf.xacro'"/>
+  <arg unless="$(arg arm)" name="robot_name" default="usrh"/>
+  <arg unless="$(arg arm)" name="initial_z" default="0.1"/>
+  <arg unless="$(arg arm)" name="arm_x_separation" default="0.0"/>
+  <arg unless="$(arg arm)" name="arm_y_separation" default="0.0"/>
+
+  <arg if="$(arg start_home)" name="spawn_model_extra_args" value="-unpause $(arg home_angles)" />
+  <arg unless="$(arg start_home)" name="spawn_model_extra_args" value="" />
+
   <!-- Mock hand data for simulation -->
   <param name="/hand/mapping/0" value="$(arg hand_id)"/>
   <param name="/hand/joint_prefix/0" value="$(arg hand_id)_"/>
+
+  <param name="/use_sim_time" value="true"/>
+  <env name="GAZEBO_MODEL_PATH" value="$(find sr_description_common)/models/" />
+  <env name="GAZEBO_MODEL_DATABASE_URI" value="" />
+  <env name="MESH_WORKSPACE_PATH" value="$(find sr_description_common)/models/" />
   <arg name="world_name" value="$(find sr_description_common)/worlds/shadowhand.world"/>
-  <arg name="paused" value="false"/>
+  <arg name="paused" value="$(arg start_home)"/>
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" default="$(arg world_name)"/>
     <arg name="gui" default="$(arg gui)"/>
@@ -58,8 +78,8 @@
     <arg name="debug" value="$(arg debug)"/>
     <arg name="verbose" value="$(arg verbose)" />
   </include>
-  <param name="robot_description" command="xacro $(arg robot_description)"/>
-  <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model usrh -z 0.0 " respawn="false" output="screen"/>
+  <param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
+  <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name) $(arg spawn_model_extra_args)" respawn="false" output="screen"/>
   <group if="$(eval arg('hand_type') == 'hand_e' or arg('hand_type') == 'hand_e_plus')">
     <rosparam if="$(eval not grasp_controller and not hybrid_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_grasp_controller_gazebo.yaml"/>
@@ -72,13 +92,37 @@
   <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
     <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
   </include>
+
+  <!-- ARM -->
+  <group if="$(arg arm_trajectory)">
+    <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_prefix)_trajectory_controller.yaml" command="load"/>
+    <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="$(arg arm_prefix)_trajectory_controller"/>
+  </group>
+  <group if="$(arg arm_position)">
+    <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_prefix)_group_position_controller.yaml" command="load"/>
+    <node name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="$(arg arm_prefix)_group_position_controller"/>
+  </group>
+
+  <!-- Set scene for robot - restrains movement -->
+  <group if="$(arg scene)">
+    <include file="$(find gazebo2rviz)/launch/gazebo2moveit.launch">
+      <arg name="frequency" default="1" />
+    </include>
+  </group>
+
   <!-- Robot state publisher -->
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
     <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)"/>
     <param name="tf_prefix" type="string" value="" />
   </node>
+
   <!-- Controller -->
   <group if="$(arg hand_ctrl)">
+    <!-- Default hand controller groups -->
+    <arg if="$(arg grasp_controller)" name="hand_controller_group" default="grasp"/>
+    <arg if="$(arg hybrid_controller)" name="hand_controller_group" default="hybrid"/>
+    <arg if="$(eval hand_trajectory and not grasp_controller and not hybrid_controller)" name="hand_controller_group" default="trajectory"/>
+    <arg if="$(eval not hand_trajectory and not grasp_controller and not hybrid_controller)" name="hand_controller_group" default="position"/>
     <node name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
     <param name="controller_group" value="$(arg hand_controller_group)"/>
     </node>
