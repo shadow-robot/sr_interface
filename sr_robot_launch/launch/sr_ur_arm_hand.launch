@@ -98,6 +98,10 @@
     <include file="$(find sr_robot_launch)/launch/sr_simulation_control_loop.launch">
       <arg name="debug" value="$(arg debug)"/>
       <arg name="scene" value="$(arg scene)"/>
+      <arg name="world" value="$(arg world)"/>
+      <arg name="start_home" value="$(arg start_home)"/>
+      <arg name="home_angles" value="$(arg home_angles)"/>
+      <arg name="initial_z" value="$(arg initial_z)"/>
       <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       <arg name="gui" value="$(arg gui)"/>
