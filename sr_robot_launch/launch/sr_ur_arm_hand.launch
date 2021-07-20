@@ -148,6 +148,7 @@
         <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       </include>
     </group>
+
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->
     <group if="$(arg scene)">
       <node name="conditional_delayed_rostool_unimanual_scene" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
