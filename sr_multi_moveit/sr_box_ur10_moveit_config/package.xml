@@ -16,6 +16,12 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <run_depend>rviz</run_depend>
+  <run_depend>warehouse_ros_mongo</run_depend>
+  <run_depend>sr_utilities_common</run_depend>
+  <run_depend>moveit_ros_warehouse</run_depend>
+  <run_depend>moveit_ros_planning</run_depend>
+  <run_depend>joy</run_depend>
   <run_depend>moveit_ros_move_group</run_depend>
   <run_depend>moveit_kinematics</run_depend>
   <run_depend>moveit_planners_ompl</run_depend>

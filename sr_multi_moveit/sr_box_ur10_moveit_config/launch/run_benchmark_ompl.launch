@@ -1,7 +1,7 @@
 <launch>
 
   <!-- This argument must specify the list of .cfg files to process for benchmarking -->
-  <arg name="cfg" />
+  <arg name="cfg" value=""/>
   <arg name="side" default="right"/>
   <arg name="side_letter" value="$(eval side[0])"/>
 

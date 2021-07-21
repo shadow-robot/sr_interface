@@ -1,5 +1,5 @@
 <launch>
-  <arg name="name"/>
+  <arg name="name" value=""/>
   <arg name="hand_h" default="false"/>
   <arg name="which" default="all"/>
   <arg name="save_target" default="false"/>
