@@ -9,7 +9,7 @@
   <!-- Whether to load a scene to restrain the movement of the robot -->
   <arg name="scene" default="false"/>
   <!-- Set world value dependant on scene -->
-  <arg name="world" default="$(find sr_description_common)/worlds/$(find sr_description_common)/worlds/shadowhand.world"/>
+  <arg name="world" default="$(find sr_description_common)/worlds/shadowhands_and_arms.world"/>
 
   <!-- ROBOT CONFIGS -->
   <arg name="arms" default="true"/>
