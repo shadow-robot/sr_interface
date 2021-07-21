@@ -112,10 +112,11 @@
         <arg name="arm_2_z" value="$(arg arm_2_z)"/>
         <arg name="hands" value="both"/>
         <arg name="arms" value="true"/>
-        <arg name="arm_ctrl" value="false"/>
+        <arg name="arm_ctrl" value="$(arg arm_ctrl)"/>
         <arg name="hand_ctrl" value="$(arg hand_ctrl)"/>
         <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>
         <arg name="start_home" value="$(arg start_home)"/>
+        <arg name="home_angles" value="$(arg home_angles)"/>
         <arg name="arm_trajectory" value="$(arg arm_trajectory)"/>
         <arg name="arm_position" value="$(arg arm_position)"/>
         <arg name="hybrid_controller" value="$(arg hybrid_controller)"/>

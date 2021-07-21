@@ -63,7 +63,8 @@
   <!-- Robot description related config-->
   <arg if="$(arg arm)" name="robot_model" default="ur10e"/>
   <arg if="$(arg arm)" name="robot_name" default="$(arg robot_model)srh"/>
-  <arg if="$(arg arm)" name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
+  <arg if="$(eval arm and hand)" name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
+  <arg if="$(eval arm and not hand)" name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/$(arg arm_prefix)_$(arg robot_model)_with_box.urdf.xacro'"/>
   <arg if="$(arg arm)" name="initial_z" default="0.1"/>
   <arg if="$(arg arm)" name="arm_x_separation" default="0.0"/>
   <arg if="$(arg arm)" name="arm_y_separation" default="0.0"/>

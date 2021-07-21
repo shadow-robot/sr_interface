@@ -109,7 +109,7 @@
       <arg name="side" value="$(arg side)"/>
       <arg name="arm" value="true"/>
       <arg name="hand" value="true"/>
-      <arg name="arm_ctrl" value="false"/>
+      <arg name="arm_ctrl" value="$(arg arm_ctrl)"/>
       <arg name="hand_ctrl" value="$(arg hand_ctrl)"/>
       <arg name="hand_type"  value="$(arg hand_type)"/>/>
       <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>

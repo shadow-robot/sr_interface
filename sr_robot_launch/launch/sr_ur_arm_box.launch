@@ -72,49 +72,22 @@
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
-    <env name="GAZEBO_MODEL_PATH" value="$(find sr_description_common)/models/" />
-    <env name="GAZEBO_MODEL_DATABASE_URI" value="" />
-    <env name="MESH_WORKSPACE_PATH" value="$(find sr_description_common)/models/" />
-    <arg name="paused" value="$(arg start_home)"/>
-    <include file="$(find gazebo_ros)/launch/empty_world.launch">
-      <arg name="world_name" value="$(arg world)"/>
-      <arg name="gui" default="$(arg gui)"/>
-      <arg name="paused" value="$(arg paused)"/>
+    <include file="$(find sr_robot_launch)/launch/sr_simulation_control_loop.launch">
       <arg name="debug" value="$(arg debug)"/>
-      <arg name="verbose" value="$(arg verbose)"/>
+      <arg name="scene" value="$(arg scene)"/>
+      <arg name="world" value="$(arg world)"/>
+      <arg name="start_home" value="$(arg start_home)"/>
+      <arg name="home_angles" value="$(arg home_angles)"/>
+      <arg name="initial_z" value="$(arg initial_z)"/>
+      <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
+      <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
+      <arg name="gui" value="$(arg gui)"/>
+      <arg name="verbose" value="$(arg verbose)" />
+      <arg name="side" value="$(arg side)"/>
+      <arg name="arm" value="true"/>
+      <arg name="hand" value="false"/>
+      <arg name="arm_ctrl" value="true"/>
     </include>
-    <param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z) kinematics_config:=$(arg kinematics_config)"/>
-
-    <arg if="$(arg start_home)" name="spawn_model_extra_args" value="-unpause $(arg home_angles)" />
-    <arg unless="$(arg start_home)" name="spawn_model_extra_args" value="" />
-    <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name) $(arg spawn_model_extra_args)" respawn="false" output="screen"/>
-
-    <!-- ARM -->
-    <rosparam if="$(arg arm_trajectory)" file="$(find sr_box_ur10_moveit_config)/config/gazebo/$(arg arm_prefix)_trajectory_controller.yaml" command="load"/>
-    <rosparam if="$(arg arm_position)" file="$(find sr_box_ur10_moveit_config)/config/gazebo/$(arg arm_prefix)_group_position_controller.yaml" command="load"/>
-    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
-      <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
-    </include>
-
-    <node if="$(arg arm_trajectory)" name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="$(arg arm_prefix)_trajectory_controller"/>
-    <node if="$(arg arm_position)" name="arm_group_position_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="$(arg arm_prefix)_group_position_controller"/>
-
-    <!-- Robot state publisher -->
-    <node name="conditional_delayed_rostool_robot_state_publisher" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
-      <param name="package_name" value="robot_state_publisher" />
-      <param name="executable_name" value="robot_state_publisher" />
-      <rosparam param="params_list">[/robot_description]</rosparam>
-      <param name="launch_args_list" value="
-      publish_frequency=$(arg robot_state_pub_frequency)
-      tf_prefix=$(arg tf_prefix)"/>
-    </node>
-
-    <!-- Set scene for robot - restrains movement -->
-    <group if="$(arg scene)">
-      <include if="$(arg use_moveit)" file="$(find gazebo2rviz)/launch/gazebo2moveit.launch">
-        <arg name="frequency" default="1" />
-      </include>
-    </group>
   </group>
 
   <!-- REAL ROBOTS -->
