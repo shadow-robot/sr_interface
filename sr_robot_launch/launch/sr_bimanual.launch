@@ -16,15 +16,12 @@
   <arg name="verbose" default="true" />
   <!-- Set world value -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world" />
-
   <!-- Xacro file containing the robot description we want to load -->
   <arg name="robot_description" default="'$(find sr_description)/robots/bimanual_shadowhand_motor_plus.urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
   <arg name="robot_name" default="bimanual_shadowhand_motor"/>
-
   <!-- The name of the rviz config file to load -->
   <arg name="rviz_config_file" default="$(find sr_multi_moveit_config)/launch/moveit_hands.rviz"/>
-
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="hand_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the hands-->
@@ -43,24 +40,14 @@
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth1_eth2)"/>
   <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
-
   <!-- The robot state publisher publishing frequency  -->
   <arg name="robot_state_pub_frequency" default="250"/>
   <!-- The joint state publisher publishing frequency  -->
   <arg name="joint_state_pub_frequency" default="125"/>
-
   <!-- Set this to true if you run the hardware loop on a remote computer -->
   <arg name="external_control_loop" default="false"/>
-
+  <!-- Separation between the robots -->
   <arg name="hand_x_separation" default="-0.4"/>
-
-  <!-- Logging. -->
-  <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch">
-    <arg name="node_name" value="server_record"/>
-    <arg name="log_bag_prefix" value="sr_hand"/>
-    <arg name="log_directory" value="$(optenv HOME)/.ros/log"/>
-    <arg name="log_topics" value='-e ".*(controller|debug_etherCAT_data).*" /joint_states /rosout /diagnostics /mechanism_statistics /journalctl_log'/>
-  </include>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(eval sim and not external_control_loop)">
@@ -110,4 +97,12 @@
       </include>
       <include file="$(find sr_multi_moveit_config)/launch/default_warehouse_db.launch"/>
   </group>
+
+  <!-- Logging. -->
+  <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch">
+    <arg name="node_name" value="server_record"/>
+    <arg name="log_bag_prefix" value="sr_hand"/>
+    <arg name="log_directory" value="$(optenv HOME)/.ros/log"/>
+    <arg name="log_topics" value='-e ".*(controller|debug_etherCAT_data).*" /joint_states /rosout /diagnostics /mechanism_statistics /journalctl_log'/>
+  </include>
 </launch>

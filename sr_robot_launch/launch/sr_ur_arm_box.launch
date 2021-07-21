@@ -54,21 +54,12 @@
   <arg name="arm_speed_scale" default="0.5"/>
   <arg name="arm_payload_mass" default="0"/>
   <arg name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
-
+  
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn group position controllers for the arms -->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
-  <param name="description_read_repetitions" value="50"/>
 
-  <!-- ROBOT CONFIG-->
-  <arg name="robot_name" default="ursrbox"/>
-
-  <!-- The prefix used by the robot_state_publisher -->
-  <arg name="tf_prefix" default="" />
-
-  <!-- Logging -->
-  <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
@@ -113,16 +104,6 @@
       </include>
     </group>
 
-    <!-- Robot state publisher -->
-    <node name="conditional_delayed_rostool_robot_state_publisher" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
-      <param name="package_name" value="robot_state_publisher" />
-      <param name="executable_name" value="robot_state_publisher" />
-      <rosparam param="params_list">[/robot_description]</rosparam>
-      <param name="launch_args_list" value="
-      publish_frequency=$(arg robot_state_pub_frequency)
-      tf_prefix=$(arg tf_prefix)"/>
-    </node>
-
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->
     <group if="$(arg scene)">
       <node name="conditional_delayed_rostool_arm_scene" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
@@ -135,10 +116,9 @@
     </group>
   </group>
 
-  <rosparam file="$(arg robot_config_file)"/>
-
   <!-- Launch moveit configuration after delay to wait for robot description to be avalible -->
   <group if="$(arg use_moveit)">
+    <rosparam file="$(arg robot_config_file)"/>
     <node name="conditional_delayed_rostool_rviz_multi" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
       <param name="package_name" value="sr_box_ur10_moveit_config" />
       <param name="executable_name" value="planning_and_execution.launch" />
@@ -147,4 +127,7 @@
       <param name="timeout" value="20.0" />
     </node>
   </group>
+
+  <!-- Logging -->
+  <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch"/>
 </launch>

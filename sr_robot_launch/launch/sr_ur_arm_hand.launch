@@ -40,7 +40,6 @@
   <arg name="robot_model" default="ur10e"/>
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
-  <arg name="robot_name" default="$(arg robot_model)srh"/>
 
   <!-- HANDS CONFIG-->
   <arg name="hand_serial" default="634"/>
@@ -70,7 +69,6 @@
   <arg name="arm_y_separation" default="0.0"/>
   <arg name="arm_robot_hw" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   <arg name="arm_robot_hw" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/$(arg side)_ur10e_arm_robot_hw.yaml"/>
-
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn group position controllers for the arms -->
@@ -85,6 +83,8 @@
   <arg if="$(eval arg('hand_type') == 'hand_extra_lite')" name="arm_payload_mass" default="2.5"/>
   <arg name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
 
+  <!-- OTHER CONFIGS-->
+  <!-- Trajectory controllers list for moveit-->
   <arg if="$(eval not hand_trajectory and not arm_trajectory)" name="trajectory_controllers_list" default="[]"/>
   <arg if="$(eval hand_trajectory and arm_trajectory)" name="trajectory_controllers_list" 
        default="[/$(arg arm_prefix)_trajectory_controller/state, /$(arg hand_id)_trajectory_controller/state]"/>
@@ -94,7 +94,7 @@
        default="[/$(arg arm_prefix)_trajectory_controller/state]"/>
 
   <!-- SIMULATED ROBOTS -->
-  <group if="$(arg sim)">
+  <group if="$(eval sim and not external_control_loop)">
     <include file="$(find sr_robot_launch)/launch/sr_simulation_control_loop.launch">
       <arg name="debug" value="$(arg debug)"/>
       <arg name="scene" value="$(arg scene)"/>
@@ -179,5 +179,4 @@
 
   <!-- Publish underactuation error -->
   <node name="error_reporter" pkg="sr_error_reporter" type="error_reporter" output="screen"/>
-
 </launch>

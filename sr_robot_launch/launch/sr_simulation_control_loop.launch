@@ -3,7 +3,6 @@
   <arg name="verbose" default="true"/>
   <arg name="robot_state_pub_frequency" default="250"/>
   <arg name="joint_state_pub_frequency" default="125"/>
-
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <!-- Whether to load a scene to restrain the movement of the robot -->
@@ -12,19 +11,16 @@
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world"/>
 
   <!-- ROBOT CONFIGS -->
-
   <arg name="side" default="right"/>
   <arg name="side_letter" value="$(eval side[0])"/>
   <arg name="arm" default="true"/>
   <arg name="hand" default="true"/>
-
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="false"/>
   <!-- home_angles must be input at the launch -->
   <arg name="home_angles" default=""/>
 
-  <!-- HAND RELATED CONFIG-->
-
+  <!-- HAND SPECIFIC CONFIG-->
   <arg name="hand_id" value="$(arg side_letter)h"/>
   <!-- Whether to run hand controllers. -->
   <arg name="hand_ctrl" default="$(arg hand)"/>
@@ -42,8 +38,7 @@
   <arg unless="$(arg arm)" name="initial_z" default="0.0"/>
   <arg unless="$(arg arm)" name="robot_description" default="'$(find sr_description)/robots/shadowhand_motor.urdf.xacro'"/>
 
-  <!-- ARM RELATED CONFIG-->
-
+  <!-- ARM SPECIFIC CONFIG-->
   <arg name="arm_prefix" value="$(arg side_letter)a"/>
   <!-- Whether to run arm controllers. -->
   <arg name="arm_ctrl" default="$(arg arm)"/>
@@ -61,7 +56,6 @@
   <arg if="$(arg arm)" name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
 
   <!-- RUNNING THE SIMULATION -->
-
   <!-- Mock hand data for simulation -->
   <param name="/hand/mapping/0" value="$(arg hand_id)"/>
   <param name="/hand/joint_prefix/0" value="$(arg hand_id)_"/>
@@ -103,7 +97,6 @@
   </group>
 
   <!-- ARM SPECIFIC -->
-
   <group if="$(arg arm_trajectory)">
     <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_prefix)_trajectory_controller.yaml" command="load"/>
     <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="$(arg arm_prefix)_trajectory_controller"/>
@@ -115,7 +108,6 @@
   </group>
 
   <!-- HAND SPECIFIC -->
-
   <group if="$(eval arg('hand_type') == 'hand_e' or arg('hand_type') == 'hand_e_plus')">
     <rosparam if="$(eval not grasp_controller and not hybrid_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_grasp_controller_gazebo.yaml"/>

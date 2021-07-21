@@ -39,7 +39,7 @@
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
   <arg name="robot_name" default="$(arg robot_model)srh"/>
 
-  <!-- HANDS CONFIG-->
+  <!-- HANDS SPECIFIC CONFIG-->
   <arg name="rh_serial" default="1290"/>
   <arg name="lh_serial" default="1338"/>
   <arg name="rh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v4.yaml"/>
@@ -62,7 +62,7 @@
   <!-- Set the hand type here: hand_e_plus, hand_e, hand_lite, hand_extra_lite -->
   <arg name="hand_type" default="hand_e_plus"/>
 
-  <!-- ARMS CONFIG-->
+  <!-- ARMS SPECIFIC CONFIG-->
   <arg name="arm_1_z" default="0.0"/>
   <arg name="arm_2_z" default="0.0"/>
   <arg name="arm_x_separation" default="1.0"/>
@@ -87,6 +87,8 @@
   <arg if="$(eval arg('hand_type') == 'hand_extra_lite')" name="arm_payload_mass" default="2.5"/>
   <arg name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
 
+  <!-- OTHER CONFIGS-->
+  <!-- Trajectory controllers list for moveit-->
   <arg if="$(eval hand_ctrl and arm_trajectory)" name="trajectory_controllers_list" 
        default="[/ra_trajectory_controller/state, /la_trajectory_controller/state, /rh_trajectory_controller/state, /lh_trajectory_controller/state]"/>
   <arg if="$(eval not hand_ctrl and not arm_trajectory)" name="trajectory_controllers_list" value="[]"/>
@@ -100,6 +102,7 @@
       <include file="$(find sr_robot_launch)/launch/sr_bimanual_simulation_control_loop.launch">
         <arg name="debug" value="$(arg debug)"/>
         <arg name="robot_description" value="$(arg robot_description)"/>
+        <arg name="robot_name" value="$(arg robot_name)"/>
         <arg name="gui" value="$(arg gui)"/>
         <arg name="world" value="$(arg world)"/>
         <arg name="scene" value="$(arg scene)"/>

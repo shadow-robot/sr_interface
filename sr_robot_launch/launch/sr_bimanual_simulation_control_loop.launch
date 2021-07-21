@@ -3,7 +3,6 @@
   <arg name="verbose" default="true"/>
   <arg name="robot_state_pub_frequency" default="250"/>
   <arg name="joint_state_pub_frequency" default="125"/>
-
   <!-- Set to false if you want to start without guis -->
   <arg name="gui" default="true"/>
   <!-- Whether to load a scene to restrain the movement of the robot -->
@@ -12,18 +11,15 @@
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhands_and_arms.world"/>
 
   <!-- ROBOT CONFIGS -->
-
   <arg name="arms" default="true"/>
   <!-- Specify if the system has "both" hands, only "right", only "left" or "none" hands-->
   <arg name="hands" default="both"/>
-
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="false"/>
   <!-- home_angles must be input at the launch -->
   <arg name="home_angles" default=""/>
 
   <!-- HAND RELATED CONFIG-->
-
   <!-- Set to true to spawn the position controllers for the hands-->
   <arg name="hand_ctrl" unless="$(eval hands == 'none')" default="true"/>
   <arg name="hand_ctrl" if="$(eval hands == 'none')" value="false"/>
@@ -41,7 +37,6 @@
   <arg name="hand_x_separation" default="-0.4"/>
 
   <!-- ARM RELATED CONFIG-->
-
   <!-- Whether to run arm controllers. -->
   <arg name="arm_ctrl" default="$(arg arms)"/>
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
@@ -60,7 +55,6 @@
   <arg if="$(arg arms)" name="arm_2_z" default="0.0"/>
 
   <!-- RUNNING THE SIMULATION -->
-
   <!-- Mock hand data for simulation -->
   <param name="/hand/mapping/0" value="rh"/>
   <param name="/hand/mapping/1" value="lh"/>
@@ -105,7 +99,6 @@
   </group>
 
   <!-- ARM SPECIFIC -->
-
   <group if="$(arg arm_trajectory)">
     <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/ra_trajectory_controller.yaml" command="load"/>
     <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/la_trajectory_controller.yaml" command="load"/>
@@ -119,7 +112,6 @@
     </group>
 
   <!-- HAND SPECIFIC -->
-
   <group if="$(eval hands == 'both' or hands == 'right')">
     <rosparam if="$(eval not hybrid_controller)" command="load" file="$(find sr_description)/hand/config/rh_controller_gazebo.yaml"/>
     <rosparam if="$(arg hybrid_controller)" command="load" file="$(find sr_description)/hand/config/rh_hybrid_controller_gazebo.yaml"/>
