@@ -98,13 +98,9 @@
 
   <!-- Set scene for robot - restrains movement -->
   <group if="$(arg scene)">
-    <node name="conditional_delayed_rostool_bimanual_scene" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
-      <param name="package_name" value="sr_multi_moveit_config" />
-      <param name="executable_name" value="scene.launch" />
-      <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
-      <rosparam param="topics_list">[/planning_scene]</rosparam>
-      <param name="launch_args_list" value="scene_file:=$(arg scene_file)" />
-    </node>
+    <include file="$(find gazebo2rviz)/launch/gazebo2moveit.launch">
+      <arg name="frequency" default="1" />
+    </include>
   </group>
 
   <!-- ARM SPECIFIC -->
