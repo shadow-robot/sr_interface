@@ -12,6 +12,7 @@
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world"/>
 
   <!-- ROBOT CONFIGS -->
+
   <arg name="side" default="right"/>
   <arg name="side_letter" value="$(eval side[0])"/>
   <arg name="arm" default="true"/>
@@ -23,8 +24,8 @@
   <arg name="home_angles" default=""/>
 
   <!-- HAND RELATED CONFIG-->
-  <arg name="hand_id" value="$(arg side_letter)h"/>
 
+  <arg name="hand_id" value="$(arg side_letter)h"/>
   <!-- Whether to run hand controllers. -->
   <arg name="hand_ctrl" default="$(arg hand)"/>
   <!-- Set to hand_e, hand_e_plus or hand_lite or hand_extra_lite -->
@@ -39,13 +40,11 @@
   <!-- Robot description related config-->
   <arg unless="$(arg arm)" name="robot_name" default="usrh"/>
   <arg unless="$(arg arm)" name="initial_z" default="0.0"/>
-  <arg unless="$(arg arm)" name="arm_x_separation" default="0.0"/>
-  <arg unless="$(arg arm)" name="arm_y_separation" default="0.0"/>
   <arg unless="$(arg arm)" name="robot_description" default="'$(find sr_description)/robots/shadowhand_motor.urdf.xacro'"/>
 
   <!-- ARM RELATED CONFIG-->
-  <arg name="arm_prefix" value="$(arg side_letter)a"/>
 
+  <arg name="arm_prefix" value="$(arg side_letter)a"/>
   <!-- Whether to run arm controllers. -->
   <arg name="arm_ctrl" default="$(arg arm)"/>
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
@@ -57,8 +56,8 @@
   <arg if="$(arg arm)" name="robot_model" default="ur10e"/>
   <arg if="$(arg arm)" name="robot_name" default="$(arg robot_model)srh"/>
   <arg if="$(arg arm)" name="initial_z" default="0.1"/>
-  <arg if="$(arg arm)" name="arm_x_separation" default="0.0"/>
-  <arg if="$(arg arm)" name="arm_y_separation" default="0.0"/>
+  <arg name="arm_x_separation" default="0.0"/>
+  <arg name="arm_y_separation" default="0.0"/>
   <arg if="$(arg arm)" name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
 
   <!-- RUNNING THE SIMULATION -->
@@ -104,6 +103,7 @@
   </group>
 
   <!-- ARM SPECIFIC -->
+
   <group if="$(arg arm_trajectory)">
     <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/$(arg arm_prefix)_trajectory_controller.yaml" command="load"/>
     <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="$(arg arm_prefix)_trajectory_controller"/>
@@ -115,6 +115,7 @@
   </group>
 
   <!-- HAND SPECIFIC -->
+
   <group if="$(eval arg('hand_type') == 'hand_e' or arg('hand_type') == 'hand_e_plus')">
     <rosparam if="$(eval not grasp_controller and not hybrid_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_grasp_controller_gazebo.yaml"/>
@@ -127,7 +128,6 @@
   </group>
 
   <group if="$(arg hand_ctrl)">
-    <!-- Default hand controller groups -->
     <arg if="$(arg grasp_controller)" name="hand_controller_group" default="grasp"/>
     <arg if="$(arg hybrid_controller)" name="hand_controller_group" default="hybrid"/>
     <arg if="$(eval hand_trajectory and not grasp_controller and not hybrid_controller)" name="hand_controller_group" default="trajectory"/>
