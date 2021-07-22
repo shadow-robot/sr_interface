@@ -56,6 +56,7 @@
       <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       <arg name="gui" value="$(arg gui)"/>
+      <arg name="world" value="$(arg world)"/>
       <arg name="verbose" value="$(arg verbose)" />
       <arg name="arms" value="false"/>
       <arg name="hands" value="both"/>
