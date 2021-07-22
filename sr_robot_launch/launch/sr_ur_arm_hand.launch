@@ -38,6 +38,7 @@
   <arg name="arm_prefix" value="$(arg side_letter)a"/>
 
   <arg name="robot_model" default="ur10e"/>
+  <arg name="robot_name" default="$(arg robot_model)srh"/>
   <arg name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
 
@@ -99,6 +100,7 @@
       <arg name="debug" value="$(arg debug)"/>
       <arg name="scene" value="$(arg scene)"/>
       <arg name="world" value="$(arg world)"/>
+      <arg name="robot_name" value="$(arg robot_name)"/>
       <arg name="start_home" value="$(arg start_home)"/>
       <arg name="home_angles" value="$(arg home_angles)"/>
       <arg name="initial_z" value="$(arg initial_z)"/>
