@@ -1,0 +1,41 @@
+<launch>
+  <!-- ROBOT CONFIGS -->
+  <arg name="side" default="right"/>
+  <arg name="side_letter" value="$(eval side[0])"/>
+  <arg name="arm" default="true"/>
+  <arg name="hand" default="true"/>
+
+  <!-- HAND SPECIFIC CONFIG-->
+  <arg name="hand_type" default="hand_e"/>
+  <arg unless="$(arg arm)" name="initial_z" default="0.0"/>
+
+  <group unless="$(arg arm)">
+    <arg name="hand_id" value="$(arg side_letter)h"/>
+
+    <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_motor.urdf.xacro'"/>
+    <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_left_motor.urdf.xacro'"/>
+    <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_lite')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_lite.urdf.xacro'"/>
+    <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_lite')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_left_lite.urdf.xacro'"/>
+    <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_extra_lite')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_extra_lite.urdf.xacro'"/>
+    <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_extra_lite')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_left_extra_lite.urdf.xacro'"/>
+    <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_motor_plus.urdf.xacro'"/>
+    <arg if="$(eval arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e_plus')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_left_motor_plus.urdf.xacro'"/>
+
+    <param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z)"/>
+  </group>
+
+  <!-- ARM SPECIFIC CONFIG-->
+  <arg name="robot_model" default="ur10e"/>
+  <arg name="arm_x_separation" default="0.0"/>
+  <arg name="arm_y_separation" default="0.0"/>
+  <arg if="$(arg arm)" name="initial_z" default="0.1"/>
+
+  <group if="$(arg arm)">
+    <arg name="arm_prefix" value="$(arg side_letter)a"/>
+
+    <arg if="$(eval arm and hand)" name="robot_description" value="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
+    <arg if="$(eval arm and not hand)" name="robot_description" value="'$(find sr_box_ur10_moveit_config)/config/$(arg arm_prefix)_$(arg robot_model)_with_box.urdf.xacro'"/>
+
+    <param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
+  </group>
+</launch>

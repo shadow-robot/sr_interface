@@ -56,6 +56,14 @@
   <arg if="$(eval arm and hand)" name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg if="$(eval arm and not hand)" name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/$(arg arm_prefix)_$(arg robot_model)_with_box.urdf.xacro'"/>
 
+  <!-- LOADING ROBOT DESCRIPTION-->
+    <include file="$(find sr_robot_launch)/launch/load_robot_description.launch">
+    <arg name="side" default="$(arg side)"/>
+    <arg name="arm" default="$(arg arm)"/>
+    <arg name="hand" value="$(arg hand)"/>
+    <arg name="hand_type" value="$(arg hand_type)"/>
+  </include>
+
   <!-- RUNNING THE SIMULATION -->
   <!-- Mock hand data for simulation -->
   <param name="/hand/mapping/0" value="$(arg hand_id)"/>
@@ -77,7 +85,6 @@
     <arg name="verbose" value="$(arg verbose)" />
   </include>
 
-  <param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
   <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name) $(arg spawn_model_extra_args)" respawn="false" output="screen"/>
 
   <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
