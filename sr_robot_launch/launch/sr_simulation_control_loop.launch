@@ -58,6 +58,7 @@
     <arg name="side" default="$(arg side)"/>
     <arg name="arm" default="$(arg arm)"/>
     <arg name="hand" value="$(arg hand)"/>
+    <arg name="robot_model" value="$(arg robot_model)"/>
     <arg name="hand_type" value="$(arg hand_type)"/>
     <arg name="initial_z" value="$(arg initial_z)"/>
     <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>

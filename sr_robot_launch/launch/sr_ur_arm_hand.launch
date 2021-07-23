@@ -100,6 +100,7 @@
       <arg name="scene" value="$(arg scene)"/>
       <arg name="world" value="$(arg world)"/>
       <arg name="robot_name" value="$(arg robot_name)"/>
+      <arg name="robot_model" value="$(arg robot_model)"/>
       <arg name="start_home" value="$(arg start_home)"/>
       <arg name="home_angles" value="$(arg home_angles)"/>
       <arg name="initial_z" value="$(arg initial_z)"/>
