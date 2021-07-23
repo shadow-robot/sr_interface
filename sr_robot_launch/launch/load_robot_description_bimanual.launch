@@ -1,0 +1,26 @@
+<launch>
+  <!-- ROBOT CONFIGS -->
+  <arg name="arms" default="true"/>
+  <!-- Specify if the system has "both" hands, only "right", only "left" or "none" hands-->
+  <arg name="hands" default="both"/>
+
+  <!-- HAND SPECIFIC CONFIG--> 
+  <arg name="hand_x_separation" default="-0.4"/>
+
+  <group unless="$(arg arms)">
+    <arg name="robot_description" default="'$(find sr_description)/robots/bimanual_shadowhand_motor_plus.urdf.xacro'"/>
+    <param name="robot_description" command="xacro $(arg robot_description) arm_x_separation:=$(arg hand_x_separation) "/>
+  </group>
+
+  <!-- ARM SPECIFIC CONFIG-->
+  <arg name="robot_model" default="ur10e"/>
+  <arg name="arm_x_separation" default="1.0"/>
+  <arg name="arm_y_separation" default="1.0"/>
+  <arg name="arm_1_z" default="0.0"/>
+  <arg name="arm_2_z" default="0.0"/>
+
+  <group if="$(arg arms)">
+    <arg if="$(arg arms)" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
+    <param name="robot_description" command="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
+  </group>
+</launch>
