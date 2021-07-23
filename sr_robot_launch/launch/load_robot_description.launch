@@ -33,7 +33,8 @@
   <group if="$(arg arm)">
     <arg name="arm_prefix" value="$(arg side_letter)a"/>
 
-    <arg if="$(eval arm and hand)" name="robot_description" value="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
+    <arg if="$(eval arm and hand and arg('hand_type') == 'hand_e')" name="robot_description" value="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
+    <arg if="$(eval arm and hand and arg('hand_type') == 'hand_lite')" name="robot_description" value="'$(find sr_multi_description)/urdf/$(arg side)_srhand_lite_$(arg robot_model).urdf.xacro'"/>
     <arg if="$(eval arm and not hand)" name="robot_description" value="'$(find sr_box_ur10_moveit_config)/config/$(arg arm_prefix)_$(arg robot_model)_with_box.urdf.xacro'"/>
 
     <param name="robot_description" command="xacro $(arg robot_description) initial_z:=$(arg initial_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>

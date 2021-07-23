@@ -39,7 +39,6 @@
 
   <arg name="robot_model" default="ur10e"/>
   <arg name="robot_name" default="$(arg robot_model)srh"/>
-  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
 
   <!-- HANDS CONFIG-->
@@ -104,7 +103,8 @@
       <arg name="start_home" value="$(arg start_home)"/>
       <arg name="home_angles" value="$(arg home_angles)"/>
       <arg name="initial_z" value="$(arg initial_z)"/>
-      <arg name="robot_description" value="$(arg robot_description)"/>
+      <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
+      <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
       <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       <arg name="gui" value="$(arg gui)"/>
