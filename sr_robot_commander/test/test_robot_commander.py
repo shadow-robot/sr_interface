@@ -30,6 +30,7 @@ class TestSrRobotCommander(TestCase):
 
     def compare_poses(self, pose1, pose2):
         digit = 2
+        tolerance 
         p1_list = [pose1.position.x, pose1.position.y, pose1.position.z,
                    pose1.orientation.x, pose1.orientation.y, pose1.orientation.z, pose1.orientation.w]
         p2_list = [pose2.position.x, pose2.position.y, pose2.position.z,
