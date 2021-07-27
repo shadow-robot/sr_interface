@@ -28,11 +28,35 @@ class TestSrRobotCommander(TestCase):
     def setUpClass(cls):
         cls.robot_commander = SrRobotCommander("right_arm")
 
+    def compare_poses(self, pose1, pose2):
+        digit = 2
+        p1_list = [pose1.position.x, pose1.position.y, pose1.position.z,
+                   pose1.orientation.x, pose1.orientation.y, pose1.orientation.z, pose1.orientation.w]
+        p2_list = [pose2.position.x, pose2.position.y, pose2.position.z,
+                   pose2.orientation.x, pose2.orientation.y, pose2.orientation.z, pose2.orientation.w]
+
+        p1_list = [round(i, digit) for i in p1_list]
+        p2_list = [round(i, digit) for i in p2_list]
+
+        rospy.logwarn("COMPARE")
+        rospy.logwarn(p1_list)
+        rospy.logwarn(p2_list)
+
+        for idx, vals in enumerate(zip(p1_list, p2_list)):
+            if vals[0] == -0.00:
+                p1_list[idx] == 0        
+            if vals[1] == -0.00:
+                p2_list[idx] == 0 
+
+            if p1_list[idx] != p2_list[idx]:
+                return False      
+        return True
+
+
+
     def test_mvgr_get_and_set_planner_id(self):
         planner_id = "BKPIECEkConfigDefault"
         self.robot_commander.set_planner_id(planner_id)
-        #st = planner_id + " " + str(self.robot_commander._move_group_commander.get_planner_id())
-        #rospy.logwarn(st)
         self.assertEqual(planner_id, self.robot_commander._move_group_commander.get_planner_id())
 
     def test_mvgr_get_and_set_planning_time(self):
@@ -127,11 +151,11 @@ class TestSrRobotCommander(TestCase):
         
         self.assertTrue(condition_1 and condition_2)
 
-    '''
+    
     def test_execute(self):
         arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
-                                'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                                'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
+                                'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.73,
+                                'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 0.00}
         self.robot_commander.plan_to_joint_value_target(arm_home_joints_goal,
                                                         angle_degrees=False, custom_start_state=None)
         self.robot_commander.execute()
@@ -144,8 +168,8 @@ class TestSrRobotCommander(TestCase):
 
     def test_execute_plan(self):
         arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
-                                'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                                'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
+                                'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.73,
+                                'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 0.00}
 
         plan = self.robot_commander.plan_to_joint_value_target(arm_home_joints_goal,
                                                                angle_degrees=False, custom_start_state=None)
@@ -164,8 +188,8 @@ class TestSrRobotCommander(TestCase):
 
     def test_check_plan_is_valid__ok(self):
         arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
-                                'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                                'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
+                                'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.73,
+                                'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 0.00}
         self.robot_commander.plan_to_joint_value_target(arm_home_joints_goal, angle_degrees=False,
                                                         custom_start_state=None)
         self.assertTrue(self.robot_commander.check_plan_is_valid())
@@ -176,16 +200,16 @@ class TestSrRobotCommander(TestCase):
 
     def test_check_given_plan_is_valid__ok(self):
         arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
-                                'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                                'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
+                                'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.73,
+                                'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 0.00}
         plan = self.robot_commander.plan_to_joint_value_target(arm_home_joints_goal, angle_degrees=False,
                                                                custom_start_state=None)
         self.assertTrue(self.robot_commander.check_given_plan_is_valid(plan))
 
     def test_check_given_plan_is_valid__not_ok(self):
         arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 3.00,
-                                'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                                'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
+                                'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.73,
+                                'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 0.00}
         plan = self.robot_commander.plan_to_joint_value_target(arm_home_joints_goal, angle_degrees=False,
                                                                custom_start_state=None)
         self.assertFalse(self.robot_commander.check_given_plan_is_valid(plan))
@@ -196,20 +220,20 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(evaluation is None)
 
     def test_evaluate_given_plan__low_quality(self):
-        current_joints = self.robot_commander.get_joints_position()
-        planned_joints = copy.deepcopy(current_joints)
-        planned_joints['ra_shoulder_pan_joint'] = planned_joints['ra_shoulder_pan_joint'] + 2.14
-        planned_joints['ra_shoulder_lift_joint'] = planned_joints['ra_shoulder_lift_joint'] + 1.36
-        plan = self.robot_commander.plan_to_joint_value_target(planned_joints, angle_degrees=False,
+        current_joints = self.robot_commander.get_current_state()
+        end_joints = copy.deepcopy(current_joints)
+        end_joints['ra_shoulder_pan_joint'] += 2.14
+        end_joints['ra_shoulder_lift_joint'] += 1.36
+        plan = self.robot_commander.plan_to_joint_value_target(end_joints, angle_degrees=False,
                                                                custom_start_state=None)
         evaluation = self.robot_commander.evaluate_given_plan(plan)
         self.assertGreater(evaluation, 10)
 
     def test_evaluate_given_plan__high_quality(self):
-        current_joints = self.robot_commander.get_joints_position()
-        planned_joints = copy.deepcopy(current_joints)
-        planned_joints['ra_shoulder_pan_joint'] = planned_joints['ra_shoulder_pan_joint'] + 0.001
-        plan = self.robot_commander.plan_to_joint_value_target(planned_joints, angle_degrees=False,
+        current_joints = self.robot_commander.get_current_state()
+        end_joints = copy.deepcopy(current_joints)
+        end_joints['ra_shoulder_pan_joint'] += 0.001
+        plan = self.robot_commander.plan_to_joint_value_target(end_joints, angle_degrees=False,
                                                                custom_start_state=None)
         evaluation = self.robot_commander.evaluate_given_plan(plan)
         self.assertLess(evaluation, 1)
@@ -235,7 +259,7 @@ class TestSrRobotCommander(TestCase):
         self.assertFalse(failed)
 
     def test_named_target_in_srdf__not_exist(self):
-        test_names = ['xf24ga']
+        test_names = ['non_existing_target_test_name']
         failed = False
         for name in test_names:
             if self.robot_commander.named_target_in_srdf(name) is False:
@@ -304,9 +328,9 @@ class TestSrRobotCommander(TestCase):
     def test_plan_to_named_target__custom_start_state_exists(self):
         target_names = self.robot_commander.get_named_targets()
         if len(target_names) > 1:
-            state = {'ra_shoulder_pan_joint': 0.5157461682721474, 'ra_elbow_joint': 0.6876824920327893,
-                     'ra_wrist_1_joint': -0.7695210732233582, 'ra_wrist_2_joint': 0.2298871642157314,
-                     'ra_shoulder_lift_joint': -0.9569080092786892, 'ra_wrist_3_joint': -0.25991215955733704}
+            state = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 3.00,
+                     'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.73,
+                     'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 0.00}
             rs = RobotState()
             for key, value in state.items():
                 rs.joint_state.name.append(key)
@@ -347,9 +371,9 @@ class TestSrRobotCommander(TestCase):
 
     # whats the point of this?
     def test_run_joint_trajectory(self):
-        end_state = {'ra_shoulder_pan_joint': 0.5157461682721474, 'ra_elbow_joint': 0.6876824920327893,
-                     'ra_wrist_1_joint': -0.7695210732233582, 'ra_wrist_2_joint': 0.2298871642157314,
-                     'ra_shoulder_lift_joint': -0.9569080092786892, 'ra_wrist_3_joint': -0.25991215955733704}
+        end_state = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
+                     'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.73,
+                     'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 0.00}
         trajectory = self.robot_commander.plan_to_joint_value_target(end_state, angle_degrees=False,
                                                                      custom_start_state=None).joint_trajectory
         self.robot_commander.run_joint_trajectory(trajectory)
@@ -361,13 +385,13 @@ class TestSrRobotCommander(TestCase):
     def test_make_named_trajectory(self):
         trajectory = []
         trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.5157467, 'ra_elbow_joint': 0.24920327},
-                           "interpolate_time": 1.0, "pause_time": 1.0, "degrees": False})
-        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.2721474, 'ra_elbow_joint': 0.49203278},
-                           "interpolate_time": 0.5, "pause_time": 0.3, "degrees": False})
-        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.5121474, 'ra_elbow_joint': 0.82492032},
-                           "interpolate_time": 0.8, "pause_time": 0.6, "degrees": False})
-        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.4616827, 'ra_elbow_joint': 0.49203278},
-                           "interpolate_time": 0.5, "pause_time": 0.7, "degrees": False})
+                           "interpolate_time": 0.5, "pause_time": 0.1, "degrees": False})
+        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.6157467, 'ra_elbow_joint': 0.24920327},
+                           "interpolate_time": 0.4, "pause_time": 0.1, "degrees": False})
+        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.6157467, 'ra_elbow_joint': 0.44920327},
+                           "interpolate_time": 0.6, "pause_time": 0.1, "degrees": False})
+        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.7157467, 'ra_elbow_joint': 0.54920327},
+                           "interpolate_time": 0.7, "pause_time": 0.1, "degrees": False})
         t = self.robot_commander.make_named_trajectory(trajectory)
         all_positions = []
 
@@ -392,43 +416,67 @@ class TestSrRobotCommander(TestCase):
         rs = RobotState()
         rs.joint_state = js
 
-        end_joints['ra_shoulder_pan_joint'] += 3.14
-        end_joints['ra_elbow_joint'] += -0.7
+        end_joints['ra_shoulder_pan_joint'] += 2.14
+        end_joints['ra_elbow_joint'] += -0.1
 
         plan = self.robot_commander.plan_to_joint_value_target(end_joints,
                                                                angle_degrees=False, custom_start_state=rs)
         self.robot_commander.execute_plan(plan)
-        rospy.sleep(0.5)
+        rospy.sleep(1)
         self.robot_commander.send_stop_trajectory_unsafe()
         current_joints = self.robot_commander.get_current_state()
 
         diffs = [end_joints[key] - current_joints[key] for key in end_joints
                  if key in current_joints]
 
-        self.assertTrue(any(abs(diff) > 0.01 for diff in diffs))
+        rospy.logwarn("DIFFS ")
+        rospy.logwarn(diffs)
+        rospy.logwarn(list(abs(diff) < 0.01 for diff in diffs))
 
-    def self_run_named_trajectory_unsafe(self):
+        self.assertTrue(any(abs(diff) < 0.01 for diff in diffs))
+
+    def test_run_named_trajectory_unsafe(self):
         trajectory = []
         trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.5157467, 'ra_elbow_joint': 0.24920327},
-                           "interpolate_time": 1.0, "pause_time": 1.0, "degrees": False})
-        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.2721474, 'ra_elbow_joint': 0.49203278},
-                           "interpolate_time": 0.5, "pause_time": 0.3, "degrees": False})
-        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.5121474, 'ra_elbow_joint': 0.82492032},
-                           "interpolate_time": 0.8, "pause_time": 0.6, "degrees": False})
-        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.4616827, 'ra_elbow_joint': 0.49203278},
-                           "interpolate_time": 0.5, "pause_time": 0.7, "degrees": False})
+                           "interpolate_time": 0.5, "pause_time": 0.1, "degrees": False})
+        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.6157467, 'ra_elbow_joint': 0.24920327},
+                           "interpolate_time": 0.4, "pause_time": 0.1, "degrees": False})
+        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.6157467, 'ra_elbow_joint': 0.44920327},
+                           "interpolate_time": 0.6, "pause_time": 0.1, "degrees": False})
+        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.7157467, 'ra_elbow_joint': 0.54920327},
+                           "interpolate_time": 0.7, "pause_time": 0.1, "degrees": False})
+        self.robot_commander.run_named_trajectory_unsafe(trajectory, wait=False)
 
-        self.robot_commander.run_named_trajectory_unsafe(self, trajectory, wait=False)
-
-    
+    '''
     def run_named_trajectory(self, trajectory):
 
     def move_to_position_target(self, xyz, end_effector_link="", wait=True):
 
     def plan_to_position_target(self, xyz, end_effector_link="", custom_start_state=None):
+    '''
+    def test_zzzmove_to_pose_target(self):
 
-    def move_to_pose_target(self, pose, end_effector_link="", wait=True):
+        eef = self.robot_commander.get_end_effector_link()
+        curr_pose = self.robot_commander.get_current_pose()
+        rospy.logwarn(curr_pose)
 
+        pose = Pose()
+        pose.position.x = 0.40
+        pose.position.y = 0.50
+        pose.position.z = 1.5
+        pose.orientation.x = -0.60
+        pose.orientation.y = -0.20
+        pose.orientation.z = -0.72
+        pose.orientation.w = 0.25
+
+        self.robot_commander.move_to_pose_target(pose, eef)
+        rospy.sleep(2)
+
+        after_pose = self.robot_commander.get_current_pose()
+
+        rospy.logwarn(self.compare_poses(pose, after_pose))
+        rospy.logwarn(after_pose)
+    '''
     def plan_to_pose_target(self, pose, end_effector_link="", alternative_method=False, custom_start_state=None):
 
     def move_to_joint_value_target_unsafe(self, joint_states, time=0.002, wait=True, angle_degrees=False):

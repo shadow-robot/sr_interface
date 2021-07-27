@@ -699,7 +699,7 @@ class SrRobotCommander(object):
         """
         self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_pose_target(pose, end_effector_link)
-        self._move_group_commander.go(wait=wait)
+        self._move_group_commander.go(pose, wait=wait)
 
     def plan_to_pose_target(self, pose, end_effector_link="", alternative_method=False, custom_start_state=None):
         """
