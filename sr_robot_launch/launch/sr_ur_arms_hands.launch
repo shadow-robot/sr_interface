@@ -35,7 +35,6 @@
   <!-- Specify if the system has "both" hands, only "right", only "left" or "none" hands-->
   <arg name="hands" default="both"/>
   <arg name="robot_model" default="ur10e"/>
-  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
   <arg name="robot_name" default="$(arg robot_model)srh"/>
 
@@ -67,10 +66,6 @@
   <arg name="arm_2_z" default="0.0"/>
   <arg name="arm_x_separation" default="1.0"/>
   <arg name="arm_y_separation" default="1.0"/>
-  <arg name="arm_robot_hw_1" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
-  <arg name="arm_robot_hw_1" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/right_ur10e_arm_robot_hw.yaml"/>
-  <arg name="arm_robot_hw_2" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/left_bimanual_ur_arm_robot_hw.yaml"/>
-  <arg name="arm_robot_hw_2" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/left_bimanual_ur10e_arm_robot_hw.yaml"/>
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn group position controllers for the arms -->
@@ -101,7 +96,6 @@
   <group if="$(arg sim)">
       <include file="$(find sr_robot_launch)/launch/sr_bimanual_simulation_control_loop.launch">
         <arg name="debug" value="$(arg debug)"/>
-        <arg name="robot_description" value="$(arg robot_description)"/>
         <arg name="robot_name" value="$(arg robot_name)"/>
         <arg name="gui" value="$(arg gui)"/>
         <arg name="world" value="$(arg world)"/>
@@ -113,8 +107,9 @@
         <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
         <arg name="arm_1_z" value="$(arg arm_1_z)"/>
         <arg name="arm_2_z" value="$(arg arm_2_z)"/>
-        <arg name="hands" value="both"/>
+        <arg name="hands" value="$(arg hands)"/>
         <arg name="arms" value="true"/>
+        <arg name="robot_model" value="$(arg robot_model)"/>
         <arg name="arm_ctrl" value="$(arg arm_ctrl)"/>
         <arg name="hand_ctrl" value="$(arg hand_ctrl)"/>
         <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>
@@ -133,7 +128,6 @@
         <arg name="debug" value="$(arg debug)"/>
         <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
         <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
-        <arg name="robot_description" value="$(arg robot_description)"/>
         <arg name="robot_config_file" value="$(arg robot_config_file)"/>
         <arg name="hands" value="$(arg hands)"/>
         <arg name="rh_serial" value="$(arg rh_serial)"/>
@@ -147,8 +141,6 @@
         <arg name="arm_2_z" value="$(arg arm_2_z)"/>
         <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
         <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
-        <arg name="arm_robot_hw_1" value="$(arg arm_robot_hw_1)"/>
-        <arg name="arm_robot_hw_2" value="$(arg arm_robot_hw_2)"/>
         <arg name="arm_trajectory" value="$(arg arm_trajectory)"/>
         <arg name="arm_position" value="$(arg arm_position)"/>
         <arg name="right_arm_speed_scale" value="$(arg right_arm_speed_scale)"/>

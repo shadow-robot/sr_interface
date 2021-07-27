@@ -67,8 +67,6 @@
   <arg name="initial_z" default="0.1"/>
   <arg name="arm_x_separation" default="0.0"/>
   <arg name="arm_y_separation" default="0.0"/>
-  <arg name="arm_robot_hw" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
-  <arg name="arm_robot_hw" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/$(arg side)_ur10e_arm_robot_hw.yaml"/>
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn group position controllers for the arms -->
@@ -133,7 +131,6 @@
         <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
         <arg name="side" value="$(arg side)"/>
         <arg name="robot_model" value="$(arg robot_model)"/>
-        <arg name="arm_robot_hw" value="$(arg arm_robot_hw)"/>
         <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
         <arg name="arm_payload_mass" value="$(arg arm_payload_mass)"/>
         <arg name="arm_payload_cog" value="$(arg arm_payload_cog)"/>

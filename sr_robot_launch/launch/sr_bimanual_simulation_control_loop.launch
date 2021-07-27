@@ -22,7 +22,7 @@
   <!-- HAND RELATED CONFIG-->
   <!-- Set to true to spawn the position controllers for the hands-->
   <arg name="hand_ctrl" unless="$(eval hands == 'none')" default="true"/>
-  <arg name="hand_ctrl" if="$(eval hands == 'none')" value="false"/>
+  <arg name="hand_ctrl" if="$(eval hands == 'none')" default="false"/>
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="hand_trajectory" default="true"/>
   <!-- Set to true if you want to use hybrid controller -->
@@ -41,12 +41,12 @@
   <arg name="arm_position" default="$(eval not arm_trajectory and arms)"/>
 
   <!-- Robot description related config-->
-  <arg if="$(arg arms)" name="robot_name" default="$(arg robot_model)srh"/>
   <arg name="robot_model" default="ur10e"/>
   <arg name="arm_x_separation" default="1.0"/>
   <arg name="arm_y_separation" default="1.0"/>
   <arg name="arm_1_z" default="0.0"/>
   <arg name="arm_2_z" default="0.0"/>
+  <arg if="$(arg arms)" name="robot_name" default="$(arg robot_model)srh"/>
 
   <!-- LOADING ROBOT DESCRIPTION-->
   <include file="$(find sr_robot_launch)/launch/load_robot_description_bimanual.launch">
