@@ -55,6 +55,7 @@
 
   <!-- LOADING ROBOT DESCRIPTION-->
     <include file="$(find sr_robot_launch)/launch/load_robot_description.launch">
+    <arg name="sim" default="true"/>
     <arg name="side" default="$(arg side)"/>
     <arg name="arm" default="$(arg arm)"/>
     <arg name="hand" value="$(arg hand)"/>
