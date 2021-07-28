@@ -47,11 +47,11 @@
   <arg name="arm_position" default="$(eval not arm_trajectory and arm)"/>
 
   <!-- Robot description related config-->
-  <arg if="$(arg arm)" name="robot_name" default="$(arg robot_model)srh"/>
-  <arg if="$(arg arm)" name="initial_z" default="0.1"/>
   <arg name="robot_model" default="ur10e"/>
   <arg name="arm_x_separation" default="0.0"/>
   <arg name="arm_y_separation" default="0.0"/>
+  <arg if="$(arg arm)" name="robot_name" default="$(arg robot_model)srh"/>
+  <arg if="$(arg arm)" name="initial_z" default="0.1"/>
 
   <!-- LOADING ROBOT DESCRIPTION-->
     <include file="$(find sr_robot_launch)/launch/load_robot_description.launch">

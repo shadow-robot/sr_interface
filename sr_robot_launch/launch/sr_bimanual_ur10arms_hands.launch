@@ -38,8 +38,6 @@
   <!-- Specify if the system has arms or is only a hand bimanual system -->
   <arg name="arms" default="true"/>
   <arg name="robot_model" default="ur10e"/>
-  <arg name="robot_description" unless="$(eval arg('hands') == 'none')" default="'$(find sr_multi_description)/urdf/bimanual_srhand_plus_bt_sp_biotacs_$(arg robot_model).urdf.xacro'"/>
-  <arg name="robot_description" if="$(eval arg('hands') == 'none')" default="'$(find sr_multi_description)/urdf/bimanual_$(arg robot_model).urdf.xacro'"/>
   <arg name="robot_config_file" unless="$(eval arg('hands') == 'none')" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
   <arg name="robot_config_file" if="$(eval arg('hands') == 'none')" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_$(arg robot_model).yaml"/>
 
@@ -98,7 +96,6 @@
     <arg name="right_arm_speed_scale" value="$(arg right_arm_speed_scale)"/>
     <arg name="left_arm_speed_scale" value="$(arg left_arm_speed_scale)"/>
     <arg name="hands" value="$(arg hands)"/>
-    <arg name="robot_description" value="$(arg robot_description)"/>
     <arg name="robot_config_file" value="$(arg robot_config_file)"/>
     <arg name="robot_model" value="$(arg robot_model)"/>
     <arg name="robot_name" value="$(arg robot_model)srh"/>

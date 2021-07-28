@@ -107,7 +107,7 @@
         <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
         <arg name="arm_1_z" value="$(arg arm_1_z)"/>
         <arg name="arm_2_z" value="$(arg arm_2_z)"/>
-        <arg name="hands" value="$(arg hands)"/>
+        <arg name="hands" value="both"/>
         <arg name="arms" value="true"/>
         <arg name="robot_model" value="$(arg robot_model)"/>
         <arg name="arm_ctrl" value="$(arg arm_ctrl)"/>
