@@ -1,4 +1,6 @@
 <launch>
+  <arg name="sim"/>
+
   <!-- ROBOT CONFIGS -->
   <arg name="arms" default="true"/>
   <!-- Specify if the system has "both" hands, only "right", only "left" or "none" hands-->
@@ -8,10 +10,9 @@
   <arg name="hand_x_separation" default="-0.4"/>
   <arg name="biotacs" default="false"/>
 
-  <group unless="$(arg arms)">
-    <arg name="robot_description" default="'$(find sr_description)/robots/bimanual_shadowhand_motor_plus.urdf.xacro'"/>
-    <param name="robot_description" command="xacro $(arg robot_description) arm_x_separation:=$(arg hand_x_separation) "/>
-  </group>
+  <arg unless="$(arg arms)" name="robot_description" default="'$(find sr_description)/robots/bimanual_shadowhand_motor_plus.urdf.xacro'"/>
+
+  <arg unless="$(arg arms)" name="load_robot_description_command" value="xacro $(arg robot_description) arm_x_separation:=$(arg hand_x_separation) "/>
 
   <!-- ARM SPECIFIC CONFIG-->
   <arg name="robot_model" default="ur10e"/>
@@ -20,10 +21,24 @@
   <arg name="arm_1_z" default="0.0"/>
   <arg name="arm_2_z" default="0.0"/>
 
-  <group if="$(arg arms)">
-    <arg if="$(eval arg('hands') == 'none')" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_$(arg robot_model).urdf.xacro'"/>
-    <arg if="$(eval not arg('hands') == 'none' and not biotacs)" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
-    <arg if="$(eval not arg('hands') == 'none' and biotacs)" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_plus_bt_sp_biotacs_$(arg robot_model).urdf.xacro'"/>
-    <param name="robot_description" command="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
+  <arg if="$(eval arms and arg('hands') == 'none')" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_$(arg robot_model).urdf.xacro'"/>
+  <arg if="$(eval arms and not arg('hands') == 'none' and not biotacs)" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
+  <arg if="$(eval arms and not arg('hands') == 'none' and biotacs)" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_plus_bt_sp_biotacs_$(arg robot_model).urdf.xacro'"/>
+
+  <arg if="$(arg arms)" name="load_robot_description_command" value="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
+
+  <!-- LOAD THE DESCRIPTION -->
+  <param if="$(arg sim)" name="robot_description" command="$(arg load_robot_description_command)"/>
+  <group unless="$(arg sim)">
+    <node if="$(arg arms)" name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description" output="screen">
+      <param name="arm_type" value="$(arg robot_model)"/>
+      <param name="robot_description_file" value="$(arg robot_description)"/>
+      <param name="arm_1_z" value="$(arg arm_1_z)"/>
+      <param name="arm_2_z" value="$(arg arm_2_z)"/>
+      <param name="arm_x_separation" value="$(arg arm_x_separation)"/>
+      <param name="arm_y_separation" value="$(arg arm_y_separation)"/>
+    </node>
+
+    <param unless="$(arg arms)" name="robot_description" command="$(arg load_robot_description_command)"/>
   </group>
 </launch>

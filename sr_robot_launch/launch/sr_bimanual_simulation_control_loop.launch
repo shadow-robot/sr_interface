@@ -52,7 +52,8 @@
 
   <!-- LOADING ROBOT DESCRIPTION-->
   <include file="$(find sr_robot_launch)/launch/load_robot_description_bimanual.launch">
-    <arg name="arms" default="$(arg arms)"/>
+    <arg name="sim" value="true"/>
+    <arg name="arms" value="$(arg arms)"/>
     <arg name="hands" value="$(arg hands)"/>
     <arg name="robot_model" value="$(arg robot_model)"/>
     <arg name="hand_x_separation" value="$(arg hand_x_separation)"/>
