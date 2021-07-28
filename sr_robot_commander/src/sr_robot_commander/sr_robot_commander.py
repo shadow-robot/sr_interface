@@ -246,7 +246,7 @@ class SrRobotCommander(object):
                                     for joint, i in joint_states_cpy.items())
         self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
-        self._move_group_commander.go(wait=wait)
+        self._move_group_commander.go(joint_states_cpy, wait=wait)
 
     def plan_to_joint_value_target(self, joint_states, angle_degrees=False, custom_start_state=None):
         """
@@ -719,7 +719,7 @@ class SrRobotCommander(object):
             self._move_group_commander.set_joint_value_target(pose, end_effector_link)
         else:
             self._move_group_commander.set_pose_target(pose, end_effector_link)
-        self.__plan = self._move_group_commander.plan()[TUPLE_TRAJECTORY_INDEX]
+        self.__plan = self._move_group_commander.plan(pose)[TUPLE_TRAJECTORY_INDEX]
         return self.__plan
 
     def _joint_states_callback(self, joint_state):
@@ -793,6 +793,9 @@ class SrRobotCommander(object):
             goal.trajectory.points = [point]
 
             goals[controller] = goal
+        
+        rospy.logerr("GOALS")
+        rospy.logerr(goals)
 
         self._call_action(goals)
 
