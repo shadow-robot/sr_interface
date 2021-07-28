@@ -109,7 +109,7 @@ class SrRobotCommander(object):
         self.listener = tf2_ros.TransformListener(self.tf_buffer)
 
         threading.Thread(None, rospy.spin)
-
+        
     def _is_trajectory_valid(self, trajectory, required_keys):
         if type(trajectory) != list:
             rospy.logerr("Trajectory is not a list of waypoints")
@@ -324,8 +324,7 @@ class SrRobotCommander(object):
         if plan_quality > medium_threshold:
             rospy.logwarn("Low plan quality! Value: {}".format(plan_quality))
             return 'poor'
-        elif (plan_quality > good_threshold and
-                plan_quality < medium_threshold):
+        elif (plan_quality > good_threshold and plan_quality < medium_threshold):
             rospy.loginfo("Medium plan quality. Value: {}".format(plan_quality))
             return 'medium'
         elif plan_quality < good_threshold:
