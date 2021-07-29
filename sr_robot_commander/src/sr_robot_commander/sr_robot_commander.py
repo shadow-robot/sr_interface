@@ -794,8 +794,6 @@ class SrRobotCommander(object):
 
             goals[controller] = goal
         
-        rospy.logerr("GOALS")
-        rospy.logerr(goals)
 
         self._call_action(goals)
 
@@ -954,7 +952,7 @@ class SrRobotCommander(object):
         service_request.group_name = self._name
         service_request.ik_link_name = self._move_group_commander.get_end_effector_link()
         service_request.pose_stamped = target_pose
-        service_request.timeout.secs = 0.5
+        service_request.timeout.secs = 1
         service_request.avoid_collisions = avoid_collisions
         if ik_constraints is not None:
             service_request.constraints = ik_constraints
