@@ -44,9 +44,10 @@ import tf2_ros
 import copy
 import numpy
 
-# Since Moveit update to noetic, the plan() method returns a tuple where trajectory is indexed at 1. 
+# Since Moveit update to noetic, the plan() method returns a tuple where trajectory is indexed at 1.
 # More info here: https://github.com/ros-planning/moveit/blob/master/MIGRATION.md
 TUPLE_TRAJECTORY_INDEX = 1
+
 
 class SrRobotCommanderException(Exception):
 
@@ -109,7 +110,7 @@ class SrRobotCommander(object):
         self.listener = tf2_ros.TransformListener(self.tf_buffer)
 
         threading.Thread(None, rospy.spin)
-        
+
     def _is_trajectory_valid(self, trajectory, required_keys):
         if type(trajectory) != list:
             rospy.logerr("Trajectory is not a list of waypoints")
@@ -789,11 +790,8 @@ class SrRobotCommander(object):
                     point.positions.append(joint_states_cpy[x])
 
             point.time_from_start = rospy.Duration.from_sec(time)
-
             goal.trajectory.points = [point]
-
             goals[controller] = goal
-        
 
         self._call_action(goals)
 
