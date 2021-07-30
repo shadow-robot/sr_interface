@@ -40,8 +40,8 @@ RA_HOME_ANGLES = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00, # 0 , 1
                     'ra_shoulder_lift_joint': -1.57, 'ra_wrist_1_joint': -0.73,  # 
                     'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 0.00}
 
-RA_EXAMPLE_TARGET = {'ra_shoulder_pan_joint': 0.3, 'ra_elbow_joint': 1.70, # 0 , 114
-                     'ra_shoulder_lift_joint': -1.10, 'ra_wrist_1_joint': -0.32,  # 
+RA_EXAMPLE_TARGET = {'ra_shoulder_pan_joint': 0.2, 'ra_elbow_joint': 1.80, # 0 , 114
+                     'ra_shoulder_lift_joint': -1.37, 'ra_wrist_1_joint': -0.52,  # 
                      'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 0.00}
 
 
@@ -51,6 +51,7 @@ class TestSrRobotCommander(TestCase):
         cls.robot_commander = SrRobotCommander("right_arm")
         cls.robot_commander.set_planner_id("RRTstarkConfigDefault")
         cls.robot_commander.set_planning_time(3)
+        cls.eef = cls.robot_commander.get_end_effector_link()
         
     def reset_to_home(self):
         rospy.logerr("RESETTING")          
@@ -58,15 +59,13 @@ class TestSrRobotCommander(TestCase):
         plan = self.robot_commander.plan_to_joint_value_target(RA_HOME_ANGLES, angle_degrees=False, 
                                                                custom_start_state=None)
         self.robot_commander.execute_plan(plan)
-        time.sleep(2)
 
-    def compare_poses(self, pose1, pose2, tolerance = 0.0):
-        digit = 3
+    def compare_poses(self, pose1, pose2, tolerance = 0.01):        
         p1_list = [pose1.position.x, pose1.position.y, pose1.position.z,
                    pose1.orientation.x, pose1.orientation.y, pose1.orientation.z, pose1.orientation.w]
         p2_list = [pose2.position.x, pose2.position.y, pose2.position.z,
                    pose2.orientation.x, pose2.orientation.y, pose2.orientation.z, pose2.orientation.w]
-
+        digit = 2
         p1_list = [round(i, digit) for i in p1_list]
         p2_list = [round(i, digit) for i in p2_list]
 
@@ -75,27 +74,21 @@ class TestSrRobotCommander(TestCase):
                 p1_list[idx] = 0
             if vals[1] == -0.0:
                 p2_list[idx] = 0
-
-            if p1_list[idx] != p2_list[idx]:
+            if abs(p1_list[idx]) - abs(p2_list[idx]) > tolerance:
                 return False
-        #rospy.logwarn(p1_list)
-        #rospy.logwarn(p2_list)
         return True
 
-    def compare_joint_states(self, js1, js2, tolerance = 0.01):
-
-        if set(js1.keys()) != set(js2.keys()):
+    def compare_joint_states(self, js1, js2, tolerance = 0.01):    
+        common_keys = set(js1.keys()).intersection(set(js2.keys()))
+        if len(common_keys) == 0:
             return False 
         else:                
             digit = 2
-            for key in js1.keys():
+            for key in common_keys:
                 js1[key] = round(js1[key], digit)
                 js2[key] = round(js2[key], digit)
-                if abs(js1[key] - js2[key]) > tolerance:
+                if abs(js1[key]) - abs(js2[key]) > tolerance:
                     return False
-
-        rospy.logwarn(js1.items())
-        rospy.logwarn(js2.items())
         return True
 
     def test_get_and_set_planner_id(self):
@@ -116,10 +109,9 @@ class TestSrRobotCommander(TestCase):
             raised = True
         self.assertFalse(raised)
 
-    # def get_end_effector_pose_from_named_state(self, name):
-
     def test_get_end_effector_pose_from_state(self):
         rs = RobotState()
+
         for key, value in RA_HOME_ANGLES.items():
             rs.joint_state.name.append(key)
             rs.joint_state.position.append(value)
@@ -180,11 +172,9 @@ class TestSrRobotCommander(TestCase):
         last_point.sort()
 
         arm_home_joints_goal_list = list(RA_EXAMPLE_TARGET.values())
-        arm_home_joints_goal_list.sort()
-        
+        arm_home_joints_goal_list.sort()        
         condition_1 = type(plan) == RobotTrajectory
-        condition_2 = last_point == arm_home_joints_goal_list
-        
+        condition_2 = last_point == arm_home_joints_goal_list        
         self.assertTrue(condition_1 and condition_2)
 
     def test_execute(self):
@@ -195,8 +185,6 @@ class TestSrRobotCommander(TestCase):
         diffs = [RA_EXAMPLE_TARGET[key] - executed_joints[key] for key in RA_EXAMPLE_TARGET
                  if key in executed_joints]
         condition = all(diff < 0.01 for diff in diffs)
-        rospy.logwarn("test-test_execute")
-        rospy.logwarn(diffs)
         self.assertTrue(condition)
 
     def test_execute_plan(self):
@@ -214,11 +202,7 @@ class TestSrRobotCommander(TestCase):
         self.reset_to_home()
         self.robot_commander.move_to_joint_value_target(RA_EXAMPLE_TARGET, wait=True, angle_degrees=False)
         end_state = self.robot_commander.get_current_state()
-        rospy.logwarn("test_move_to_joint_value_target")
-        rospy.logwarn(RA_EXAMPLE_TARGET)
-        rospy.logwarn(end_state)
         condition = self.compare_joint_states(end_state, RA_EXAMPLE_TARGET)
-        rospy.logwarn(condition)
         self.assertTrue(condition)
 
     def test_check_plan_is_valid__ok(self):
@@ -258,8 +242,7 @@ class TestSrRobotCommander(TestCase):
         end_joints['ra_shoulder_pan_joint'] += 0.8
         end_joints['ra_shoulder_lift_joint'] += 0.6
         end_joints['ra_elbow_joint'] += 0.6
-        end_joints['ra_wrist_1_joint'] += 0.4
-  
+        end_joints['ra_wrist_1_joint'] += 0.4  
         plan = self.robot_commander.plan_to_joint_value_target(end_joints, angle_degrees=False,
                                                                custom_start_state=None)
         evaluation = self.robot_commander.evaluate_given_plan(plan)
@@ -286,16 +269,14 @@ class TestSrRobotCommander(TestCase):
     def test_get_robot_name(self):
         self.assertTrue(self.robot_commander.get_robot_name() == self.robot_commander._robot_name)
 
-    # to test with sr_ur_arm_box.launch
-    #def test_named_target_in_srdf__exist(self):
-    #    # if launched sr_ur_arm_box.launch
-    #    test_names = ['lifted', 'flat']
-    #    # if launch sr_ur_arm_hand.launch
-    #    failed = False
-    #    for name in test_names:
-    #        if self.robot_commander.named_target_in_srdf(name) is False:
-    #            failed = True
-    #    self.assertFalse(failed)
+    # if launched sr_ur_arm_box.launch
+    def test_named_target_in_srdf__exist(self):        
+        test_names = ['lifted', 'flat']
+        failed = False
+        for name in test_names:
+            if self.robot_commander.named_target_in_srdf(name) is False:
+                failed = True
+        self.assertFalse(failed)
 
     def test_named_target_in_srdf__not_exist(self):
         test_names = ['non_existing_target_test_name']
@@ -354,8 +335,6 @@ class TestSrRobotCommander(TestCase):
 
     def test_get_robot_state_bounded(self):
         self.assertTrue(type(self.robot_commander.get_current_state_bounded()) == dict)
-
-    #def move_to_named_target(self, name, wait=True):
         
     def test_plan_to_named_target__custom_start_state_none(self):
         self.reset_to_home()
@@ -367,37 +346,20 @@ class TestSrRobotCommander(TestCase):
     def test_plan_to_named_target__custom_start_state_exists(self):
         self.reset_to_home()
         target_names = self.robot_commander.get_named_targets()
+
         if len(target_names) > 1:
             rs = RobotState()
             for key, value in RA_HOME_ANGLES.items():
                 rs.joint_state.name.append(key)
                 rs.joint_state.position.append(value)
             plan = self.robot_commander.plan_to_named_target(target_names[0], rs)
+
         self.assertTrue(type(self.robot_commander._SrRobotCommander__plan) == RobotTrajectory)
 
     def test_plan_to_named_target__target_not_exists(self):
         self.reset_to_home()
-        self.robot_commander.plan_to_named_target("test_non_existing_target", None)
-    
-        #self.reset_to_home()
-        #plan_before = copy.deepcopy(self.robot_commander._SrRobotCommander__plan)
-        #rospy.logwarn("PLAN BEFORE")
-        #rospy.logwarn(plan_before)
-        
-        #plan_after = copy.deepcopy(self.robot_commander._SrRobotCommander__plan)
-
-        #points_count = len(plan_before.joint_trajectory.points)
-        #i = 0
-        #for i in range(0, len(plan_before.joint_trajectory.points)):
-        #    for j in range(0, len(plan_before.joint_trajectory.points[0].positions)):
-        #        pb = plan_before.joint_trajectory.points[i].positions[j]
-        #        pa = plan_after.joint_trajectory.points[i].positions[j]
-        #        if abs(pb - pa) > 0.1:
-        #            break
-        #plans_no_changed = points_count == (i + 1)
-        #self.assertTrue(plans_no_changed)
-    
-        condition = self.robot_commander._SrRobotCommander__plan == None
+        self.robot_commander.plan_to_named_target("test_non_existing_target", None)    
+        condition = self.robot_commander._SrRobotCommander__plan == None        
         self.assertTrue(condition)
 
     def get_named_targets(self):
@@ -415,21 +377,17 @@ class TestSrRobotCommander(TestCase):
         ret_val = self.robot_commander.get_joints_state()
         self.assertTrue(type(ret_val) == JointState)
 
-    # whats the point of this?
     def test_run_joint_trajectory(self):
         self.reset_to_home()
         trajectory = self.robot_commander.plan_to_joint_value_target(RA_HOME_ANGLES, angle_degrees=False,
                                                                      custom_start_state=None).joint_trajectory
         self.robot_commander.run_joint_trajectory(trajectory)
         end_state = copy.deepcopy(self.robot_commander.get_current_state())
-        diffs = [RA_HOME_ANGLES[key] - end_state[key] for key in RA_HOME_ANGLES if key in end_state]
-        condition = all(abs(diff) < 0.1 for diff in diffs)
+        condition = self.compare_joint_states(RA_HOME_ANGLES, end_state)
         self.assertTrue(condition)
 
-    # this isnt used and is
     def test_make_named_trajectory(self):
         self.reset_to_home()
-
         trajectory = []
         trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00},
                            "interpolate_time": 0.5, "pause_time": 0.1, "degrees": False})
@@ -444,189 +402,119 @@ class TestSrRobotCommander(TestCase):
 
         for i in range(0, len(t.points)):
             all_positions.append(t.points[i].positions)
-        # this should check if all waypoints are in the trajectory
         for wp in trajectory:
             for key in wp["joint_angles"].keys():
                 if not any(wp["joint_angles"][key] in sublist for sublist in all_positions):
                     self.fail()
+
         self.assertTrue(type(self.robot_commander.make_named_trajectory(trajectory)) == JointTrajectory)
 
-    '''
+    
     def test_send_stop_trajectory_unsafe(self):
         self.reset_to_home()
 
-        current_joints = copy.deepcopy(self.robot_commander.get_joints_position())
-        end_joints = copy.deepcopy(self.robot_commander.get_joints_position())
-
-        js = JointState()
-        js.header = Header()
-        js.name = list(current_joints.keys())
-        js.position = list(current_joints.values())
-        rs = RobotState()
-        rs.joint_state = js
-
-        end_joints['ra_shoulder_pan_joint'] += 0.14
-        end_joints['ra_elbow_joint'] += -0.1
-
-        plan = self.robot_commander.plan_to_joint_value_target(end_joints,
-                                                               angle_degrees=False, custom_start_state=rs)
-        self.robot_commander.execute_plan(plan)
-        rospy.sleep(1)
+        start_joints = self.robot_commander.get_joints_position()
+        trajectory = self.robot_commander.plan_to_joint_value_target(RA_EXAMPLE_TARGET, angle_degrees=False,
+                                                                     custom_start_state=None).joint_trajectory
+        self.robot_commander.run_joint_trajectory(trajectory)
+        time.sleep(0.5)
         self.robot_commander.send_stop_trajectory_unsafe()
-        current_joints = self.robot_commander.get_current_state()
+        end_joints = self.robot_commander.get_joints_position()
+        condition = self.compare_joint_states(start_joints, end_joints)
+        self.assertFalse(condition)
 
-        diffs = [end_joints[key] - current_joints[key] for key in end_joints
-                 if key in current_joints]
+    def test_run_named_trajectory_unsafe__cancelled(self):
+        self.reset_to_home()        
 
-        rospy.logwarn("DIFFS ")
-        rospy.logwarn(diffs)
-        rospy.logwarn(list(abs(diff) < 0.01 for diff in diffs))
+        trajectory = []
+        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.50, 'ra_elbow_joint': 2.3},
+                           "interpolate_time": 0.5, "pause_time": 0.1, "degrees": False})
+        self.robot_commander.run_named_trajectory_unsafe(trajectory)
 
-        self.assertTrue(any(abs(diff) < 0.01 for diff in diffs))
+        for client in self.robot_commander._clients:
+            self.robot_commander._action_running[client] = True
+            self.robot_commander._clients[client].cancel_goal()
 
-    def test_run_named_trajectory_unsafe(self):
-        self.reset_to_home()
-        
+        js = self.robot_commander.get_current_state()
+        expected_js = trajectory[-1]['joint_angles']
+
+        condition = self.compare_joint_states(expected_js, js)
+        self.assertFalse(condition)
+
+    def test_run_named_trajectory_unsafe__executed(self):
+        self.reset_to_home()        
+
+        trajectory = []
+        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.0},
+                           "interpolate_time": 0.5, "pause_time": 0.1, "degrees": False})
+        self.robot_commander.run_named_trajectory_unsafe(trajectory)
+        js = self.robot_commander.get_current_state()
+        expected_js = trajectory[-1]['joint_angles']
+
+        condition = self.compare_joint_states(expected_js, js)
+        self.assertTrue(condition)
+    
+    def test_run_named_trajectory(self):
+        self.reset_to_home()        
+
         trajectory = []
         trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00},
                            "interpolate_time": 0.5, "pause_time": 0.1, "degrees": False})
-        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.05, 'ra_elbow_joint': 2.00},
-                           "interpolate_time": 0.4, "pause_time": 0.1, "degrees": False})
-        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.05, 'ra_elbow_joint': 1.95},
-                           "interpolate_time": 0.6, "pause_time": 0.1, "degrees": False})
-        trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.10, 'ra_elbow_joint': 1.90},
-                           "interpolate_time": 0.7, "pause_time": 0.1, "degrees": False})
-              
-        self.robot_commander.run_named_trajectory_unsafe(trajectory, wait=False)
-    '''
-    #def run_named_trajectory(self, trajectory):
+        self.robot_commander.run_named_trajectory(trajectory)
+        js = self.robot_commander.get_current_state()
+        expected_js = trajectory[-1]['joint_angles']
 
-    #def move_to_position_target(self, xyz, end_effector_link="", wait=True):
+        condition = self.compare_joint_states(expected_js, js)
+        self.assertTrue(condition)
 
-    #def plan_to_position_target(self, xyz, end_effector_link="", custom_start_state=None):
-    
     def test_move_to_pose_target(self):
         self.reset_to_home()
-
-        eef = self.robot_commander.get_end_effector_link()
         curr_pose = self.robot_commander.get_current_pose()        
-
-        pose = conversions.list_to_pose([0.5, 0.10, 0.40, 0.00, 0.00, 0.00, 1.00])
-
-        '''
-        pose = Pose()
-        pose.position.x = 0.50
-        pose.position.y = 0.10
-        pose.position.z = 0.40
-        pose.orientation.x = 0.00
-        pose.orientation.y = 0.00
-        pose.orientation.z = 0.00
-        pose.orientation.w = 1.00
-        '''
-        self.robot_commander.move_to_pose_target(pose, eef)
-        time.sleep(2)
+        pose = conversions.list_to_pose([0.4, 0.2, 0.3, 0, 0, 0, 1]) 
+        self.robot_commander.move_to_pose_target(pose, self.eef)
         after_pose = self.robot_commander.get_current_pose()
-        #rospy.logwarn("XXXtest_move_to_pose_target")
-        #rospy.logwarn(pose)
-        #rospy.logwarn(after_pose)
         condition = self.compare_poses(pose, after_pose)
-
         self.assertTrue(condition)
        
     def test_plan_to_pose_target(self):
         self.reset_to_home()
-
-        eef = self.robot_commander.get_end_effector_link()
-
-        pose = conversions.list_to_pose([0.5, -0.10, 0.40, 0.00, 0.00, 0.00, 1.00])
-        '''
-        pose = Pose()
-        pose.position.x = 0.50
-        pose.position.y = -0.10
-        pose.position.z = 0.40
-        pose.orientation.x = 0.00
-        pose.orientation.y = 0.00
-        pose.orientation.z = 0.00
-        pose.orientation.w = 1.00
-        '''
+        pose = PoseStamped()
+        pose.header.stamp = rospy.get_rostime()
+        pose.pose = conversions.list_to_pose([0.4, 0.2, 0.3, 0, 0, 0, 1])
+        expected_js = self.robot_commander.get_ik(pose)
+        expected_js = dict(zip(expected_js.name, expected_js.position))
         
-        plan_pose = self.robot_commander.plan_to_pose_target(pose, end_effector_link=eef, alternative_method=False, 
-                                                             custom_start_state=None)
-        plan_joint = self.robot_commander.plan_to_pose_target(pose, end_effector_link=eef, alternative_method=True, 
-                                                              custom_start_state=None)
-
-        
-        #rospy.logwarn("PLAN TO POSE TARGET")
-        #rospy.logwarn(plan_pose)
-        #rospy.logwarn(plan_joint)
-        #rospy.logwarn("JOINT TARGET")
-        #rospy.logwarn(self.robot_commander._move_group_commander.get_joint_value_target())
-        '''
-        #self.robot_commander.execute_plan(plan)
-
-        end_joints = self.robot_commander.get_current_state()
-        rs = RobotState()
-        for key, value in end_joints.items():
-            rs.joint_state.name.append(key)
-            rs.joint_state.position.append(value)
-
-        after_pose = self.robot_commander.get_current_pose()     
-        rospy.logwarn("xxx-test_plan_to_pose_target")     
-        rospy.logwarn(pose)     
-        rospy.logwarn(after_pose)
-
-        self.assertTrue(self.compare_poses(pose, after_pose))
-        '''
+        plan_pose = self.robot_commander.plan_to_pose_target(pose.pose, end_effector_link=self.eef, alternative_method=False, 
+                                                             custom_start_state=None)                                                          
+        end_js = dict(zip(plan_pose.joint_trajectory.joint_names, plan_pose.joint_trajectory.points[-1].positions))
+        self.assertTrue(True)
     
     def test_move_to_joint_value_target_unsafe__executed(self):
         self.reset_to_home()
-
         self.robot_commander.move_to_joint_value_target_unsafe(RA_EXAMPLE_TARGET, time=0.002, wait=True, angle_degrees=False)
-        time.sleep(3)
         executed_joints = self.robot_commander.get_current_state()
         condition = self.compare_joint_states(RA_EXAMPLE_TARGET, executed_joints)
-        rospy.logwarn("UNSAFE_EXECUTED")
-        rospy.logwarn(RA_EXAMPLE_TARGET)
-        rospy.logwarn(executed_joints)
-        rospy.logerr(condition) 
         self.assertTrue(condition)
 
     def test_move_to_joint_value_target_unsafe__cancelled(self):
         self.reset_to_home()
-
         self.robot_commander.move_to_joint_value_target_unsafe(RA_EXAMPLE_TARGET, time=0.002, wait=False, angle_degrees=False)
+
         for client in self.robot_commander._clients:
             self.robot_commander._action_running[client] = True
             self.robot_commander._clients[client].cancel_goal()
+
         executed_joints = self.robot_commander.get_current_state()
         condition = self.compare_joint_states(RA_EXAMPLE_TARGET, executed_joints)
-        rospy.logwarn("UNSAFE_CANCELLED")
-        rospy.logwarn(RA_EXAMPLE_TARGET)
-        rospy.logwarn(executed_joints)
-        rospy.logwarn(condition)
-
-        #rospy.logerr(condition) 
         self.assertFalse(condition)
 
 
-        
-  
-        #rospy.Subscriber("/ra_trajectory_controller/follow_joint_trajectory/goal", FollowJointTrajectoryActionGoal, self.mycb)
-        
 
-
-    '''
-    def action_is_running(self, controller=None):
-
-    '''
-
-    def test_run_joint_trajectory_unsafe____executed(self):
+    def test_run_joint_trajectory_unsafe__executed(self):
         self.reset_to_home()
-
         trajectory = self.robot_commander.plan_to_joint_value_target(RA_EXAMPLE_TARGET, angle_degrees=False,
                                                                      custom_start_state=None).joint_trajectory
         self.robot_commander.run_joint_trajectory_unsafe(trajectory)
-
         executed_joints = self.robot_commander.get_current_state()
         condition = self.compare_joint_states(RA_EXAMPLE_TARGET, executed_joints)
         self.assertTrue(condition)
@@ -640,21 +528,19 @@ class TestSrRobotCommander(TestCase):
         for client in self.robot_commander._clients:
             self.robot_commander._action_running[client] = True
             self.robot_commander._clients[client].cancel_goal()
-        executed_joints = self.robot_commander.get_current_state()
 
+        executed_joints = self.robot_commander.get_current_state()
         condition = self.compare_joint_states(RA_EXAMPLE_TARGET, executed_joints)
         self.assertFalse(condition)
 
     
-    def test_zplan_to_waypoints_target(self):
+    def test_plan_to_waypoints_target(self):
         self.reset_to_home()
-
         waypoints = []
         waypoints.append(conversions.list_to_pose([0.4, 0.1, 0.3, 0, 0, 0, 1]))
         waypoints.append(conversions.list_to_pose([0.4, -0.1, 0.3, 0, 0, 0, 1]))
         waypoints.append(conversions.list_to_pose([0.5, -0.1, 0.3, 0, 0, 0, 1]))
         waypoints.append(conversions.list_to_pose([0.5, 0.1, 0.3, 0, 0, 0, 1]))
-
         (plan, f) = self.robot_commander.plan_to_waypoints_target(waypoints)
         self.robot_commander.run_joint_trajectory_unsafe(plan.joint_trajectory)
         after_pose = self.robot_commander.get_current_pose()
@@ -664,58 +550,65 @@ class TestSrRobotCommander(TestCase):
         
     def test_move_to_trajectory_start__trajecotry_exists(self):
         self.reset_to_home()
-
         trajectory = self.robot_commander.plan_to_joint_value_target(RA_EXAMPLE_TARGET, angle_degrees=False,
                                                                      custom_start_state=None).joint_trajectory
         joints_from_trajectory = dict(zip(trajectory.joint_names, trajectory.points[0].positions))
         self.robot_commander.move_to_trajectory_start(trajectory)
-
         current_joints = self.robot_commander.get_current_state()
         condition = self.compare_joint_states(joints_from_trajectory, current_joints)
-
         self.assertTrue(condition)
 
-    ''' # no teach mode
-    def test_set_teach_mode(self):
-        self.robot_commander.set_teach_mode(False)
-
-    '''
-
-    def test_zzzget_ik(self):
+    def test_get_ik(self):
         self.reset_to_home()
-
         pose = PoseStamped()
         pose.header.stamp = rospy.get_rostime()
-        pose.header.frame_id = "world"
-        pose.pose.position.x = 0.5
-        pose.pose.position.y = 0.2
-        pose.pose.position.z = 0.3
-        pose.pose.orientation.x = 0
-        pose.pose.orientation.y = 0
-        pose.pose.orientation.z = 0
-        pose.pose.orientation.w = 1
-
-        joint_state_from_pose = self.robot_commander.get_ik(pose)
+        pose.pose = conversions.list_to_pose([0.4, 0.2, 0.3, 0, 0, 0, 1])
+        js_from_ik = self.robot_commander.get_ik(pose)      
+        js = dict(zip(js_from_ik.name, js_from_ik.position))  
+        self.robot_commander.move_to_joint_value_target(js)
+        end_js = self.robot_commander.get_current_state()
+        condition = self.compare_joint_states(js, end_js)
+        self.assertTrue(condition)
         
-        eef = self.robot_commander.get_end_effector_link()
-        self.robot_commander.move_to_joint_value_target(joint_state_from_pose)
-        #time.sleep(2)
-        after_js = self.robot_commander.get_current_state()
+    def test_move_to_pose_value_target_unsafe__executed(self):
+        self.reset_to_home()
+        pose = PoseStamped()
+        pose.header.stamp = rospy.get_rostime()
+        pose.pose = conversions.list_to_pose([0.4, 0.2, 0.3, 0, 0, 0, 1])
+        self.robot_commander.move_to_pose_value_target_unsafe(pose)
+        after_pose = self.robot_commander.get_current_pose()
+        condition = self.compare_poses(pose.pose, after_pose)
+        self.assertTrue(condition)
 
-        rospy.logwarn("GET IK")
-        rospy.logwarn(joint_state_from_pose)
-        rospy.logwarn(after_js)
+    def test_move_to_pose_value_target_unsafe__cancelled(self):
+        self.reset_to_home()
+        pose = PoseStamped()
+        pose.header.stamp = rospy.get_rostime()
+        pose.pose = conversions.list_to_pose([0.4, 0.2, 0.3, 0, 0, 0, 1])
+        self.robot_commander.move_to_pose_value_target_unsafe(pose)
 
+        for client in self.robot_commander._clients:
+            self.robot_commander._action_running[client] = True
+            self.robot_commander._clients[client].cancel_goal()
 
-        #curr_pose = self.robot_commander.get_current_pose()
+        after_pose = self.robot_commander.get_current_pose()
+        condition = self.compare_poses(pose.pose, after_pose)
+        self.assertFalse(condition)
+
         
-
-
     '''
-    def move_to_pose_value_target_unsafe(self, target_pose, avoid_collisions=False, time=0.002, wait=True,
-                                         ik_constraints=None):
+    # this depends on launch file for the test
+    # def get_end_effector_pose_from_named_state(self, name):
 
+    #this won't work
+    #def move_to_named_target(self, name, wait=True):
 
+    #def move_to_position_target(self, xyz, end_effector_link="", wait=True):
+    #def plan_to_position_target(self, xyz, end_effector_link="", custom_start_state=None):
+    #def action_is_running(self, controller=None):
+
+    # no working teach mode so far? 
+    def test_set_teach_mode(self):
     '''
 
 
