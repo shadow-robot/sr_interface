@@ -18,7 +18,7 @@
 from __future__ import absolute_import
 
 import collections
-import builtins
+from builtins import round
 import copy
 import rospy
 import rostest
@@ -162,7 +162,7 @@ class TestSrRobotCommander(TestCase):
     def test_plan_to_joint_value_target(self):
         self.reset_to_home()
         plan = self.robot_commander.plan_to_joint_value_target(RA_EXAMPLE_TARGET, angle_degrees=False,
-                                                                custom_start_state=None)
+                                                               custom_start_state=None)
         last_point = list(plan.joint_trajectory.points[-1].positions)
 
         for i in range(0, len(last_point)):
@@ -473,14 +473,14 @@ class TestSrRobotCommander(TestCase):
         pose.pose = conversions.list_to_pose([0.4, 0.2, 0.3, 0, 0, 0, 1])
         expected_js = self.robot_commander.get_ik(pose)
         expected_js = dict(zip(expected_js.name, expected_js.position))
-        plan_pose = self.robot_commander.plan_to_pose_target(pose.pose, end_effector_link=self.eef, 
+        plan_pose = self.robot_commander.plan_to_pose_target(pose.pose, end_effector_link=self.eef,
                                                              alternative_method=False, custom_start_state=None)
         end_js = dict(zip(plan_pose.joint_trajectory.joint_names, plan_pose.joint_trajectory.points[-1].positions))
         self.assertTrue(True)
 
     def test_move_to_joint_value_target_unsafe__executed(self):
         self.reset_to_home()
-        self.robot_commander.move_to_joint_value_target_unsafe(RA_EXAMPLE_TARGET, time=0.002, wait=True, 
+        self.robot_commander.move_to_joint_value_target_unsafe(RA_EXAMPLE_TARGET, time=0.002, wait=True,
                                                                angle_degrees=False)
         executed_joints = self.robot_commander.get_current_state()
         condition = self.compare_joint_states(RA_EXAMPLE_TARGET, executed_joints)
@@ -488,7 +488,7 @@ class TestSrRobotCommander(TestCase):
 
     def test_move_to_joint_value_target_unsafe__cancelled(self):
         self.reset_to_home()
-        self.robot_commander.move_to_joint_value_target_unsafe(RA_EXAMPLE_TARGET, time=0.002, wait=False, 
+        self.robot_commander.move_to_joint_value_target_unsafe(RA_EXAMPLE_TARGET, time=0.002, wait=False,
                                                                angle_degrees=False)
         for client in self.robot_commander._clients:
             self.robot_commander._action_running[client] = True
