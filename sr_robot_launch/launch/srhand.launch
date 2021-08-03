@@ -57,7 +57,7 @@
       <arg name="arm" value="false"/>
       <arg name="hand" value="true"/>
       <arg name="hand_ctrl" value="$(arg hand_ctrl)"/>
-      <arg name="hand_type"  value="$(arg hand_type)"/>/>
+      <arg name="hand_type"  value="$(arg hand_type)"/>
       <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>
       <arg name="grasp_controller" value="$(arg grasp_controller)"/>
       <arg name="hybrid_controller" value="$(arg hybrid_controller)"/>
@@ -78,9 +78,9 @@
         <arg name="grasp_controller" value="$(arg grasp_controller)"/>
         <arg name="hybrid_controller" value="$(arg hybrid_controller)"/>
         <arg name="hand_ctrl" value="$(arg hand_ctrl)"/>
+        <arg name="hand_type"  value="$(arg hand_type)"/>
         <arg name="arm" value="false"/>
         <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>
-        <arg name="hand_controller_group" value="$(arg hand_controller_group)"/>
       </include>
   </group>
 

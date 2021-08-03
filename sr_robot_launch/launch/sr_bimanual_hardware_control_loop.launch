@@ -4,6 +4,7 @@
   <arg name="joint_state_pub_frequency" default="125"/>
   <!-- Specify if the system has "both" hands, only "right", only "left", or "none"-->
   <arg name="hands" default="both"/>
+  <arg name="arms" default="true"/>
   <arg name="arm_ctrl" default="true"/>	
 
   <!-- ROBOT CONFIG-->
@@ -31,6 +32,8 @@
   <arg name="hand_trajectory" if="$(eval hands == 'none')" default="false"/>
   <!-- Wheather the hands have biotacs -->
   <arg name="biotacs" default="false"/>
+  <!-- Separation between the robots -->
+  <arg name="hand_x_separation" default="-0.4"/>
 
   <!-- ARMS CONFIG-->
   <arg name="arm_1_z" default="0.7551"/>
