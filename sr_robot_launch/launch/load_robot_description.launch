@@ -21,7 +21,7 @@
   <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_motor_plus.urdf.xacro'"/>
   <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e_plus')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_left_motor_plus.urdf.xacro'"/>
 
-  <arg unless="$(arg arm)" arg="load_robot_description_command" value="xacro $(arg robot_description) initial_z:=$(arg initial_z)"/>
+  <arg unless="$(arg arm)" name="load_robot_description_command" value="xacro $(arg robot_description) initial_z:=$(arg initial_z)"/>
 
   <!-- ARM SPECIFIC CONFIG-->
   <arg name="robot_model" default="ur10e"/>
