@@ -84,11 +84,11 @@
   <!-- Trajectory controllers list for moveit-->
   <arg if="$(eval not hand_trajectory and not arm_trajectory)" name="trajectory_controllers_list" default="[]"/>
   <arg if="$(eval hand_trajectory and arm_trajectory)" name="trajectory_controllers_list" 
-       default="[/$(arg arm_prefix)_trajectory_controller/state, /$(arg hand_id)_trajectory_controller/state]"/>
+       default="[a_trajectory_controller/state, h_trajectory_controller/state]"/>
   <arg if="$(eval hand_trajectory and not arm_trajectory)" name="trajectory_controllers_list"
-       default="[/$(arg hand_id)_trajectory_controller/state]"/>
+       default="[h_trajectory_controller/state]"/>
   <arg if="$(eval not hand_trajectory and arm_trajectory)" name="trajectory_controllers_list"
-       default="[/$(arg arm_prefix)_trajectory_controller/state]"/>
+       default="[a_trajectory_controller/state]"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(eval sim and not external_control_loop)">

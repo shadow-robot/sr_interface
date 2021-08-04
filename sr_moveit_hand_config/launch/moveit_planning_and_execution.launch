@@ -22,7 +22,7 @@
     <param name="package_name" value="sr_moveit_hand_config" />
     <param name="executable_name" value="move_group.launch" />
     <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
-    <rosparam param="topics_list" subst_value="True">$(arg trajectory_controllers_list)</rosparam>
+    <rosparam param="topics_list_partial" subst_value="True">$(arg trajectory_controllers_list)</rosparam>
     <param name="launch_args_list" value="hand_ik_solver_path:=$(arg hand_ik_solver_path)
     allow_trajectory_execution:=true
     fake_execution:=false
