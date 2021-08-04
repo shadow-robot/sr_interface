@@ -74,6 +74,7 @@ class TestSrRobotCommander(TestCase):
                 p1_list[idx] = 0
             if vals[1] == -0.0:
                 p2_list[idx] = 0
+            #rospy.logwarn("{} {}".format(p1_list[idx], p2_list[idx]))
             if abs(p1_list[idx]) - abs(p2_list[idx]) > tolerance:
                 return False
         return True
@@ -360,7 +361,7 @@ class TestSrRobotCommander(TestCase):
         condition = self.robot_commander._SrRobotCommander__plan is None
         self.assertTrue(condition)
 
-    def get_named_targets(self):
+    def test_get_named_targets(self):
         self.assertTrue(type(self.robot_commander.get_named_targets()) == list)
 
     def test_get_joints_position(self):
@@ -581,6 +582,53 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_poses(pose.pose, after_pose)
         self.assertFalse(condition)
 
+    def test_move_to_position_target(self):
+        self.reset_to_home()
+
+        xyz = [0.5, 0.2, 0.3]
+        self.robot_commander.move_to_position_target(xyz, self.eef)
+        time.sleep(1)
+
+        end_pose = self.robot_commander.get_current_pose()
+
+        target_xyz = Pose()
+        target_xyz.position.x = xyz[0]
+        target_xyz.position.y = xyz[1]
+        target_xyz.position.z = xyz[2]
+        target_xyz.orientation = end_pose.orientation
+
+        rospy.logwarn(self.compare_poses(target_xyz, end_pose))
+
+    def test_zzzzzzplan_to_position_target(self):
+        self.reset_to_home()
+        rospy.logwarn("-----------")
+        rospy.logwarn(self.robot_commander._SrRobotCommander__plan)
+
+        xyz = [0.5, 0.3, 0.4]
+
+        target_xyz = PoseStamped()
+        target_xyz.header.stamp = rospy.get_rostime()
+        target_xyz.pose.position.x = xyz[0]
+        target_xyz.pose.position.y = xyz[1]
+        target_xyz.pose.position.z = xyz[2]
+
+        target_xyz.pose.orientation.x = 0
+        target_xyz.pose.orientation.y = 0
+        target_xyz.pose.orientation.z = 0
+        target_xyz.pose.orientation.w = 1
+
+        
+        self.robot_commander.plan_to_position_target(xyz, self.eef)
+        plan = self.robot_commander._SrRobotCommander__plan
+        #rospy.logwarn(plan)
+
+        last_planned_js = plan.joint_trajectory.points[-1].positions
+        last_pose = self.robot_commander.get_ik(target_xyz)
+
+        rospy.logwarn(last_planned_js)
+        rospy.logwarn(last_pose)
+        rospy.logwarn("-----------")
+
     '''
     # this depends on launch file for the test
     # def get_end_effector_pose_from_named_state(self, name):
@@ -588,8 +636,7 @@ class TestSrRobotCommander(TestCase):
     #this won't work
     #def move_to_named_target(self, name, wait=True):
 
-    #def move_to_position_target(self, xyz, end_effector_link="", wait=True):
-    #def plan_to_position_target(self, xyz, end_effector_link="", custom_start_state=None):
+    
     #def action_is_running(self, controller=None):
 
     # no working teach mode so far?

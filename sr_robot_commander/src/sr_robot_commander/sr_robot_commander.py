@@ -247,7 +247,7 @@ class SrRobotCommander(object):
                                     for joint, i in joint_states_cpy.items())
         self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
-        self._move_group_commander.go(joint_states_cpy, wait=wait)
+        self._move_group_commander.go(wait=wait)
 
     def plan_to_joint_value_target(self, joint_states, angle_degrees=False, custom_start_state=None):
         """
@@ -687,6 +687,7 @@ class SrRobotCommander(object):
             self._move_group_commander.set_start_state(custom_start_state)
         self._move_group_commander.set_position_target(xyz, end_effector_link)
         self.__plan = self._move_group_commander.plan()[TUPLE_TRAJECTORY_INDEX]
+        return self.__plan
 
     def move_to_pose_target(self, pose, end_effector_link="", wait=True):
         """
@@ -699,7 +700,7 @@ class SrRobotCommander(object):
         """
         self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_pose_target(pose, end_effector_link)
-        self._move_group_commander.go(pose, wait=wait)
+        self._move_group_commander.go(wait=wait)
 
     def plan_to_pose_target(self, pose, end_effector_link="", alternative_method=False, custom_start_state=None):
         """
