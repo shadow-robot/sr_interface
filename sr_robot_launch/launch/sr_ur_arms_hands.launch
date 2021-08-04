@@ -35,7 +35,6 @@
   <!-- Specify if the system has "both" hands, only "right", only "left" or "none" hands-->
   <arg name="hands" default="both"/>
   <arg name="robot_model" default="ur10e"/>
-  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
   <arg name="robot_name" default="$(arg robot_model)srh"/>
 
   <!-- HANDS SPECIFIC CONFIG-->
@@ -128,7 +127,6 @@
         <arg name="debug" value="$(arg debug)"/>
         <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
         <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
-        <arg name="robot_config_file" value="$(arg robot_config_file)"/>
         <arg name="hands" value="$(arg hands)"/>
         <arg name="rh_serial" value="$(arg rh_serial)"/>
         <arg name="lh_serial" value="$(arg lh_serial)"/>
@@ -164,12 +162,10 @@
 
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
-    <rosparam file="$(arg robot_config_file)"/>
       <include file="$(find sr_multi_moveit_config)/launch/moveit_planning_and_execution.launch">
         <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
         <arg name="load_robot_description" value="true"/>
         <arg name="gui" value="$(arg gui)"/>
-        <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
         <arg name="planning" value="$(arg planning)"/>
         <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
         <arg name="trajectory_controllers_list" value="$(arg trajectory_controllers_list)"/>

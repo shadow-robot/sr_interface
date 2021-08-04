@@ -17,7 +17,6 @@
   <!-- Set world value -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world" />
   <!-- Xacro file containing the robot description we want to load -->
-  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
   <arg name="robot_name" default="bimanual_shadowhand_motor"/>
   <!-- The name of the rviz config file to load -->
   <arg name="rviz_config_file" default="$(find sr_multi_moveit_config)/launch/moveit_hands.rviz"/>
@@ -69,7 +68,6 @@
   <group if="$(eval not sim and not external_control_loop)">
       <include file="$(find sr_robot_launch)/launch/sr_bimanual_hardware_control_loop.launch">
         <arg name="debug" value="$(arg debug)"/>
-        <arg name="robot_config_file" value="$(arg robot_config_file)"/>
         <arg name="hand_x_separation" value="$(arg hand_x_separation)"/>
         <arg name="hands" value="both"/>
         <arg name="rh_serial" value="$(arg rh_serial)"/>
@@ -84,12 +82,10 @@
 
   <!-- MOVEIT -->
   <group if="$(arg use_moveit)">
-    <rosparam file="$(arg robot_config_file)"/>
       <include file="$(find sr_multi_moveit_config)/launch/moveit_planning_and_execution.launch">
         <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
         <arg name="load_robot_description" value="true"/>
         <arg name="gui" value="$(arg gui)"/>
-        <arg name="robot_config_file" value ="$(arg robot_config_file)"/>
         <arg name="planning" value="$(arg planning)"/>
         <arg name="generate_planning_config" value="$(arg generate_planning_config)"/>
         <arg name="rviz_config_file" value="$(arg rviz_config_file)"/>

@@ -5,16 +5,7 @@
   <!-- Specify if the system has "both" hands, only "right", only "left", or "none"-->
   <arg name="hands" default="both"/>
   <arg name="arms" default="true"/>
-  <arg name="arm_ctrl" default="true"/>	
-
-  <!-- ROBOT CONFIG-->
-  <arg name="robot_model" default="ur10e"/>
-  <!-- HANDS AND ARMS -->
-  <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
-  <!-- ARMS BUT NO HANDS -->
-  <arg name="robot_config_file" if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_$(arg robot_model).yaml"/>
-  <!-- HANDS BUT NO ARMS -->
-  <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
+  <arg name="arm_ctrl" default="true"/>
 
   <!-- HANDS CONFIG-->
   <arg name="rh_serial" default="1370"/>
@@ -36,6 +27,7 @@
   <arg name="hand_x_separation" default="-0.4"/>
 
   <!-- ARMS CONFIG-->
+  <arg name="robot_model" default="ur10e"/>
   <arg name="arm_1_z" default="0.7551"/>
   <arg name="arm_2_z" default="0.7551"/>
   <arg name="arm_x_separation" default="-0.4" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))"/>
@@ -63,6 +55,19 @@
 
   <node pkg="rosservice" type="rosservice" name="set_right_arm_payload" args="call --wait /ra_sr_ur_robot_hw/set_payload '{payload: $(arg arm_payload_mass), center_of_gravity: $(arg arm_payload_cog)}'"/>
   <node pkg="rosservice" type="rosservice" name="set_left_arm_payload" args="call --wait /la_sr_ur_robot_hw/set_payload '{payload: $(arg arm_payload_mass), center_of_gravity: $(arg arm_payload_cog)}'"/>
+
+  <!-- ROBOT CONFIG-->
+  <!-- HANDS AND ARMS -->
+  <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
+  <!-- ARMS BUT NO HANDS -->
+  <arg name="robot_config_file" if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_$(arg robot_model).yaml"/>
+  <!-- HANDS BUT NO ARMS -->
+  <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
+
+  <!-- Set robot config file path in a param in case moveit nodes need it -->
+  <param name="robot_config_file" value="$(arg robot_config_file)" type="str"/>
+  <!-- Launch rosparam for payload. If we only use hand and no arm the extra values wont be used-->
+  <rosparam file="$(arg robot_config_file)"/>
 
   <!-- Logging local topics -->
   <group ns="control_box">
@@ -96,8 +101,6 @@
 
   <!-- Controller -->
   <group unless="$(eval hands == 'none')">
-    <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
-    <rosparam file="$(arg robot_config_file)"/>
     <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
     <include file="$(find sr_edc_launch)/sr_edc_bimanual_ros_control.launch">
       <arg name="define_robot_hardware" value="false"/>
