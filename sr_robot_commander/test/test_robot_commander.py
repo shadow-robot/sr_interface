@@ -60,6 +60,7 @@ class TestSrRobotCommander(TestCase):
                                                                custom_start_state=None)
         self.robot_commander.execute_plan(plan)
 
+    '''
     def compare_poses(self, pose1, pose2, tolerance=0.01):
         p1_list = [pose1.position.x, pose1.position.y, pose1.position.z,
                    pose1.orientation.x, pose1.orientation.y, pose1.orientation.z, pose1.orientation.w]
@@ -239,7 +240,7 @@ class TestSrRobotCommander(TestCase):
         self.reset_to_home()
         end_joints = copy.deepcopy(RA_HOME_ANGLES)
         end_joints['ra_shoulder_pan_joint'] += 0.8
-        end_joints['ra_shoulder_lift_joint'] += 0.6
+        end_joints['ra_shoulder_lift_joint'] += 0.4
         end_joints['ra_elbow_joint'] += 0.6
         end_joints['ra_wrist_1_joint'] += 0.4
         plan = self.robot_commander.plan_to_joint_value_target(end_joints, angle_degrees=False,
@@ -580,15 +581,13 @@ class TestSrRobotCommander(TestCase):
 
         after_pose = self.robot_commander.get_current_pose()
         condition = self.compare_poses(pose.pose, after_pose)
-        self.assertFalse(condition)
-
+        self.assertFalse(condition) 
+    
     def test_move_to_position_target(self):
         self.reset_to_home()
-
-        xyz = [0.5, 0.2, 0.3]
+        xyz = [0.5, 0.3, 0.4]
         self.robot_commander.move_to_position_target(xyz, self.eef)
         time.sleep(1)
-
         end_pose = self.robot_commander.get_current_pose()
 
         target_xyz = Pose()
@@ -597,48 +596,53 @@ class TestSrRobotCommander(TestCase):
         target_xyz.position.z = xyz[2]
         target_xyz.orientation = end_pose.orientation
 
-        rospy.logwarn(self.compare_poses(target_xyz, end_pose))
+        condition = self.compare_poses(target_xyz, end_pose)
+        self.assertTrue(condition)
 
-    def test_zzzzzzplan_to_position_target(self):
+    def test_plan_to_position_target(self):
         self.reset_to_home()
-        rospy.logwarn("-----------")
-        rospy.logwarn(self.robot_commander._SrRobotCommander__plan)
-
         xyz = [0.5, 0.3, 0.4]
+        start_pose = PoseStamped()
+        start_pose.header.stamp = rospy.get_rostime()
+        start_pose.pose = self.robot_commander.get_current_pose()
+        start_pose.pose.position.x = xyz[0]
+        start_pose.pose.position.y = xyz[1]
+        start_pose.pose.position.z = xyz[2]
 
-        target_xyz = PoseStamped()
-        target_xyz.header.stamp = rospy.get_rostime()
-        target_xyz.pose.position.x = xyz[0]
-        target_xyz.pose.position.y = xyz[1]
-        target_xyz.pose.position.z = xyz[2]
-
-        target_xyz.pose.orientation.x = 0
-        target_xyz.pose.orientation.y = 0
-        target_xyz.pose.orientation.z = 0
-        target_xyz.pose.orientation.w = 1
-
-        
-        self.robot_commander.plan_to_position_target(xyz, self.eef)
+        plan = self.robot_commander.plan_to_position_target(xyz, self.eef)
         plan = self.robot_commander._SrRobotCommander__plan
-        #rospy.logwarn(plan)
 
-        last_planned_js = plan.joint_trajectory.points[-1].positions
-        last_pose = self.robot_commander.get_ik(target_xyz)
+        last_planned_js = dict(zip(plan.joint_trajectory.joint_names, plan.joint_trajectory.points[-1].positions))
+        expected_js = self.robot_commander.get_ik(start_pose)
+        expected_js = dict(zip(expected_js.name, expected_js.position))
 
-        rospy.logwarn(last_planned_js)
-        rospy.logwarn(last_pose)
-        rospy.logwarn("-----------")
-
+        condition = self.compare_joint_states(expected_js, last_planned_js)
+        self.assertTrue(condition)
     '''
-    # this depends on launch file for the test
-    # def get_end_effector_pose_from_named_state(self, name):
-
-    #this won't work
-    #def move_to_named_target(self, name, wait=True):
-
     
-    #def action_is_running(self, controller=None):
+    # this depends on launch file for the test
+    def test_get_end_effector_pose_from_named_state(self):
+        '''
+        rs = RobotState()
+        for key, value in RA_HOME_ANGLES.items():
+            rs.joint_state.name.append(key)
+            rs.joint_state.position.append(value)
+        '''
+        name = 'lifted'
+        self.robot_commander.move_to_named_target(name)
+        #js_start = self.robot_commander.get_end_effector_pose_from_named_state(name)
+        js_stop = self.robot_commander.get_named_target_joint_values(name)
 
+        #rospy.logwarn(js_start)
+        rospy.logwarn(js_stop)
+        
+    #this won't work?
+    #def move_to_named_target(self, name, wait=True):
+    
+    # TODO
+    #def action_is_running(self, controller=None):
+    
+    '''
     # no working teach mode so far?
     def test_set_teach_mode(self):
     '''
