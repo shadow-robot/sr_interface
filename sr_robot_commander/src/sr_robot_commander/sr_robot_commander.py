@@ -665,7 +665,8 @@ class SrRobotCommander(object):
 
     def move_to_position_target(self, xyz, end_effector_link="", wait=True):
         """
-        Specify a target position for the end-effector and moves to it preserving the current orientation of the end-effector.
+        Specify a target position for the end-effector and moves to it 
+        preserving the current orientation of the end-effector.
         @param xyz - new position of end-effector.
         @param end_effector_link - name of the end effector link.
         @param wait - should method wait for movement end or not.
@@ -681,7 +682,7 @@ class SrRobotCommander(object):
 
     def plan_to_position_target(self, xyz, end_effector_link="", custom_start_state=None):
         """
-        Specify a target position for the end-effector and plans preserving the current orientation of the end-effector.
+        Specify a target position for the end-effector and plans preserving the current orientation of end-effector.
         This is a blocking method.
         @param xyz - new position of end-effector.
         @param end_effector_link - name of the end effector link.
