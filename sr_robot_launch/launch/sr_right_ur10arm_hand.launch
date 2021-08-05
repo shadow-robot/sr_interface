@@ -64,7 +64,7 @@
   <!-- Set to true to spawn group position controllers for the arms -->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
 
-  <include file="$(find sr_robot_launch)/launch/sr_ur_arm_hand.launch">
+  <include file="$(find sr_robot_launch)/launch/sr_ur_arm_hand.lanch">
     <arg name="sim" value="$(arg sim)"/>
     <arg name="debug" default="$(arg debug)"/>
     <arg name="use_moveit" default="$(arg use_moveit)"/>
