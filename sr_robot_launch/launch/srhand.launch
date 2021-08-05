@@ -42,8 +42,8 @@
   <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
   <!-- Trajectory controllers partial name list for moveit-->
-  <arg if="$(eval not hand_trajectory)" name="trajectory_controllers_list" default="[]"/>
-  <arg if="$(eval hand_trajectory)" name="trajectory_controllers_list" default="[h_trajectory_controller/state]"/>
+  <arg if="$(eval not hand_trajectory)" name="trajectory_controllers_list_patterns" default="[]"/>
+  <arg if="$(eval hand_trajectory)" name="trajectory_controllers_list_patterns" default="[h_trajectory_controller/state]"/>
 
   <!-- SIMULATED ROBOTS -->
   <group if="$(eval sim and not external_control_loop)">
@@ -89,7 +89,7 @@
     <include file="$(find sr_moveit_hand_config)/launch/moveit_planning_and_execution.launch">
       <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
       <arg name="gui" value="$(arg gui)"/>
-      <arg name="trajectory_controllers_list" value="$(arg trajectory_controllers_list)"/>
+      <arg name="trajectory_controllers_list" value="$(arg trajectory_controllers_list_patterns)"/>
     </include>
     <include file="$(find sr_moveit_hand_config)/launch/default_warehouse_db.launch"/>
   </group>

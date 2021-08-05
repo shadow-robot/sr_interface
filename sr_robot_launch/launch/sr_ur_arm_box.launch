@@ -25,8 +25,6 @@
   <arg name="side_letter" value="$(eval side[0])"/>
   <arg name="arm_prefix" value="$(arg side_letter)a"/>
   <arg name="robot_model" default="ur10e"/>
-  <arg name="robot_description" default="'$(find sr_box_ur10_moveit_config)/config/$(arg arm_prefix)_$(arg robot_model)_with_box.urdf.xacro'"/>
-  <arg name="robot_config_file" default="$(find sr_box_ur10_moveit_config)/config/robot_configs/$(arg side)_$(arg robot_model).yaml"/>
 
   <!-- Set to true if you want the robot to start in the "home" positions -->
   <arg name="start_home" default="true"/>
@@ -56,12 +54,10 @@
   <!-- Set to true to spawn group position controllers for the arms -->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
 
-
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
     <include file="$(find sr_robot_launch)/launch/sr_simulation_control_loop.launch">
       <arg name="debug" value="$(arg debug)"/>
-      <arg name="robot_description" value="$(arg robot_description)"/>
       <arg name="scene" value="$(arg scene)"/>
       <arg name="world" value="$(arg world)"/>
       <arg name="start_home" value="$(arg start_home)"/>
@@ -85,7 +81,6 @@
         <arg name="debug" default="$(arg debug)"/>
         <arg name="initial_z" default="0.7521" if="$(arg scene)"/>
         <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
-        <arg name="robot_description" value="$(arg robot_description)"/>
         <arg name="side" value="$(arg side)"/>
         <arg name="robot_model" value="$(arg robot_model)"/>
         <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
@@ -113,7 +108,6 @@
 
   <!-- Launch moveit configuration after delay to wait for robot description to be avalible -->
   <group if="$(arg use_moveit)">
-    <rosparam file="$(arg robot_config_file)"/>
     <node name="conditional_delayed_rostool_rviz_multi" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
       <param name="package_name" value="sr_box_ur10_moveit_config" />
       <param name="executable_name" value="planning_and_execution.launch" />
