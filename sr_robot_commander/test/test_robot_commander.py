@@ -92,7 +92,7 @@ class TestSrRobotCommander(TestCase):
                 if abs(js1[key]) - abs(js2[key]) > tolerance:
                     return False
         return True
-    
+
     def test_get_and_set_planner_id(self):
         planner_id = "RRTstarkConfigDefault"
         self.robot_commander.set_planner_id(planner_id)
@@ -657,12 +657,12 @@ class TestSrRobotCommander(TestCase):
         self.reset_to_home()
         self.robot_commander.move_to_joint_value_target_unsafe(RA_EXAMPLE_TARGET, time=0.002, wait=False,
                                                                angle_degrees=False)
-        condition_1 = (self.robot_commander.action_is_running() == True)
+        condition_1 = (self.robot_commander.action_is_running() is True)
 
         self.reset_to_home()
         self.robot_commander.move_to_joint_value_target_unsafe(RA_EXAMPLE_TARGET, time=0.002, wait=True,
                                                                angle_degrees=False)
-        condition_2 = (self.robot_commander.action_is_running() == False)
+        condition_2 = (self.robot_commander.action_is_running() is False)
         self.assertTrue(condition_1 and condition_2)
 
     '''
