@@ -42,19 +42,6 @@
   <!-- Set to true to spawn group position controllers for the arms -->
   <arg name="arm_position" default="$(eval not arm_trajectory and arms)"/>
 
-  <!-- ROBOT CONFIG FILES-->
-  <!-- HANDS AND ARMS -->
-  <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
-  <!-- ARMS BUT NO HANDS -->
-  <arg name="robot_config_file" if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_$(arg robot_model).yaml"/>
-  <!-- HANDS BUT NO ARMS -->
-  <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
-
-  <!-- Set robot config file path in a param in case moveit nodes need it -->
-  <param name="robot_config_file" value="$(arg robot_config_file)" type="str"/>
-  <!-- Launch rosparam for payload. If we only use hand and no arm the extra values wont be used-->
-  <rosparam file="$(arg robot_config_file)"/>
-
   <!-- Robot description related config-->
   <arg name="robot_model" default="ur10e"/>
   <arg name="arm_x_separation" default="1.0"/>
@@ -62,6 +49,19 @@
   <arg name="arm_1_z" default="0.0"/>
   <arg name="arm_2_z" default="0.0"/>
   <arg if="$(arg arms)" name="robot_name" default="$(arg robot_model)srh"/>
+
+  <!-- ROBOT CONFIG FILES-->
+  <!-- Hands and arms -->
+  <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
+  <!-- Arms but no hands -->
+  <arg name="robot_config_file" if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_$(arg robot_model).yaml"/>
+  <!-- Hands but no arms -->
+  <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
+
+  <!-- Set robot config file path in a param in case moveit nodes need it -->
+  <param name="robot_config_file" value="$(arg robot_config_file)" type="str"/>
+  <!-- Launch rosparam for payload. If we only use hand and no arm the extra values wont be used-->
+  <rosparam file="$(arg robot_config_file)"/>
 
   <!-- LOADING ROBOT DESCRIPTION-->
   <include file="$(find sr_robot_launch)/launch/load_robot_description_bimanual.launch">
