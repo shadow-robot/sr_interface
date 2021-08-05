@@ -20,9 +20,11 @@
   <arg name="hand_ctrl" default="$(arg hand)"/>
 
   <!-- Robot config file -->
-  <arg if="$(eval arg('hand') and arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
   <arg if="$(eval not arg('hand') and arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
   <arg if="$(eval arg('hand') and not arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh.yaml"/>
+  <arg if="$(eval arg('hand') and arg('arm')) and not arg('robot_model') == 'ur5e'" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
+  <arg if="$(eval arg('hand') and arg('arm')) and arg('robot_model') == 'ur5e'" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_lite_$(arg robot_model).yaml"/>
+
 
   <!-- Set robot config file path in a param in case moveit nodes need it -->
   <param name="robot_config_file" value="$(arg robot_config_file)" type="str"/>
@@ -54,10 +56,16 @@
   <!-- Set to true to spawn the position controllers for the arm-->
   <arg name="arm_position" default="$(eval not arm_trajectory)"/>
   <arg name="arm_speed_scale" default="0.5"/>
-  <arg if="$(arg hand)" name="arm_payload_mass" default="5.00"/>
+
+  <!-- Sets up right payload -->
+  <arg if="$(eval hand and arg('hand_type') == 'hand_e')" name="arm_payload_mass" default="5.0"/>
+  <arg if="$(eval hand and arg('hand_type') == 'hand_e_plus')" name="arm_payload_mass" default="5.0"/>
+  <arg if="$(eval hand and arg('hand_type') == 'hand_lite')" name="arm_payload_mass" default="2.7"/>
+  <arg if="$(eval hand and arg('hand_type') == 'hand_extra_lite')" name="arm_payload_mass" default="2.5"/>
   <arg if="$(arg hand)" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
   <arg unless="$(arg hand)" name="arm_payload_mass" default="0.0"/>
   <arg unless="$(arg hand)" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
+
   <arg name="kinematics_config" if="$(eval robot_model[-1] == 'e')" default="$(find ur_e_description)/config/$(arg robot_model)_default.yaml"/>
   <arg name="kinematics_config" if="$(eval not robot_model[-1] == 'e')" default="$(find ur_description)/config/$(arg robot_model)_default.yaml"/>
   <arg name="urcap_program_name" default="external_ctrl.urp"/>

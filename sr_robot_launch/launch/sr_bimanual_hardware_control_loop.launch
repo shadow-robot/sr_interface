@@ -22,9 +22,11 @@
   <arg name="hand_trajectory" unless="$(eval hands == 'none')" default="true"/>
   <arg name="hand_trajectory" if="$(eval hands == 'none')" default="false"/>
   <!-- Wheather the hands have biotacs -->
-  <arg name="biotacs" default="false"/>
+  <arg name="biotac" default="false"/>
   <!-- Separation between the robots -->
   <arg name="hand_x_separation" default="-0.4"/>
+  <!-- Set the hand type here: hand_e_plus, hand_e, hand_lite, hand_extra_lite -->
+  <arg name="hand_type" default="hand_e_plus"/>
 
   <!-- ARMS CONFIG-->
   <arg name="robot_model" default="ur10e"/>
@@ -45,7 +47,11 @@
   <arg name="right_arm_speed_scale" default="0.5"/>
   <arg name="left_arm_speed_scale" default="0.5"/>
 
-  <arg unless="$(eval hands == 'none')" name="arm_payload_mass" default="5.00"/>
+  <!-- Sets up right payload -->
+  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_e')" name="arm_payload_mass" default="5.0"/>
+  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_e_plus')" name="arm_payload_mass" default="5.0"/>
+  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_lite')" name="arm_payload_mass" default="2.7"/>
+  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_extra_lite')" name="arm_payload_mass" default="2.5"/>
   <arg unless="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_mass" default="0.0"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
@@ -91,7 +97,7 @@
     <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
     <arg name="arm_1_z" value="$(arg arm_1_z)"/>
     <arg name="arm_2_z" value="$(arg arm_2_z)"/>
-    <arg name="biotacs" value="$(arg biotacs)"/>
+    <arg name="biotac" value="$(arg biotac)"/>
   </include>
 
   <!-- Default hand controller groups -->

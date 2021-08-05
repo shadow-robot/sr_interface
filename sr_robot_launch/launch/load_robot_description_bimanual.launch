@@ -8,7 +8,7 @@
 
   <!-- HAND SPECIFIC CONFIG--> 
   <arg name="hand_x_separation" default="-0.4"/>
-  <arg name="biotacs" default="false"/>
+  <arg name="biotac" default="false"/>
 
   <arg unless="$(arg arms)" name="robot_description" default="'$(find sr_description)/robots/bimanual_shadowhand_motor_plus.urdf.xacro'"/>
 
@@ -22,8 +22,8 @@
   <arg name="arm_2_z" default="0.0"/>
 
   <arg if="$(eval arms and arg('hands') == 'none')" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_$(arg robot_model).urdf.xacro'"/>
-  <arg if="$(eval arms and not arg('hands') == 'none' and not biotacs)" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
-  <arg if="$(eval arms and not arg('hands') == 'none' and biotacs)" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_plus_bt_sp_biotacs_$(arg robot_model).urdf.xacro'"/>
+  <arg if="$(eval arms and not arg('hands') == 'none' and not biotac)" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
+  <arg if="$(eval arms and not arg('hands') == 'none' and biotac)" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_plus_bt_sp_biotacs_$(arg robot_model).urdf.xacro'"/>
 
   <arg if="$(arg arms)" name="load_robot_description_command" value="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
 

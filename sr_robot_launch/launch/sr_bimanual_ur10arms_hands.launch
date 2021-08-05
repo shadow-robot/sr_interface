@@ -40,13 +40,6 @@
   <arg name="robot_model" default="ur10e"/>
 
   <!-- HANDS CONFIG-->
-  <arg name="rh_serial" default="1130"/>
-  <arg name="lh_serial" default="2346"/>
-  <arg name="rh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v4.yaml"/>
-  <arg name="lh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_E_v4.yaml"/>
-  <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
-       More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
-  <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
   <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
   <!-- The control mode PWM (true) or torque (false) -->
@@ -78,11 +71,6 @@
     <arg name="gui" value="$(arg gui)"/>
     <arg name="world" value="$(arg world)"/>
 
-    <arg name="rh_serial" value="$(arg rh_serial)"/>
-    <arg name="lh_serial" value="$(arg lh_serial)"/>
-    <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
-    <arg name="lh_mapping_path" value="$(arg lh_mapping_path)"/>
-    <arg name="eth_port" value="$(arg eth_port)"/>
     <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
     <arg name="hand_type" value="$(arg hand_type)"/>
     <arg name="arm_1_z" value="$(arg arm_1_z)"/>

@@ -21,7 +21,7 @@
 
   <!-- HAND RELATED CONFIG-->
   <!-- Wheather the hands have biotacs -->
-  <arg name="biotacs" default="false"/>
+  <arg name="biotac" default="false"/>
   <!-- Set to true to spawn the position controllers for the hands-->
   <arg name="hand_ctrl" unless="$(eval hands == 'none')" default="true"/>
   <arg name="hand_ctrl" if="$(eval hands == 'none')" default="false"/>
@@ -74,7 +74,7 @@
     <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
     <arg name="arm_1_z" value="$(arg arm_1_z)"/>
     <arg name="arm_2_z" value="$(arg arm_2_z)"/>
-    <arg name="biotacs" value="$(arg biotacs)"/>
+    <arg name="biotac" value="$(arg biotac)"/>
   </include>
 
   <!-- RUNNING THE SIMULATION -->
