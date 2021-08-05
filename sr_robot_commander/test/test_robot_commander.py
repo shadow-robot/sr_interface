@@ -27,7 +27,7 @@ from sr_robot_commander.sr_robot_commander import SrRobotCommander, MoveGroupCom
 from geometry_msgs.msg import Pose, PoseStamped
 from control_msgs.msg import FollowJointTrajectoryActionGoal
 from moveit_msgs.msg import RobotState, RobotTrajectory
-from moveit_msgs.srv import GetPositionFK
+from moveit_msgs.srv import GetPositionFK, SaveRobotStateToWarehouse
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
 from std_msgs.msg import Header
 from sensor_msgs.msg import JointState
@@ -60,7 +60,6 @@ class TestSrRobotCommander(TestCase):
                                                                custom_start_state=None)
         self.robot_commander.execute_plan(plan)
 
-    '''
     def compare_poses(self, pose1, pose2, tolerance=0.01):
         p1_list = [pose1.position.x, pose1.position.y, pose1.position.z,
                    pose1.orientation.x, pose1.orientation.y, pose1.orientation.z, pose1.orientation.w]
@@ -611,37 +610,48 @@ class TestSrRobotCommander(TestCase):
 
         plan = self.robot_commander.plan_to_position_target(xyz, self.eef)
         plan = self.robot_commander._SrRobotCommander__plan
-
         last_planned_js = dict(zip(plan.joint_trajectory.joint_names, plan.joint_trajectory.points[-1].positions))
+
         expected_js = self.robot_commander.get_ik(start_pose)
         expected_js = dict(zip(expected_js.name, expected_js.position))
-
         condition = self.compare_joint_states(expected_js, last_planned_js)
         self.assertTrue(condition)
-    '''
-    
-    # this depends on launch file for the test
-    def test_get_end_effector_pose_from_named_state(self):
-        '''
-        rs = RobotState()
-        for key, value in RA_HOME_ANGLES.items():
-            rs.joint_state.name.append(key)
-            rs.joint_state.position.append(value)
-        '''
-        name = 'lifted'
-        self.robot_commander.move_to_named_target(name)
-        #js_start = self.robot_commander.get_end_effector_pose_from_named_state(name)
-        js_stop = self.robot_commander.get_named_target_joint_values(name)
 
-        #rospy.logwarn(js_start)
-        rospy.logwarn(js_stop)
-        
-    #this won't work?
-    #def move_to_named_target(self, name, wait=True):
-    
+    def test_get_end_effector_pose_from_named_state(self):
+        self.reset_to_home()
+        target_js = RA_EXAMPLE_TARGET
+        rs = RobotState()
+        rs.joint_state = JointState()
+        rs.joint_state.name = list(target_js.keys())
+        rs.joint_state.position = list(target_js.values())
+        save = rospy.ServiceProxy('save_robot_state', SaveRobotStateToWarehouse)
+        save("test_saved_robot_state", self.robot_commander._robot_name, rs)
+        pose = self.robot_commander.get_end_effector_pose_from_named_state("test_saved_robot_state")
+        end_js = self.robot_commander.get_ik(pose)
+        end_js = dict(zip(end_js.name, end_js.position))
+        condition = self.compare_joint_states(target_js, end_js)
+        self.assertTrue(condition)
+
+    def test_move_to_named_target(self):
+        self.reset_to_home()
+        for name in self.robot_commander._srdf_names:
+            self.robot_commander.move_to_named_target(name)
+            expected_js = self.robot_commander.get_named_target_joint_values(name)
+            end_js = self.robot_commander.get_current_state()
+            if not self.compare_joint_states(end_js, expected_js):
+                self.fail()
+            break
+
+        for name in self.robot_commander._warehouse_names:
+            self.robot_commander.move_to_named_target(name)
+            expected_pose = self.robot_commander.get_end_effector_pose_from_named_state(name).pose
+            end_pose = self.robot_commander.get_current_pose()
+            if not self.compare_poses(end_pose, expected_pose):
+                self.fail()
+            break
+
     # TODO
     #def action_is_running(self, controller=None):
-    
     '''
     # no working teach mode so far?
     def test_set_teach_mode(self):
