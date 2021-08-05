@@ -665,7 +665,7 @@ class SrRobotCommander(object):
 
     def move_to_position_target(self, xyz, end_effector_link="", wait=True):
         """
-        Specify a target position for the end-effector and moves to it 
+        Specify a target position for the end-effector and moves to it
         preserving the current orientation of the end-effector.
         @param xyz - new position of end-effector.
         @param end_effector_link - name of the end effector link.
