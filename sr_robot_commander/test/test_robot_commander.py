@@ -33,6 +33,7 @@ from std_msgs.msg import Header
 from sensor_msgs.msg import JointState
 from moveit_commander.exception import MoveItCommanderException
 from moveit_commander import conversions
+from actionlib_msgs.msg import GoalStatusArray
 import tf2_ros
 import time
 
@@ -49,6 +50,7 @@ RA_EXAMPLE_TARGET = {'ra_shoulder_pan_joint': 0.2, 'ra_elbow_joint': 1.80,
 class TestSrRobotCommander(TestCase):
     @classmethod
     def setUpClass(cls):
+        rospy.wait_for_message("/move_group/status", GoalStatusArray)
         cls.robot_commander = SrRobotCommander("right_arm")
         cls.robot_commander.set_planner_id("RRTstarkConfigDefault")
         cls.robot_commander.set_planning_time(3)
@@ -90,7 +92,7 @@ class TestSrRobotCommander(TestCase):
                 if abs(js1[key]) - abs(js2[key]) > tolerance:
                     return False
         return True
-
+    
     def test_get_and_set_planner_id(self):
         planner_id = "RRTstarkConfigDefault"
         self.robot_commander.set_planner_id(planner_id)
@@ -651,10 +653,20 @@ class TestSrRobotCommander(TestCase):
                 self.fail()
             break
 
-    # TODO
-    # def action_is_running(self, controller=None):
+    def test_action_is_running(self):
+        self.reset_to_home()
+        self.robot_commander.move_to_joint_value_target_unsafe(RA_EXAMPLE_TARGET, time=0.002, wait=False,
+                                                               angle_degrees=False)
+        condition_1 = (self.robot_commander.action_is_running() == True)
+
+        self.reset_to_home()
+        self.robot_commander.move_to_joint_value_target_unsafe(RA_EXAMPLE_TARGET, time=0.002, wait=True,
+                                                               angle_degrees=False)
+        condition_2 = (self.robot_commander.action_is_running() == False)
+        self.assertTrue(condition_1 and condition_2)
+
     '''
-    # no working teach mode so far?
+    # no working teach mode so far
     def test_set_teach_mode(self):
     '''
 
