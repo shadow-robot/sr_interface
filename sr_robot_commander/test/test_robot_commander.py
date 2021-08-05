@@ -74,7 +74,6 @@ class TestSrRobotCommander(TestCase):
                 p1_list[idx] = 0
             if vals[1] == -0.0:
                 p2_list[idx] = 0
-            #rospy.logwarn("{} {}".format(p1_list[idx], p2_list[idx]))
             if abs(p1_list[idx]) - abs(p2_list[idx]) > tolerance:
                 return False
         return True
@@ -580,8 +579,8 @@ class TestSrRobotCommander(TestCase):
 
         after_pose = self.robot_commander.get_current_pose()
         condition = self.compare_poses(pose.pose, after_pose)
-        self.assertFalse(condition) 
-    
+        self.assertFalse(condition)
+
     def test_move_to_position_target(self):
         self.reset_to_home()
         xyz = [0.5, 0.3, 0.4]
@@ -624,8 +623,10 @@ class TestSrRobotCommander(TestCase):
         rs.joint_state = JointState()
         rs.joint_state.name = list(target_js.keys())
         rs.joint_state.position = list(target_js.values())
+
         save = rospy.ServiceProxy('save_robot_state', SaveRobotStateToWarehouse)
         save("test_saved_robot_state", self.robot_commander._robot_name, rs)
+
         pose = self.robot_commander.get_end_effector_pose_from_named_state("test_saved_robot_state")
         end_js = self.robot_commander.get_ik(pose)
         end_js = dict(zip(end_js.name, end_js.position))
@@ -651,7 +652,7 @@ class TestSrRobotCommander(TestCase):
             break
 
     # TODO
-    #def action_is_running(self, controller=None):
+    # def action_is_running(self, controller=None):
     '''
     # no working teach mode so far?
     def test_set_teach_mode(self):
