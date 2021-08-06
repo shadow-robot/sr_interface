@@ -151,17 +151,6 @@ class TestSrRobotCommander(TestCase):
                                                                custom_start_state=None)
         last_point = list(plan.joint_trajectory.points[-1].positions)
         last_joint_state = dict(zip(plan.joint_trajectory.joint_names, plan.joint_trajectory.points[-1].positions))
-
-        '''
-        for i in range(0, len(last_point)):
-            last_point[i] = round(last_point[i], 2)
-            if last_point[i] == -0.00:
-                last_point[i] = 0.00
-        last_point.sort()
-
-        arm_home_joints_goal_list = list(CONST_EXAMPLE_TARGET.values())
-        arm_home_joints_goal_list.sort()
-        '''
         condition_1 = type(plan) == RobotTrajectory
         condition_2 = self.compare_joint_states(CONST_EXAMPLE_TARGET, last_joint_state)
         self.assertTrue(condition_1 and condition_2)
@@ -260,20 +249,16 @@ class TestSrRobotCommander(TestCase):
 
     # if launched sr_ur_arm_box.launch
     def test_named_target_in_srdf_exist(self):
-        test_names = ['lifted', 'flat']
-        failed = False
-        for name in test_names:
+        const_test_names = ['lifted', 'flat']
+        for name in const_test_names:
             if self.robot_commander.named_target_in_srdf(name) is False:
-                failed = True
-        self.assertFalse(failed)
+                self.fail()
 
     def test_named_target_in_srdf_not_exist(self):
-        test_names = ['non_existing_target_test_name']
-        failed = False
-        for name in test_names:
-            if self.robot_commander.named_target_in_srdf(name) is False:
-                failed = True
-        self.assertTrue(failed)
+        const_test_names = ['non_existing_target_test_name']
+        for name in const_test_names:
+            if self.robot_commander.named_target_in_srdf(name) is True:
+                self.fail()
 
     def test_set_named_target_correct_name(self):
         test_names = self.robot_commander.get_named_targets()
@@ -297,8 +282,8 @@ class TestSrRobotCommander(TestCase):
             self.assertTrue(type(output) == dict)
 
     def test_get_named_target_joint_values_no_target(self):
-        test_names = "no_target"
-        output = self.robot_commander.get_named_target_joint_values(test_names[0])
+        const_test_names = ["no_target"]
+        output = self.robot_commander.get_named_target_joint_values(const_test_names[0])
         self.assertTrue(output is None)
 
     def test_get_end_effector_link(self):
@@ -576,7 +561,7 @@ class TestSrRobotCommander(TestCase):
         self.reset_to_home()
         xyz = [0.5, 0.3, 0.4]
         self.robot_commander.move_to_position_target(xyz, self.eef)
-        time.sleep(1)
+        time.sleep(0.5)
         end_pose = self.robot_commander.get_current_pose()
 
         target_xyz = Pose()
@@ -599,7 +584,6 @@ class TestSrRobotCommander(TestCase):
         start_pose.pose.position.z = xyz[2]
 
         plan = self.robot_commander.plan_to_position_target(xyz, self.eef)
-        plan = self.robot_commander._SrRobotCommander__plan
         last_planned_js = dict(zip(plan.joint_trajectory.joint_names, plan.joint_trajectory.points[-1].positions))
 
         expected_js = self.robot_commander.get_ik(start_pose)
