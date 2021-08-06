@@ -663,10 +663,3 @@ class TestSrRobotCommander(TestCase):
 if __name__ == "__main__":
     rospy.init_node('test_sr_robot_commander', anonymous=True)
     rostest.rosrun(PKG, 'test_sr_robot_commander', TestSrRobotCommander)
-
-
-'''
-  <include file="$(find sr_robot_launch)/launch/sr_ur_arm_box.launch">
-      <arg name="sim" value="true"/>
-  </include>
-'''
