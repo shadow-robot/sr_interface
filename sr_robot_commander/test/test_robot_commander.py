@@ -108,7 +108,8 @@ class TestSrRobotCommander(TestCase):
             robot_state.joint_state.name.append(joint_name)
             robot_state.joint_state.position.append(angle)
         pose = self.robot_commander.get_end_effector_pose_from_state(robot_state)
-        self.assertIsInstance(pose, PoseStamped)
+        condition = type(pose) == PoseStamped
+        self.assertTrue(condition)
 
     def test_get_planning_frame(self):
         self.robot_commander.get_planning_frame()
