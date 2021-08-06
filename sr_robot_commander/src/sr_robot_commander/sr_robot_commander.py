@@ -47,7 +47,7 @@ import numpy
 
 # Since Moveit update to noetic, the plan() method returns a tuple where trajectory is indexed at 1.
 # More info here: https://github.com/ros-planning/moveit/blob/master/MIGRATION.md
-TUPLE_TRAJECTORY_INDEX = 1
+CONST_TUPLE_TRAJECTORY_INDEX = 1
 
 
 class SrRobotCommanderException(Exception):
@@ -270,7 +270,7 @@ class SrRobotCommander(object):
         else:
             self._move_group_commander.set_start_state(custom_start_state)
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
-        self.__plan = self._move_group_commander.plan()[TUPLE_TRAJECTORY_INDEX]
+        self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
         return self.__plan
 
     def check_plan_is_valid(self):
@@ -474,7 +474,7 @@ class SrRobotCommander(object):
         else:
             self._move_group_commander.set_start_state(custom_start_state)
         if self.set_named_target(name):
-            self.__plan = self._move_group_commander.plan()[TUPLE_TRAJECTORY_INDEX]
+            self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
         else:
             rospy.logwarn("Failed to set to named target")
 
@@ -698,7 +698,7 @@ class SrRobotCommander(object):
         else:
             self._move_group_commander.set_start_state(custom_start_state)
         self._move_group_commander.set_pose_target(pose, end_effector_link)
-        self.__plan = self._move_group_commander.plan()[TUPLE_TRAJECTORY_INDEX]
+        self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
         return self.__plan
 
     def move_to_pose_target(self, pose, end_effector_link="", wait=True):
@@ -733,7 +733,7 @@ class SrRobotCommander(object):
             self._move_group_commander.set_joint_value_target(pose, end_effector_link)
         else:
             self._move_group_commander.set_pose_target(pose, end_effector_link)
-        self.__plan = self._move_group_commander.plan(pose)[TUPLE_TRAJECTORY_INDEX]
+        self.__plan = self._move_group_commander.plan(pose)[CONST_TUPLE_TRAJECTORY_INDEX]
         return self.__plan
 
     def _joint_states_callback(self, joint_state):
