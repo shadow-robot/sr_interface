@@ -60,17 +60,17 @@
 
   <!-- REAL ROBOTS -->
   <group if="$(eval not sim and not external_control_loop)">
-      <include file="$(find sr_robot_launch)/launch/sr_hardware_control_loop.launch">
-        <arg name="debug" value="$(arg debug)"/>
-        <arg name="pwm_control" value="$(arg pwm_control)"/>
-        <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
-        <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
-        <arg name="grasp_controller" value="$(arg grasp_controller)"/>
-        <arg name="hybrid_controller" value="$(arg hybrid_controller)"/>
-        <arg name="hand_ctrl" value="$(arg hand_ctrl)"/>
-        <arg name="arm" value="false"/>
-        <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>
-      </include>
+      <node pkg="sr_hand_detector" type="sr_hand_autodetect" name="hardware_control_loop_autodetection" output="screen"
+        args="roslaunch sr_robot_launch sr_hardware_control_loop.launch
+          debug:=$(arg debug)
+          pwm_control:=$(arg pwm_control)
+          robot_state_pub_frequency:=$(arg robot_state_pub_frequency)
+          joint_state_pub_frequency:=$(arg joint_state_pub_frequency)
+          grasp_controller:=$(arg grasp_controller)
+          hybrid_controller:=$(arg hybrid_controller)
+          hand_ctrl:=$(arg hand_ctrl)
+          hand_trajectory:=$(arg hand_trajectory)
+          arm:=false" />
   </group>
 
   <!-- MOVEIT -->

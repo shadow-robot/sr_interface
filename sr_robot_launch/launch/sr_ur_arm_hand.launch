@@ -108,24 +108,24 @@
 
   <group unless="$(arg sim)">
     <group unless="$(arg external_control_loop)">
-      <include file="$(find sr_robot_launch)/launch/sr_hardware_control_loop.launch">
-        <arg name="debug" value="$(arg debug)"/>
-        <arg name="initial_z" value="$(arg initial_z)"/>
-        <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
-        <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
-        <arg name="robot_model" value="$(arg robot_model)"/>
-        <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
-        <arg name="grasp_controller" value="$(arg grasp_controller)"/>
-        <arg name="hybrid_controller" value="$(arg hybrid_controller)"/>
-        <arg name="pwm_control" value="$(arg pwm_control)"/>
-        <arg name="hand_ctrl" value="$(arg hand_ctrl)"/>
-        <arg name="arm_trajectory" value="$(arg arm_trajectory)"/>
-        <arg name="arm_position" value="$(arg arm_position)"/>
-        <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>
-        <arg name="arm_ctrl" value="$(arg arm_ctrl)"/>
-        <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
-        <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
-      </include>
+      <node pkg="sr_hand_detector" type="sr_hand_autodetect" name="hardware_control_loop_autodetection" output="screen"
+        args="roslaunch sr_robot_launch sr_hardware_control_loop.launch
+          debug:=$(arg debug)
+          initial_z:=$(arg initial_z)
+          arm_x_separation:=$(arg arm_x_separation)
+          arm_y_separation:=$(arg arm_y_separation)
+          robot_model:=$(arg robot_model)
+          arm_speed_scale:=$(arg arm_speed_scale)
+          grasp_controller:=$(arg grasp_controller)
+          hybrid_controller:=$(arg hybrid_controller)
+          pwm_control:=$(arg pwm_control)
+          hand_ctrl:=$(arg hand_ctrl)
+          arm_trajectory:=$(arg arm_trajectory)
+          arm_position:=$(arg arm_position)
+          hand_trajectory:=$(arg hand_trajectory)
+          arm_ctrl:=$(arg arm_ctrl)
+          robot_state_pub_frequency:=$(arg robot_state_pub_frequency)
+          joint_state_pub_frequency:=$(arg joint_state_pub_frequency)" />
     </group>
 
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->

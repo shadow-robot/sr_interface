@@ -54,13 +54,16 @@
 
   <!-- REAL ROBOTS -->
   <group if="$(eval not sim and not external_control_loop)">
-      <include file="$(find sr_robot_launch)/launch/sr_bimanual_hardware_control_loop.launch">
-        <arg name="debug" value="$(arg debug)"/>
-        <arg name="hand_x_separation" value="$(arg hand_x_separation)"/>
-        <arg name="hands" value="both"/>
-        <arg name="pwm_control" value="$(arg pwm_control)"/>
-        <arg name="arm_ctrl" value="false"/>
-      </include>
+    <node pkg="sr_hand_detector" type="sr_hand_autodetect" name="bimanual_hardware_control_loop_autodetection" output="screen"
+      args="roslaunch sr_robot_launch sr_bimanual_hardware_control_loop.launch
+        debug:=$(arg debug)
+        hand_x_separation:=$(arg hand_x_separation)
+        hands:=both
+        hand_ctrl:=$(arg hand_ctrl)
+        hand_trajectory:=$(arg hand_trajectory)
+        pwm_control:=$(arg pwm_control)
+        arms:=false
+        arm_ctrl:=false" />
   </group>
 
   <!-- MOVEIT -->
