@@ -78,7 +78,7 @@ class TestSrRobotCommander(TestCase):
                 return False
         return True
 
-    def compare_joint_states(self, joint_state_1, joint_state_2, tolerance=0.01):
+    def compare_joint_states_by_common_joints_by_common_joints(self, joint_state_1, joint_state_2, tolerance=0.01):
         common_joint_names = set(joint_state_1.keys()).intersection(set(joint_state_2.keys()))
         if len(common_joint_names) == 0:
             return False
@@ -153,7 +153,7 @@ class TestSrRobotCommander(TestCase):
         last_point = list(plan.joint_trajectory.points[-1].positions)
         last_joint_state = dict(zip(plan.joint_trajectory.joint_names, plan.joint_trajectory.points[-1].positions))
         condition_1 = type(plan) == RobotTrajectory
-        condition_2 = self.compare_joint_states(CONST_EXAMPLE_TARGET, last_joint_state)
+        condition_2 = self.compare_joint_states_by_common_joints(CONST_EXAMPLE_TARGET, last_joint_state)
         self.assertTrue(condition_1 and condition_2)
 
     def test_execute(self):
@@ -162,7 +162,7 @@ class TestSrRobotCommander(TestCase):
                                                         custom_start_state=None)
         self.robot_commander.execute()
         executed_joints = self.robot_commander.get_current_state()
-        condition = self.compare_joint_states(CONST_EXAMPLE_TARGET, executed_joints)
+        condition = self.compare_joint_states_by_common_joints(CONST_EXAMPLE_TARGET, executed_joints)
         self.assertTrue(condition)
 
     def test_execute_plan(self):
@@ -171,14 +171,14 @@ class TestSrRobotCommander(TestCase):
                                                                custom_start_state=None)
         self.robot_commander.execute_plan(plan)
         executed_joints = self.robot_commander.get_current_state()
-        condition = self.compare_joint_states(executed_joints, CONST_RA_HOME_ANGLES)
+        condition = self.compare_joint_states_by_common_joints(executed_joints, CONST_RA_HOME_ANGLES)
         self.assertTrue(condition)
 
     def test_move_to_joint_value_target(self):
         self.reset_to_home()
         self.robot_commander.move_to_joint_value_target(CONST_EXAMPLE_TARGET, wait=True, angle_degrees=False)
         end_state = self.robot_commander.get_current_state()
-        condition = self.compare_joint_states(end_state, CONST_EXAMPLE_TARGET)
+        condition = self.compare_joint_states_by_common_joints(end_state, CONST_EXAMPLE_TARGET)
         self.assertTrue(condition)
 
     def test_check_plan_is_valid_ok(self):
@@ -358,7 +358,7 @@ class TestSrRobotCommander(TestCase):
                                                                      custom_start_state=None).joint_trajectory
         self.robot_commander.run_joint_trajectory(trajectory)
         end_state = self.robot_commander.get_current_state()
-        condition = self.compare_joint_states(CONST_RA_HOME_ANGLES, end_state)
+        condition = self.compare_joint_states_by_common_joints(CONST_RA_HOME_ANGLES, end_state)
         self.assertTrue(condition)
 
     def test_make_named_trajectory(self):
@@ -377,9 +377,9 @@ class TestSrRobotCommander(TestCase):
 
         for i in range(0, len(named_trajectory.points)):
             all_positions.append(named_trajectory.points[i].positions)
-        for wp in trajectory:
-            for joint in wp["joint_angles"].keys():
-                if not any(wp["joint_angles"][joint] in sublist for sublist in all_positions):
+        for waypoint in trajectory:
+            for joint in waypoint["joint_angles"].keys():
+                if not any(waypoint["joint_angles"][joint] in sublist for sublist in all_positions):
                     self.fail()
 
         self.assertIsInstance(self.robot_commander.make_named_trajectory(trajectory), JointTrajectory)
@@ -393,7 +393,7 @@ class TestSrRobotCommander(TestCase):
         time.sleep(0.5)
         self.robot_commander.send_stop_trajectory_unsafe()
         end_joints = self.robot_commander.get_joints_position()
-        condition = self.compare_joint_states(start_joints, end_joints)
+        condition = self.compare_joint_states_by_common_joints(start_joints, end_joints)
         self.assertFalse(condition)
 
     def test_run_named_trajectory_unsafe_cancelled(self):
@@ -409,7 +409,7 @@ class TestSrRobotCommander(TestCase):
 
         joint_state = self.robot_commander.get_current_state()
         expected_joint_state = trajectory[-1]['joint_angles']
-        condition = self.compare_joint_states(expected_joint_state, joint_state)
+        condition = self.compare_joint_states_by_common_joints(expected_joint_state, joint_state)
         self.assertFalse(condition)
 
     def test_run_named_trajectory_unsafe_executed(self):
@@ -420,7 +420,7 @@ class TestSrRobotCommander(TestCase):
         self.robot_commander.run_named_trajectory_unsafe(trajectory)
         joint_state = self.robot_commander.get_current_state()
         expected_joint_state = trajectory[-1]['joint_angles']
-        condition = self.compare_joint_states(expected_joint_state, joint_state)
+        condition = self.compare_joint_states_by_common_joints(expected_joint_state, joint_state)
         self.assertTrue(condition)
 
     def test_run_named_trajectory(self):
@@ -431,7 +431,7 @@ class TestSrRobotCommander(TestCase):
         self.robot_commander.run_named_trajectory(trajectory)
         joint_state = self.robot_commander.get_current_state()
         expected_joint_state = trajectory[-1]['joint_angles']
-        condition = self.compare_joint_states(expected_joint_state, joint_state)
+        condition = self.compare_joint_states_by_common_joints(expected_joint_state, joint_state)
         self.assertTrue(condition)
 
     def test_move_to_pose_target(self):
@@ -461,7 +461,7 @@ class TestSrRobotCommander(TestCase):
         self.robot_commander.move_to_joint_value_target_unsafe(CONST_EXAMPLE_TARGET, time=0.002, wait=True,
                                                                angle_degrees=False)
         executed_joints = self.robot_commander.get_current_state()
-        condition = self.compare_joint_states(CONST_EXAMPLE_TARGET, executed_joints)
+        condition = self.compare_joint_states_by_common_joints(CONST_EXAMPLE_TARGET, executed_joints)
         self.assertTrue(condition)
 
     def test_move_to_joint_value_target_unsafe_cancelled(self):
@@ -473,7 +473,7 @@ class TestSrRobotCommander(TestCase):
             self.robot_commander._clients[client].cancel_goal()
 
         executed_joints = self.robot_commander.get_current_state()
-        condition = self.compare_joint_states(CONST_EXAMPLE_TARGET, executed_joints)
+        condition = self.compare_joint_states_by_common_joints(CONST_EXAMPLE_TARGET, executed_joints)
         self.assertFalse(condition)
 
     def test_run_joint_trajectory_unsafe_executed(self):
@@ -482,7 +482,7 @@ class TestSrRobotCommander(TestCase):
                                                                      custom_start_state=None).joint_trajectory
         self.robot_commander.run_joint_trajectory_unsafe(trajectory)
         executed_joints = self.robot_commander.get_current_state()
-        condition = self.compare_joint_states(CONST_EXAMPLE_TARGET, executed_joints)
+        condition = self.compare_joint_states_by_common_joints(CONST_EXAMPLE_TARGET, executed_joints)
         self.assertTrue(condition)
 
     def test_run_joint_trajectory_unsafe_cancelled(self):
@@ -496,7 +496,7 @@ class TestSrRobotCommander(TestCase):
             self.robot_commander._clients[client].cancel_goal()
 
         executed_joints = self.robot_commander.get_current_state()
-        condition = self.compare_joint_states(CONST_EXAMPLE_TARGET, executed_joints)
+        condition = self.compare_joint_states_by_common_joints(CONST_EXAMPLE_TARGET, executed_joints)
         self.assertFalse(condition)
 
     def test_plan_to_waypoints_target(self):
@@ -519,7 +519,7 @@ class TestSrRobotCommander(TestCase):
         joints_from_trajectory = dict(zip(trajectory.joint_names, trajectory.points[0].positions))
         self.robot_commander.move_to_trajectory_start(trajectory)
         current_joints = self.robot_commander.get_current_state()
-        condition = self.compare_joint_states(joints_from_trajectory, current_joints)
+        condition = self.compare_joint_states_by_common_joints(joints_from_trajectory, current_joints)
         self.assertTrue(condition)
 
     def test_get_ik(self):
@@ -531,7 +531,7 @@ class TestSrRobotCommander(TestCase):
         joint_state = dict(zip(joint_state_from_ik.name, joint_state_from_ik.position))
         self.robot_commander.move_to_joint_value_target(joint_state)
         end_joint_state = self.robot_commander.get_current_state()
-        condition = self.compare_joint_states(joint_state, end_joint_state)
+        condition = self.compare_joint_states_by_common_joints(joint_state, end_joint_state)
         self.assertTrue(condition)
 
     def test_move_to_pose_value_target_unsafe_executed(self):
@@ -591,7 +591,7 @@ class TestSrRobotCommander(TestCase):
 
         expected_joint_state = self.robot_commander.get_ik(start_pose)
         expected_joint_state = dict(zip(expected_joint_state.name, expected_joint_state.position))
-        condition = self.compare_joint_states(expected_joint_state, last_planned_joint_state)
+        condition = self.compare_joint_states_by_common_joints(expected_joint_state, last_planned_joint_state)
         self.assertTrue(condition)
 
     def test_get_end_effector_pose_from_named_state(self):
@@ -609,7 +609,7 @@ class TestSrRobotCommander(TestCase):
         pose = self.robot_commander.get_end_effector_pose_from_named_state(const_test_name)
         end_joint_state = self.robot_commander.get_ik(pose)
         end_joint_state = dict(zip(end_joint_state.name, end_joint_state.position))
-        condition = self.compare_joint_states(target_joint_state, end_joint_state)
+        condition = self.compare_joint_states_by_common_joints(target_joint_state, end_joint_state)
         self.assertTrue(condition)
 
     def test_move_to_named_target(self):
@@ -618,7 +618,7 @@ class TestSrRobotCommander(TestCase):
             self.robot_commander.move_to_named_target(name)
             expected_joint_state = self.robot_commander.get_named_target_joint_values(name)
             end_joint_state = self.robot_commander.get_current_state()
-            if not self.compare_joint_states(end_joint_state, expected_joint_state):
+            if not self.compare_joint_states_by_common_joints(end_joint_state, expected_joint_state):
                 self.fail()
             break
 
