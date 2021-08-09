@@ -78,7 +78,7 @@ class TestSrRobotCommander(TestCase):
                 return False
         return True
 
-    def compare_joint_states_by_common_joints_by_common_joints(self, joint_state_1, joint_state_2, tolerance=0.01):
+    def compare_joint_states_by_common_joints(self, joint_state_1, joint_state_2, tolerance=0.01):
         common_joint_names = set(joint_state_1.keys()).intersection(set(joint_state_2.keys()))
         if len(common_joint_names) == 0:
             return False
