@@ -82,6 +82,9 @@
     <arg name="side" value="$(arg side)"/>
   </include>
 
+  <include file="$(find benfile)/launch/cry.launch">
+  </include>
+
   <!-- Constructs robot description string and loads it -->
   <node unless="$(arg load_robot_description_at_lower_level)" name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description" output="screen">
     <param name="arm_type" value="$(arg robot_model)"/>
