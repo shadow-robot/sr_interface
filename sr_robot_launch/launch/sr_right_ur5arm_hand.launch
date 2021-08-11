@@ -34,6 +34,8 @@
   <arg name="side" value="right"/>
 
   <!-- HAND CONFIG-->
+  <!-- Set hand type. -->
+  <arg name="hand_type" default="hand_lite"/>
   <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
   <!-- The control mode PWM (true) or torque (false) -->
@@ -63,6 +65,7 @@
     <arg name="gui" default="$(arg gui)"/>
     <arg name="world" value="$(arg world)"/>
 
+    <arg name="hand_type" value="$(arg hand_type)"/>
     <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
     <arg name="initial_z" value="$(arg initial_z)"/>
     <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>

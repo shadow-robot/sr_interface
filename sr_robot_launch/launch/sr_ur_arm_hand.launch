@@ -65,6 +65,7 @@
        default="[(ra|la)_trajectory_controller/state]"/>
 
   <!-- SIMULATED ROBOTS -->
+  <arg name="hand_type" default="hand_lite"/>
   <arg name="side" default="right"/>
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhands_and_arms.world"/>
@@ -92,6 +93,7 @@
       <arg name="side" value="$(arg side)"/>
       <arg name="arm" value="true"/>
       <arg name="hand" value="true"/>
+      <arg name="hand_type" value="$(arg hand_type)"/>
       <arg name="arm_ctrl" value="$(arg arm_ctrl)"/>
       <arg name="arm_trajectory" value="$(arg arm_trajectory)"/>
       <arg name="arm_position" value="$(arg arm_position)"/>

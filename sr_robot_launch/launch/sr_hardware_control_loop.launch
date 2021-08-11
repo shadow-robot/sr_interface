@@ -41,7 +41,7 @@
   <arg name="grasp_controller" default="false"/>
   <!-- Set to true if you want to use hybrid controller -->
   <arg name="hybrid_controller" default="false"/>
-  <!-- Whether to run hand controllers. -->
+  <!-- Set hand type. -->
   <arg name="hand_type" default="hand_e"/>
 
   <!-- ARMS CONFIG-->
