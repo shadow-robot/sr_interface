@@ -26,7 +26,6 @@ from moveit_commander import MoveGroupCommander, RobotCommander, \
 from moveit_msgs.msg import RobotTrajectory, PositionIKRequest
 from sensor_msgs.msg import JointState
 import geometry_msgs.msg
-from geometry_msgs.msg import Pose, PoseStamped
 from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, \
     RobotTeachModeResponse
 
@@ -733,7 +732,7 @@ class SrRobotCommander(object):
             self._move_group_commander.set_joint_value_target(pose, end_effector_link)
         else:
             self._move_group_commander.set_pose_target(pose, end_effector_link)
-        self.__plan = self._move_group_commander.plan(pose)[CONST_TUPLE_TRAJECTORY_INDEX]
+        self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
         return self.__plan
 
     def _joint_states_callback(self, joint_state):

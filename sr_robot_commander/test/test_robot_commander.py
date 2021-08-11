@@ -201,7 +201,7 @@ class TestSrRobotCommander(TestCase):
 
     def test_check_given_plan_is_valid_not_ok(self):
         self.reset_to_home()
-        not_valid_goal = CONST_RA_HOME_ANGLES
+        not_valid_goal = copy.deepcopy(CONST_RA_HOME_ANGLES)
         out_of_range_value = 3.0
         not_valid_goal['ra_elbow_joint'] = out_of_range_value
         plan = self.robot_commander.plan_to_joint_value_target(not_valid_goal, angle_degrees=False,
@@ -216,7 +216,7 @@ class TestSrRobotCommander(TestCase):
 
     def test_evaluate_given_plan_low_quality(self):
         self.reset_to_home()
-        end_joints = CONST_RA_HOME_ANGLES
+        end_joints = copy.deepcopy(CONST_RA_HOME_ANGLES)
         end_joints['ra_shoulder_pan_joint'] += 0.8
         end_joints['ra_shoulder_lift_joint'] += 0.4
         end_joints['ra_elbow_joint'] += 0.6
@@ -228,7 +228,7 @@ class TestSrRobotCommander(TestCase):
 
     def test_evaluate_given_plan_high_quality(self):
         self.reset_to_home()
-        end_joints = CONST_RA_HOME_ANGLES
+        end_joints = copy.deepcopy(CONST_RA_HOME_ANGLES)
         end_joints['ra_shoulder_pan_joint'] += 0.1
         plan = self.robot_commander.plan_to_joint_value_target(end_joints, angle_degrees=False,
                                                                custom_start_state=None)
@@ -338,7 +338,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_get_named_targets(self):
-        self.assertIsInstances(elf.robot_commander.get_named_targets(), list)
+        self.assertIsInstance(self.robot_commander.get_named_targets(), list)
 
     def test_get_joints_position(self):
         ret_val = self.robot_commander.get_joints_position()
@@ -642,10 +642,8 @@ class TestSrRobotCommander(TestCase):
         condition_2 = (self.robot_commander.action_is_running() is False)
         self.assertTrue(condition_1 and condition_2)
 
-    '''
     # no working teach mode so far
-    def test_set_teach_mode(self):
-    '''
+    # def test_set_teach_mode(self):
 
 
 if __name__ == "__main__":
