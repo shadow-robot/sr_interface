@@ -28,7 +28,7 @@
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
   <!-- Trajectory controllers partial name list for moveit-->
   <arg if="$(eval not hand_trajectory)" name="trajectory_controllers_list_patterns" default="[]"/>
-  <arg if="$(eval hand_trajectory)" name="trajectory_controllers_list_patterns" default="[h_trajectory_controller/state]"/>
+  <arg if="$(eval hand_trajectory)" name="trajectory_controllers_list_patterns" default="[(rh|lh)_trajectory_controller/state]"/>
 
   <!-- SIMULATED ROBOTS -->
   <arg name="verbose" default="true" />

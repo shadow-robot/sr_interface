@@ -58,11 +58,11 @@
   <!-- Trajectory controllers list for moveit-->
   <arg if="$(eval not hand_trajectory and not arm_trajectory)" name="trajectory_controllers_list_patterns" default="[]"/>
   <arg if="$(eval hand_trajectory and arm_trajectory)" name="trajectory_controllers_list_patterns" 
-       default="[a_trajectory_controller/state, h_trajectory_controller/state]"/>
+       default="[(ra|la)_trajectory_controller/state, (rh|lh)_trajectory_controller/state]"/>
   <arg if="$(eval hand_trajectory and not arm_trajectory)" name="trajectory_controllers_list_patterns"
-       default="[h_trajectory_controller/state]"/>
+       default="[(rh|lh)_trajectory_controller/state]"/>
   <arg if="$(eval not hand_trajectory and arm_trajectory)" name="trajectory_controllers_list_patterns"
-       default="[a_trajectory_controller/state]"/>
+       default="[(ra|la)_trajectory_controller/state]"/>
 
   <!-- SIMULATED ROBOTS -->
   <arg name="side" default="right"/>
