@@ -36,6 +36,8 @@ from moveit_commander import conversions
 from actionlib_msgs.msg import GoalStatusArray
 import tf2_ros
 import time
+import numpy as np
+from math import fmod
 
 # Some of the test cases do not have an assert method. In case of these methods the test verifies if
 # the API of moveit_commander changed - i.e. change of methods name, number of arguments, return type
@@ -43,11 +45,11 @@ import time
 PKG = "sr_robot_commander"
 CONST_RA_HOME_ANGLES = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
                         'ra_shoulder_lift_joint': -1.57, 'ra_wrist_1_joint': -0.73,
-                        'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 0.00}
+                        'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 3.14}
 
 CONST_EXAMPLE_TARGET = {'ra_shoulder_pan_joint': 0.2, 'ra_elbow_joint': 1.80,
                         'ra_shoulder_lift_joint': -1.37, 'ra_wrist_1_joint': -0.52,
-                        'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 0.00}
+                        'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 3.14}
 
 
 class TestSrRobotCommander(TestCase):
@@ -65,7 +67,7 @@ class TestSrRobotCommander(TestCase):
                                                                custom_start_state=None)
         self.robot_commander.execute_plan(plan)
 
-    def compare_poses(self, pose1, pose2, tolerance=0.01):
+    def compare_poses(self, pose1, pose2, tolerance=0.05):
         pose1_list = [pose1.position.x, pose1.position.y, pose1.position.z,
                       pose1.orientation.x, pose1.orientation.y, pose1.orientation.z, pose1.orientation.w]
         pose2_list = [pose2.position.x, pose2.position.y, pose2.position.z,
@@ -78,14 +80,20 @@ class TestSrRobotCommander(TestCase):
                 return False
         return True
 
-    def compare_joint_states_by_common_joints(self, joint_state_1, joint_state_2, tolerance=0.01):
-        common_joint_names = set(joint_state_1.keys()).intersection(set(joint_state_2.keys()))
+    def normalize_angle_positive(self, angle):
+        pi_2 = 2. * np.pi
+        return fmod(fmod(angle, pi_2) + pi_2, pi_2)
+
+    def compare_joint_states_by_common_joints(self, joint_state_1, joint_state_2, tolerance=0.05):
+        joint_state_1_cpy = copy.deepcopy(joint_state_1)
+        joint_state_2_cpy = copy.deepcopy(joint_state_2)
+        common_joint_names = set(joint_state_1_cpy.keys()).intersection(set(joint_state_2_cpy.keys()))
         if len(common_joint_names) == 0:
             return False
         for key in common_joint_names:
-            joint_state_1[key] = round(joint_state_1[key], 2)
-            joint_state_2[key] = round(joint_state_2[key], 2)
-            if abs(joint_state_1[key] - joint_state_2[key]) > tolerance:
+            joint_state_1_cpy[key] = self.normalize_angle_positive(round(joint_state_1_cpy[key], 2))
+            joint_state_2_cpy[key] = self.normalize_angle_positive(round(joint_state_2_cpy[key], 2))
+            if abs(joint_state_1_cpy[key] - joint_state_2_cpy[key]) > tolerance:
                 return False
         return True
 
@@ -172,13 +180,6 @@ class TestSrRobotCommander(TestCase):
         self.robot_commander.execute_plan(plan)
         executed_joints = self.robot_commander.get_current_state()
         condition = self.compare_joint_states_by_common_joints(executed_joints, CONST_RA_HOME_ANGLES)
-        self.assertTrue(condition)
-
-    def test_move_to_joint_value_target(self):
-        self.reset_to_home()
-        self.robot_commander.move_to_joint_value_target(CONST_EXAMPLE_TARGET, wait=True, angle_degrees=False)
-        end_state = self.robot_commander.get_current_state()
-        condition = self.compare_joint_states_by_common_joints(end_state, CONST_EXAMPLE_TARGET)
         self.assertTrue(condition)
 
     def test_check_plan_is_valid_ok(self):
@@ -436,9 +437,9 @@ class TestSrRobotCommander(TestCase):
 
     def test_move_to_pose_target(self):
         self.reset_to_home()
-        curr_pose = self.robot_commander.get_current_pose()
         pose = conversions.list_to_pose([0.4, 0.2, 0.3, 0, 0, 0, 1])
-        self.robot_commander.move_to_pose_target(pose, self.eef)
+        self.robot_commander.move_to_pose_target(pose, self.eef, wait=True)
+        time.sleep(5)
         after_pose = self.robot_commander.get_current_pose()
         condition = self.compare_poses(pose, after_pose)
         self.assertTrue(condition)
@@ -528,10 +529,19 @@ class TestSrRobotCommander(TestCase):
         pose.header.stamp = rospy.get_rostime()
         pose.pose = conversions.list_to_pose([0.4, 0.2, 0.3, 0, 0, 0, 1])
         joint_state_from_ik = self.robot_commander.get_ik(pose)
-        joint_state = dict(zip(joint_state_from_ik.name, joint_state_from_ik.position))
-        self.robot_commander.move_to_joint_value_target(joint_state)
-        end_joint_state = self.robot_commander.get_current_state()
-        condition = self.compare_joint_states_by_common_joints(joint_state, end_joint_state)
+        plan = self.robot_commander.plan_to_pose_target(pose.pose, end_effector_link=self.eef,
+                                                        alternative_method=False, custom_start_state=None)
+        joint_state_from_ik = dict(zip(joint_state_from_ik.name, joint_state_from_ik.position))
+        joint_state_plan = dict(zip(plan.joint_trajectory.joint_names, plan.joint_trajectory.points[-1].positions))
+        condition = self.compare_joint_states_by_common_joints(joint_state_from_ik, joint_state_plan)
+        self.assertTrue(condition)
+
+    def test_move_to_joint_value_target(self):
+        self.reset_to_home()
+        self.robot_commander.move_to_joint_value_target(CONST_EXAMPLE_TARGET, wait=True, angle_degrees=False)
+        time.sleep(1)
+        end_state = self.robot_commander.get_current_state()
+        condition = self.compare_joint_states_by_common_joints(end_state, CONST_EXAMPLE_TARGET)
         self.assertTrue(condition)
 
     def test_move_to_pose_value_target_unsafe_executed(self):
@@ -548,7 +558,8 @@ class TestSrRobotCommander(TestCase):
         self.reset_to_home()
         pose = PoseStamped()
         pose.header.stamp = rospy.get_rostime()
-        pose.pose = conversions.list_to_pose([0.4, 0.2, 0.3, 0, 0, 0, 1])
+
+        pose.pose = conversions.list_to_pose([0.4, 0.2, 0.3, 0, 0, 0, -1])
         self.robot_commander.move_to_pose_value_target_unsafe(pose)
 
         for client in self.robot_commander._clients:
@@ -594,8 +605,6 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_joint_states_by_common_joints(expected_joint_state, last_planned_joint_state)
         self.assertTrue(condition)
 
-    # Checking if failing because of warehouse
-    '''
     def test_get_end_effector_pose_from_named_state(self):
         self.reset_to_home()
         target_joint_state = CONST_EXAMPLE_TARGET
@@ -613,7 +622,6 @@ class TestSrRobotCommander(TestCase):
         end_joint_state = dict(zip(end_joint_state.name, end_joint_state.position))
         condition = self.compare_joint_states_by_common_joints(target_joint_state, end_joint_state)
         self.assertTrue(condition)
-    '''
 
     def test_move_to_named_target(self):
         self.reset_to_home()
