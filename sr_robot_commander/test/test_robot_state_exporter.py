@@ -36,9 +36,9 @@ class TestSrRobotStateExporter(TestCase):
         if not os.path.exists("/tmp/test_exporter"):
             os.mkdir("/tmp/test_exporter")
 
-    @classmethod
-    def tearDownClass(cls):
-        shutil.rmtree("/tmp/test_exporter", ignore_errors=True)
+    #@classmethod
+    #def tearDownClass(cls):
+    #    shutil.rmtree("/tmp/test_exporter", ignore_errors=True)
 
     def setUp(self):
         rospy.init_node('test_hand_commander', anonymous=True)
@@ -65,7 +65,7 @@ class TestSrRobotStateExporter(TestCase):
         state_exporter = SrRobotStateExporter()
         state_exporter.extract_all()
         state_exporter.output_module(self.test_path + "/exporter_output_all.py")
-        from self.test_path.exporter_output_all import warehouse_states
+        from exporter_output_all import warehouse_states
         self.assertEqual(warehouse_states, self.expected_states, msg="Export all states failed:" +
                          str(warehouse_states) + " not " + str(self.expected_states))
 
@@ -74,7 +74,7 @@ class TestSrRobotStateExporter(TestCase):
         state_exporter = SrRobotStateExporter()
         state_exporter.extract_one_state("state1")
         state_exporter.output_module(self.test_path + "/exporter_output_state.py")
-        from self.test_path.exporter_output_state import warehouse_states
+        from exporter_output_state import warehouse_states
         self.assertEqual(warehouse_states, self.expected_state, msg="Export all states failed:" +
                          str(warehouse_states) + " not " + str(self.expected_state))
 
@@ -83,7 +83,7 @@ class TestSrRobotStateExporter(TestCase):
         state_exporter = SrRobotStateExporter()
         state_exporter.extract_list(["state1"])
         state_exporter.output_module(self.test_path + "/exporter_output_list.py")
-        from self.test_path.exporter_output_list import warehouse_states
+        from exporter_output_list import warehouse_states
         self.assertEqual(warehouse_states, self.expected_state, msg="Export all states failed:" +
                          str(warehouse_states) + " not " + str(self.expected_state))
 
