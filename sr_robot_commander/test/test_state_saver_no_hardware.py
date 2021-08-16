@@ -55,7 +55,7 @@ class TestSrStateSaverExceptions(TestCase):
             exception_string = str(e)
 
         self.assertTrue(exception_raised)
-        self.assertEqual(exception_string, "'No hand found.'")
+        self.assertEqual(exception_string, "Unable to construct robot model. Please make sure all needed information is on the parameter server.")
 
     def test_with_arm(self):
         exception_raised = False
@@ -68,7 +68,7 @@ class TestSrStateSaverExceptions(TestCase):
             exception_string = str(e)
 
         self.assertTrue(exception_raised)
-        self.assertEqual(exception_string, "'No arm found.'")
+        self.assertEqual(exception_string, "Group right_arm not found.")
 
     def test_with_both(self):
         exception_raised = False
@@ -81,7 +81,7 @@ class TestSrStateSaverExceptions(TestCase):
             exception_string = str(e)
 
         self.assertTrue(exception_raised)
-        self.assertEqual(exception_string, "'No hand found.' 'No arm found.'")
+        self.assertEqual(exception_string, "Unable to construct robot model. Please make sure all needed information is on the parameter server.")
 
 
 if __name__ == "__main__":
