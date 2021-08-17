@@ -59,7 +59,7 @@ class TestSrRobotStateExporter(TestCase):
     @classmethod
     def tearDownClass(cls):
         shutil.rmtree("/tmp/test_exporter", ignore_errors=True)
-     
+
     def test_extract_all(self):
         rospy.wait_for_service("/has_robot_state")
         state_exporter = SrRobotStateExporter()
