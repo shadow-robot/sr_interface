@@ -36,10 +36,6 @@ class TestSrRobotStateExporter(TestCase):
         if not os.path.exists("/tmp/test_exporter"):
             os.mkdir("/tmp/test_exporter")
 
-    #@classmethod
-    #def tearDownClass(cls):
-    #    shutil.rmtree("/tmp/test_exporter", ignore_errors=True)
-
     def setUp(self):
         rospy.init_node('test_hand_commander', anonymous=True)
         self.test_path = "/tmp/test_exporter"
