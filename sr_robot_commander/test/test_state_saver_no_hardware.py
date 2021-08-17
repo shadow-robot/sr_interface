@@ -55,7 +55,7 @@ class TestSrStateSaverExceptions(TestCase):
             exception_string = str(e)
 
         self.assertTrue(exception_raised)
-        self.assertEqual(exception_string, "Unable to construct robot model. Please make"\
+        self.assertEqual(exception_string, "Unable to construct robot model. Please make"
                          " sure all needed information is on the parameter server.")
 
     def test_with_arm(self):
@@ -82,7 +82,7 @@ class TestSrStateSaverExceptions(TestCase):
             exception_string = str(e)
 
         self.assertTrue(exception_raised)
-        self.assertEqual(exception_string, "Unable to construct robot model. Please make"\
+        self.assertEqual(exception_string, "Unable to construct robot model. Please make"
                          " sure all needed information is on the parameter server.")
 
 
