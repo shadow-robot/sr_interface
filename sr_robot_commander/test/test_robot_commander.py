@@ -62,10 +62,17 @@ class TestSrRobotCommander(TestCase):
         cls.eef = cls.robot_commander.get_end_effector_link()
 
     def reset_to_home(self):
+        rospy.sleep(1)
+        rospy.logwarn("-- Resetting plan, planning to HOME, executing plan --")
         self.robot_commander._reset_plan()
-        plan = self.robot_commander.plan_to_joint_value_target(CONST_RA_HOME_ANGLES, angle_degrees=False,
-                                                               custom_start_state=None)
+        '''
+        #plan = self.robot_commander.plan_to_joint_value_target(CONST_RA_HOME_ANGLES, angle_degrees=False,
+                                                                custom_start_state=None)
         self.robot_commander.execute_plan(plan)
+        '''
+        self.robot_commander.move_to_joint_value_target(CONST_RA_HOME_ANGLES, wait=True, angle_degrees=False)
+        rospy.logwarn("-- Reset complete --")
+        rospy.sleep(1)        
 
     def compare_poses(self, pose1, pose2, tolerance=0.05):
         pose1_list = [pose1.position.x, pose1.position.y, pose1.position.z,
@@ -458,10 +465,16 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(True)
 
     def test_move_to_joint_value_target_unsafe_executed(self):
+        rospy.logwarn("test-test_move_to_joint_value_target_unsafe_executed")
         self.reset_to_home()
+        rospy.logwarn(self.robot_commander.get_current_state())
         self.robot_commander.move_to_joint_value_target_unsafe(CONST_EXAMPLE_TARGET, time=0.002, wait=True,
                                                                angle_degrees=False)
+        
+        rospy.logwarn(CONST_EXAMPLE_TARGET)
         executed_joints = self.robot_commander.get_current_state()
+        rospy.logwarn(executed_joints)
+        rospy.logwarn("test-test_move_to_joint_value_target_unsafe_executed")        
         condition = self.compare_joint_states_by_common_joints(CONST_EXAMPLE_TARGET, executed_joints)
         self.assertTrue(condition)
 
