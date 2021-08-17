@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2018 Shadow Robot Company Ltd.
+# Copyright 2018-2021 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -56,6 +56,10 @@ class TestSrRobotStateExporter(TestCase):
             }
         }
 
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree("/tmp/test_exporter", ignore_errors=True)
+     
     def test_extract_all(self):
         rospy.wait_for_service("/has_robot_state")
         state_exporter = SrRobotStateExporter()
@@ -76,6 +80,7 @@ class TestSrRobotStateExporter(TestCase):
 
     def test_extract_list(self):
         rospy.wait_for_service("/has_robot_state")
+        rospy.sleep(2)
         state_exporter = SrRobotStateExporter()
         state_exporter.extract_list(["state1"])
         state_exporter.output_module(self.test_path + "/exporter_output_list.py")
