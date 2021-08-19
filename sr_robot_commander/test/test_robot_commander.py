@@ -39,6 +39,9 @@ import time
 import numpy as np
 from math import fmod
 
+# DEBUG
+import sys
+
 # Some of the test cases do not have an assert method. In case of these methods the test verifies if
 # the API of moveit_commander changed - i.e. change of methods name, number of arguments, return type
 
@@ -100,6 +103,7 @@ class TestSrRobotCommander(TestCase):
         return True
 
     def test_get_and_set_planner_id(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         prev_planner_id = self.robot_commander._move_group_commander.get_planner_id()
         test_planner_id = "RRTstarkConfigDefault"
         self.robot_commander.set_planner_id(test_planner_id)
@@ -108,6 +112,7 @@ class TestSrRobotCommander(TestCase):
         self.robot_commander.set_planner_id(prev_planner_id)
 
     def test_get_and_set_planning_time(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         prev_planning_time = self.robot_commander._move_group_commander.get_planning_time()
         test_planning_time = 3
         self.robot_commander.set_planning_time(test_planning_time)
@@ -116,9 +121,11 @@ class TestSrRobotCommander(TestCase):
         self.robot_commander.set_planning_time(prev_planning_time)
 
     def test_set_num_planning_attempts(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.robot_commander.set_num_planning_attempts(3)
 
     def test_get_end_effector_pose_from_state(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         robot_state = RobotState()
         for joint_name, angle in CONST_RA_HOME_ANGLES.items():
             robot_state.joint_state.name.append(joint_name)
@@ -128,41 +135,52 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_get_planning_frame(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.robot_commander.get_planning_frame()
 
     def test_set_and_get_pose_reference_frame(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         const_reference_frame = "world"
         self.robot_commander._move_group_commander.set_pose_reference_frame(const_reference_frame)
         self.assertEqual(self.robot_commander._move_group_commander.get_pose_reference_frame(), const_reference_frame)
 
     def test_get_group_name(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.assertEqual(self.robot_commander._name, self.robot_commander.get_group_name())
 
     def test_refresh_named_targets(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.robot_commander.refresh_named_targets()
         condition_1 = type(self.robot_commander._srdf_names) == list
         condition_2 = type(self.robot_commander._warehouse_names) == list
         self.assertTrue(condition_1 and condition_2)
 
     def test_set_max_velocity_scaling_factor_range_ok(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.robot_commander.set_max_velocity_scaling_factor(0.2)
 
     def test_set_max_velocity_scaling_factor_range_not_ok(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.assertRaises(MoveItCommanderException, self.robot_commander.set_max_velocity_scaling_factor, 3)
 
     def test_set_max_acceleration_scaling_factor_range_ok(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.robot_commander.set_max_acceleration_scaling_factor(0.2)
 
     def test_set_max_acceleration_scaling_factor_range_not_ok(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.assertRaises(MoveItCommanderException, self.robot_commander.set_max_acceleration_scaling_factor, 3)
 
     def test_allow_looking(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.robot_commander.allow_looking(True)
 
     def test_allow_replanning(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.robot_commander.allow_replanning(True)
 
     def test_plan_to_joint_value_target(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         plan = self.robot_commander.plan_to_joint_value_target(CONST_EXAMPLE_TARGET, angle_degrees=False,
                                                                custom_start_state=None)
@@ -173,6 +191,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition_1 and condition_2)
 
     def test_execute(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         self.robot_commander.plan_to_joint_value_target(CONST_EXAMPLE_TARGET, angle_degrees=False,
                                                         custom_start_state=None)
@@ -182,6 +201,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_execute_plan(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         plan = self.robot_commander.plan_to_joint_value_target(CONST_RA_HOME_ANGLES, angle_degrees=False,
                                                                custom_start_state=None)
@@ -191,24 +211,28 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_check_plan_is_valid_ok(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         self.robot_commander.plan_to_joint_value_target(CONST_RA_HOME_ANGLES, angle_degrees=False,
                                                         custom_start_state=None)
         self.assertTrue(self.robot_commander.check_plan_is_valid())
 
     def test_check_plan_is_valid_not_ok(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         self.robot_commander._SrRobotCommander__plan = None
         condition = self.robot_commander.check_plan_is_valid()
         self.assertFalse(condition)
 
     def test_check_given_plan_is_valid_ok(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         plan = self.robot_commander.plan_to_joint_value_target(CONST_RA_HOME_ANGLES, angle_degrees=False,
                                                                custom_start_state=None)
         self.assertTrue(self.robot_commander.check_given_plan_is_valid(plan))
 
     def test_check_given_plan_is_valid_not_ok(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         not_valid_goal = copy.deepcopy(CONST_RA_HOME_ANGLES)
         out_of_range_value = 3.0
@@ -218,12 +242,14 @@ class TestSrRobotCommander(TestCase):
         self.assertFalse(self.robot_commander.check_given_plan_is_valid(plan))
 
     def test_evaluate_given_plan_none(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         plan = None
         evaluation = self.robot_commander.evaluate_given_plan(plan)
         self.assertIsNone(evaluation)
 
     def test_evaluate_given_plan_low_quality(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         end_joints = copy.deepcopy(CONST_RA_HOME_ANGLES)
         end_joints['ra_shoulder_pan_joint'] += 0.8
@@ -236,6 +262,7 @@ class TestSrRobotCommander(TestCase):
         self.assertGreater(evaluation, 10)
 
     def test_evaluate_given_plan_high_quality(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         end_joints = copy.deepcopy(CONST_RA_HOME_ANGLES)
         end_joints['ra_shoulder_pan_joint'] += 0.1
@@ -245,81 +272,100 @@ class TestSrRobotCommander(TestCase):
         self.assertLess(evaluation, 1)
 
     def test_evaluate_plan_quality_good(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.assertEqual('good', self.robot_commander.evaluate_plan_quality(7))
 
     def test_evaluate_plan_quality_poor(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.assertEqual('poor', self.robot_commander.evaluate_plan_quality(60))
 
     def test_evaluate_plan_quality_medium(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.assertEqual('medium', self.robot_commander.evaluate_plan_quality(32))
 
     def test_get_robot_name(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.assertTrue(self.robot_commander.get_robot_name() == self.robot_commander._robot_name)
 
     # if launched sr_ur_arm_box.launch
     def test_named_target_in_srdf_exist(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         const_test_names = ['lifted', 'flat']
         for name in const_test_names:
             if self.robot_commander.named_target_in_srdf(name) is False:
                 self.fail()
 
     def test_named_target_in_srdf_not_exist(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         const_test_names = ['non_existing_target_test_name']
         for name in const_test_names:
             if self.robot_commander.named_target_in_srdf(name) is True:
                 self.fail()
 
     def test_set_named_target_correct_name(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         test_names = self.robot_commander.get_named_targets()
         result = self.robot_commander.set_named_target(test_names[0])
         self.assertTrue(result)
 
     def test_set_named_target_false_name(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         result = self.robot_commander.set_named_target("test_false_name")
         self.assertFalse(result)
 
     def test_get_named_target_joint_values_srdf(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         test_names = self.robot_commander._srdf_names
         if len(test_names) > 0:
             output = self.robot_commander.get_named_target_joint_values(test_names[0])
             self.assertIsInstance(output, dict)
 
     def test_get_named_target_joint_values_warehouse(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         test_names = self.robot_commander._warehouse_names
         if len(test_names) > 0:
             output = self.robot_commander.get_named_target_joint_values(test_names[0])
             self.assertIsInstance(output, dict)
 
     def test_get_named_target_joint_values_no_target(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         const_test_names = ["no_target"]
         output = self.robot_commander.get_named_target_joint_values(const_test_names[0])
         self.assertIsNone(output)
 
     def test_get_end_effector_link(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.assertIsInstance(self.robot_commander.get_end_effector_link(), str)
 
     def test_get_current_pose_frame(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         pose = self.robot_commander.get_current_pose(reference_frame="world")
         self.assertIsInstance(pose, Pose)
 
     def test_get_current_pose_frame_none(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         pose = self.robot_commander.get_current_pose(reference_frame=None)
         self.assertIsInstance(pose, Pose)
 
     def test_get_current_pose_frame_wrong(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         pose = self.robot_commander.get_current_pose(reference_frame="test_wrong_frame")
         self.assertIsNone(pose)
 
     def test_get_current_state(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.assertIsInstance(self.robot_commander.get_current_state(), dict)
 
     def test_get_current_state_bounded(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.assertIsInstance(self.robot_commander.get_current_state_bounded(), dict)
 
     def test_get_robot_state_bounded(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.assertIsInstance(self.robot_commander.get_current_state_bounded(), dict)
 
     def test_plan_to_named_target_custom_start_state_none(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         target_names = self.robot_commander.get_named_targets()
         if len(target_names) > 0:
@@ -327,6 +373,7 @@ class TestSrRobotCommander(TestCase):
         self.assertIsInstance(self.robot_commander._SrRobotCommander__plan, RobotTrajectory)
 
     def test_plan_to_named_target_custom_start_state_exists(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         target_names = self.robot_commander.get_named_targets()
 
@@ -340,6 +387,7 @@ class TestSrRobotCommander(TestCase):
         self.assertIsInstance(self.robot_commander._SrRobotCommander__plan, RobotTrajectory)
 
     def test_plan_to_named_target_target_not_exists(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         const_test_name = "test_non_existing_target"
         self.robot_commander.plan_to_named_target(const_test_name, None)
@@ -347,21 +395,26 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_get_named_targets(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.assertIsInstance(self.robot_commander.get_named_targets(), list)
 
     def test_get_joints_position(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         ret_val = self.robot_commander.get_joints_position()
         self.assertIsInstance(ret_val, dict)
 
     def test_get_joints_velocity(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         ret_val = self.robot_commander.get_joints_velocity()
         self.assertIsInstance(ret_val, dict)
 
     def test_get_joints_state(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         ret_val = self.robot_commander.get_joints_state()
         self.assertIsInstance(ret_val, JointState)
 
     def test_run_joint_trajectory(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         trajectory = self.robot_commander.plan_to_joint_value_target(CONST_RA_HOME_ANGLES, angle_degrees=False,
                                                                      custom_start_state=None).joint_trajectory
@@ -371,6 +424,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_make_named_trajectory(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         trajectory = []
         trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00},
@@ -394,6 +448,7 @@ class TestSrRobotCommander(TestCase):
         self.assertIsInstance(self.robot_commander.make_named_trajectory(trajectory), JointTrajectory)
 
     def test_send_stop_trajectory_unsafe(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         start_joints = self.robot_commander.get_joints_position()
         trajectory = self.robot_commander.plan_to_joint_value_target(CONST_EXAMPLE_TARGET, angle_degrees=False,
@@ -406,6 +461,7 @@ class TestSrRobotCommander(TestCase):
         self.assertFalse(condition)
 
     def test_run_named_trajectory_unsafe_cancelled(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         trajectory = []
         trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.50, 'ra_elbow_joint': 2.3},
@@ -422,6 +478,7 @@ class TestSrRobotCommander(TestCase):
         self.assertFalse(condition)
 
     def test_run_named_trajectory_unsafe_executed(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         trajectory = []
         trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.0},
@@ -433,6 +490,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_run_named_trajectory(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         trajectory = []
         trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00},
@@ -444,6 +502,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_move_to_pose_target(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         pose = conversions.list_to_pose([0.4, 0.2, 0.3, 0, 0, 0, 1])
         self.robot_commander.move_to_pose_target(pose, self.eef, wait=True)
@@ -453,6 +512,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_plan_to_pose_target(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         pose = PoseStamped()
         pose.header.stamp = rospy.get_rostime()
@@ -478,6 +538,7 @@ class TestSrRobotCommander(TestCase):
     '''
 
     def test_move_to_joint_value_target_unsafe_cancelled(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         self.robot_commander.move_to_joint_value_target_unsafe(CONST_EXAMPLE_TARGET, time=0.002, wait=False,
                                                                angle_degrees=False)
@@ -502,6 +563,7 @@ class TestSrRobotCommander(TestCase):
     '''
 
     def test_run_joint_trajectory_unsafe_cancelled(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         trajectory = self.robot_commander.plan_to_joint_value_target(CONST_EXAMPLE_TARGET, angle_degrees=False,
                                                                      custom_start_state=None).joint_trajectory
@@ -516,6 +578,7 @@ class TestSrRobotCommander(TestCase):
         self.assertFalse(condition)
 
     def test_plan_to_waypoints_target(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         waypoints = []
         waypoints.append(conversions.list_to_pose([0.4, 0.1, 0.3, 0, 0, 0, 1]))
@@ -529,6 +592,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_move_to_trajectory_start_trajecotry_exists(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         trajectory = self.robot_commander.plan_to_joint_value_target(CONST_EXAMPLE_TARGET, angle_degrees=False,
                                                                      custom_start_state=None).joint_trajectory
@@ -539,6 +603,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_get_ik(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         pose = PoseStamped()
         pose.header.stamp = rospy.get_rostime()
@@ -552,6 +617,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_move_to_joint_value_target(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         self.robot_commander.move_to_joint_value_target(CONST_EXAMPLE_TARGET, wait=True, angle_degrees=False)
         time.sleep(1)
@@ -560,6 +626,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_move_to_pose_value_target_unsafe_executed(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         pose = PoseStamped()
         pose.header.stamp = rospy.get_rostime()
@@ -570,6 +637,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_move_to_pose_value_target_unsafe_cancelled(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         pose = PoseStamped()
         pose.header.stamp = rospy.get_rostime()
@@ -586,6 +654,7 @@ class TestSrRobotCommander(TestCase):
         self.assertFalse(condition)
 
     def test_move_to_position_target(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         xyz = [0.5, 0.3, 0.4]
         self.robot_commander.move_to_position_target(xyz, self.eef)
@@ -602,6 +671,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_plan_to_position_target(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         xyz = [0.5, 0.3, 0.4]
         start_pose = PoseStamped()
@@ -621,6 +691,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_get_end_effector_pose_from_named_state(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         target_joint_state = CONST_EXAMPLE_TARGET
         robot_state = RobotState()
@@ -639,6 +710,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_move_to_named_target(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         for name in self.robot_commander._srdf_names:
             self.robot_commander.move_to_named_target(name)
@@ -657,6 +729,7 @@ class TestSrRobotCommander(TestCase):
             break
 
     def test_action_is_running(self):
+        rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         self.robot_commander.move_to_joint_value_target_unsafe(CONST_EXAMPLE_TARGET, time=0.002, wait=False,
                                                                angle_degrees=False)
