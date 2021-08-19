@@ -58,9 +58,9 @@ class TestSrRobotCommander(TestCase):
     @classmethod
     def setUpClass(cls):
         rospy.wait_for_message("/move_group/status", GoalStatusArray)
+        rospy.wait_for_service("/gazebo/set_model_configuration")
+        rospy.sleep(10.0)  # Wait for Gazebo to sort itself out
         cls.robot_commander = SrRobotCommander("right_arm")
-        cls.robot_commander.set_planner_id("RRTConnectkConfigDefault")
-        cls.robot_commander.set_planning_time(3)
         cls.eef = cls.robot_commander.get_end_effector_link()
 
     def reset_to_home(self):
@@ -100,14 +100,20 @@ class TestSrRobotCommander(TestCase):
         return True
 
     def test_get_and_set_planner_id(self):
-        const_planner_id = "RRTstarkConfigDefault"
-        self.robot_commander.set_planner_id(const_planner_id)
-        self.assertEqual(const_planner_id, self.robot_commander._move_group_commander.get_planner_id())
+        prev_planner_id = self.robot_commander._move_group_commander.get_planner_id()
+        test_planner_id = "RRTstarkConfigDefault"
+        self.robot_commander.set_planner_id(test_planner_id)
+        self.assertEqual(test_planner_id, self.robot_commander._move_group_commander.get_planner_id())
+
+        self.robot_commander.set_planner_id(prev_planner_id)
 
     def test_get_and_set_planning_time(self):
-        const_time_test_value = 3
-        self.robot_commander.set_planning_time(const_time_test_value)
-        self.assertEqual(const_time_test_value, self.robot_commander._move_group_commander.get_planning_time())
+        prev_planning_time = self.robot_commander._move_group_commander.get_planning_time()
+        test_planning_time = 3
+        self.robot_commander.set_planning_time(test_planning_time)
+        self.assertEqual(test_planning_time, self.robot_commander._move_group_commander.get_planning_time())
+
+        self.robot_commander.set_planning_time(prev_planning_time)
 
     def test_set_num_planning_attempts(self):
         self.robot_commander.set_num_planning_attempts(3)
