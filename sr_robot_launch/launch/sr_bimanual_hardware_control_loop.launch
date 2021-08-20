@@ -5,7 +5,7 @@
   <!-- Specify if the system has "both" hands, only "right", only "left", or "none"-->
   <arg name="hands" default="both"/>
   <arg name="arms" default="true"/>
-  <arg name="arm_ctrl" default="true"/>
+  <arg name="arm_ctrl" default="$(arg arms)"/>
 
   <!-- HANDS CONFIG-->
   <arg name="rh_serial" default="1370"/>
