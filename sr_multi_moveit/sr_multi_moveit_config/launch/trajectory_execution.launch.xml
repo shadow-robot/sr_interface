@@ -16,7 +16,7 @@
   <param name="trajectory_execution/allowed_start_tolerance" value="0.03"/> <!-- default 0.01 -->
   
   <!-- Load the robot specific controller manager; this sets the moveit_controller_manager ROS parameter -->
-  <arg name="moveit_controller_manager" default="shadowhand_motor" />
+  <arg name="moveit_controller_manager" default="shadowrobot_motor" />
   <include file="$(find sr_multi_moveit_config)/launch/$(arg moveit_controller_manager)_moveit_controller_manager.launch.xml">
     <arg name="robot_config_file" value="$(arg robot_config_file)"/>
   </include>
