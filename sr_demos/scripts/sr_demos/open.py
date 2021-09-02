@@ -18,19 +18,18 @@
 
 from __future__ import absolute_import
 import rospy
+import argparse
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
-import argparse
 
 
 def execute_trajectory(hand_commander, joint_states_no_id, joint_prefix, msg, time=5.0):
     joints_target = {}
-    if joint_prefix == 'both':
-        for key, value in joint_states_no_id.items():
+    for key, value in joint_states_no_id.items():
+        if joint_prefix == 'both':
             joints_target['rh_' + key] = value
             joints_target['lh_' + key] = value
-    else:
-        for key, value in joint_states_no_id.items():
+        else:
             joints_target[joint_prefix + key] = value
 
     rospy.loginfo(msg)

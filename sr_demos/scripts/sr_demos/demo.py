@@ -22,6 +22,7 @@ import yaml
 import termios
 import tty
 import sys
+import argparse
 from math import degrees
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
@@ -486,7 +487,11 @@ if __name__ == "__main__":
     for joint_state_dicts_no_id in joint_states_config.keys():
         for key, value in joint_states_config[joint_state_dicts_no_id].items():
             joints_target = {}
-            joints_target[joint_prefix + key] = value
+            if joint_prefix == 'both':
+                joints_target['rh_' + key] = value
+                joints_target['lh_' + key] = value
+            else:
+                joints_target[joint_prefix + key] = value
             demo_states[joint_state_dicts_no_id] = joints_target
 
     # Read tactile type
