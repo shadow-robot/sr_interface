@@ -21,7 +21,8 @@ import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
 
-def execute_trajectory(joint_states_no_id, joint_prefix, msg, time=5.0):
+
+def execute_trajectory(hand_commander, joint_states_no_id, joint_prefix, msg, time=5.0):
     joints_target = {}
     for key, value in joint_states_no_id.items():
         joints_target[joint_prefix + key] = value
@@ -38,7 +39,7 @@ if __name__ == "__main__":
     # Search for gazebo to confirm if in simulation or not
     sim = rospy.search_param('gazebo')
 
-    if sim == None:
+    if sim is None:
         hand_finder = HandFinder()
         joint_prefix = hand_finder.get_hand_parameters().joint_prefix['1']
     else:
@@ -59,9 +60,8 @@ if __name__ == "__main__":
                        'THJ1': 0.0, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 0.0, 'THJ5': 0.0,
                        'WRJ1': 0.0, 'WRJ2': 0.0}
 
-    #### NOT SURE WHY THIS IS INCLUDED - CAN I REMOVE? #####
+    # NOT SURE WHY THIS IS INCLUDED - CAN I REMOVE? #####
     # open_thumb_no_id = {'THJ1': 0.0, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 1.2, 'THJ5': 0.0}
 
     # execute_trajectory(open_thumb_no_id, joint_prefix, "Move thumb to open position")
-    execute_trajectory(open_hand_no_id, joint_prefix, "Move hand to open position")
-
+    execute_trajectory(hand_commander, open_hand_no_id, joint_prefix, "Move hand to open position")

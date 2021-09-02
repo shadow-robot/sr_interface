@@ -27,8 +27,15 @@ from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
 
 
+def sequence_th(hand_commander, joint_states_config):
+    rospy.sleep(0.5)
+    hand_commander.move_to_joint_value_target_unsafe(joint_states_config['start_pos'],
+                                                     1.5, False, angle_degrees=True)
+    rospy.sleep(1.5)
+    return
+
+
 def sequence_ff(hand_commander, joint_states_config):
-    # Start secuence 1
     rospy.sleep(1)
     hand_commander.move_to_joint_value_target_unsafe(joint_states_config['store_3'], 1.1, False, angle_degrees=True)
     rospy.sleep(1.1)
@@ -47,8 +54,6 @@ def sequence_ff(hand_commander, joint_states_config):
     hand_commander.move_to_joint_value_target_unsafe(joint_states_config['ext_rf'], 1.0, False, angle_degrees=True)
     rospy.sleep(1.1)
     hand_commander.move_to_joint_value_target_unsafe(joint_states_config['flex_lf'], 1.0, False, angle_degrees=True)
-    rospy.sleep(1.1)
-#   hand_commander.move_to_joint_value_target_unsafe(ext_lf, 1.0, False, angle_degrees=True)
     rospy.sleep(1.1)
     hand_commander.move_to_joint_value_target_unsafe(joint_states_config['flex_th_1'], 0.7, False, angle_degrees=True)
     rospy.sleep(1)
@@ -177,23 +182,24 @@ def sequence_ff(hand_commander, joint_states_config):
     return
 
 
-def sequence_mf(hand_commander, joint_states_config, inter_time_max):
-    # Start the secuence 2
+def sequence_mf(hand_commander, joint_states_config, inter_time_max, sim, force_zero):
     rospy.sleep(0.5)
     # Initialize wake time
     wake_time = time.time()
 
     while True:
+        touched = None
+        if sim is False:
         # Check if any of the tactile senors have been triggered
         # If so, send the Hand to its start position
-        tactile_values = read_tactile_values(hand_commander, hand_commander.get_tactile_type())
-        touched = None
-        for finger in ["FF", "MF", "RF", "LF", "TH"]:
-            if tactile_values[finger] > force_zero[finger]:
-                touched = finger
+            tactile_values = read_tactile_values(hand_commander, hand_commander.get_tactile_type())
+            for finger in ["FF", "MF", "RF", "LF", "TH"]:
+                if tactile_values[finger] > force_zero[finger]:
+                    touched = finger
         if touched is not None:
-            hand_commander.move_to_joint_value_target_unsafe(joint_states_config['start_pos'], 2.0, False, angle_degrees=True)
-            print('{} touched!'.format(finger))
+            hand_commander.move_to_joint_value_target_unsafe(joint_states_config['start_pos'],
+                                                             2.0, False, angle_degrees=True)
+            rospy.loginfo('{} touched!'.format(finger))
             rospy.sleep(2.0)
             if touched == "TH":
                 break
@@ -203,21 +209,22 @@ def sequence_mf(hand_commander, joint_states_config, inter_time_max):
         # and interpolation time
         else:
             if time.time() > wake_time:
-                for i in rand_pos:
-                    rand_pos[i] = random.randrange(min_range[i], max_range[i])
+                for i in joint_states_config['rand_pos']:
+                    joint_states_config['rand_pos'][i] = random.randrange(joint_states_config['min_range'][i],
+                                                         joint_states_config['max_range'][i])
 
-                rand_pos['rh_FFJ4'] = random.randrange(min_range['rh_FFJ4'], rand_pos['rh_MFJ4'])
-                rand_pos['rh_LFJ4'] = random.randrange(min_range['rh_LFJ4'], rand_pos['rh_RFJ4'])
+                joint_states_config['rand_pos']['rh_FFJ4'] = random.randrange(joint_states_config['min_range']['rh_FFJ4'],
+                                                             joint_states_config['rand_pos']['rh_MFJ4'])
+                joint_states_config['rand_pos']['rh_LFJ4'] = random.randrange(joint_states_config['min_range']['rh_LFJ4'],
+                                                             joint_states_config['rand_pos']['rh_RFJ4'])
                 inter_time = inter_time_max * random.random()
-                #            rand_pos['interpolation_time'] = max_range['interpolation_time'] * random.random()
-
-                hand_commander.move_to_joint_value_target_unsafe(rand_pos, inter_time, False, angle_degrees=True)
+                hand_commander.move_to_joint_value_target_unsafe(joint_states_config['rand_pos'],
+                                                                 inter_time, False, angle_degrees=True)
                 wake_time = time.time() + inter_time * 0.9
     return
 
 
 def sequence_rf(hand_commander, joint_states_config):
-    # Start the secuence 3
     rospy.sleep(0.5)
     hand_commander.move_to_joint_value_target_unsafe(joint_states_config['start_pos'], 1.0, False, angle_degrees=True)
     rospy.sleep(1)
@@ -253,27 +260,29 @@ def sequence_rf(hand_commander, joint_states_config):
     return
 
 
-def sequence_lf(hand_commander, joint_states_config):
-    # Start the secuence 4
+def sequence_lf(hand_commander, joint_states_config, sim, force_zero):
     # Trigger flag array
     trigger = [0, 0, 0, 0, 0]
 
     # Move Hand to zero position
-    hand_commander.move_to_joint_value_target_unsafe(joint_states_config['start_pos'], 2.0, False, angle_degrees=True)
+    hand_commander.move_to_joint_value_target_unsafe(joint_states_config['start_pos'],
+                                                     2.0, False, angle_degrees=True)
     rospy.sleep(2.0)
 
     # Move Hand to starting position
-    hand_commander.move_to_joint_value_target_unsafe(joint_states_config['pregrasp_pos'], 2.0, False, angle_degrees=True)
+    hand_commander.move_to_joint_value_target_unsafe(joint_states_config['pregrasp_pos'],
+                                                     2.0, False, angle_degrees=True)
     rospy.sleep(2.0)
 
     # Move Hand to close position
-    hand_commander.move_to_joint_value_target_unsafe(joint_states_config['grasp_pos'], 11.0, False, angle_degrees=True)
+    hand_commander.move_to_joint_value_target_unsafe(joint_states_config['grasp_pos'],
+                                                     11.0, False, angle_degrees=True)
     offset1 = 3
 
     # Initialize end time
     end_time = time.time() + 11
 
-    while True:
+    while True and sim is False:
         # Check  the state of the tactile senors
         tactile_values =  read_tactile_values(hand_commander, hand_commander.get_tactile_type())
 
@@ -285,31 +294,31 @@ def sequence_lf(hand_commander, joint_states_config):
         if (tactile_values['FF'] > force_zero['FF'] and trigger[0] == 0):
             hand_pos_incr_f = {"rh_FFJ1": hand_pos['rh_FFJ1'] + offset1, "rh_FFJ3": hand_pos['rh_FFJ3'] + offset1}
             hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_f, 0.5, False, angle_degrees=True)
-            print('First finger contact')
+            rospy.loginfo('First finger contact')
             trigger[0] = 1
 
         if (tactile_values['MF'] > force_zero['MF'] and trigger[1] == 0):
             hand_pos_incr_m = {"rh_MFJ1": hand_pos['rh_MFJ1'] + offset1, "rh_MFJ3": hand_pos['rh_MFJ3'] + offset1}
             hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_m, 0.5, False, angle_degrees=True)
-            print('Middle finger contact')
+            rospy.loginfo('Middle finger contact')
             trigger[1] = 1
 
         if (tactile_values['RF'] > force_zero['RF'] and trigger[2] == 0):
             hand_pos_incr_r = {"rh_RFJ1": hand_pos['rh_RFJ1'] + offset1, "rh_RFJ3": hand_pos['rh_RFJ3'] + offset1}
             hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_r, 0.5, False, angle_degrees=True)
-            print('Ring finger contact')
+            rospy.loginfo('Ring finger contact')
             trigger[2] = 1
 
         if (tactile_values['LF'] > force_zero['LF'] and trigger[3] == 0):
             hand_pos_incr_l = {"rh_LFJ1": hand_pos['rh_LFJ1'] + offset1, "rh_LFJ3": hand_pos['rh_LFJ3'] + offset1}
             hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_l, 0.5, False, angle_degrees=True)
-            print('Little finger contact')
+            rospy.loginfo('Little finger contact')
             trigger[3] = 1
 
         if (tactile_values['TH'] > force_zero['TH'] and trigger[4] == 0):
             hand_pos_incr_th = {"rh_THJ2": hand_pos['rh_THJ2'] + offset1, "rh_THJ5": hand_pos['rh_THJ5'] + offset1}
             hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_th, 0.5, False, angle_degrees=True)
-            print('Thumb contact')
+            rospy.loginfo('Thumb contact')
             trigger[4] = 1
 
         if (trigger[0] == 1 and trigger[1] == 1 and trigger[2] == 1 and trigger[3] == 1 and trigger[4] == 1):
@@ -342,28 +351,23 @@ def sequence_lf(hand_commander, joint_states_config):
     rospy.sleep(0.5)
     hand_commander.move_to_joint_value_target_unsafe(hand_pos, 2.0, False, angle_degrees=True)
     rospy.sleep(2.0)
-    hand_commander.move_to_joint_value_target_unsafe(joint_states_config['pregrasp_pos'], 2.0, False, angle_degrees=True)
+    hand_commander.move_to_joint_value_target_unsafe(joint_states_config['pregrasp_pos'],
+                                                     2.0, False, angle_degrees=True)
     rospy.sleep(2.0)
-    hand_commander.move_to_joint_value_target_unsafe(joint_states_config['start_pos'], 2.0, False, angle_degrees=True)
+    hand_commander.move_to_joint_value_target_unsafe(joint_states_config['start_pos'],
+                                                     2.0, False, angle_degrees=True)
     rospy.sleep(2.0)
 
-    return
-
-
-def sequence_th(hand_commander, joint_states_config):
-    # Start the secuence 5
-    rospy.sleep(0.5)
-    hand_commander.move_to_joint_value_target_unsafe(joint_states_config['start_pos'], 1.5, False, angle_degrees=True)
-    rospy.sleep(1.5)
     return
 
 
 def zero_tactile_sensors(hand_commander, joint_states_config):
     # Move Hand to zero position
     rospy.sleep(0.5)
-    hand_commander.move_to_joint_value_target_unsafe(joint_states_config['start_pos'], 1.0, False, angle_degrees=True)
+    hand_commander.move_to_joint_value_target_unsafe(joint_states_config['start_pos'],
+                                                     1.0, False, angle_degrees=True)
 
-    print('\n\nPLEASE ENSURE THAT THE TACTILE SENSORS ARE NOT PRESSED\n')
+    rospy.logwarn('\n\nPLEASE ENSURE THAT THE TACTILE SENSORS ARE NOT PRESSED\n')
     # raw_input ('Press ENTER to continue')
     rospy.sleep(1.0)
 
@@ -388,7 +392,7 @@ def zero_tactile_sensors(hand_commander, joint_states_config):
     force_zero['LF'] = force_zero['LF'] + 5
     force_zero['TH'] = force_zero['TH'] + 5
 
-    print('Force Zero', force_zero)
+    rospy.loginfo('Force Zero: ' + force_zero)
 
     return force_zero
 
@@ -413,6 +417,7 @@ def read_tactile_values(hand_commander, tactile_type):
 
     return tactile_values
 
+
 def get_input():
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
@@ -431,7 +436,7 @@ if __name__ == "__main__":
     # Search for gazebo to confirm if in simulation or not
     sim = rospy.search_param('gazebo')
 
-    if sim == None:
+    if sim is None:
         hand_finder = HandFinder()
         joint_prefix = hand_finder.get_hand_parameters().joint_prefix['1']
     else:
@@ -445,31 +450,42 @@ if __name__ == "__main__":
 
     hand_commander = SrHandCommander(name=hand_name)
 
-    joint_states_config_filename = '/home/user/projects/shadow_robot/base/src/sr_interface/sr_demos/config/demo_joint_states.yaml'
+    # Get joint states for demo from yaml
+    joint_states_config_filename = '/home/user/projects/shadow_robot/base/src/'\
+                                   'sr_interface/sr_demos/config/demo_joint_states.yaml'
     with open(joint_states_config_filename) as f:
         joint_states_config = yaml.load(f, Loader=yaml.FullLoader)
 
+    # Add prefix to joint states
+    demo_states = {}
+    for joint_state_dicts_no_id in joint_states_config.keys():
+        for key, value in joint_states_config[joint_state_dicts_no_id].items():
+            joints_target = {}
+            joints_target[joint_prefix + key] = value
+            demo_states[joint_state_dicts_no_id] = joints_target
+
     # Read tactile type
     tactile_type = hand_commander.get_tactile_type()
-
+    # Zero values in dictionary for tactile sensors (initialized at 0)
+    force_zero = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
+    # Initialize values for current tactile values
+    tactile_values = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
 
     if tactile_type is None:
-        print("You don't have tactile sensors. Talk to your Shadow representative to purchase some or use the keyboard to access this demo.")
-    else:   
-        # Zero values in dictionary for tactile sensors (initialized at 0)
-        force_zero = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
-        # Initialize values for current tactile values
-        tactile_values = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
+        rospy.loginfo("You don't have tactile sensors. " +
+                      "Talk to your Shadow representative to purchase some " +
+                      "or use the keyboard to access this demo.")
+    else:
         # Zero tactile sensors
-        zero_tactile_sensors(hand_commander, joint_states_config)
+        force_zero = zero_tactile_sensors(hand_commander, joint_states_config)
 
-    print("\nPRESS ONE OF THE TACTILES or 1-5 on the keyboard TO START A DEMO")
-    print("   FF or 1: Standard Demo")
-    print("   MF or 2: Shy Hand Demo")
-    print("   RF or 3: Card Trick Demo")
-    print("   LF or 4: Grasp Demo")
-    print("   TH or 5: Open Hand")
-    print("   ESC to exit")
+    rospy.loginfo("\nPRESS ONE OF THE TACTILES or 1-5 ON THE KEYBOARD TO START A DEMO:\
+                   \n   TH or 1: Open Hand\
+                   \n   FF or 2: Standard Demo\
+                   \n   MF or 3: Shy Hand Demo\
+                   \n   RF or 4: Card Trick Demo\
+                   \n   LF or 5: Grasp Demo\
+                   \n   ESC to exit")
 
     while not rospy.is_shutdown():
         # Check the state of the tactile senors
@@ -480,26 +496,27 @@ if __name__ == "__main__":
             for finger in ["FF", "MF", "RF", "LF", "TH"]:
                 if tactile_values[finger] > force_zero[finger]:
                     touched = finger
-                    print("{} contact".format(touched))
+                    rospy.loginfo("{} contact".format(touched))
 
+        # Get input from the keyboard
         input_val = get_input()
+
         # If the tactile is touched, trigger the corresponding function
-
-        if touched == "FF" or "2" == input_val:
-            secuence_ff(hand_commander, joint_states_config)
+        if touched == "TH" or "1" == input_val:
+            sequence_th(hand_commander, demo_states)
+        elif touched == "FF" or "2" == input_val:
+            sequence_ff(hand_commander, demo_states)
         elif touched == "MF" or "3" == input_val:
-            secuence_mf(hand_commander, joint_states_config, 4.0)
+            sequence_mf(hand_commander, demo_states, 4.0, sim, force_zero)
         elif touched == "RF" or "4" == input_val:
-            secuence_rf(hand_commander, joint_states_config)
+            sequence_rf(hand_commander, demo_states)
         elif touched == "LF" or "5" == input_val:
-            secuence_lf(hand_commander, joint_states_config)
-        elif touched == "TH" or "1" == input_val:
-            secuence_th(hand_commander, joint_states_config)
+            sequence_lf(hand_commander, demo_states, sim, force_zero)
 
-        print("Demo completed")
+        rospy.loginfo("Demo completed")
 
-        if tactile_type is not None:       
-            zero_tactile_sensors(hand_commander, joint_states_config)
+        if tactile_type is not None:
+            force_zero = zero_tactile_sensors(hand_commander, demo_states)
 
         CONST_ESC_KEY_HEX_VALUE = '0x1b'
         if CONST_ESC_KEY_HEX_VALUE == hex(ord(input_val)):

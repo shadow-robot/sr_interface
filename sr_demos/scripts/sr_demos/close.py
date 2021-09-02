@@ -21,7 +21,8 @@ import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
 
-def execute_trajectory(joint_states_no_id, joint_prefix, msg, time=5.0):
+
+def execute_trajectory(hand_commander, joint_states_no_id, joint_prefix, msg, time=5.0):
     joints_target = {}
     for key, value in joint_states_no_id.items():
         joints_target[joint_prefix + key] = value
@@ -38,7 +39,7 @@ if __name__ == "__main__":
     # Search for gazebo to confirm if in simulation or not
     sim = rospy.search_param('gazebo')
 
-    if sim == None:
+    if sim is None:
         hand_finder = HandFinder()
         joint_prefix = hand_finder.get_hand_parameters().joint_prefix['1']
     else:
@@ -59,10 +60,11 @@ if __name__ == "__main__":
                        'THJ1': 0.0, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 0.0, 'THJ5': 0.0,
                        'WRJ1': 0.0, 'WRJ2': 0.0}
     close_hand_no_id = {'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
-                         'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
-                         'RFJ1': 1.5707, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0,
-                         'LFJ1': 1.5707, 'LFJ2': 1.5707, 'LFJ3': 1.5707, 'LFJ4': 0.0, 'LFJ5': 0.0,
-                         'WRJ1': 0.0, 'WRJ2': 0.0}
+                        'MFJ1': 1.5707, 'MFJ2': 1.5707, 'MFJ3': 1.5707, 'MFJ4': 0.0,
+                        'RFJ1': 1.5707, 'RFJ2': 1.5707, 'RFJ3': 1.5707, 'RFJ4': 0.0,
+                        'LFJ1': 1.5707, 'LFJ2': 1.5707, 'LFJ3': 1.5707, 'LFJ4': 0.0,
+                        'LFJ5': 0.0,
+                        'WRJ1': 0.0, 'WRJ2': 0.0}
     close_thumb_no_id = {'THJ1': 0.52, 'THJ2': 0.61, 'THJ3': 0.0, 'THJ4': 1.20, 'THJ5': 0.17}
     # sr-config one
     # close_hand_no_id = {'FFJ1': 1.5707, 'FFJ2': 1.5707, 'FFJ3': 1.5707, 'FFJ4': 0.0,
@@ -72,6 +74,6 @@ if __name__ == "__main__":
     #                       'THJ1': 0.75, 'THJ2': 0.45, 'THJ3': 0.0, 'THJ4': 1.2, 'THJ5': 0.35,
     #                       'WRJ1': 0.0, 'WRJ2': 0.0}
 
-    execute_trajectory(open_hand_no_id, joint_prefix, "Move hand to open position")
-    execute_trajectory(close_hand_no_id, joint_prefix, "Move fingers to close position")
-    execute_trajectory(close_thumb_no_id, joint_prefix, "Move thumb to close position")
+    execute_trajectory(hand_commander, open_hand_no_id, joint_prefix, "Move hand to open position")
+    execute_trajectory(hand_commander, close_hand_no_id, joint_prefix, "Move fingers to close position")
+    execute_trajectory(hand_commander, close_thumb_no_id, joint_prefix, "Move thumb to close position")
