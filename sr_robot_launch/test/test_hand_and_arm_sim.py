@@ -48,7 +48,7 @@ class TestHandAndArmSim(TestCase):
                 cls.hand_id = 'lh'
         except rospy.ROSException:
             rospy.loginfo("No side param for this test type")
-            cls.hand_id = rospy.get_param('/hand/mapping/1082')
+            cls.hand_id = rospy.get_param('/hand/mapping/0')
 
         if cls.hand_id == 'rh':
             cls.arm_id = 'ra'

@@ -190,8 +190,8 @@ def sequence_mf(hand_commander, joint_states_config, inter_time_max, sim, force_
     while True:
         touched = None
         if sim is False:
-        # Check if any of the tactile senors have been triggered
-        # If so, send the Hand to its start position
+            # Check if any of the tactile senors have been triggered
+            # If so, send the Hand to its start position
             tactile_values = read_tactile_values(hand_commander, hand_commander.get_tactile_type())
             for finger in ["FF", "MF", "RF", "LF", "TH"]:
                 if tactile_values[finger] > force_zero[finger]:
@@ -210,13 +210,16 @@ def sequence_mf(hand_commander, joint_states_config, inter_time_max, sim, force_
         else:
             if time.time() > wake_time:
                 for i in joint_states_config['rand_pos']:
-                    joint_states_config['rand_pos'][i] = random.randrange(joint_states_config['min_range'][i],
-                                                         joint_states_config['max_range'][i])
+                    joint_states_config['rand_pos'][i] =\
+                        random.randrange(joint_states_config['min_range'][i],
+                                         joint_states_config['max_range'][i])
 
-                joint_states_config['rand_pos']['rh_FFJ4'] = random.randrange(joint_states_config['min_range']['rh_FFJ4'],
-                                                             joint_states_config['rand_pos']['rh_MFJ4'])
-                joint_states_config['rand_pos']['rh_LFJ4'] = random.randrange(joint_states_config['min_range']['rh_LFJ4'],
-                                                             joint_states_config['rand_pos']['rh_RFJ4'])
+                joint_states_config['rand_pos']['rh_FFJ4'] =\
+                    random.randrange(joint_states_config['min_range']['rh_FFJ4'],
+                                     joint_states_config['rand_pos']['rh_MFJ4'])
+                joint_states_config['rand_pos']['rh_LFJ4'] =\
+                    random.randrange(joint_states_config['min_range']['rh_LFJ4'],
+                                     joint_states_config['rand_pos']['rh_RFJ4'])
                 inter_time = inter_time_max * random.random()
                 hand_commander.move_to_joint_value_target_unsafe(joint_states_config['rand_pos'],
                                                                  inter_time, False, angle_degrees=True)
@@ -284,7 +287,7 @@ def sequence_lf(hand_commander, joint_states_config, sim, force_zero):
 
     while True and sim is False:
         # Check  the state of the tactile senors
-        tactile_values =  read_tactile_values(hand_commander, hand_commander.get_tactile_type())
+        tactile_values = read_tactile_values(hand_commander, hand_commander.get_tactile_type())
 
         # Record current joint positions
         hand_pos = {joint: degrees(i) for joint, i in hand_commander.get_joints_position().items()}
@@ -433,20 +436,42 @@ if __name__ == "__main__":
 
     rospy.init_node("right_hand_demo", anonymous=True)
 
+    parser = argparse.ArgumentParser(description="Hand side")
+    parser.add_argument("-s", "--side",
+                        dest="side",
+                        type=str,
+                        required=False,
+                        help="Please select hand side, can be 'right', 'left' or 'both'.",
+                        default=None,
+                        choices=["right", "left", "both"])
+
+    args = parser.parse_args(rospy.myargv()[1:])
+
     # Search for gazebo to confirm if in simulation or not
     sim = rospy.search_param('gazebo')
 
-    if sim is None:
-        hand_finder = HandFinder()
-        joint_prefix = hand_finder.get_hand_parameters().joint_prefix['1']
+    if args.side is None:
+        rospy.loginfo("Hand side not specified, defaulting to first hand avalliable.")
+        if sim is None:
+            hand_finder = HandFinder()
+            joint_prefix = hand_finder.get_hand_parameters().joint_prefix['1']
+        else:
+            # Default parameter for simulated hand
+            joint_prefix = rospy.get_param('/hand/joint_prefix/0')
     else:
-        # Default parameter for simulated hand
-        joint_prefix = rospy.get_param('/hand/joint_prefix/1322')
+        if args.side == 'right':
+            joint_prefix = 'rh_'
+        elif args.side == 'left':
+            joint_prefix = 'lh_'
+        else:
+            joint_prefix = 'both'
 
     if 'rh_' == joint_prefix:
         hand_name = 'right_hand'
     elif 'lh_' == joint_prefix:
         hand_name = 'left_hand'
+    else:
+        hand_name = 'two_hands'
 
     hand_commander = SrHandCommander(name=hand_name)
 

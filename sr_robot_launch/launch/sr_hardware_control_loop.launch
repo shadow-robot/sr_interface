@@ -35,7 +35,7 @@
 
   <!-- Robot config -->
   <!-- HANDS CONFIG-->
-  <arg name="hand_serial" default="1082"/>
+  <arg name="hand_serial" default="0"/>
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/$(arg hand_id)_E_v4.yaml"/>
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT enp2s0)"/>
   <arg name="pwm_control" default="true"/>

@@ -32,7 +32,7 @@
   <arg name="joint_state_pub_frequency" default="125"/>
 
   <!-- HAND CONFIG-->
-  <arg name="hand_serial" default="1082"/>
+  <arg name="hand_serial" default="0"/>
   <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v4.yaml"/>
   <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
        More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->

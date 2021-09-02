@@ -176,20 +176,43 @@ def burn_in_demo(hand_commander, burn_in_config):
 if __name__ == "__main__":
     rospy.init_node("burn_in_demo", anonymous=True)
 
+    parser = argparse.ArgumentParser(description="Hand side")
+    parser.add_argument("-s", "--side",
+                        dest="side",
+                        type=str,
+                        required=False,
+                        help="Please select hand side, can be 'right', 'left' or 'both'.",
+                        default=None,
+                        choices=["right", "left", "both"])
+
+    args = parser.parse_args(rospy.myargv()[1:])
+
     # Search for gazebo to confirm if in simulation or not
     sim = rospy.search_param('gazebo')
 
-    if sim is None:
-        hand_finder = HandFinder()
-        joint_prefix = hand_finder.get_hand_parameters().joint_prefix['1']
+    if args.side is None:
+        rospy.loginfo("Hand side not specified, defaulting to first hand avalliable.")
+        if sim is None:
+            hand_finder = HandFinder()
+            joint_prefix = hand_finder.get_hand_parameters().joint_prefix['1']
+        else:
+            # Default parameter for simulated hand
+            joint_prefix = rospy.get_param('/hand/joint_prefix/0')
     else:
-        # Default parameter for simulated hand
-        joint_prefix = rospy.get_param('/hand/joint_prefix/1322')
+        if args.side == 'right':
+            joint_prefix = 'rh_'
+        elif args.side == 'left':
+            joint_prefix = 'lh_'
+        else:
+            joint_prefix = 'both'
 
     if 'rh_' == joint_prefix:
         hand_name = 'right_hand'
     elif 'lh_' == joint_prefix:
         hand_name = 'left_hand'
+    else:
+        hand_name = 'two_hands'
+
     hand_commander = SrHandCommander(name=hand_name)
 
     # Get joint states for burn in demo
@@ -205,5 +228,5 @@ if __name__ == "__main__":
             joints_target = {}
             joints_target[joint_prefix + key] = value
             burn_in_states[joint_state_dicts_no_id] = joints_target
-    
+
     burn_in_demo(hand_commander, burn_in_states)

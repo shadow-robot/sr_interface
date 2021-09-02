@@ -32,9 +32,9 @@
   <!-- The control mode PWM (true) or torque (false) -->
   <arg name="pwm_control" default="true"/>
   <!-- The ethercat serial number for the right hand -->
-  <arg name="rh_serial" default="1130"/>
+  <arg name="rh_serial" default="0"/>
   <!-- The ethercat serial number for the left hand -->
-  <arg name="lh_serial" default="2346"/>
+  <arg name="lh_serial" default="1"/>
   <!-- the path to the mapping files -->
   <arg name="rh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v4.yaml"/>
   <arg name="lh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_E_v4.yaml"/>

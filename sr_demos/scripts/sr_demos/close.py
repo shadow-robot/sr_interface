@@ -20,12 +20,17 @@ from __future__ import absolute_import
 import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
-
+import argparse
 
 def execute_trajectory(hand_commander, joint_states_no_id, joint_prefix, msg, time=5.0):
     joints_target = {}
-    for key, value in joint_states_no_id.items():
-        joints_target[joint_prefix + key] = value
+    if joint_prefix == 'both':
+        for key, value in joint_states_no_id.items():
+            joints_target['rh_' + key] = value
+            joints_target['lh_' + key] = value
+    else:
+        for key, value in joint_states_no_id.items():
+            joints_target[joint_prefix + key] = value
 
     rospy.loginfo(msg)
     hand_commander.move_to_joint_value_target_unsafe(joints_target, time, True)
@@ -36,20 +41,42 @@ if __name__ == "__main__":
 
     rospy.init_node("close_hand", anonymous=True)
 
+    parser = argparse.ArgumentParser(description="Hand side")
+    parser.add_argument("-s", "--side",
+                        dest="side",
+                        type=str,
+                        required=False,
+                        help="Please select hand side, can be 'right', 'left' or 'both'.",
+                        default=None,
+                        choices=["right", "left", "both"])
+
+    args = parser.parse_args(rospy.myargv()[1:])
+
     # Search for gazebo to confirm if in simulation or not
     sim = rospy.search_param('gazebo')
 
-    if sim is None:
-        hand_finder = HandFinder()
-        joint_prefix = hand_finder.get_hand_parameters().joint_prefix['1']
+    if args.side is None:
+        rospy.loginfo("Hand side not specified, defaulting to first hand avalliable.")
+        if sim is None:
+            hand_finder = HandFinder()
+            joint_prefix = hand_finder.get_hand_parameters().joint_prefix['1']
+        else:
+            # Default parameter for simulated hand
+            joint_prefix = rospy.get_param('/hand/joint_prefix/0')
     else:
-        # Default parameter for simulated hand
-        joint_prefix = rospy.get_param('/hand/joint_prefix/1322')
+        if args.side == 'right':
+            joint_prefix = 'rh_'
+        elif args.side == 'left':
+            joint_prefix = 'lh_'
+        else:
+            joint_prefix = 'both'
 
     if 'rh_' == joint_prefix:
         hand_name = 'right_hand'
     elif 'lh_' == joint_prefix:
         hand_name = 'left_hand'
+    else:
+        hand_name = 'two_hands'
 
     hand_commander = SrHandCommander(name=hand_name)
 
@@ -74,6 +101,6 @@ if __name__ == "__main__":
     #                       'THJ1': 0.75, 'THJ2': 0.45, 'THJ3': 0.0, 'THJ4': 1.2, 'THJ5': 0.35,
     #                       'WRJ1': 0.0, 'WRJ2': 0.0}
 
-    execute_trajectory(hand_commander, open_hand_no_id, joint_prefix, "Move hand to open position")
-    execute_trajectory(hand_commander, close_hand_no_id, joint_prefix, "Move fingers to close position")
-    execute_trajectory(hand_commander, close_thumb_no_id, joint_prefix, "Move thumb to close position")
+    execute_trajectory(hand_commander, open_hand_no_id, joint_prefix, "Moving to open position")
+    execute_trajectory(hand_commander, close_hand_no_id, joint_prefix, "Moving fingers to close position")
+    execute_trajectory(hand_commander, close_thumb_no_id, joint_prefix, "Moving thumb to close position")
