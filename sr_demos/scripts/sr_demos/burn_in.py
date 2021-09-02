@@ -1,0 +1,209 @@
+#!/usr/bin/env python3
+
+# Copyright 2021 Shadow Robot Company Ltd.
+#
+# This program is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation version 2 of the License.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program. If not, see <http://www.gnu.org/licenses/>.
+
+from __future__ import absolute_import
+import rospy
+import random
+import time
+import yaml
+from sr_robot_commander.sr_hand_commander import SrHandCommander
+from sr_utilities.hand_finder import HandFinder
+
+
+def burn_in_demo(hand_commander, burn_in_config):
+    for x in range(0, 100):
+        rospy.loginfo("We're on iteration number %d" % (x))
+        rospy.sleep(1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['store_3'], 1.1, False, angle_degrees=True)
+        rospy.sleep(1.1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['start_pos'], 1.1, False, angle_degrees=True)
+        rospy.sleep(1.1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['flex_ff'], 1.0, False, angle_degrees=True)
+        rospy.sleep(1.1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ext_ff'], 1.0, False, angle_degrees=True)
+        rospy.sleep(1.1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['flex_mf'], 1.0, False, angle_degrees=True)
+        rospy.sleep(1.1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ext_mf'], 1.0, False, angle_degrees=True)
+        rospy.sleep(1.1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['flex_rf'], 1.0, False, angle_degrees=True)
+        rospy.sleep(1.1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ext_rf'], 1.0, False, angle_degrees=True)
+        rospy.sleep(1.1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['flex_lf'], 1.0, False, angle_degrees=True)
+        rospy.sleep(1.1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ext_lf'], 1.0, False, angle_degrees=True)
+        rospy.sleep(1.1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['flex_th_1'], 0.7, False, angle_degrees=True)
+        rospy.sleep(1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['flex_th_2'], 0.7, False, angle_degrees=True)
+        rospy.sleep(1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ext_th_1'], 2.0, False, angle_degrees=True)
+        rospy.sleep(2.0)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ext_th_2'], 0.7, False, angle_degrees=True)
+        rospy.sleep(0.7)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['l_ext_lf'], 0.5, False, angle_degrees=True)
+        rospy.sleep(0.5)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['l_ext_rf'], 0.5, False, angle_degrees=True)
+        rospy.sleep(0.5)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['l_ext_mf'], 0.5, False, angle_degrees=True)
+        rospy.sleep(0.5)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['l_ext_ff'], 0.5, False, angle_degrees=True)
+        rospy.sleep(0.5)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['l_int_all'], 0.5, False, angle_degrees=True)
+        rospy.sleep(0.5)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['l_ext_all'], 0.5, False, angle_degrees=True)
+        rospy.sleep(0.5)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['l_int_ff'], 0.5, False, angle_degrees=True)
+        rospy.sleep(0.5)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['l_int_mf'], 0.5, False, angle_degrees=True)
+        rospy.sleep(0.5)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['l_int_rf'], 0.5, False, angle_degrees=True)
+        rospy.sleep(0.5)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['l_int_lf'], 0.5, False, angle_degrees=True)
+        rospy.sleep(0.5)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['l_zero_all'], 0.5, False, angle_degrees=True)
+        rospy.sleep(0.5)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['l_spock'], 0.5, False, angle_degrees=True)
+        rospy.sleep(0.5)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['l_zero_all'], 0.5, False, angle_degrees=True)
+        rospy.sleep(0.5)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['pre_ff_ok'], 1.0, False, angle_degrees=True)
+        rospy.sleep(1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ff_ok'], 0.7, False, angle_degrees=True)
+        rospy.sleep(0.9)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ff2mf_ok'], 0.5, False, angle_degrees=True)
+        rospy.sleep(0.4)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['mf_ok'], 0.7, False, angle_degrees=True)
+        rospy.sleep(0.9)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['mf2rf_ok'], 0.5, False, angle_degrees=True)
+        rospy.sleep(0.4)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['rf_ok'], 0.7, False, angle_degrees=True)
+        rospy.sleep(0.9)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['rf2lf_ok'], 0.5, False, angle_degrees=True)
+        rospy.sleep(0.4)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['lf_ok'], 0.7, False, angle_degrees=True)
+        rospy.sleep(0.9)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['start_pos'], 1.0, False, angle_degrees=True)
+        rospy.sleep(1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['flex_ff'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['flex_mf'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['flex_rf'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['flex_lf'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ext_ff'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ext_mf'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ext_rf'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ext_lf'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['flex_ff'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['flex_mf'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['flex_rf'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['flex_lf'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ext_ff'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ext_mf'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ext_rf'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ext_lf'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['flex_ff'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['flex_mf'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['flex_rf'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['flex_lf'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ext_ff'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ext_mf'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ext_rf'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ext_lf'], 0.2, False, angle_degrees=True)
+        rospy.sleep(0.2)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['pre_ff_ok'], 1.0, False, angle_degrees=True)
+        rospy.sleep(1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ff_ok'], 1.3, False, angle_degrees=True)
+        rospy.sleep(1.3)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ne_wr'], 1.1, False, angle_degrees=True)
+        rospy.sleep(1.1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['nw_wr'], 1.1, False, angle_degrees=True)
+        rospy.sleep(1.1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['sw_wr'], 1.1, False, angle_degrees=True)
+        rospy.sleep(1.1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['se_wr'], 1.1, False, angle_degrees=True)
+        rospy.sleep(1.1)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['ne_wr'], 0.7, False, angle_degrees=True)
+        rospy.sleep(0.7)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['nw_wr'], 0.7, False, angle_degrees=True)
+        rospy.sleep(0.7)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['sw_wr'], 0.7, False, angle_degrees=True)
+        rospy.sleep(0.7)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['se_wr'], 0.7, False, angle_degrees=True)
+        rospy.sleep(0.7)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['zero_wr'], 0.4, False, angle_degrees=True)
+        rospy.sleep(0.4)
+        hand_commander.move_to_joint_value_target_unsafe(burn_in_config['start_pos'], 1.5, False, angle_degrees=True)
+        rospy.sleep(1.5)
+
+
+if __name__ == "__main__":
+    rospy.init_node("burn_in_demo", anonymous=True)
+
+    # Search for gazebo to confirm if in simulation or not
+    sim = rospy.search_param('gazebo')
+
+    if sim is None:
+        hand_finder = HandFinder()
+        joint_prefix = hand_finder.get_hand_parameters().joint_prefix['1']
+    else:
+        # Default parameter for simulated hand
+        joint_prefix = rospy.get_param('/hand/joint_prefix/1322')
+
+    if 'rh_' == joint_prefix:
+        hand_name = 'right_hand'
+    elif 'lh_' == joint_prefix:
+        hand_name = 'left_hand'
+    hand_commander = SrHandCommander(name=hand_name)
+
+    # Get joint states for burn in demo
+    burn_in_config_filename = '/home/user/projects/shadow_robot/base/src/'\
+                              'sr_interface/sr_demos/config/burn_in_states.yaml'
+    with open(burn_in_config_filename) as f:
+        burn_in_config = yaml.load(f, Loader=yaml.FullLoader)
+
+    # Add prefix to joint states
+    burn_in_states = {}
+    for joint_state_dicts_no_id in burn_in_config.keys():
+        for key, value in burn_in_config[joint_state_dicts_no_id].items():
+            joints_target = {}
+            joints_target[joint_prefix + key] = value
+            burn_in_states[joint_state_dicts_no_id] = joints_target
+    
+    burn_in_demo(hand_commander, burn_in_states)
