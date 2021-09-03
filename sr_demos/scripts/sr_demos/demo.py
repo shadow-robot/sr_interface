@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2019 Shadow Robot Company Ltd.
+# Copyright 2021 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -432,6 +432,31 @@ def get_input():
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
     return ch
 
+def get_tactiles(hand_commander, joint_states_config):
+    # Read tactile type
+    tactile_type = hand_commander.get_tactile_type()
+    # Zero values in dictionary for tactile sensors (initialized at 0)
+    force_zero = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
+    # Initialize values for current tactile values
+    tactile_values = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
+
+    if tactile_type is None:
+        rospy.loginfo("You don't have tactile sensors. " +
+                      "Talk to your Shadow representative to purchase some " +
+                      "or use the keyboard to access this demo.")
+    else:
+        # Zero tactile sensors
+        force_zero = zero_tactile_sensors(hand_commander, joint_states_config)
+
+    return force_zero, tactile_values, tactile_type
+
+def confirm_touched(tactile_values, force_zero):
+    touched = None
+    for finger in ["FF", "MF", "RF", "LF", "TH"]:
+        if tactile_values[finger] > force_zero[finger]:
+            touched = finger
+            rospy.loginfo("{} contact".format(touched))
+    return touched
 
 if __name__ == "__main__":
 
@@ -494,20 +519,14 @@ if __name__ == "__main__":
                 joints_target[joint_prefix + key] = value
             demo_states[joint_state_dicts_no_id] = joints_target
 
-    # Read tactile type
-    tactile_type = hand_commander.get_tactile_type()
-    # Zero values in dictionary for tactile sensors (initialized at 0)
-    force_zero = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
-    # Initialize values for current tactile values
-    tactile_values = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
 
-    if tactile_type is None:
-        rospy.loginfo("You don't have tactile sensors. " +
-                      "Talk to your Shadow representative to purchase some " +
-                      "or use the keyboard to access this demo.")
+    if joint_prefix == 'both':
+        hand_commander_right = SrHandCommander(name='right_hand')
+        hand_commander_left = SrHandCommander(name='left_hand')
+        force_zero_right, tactile_values_right, tactile_type_right = get_tactiles(hand_commander_right, joint_states_config)
+        force_zero_left, tactile_values_left, tactile_type_left = get_tactiles(hand_commander_left, joint_states_config)
     else:
-        # Zero tactile sensors
-        force_zero = zero_tactile_sensors(hand_commander, joint_states_config)
+        force_zero, tactile_values, tactile_type = get_tactiles(hand_commander, joint_states_config)
 
     rospy.loginfo("\nPRESS ONE OF THE TACTILES or 1-5 ON THE KEYBOARD TO START A DEMO:\
                    \n   TH or 1: Open Hand\
@@ -522,11 +541,24 @@ if __name__ == "__main__":
         touched = None
 
         if tactile_type is not None:
-            tactile_values = read_tactile_values(hand_commander, tactile_type)
-            for finger in ["FF", "MF", "RF", "LF", "TH"]:
-                if tactile_values[finger] > force_zero[finger]:
-                    touched = finger
-                    rospy.loginfo("{} contact".format(touched))
+            if joint_prefix == 'both':
+                tactile_values_right = read_tactile_values(hand_commander_right, tactile_type_right)
+                tactile_values_left = read_tactile_values(hand_commander_left, tactile_type_left)
+                touched_right = confirm_touched(tactile_values_right, force_zero_right)
+                touched_left = confirm_touched(tactile_values_left, force_zero_left)
+                if touched_right is not None:
+                    touched = touched_right
+                    force_zero = force_zero_right
+                elif touched_left is not None:
+                    touched = touched_left
+                    force_zero = force_zero_left
+                elif touched_right is not None and touched_left is not None:
+                    rospy.loginfo("You touched fingers on both hands at the same time. Defaulting to right touch")
+                    touched = touched_right
+                    force_zero = force_zero_right
+            else:
+                tactile_values = read_tactile_values(hand_commander, tactile_type)
+                touched = confirm_touched(tactile_values, force_zero)
 
         # Get input from the keyboard
         input_val = get_input()
