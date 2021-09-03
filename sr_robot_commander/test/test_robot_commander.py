@@ -107,7 +107,7 @@ class TestSrRobotCommander(TestCase):
 
         self.robot_commander.set_planner_id(prev_planner_id)
 
-    def test_get_and_set_planning_time(self):        
+    def test_get_and_set_planning_time(self):
         prev_planning_time = self.robot_commander._move_group_commander.get_planning_time()
         test_planning_time = 3
         self.robot_commander.set_planning_time(test_planning_time)
@@ -115,10 +115,10 @@ class TestSrRobotCommander(TestCase):
 
         self.robot_commander.set_planning_time(prev_planning_time)
 
-    def test_set_num_planning_attempts(self):        
+    def test_set_num_planning_attempts(self):
         self.robot_commander.set_num_planning_attempts(3)
 
-    def test_get_end_effector_pose_from_state(self):        
+    def test_get_end_effector_pose_from_state(self):
         robot_state = RobotState()
         for joint_name, angle in CONST_RA_HOME_ANGLES.items():
             robot_state.joint_state.name.append(joint_name)
@@ -127,42 +127,42 @@ class TestSrRobotCommander(TestCase):
         condition = type(pose) == PoseStamped
         self.assertTrue(condition)
 
-    def test_get_planning_frame(self):        
+    def test_get_planning_frame(self):
         self.robot_commander.get_planning_frame()
 
-    def test_set_and_get_pose_reference_frame(self):        
+    def test_set_and_get_pose_reference_frame(self):
         const_reference_frame = "world"
         self.robot_commander._move_group_commander.set_pose_reference_frame(const_reference_frame)
         self.assertEqual(self.robot_commander._move_group_commander.get_pose_reference_frame(), const_reference_frame)
 
-    def test_get_group_name(self):        
+    def test_get_group_name(self):
         self.assertEqual(self.robot_commander._name, self.robot_commander.get_group_name())
 
-    def test_refresh_named_targets(self):        
+    def test_refresh_named_targets(self):
         self.robot_commander.refresh_named_targets()
         condition_1 = type(self.robot_commander._srdf_names) == list
         condition_2 = type(self.robot_commander._warehouse_names) == list
         self.assertTrue(condition_1 and condition_2)
 
-    def test_set_max_velocity_scaling_factor_range_ok(self):        
+    def test_set_max_velocity_scaling_factor_range_ok(self):
         self.robot_commander.set_max_velocity_scaling_factor(0.2)
 
-    def test_set_max_velocity_scaling_factor_range_not_ok(self):        
+    def test_set_max_velocity_scaling_factor_range_not_ok(self):
         self.assertRaises(MoveItCommanderException, self.robot_commander.set_max_velocity_scaling_factor, 3)
 
-    def test_set_max_acceleration_scaling_factor_range_ok(self):        
+    def test_set_max_acceleration_scaling_factor_range_ok(self):
         self.robot_commander.set_max_acceleration_scaling_factor(0.2)
 
-    def test_set_max_acceleration_scaling_factor_range_not_ok(self):        
+    def test_set_max_acceleration_scaling_factor_range_not_ok(self):
         self.assertRaises(MoveItCommanderException, self.robot_commander.set_max_acceleration_scaling_factor, 3)
 
-    def test_allow_looking(self):        
+    def test_allow_looking(self):
         self.robot_commander.allow_looking(True)
 
-    def test_allow_replanning(self):        
+    def test_allow_replanning(self):
         self.robot_commander.allow_replanning(True)
 
-    def test_plan_to_joint_value_target(self):        
+    def test_plan_to_joint_value_target(self):
         self.reset_to_home()
         plan = self.robot_commander.plan_to_joint_value_target(CONST_EXAMPLE_TARGET, angle_degrees=False,
                                                                custom_start_state=None)
@@ -172,7 +172,7 @@ class TestSrRobotCommander(TestCase):
         condition_2 = self.compare_joint_states_by_common_joints(CONST_EXAMPLE_TARGET, last_joint_state)
         self.assertTrue(condition_1 and condition_2)
 
-    def test_execute(self):        
+    def test_execute(self):
         self.reset_to_home()
         self.robot_commander.plan_to_joint_value_target(CONST_EXAMPLE_TARGET, angle_degrees=False,
                                                         custom_start_state=None)
@@ -181,7 +181,7 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_joint_states_by_common_joints(CONST_EXAMPLE_TARGET, executed_joints)
         self.assertTrue(condition)
 
-    def test_execute_plan(self):        
+    def test_execute_plan(self):
         self.reset_to_home()
         plan = self.robot_commander.plan_to_joint_value_target(CONST_RA_HOME_ANGLES, angle_degrees=False,
                                                                custom_start_state=None)
@@ -190,25 +190,25 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_joint_states_by_common_joints(executed_joints, CONST_RA_HOME_ANGLES)
         self.assertTrue(condition)
 
-    def test_check_plan_is_valid_ok(self):        
+    def test_check_plan_is_valid_ok(self):
         self.reset_to_home()
         self.robot_commander.plan_to_joint_value_target(CONST_RA_HOME_ANGLES, angle_degrees=False,
                                                         custom_start_state=None)
         self.assertTrue(self.robot_commander.check_plan_is_valid())
 
-    def test_check_plan_is_valid_not_ok(self):        
+    def test_check_plan_is_valid_not_ok(self):
         self.reset_to_home()
         self.robot_commander._SrRobotCommander__plan = None
         condition = self.robot_commander.check_plan_is_valid()
         self.assertFalse(condition)
 
-    def test_check_given_plan_is_valid_ok(self):        
+    def test_check_given_plan_is_valid_ok(self):
         self.reset_to_home()
         plan = self.robot_commander.plan_to_joint_value_target(CONST_RA_HOME_ANGLES, angle_degrees=False,
                                                                custom_start_state=None)
         self.assertTrue(self.robot_commander.check_given_plan_is_valid(plan))
 
-    def test_check_given_plan_is_valid_not_ok(self):        
+    def test_check_given_plan_is_valid_not_ok(self):
         self.reset_to_home()
         not_valid_goal = copy.deepcopy(CONST_RA_HOME_ANGLES)
         out_of_range_value = 3.0
@@ -217,13 +217,13 @@ class TestSrRobotCommander(TestCase):
                                                                custom_start_state=None)
         self.assertFalse(self.robot_commander.check_given_plan_is_valid(plan))
 
-    def test_evaluate_given_plan_none(self):        
+    def test_evaluate_given_plan_none(self):
         self.reset_to_home()
         plan = None
         evaluation = self.robot_commander.evaluate_given_plan(plan)
         self.assertIsNone(evaluation)
 
-    def test_evaluate_given_plan_low_quality(self):        
+    def test_evaluate_given_plan_low_quality(self):
         self.reset_to_home()
         end_joints = copy.deepcopy(CONST_RA_HOME_ANGLES)
         end_joints['ra_shoulder_pan_joint'] += 0.8
@@ -235,7 +235,7 @@ class TestSrRobotCommander(TestCase):
         evaluation = self.robot_commander.evaluate_given_plan(plan)
         self.assertGreater(evaluation, 10)
 
-    def test_evaluate_given_plan_high_quality(self):        
+    def test_evaluate_given_plan_high_quality(self):
         self.reset_to_home()
         end_joints = copy.deepcopy(CONST_RA_HOME_ANGLES)
         end_joints['ra_shoulder_pan_joint'] += 0.1
@@ -244,16 +244,16 @@ class TestSrRobotCommander(TestCase):
         evaluation = self.robot_commander.evaluate_given_plan(plan)
         self.assertLess(evaluation, 1)
 
-    def test_evaluate_plan_quality_good(self):        
+    def test_evaluate_plan_quality_good(self):
         self.assertEqual('good', self.robot_commander.evaluate_plan_quality(7))
 
-    def test_evaluate_plan_quality_poor(self):        
+    def test_evaluate_plan_quality_poor(self):
         self.assertEqual('poor', self.robot_commander.evaluate_plan_quality(60))
 
-    def test_evaluate_plan_quality_medium(self):        
+    def test_evaluate_plan_quality_medium(self):
         self.assertEqual('medium', self.robot_commander.evaluate_plan_quality(32))
 
-    def test_get_robot_name(self):        
+    def test_get_robot_name(self):
         self.assertTrue(self.robot_commander.get_robot_name() == self.robot_commander._robot_name)
 
     # if launched sr_ur_arm_box.launch
@@ -263,70 +263,70 @@ class TestSrRobotCommander(TestCase):
             if self.robot_commander.named_target_in_srdf(name) is False:
                 self.fail()
 
-    def test_named_target_in_srdf_not_exist(self):        
+    def test_named_target_in_srdf_not_exist(self):
         const_test_names = ['non_existing_target_test_name']
         for name in const_test_names:
             if self.robot_commander.named_target_in_srdf(name) is True:
                 self.fail()
 
-    def test_set_named_target_correct_name(self):        
+    def test_set_named_target_correct_name(self):
         test_names = self.robot_commander.get_named_targets()
         result = self.robot_commander.set_named_target(test_names[0])
         self.assertTrue(result)
 
-    def test_set_named_target_false_name(self):        
+    def test_set_named_target_false_name(self):
         result = self.robot_commander.set_named_target("test_false_name")
         self.assertFalse(result)
 
-    def test_get_named_target_joint_values_srdf(self):        
+    def test_get_named_target_joint_values_srdf(self):
         test_names = self.robot_commander._srdf_names
         if len(test_names) > 0:
             output = self.robot_commander.get_named_target_joint_values(test_names[0])
             self.assertIsInstance(output, dict)
 
-    def test_get_named_target_joint_values_warehouse(self):        
+    def test_get_named_target_joint_values_warehouse(self):
         test_names = self.robot_commander._warehouse_names
         if len(test_names) > 0:
             output = self.robot_commander.get_named_target_joint_values(test_names[0])
             self.assertIsInstance(output, dict)
 
-    def test_get_named_target_joint_values_no_target(self):        
+    def test_get_named_target_joint_values_no_target(self):
         const_test_names = ["no_target"]
         output = self.robot_commander.get_named_target_joint_values(const_test_names[0])
         self.assertIsNone(output)
 
-    def test_get_end_effector_link(self):        
+    def test_get_end_effector_link(self):
         self.assertIsInstance(self.robot_commander.get_end_effector_link(), str)
 
-    def test_get_current_pose_frame(self):        
+    def test_get_current_pose_frame(self):
         pose = self.robot_commander.get_current_pose(reference_frame="world")
         self.assertIsInstance(pose, Pose)
 
-    def test_get_current_pose_frame_none(self):        
+    def test_get_current_pose_frame_none(self):
         pose = self.robot_commander.get_current_pose(reference_frame=None)
         self.assertIsInstance(pose, Pose)
 
-    def test_get_current_pose_frame_wrong(self):        
+    def test_get_current_pose_frame_wrong(self):
         pose = self.robot_commander.get_current_pose(reference_frame="test_wrong_frame")
         self.assertIsNone(pose)
 
-    def test_get_current_state(self):        
+    def test_get_current_state(self):
         self.assertIsInstance(self.robot_commander.get_current_state(), dict)
 
-    def test_get_current_state_bounded(self):        
+    def test_get_current_state_bounded(self):
         self.assertIsInstance(self.robot_commander.get_current_state_bounded(), dict)
 
-    def test_get_robot_state_bounded(self):        
+    def test_get_robot_state_bounded(self):
         self.assertIsInstance(self.robot_commander.get_current_state_bounded(), dict)
 
-    def test_plan_to_named_target_custom_start_state_none(self):        
+    def test_plan_to_named_target_custom_start_state_none(self):
         self.reset_to_home()
         target_names = self.robot_commander.get_named_targets()
         if len(target_names) > 0:
             self.robot_commander.plan_to_named_target(target_names[0], None)
         self.assertIsInstance(self.robot_commander._SrRobotCommander__plan, RobotTrajectory)
 
-    def test_plan_to_named_target_custom_start_state_exists(self):        
+    def test_plan_to_named_target_custom_start_state_exists(self):
         self.reset_to_home()
         target_names = self.robot_commander.get_named_targets()
 
@@ -339,29 +339,29 @@ class TestSrRobotCommander(TestCase):
 
         self.assertIsInstance(self.robot_commander._SrRobotCommander__plan, RobotTrajectory)
 
-    def test_plan_to_named_target_target_not_exists(self):        
+    def test_plan_to_named_target_target_not_exists(self):
         self.reset_to_home()
         const_test_name = "test_non_existing_target"
         self.robot_commander.plan_to_named_target(const_test_name, None)
         condition = self.robot_commander._SrRobotCommander__plan is None
         self.assertTrue(condition)
 
-    def test_get_named_targets(self):        
+    def test_get_named_targets(self):
         self.assertIsInstance(self.robot_commander.get_named_targets(), list)
 
-    def test_get_joints_position(self):        
+    def test_get_joints_position(self):
         ret_val = self.robot_commander.get_joints_position()
         self.assertIsInstance(ret_val, dict)
 
-    def test_get_joints_velocity(self):        
+    def test_get_joints_velocity(self):
         ret_val = self.robot_commander.get_joints_velocity()
         self.assertIsInstance(ret_val, dict)
 
-    def test_get_joints_state(self):        
+    def test_get_joints_state(self):
         ret_val = self.robot_commander.get_joints_state()
         self.assertIsInstance(ret_val, JointState)
 
-    def test_run_joint_trajectory(self):        
+    def test_run_joint_trajectory(self):
         self.reset_to_home()
         trajectory = self.robot_commander.plan_to_joint_value_target(CONST_RA_HOME_ANGLES, angle_degrees=False,
                                                                      custom_start_state=None).joint_trajectory
@@ -370,7 +370,7 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_joint_states_by_common_joints(CONST_RA_HOME_ANGLES, end_state)
         self.assertTrue(condition)
 
-    def test_make_named_trajectory(self):        
+    def test_make_named_trajectory(self):
         self.reset_to_home()
         trajectory = []
         trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00},
@@ -393,7 +393,7 @@ class TestSrRobotCommander(TestCase):
 
         self.assertIsInstance(self.robot_commander.make_named_trajectory(trajectory), JointTrajectory)
 
-    def test_send_stop_trajectory_unsafe(self):        
+    def test_send_stop_trajectory_unsafe(self):
         self.reset_to_home()
         start_joints = self.robot_commander.get_joints_position()
         trajectory = self.robot_commander.plan_to_joint_value_target(CONST_EXAMPLE_TARGET, angle_degrees=False,
@@ -405,7 +405,7 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_joint_states_by_common_joints(start_joints, end_joints, TOLERANCE_UNSAFE)
         self.assertFalse(condition)
 
-    def test_run_named_trajectory_unsafe_cancelled(self):        
+    def test_run_named_trajectory_unsafe_cancelled(self):
         self.reset_to_home()
         trajectory = []
         trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.50, 'ra_elbow_joint': 2.3},
@@ -421,7 +421,7 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_joint_states_by_common_joints(expected_joint_state, joint_state, TOLERANCE_UNSAFE)
         self.assertFalse(condition)
 
-    def test_run_named_trajectory_unsafe_executed(self):        
+    def test_run_named_trajectory_unsafe_executed(self):
         self.reset_to_home()
         trajectory = []
         trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.0},
@@ -432,7 +432,7 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_joint_states_by_common_joints(expected_joint_state, joint_state, TOLERANCE_UNSAFE)
         self.assertTrue(condition)
 
-    def test_run_named_trajectory(self):        
+    def test_run_named_trajectory(self):
         self.reset_to_home()
         trajectory = []
         trajectory.append({"joint_angles": {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00},
@@ -443,7 +443,7 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_joint_states_by_common_joints(expected_joint_state, joint_state)
         self.assertTrue(condition)
 
-    def test_move_to_pose_target(self):        
+    def test_move_to_pose_target(self):
         self.reset_to_home()
         pose = conversions.list_to_pose([0.4, 0.2, 0.3, 0, 0, 0, 1])
         self.robot_commander.move_to_pose_target(pose, self.eef, wait=True)
@@ -452,7 +452,7 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_poses(pose, after_pose)
         self.assertTrue(condition)
 
-    def test_plan_to_pose_target(self):        
+    def test_plan_to_pose_target(self):
         self.reset_to_home()
         pose = PoseStamped()
         pose.header.stamp = rospy.get_rostime()
@@ -477,7 +477,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
     '''
 
-    def test_move_to_joint_value_target_unsafe_cancelled(self):        
+    def test_move_to_joint_value_target_unsafe_cancelled(self):
         self.reset_to_home()
         self.robot_commander.move_to_joint_value_target_unsafe(CONST_EXAMPLE_TARGET, time=0.002, wait=False,
                                                                angle_degrees=False)
@@ -501,7 +501,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
     '''
 
-    def test_run_joint_trajectory_unsafe_cancelled(self):        
+    def test_run_joint_trajectory_unsafe_cancelled(self):
         self.reset_to_home()
         trajectory = self.robot_commander.plan_to_joint_value_target(CONST_EXAMPLE_TARGET, angle_degrees=False,
                                                                      custom_start_state=None).joint_trajectory
@@ -528,7 +528,7 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_poses(after_pose, waypoints[-1])
         self.assertTrue(condition)
 
-    def test_move_to_trajectory_start_trajecotry_exists(self):        
+    def test_move_to_trajectory_start_trajecotry_exists(self):
         self.reset_to_home()
         trajectory = self.robot_commander.plan_to_joint_value_target(CONST_EXAMPLE_TARGET, angle_degrees=False,
                                                                      custom_start_state=None).joint_trajectory
@@ -538,7 +538,7 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_joint_states_by_common_joints(joints_from_trajectory, current_joints)
         self.assertTrue(condition)
 
-    def test_get_ik(self):        
+    def test_get_ik(self):
         self.reset_to_home()
         pose = PoseStamped()
         pose.header.stamp = rospy.get_rostime()
@@ -551,7 +551,7 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_joint_states_by_common_joints(joint_state_from_ik, joint_state_plan)
         self.assertTrue(condition)
 
-    def test_move_to_joint_value_target(self):        
+    def test_move_to_joint_value_target(self):
         self.reset_to_home()
         self.robot_commander.move_to_joint_value_target(CONST_EXAMPLE_TARGET, wait=True, angle_degrees=False)
         time.sleep(1)
@@ -559,7 +559,7 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_joint_states_by_common_joints(end_state, CONST_EXAMPLE_TARGET)
         self.assertTrue(condition)
 
-    def test_move_to_pose_value_target_unsafe_executed(self):        
+    def test_move_to_pose_value_target_unsafe_executed(self):
         self.reset_to_home()
         pose = PoseStamped()
         pose.header.stamp = rospy.get_rostime()
@@ -569,7 +569,7 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_poses(pose.pose, after_pose, TOLERANCE_UNSAFE)
         self.assertTrue(condition)
 
-    def test_move_to_pose_value_target_unsafe_cancelled(self):        
+    def test_move_to_pose_value_target_unsafe_cancelled(self):
         self.reset_to_home()
         pose = PoseStamped()
         pose.header.stamp = rospy.get_rostime()
@@ -585,7 +585,7 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_poses(pose.pose, after_pose, TOLERANCE_UNSAFE)
         self.assertFalse(condition)
 
-    def test_move_to_position_target(self):        
+    def test_move_to_position_target(self):
         self.reset_to_home()
         xyz = [0.5, 0.3, 0.4]
         self.robot_commander.move_to_position_target(xyz, self.eef)
@@ -601,7 +601,7 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_poses(target_xyz, end_pose)
         self.assertTrue(condition)
 
-    def test_plan_to_position_target(self):        
+    def test_plan_to_position_target(self):
         self.reset_to_home()
         xyz = [0.5, 0.3, 0.4]
         start_pose = PoseStamped()
@@ -620,7 +620,7 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_joint_states_by_common_joints(expected_joint_state, last_planned_joint_state)
         self.assertTrue(condition)
 
-    def test_get_end_effector_pose_from_named_state(self):        
+    def test_get_end_effector_pose_from_named_state(self):
         self.reset_to_home()
         target_joint_state = CONST_EXAMPLE_TARGET
         robot_state = RobotState()
@@ -638,7 +638,7 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_joint_states_by_common_joints(target_joint_state, end_joint_state)
         self.assertTrue(condition)
 
-    def test_move_to_named_target(self):        
+    def test_move_to_named_target(self):
         self.reset_to_home()
         for name in self.robot_commander._srdf_names:
             self.robot_commander.move_to_named_target(name)
@@ -656,7 +656,7 @@ class TestSrRobotCommander(TestCase):
                 self.fail()
             break
 
-    def test_action_is_running(self):        
+    def test_action_is_running(self):
         self.reset_to_home()
         self.robot_commander.move_to_joint_value_target_unsafe(CONST_EXAMPLE_TARGET, time=0.002, wait=False,
                                                                angle_degrees=False)
