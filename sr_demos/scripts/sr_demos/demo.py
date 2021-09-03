@@ -432,6 +432,7 @@ def get_input():
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
     return ch
 
+
 def get_tactiles(hand_commander, joint_states_config):
     # Read tactile type
     tactile_type = hand_commander.get_tactile_type()
@@ -450,6 +451,7 @@ def get_tactiles(hand_commander, joint_states_config):
 
     return force_zero, tactile_values, tactile_type
 
+
 def confirm_touched(tactile_values, force_zero):
     touched = None
     for finger in ["FF", "MF", "RF", "LF", "TH"]:
@@ -457,6 +459,7 @@ def confirm_touched(tactile_values, force_zero):
             touched = finger
             rospy.loginfo("{} contact".format(touched))
     return touched
+
 
 if __name__ == "__main__":
 
@@ -523,8 +526,10 @@ if __name__ == "__main__":
     if joint_prefix == 'both':
         hand_commander_right = SrHandCommander(name='right_hand')
         hand_commander_left = SrHandCommander(name='left_hand')
-        force_zero_right, tactile_values_right, tactile_type_right = get_tactiles(hand_commander_right, joint_states_config)
-        force_zero_left, tactile_values_left, tactile_type_left = get_tactiles(hand_commander_left, joint_states_config)
+        force_zero_right, tactile_values_right, tactile_type_right = get_tactiles(hand_commander_right,
+                                                                                  joint_states_config)
+        force_zero_left, tactile_values_left, tactile_type_left = get_tactiles(hand_commander_left,
+                                                                               joint_states_config)
     else:
         force_zero, tactile_values, tactile_type = get_tactiles(hand_commander, joint_states_config)
 
