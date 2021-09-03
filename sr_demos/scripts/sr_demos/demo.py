@@ -522,7 +522,6 @@ if __name__ == "__main__":
                 joints_target[joint_prefix + key] = value
             demo_states[joint_state_dicts_no_id] = joints_target
 
-
     if joint_prefix == 'both':
         hand_commander_right = SrHandCommander(name='right_hand')
         hand_commander_left = SrHandCommander(name='left_hand')
