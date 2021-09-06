@@ -60,8 +60,9 @@
 
   <!-- REAL ROBOTS -->
   <group if="$(eval not sim and not external_control_loop)">
-      <node pkg="sr_hand_detector" type="sr_hand_autodetect" name="hardware_control_loop_autodetection" output="screen"
-        args="roslaunch sr_robot_launch sr_hardware_control_loop.launch
+      <!--Using this wrapper is temporary! Rosrun directy the sr_hand_autodetect when it's available after 09/2021 debian sync -->
+      <node pkg="sr_utilities_common" type="ros_executable_wrapper.sh" name="hardware_control_loop_autodetection" output="screen"
+        args="sr_hand_autodetect roslaunch sr_robot_launch sr_hardware_control_loop.launch
           debug:=$(arg debug)
           pwm_control:=$(arg pwm_control)
           robot_state_pub_frequency:=$(arg robot_state_pub_frequency)
