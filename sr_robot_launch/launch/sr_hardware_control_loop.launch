@@ -87,7 +87,7 @@
   </include>
 
   <!-- Loading robot description-->
-    <include file="$(find sr_robot_launch)/launch/load_robot_description.launch">
+  <include file="$(find sr_robot_launch)/launch/load_robot_description.launch">
     <arg name="sim" value="false"/>
     <arg name="side" value="$(arg side)"/>
     <arg name="arm" value="$(arg arm)"/>
