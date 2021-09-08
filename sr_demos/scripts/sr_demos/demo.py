@@ -275,7 +275,7 @@ def zero_tactile_sensors(hand_commander, joint_states_config):
 
     for x in range(1, 1000):
         # Read current state of tactile sensors to zero them
-        read_tactile_values(hand_commander, hand_commander.get_tactile_type())
+        tactile_values = read_tactile_values(hand_commander, hand_commander.get_tactile_type())
 
         if tactile_values['FF'] > force_zero['FF']:
             force_zero['FF'] = tactile_values['FF']
