@@ -28,11 +28,77 @@ from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
 
 
+class TactileReading():
+    def __init__(self, hand_commander, demo_joint_states):
+        self.hand_commander = hand_commander
+        self.demo_joint_states = demo_joint_states
+        # Read tactile type
+        self.tactile_type = self.hand_commander.get_tactile_type()
+        # Zero values in dictionary for tactile sensors (initialized at 0)
+        self.force_zero = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
+        # Initialize values for current tactile values
+        self.tactile_values = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
+
+        self.zero_tactile_sensors()
+
+    def zero_tactile_sensors(self):
+        rospy.sleep(0.5)
+        rospy.logwarn('\n\nPLEASE ENSURE THAT THE TACTILE SENSORS ARE NOT PRESSED\n')
+        input('Press ENTER to continue...')
+        rospy.sleep(1.0)
+
+        for x in range(1, 1000):
+            # Read current state of tactile sensors to zero them
+            self.read_tactile_values()
+
+            for finger in ["FF", "MF", "RF", "LF", "TH"]:
+                if self.tactile_values[finger] > self.force_zero[finger]:
+                    self.force_zero[finger] = self.tactile_values[finger] + 5
+
+        rospy.loginfo('\nForce Zero: ' + str(self.force_zero))
+
+    def read_tactile_values(self):
+        # Read current state of tactile sensors
+        tactile_state = self.hand_commander.get_tactile_state()
+
+        if self.tactile_type == "biotac":
+            self.tactile_values['FF'] = tactile_state.tactiles[0].pdc
+            self.tactile_values['MF'] = tactile_state.tactiles[1].pdc
+            self.tactile_values['RF'] = tactile_state.tactiles[2].pdc
+            self.tactile_values['LF'] = tactile_state.tactiles[3].pdc
+            self.tactile_values['TH'] = tactile_state.tactiles[4].pdc
+
+        elif self.tactile_type == "PST":
+            self.tactile_values['FF'] = tactile_state.pressure[0]
+            self.tactile_values['MF'] = tactile_state.pressure[1]
+            self.tactile_values['RF'] = tactile_state.pressure[2]
+            self.tactile_values['LF'] = tactile_state.pressure[3]
+            self.tactile_values['TH'] = tactile_state.pressure[4]
+
+    def get_tactiles(self):
+        if self.tactile_type is None:
+            rospy.loginfo("You don't have tactile sensors. " +
+                        "Talk to your Shadow representative to purchase some " +
+                        "or use the keyboard to access this demo.")
+        else:
+            # Zero tactile sensors
+            self.zero_tactile_sensors()
+        return self.tactile_type
+
+    def confirm_touched(self):
+        self.read_tactile_values()
+        touched = None
+        for finger in ["FF", "MF", "RF", "LF", "TH"]:
+            print("checking")
+            if self.tactile_values[finger] > self.force_zero[finger]:
+                touched = finger
+                rospy.loginfo("{} contact".format(touched))
+        return touched
+
 def sequence_th(hand_commander, joint_states_config):
-    # rospy.sleep(0.5)
-    # execute_command_check(hand_commander, joint_states_config,'start_pos'],
-    #                                                  1.5, False, angle_degrees=True)
-    # rospy.sleep(1.5)
+    rospy.sleep(0.5)
+    execute_command_check(hand_commander, joint_states_config,'start_pos', 1.5, 1.5)
+
     return
 
 
@@ -113,26 +179,22 @@ def sequence_ff(hand_commander, joint_states_config):
     return
 
 
-def sequence_mf(hand_commander, joint_states_config, inter_time_max, sim, force_zero):
+def sequence_mf(hand_commander, joint_states_config, inter_time_max, sim, tactile_reading):
     rospy.sleep(0.5)
     # Initialize wake time
     wake_time = time.time()
 
     while True:
-        touched = None
         if sim is False:
             # Check if any of the tactile senors have been triggered
             # If so, send the Hand to its start position
-            tactile_values = read_tactile_values(hand_commander, hand_commander.get_tactile_type())
-            for finger in ["FF", "MF", "RF", "LF", "TH"]:
-                if tactile_values[finger] > force_zero[finger]:
-                    touched = finger
-        if touched is not None:
-            execute_command_check(hand_commander, joint_states_config, 'start_pos', 0.0, 2.0)
-            rospy.loginfo('{} touched!'.format(finger))
-            rospy.sleep(2.0)
-            if touched == "TH":
-                break
+            touched = tactile_reading.confirm_touched()
+            if touched is not None:
+                execute_command_check(hand_commander, joint_states_config, 'start_pos', 0.0, 2.0)
+                rospy.loginfo('{} touched!'.format(touched))
+                rospy.sleep(2.0)
+                if touched == "TH":
+                    break
 
         # If the tactile sensors have not been triggered and the Hand
         # is not in the middle of a movement, generate a random position
@@ -195,39 +257,36 @@ def sequence_lf(hand_commander, joint_states_config, sim, force_zero):
     end_time = time.time() + 11
 
     while True and sim is False:
-        # Check  the state of the tactile senors
-        tactile_values = read_tactile_values(hand_commander, hand_commander.get_tactile_type())
-
         # Record current joint positions
         hand_pos = {joint: degrees(i) for joint, i in hand_commander.get_joints_position().items()}
 
         # If any tacticle sensor has been triggered, send
         # the corresponding digit to its current position
-        if (tactile_values['FF'] > force_zero['FF'] and trigger[0] == 0):
+        if (tactile_reading.confirm_touched() == 'FF' and trigger[0] == 0):
             hand_pos_incr_f = {"rh_FFJ1": hand_pos['rh_FFJ1'] + offset1, "rh_FFJ3": hand_pos['rh_FFJ3'] + offset1}
             execute_command_check(hand_commander, joint_states_config, hand_pos_incr_f, 0.0, 0.5)
             rospy.loginfo('First finger contact')
             trigger[0] = 1
 
-        if (tactile_values['MF'] > force_zero['MF'] and trigger[1] == 0):
+        if (tactile_reading.confirm_touched() == 'MF' and trigger[1] == 0):
             hand_pos_incr_m = {"rh_MFJ1": hand_pos['rh_MFJ1'] + offset1, "rh_MFJ3": hand_pos['rh_MFJ3'] + offset1}
             execute_command_check(hand_commander, joint_states_config, hand_pos_incr_m, 0.0, 0.5)
             rospy.loginfo('Middle finger contact')
             trigger[1] = 1
 
-        if (tactile_values['RF'] > force_zero['RF'] and trigger[2] == 0):
+        if (tactile_reading.confirm_touched() == 'RF' and trigger[2] == 0):
             hand_pos_incr_r = {"rh_RFJ1": hand_pos['rh_RFJ1'] + offset1, "rh_RFJ3": hand_pos['rh_RFJ3'] + offset1}
             execute_command_check(hand_commander, joint_states_config, hand_pos_incr_r, 0.0, 0.5)
             rospy.loginfo('Ring finger contact')
             trigger[2] = 1
 
-        if (tactile_values['LF'] > force_zero['LF'] and trigger[3] == 0):
+        if (tactile_reading.confirm_touched() == 'LF' and trigger[3] == 0):
             hand_pos_incr_l = {"rh_LFJ1": hand_pos['rh_LFJ1'] + offset1, "rh_LFJ3": hand_pos['rh_LFJ3'] + offset1}
             execute_command_check(hand_commander, joint_states_config, hand_pos_incr_l, 0.0, 0.5)
             rospy.loginfo('Little finger contact')
             trigger[3] = 1
 
-        if (tactile_values['TH'] > force_zero['TH'] and trigger[4] == 0):
+        if (tactile_reading.confirm_touched() == 'TH' and trigger[4] == 0):
             hand_pos_incr_th = {"rh_THJ2": hand_pos['rh_THJ2'] + offset1, "rh_THJ5": hand_pos['rh_THJ5'] + offset1}
             execute_command_check(hand_commander, joint_states_config, hand_pos_incr_th, 0.0, 0.5)
             rospy.loginfo('Thumb contact')
@@ -263,100 +322,6 @@ def sequence_lf(hand_commander, joint_states_config, sim, force_zero):
 
     return
 
-
-def zero_tactile_sensors(hand_commander, joint_states_config):
-    # Move Hand to zero position
-    rospy.sleep(0.5)
-    execute_command_check(hand_commander, joint_states_config, 'start_pos', 0.0, 1.0)
-
-    rospy.logwarn('\n\nPLEASE ENSURE THAT THE TACTILE SENSORS ARE NOT PRESSED\n')
-    # raw_input ('Press ENTER to continue')
-    rospy.sleep(1.0)
-
-    for x in range(1, 1000):
-        # Read current state of tactile sensors to zero them
-        tactile_values = read_tactile_values(hand_commander, hand_commander.get_tactile_type())
-
-        if tactile_values['FF'] > force_zero['FF']:
-            force_zero['FF'] = tactile_values['FF']
-        if tactile_values['MF'] > force_zero['MF']:
-            force_zero['MF'] = tactile_values['MF']
-        if tactile_values['RF'] > force_zero['RF']:
-            force_zero['RF'] = tactile_values['RF']
-        if tactile_values['LF'] > force_zero['LF']:
-            force_zero['LF'] = tactile_values['LF']
-        if tactile_values['TH'] > force_zero['TH']:
-            force_zero['TH'] = tactile_values['TH']
-
-    force_zero['FF'] = force_zero['FF'] + 5
-    force_zero['MF'] = force_zero['MF'] + 5
-    force_zero['RF'] = force_zero['RF'] + 5
-    force_zero['LF'] = force_zero['LF'] + 5
-    force_zero['TH'] = force_zero['TH'] + 5
-
-    rospy.loginfo('Force Zero: ' + force_zero)
-    return force_zero
-
-
-def read_tactile_values(hand_commander, tactile_type):
-    # Read current state of tactile sensors
-    tactile_state = hand_commander.get_tactile_state()
-    tactile_values = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
-    
-    if tactile_type == "biotac":
-        tactile_values['FF'] = tactile_state.tactiles[0].pdc
-        tactile_values['MF'] = tactile_state.tactiles[1].pdc
-        tactile_values['RF'] = tactile_state.tactiles[2].pdc
-        tactile_values['LF'] = tactile_state.tactiles[3].pdc
-        tactile_values['TH'] = tactile_state.tactiles[4].pdc
-
-    elif tactile_type == "PST":
-        tactile_values['FF'] = tactile_state.pressure[0]
-        tactile_values['MF'] = tactile_state.pressure[1]
-        tactile_values['RF'] = tactile_state.pressure[2]
-        tactile_values['LF'] = tactile_state.pressure[3]
-        tactile_values['TH'] = tactile_state.pressure[4]
-
-    return tactile_values
-
-
-def get_input():
-    fd = sys.stdin.fileno()
-    old_settings = termios.tcgetattr(fd)
-    try:
-        tty.setraw(sys.stdin.fileno())
-        ch = sys.stdin.read(1)
-    finally:
-        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-    return ch
-
-
-def get_tactiles(hand_commander, joint_states_config):
-    # Read tactile type
-    tactile_type = hand_commander.get_tactile_type()
-    # Zero values in dictionary for tactile sensors (initialized at 0)
-    force_zero = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
-    # Initialize values for current tactile values
-    tactile_values = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
-
-    if tactile_type is None:
-        rospy.loginfo("You don't have tactile sensors. " +
-                      "Talk to your Shadow representative to purchase some " +
-                      "or use the keyboard to access this demo.")
-    else:
-        # Zero tactile sensors
-        force_zero = zero_tactile_sensors(hand_commander, joint_states_config)
-
-    return force_zero, tactile_values, tactile_type
-
-
-def confirm_touched(tactile_values, force_zero):
-    touched = None
-    for finger in ["FF", "MF", "RF", "LF", "TH"]:
-        if tactile_values[finger] > force_zero[finger]:
-            touched = finger
-            rospy.loginfo("{} contact".format(touched))
-    return touched
 
 def correct_joint_states_for_hand_type(joint_states_config, hand_type):
     hand_type_joints_filename = '/home/user/projects/shadow_robot/base/src/'\
@@ -394,6 +359,17 @@ def execute_command_check(hand_commander, joint_states_config, joint_states,
         rospy.sleep(sleep)
 
 
+def get_input():
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    try:
+        tty.setraw(sys.stdin.fileno())
+        ch = sys.stdin.read(1)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+    return ch
+
+
 if __name__ == "__main__":
 
     rospy.init_node("right_hand_demo", anonymous=True)
@@ -413,6 +389,14 @@ if __name__ == "__main__":
                         help="Please select hand type, can be 'hand_e', 'hand_e_plus', 'hand_lite', 'hand_extra_lite'.",
                         default="hand_e",
                         choices=["hand_e", "hand_e_plus", "hand_lite", "hand_extra_lite"])
+    parser.add_argument("-t", "--tactiles",
+                        dest="tactiles",
+                        type=bool,
+                        required=True,
+                        help="Please select whether the hand has tactiles or not, can be True or False.",
+                        default=False,
+                        choices=[True, False])
+
 
     args = parser.parse_args(rospy.myargv()[1:])
 
@@ -435,13 +419,17 @@ if __name__ == "__main__":
         joint_prefix = 'both'
 
     if 'rh_' == joint_prefix:
-        hand_name = 'right_hand'
+        hand_name = "right_hand"
     elif 'lh_' == joint_prefix:
-        hand_name = 'left_hand'
+        hand_name = "left_hand"
     else:
-        hand_name = 'two_hands'
+        hand_name = "two_hands"
 
     hand_commander = SrHandCommander(name=hand_name)
+
+    # tactile_state = hand_commander.get_tactile_state()
+
+    # print(str(tactile_state))
 
     # Get joint states for demo from yaml
     joint_states_config_filename = '/home/user/projects/shadow_robot/base/src/'\
@@ -452,17 +440,18 @@ if __name__ == "__main__":
     corrected_joint_states_config = correct_joint_states_for_hand_type(joint_states_config, args.hand_type)
 
     # Add prefix to joint states
-    demo_states = add_prefix_to_joint_states(corrected_joint_states_config, joint_prefix)
+    demo_states = add_prefix_to_joint_states(corrected_joint_states_config, joint_prefix)     
 
-    if joint_prefix == 'both':
-        hand_commander_right = SrHandCommander(name='right_hand')
-        hand_commander_left = SrHandCommander(name='left_hand')
-        force_zero_right, tactile_values_right, tactile_type_right = get_tactiles(hand_commander_right,
-                                                                                  demo_states)
-        force_zero_left, tactile_values_left, tactile_type_left = get_tactiles(hand_commander_left,
-                                                                               demo_states)
-    else:
-        force_zero, tactile_values, tactile_type = get_tactiles(hand_commander, demo_states)
+    execute_command_check(hand_commander, demo_states, 'start_pos', 0.0, 1.0)
+
+    if args.tactiles:
+        if joint_prefix == 'both':
+            hand_commander_right = SrHandCommander(name='right_hand')
+            hand_commander_left = SrHandCommander(name='left_hand')
+            tactile_right = TactileReading(hand_commander_right, demo_states)
+            tactile_left = TactileReading(hand_commander_left, demo_states)
+        else:
+            tactile_reading = TactileReading(hand_commander, demo_states)
 
     rospy.loginfo("\nPRESS ONE OF THE TACTILES or 1-5 ON THE KEYBOARD TO START A DEMO:\
                    \n   TH or 1: Open Hand\
@@ -476,25 +465,19 @@ if __name__ == "__main__":
         # Check the state of the tactile senors
         touched = None
 
-        if tactile_type is not None:
-            if joint_prefix == 'both':
-                tactile_values_right = read_tactile_values(hand_commander_right, tactile_type_right)
-                tactile_values_left = read_tactile_values(hand_commander_left, tactile_type_left)
-                touched_right = confirm_touched(tactile_values_right, force_zero_right)
-                touched_left = confirm_touched(tactile_values_left, force_zero_left)
-                if touched_right is not None:
-                    touched = touched_right
-                    force_zero = force_zero_right
-                elif touched_left is not None:
-                    touched = touched_left
-                    force_zero = force_zero_left
-                elif touched_right is not None and touched_left is not None:
-                    rospy.loginfo("You touched fingers on both hands at the same time. Defaulting to right touch")
-                    touched = touched_right
-                    force_zero = force_zero_right
-            else:
-                tactile_values = read_tactile_values(hand_commander, tactile_type)
-                touched = confirm_touched(tactile_values, force_zero)
+        # if args.tactiles:
+        #     if joint_prefix == 'both':
+        #         touched_right = tactile_right.confirm_touched()
+        #         touched_left = tactile_right.confirm_touched()
+        #         if touched_right is not None:
+        #             touched = touched_right
+        #         elif touched_left is not None:
+        #             touched = touched_left
+        #         elif touched_right is not None and touched_left is not None:
+        #             rospy.loginfo("You touched fingers on both hands at the same time. Defaulting to right touch")
+        #             touched = touched_right
+        #     else:
+        touched = tactile_reading.confirm_touched()
 
         # Get input from the keyboard
         input_val = get_input()
@@ -505,16 +488,13 @@ if __name__ == "__main__":
         elif touched == "FF" or "2" == input_val:
             sequence_ff(hand_commander, demo_states)
         elif touched == "MF" or "3" == input_val:
-            sequence_mf(hand_commander, demo_states, 4.0, sim, force_zero)
+            sequence_mf(hand_commander, demo_states, 4.0, sim, tactile_reading)
         elif touched == "RF" or "4" == input_val:
             sequence_rf(hand_commander, demo_states)
         elif touched == "LF" or "5" == input_val:
-            sequence_lf(hand_commander, demo_states, sim, force_zero)
+            sequence_lf(hand_commander, demo_states, sim, tactile_reading)
 
         rospy.loginfo("Demo completed")
-
-        if tactile_type is not None:
-            force_zero = zero_tactile_sensors(hand_commander, demo_states)
 
         CONST_ESC_KEY_HEX_VALUE = '0x1b'
         if CONST_ESC_KEY_HEX_VALUE == hex(ord(input_val)):
