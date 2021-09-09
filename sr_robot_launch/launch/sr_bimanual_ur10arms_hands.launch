@@ -45,6 +45,8 @@
   <!-- The control mode PWM (true) or torque (false) -->
   <!-- Set to true by default for now as torque control is not available yet -->
   <arg name="pwm_control" default="true"/>
+  <!-- Set to true if you want to use hybrid controller -->
+  <arg name="hybrid_controller" default="false"/>
 
   <!-- ARMS CONFIG-->
   <arg name="arm_1_z" default="0.7521" if="$(arg scene)"/>
@@ -70,6 +72,7 @@
     <arg name="world" value="$(arg world)"/>
 
     <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
+    <arg name="hybrid_controller" value="$(arg hybrid_controller)"/>
     <arg name="arm_1_z" value="$(arg arm_1_z)"/>
     <arg name="arm_2_z" value="$(arg arm_2_z)"/>
     <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
