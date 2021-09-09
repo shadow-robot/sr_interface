@@ -25,8 +25,6 @@ import sys
 import argparse
 from pynput.keyboard import Key, Listener
 from threading import Thread, Lock
-import threading, queue
-import concurrent.futures
 import os
 from math import degrees
 from sr_robot_commander.sr_hand_commander import SrHandCommander
@@ -83,8 +81,8 @@ class TactileReading():
     def get_tactiles(self):
         if self.tactile_type is None:
             rospy.loginfo("You don't have tactile sensors. " +
-                        "Talk to your Shadow representative to purchase some " +
-                        "or use the keyboard to access this demo.")
+                          "Talk to your Shadow representative to purchase some " +
+                          "or use the keyboard to access this demo.")
         else:
             # Zero tactile sensors
             self.zero_tactile_sensors()
@@ -100,6 +98,40 @@ class TactileReading():
         return touched
 
 
+class KeyboardPressDetector(object):
+    def __init__(self):
+        self.keyboard_pressed = False
+
+    def _get_input(self):
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch
+
+    def run(self):
+        while True:
+            input_val = self._get_input()            
+            if input_val == "1":
+                sequence_th(hand_commander, demo_states)
+            elif input_val == "2":
+                sequence_ff(hand_commander, demo_states)
+            elif input_val == "3":
+                sequence_mf(hand_commander, demo_states, 4.0, tactile_reading)
+            elif input_val == "4":
+                sequence_rf(hand_commander, demo_states)
+            elif input_val == "5":
+                sequence_lf(hand_commander, demo_states, tactile_reading)
+
+            if '0x1b' == hex(ord(input_val)):
+                sys.exit(0)
+
+            rospy.loginfo("Demo completed")
+
+
 def sequence_th(hand_commander, joint_states_config):
     rospy.sleep(0.5)
     execute_command_check(hand_commander, joint_states_config,'start_pos', 1.5, 1.5)
@@ -111,76 +143,76 @@ def sequence_ff(hand_commander, joint_states_config):
     rospy.sleep(1)
     execute_command_check(hand_commander, joint_states_config, 'store_3', 1.1, 1.1)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.1, 1.1)
-    execute_command_check(hand_commander, joint_states_config,'flex_ff', 1.1, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'ext_ff', 1.1, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'flex_mf', 1.1, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'ext_mf', 1.1, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'flex_rf', 1.1, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'ext_rf', 1.1, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'flex_lf', 1.1, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'ext_lf', 1.1, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'flex_th_1', 1, 0.7)
-    execute_command_check(hand_commander, joint_states_config,'flex_th_2', 1, 0.7)
-    execute_command_check(hand_commander, joint_states_config,'ext_th_1', 1.5, 1.5)
-    execute_command_check(hand_commander, joint_states_config,'ext_th_2', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config,'l_ext_lf', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config,'l_ext_rf', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config,'l_ext_mf', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config,'l_ext_ff', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config,'l_int_all', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config,'l_ext_all', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config,'l_int_ff', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config,'l_int_mf', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config,'l_int_rf', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config,'l_int_lf', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config,'l_zero_all', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config,'l_spock', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config,'l_zero_all', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config,'pre_ff_ok', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'ff_ok', 0.9, 0.7)
-    execute_command_check(hand_commander, joint_states_config,'ff2mf_ok', 0.4, 0.5)
-    execute_command_check(hand_commander, joint_states_config,'mf_ok', 0.9, 0.7)
-    execute_command_check(hand_commander, joint_states_config,'mf2rf_ok', 0.4, 0.5)
-    execute_command_check(hand_commander, joint_states_config,'rf_ok', 0.9, 0.7)
-    execute_command_check(hand_commander, joint_states_config,'rf2lf_ok', 0.4, 0.5)
-    execute_command_check(hand_commander, joint_states_config,'lf_ok', 0.9, 0.7)
-    execute_command_check(hand_commander, joint_states_config,'start_pos', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'flex_ff', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'flex_mf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'flex_rf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'flex_lf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'ext_ff', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'ext_mf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'ext_rf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'ext_lf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'flex_ff', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'flex_mf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'flex_rf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'flex_lf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'ext_ff', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'ext_mf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'ext_rf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'ext_lf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'flex_ff', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'flex_mf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'flex_rf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'flex_lf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'ext_ff', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'ext_mf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'ext_rf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'ext_lf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config,'pre_ff_ok', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'ff_ok', 3.3, 1.3)
-    execute_command_check(hand_commander, joint_states_config,'ne_wr', 1.1, 1.1)
-    execute_command_check(hand_commander, joint_states_config,'nw_wr', 1.1, 1.1)
-    execute_command_check(hand_commander, joint_states_config,'sw_wr', 1.1, 1.1)
-    execute_command_check(hand_commander, joint_states_config,'se_wr', 1.1, 1.1)
-    execute_command_check(hand_commander, joint_states_config,'ne_wr', 0.7, 0.7)
-    execute_command_check(hand_commander, joint_states_config,'nw_wr', 0.7, 0.7)
-    execute_command_check(hand_commander, joint_states_config,'sw_wr', 0.7, 0.7)
-    execute_command_check(hand_commander, joint_states_config,'se_wr', 0.7, 0.7)
-    execute_command_check(hand_commander, joint_states_config,'zero_wr', 0.4, 0.4)
-    execute_command_check(hand_commander, joint_states_config,'start_pos', 1.5, 1.5)
+    execute_command_check(hand_commander, joint_states_config, 'flex_ff', 1.1, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'ext_ff', 1.1, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'flex_mf', 1.1, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'ext_mf', 1.1, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'flex_rf', 1.1, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'ext_rf', 1.1, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'flex_lf', 1.1, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'ext_lf', 1.1, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'flex_th_1', 1, 0.7)
+    execute_command_check(hand_commander, joint_states_config, 'flex_th_2', 1, 0.7)
+    execute_command_check(hand_commander, joint_states_config, 'ext_th_1', 1.5, 1.5)
+    execute_command_check(hand_commander, joint_states_config, 'ext_th_2', 0.5, 0.5)
+    execute_command_check(hand_commander, joint_states_config, 'l_ext_lf', 0.5, 0.5)
+    execute_command_check(hand_commander, joint_states_config, 'l_ext_rf', 0.5, 0.5)
+    execute_command_check(hand_commander, joint_states_config, 'l_ext_mf', 0.5, 0.5)
+    execute_command_check(hand_commander, joint_states_config, 'l_ext_ff', 0.5, 0.5)
+    execute_command_check(hand_commander, joint_states_config, 'l_int_all', 0.5, 0.5)
+    execute_command_check(hand_commander, joint_states_config, 'l_ext_all', 0.5, 0.5)
+    execute_command_check(hand_commander, joint_states_config, 'l_int_ff', 0.5, 0.5)
+    execute_command_check(hand_commander, joint_states_config, 'l_int_mf', 0.5, 0.5)
+    execute_command_check(hand_commander, joint_states_config, 'l_int_rf', 0.5, 0.5)
+    execute_command_check(hand_commander, joint_states_config, 'l_int_lf', 0.5, 0.5)
+    execute_command_check(hand_commander, joint_states_config, 'l_zero_all', 0.5, 0.5)
+    execute_command_check(hand_commander, joint_states_config, 'l_spock', 0.5, 0.5)
+    execute_command_check(hand_commander, joint_states_config, 'l_zero_all', 0.5, 0.5)
+    execute_command_check(hand_commander, joint_states_config, 'pre_ff_ok', 1.0, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'ff_ok', 0.9, 0.7)
+    execute_command_check(hand_commander, joint_states_config, 'ff2mf_ok', 0.4, 0.5)
+    execute_command_check(hand_commander, joint_states_config, 'mf_ok', 0.9, 0.7)
+    execute_command_check(hand_commander, joint_states_config, 'mf2rf_ok', 0.4, 0.5)
+    execute_command_check(hand_commander, joint_states_config, 'rf_ok', 0.9, 0.7)
+    execute_command_check(hand_commander, joint_states_config, 'rf2lf_ok', 0.4, 0.5)
+    execute_command_check(hand_commander, joint_states_config, 'lf_ok', 0.9, 0.7)
+    execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.0, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'flex_ff', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'flex_mf', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'flex_rf', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'flex_lf', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'ext_ff', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'ext_mf', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'ext_rf', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'ext_lf', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'flex_ff', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'flex_mf', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'flex_rf', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'flex_lf', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'ext_ff', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'ext_mf', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'ext_rf', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'ext_lf', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'flex_ff', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'flex_mf', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'flex_rf', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'flex_lf', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'ext_ff', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'ext_mf', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'ext_rf', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'ext_lf', 0.2, 0.2)
+    execute_command_check(hand_commander, joint_states_config, 'pre_ff_ok', 1.0, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'ff_ok', 3.3, 1.3)
+    execute_command_check(hand_commander, joint_states_config, 'ne_wr', 1.1, 1.1)
+    execute_command_check(hand_commander, joint_states_config, 'nw_wr', 1.1, 1.1)
+    execute_command_check(hand_commander, joint_states_config, 'sw_wr', 1.1, 1.1)
+    execute_command_check(hand_commander, joint_states_config, 'se_wr', 1.1, 1.1)
+    execute_command_check(hand_commander, joint_states_config, 'ne_wr', 0.7, 0.7)
+    execute_command_check(hand_commander, joint_states_config, 'nw_wr', 0.7, 0.7)
+    execute_command_check(hand_commander, joint_states_config, 'sw_wr', 0.7, 0.7)
+    execute_command_check(hand_commander, joint_states_config, 'se_wr', 0.7, 0.7)
+    execute_command_check(hand_commander, joint_states_config, 'zero_wr', 0.4, 0.4)
+    execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.5, 1.5)
     return
 
 
@@ -216,13 +248,13 @@ def complete_random_sequence(wake_time, hand_commander, joint_states_config, int
         for i in joint_states_config['rand_pos']:
             joint_states_config['rand_pos'][i] =\
                 random.randrange(joint_states_config['min_range'][i],
-                                joint_states_config['max_range'][i])
+                                 joint_states_config['max_range'][i])
         joint_states_config['rand_pos']['rh_FFJ4'] =\
             random.randrange(joint_states_config['min_range']['rh_FFJ4'],
-                            joint_states_config['rand_pos']['rh_MFJ4'])
+                             joint_states_config['rand_pos']['rh_MFJ4'])
         joint_states_config['rand_pos']['rh_LFJ4'] =\
             random.randrange(joint_states_config['min_range']['rh_LFJ4'],
-                            joint_states_config['rand_pos']['rh_RFJ4'])
+                             joint_states_config['rand_pos']['rh_RFJ4'])
         inter_time = inter_time_max * random.random()
         execute_command_check(hand_commander, joint_states_config, 'rand_pos', 0.0, inter_time)
         wake_time = time.time() + inter_time * 0.9
@@ -230,21 +262,21 @@ def complete_random_sequence(wake_time, hand_commander, joint_states_config, int
 
 def sequence_rf(hand_commander, joint_states_config):
     rospy.sleep(0.5)
-    execute_command_check(hand_commander, joint_states_config,'start_pos', 1.0, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.0, 1.0)
     execute_command_check(hand_commander, joint_states_config, 'bc_pre_zero', 2.0, 2.0)
     execute_command_check(hand_commander, joint_states_config, 'bc_zero', 4.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'bc_1', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'bc_2', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'bc_3', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'bc_4', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'bc_5', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'bc_6', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'bc_7', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'bc_8', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'bc_9', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'bc_11', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config,'bc_12', 4.0, 3.0)
-    execute_command_check(hand_commander, joint_states_config,'start_pos', 1.5, 1.5)
+    execute_command_check(hand_commander, joint_states_config, 'bc_1', 1.0, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'bc_2', 1.0, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'bc_3', 1.0, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'bc_4', 1.0, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'bc_5', 1.0, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'bc_6', 1.0, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'bc_7', 1.0, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'bc_8', 1.0, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'bc_9', 1.0, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'bc_11', 1.0, 1.0)
+    execute_command_check(hand_commander, joint_states_config, 'bc_12', 4.0, 3.0)
+    execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.5, 1.5)
 
     return
 
@@ -254,10 +286,10 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
     trigger = [0, 0, 0, 0, 0]
 
     # Move Hand to zero position
-    execute_command_check(hand_commander, joint_states_config,'start_pos', 2.0, 2.0)
+    execute_command_check(hand_commander, joint_states_config, 'start_pos', 2.0, 2.0)
 
     # Move Hand to starting position
-    execute_command_check(hand_commander, joint_states_config,'pregrasp_pos', 2.0, 2.0)
+    execute_command_check(hand_commander, joint_states_config, 'pregrasp_pos', 2.0, 2.0)
 
     # Move Hand to close position
     execute_command_check(hand_commander, joint_states_config, 'grasp_pos', 0.0, 11.0)
@@ -311,7 +343,7 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
     # Send all joints to current position to compensate
     # for minor offsets created in the previous loop
     hand_pos = {joint: degrees(i) for joint, i in hand_commander.get_joints_position().items()}
-    execute_command_check(hand_commander, joint_states_config,hand_pos, 2.0, 2.0)
+    execute_command_check(hand_commander, joint_states_config, hand_pos, 2.0, 2.0)
 
     # Generate new values to squeeze object slightly
     offset2 = 3
@@ -327,8 +359,8 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
     execute_command_check(hand_commander, joint_states_config, hand_pos, 0.5, 0.5)
     execute_command_check(hand_commander, joint_states_config, squeeze, 0.5, 0.5)
     execute_command_check(hand_commander, joint_states_config, hand_pos, 2.0, 2.0)
-    execute_command_check(hand_commander, joint_states_config,'pregrasp_pos', 2.0, 2.0)
-    execute_command_check(hand_commander, joint_states_config,'start_pos', 2.0, 2.0)
+    execute_command_check(hand_commander, joint_states_config, 'pregrasp_pos', 2.0, 2.0)
+    execute_command_check(hand_commander, joint_states_config, 'start_pos', 2.0, 2.0)
 
     return
 
@@ -349,6 +381,7 @@ def correct_joint_states_for_hand_type(joint_states_config, hand_type):
 
     return joint_states_config
 
+
 def add_prefix_to_joint_states(corrected_joint_states_config, joint_prefix):
     demo_states = {}
     for joint_state_dicts_no_id in corrected_joint_states_config.keys():
@@ -362,32 +395,12 @@ def add_prefix_to_joint_states(corrected_joint_states_config, joint_prefix):
             demo_states[joint_state_dicts_no_id] = joints_target
     return demo_states
 
+
 def execute_command_check(hand_commander, joint_states_config, joint_states,
                           sleep, time, wait=False, angle_degrees=True):
     if joint_states in joint_states_config.keys():
-        hand_commander.move_to_joint_value_target_unsafe(joint_states_config[joint_states], time, wait, angle_degrees) 
+        hand_commander.move_to_joint_value_target_unsafe(joint_states_config[joint_states], time, wait, angle_degrees)
         rospy.sleep(sleep)
-
-
-def process_input(hand_commander, demo_states, tactile_reading):
-    fd = sys.stdin.fileno()
-    old_settings = termios.tcgetattr(fd)
-    try:
-        tty.setraw(sys.stdin.fileno())
-        input_val = sys.stdin.read(1)
-    finally:
-        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-
-    if input_val == "1":
-        sequence_th(hand_commander, demo_states)
-    elif input_val == "2":
-        sequence_ff(hand_commander, demo_states)
-    elif input_val == "3":
-        sequence_mf(hand_commander, demo_states, 4.0, tactile_reading)
-    elif input_val == "4":
-        sequence_rf(hand_commander, demo_states)
-    elif input_val == "5":
-        sequence_lf(hand_commander, demo_states, tactile_reading)
 
 
 if __name__ == "__main__":
@@ -416,7 +429,6 @@ if __name__ == "__main__":
                         help="Please add this argument if the hand has tactiles, can be 'right', 'left' or 'both'.",
                         default=None,
                         choices=["right", "left", "both"])
-
 
     args = parser.parse_args(rospy.myargv()[1:])
 
@@ -452,11 +464,11 @@ if __name__ == "__main__":
                                    'sr_interface/sr_demos/config/demo_joint_states.yaml'
     with open(joint_states_config_filename) as f:
         joint_states_config = yaml.load(f, Loader=yaml.FullLoader)
-    
+
     corrected_joint_states_config = correct_joint_states_for_hand_type(joint_states_config, args.hand_type)
 
     # Add prefix to joint states
-    demo_states = add_prefix_to_joint_states(corrected_joint_states_config, joint_prefix)     
+    demo_states = add_prefix_to_joint_states(corrected_joint_states_config, joint_prefix)
 
     execute_command_check(hand_commander, demo_states, 'start_pos', 0.0, 1.0)
 
@@ -475,10 +487,6 @@ if __name__ == "__main__":
         else:
             tactile_reading = TactileReading(hand_commander, demo_states)
 
-    # Keyboard thread
-    input_thread = Thread(target=process_input, args=(hand_commander, demo_states, tactile_reading))
-    input_thread.start()
-
     rospy.loginfo("\nPRESS ONE OF THE TACTILES or 1-5 ON THE KEYBOARD TO START A DEMO:\
                    \n   TH or 1: Open Hand\
                    \n   FF or 2: Standard Demo\
@@ -486,6 +494,11 @@ if __name__ == "__main__":
                    \n   RF or 4: Card Trick Demo\
                    \n   LF or 5: Grasp Demo\
                    \n   ESC to exit")
+
+    # Keyboard thread for input
+    kpd = KeyboardPressDetector()
+    keyboard_thread = Thread(target=kpd.run)
+    keyboard_thread.start()
 
     while not rospy.is_shutdown():
         # Check the state of the tactile senors
@@ -517,8 +530,4 @@ if __name__ == "__main__":
         elif touched == "LF":
             sequence_lf(hand_commander, demo_states, tactile_reading)
 
-        # rospy.loginfo("Demo completed")
-
-        # CONST_ESC_KEY_HEX_VALUE = '0x1b'
-        # if CONST_ESC_KEY_HEX_VALUE == hex(ord(input_val)):
-        #     sys.exit(0)
+        rospy.loginfo("Demo completed")
