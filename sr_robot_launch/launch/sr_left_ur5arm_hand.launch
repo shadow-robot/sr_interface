@@ -34,16 +34,8 @@
   <arg name="side" value="left"/>
 
   <!-- HAND CONFIG-->
-<<<<<<< HEAD
-  <arg name="hand_serial" default="0"/>
-  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_E_v4.yaml"/>
-  <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
-       More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
-  <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
-=======
   <!-- Set hand type. -->
   <arg name="hand_type" default="hand_lite"/>
->>>>>>> 159f6ac6d9537cb5bbbf4bc87df93bf76c4ecc0a
   <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
   <!-- The control mode PWM (true) or torque (false) -->
