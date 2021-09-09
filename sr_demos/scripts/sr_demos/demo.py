@@ -140,7 +140,7 @@ class KeyboardPressDetector(object):
 
 def sequence_th(hand_commander, joint_states_config):
     rospy.sleep(0.5)
-    execute_command_check(hand_commander, joint_states_config,'start_pos', 1.5, 1.5)
+    execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.5, 1.5)
 
     return
 
@@ -220,8 +220,8 @@ def sequence_ff(hand_commander, joint_states_config):
     execute_command_check(hand_commander, joint_states_config, 'zero_wr', 0.4, 0.4)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.5, 1.5)
 
-    rospy.loginfo("Demo completed")
-    
+    rospy.loginfo("'FF' Demo completed")
+
     return
 
 
@@ -249,8 +249,8 @@ def sequence_mf(hand_commander, joint_states_config, inter_time_max, tactile_rea
                 complete_random_sequence(wake_time, hand_commander, joint_states_config, inter_time_max)
         else:
             complete_random_sequence(wake_time, hand_commander, joint_states_config, inter_time_max)
-    
-    rospy.loginfo("Demo completed")
+
+    rospy.loginfo("'MF' Demo completed")
 
     return
 
@@ -290,7 +290,7 @@ def sequence_rf(hand_commander, joint_states_config):
     execute_command_check(hand_commander, joint_states_config, 'bc_12', 4.0, 3.0)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.5, 1.5)
 
-    rospy.loginfo("Demo completed")
+    rospy.loginfo("'RF' Demo completed")
 
     return
 
@@ -372,7 +372,7 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
     # Squeeze object gently
     hand_commander.move_to_joint_value_target_unsafe(squeeze, 0.5, wait=False, angle_degrees=True)
     rospy.sleep(0.5)
-    hand_commander.move_to_joint_value_target_unsafe(hand_pos,0.5, wait=False, angle_degrees=True)
+    hand_commander.move_to_joint_value_target_unsafe(hand_pos, 0.5, wait=False, angle_degrees=True)
     rospy.sleep(0.5)
     hand_commander.move_to_joint_value_target_unsafe(squeeze, 0.5, wait=False, angle_degrees=True)
     rospy.sleep(0.5)
@@ -381,7 +381,7 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
     execute_command_check(hand_commander, joint_states_config, 'pregrasp_pos', 2.0, 2.0)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 2.0, 2.0)
 
-    rospy.loginfo("Demo completed")
+    rospy.loginfo("'LF' Demo completed")
     return
 
 
@@ -529,4 +529,3 @@ if __name__ == "__main__":
             sequence_rf(hand_commander, demo_states)
         elif touched == "LF":
             sequence_lf(hand_commander, demo_states, tactile_reading)
-
