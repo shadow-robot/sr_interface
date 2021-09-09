@@ -4,22 +4,8 @@
   <arg name="joint_state_pub_frequency" default="125"/>
   <!-- Specify if the system has "both" hands, only "right", only "left", or "none"-->
   <arg name="hands" default="both"/>
-  <arg name="arm_ctrl" default="true"/>	
-  <!-- ROBOT CONFIG-->
-  <arg name="robot_model" default="ur10e"/>
-  <!-- HANDS AND ARMS -->
-  <arg name="robot_description" if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
-  <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
-  <!-- ARMS BUT NO HANDS -->
-  <arg name="robot_description" if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))" default="'$(find sr_multi_description)/urdf/bimanual_$(arg robot_model).urdf.xacro'"/>
-  <arg name="robot_config_file" if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_$(arg robot_model).yaml"/>
-  <!-- HANDS BUT NO ARMS -->
-  <arg name="robot_description" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="'$(find sr_description)/robots/bimanual_shadowhand_motor_plus.urdf.xacro'"/>
-  <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
-
-  <!-- If the arm is available the automatic calibration script will load the robot_description,
-       otherwise the robot description is loaded at lower level -->
-  <arg name="load_robot_description_at_lower_level" default="$(eval not arm_ctrl)"/>
+  <arg name="arms" default="true"/>
+  <arg name="arm_ctrl" default="$(arg arms)"/>
 
   <!-- HANDS CONFIG-->
   <arg name="rh_serial" default="0"/>
@@ -35,8 +21,15 @@
   <arg name="hybrid_controller" default="false"/>
   <arg name="hand_trajectory" unless="$(eval hands == 'none')" default="true"/>
   <arg name="hand_trajectory" if="$(eval hands == 'none')" default="false"/>
+  <!-- Wheather the hands have biotacs -->
+  <arg name="biotac" default="false"/>
+  <!-- Separation between the robots -->
+  <arg name="hand_x_separation" default="-0.4"/>
+  <!-- Set the hand type here: hand_e_plus, hand_e, hand_lite, hand_extra_lite -->
+  <arg name="hand_type" default="hand_e_plus"/>
 
   <!-- ARMS CONFIG-->
+  <arg name="robot_model" default="ur10e"/>
   <arg name="arm_1_z" default="0.7551"/>
   <arg name="arm_2_z" default="0.7551"/>
   <arg name="arm_x_separation" default="-0.4" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))"/>
@@ -54,18 +47,33 @@
   <arg name="right_arm_speed_scale" default="0.5"/>
   <arg name="left_arm_speed_scale" default="0.5"/>
 
-  <arg unless="$(eval hands == 'none')" name="arm_payload_mass" default="5.00"/>
+  <!-- Sets up right payload -->
+  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_e')" name="arm_payload_mass" default="5.0"/>
+  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_e_plus')" name="arm_payload_mass" default="5.0"/>
+  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_lite')" name="arm_payload_mass" default="2.7"/>
+  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_extra_lite')" name="arm_payload_mass" default="2.5"/>
   <arg unless="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_mass" default="0.0"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
-
-  <arg name="load_robot_description_command" default="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
 
   <node pkg="rosservice" type="rosservice" name="set_right_speed_scale" args="call --wait /ra_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg right_arm_speed_scale)'"/>
   <node pkg="rosservice" type="rosservice" name="set_left_speed_scale" args="call --wait /la_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg left_arm_speed_scale)'"/>
 
   <node pkg="rosservice" type="rosservice" name="set_right_arm_payload" args="call --wait /ra_sr_ur_robot_hw/set_payload '{payload: $(arg arm_payload_mass), center_of_gravity: $(arg arm_payload_cog)}'"/>
   <node pkg="rosservice" type="rosservice" name="set_left_arm_payload" args="call --wait /la_sr_ur_robot_hw/set_payload '{payload: $(arg arm_payload_mass), center_of_gravity: $(arg arm_payload_cog)}'"/>
+
+  <!-- ROBOT CONFIG-->
+  <!-- HANDS AND ARMS -->
+  <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
+  <!-- ARMS BUT NO HANDS -->
+  <arg name="robot_config_file" if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_$(arg robot_model).yaml"/>
+  <!-- HANDS BUT NO ARMS -->
+  <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
+
+  <!-- Set robot config file path in a param in case moveit nodes need it -->
+  <param name="robot_config_file" value="$(arg robot_config_file)" type="str"/>
+  <!-- Launch rosparam for payload. If we only use hand and no arm the extra values wont be used-->
+  <rosparam file="$(arg robot_config_file)"/>
 
   <!-- Logging local topics -->
   <group ns="control_box">
@@ -78,15 +86,19 @@
 
   <include file="$(find sr_robot_launch)/launch/bimanual_controller_stopper.launch"/>
 
-  <!-- Constructs robot description string and loads it -->
-  <node unless="$(arg load_robot_description_at_lower_level)" name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description" output="screen">
-    <param name="arm_type" value="$(arg robot_model)"/>
-    <param name="robot_description_file" value="$(arg robot_description)"/>
-    <param name="arm_1_z" value="$(arg arm_1_z)"/>
-    <param name="arm_2_z" value="$(arg arm_2_z)"/>
-    <param name="arm_x_separation" value="$(arg arm_x_separation)"/>
-    <param name="arm_y_separation" value="$(arg arm_y_separation)"/>
-  </node>
+  <!-- Loading robot description-->
+    <include file="$(find sr_robot_launch)/launch/load_robot_description_bimanual.launch">
+    <arg name="sim" value="false"/>
+    <arg name="arms" value="$(arg arms)"/>
+    <arg name="hands" value="$(arg hands)"/>
+    <arg name="robot_model" value="$(arg robot_model)"/>
+    <arg name="hand_x_separation" value="$(arg hand_x_separation)"/>
+    <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
+    <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
+    <arg name="arm_1_z" value="$(arg arm_1_z)"/>
+    <arg name="arm_2_z" value="$(arg arm_2_z)"/>
+    <arg name="biotac" value="$(arg biotac)"/>
+  </include>
 
   <!-- Default hand controller groups -->
   <arg if="$(arg hybrid_controller)" name="hand_controller_group" default="hybrid"/>
@@ -95,14 +107,11 @@
 
   <!-- Controller -->
   <group unless="$(eval hands == 'none')">
-    <!-- Launch rosparam for payload if we use hand. If we only use hand and no arm the extra values wont be used-->
-    <rosparam file="$(arg robot_config_file)"/>
     <!-- HAND (N.B. Arm robot harware is implicitly started here if ra_sr_ur_robot_hw is present in param /robot_hardware-->
     <include file="$(find sr_edc_launch)/sr_edc_bimanual_ros_control.launch">
       <arg name="define_robot_hardware" value="false"/>
+      <arg name="load_robot_description" value="false"/>
       <arg name="debug" value="$(arg debug)"/>
-      <arg name="load_robot_description" value="$(arg load_robot_description_at_lower_level)"/>
-      <arg name="load_robot_description_command" value="$(arg load_robot_description_command)"/>
       <arg name="rh_serial" value="$(arg rh_serial)"/>
       <arg name="lh_serial" value="$(arg lh_serial)"/>
       <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>

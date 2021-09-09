@@ -45,31 +45,19 @@ if __name__ == "__main__":
     parser.add_argument("-s", "--side",
                         dest="side",
                         type=str,
-                        required=False,
+                        required=True,
                         help="Please select hand side, can be 'right', 'left' or 'both'.",
                         default=None,
                         choices=["right", "left", "both"])
 
     args = parser.parse_args(rospy.myargv()[1:])
 
-    # Search for gazebo to confirm if in simulation or not
-    sim = rospy.search_param('gazebo')
-
-    if args.side is None:
-        rospy.loginfo("Hand side not specified, defaulting to first hand avalliable.")
-        if sim is None:
-            hand_finder = HandFinder()
-            joint_prefix = hand_finder.get_hand_parameters().joint_prefix['1']
-        else:
-            # Default parameter for simulated hand
-            joint_prefix = rospy.get_param('/hand/joint_prefix/0')
+    if args.side == 'right':
+        joint_prefix = 'rh_'
+    elif args.side == 'left':
+        joint_prefix = 'lh_'
     else:
-        if args.side == 'right':
-            joint_prefix = 'rh_'
-        elif args.side == 'left':
-            joint_prefix = 'lh_'
-        else:
-            joint_prefix = 'both'
+        joint_prefix = 'both'
 
     if 'rh_' == joint_prefix:
         hand_name = 'right_hand'

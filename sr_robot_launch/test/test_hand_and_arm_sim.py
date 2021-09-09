@@ -143,12 +143,12 @@ class TestHandAndArmSim(TestCase):
             hand_joints_target[self.hand_id + '_' + key] = value
 
         self.hand_commander.move_to_joint_value_target(hand_joints_target, wait=True)
-        rospy.sleep(15)
+        rospy.sleep(5)
         final_hand_joint_values = self.hand_commander.get_current_state()
 
         expected_and_final_joint_value_diff_hand = self.joints_error_check(hand_joints_target, final_hand_joint_values)
 
-        self.assertAlmostEqual(expected_and_final_joint_value_diff_hand, 0, delta=0.4)
+        self.assertAlmostEqual(expected_and_final_joint_value_diff_hand, 0, delta=1.0)
 
     def test_3_arm(self):
 
@@ -210,7 +210,9 @@ class TestHandAndArmSim(TestCase):
         for key, value in arm_joints_target_no_id.items():
             arm_joints_target[self.arm_id + '_' + key] = value
 
-        hand_and_arm_joints_target = {**hand_joints_target.items, **arm_joints_target}
+        hand_and_arm_joints_target = dict()
+        hand_and_arm_joints_target.update(hand_joints_target)
+        hand_and_arm_joints_target.update(arm_joints_target)
         self.robot_commander.move_to_joint_value_target_unsafe(hand_and_arm_joints_target, 10.0, True)
 
         rospy.sleep(5)
