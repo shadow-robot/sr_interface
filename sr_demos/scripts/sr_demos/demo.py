@@ -23,14 +23,12 @@ import termios
 import tty
 import sys
 import argparse
-from pynput.keyboard import Key, Listener
-from threading import Thread, Lock
+from threading import Thread
 import os
 from math import degrees
+from builtins import input
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_hand.tactile_receiver import TactileReceiver
-from sr_utilities.hand_finder import HandFinder
-
 
 class TactileReading():
     def __init__(self, hand_commander, demo_joint_states, prefix):
