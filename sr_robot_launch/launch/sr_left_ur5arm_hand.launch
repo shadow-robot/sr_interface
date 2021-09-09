@@ -44,6 +44,8 @@
   <arg name="pwm_control" default="true"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
+  <!-- Set to true if you want to use hybrid controller -->
+  <arg name="hybrid_controller" default="false"/>
   <!-- Set the hand type here: hand_e_plus, hand_e, hand_lite, hand_extra_lite -->
   <arg name="hand_type" default="hand_e_plus"/>
 
@@ -98,6 +100,7 @@
     <arg name="external_control_loop" value="$(arg external_control_loop)"/>
 
     <arg name="grasp_controller" value="$(arg grasp_controller)"/>
+    <arg name="hybrid_controller" value="$(arg hybrid_controller)"/>
     <arg name="pwm_control" value="$(arg pwm_control)"/>
 
     <arg name="scene" value="$(arg scene)"/>
