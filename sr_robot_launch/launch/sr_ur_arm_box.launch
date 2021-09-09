@@ -67,6 +67,9 @@
   <!-- The prefix used by the robot_state_publisher -->
   <arg name="tf_prefix" default="" />
 
+  <!-- Set to true if you want to use hybrid controller -->
+  <arg name="hybrid_controller" default="false"/>
+
   <!-- Logging -->
   <include file="$(find sr_logging_common)/launch/sr_rosbag_log.launch"/>
 
@@ -136,6 +139,7 @@
         <arg name="hand" default="false"/>
         <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
         <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
+        <arg name="hybrid_controller" value="$(arg hybrid_controller)"/>
       </include>
     </group>
 
