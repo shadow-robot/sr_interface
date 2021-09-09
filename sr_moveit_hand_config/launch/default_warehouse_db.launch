@@ -3,15 +3,10 @@
   <arg name="reset" default="false"/>
   <!-- If not specified, we'll use a default database location -->
   <arg name="moveit_warehouse_database_path" default="$(find sr_moveit_hand_config)/default_warehouse_mongo_db" />
-  <arg name="remote_warehouse" default="false"/>
 
   <!-- Launch the warehouse with the configured database location -->
-  <include unless="$(arg remote_warehouse)" file="$(find sr_moveit_hand_config)/launch/warehouse.launch">
+  <include file="$(find sr_moveit_hand_config)/launch/warehouse.launch">
     <arg name="moveit_warehouse_database_path" value="$(arg moveit_warehouse_database_path)" />
-  </include>
-
-  <include if="$(arg remote_warehouse)" file="$(find sr_remote_warehouse)/launch/remote_warehouse.launch">
-    <arg name="launch_services" value="false"/>
   </include>
 
   <!-- If we want to reset the database, run this node -->
