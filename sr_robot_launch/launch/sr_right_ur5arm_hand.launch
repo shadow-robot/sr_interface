@@ -30,13 +30,12 @@
   <arg name="robot_state_pub_frequency" default="250"/>
   <!-- The joint state publisher publishing frequency  -->
   <arg name="joint_state_pub_frequency" default="125"/>
+  <!-- Robot side -->
+  <arg name="side" value="right"/>
 
   <!-- HAND CONFIG-->
-  <arg name="hand_serial" default="1082"/>
-  <arg name="mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v4.yaml"/>
-  <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
-       More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
-  <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
+  <!-- Set hand type. -->
+  <arg name="hand_type" default="hand_lite"/>
   <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
   <!-- The control mode PWM (true) or torque (false) -->
@@ -46,20 +45,13 @@
   <arg name="grasp_controller" default="false"/>
   <!-- Set to true if you want to use hybrid controller -->
   <arg name="hybrid_controller" default="false"/>
-  <!-- Set the hand type here: hand_e_plus, hand_e, hand_lite, hand_extra_lite -->
-  <arg name="hand_type" default="hand_e_plus"/>
 
   <!-- ARM CONFIG-->
   <arg name="initial_z" default="0.7521" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
   <!-- You can select ur5 or ur5e -->
   <arg name="robot_model" default="ur5e"/>
-  <arg name="arm_robot_hw" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
   <arg name="arm_speed_scale" default="0.5"/>
-
-  <arg name="side" value="right"/>
-  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/$(arg side)_srhand_lite_$(arg robot_model).urdf.xacro'"/>
-  <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_lite_$(arg robot_model).yaml"/>
 
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
@@ -75,22 +67,15 @@
     <arg name="gui" default="$(arg gui)"/>
     <arg name="world" value="$(arg world)"/>
 
-    <arg name="hand_serial" value="$(arg hand_serial)"/>
-    <arg name="mapping_path" value="$(arg mapping_path)"/>
-    <arg name="eth_port" value="$(arg eth_port)"/>
-    <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
     <arg name="hand_type" value="$(arg hand_type)"/>
-
+    <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
     <arg name="initial_z" value="$(arg initial_z)"/>
-    <arg name="arm_robot_hw" value="$(arg arm_robot_hw)"/>
     <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
     <arg name="arm_position" default="$(arg arm_position)"/>
     <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
     <arg name="side" value="$(arg side)"/>
     <arg name="robot_model" value="$(arg robot_model)"/>
     <arg name="robot_name" value="$(arg robot_model)srh"/>
-    <arg name="robot_description" value="$(arg robot_description)"/>
-    <arg name="robot_config_file" value="$(arg robot_config_file)"/>
     <arg name="external_control_loop" value="$(arg external_control_loop)"/>
 
     <arg name="grasp_controller" value="$(arg grasp_controller)"/>
