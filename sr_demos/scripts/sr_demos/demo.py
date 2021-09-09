@@ -37,10 +37,11 @@ class TactileReading():
         self.hand_commander = hand_commander
         self.demo_joint_states = demo_joint_states
         self.prefix = prefix
+
         # Read tactile type
         self.tactile_reciever = TactileReceiver(prefix)
         self.tactile_type = self.tactile_reciever.get_tactile_type()
-        print("tactile type: " + str(self.tactile_type))
+
         # Zero values in dictionary for tactile sensors (initialized at 0)
         self.force_zero = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
         # Initialize values for current tactile values
@@ -67,7 +68,6 @@ class TactileReading():
     def read_tactile_values(self):
         # Read current state of tactile sensors
         tactile_state = self.tactile_reciever.get_tactile_state()
-        print("tactile state: " + str(tactile_state))
 
         if self.tactile_type == "biotac":
             self.tactile_values['FF'] = tactile_state.tactiles[0].pdc
@@ -125,19 +125,14 @@ class KeyboardPressDetector(object):
             input_val = self._get_input()
             if input_val == "1":
                 sequence_th(self.hand_commander, self.demo_states)
-                rospy.loginfo("Demo completed")
             elif input_val == "2":
                 sequence_ff(self.hand_commander, self.demo_states)
-                rospy.loginfo("Demo completed")
             elif input_val == "3":
                 sequence_mf(self.hand_commander, self.demo_states, 4.0, self.tactile_reading)
-                rospy.loginfo("Demo completed")
             elif input_val == "4":
                 sequence_rf(self.hand_commander, self.demo_states)
-                rospy.loginfo("Demo completed")
             elif input_val == "5":
                 sequence_lf(self.hand_commander, self.demo_states, self.tactile_reading)
-                rospy.loginfo("Demo completed")
 
             if '0x1b' == hex(ord(input_val)):
                 sys.exit(0)
@@ -224,6 +219,9 @@ def sequence_ff(hand_commander, joint_states_config):
     execute_command_check(hand_commander, joint_states_config, 'se_wr', 0.7, 0.7)
     execute_command_check(hand_commander, joint_states_config, 'zero_wr', 0.4, 0.4)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.5, 1.5)
+
+    rospy.loginfo("Demo completed")
+    
     return
 
 
@@ -251,6 +249,9 @@ def sequence_mf(hand_commander, joint_states_config, inter_time_max, tactile_rea
                 complete_random_sequence(wake_time, hand_commander, joint_states_config, inter_time_max)
         else:
             complete_random_sequence(wake_time, hand_commander, joint_states_config, inter_time_max)
+    
+    rospy.loginfo("Demo completed")
+
     return
 
 
@@ -288,6 +289,8 @@ def sequence_rf(hand_commander, joint_states_config):
     execute_command_check(hand_commander, joint_states_config, 'bc_11', 1.0, 1.0)
     execute_command_check(hand_commander, joint_states_config, 'bc_12', 4.0, 3.0)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.5, 1.5)
+
+    rospy.loginfo("Demo completed")
 
     return
 
@@ -373,6 +376,7 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
     execute_command_check(hand_commander, joint_states_config, 'pregrasp_pos', 2.0, 2.0)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 2.0, 2.0)
 
+    rospy.loginfo("Demo completed")
     return
 
 
@@ -469,10 +473,6 @@ if __name__ == "__main__":
         hand_name = "two_hands"
 
     hand_commander = SrHandCommander(name=hand_name)
-    # tactile_type = hand_commander.get_tactile_type()
-    # print("Tactile type for two_hands: " + str(tactile_type))
-    # tactile_state = hand_commander.get_tactile_state()
-    # print("Tactile state for two_hands: " + str(tactile_state))
 
     # Get joint states for demo from yaml
     joint_states_config_filename = '/home/user/projects/shadow_robot/base/src/'\
@@ -500,8 +500,7 @@ if __name__ == "__main__":
                    \n   FF or 2: Standard Demo\
                    \n   MF or 3: Shy Hand Demo\
                    \n   RF or 4: Card Trick Demo\
-                   \n   LF or 5: Grasp Demo\
-                   \n   ESC to exit")
+                   \n   LF or 5: Grasp Demo")
 
     # Keyboard thread for input
     kpd = KeyboardPressDetector(hand_commander, demo_states, tactile_reading)
@@ -538,4 +537,3 @@ if __name__ == "__main__":
         elif touched == "LF":
             sequence_lf(hand_commander, demo_states, tactile_reading)
 
-        rospy.loginfo("Demo completed")
