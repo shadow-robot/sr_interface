@@ -357,7 +357,8 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
     # Send all joints to current position to compensate
     # for minor offsets created in the previous loop
     hand_pos = {joint: degrees(i) for joint, i in hand_commander.get_joints_position().items()}
-    execute_command_check(hand_commander, joint_states_config, hand_pos, 2.0, 2.0)
+    hand_commander.move_to_joint_value_target_unsafe(hand_pos, 2.0, wait=False, angle_degrees=True)
+    rospy.sleep(2.0)
 
     # Generate new values to squeeze object slightly
     offset2 = 3
@@ -369,10 +370,14 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
                     "rh_LFJ3": hand_pos['rh_LFJ3'] + offset2, "rh_LFJ1": hand_pos['rh_LFJ1'] + offset2})
 
     # Squeeze object gently
-    execute_command_check(hand_commander, joint_states_config, squeeze, 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config, hand_pos, 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config, squeeze, 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config, hand_pos, 2.0, 2.0)
+    hand_commander.move_to_joint_value_target_unsafe(squeeze, 0.5, wait=False, angle_degrees=True)
+    rospy.sleep(0.5)
+    hand_commander.move_to_joint_value_target_unsafe(hand_pos,0.5, wait=False, angle_degrees=True)
+    rospy.sleep(0.5)
+    hand_commander.move_to_joint_value_target_unsafe(squeeze, 0.5, wait=False, angle_degrees=True)
+    rospy.sleep(0.5)
+    hand_commander.move_to_joint_value_target_unsafe(hand_pos, 2.0, wait=False, angle_degrees=True)
+    rospy.sleep(2.0)
     execute_command_check(hand_commander, joint_states_config, 'pregrasp_pos', 2.0, 2.0)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 2.0, 2.0)
 
@@ -439,25 +444,13 @@ if __name__ == "__main__":
                         choices=["hand_e", "hand_e_plus", "hand_lite", "hand_extra_lite"])
     parser.add_argument("-tac", "--tactiles",
                         dest="tactiles",
-                        type=str,
                         required=False,
-                        help="Please add this argument if the hand has tactiles, can be 'right', 'left' or 'both'.",
-                        default=None,
-                        choices=["right", "left", "both"])
+                        help="Please add this argument if the hand has tactiles.",
+                        default=False,
+                        action='store_true')
 
     args = parser.parse_args(rospy.myargv()[1:])
 
-    # Search for gazebo to confirm if in simulation or not
-    # sim = rospy.search_param('gazebo')
-    # if args.side is None:corrected_joint_states_config
-    #     rospy.loginfo("Hand side notcorrected_joint_states_config specified, defaulting to first hand avalliable.")
-    #     if sim is None:corrected_joint_states_config
-    #         hand_finder = HandFindercorrected_joint_states_config()
-    #         joint_prefix = hand_findcorrected_joint_states_configer.get_hand_parameters().joint_prefix['1']
-    #     else:corrected_joint_states_config
-    #         # Default parameter for corrected_joint_states_configsimulated hand
-    #         joint_prefix = rospy.get_param('/hand/joint_prefix/0')
-    # else:
     if args.side == 'right':
         joint_prefix = 'rh_'
     elif args.side == 'left':
@@ -488,7 +481,7 @@ if __name__ == "__main__":
     execute_command_check(hand_commander, demo_states, 'start_pos', 0.0, 1.0)
 
     tactile_reading = None
-    if args.tactiles is not None:
+    if args.tactiles:
         if joint_prefix == 'both':
             tactile_right = TactileReading(hand_commander, demo_states, 'rh_')
             tactile_left = TactileReading(hand_commander, demo_states, 'lh_')
@@ -511,10 +504,10 @@ if __name__ == "__main__":
         # Check the state of the tactile senors
         touched = None
 
-        if args.tactiles is not None:
+        if args.tactiles:
             if joint_prefix == 'both':
                 touched_right = tactile_right.confirm_touched()
-                touched_left = tactile_right.confirm_touched()
+                touched_left = tactile_left.confirm_touched()
                 if touched_right is not None:
                     touched = touched_right
                 elif touched_left is not None:
