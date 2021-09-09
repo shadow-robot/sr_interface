@@ -28,15 +28,19 @@ from threading import Thread, Lock
 import os
 from math import degrees
 from sr_robot_commander.sr_hand_commander import SrHandCommander
+from sr_hand.tactile_receiver import TactileReceiver
 from sr_utilities.hand_finder import HandFinder
 
 
 class TactileReading():
-    def __init__(self, hand_commander, demo_joint_states):
+    def __init__(self, hand_commander, demo_joint_states, prefix):
         self.hand_commander = hand_commander
         self.demo_joint_states = demo_joint_states
+        self.prefix = prefix
         # Read tactile type
-        self.tactile_type = self.hand_commander.get_tactile_type()
+        self.tactile_reciever = TactileReceiver(prefix)
+        self.tactile_type = self.tactile_reciever.get_tactile_type()
+        print("tactile type: " + str(self.tactile_type))
         # Zero values in dictionary for tactile sensors (initialized at 0)
         self.force_zero = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
         # Initialize values for current tactile values
@@ -62,7 +66,8 @@ class TactileReading():
 
     def read_tactile_values(self):
         # Read current state of tactile sensors
-        tactile_state = self.hand_commander.get_tactile_state()
+        tactile_state = self.tactile_reciever.get_tactile_state()
+        print("tactile state: " + str(tactile_state))
 
         if self.tactile_type == "biotac":
             self.tactile_values['FF'] = tactile_state.tactiles[0].pdc
@@ -99,8 +104,11 @@ class TactileReading():
 
 
 class KeyboardPressDetector(object):
-    def __init__(self):
+    def __init__(self, hand_commander, demo_states, tactile_reading):
         self.keyboard_pressed = False
+        self.hand_commander = hand_commander
+        self.demo_states = demo_states
+        self.tactile_reading = tactile_reading
 
     def _get_input(self):
         fd = sys.stdin.fileno()
@@ -114,22 +122,25 @@ class KeyboardPressDetector(object):
 
     def run(self):
         while True:
-            input_val = self._get_input()            
+            input_val = self._get_input()
             if input_val == "1":
-                sequence_th(hand_commander, demo_states)
+                sequence_th(self.hand_commander, self.demo_states)
+                rospy.loginfo("Demo completed")
             elif input_val == "2":
-                sequence_ff(hand_commander, demo_states)
+                sequence_ff(self.hand_commander, self.demo_states)
+                rospy.loginfo("Demo completed")
             elif input_val == "3":
-                sequence_mf(hand_commander, demo_states, 4.0, tactile_reading)
+                sequence_mf(self.hand_commander, self.demo_states, 4.0, self.tactile_reading)
+                rospy.loginfo("Demo completed")
             elif input_val == "4":
-                sequence_rf(hand_commander, demo_states)
+                sequence_rf(self.hand_commander, self.demo_states)
+                rospy.loginfo("Demo completed")
             elif input_val == "5":
-                sequence_lf(hand_commander, demo_states, tactile_reading)
+                sequence_lf(self.hand_commander, self.demo_states, self.tactile_reading)
+                rospy.loginfo("Demo completed")
 
             if '0x1b' == hex(ord(input_val)):
                 sys.exit(0)
-
-            rospy.loginfo("Demo completed")
 
 
 def sequence_th(hand_commander, joint_states_config):
@@ -458,6 +469,10 @@ if __name__ == "__main__":
         hand_name = "two_hands"
 
     hand_commander = SrHandCommander(name=hand_name)
+    # tactile_type = hand_commander.get_tactile_type()
+    # print("Tactile type for two_hands: " + str(tactile_type))
+    # tactile_state = hand_commander.get_tactile_state()
+    # print("Tactile state for two_hands: " + str(tactile_state))
 
     # Get joint states for demo from yaml
     joint_states_config_filename = '/home/user/projects/shadow_robot/base/src/'\
@@ -475,17 +490,10 @@ if __name__ == "__main__":
     tactile_reading = None
     if args.tactiles is not None:
         if joint_prefix == 'both':
-            if args.tactiles == 'both':
-                hand_commander_right = SrHandCommander(name='right_hand')
-                hand_commander_left = SrHandCommander(name='left_hand')
-                tactile_right = TactileReading(hand_commander_right, demo_states)
-                tactile_left = TactileReading(hand_commander_left, demo_states)
-            else:
-                tactile_group = args.tactiles + '_hand'
-                hand_commander_tactile = SrHandCommander(name=tactile_group)
-                tactile_reading = TactileReading(hand_commander_tactile, demo_states)
+            tactile_right = TactileReading(hand_commander, demo_states, 'rh_')
+            tactile_left = TactileReading(hand_commander, demo_states, 'lh_')
         else:
-            tactile_reading = TactileReading(hand_commander, demo_states)
+            tactile_reading = TactileReading(hand_commander, demo_states, joint_prefix)
 
     rospy.loginfo("\nPRESS ONE OF THE TACTILES or 1-5 ON THE KEYBOARD TO START A DEMO:\
                    \n   TH or 1: Open Hand\
@@ -496,7 +504,7 @@ if __name__ == "__main__":
                    \n   ESC to exit")
 
     # Keyboard thread for input
-    kpd = KeyboardPressDetector()
+    kpd = KeyboardPressDetector(hand_commander, demo_states, tactile_reading)
     keyboard_thread = Thread(target=kpd.run)
     keyboard_thread.start()
 
@@ -505,7 +513,7 @@ if __name__ == "__main__":
         touched = None
 
         if args.tactiles is not None:
-            if joint_prefix == 'both' and args.tactiles == 'both':
+            if joint_prefix == 'both':
                 touched_right = tactile_right.confirm_touched()
                 touched_left = tactile_right.confirm_touched()
                 if touched_right is not None:
