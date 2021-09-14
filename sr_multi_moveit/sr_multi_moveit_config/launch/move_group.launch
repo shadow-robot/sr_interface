@@ -60,6 +60,7 @@
     <param name="launch_args_list" value="allow_trajectory_execution:=$(arg allow_trajectory_execution)
     max_safe_path_cost:=$(arg max_safe_path_cost)
     jiggle_fraction:=$(arg jiggle_fraction)
+    default_planning_pipeline:=$(arg pipeline)
     publish_monitored_planning_scene:=$(arg publish_monitored_planning_scene)" />
   </node>
 
