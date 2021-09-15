@@ -40,7 +40,7 @@
   <!-- Set to hand_e, hand_e_plus or hand_lite or hand_extra_lite -->
   <arg name="hand_type" default="hand_e"/>
 
-  <group if="$(eval sim and not external_control_loop)">
+  <group if="$(arg sim)">
     <include file="$(find sr_robot_launch)/launch/sr_simulation_control_loop.launch">
       <arg name="debug" value="$(arg debug)"/>
       <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
