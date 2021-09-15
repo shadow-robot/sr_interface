@@ -179,7 +179,7 @@ if __name__ == "__main__":
 
     # Get joint states for burn in demo
     burn_in_config_filename = '/home/user/projects/shadow_robot/base/src/'\
-                                'sr_interface/sr_demos/config/burn_in_states.yaml'
+                              'sr_interface/sr_demos/config/burn_in_states.yaml'
     with open(burn_in_config_filename) as f:
         burn_in_config = yaml.load(f, Loader=yaml.FullLoader)
 

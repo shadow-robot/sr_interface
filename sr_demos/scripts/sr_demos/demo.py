@@ -397,6 +397,7 @@ def complete_random_sequence(wake_time, hand_commander, joint_states_config, int
         execute_command_check(hand_commander, joint_states_config, 'rand_pos', 0.0, inter_time)
         wake_time = time.time() + inter_time * 0.9
 
+
 def correct_joint_states_for_hand_type(joint_states_config, hand_type):
     hand_type_joints_filename = '/home/user/projects/shadow_robot/base/src/'\
                        'sr_interface/sr_demos/config/joints_in_hand.yaml'
