@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root 
+ xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+ xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+ xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+ xmlns:xacro="http://ros.org/wiki/xacro">
+
+
+<!-- MACRO FOR THE ROBOT ARM ON THE TABLE-->
+<xacro:macro name="gzplugin_grasp_fix">
+	<gazebo>
+		<plugin name="gazebo_grasp_fix" filename="libgazebo_grasp_fix.so">
+			<!--
+            NOTE: The finger tips are linked together with the links before, because they are connected with a
+			fixed joint. Gazebo makes one whole link out of this automatically. When listing the 9_*_tip links
+			here, they won't be found in the SDF.
+            -->
+            <arm>
+                <arm_name>ur10esrh</arm_name>
+                <palm_link>rh_palm</palm_link>
+                <gripper_link>rh_ffdistal</gripper_link>
+				<gripper_link>rh_ffmiddle</gripper_link>
+                <gripper_link>rh_lfdistal</gripper_link>
+				<gripper_link>rh_lfmiddle</gripper_link>
+				<gripper_link>rh_mfdistal</gripper_link>
+				<gripper_link>rh_mfmiddle</gripper_link>
+                <gripper_link>rh_rfdistal</gripper_link>
+				<gripper_link>rh_rfmiddle</gripper_link>
+                <gripper_link>rh_thdistal</gripper_link>
+				<gripper_link>rh_thmiddle</gripper_link>
+            </arm>
+			<forces_angle_tolerance>90</forces_angle_tolerance>
+			<update_rate>4</update_rate>
+			<grip_count_threshold>4</grip_count_threshold>
+			<max_grip_count>8</max_grip_count>
+			<release_tolerance>0.005</release_tolerance>
+			<disable_collisions_on_attach>false</disable_collisions_on_attach>
+			<contact_topic>__default_topic__</contact_topic>
+		</plugin>
+	</gazebo>
+</xacro:macro>
+
+</root>

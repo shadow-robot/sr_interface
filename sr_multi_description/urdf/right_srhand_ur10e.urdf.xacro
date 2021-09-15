@@ -20,6 +20,7 @@
     <xacro:include filename="$(find sr_description)/hand/xacro/full_hand.urdf.xacro"/>
     <xacro:include filename="$(find sr_description)/other/xacro/gazebo/gazebo.urdf.xacro"/>
 
+
     <xacro:shadowhand muscletrans="false" muscle="false" bio="false" bt_sp="false" ubi="false" eli="false"
                       reflect="1.0" prefix="rh_" lf="true" cable_mesh="true"/>
 
@@ -28,4 +29,5 @@
         <child link="rh_forearm"/>
         <origin xyz="0.012 0.0 0.0" rpy="${pi/2.0} ${0.0} ${pi/2.0}"/>
     </joint>
+
 </robot>
