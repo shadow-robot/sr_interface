@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     rospy.wait_for_service('/get_planning_scene')
     acm_utils = AcmUtils()
-    acm_utils.allow_collisions_between_links(['ball__link', 'rh_ffdistal', 'rh_ffmiddle'], allow=True)
+    acm_utils.allow_collisions_between_links(['ball__link', 'rh_ffdistal', 'rh_ffmiddle', 'rh_ffproximal'], allow=True)
 
     rospy.wait_for_message("/move_group/status", GoalStatusArray)
     rospy.sleep(3)
