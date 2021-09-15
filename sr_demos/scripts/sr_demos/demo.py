@@ -102,11 +102,12 @@ class TactileReading():
 
 
 class KeyboardPressDetector(object):
-    def __init__(self, hand_commander, demo_states, tactile_reading):
+    def __init__(self, hand_commander, demo_states, tactile_reading, hand_type):
         self.keyboard_pressed = False
         self.hand_commander = hand_commander
         self.demo_states = demo_states
         self.tactile_reading = tactile_reading
+        self.hand_type = hand_type
 
     def _get_input(self):
         fd = sys.stdin.fileno()
@@ -126,11 +127,14 @@ class KeyboardPressDetector(object):
             elif input_val == "2":
                 sequence_ff(self.hand_commander, self.demo_states)
             elif input_val == "3":
-                sequence_mf(self.hand_commander, self.demo_states, 4.0, self.tactile_reading)
+                sequence_mf(self.hand_commander, self.demo_states)
             elif input_val == "4":
-                sequence_rf(self.hand_commander, self.demo_states)
+                sequence_rf(self.hand_commander, self.demo_states, self.tactile_reading, self.hand_type)
             elif input_val == "5":
-                sequence_lf(self.hand_commander, self.demo_states, self.tactile_reading)
+                if self.hand_type == 'hand_e' or self.hand_type == 'hand_e_plus':
+                    sequence_lf(self.hand_commander, self.demo_states, 4.0, self.tactile_reading)
+                else:
+                    rospy.logerr("This demo only works for a 5-fingered Hand E. Please try demos 1-4")
 
             if '0x1b' == hex(ord(input_val)):
                 sys.exit(0)
@@ -223,54 +227,7 @@ def sequence_ff(hand_commander, joint_states_config):
     return
 
 
-def sequence_mf(hand_commander, joint_states_config, inter_time_max, tactile_reading):
-    rospy.sleep(0.5)
-    # Initialize wake time
-    wake_time = time.time()
-
-    while True:
-        if tactile_reading is not None:
-            # Check if any of the tactile senors have been triggered
-            # If so, send the Hand to its start position
-            touched = tactile_reading.confirm_touched()
-            if touched is not None:
-                execute_command_check(hand_commander, joint_states_config, 'start_pos', 0.0, 2.0)
-                rospy.loginfo('{} touched!'.format(touched))
-                rospy.sleep(2.0)
-                if touched == "TH":
-                    break
-
-            # If the tactile sensors have not been triggered and the Hand
-            # is not in the middle of a movement, generate a random position
-            # and interpolation time
-            else:
-                complete_random_sequence(wake_time, hand_commander, joint_states_config, inter_time_max)
-        else:
-            complete_random_sequence(wake_time, hand_commander, joint_states_config, inter_time_max)
-
-    rospy.loginfo("'MF' Demo completed")
-
-    return
-
-
-def complete_random_sequence(wake_time, hand_commander, joint_states_config, inter_time_max):
-    if time.time() > wake_time:
-        for i in joint_states_config['rand_pos']:
-            joint_states_config['rand_pos'][i] =\
-                random.randrange(joint_states_config['min_range'][i],
-                                 joint_states_config['max_range'][i])
-        joint_states_config['rand_pos']['rh_FFJ4'] =\
-            random.randrange(joint_states_config['min_range']['rh_FFJ4'],
-                             joint_states_config['rand_pos']['rh_MFJ4'])
-        joint_states_config['rand_pos']['rh_LFJ4'] =\
-            random.randrange(joint_states_config['min_range']['rh_LFJ4'],
-                             joint_states_config['rand_pos']['rh_RFJ4'])
-        inter_time = inter_time_max * random.random()
-        execute_command_check(hand_commander, joint_states_config, 'rand_pos', 0.0, inter_time)
-        wake_time = time.time() + inter_time * 0.9
-
-
-def sequence_rf(hand_commander, joint_states_config):
+def sequence_mf(hand_commander, joint_states_config):
     rospy.sleep(0.5)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.0, 1.0)
     execute_command_check(hand_commander, joint_states_config, 'bc_pre_zero', 2.0, 2.0)
@@ -293,7 +250,7 @@ def sequence_rf(hand_commander, joint_states_config):
     return
 
 
-def sequence_lf(hand_commander, joint_states_config, tactile_reading):
+def sequence_rf(hand_commander, joint_states_config, tactile_reading, hand_type):
     # Trigger flag array
     trigger = [0, 0, 0, 0, 0]
 
@@ -361,11 +318,21 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
     # Generate new values to squeeze object slightly
     offset2 = 3
     squeeze = hand_pos.copy()
-    squeeze.update({"rh_THJ5": hand_pos['rh_THJ5'] + offset2, "rh_THJ2": hand_pos['rh_THJ2'] + offset2,
-                    "rh_FFJ3": hand_pos['rh_FFJ3'] + offset2, "rh_FFJ1": hand_pos['rh_FFJ1'] + offset2,
-                    "rh_MFJ3": hand_pos['rh_MFJ3'] + offset2, "rh_MFJ1": hand_pos['rh_MFJ1'] + offset2,
-                    "rh_RFJ3": hand_pos['rh_RFJ3'] + offset2, "rh_RFJ1": hand_pos['rh_RFJ1'] + offset2,
-                    "rh_LFJ3": hand_pos['rh_LFJ3'] + offset2, "rh_LFJ1": hand_pos['rh_LFJ1'] + offset2})
+    if hand_type == 'hand_lite':
+        squeeze.update({"rh_THJ5": hand_pos['rh_THJ5'] + offset2, "rh_THJ2": hand_pos['rh_THJ2'] + offset2,
+                        "rh_FFJ3": hand_pos['rh_FFJ3'] + offset2, "rh_FFJ1": hand_pos['rh_FFJ1'] + offset2,
+                        "rh_MFJ3": hand_pos['rh_MFJ3'] + offset2, "rh_MFJ1": hand_pos['rh_MFJ1'] + offset2,
+                        "rh_RFJ3": hand_pos['rh_RFJ3'] + offset2, "rh_RFJ1": hand_pos['rh_RFJ1'] + offset2})
+    elif hand_type == 'hand_extra_lite':
+        squeeze.update({"rh_THJ5": hand_pos['rh_THJ5'] + offset2, "rh_THJ2": hand_pos['rh_THJ2'] + offset2,
+                        "rh_FFJ3": hand_pos['rh_FFJ3'] + offset2, "rh_FFJ1": hand_pos['rh_FFJ1'] + offset2,
+                        "rh_MFJ3": hand_pos['rh_MFJ3'] + offset2, "rh_MFJ1": hand_pos['rh_MFJ1'] + offset2})
+    else:
+        squeeze.update({"rh_THJ5": hand_pos['rh_THJ5'] + offset2, "rh_THJ2": hand_pos['rh_THJ2'] + offset2,
+                        "rh_FFJ3": hand_pos['rh_FFJ3'] + offset2, "rh_FFJ1": hand_pos['rh_FFJ1'] + offset2,
+                        "rh_MFJ3": hand_pos['rh_MFJ3'] + offset2, "rh_MFJ1": hand_pos['rh_MFJ1'] + offset2,
+                        "rh_RFJ3": hand_pos['rh_RFJ3'] + offset2, "rh_RFJ1": hand_pos['rh_RFJ1'] + offset2,
+                        "rh_LFJ3": hand_pos['rh_LFJ3'] + offset2, "rh_LFJ1": hand_pos['rh_LFJ1'] + offset2})
 
     # Squeeze object gently
     hand_commander.move_to_joint_value_target_unsafe(squeeze, 0.5, wait=False, angle_degrees=True)
@@ -382,6 +349,52 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
     rospy.loginfo("'LF' Demo completed")
     return
 
+
+def sequence_lf(hand_commander, joint_states_config, inter_time_max, tactile_reading):
+    rospy.sleep(0.5)
+    # Initialize wake time
+    wake_time = time.time()
+
+    while True:
+        if tactile_reading is not None:
+            # Check if any of the tactile senors have been triggered
+            # If so, send the Hand to its start position
+            touched = tactile_reading.confirm_touched()
+            if touched is not None:
+                execute_command_check(hand_commander, joint_states_config, 'start_pos', 0.0, 2.0)
+                rospy.loginfo('{} touched!'.format(touched))
+                rospy.sleep(2.0)
+                if touched == "TH":
+                    break
+
+            # If the tactile sensors have not been triggered and the Hand
+            # is not in the middle of a movement, generate a random position
+            # and interpolation time
+            else:
+                complete_random_sequence(wake_time, hand_commander, joint_states_config, inter_time_max)
+        else:
+            complete_random_sequence(wake_time, hand_commander, joint_states_config, inter_time_max)
+
+    rospy.loginfo("'MF' Demo completed")
+
+    return
+
+
+def complete_random_sequence(wake_time, hand_commander, joint_states_config, inter_time_max):
+    if time.time() > wake_time:
+        for i in joint_states_config['rand_pos']:
+            joint_states_config['rand_pos'][i] =\
+                random.randrange(joint_states_config['min_range'][i],
+                                 joint_states_config['max_range'][i])
+        joint_states_config['rand_pos']['rh_FFJ4'] =\
+            random.randrange(joint_states_config['min_range']['rh_FFJ4'],
+                             joint_states_config['rand_pos']['rh_MFJ4'])
+        joint_states_config['rand_pos']['rh_LFJ4'] =\
+            random.randrange(joint_states_config['min_range']['rh_LFJ4'],
+                             joint_states_config['rand_pos']['rh_RFJ4'])
+        inter_time = inter_time_max * random.random()
+        execute_command_check(hand_commander, joint_states_config, 'rand_pos', 0.0, inter_time)
+        wake_time = time.time() + inter_time * 0.9
 
 def correct_joint_states_for_hand_type(joint_states_config, hand_type):
     hand_type_joints_filename = '/home/user/projects/shadow_robot/base/src/'\
@@ -489,12 +502,13 @@ if __name__ == "__main__":
     rospy.loginfo("\nPRESS ONE OF THE TACTILES or 1-5 ON THE KEYBOARD TO START A DEMO:\
                    \n   TH or 1: Open Hand\
                    \n   FF or 2: Standard Demo\
-                   \n   MF or 3: Shy Hand Demo\
-                   \n   RF or 4: Card Trick Demo\
-                   \n   LF or 5: Grasp Demo")
+                   \n   RF or 3: Card Trick Demo\
+                   \n   LF or 4: Grasp Demo\
+                   \n   MF or 5: Shy Hand Demo (only works with Hand E)")
 
     # Keyboard thread for input
-    kpd = KeyboardPressDetector(hand_commander, demo_states, tactile_reading)
+    kpd = KeyboardPressDetector(hand_commander, demo_states,
+                                tactile_reading, args.hand_type)
     keyboard_thread = Thread(target=kpd.run)
     keyboard_thread.start()
 
@@ -522,8 +536,8 @@ if __name__ == "__main__":
         elif touched == "FF":
             sequence_ff(hand_commander, demo_states)
         elif touched == "MF":
-            sequence_mf(hand_commander, demo_states, 4.0, tactile_reading)
+            sequence_mf(hand_commander, demo_states)
         elif touched == "RF":
-            sequence_rf(hand_commander, demo_states)
+            sequence_rf(hand_commander, demo_states, tactile_reading, args.hand_type)
         elif touched == "LF":
-            sequence_lf(hand_commander, demo_states, tactile_reading)
+            sequence_lf(hand_commander, demo_states, 4.0, tactile_reading)
