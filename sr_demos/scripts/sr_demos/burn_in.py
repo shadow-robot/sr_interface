@@ -185,6 +185,13 @@ if __name__ == "__main__":
                         help="Please select hand side, can be 'right', 'left' or 'both'.",
                         default=None,
                         choices=["right", "left", "both"])
+    parser.add_argument("-ht", "--hand_type",
+                        dest="hand_type",
+                        type=str,
+                        required=True,
+                        help="Please select hand type, can be 'hand_e', 'hand_e_plus', 'hand_lite', 'hand_extra_lite'.",
+                        default="hand_e",
+                        choices=["hand_e", "hand_e_plus", "hand_lite", "hand_extra_lite"])
 
     args = parser.parse_args(rospy.myargv()[1:])
 
@@ -206,9 +213,11 @@ if __name__ == "__main__":
 
     # Get joint states for burn in demo
     burn_in_config_filename = '/home/user/projects/shadow_robot/base/src/'\
-                              'sr_interface/sr_demos/config/burn_in_states.yaml'
+                                   'sr_interface/sr_demos/config/demo_joint_states.yaml'
     with open(burn_in_config_filename) as f:
         burn_in_config = yaml.load(f, Loader=yaml.FullLoader)
+
+    corrected_burn_in_config = correct_joint_states_for_hand_type(burn_in_config, args.hand_type)
 
     # Add prefix to joint states
     burn_in_states = {}
