@@ -3,6 +3,7 @@
   <arg name="max_safe_path_cost" default="1"/>
   <arg name="jiggle_fraction" default="0.05" />
   <arg name="publish_monitored_planning_scene" default="true"/>
+  <arg name="default_planning_pipeline" default="ompl"/>
 
   <node name="move_group" pkg="moveit_ros_move_group" type="move_group" respawn="false" output="screen">
     <!-- Set the display variable, in case OpenGL code is used internally -->
@@ -11,6 +12,7 @@
     <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
     <param name="max_safe_path_cost" value="$(arg max_safe_path_cost)"/>
     <param name="jiggle_fraction" value="$(arg jiggle_fraction)" />
+    <param name="default_planning_pipeline" value="$(arg default_planning_pipeline)" />
 
     <!-- MoveGroup capabilities to load -->
     <param name="capabilities" value="move_group/MoveGroupCartesianPathService
