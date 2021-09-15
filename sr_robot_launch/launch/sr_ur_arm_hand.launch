@@ -74,7 +74,7 @@
   <!-- home_angles must be input at the launch -->
   <arg name="home_angles" default=""/>
 
-  <group if="$(eval sim and not external_control_loop)">
+  <group if="$(arg sim)">
     <include file="$(find sr_robot_launch)/launch/sr_simulation_control_loop.launch">
       <arg name="debug" value="$(arg debug)"/>
       <arg name="scene" value="$(arg scene)"/>
