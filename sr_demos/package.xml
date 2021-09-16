@@ -5,7 +5,7 @@
   <description>The sr_demos package</description>
   <maintainer email="software@shadowrobot.com">Shadow Robot's software team</maintainer>
 
-  <license>GPL</license>
+  <license>Public</license>
 
   <url type="website">http://www.shadowrobot.com</url>
   <url type="repository">https://github.com/shadow-robot/sr-ros-interface</url>
