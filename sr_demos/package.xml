@@ -7,6 +7,7 @@
 
   <license>GPL</license>
 
+  <url type="website">http://www.shadowrobot.com</url>
   <url type="repository">https://github.com/shadow-robot/sr-ros-interface</url>
   <url type="bugtracker">https://github.com/shadow-robot/sr-ros-interface/issues</url>
 
