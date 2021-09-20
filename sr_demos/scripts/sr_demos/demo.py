@@ -246,7 +246,7 @@ def sequence_mf(hand_commander, joint_states_config):
     execute_command_check(hand_commander, joint_states_config, 'bc_12', 4.0, 3.0)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.5, 1.5)
 
-    rospy.loginfo("'RF' Demo completed")
+    rospy.loginfo("'MF' Demo completed")
 
     return
 
