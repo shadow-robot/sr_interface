@@ -75,8 +75,4 @@ if __name__ == "__main__":
                        'THJ1': 0.0, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 0.0, 'THJ5': 0.0,
                        'WRJ1': 0.0, 'WRJ2': 0.0}
 
-    # NOT SURE WHY THIS IS INCLUDED - CAN I REMOVE? #####
-    # open_thumb_no_id = {'THJ1': 0.0, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 1.2, 'THJ5': 0.0}
-
-    # execute_trajectory(open_thumb_no_id, joint_prefix, "Move thumb to open position")
     execute_trajectory(hand_commander, open_hand_no_id, joint_prefix, "Moving to open position")
