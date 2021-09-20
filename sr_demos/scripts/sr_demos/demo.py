@@ -319,31 +319,31 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
         # the corresponding digit to its current position
         if (tactile_reading.confirm_touched() == 'FF' and trigger[0] == 0):
             hand_pos_incr_f = {"rh_FFJ1": hand_pos['rh_FFJ1'] + offset1, "rh_FFJ3": hand_pos['rh_FFJ3'] + offset1}
-            execute_command_check(hand_commander, joint_states_config, hand_pos_incr_f, 0.0, 0.5)
+            hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_f, 0.5, wait=False, angle_degrees=True)
             rospy.loginfo('First finger contact')
             trigger[0] = 1
 
         if (tactile_reading.confirm_touched() == 'MF' and trigger[1] == 0):
             hand_pos_incr_m = {"rh_MFJ1": hand_pos['rh_MFJ1'] + offset1, "rh_MFJ3": hand_pos['rh_MFJ3'] + offset1}
-            execute_command_check(hand_commander, joint_states_config, hand_pos_incr_m, 0.0, 0.5)
+            hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_m, 0.5, wait=False, angle_degrees=True)
             rospy.loginfo('Middle finger contact')
             trigger[1] = 1
 
         if (tactile_reading.confirm_touched() == 'RF' and trigger[2] == 0):
             hand_pos_incr_r = {"rh_RFJ1": hand_pos['rh_RFJ1'] + offset1, "rh_RFJ3": hand_pos['rh_RFJ3'] + offset1}
-            execute_command_check(hand_commander, joint_states_config, hand_pos_incr_r, 0.0, 0.5)
+            hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_r, 0.5, wait=False, angle_degrees=True)
             rospy.loginfo('Ring finger contact')
             trigger[2] = 1
 
         if (tactile_reading.confirm_touched() == 'LF' and trigger[3] == 0):
             hand_pos_incr_l = {"rh_LFJ1": hand_pos['rh_LFJ1'] + offset1, "rh_LFJ3": hand_pos['rh_LFJ3'] + offset1}
-            execute_command_check(hand_commander, joint_states_config, hand_pos_incr_l, 0.0, 0.5)
+            hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_l, 0.5, wait=False, angle_degrees=True)
             rospy.loginfo('Little finger contact')
             trigger[3] = 1
 
         if (tactile_reading.confirm_touched() == 'TH' and trigger[4] == 0):
             hand_pos_incr_th = {"rh_THJ2": hand_pos['rh_THJ2'] + offset1, "rh_THJ5": hand_pos['rh_THJ5'] + offset1}
-            execute_command_check(hand_commander, joint_states_config, hand_pos_incr_th, 0.0, 0.5)
+            hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_th, 0.5, wait=False, angle_degrees=True)
             rospy.loginfo('Thumb contact')
             trigger[4] = 1
 
