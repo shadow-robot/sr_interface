@@ -347,7 +347,7 @@ def sequence_rf(hand_commander, joint_states_config, tactile_reading, hand_type)
     execute_command_check(hand_commander, joint_states_config, 'pregrasp_pos', 2.0, 2.0)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 2.0, 2.0)
 
-    rospy.loginfo("'LF' Demo completed")
+    rospy.loginfo("'RF' Demo completed")
     return
 
 
@@ -376,7 +376,7 @@ def sequence_lf(hand_commander, joint_states_config, inter_time_max, tactile_rea
         else:
             complete_random_sequence(wake_time, hand_commander, joint_states_config, inter_time_max)
 
-    rospy.loginfo("'MF' Demo completed")
+    rospy.loginfo("'LF' Demo completed")
 
     return
 
