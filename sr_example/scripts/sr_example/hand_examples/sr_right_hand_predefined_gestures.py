@@ -67,7 +67,6 @@ class GraspExecution(object):
             elif input_val == "7":
                 self.execute_grasp("grasp_sphere")
 
-
             if '0x1b' == hex(ord(input_val)):
                 sys.exit(0)
 
