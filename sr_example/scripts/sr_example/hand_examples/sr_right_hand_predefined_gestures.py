@@ -57,19 +57,16 @@ class GraspExecution(object):
             elif input_val == "2":
                 self.execute_grasp("close_hand")
             elif input_val == "3":
-                self.execute_grasp("abduction_grip")
+                self.execute_grasp("point")
             elif input_val == "4":
-                self.execute_grasp("medium_wrap")
+                self.execute_grasp("2_finger_pinch")
             elif input_val == "5":
-                self.execute_grasp("palmar_pinch")
+                self.execute_grasp("3_finger_pinch")
             elif input_val == "6":
                 self.execute_grasp("parallel_extension")
             elif input_val == "7":
-                self.execute_grasp("pinch_sphere")
-            elif input_val == "8":
-                self.execute_grasp("tip_pinch")
-            elif input_val == "9":
-                self.execute_grasp("writing_tripod")
+                self.execute_grasp("grasp_sphere")
+
 
             if '0x1b' == hex(ord(input_val)):
                 sys.exit(0)
@@ -78,8 +75,8 @@ class GraspExecution(object):
         rospy.loginfo("Grasp {} started.".format(grasp))
         open_dict = dict(zip(self.grasp_yaml['joint_names'], self.grasp_yaml['grasps']['open_hand']))
         grasp_dict = dict(zip(self.grasp_yaml['joint_names'], self.grasp_yaml['grasps'][grasp]))
-        self.hand_commander.move_to_joint_value_target_unsafe(open_dict, 8.0, True)
-        self.hand_commander.move_to_joint_value_target_unsafe(grasp_dict, 8.0, True)
+        self.hand_commander.move_to_joint_value_target_unsafe(open_dict, 5.0, True)
+        self.hand_commander.move_to_joint_value_target_unsafe(grasp_dict, 5.0, True)
         rospy.sleep(2.0)
         rospy.loginfo("Grasp {} completed.".format(grasp))
 
@@ -96,10 +93,8 @@ if __name__ == "__main__":
     rospy.loginfo("\nPRESS 1-9 ON THE KEYBOARD TO SHOW A GRASP:\
                 \n   1: Open Hand\
                 \n   2: Close Hand\
-                \n   3: Abduction Grip\
-                \n   4: Medium Wrap\
-                \n   5: Palmar Pinch\
+                \n   3: Point\
+                \n   4: 2 Finger Pinch\
+                \n   5: 3 Finger Pinch\
                 \n   6: Parallel Extension\
-                \n   7: Pinch Sphere\
-                \n   8: Tip Pinch\
-                \n   9: Writing tripod")
+                \n   7: Grasp Sphere")
