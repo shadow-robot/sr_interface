@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright 20 Shadow Robot Company Ltd.
+# Copyright 2021 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
