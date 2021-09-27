@@ -98,9 +98,6 @@ class TestSrRobotCommander(TestCase):
             rospy.sleep(1)
             retries += 1
 
-        if retriess == 3:
-            sys.exit(1)
-
     def compare_poses(self, pose1, pose2, tolerance=0.02):
         pose1_list = [pose1.position.x, pose1.position.y, pose1.position.z,
                       pose1.orientation.x, pose1.orientation.y, pose1.orientation.z, pose1.orientation.w]
