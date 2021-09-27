@@ -69,8 +69,8 @@ class TestSrRobotCommander(TestCase):
         cls.robot_commander = SrRobotCommander("right_arm")
         cls.eef = cls.robot_commander.get_end_effector_link()
 
-        height=0.05
-        z_position=0.05
+        height = 0.05
+        z_position = 0.05
 
         rospy.logwarn("0")
         pose = PoseStamped()
@@ -85,7 +85,6 @@ class TestSrRobotCommander(TestCase):
         pose.header.stamp = get_rostime()
         pose.header.frame_id = cls.robot_commander._robot_commander.get_root_link()
         cls.robot_commander._planning_scene.add_box("ground", pose, (3, 3, height))
-
 
     def reset_to_home(self):
         rospy.sleep(1)
