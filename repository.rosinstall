@@ -20,8 +20,8 @@
 
 - git:
     local-name: universal_robot
-    uri: https://github.com/shadow-robot/universal_robot.git
-    version: F_#SRC-4392_UR10_CoG
+    uri: https://github.com/ros-industrial/universal_robot.git
+    version: melodic-devel
 
 - git:
     local-name: shadow_robot_ethercat
