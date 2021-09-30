@@ -156,6 +156,8 @@ class TestSrRobotCommander(TestCase):
         count=0
         while True:
             closeness_list.append(self.do_thing())
+            if closeness_list[-1] > 0.02:
+                self.assertTrue(False)
             count = count + 1
             rospy.logerr("######################################## loop count: " + str(count))
             rospy.logerr("closeness of get_ik this time: " + str(closeness_list[-1]))
