@@ -122,14 +122,15 @@ class TestSrRobotCommander(TestCase):
         joint_state_1_cpy = copy.deepcopy(joint_state_1)
         joint_state_2_cpy = copy.deepcopy(joint_state_2)
         common_joint_names = set(joint_state_1_cpy.keys()).intersection(set(joint_state_2_cpy.keys()))
+        biggest = 0.0
         if len(common_joint_names) == 0:
             return False
         for key in common_joint_names:
             joint_state_1_cpy[key] = self.normalize_angle_positive(round(joint_state_1_cpy[key], 2))
             joint_state_2_cpy[key] = self.normalize_angle_positive(round(joint_state_2_cpy[key], 2))
-            if abs(joint_state_1_cpy[key] - joint_state_2_cpy[key]) >= tolerance:
-                return abs(joint_state_1_cpy[key] - joint_state_2_cpy[key])
-        return abs(joint_state_1_cpy[key] - joint_state_2_cpy[key])
+            if abs(joint_state_1_cpy[key] - joint_state_2_cpy[key]) >= biggest:
+                biggest = abs(joint_state_1_cpy[key] - joint_state_2_cpy[key])
+        return biggest
         
 
     def do_thing(self):
@@ -157,10 +158,13 @@ class TestSrRobotCommander(TestCase):
             closeness_list.append(self.do_thing())
             count = count + 1
             rospy.logerr("######################################## loop count: " + str(count))
+            rospy.logerr("closeness of get_ik this time: " + str(closeness_list[-1]))
             for x in closeness_list:
-                rospy.logerr("closeness of get_ik this time: " + str(x))
-            closeness_list.sort()
-            rospy.logerr("worst yet: " + str(closeness_list[-1]))
+                rospy.logerr("history: " + str(x))
+            sorted_list = copy.deepcopy(closeness_list)
+            sorted_list.sort()
+            rospy.logerr("worst yet: " + str(sorted_list[-1]))
+            rospy.logerr("best yet: " + str(sorted_list[0]))
     
 
     # no working teach mode so far
