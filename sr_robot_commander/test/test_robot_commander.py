@@ -117,6 +117,7 @@ class TestSrRobotCommander(TestCase):
         pi_2 = 2. * np.pi
         return fmod(fmod(angle, pi_2) + pi_2, pi_2)
 
+        
     def compare_joint_states_by_common_joints(self, joint_state_1, joint_state_2, tolerance=0.02):
         joint_state_1_cpy = copy.deepcopy(joint_state_1)
         joint_state_2_cpy = copy.deepcopy(joint_state_2)
@@ -127,30 +128,39 @@ class TestSrRobotCommander(TestCase):
             joint_state_1_cpy[key] = self.normalize_angle_positive(round(joint_state_1_cpy[key], 2))
             joint_state_2_cpy[key] = self.normalize_angle_positive(round(joint_state_2_cpy[key], 2))
             if abs(joint_state_1_cpy[key] - joint_state_2_cpy[key]) >= tolerance:
-                return False
-        return True
+                return abs(joint_state_1_cpy[key] - joint_state_2_cpy[key])
+        return abs(joint_state_1_cpy[key] - joint_state_2_cpy[key])
+        
 
-
-    def test_move_to_pose_value_target_unsafe_executed(self):
-        count=0
-        while True:
-            self.do_thing()
-            count = count + 1
-            rospy.logerr("######################################## loop count: " + str(count))
-    
     def do_thing(self):
         rospy.logwarn(sys._getframe().f_code.co_name)
         self.reset_to_home()
         pose = PoseStamped()
         pose.header.stamp = rospy.get_rostime()
         pose.pose = conversions.list_to_pose([0.4, 0.2, 0.3, 0, 0, 0, 1])
-        self.robot_commander.move_to_pose_value_target_unsafe(pose)
-        after_pose = self.robot_commander.get_current_pose()
-        rospy.logerr("#############################")
-        rospy.logerr("pose.pose: " + str(pose.pose))
-        rospy.logerr("after_pose: " + str(after_pose))
-        condition = self.compare_poses(pose.pose, after_pose, TOLERANCE_UNSAFE)
-        self.assertTrue(condition)
+        joint_state_from_ik = self.robot_commander.get_ik(pose)
+        plan = self.robot_commander.plan_to_pose_target(pose.pose, end_effector_link=self.eef,
+                                                        alternative_method=False, custom_start_state=None)
+        joint_state_from_ik = dict(zip(joint_state_from_ik.name, joint_state_from_ik.position))
+        joint_state_plan = dict(zip(plan.joint_trajectory.joint_names, plan.joint_trajectory.points[-1].positions))
+        closeness = self.compare_joint_states_by_common_joints(joint_state_from_ik, joint_state_plan)
+        rospy.logerr("get_ik_closeness: " + str(closeness))
+        # self.assertTrue(condition)
+        return closeness
+
+
+
+    def test_move_to_pose_value_target_unsafe_executed(self):
+        closeness_list = []
+        count=0
+        while True:
+            closeness_list.append(self.do_thing())
+            count = count + 1
+            rospy.logerr("######################################## loop count: " + str(count))
+            for x in closeness_list:
+                rospy.logerr("closeness of get_ik this time: " + str(x))
+            rospy.logerr("worst yet: " + str(closeness_list.sort()[-1]))
+    
 
     # no working teach mode so far
     # def test_set_teach_mode(self):
