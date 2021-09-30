@@ -63,6 +63,7 @@ class TestSrRobotCommander(TestCase):
         if rospy.has_param('trajectory_execution/allowed_start_tolerance'):
             rospy.set_param('trajectory_execution/allowed_start_tolerance', 0.1)
         cls.robot_commander = SrRobotCommander("right_arm")
+        cls.robot_commander.set_planner_id("RRT")
         cls.eef = cls.robot_commander.get_end_effector_link()
 
     def reset_to_home(self):
