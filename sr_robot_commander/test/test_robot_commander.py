@@ -159,7 +159,8 @@ class TestSrRobotCommander(TestCase):
             rospy.logerr("######################################## loop count: " + str(count))
             for x in closeness_list:
                 rospy.logerr("closeness of get_ik this time: " + str(x))
-            rospy.logerr("worst yet: " + str(closeness_list.sort()[-1]))
+            closeness_list.sort()
+            rospy.logerr("worst yet: " + str(closeness_list[-1]))
     
 
     # no working teach mode so far
