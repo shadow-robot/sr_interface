@@ -572,21 +572,30 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_poses(pose.pose, after_pose, TOLERANCE_UNSAFE)
         self.assertTrue(condition)
 
-    # def test_move_to_pose_value_target_unsafe_cancelled(self):
-    #     self.reset_to_home()
-    #     pose = PoseStamped()
-    #     pose.header.stamp = rospy.get_rostime()
+    def test_move_to_pose_value_target_unsafe_cancelled(self):
+        self.reset_to_home()
+        pose = PoseStamped()
+        pose.header.stamp = rospy.get_rostime()
 
-    #     pose.pose = conversions.list_to_pose([0.71, 0.17, 0.34, 0, 0, 0, 1])
-    #     self.robot_commander.move_to_pose_value_target_unsafe(pose)
+        before_pose = self.robot_commander.get_current_pose()
+        pose.pose = conversions.list_to_pose([0.91, 0.17, 0.34, 0, 0, 0, 1])
+        self.robot_commander.move_to_pose_value_target_unsafe(pose, time=1, wait=False)
+        rospy.sleep(0.5)
 
-    #     for client in self.robot_commander._clients:
-    #         self.robot_commander._action_running[client] = True
-    #         self.robot_commander._clients[client].cancel_goal()
+        for client in self.robot_commander._clients:
+            self.robot_commander._action_running[client] = True
+            self.robot_commander._clients[client].cancel_goal()
 
-    #     after_pose = self.robot_commander.get_current_pose()
-    #     condition = self.compare_poses(pose.pose, after_pose, TOLERANCE_UNSAFE)
-    #     self.assertFalse(condition)
+        after_pose = self.robot_commander.get_current_pose()
+
+        condition_1 = self.compare_poses(before_pose, pose.pose, TOLERANCE_UNSAFE)
+        condition_2 = self.compare_poses(pose.pose, after_pose, TOLERANCE_UNSAFE)
+
+        rospy.logwarn(before_pose)
+        rospy.logwarn(pose.pose)
+        rospy.logwarn(after_pose)
+
+        self.assertFalse(condition_1 is True and condition_2 is False)
 
     def test_move_to_position_target(self):
         self.reset_to_home()
