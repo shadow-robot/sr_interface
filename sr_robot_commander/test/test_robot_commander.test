@@ -1,7 +1,8 @@
 <launch>
   <include file="$(find sr_robot_launch)/launch/sr_ur_arm_box.launch">
       <arg name="sim" value="true"/>
-      <arg name="gui" value="false"/>
+      <arg name="gui" value="true"/>
+      <!-- arg name="scene" value="true"/ -->
   </include>
   <test test-name="test_robot_commander" pkg="sr_robot_commander" type="test_robot_commander.py" time-limit="300.0"/>
 </launch>

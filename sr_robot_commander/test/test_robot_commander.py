@@ -238,7 +238,7 @@ class TestSrRobotCommander(TestCase):
     def test_evaluate_given_plan_high_quality(self):
         self.reset_to_home()
         end_joints = copy.deepcopy(CONST_RA_HOME_ANGLES)
-        end_joints['ra_shoulder_pan_joint'] += 0.1
+        end_joints['ra_shoulder_pan_joint'] += 0.01
         plan = self.robot_commander.plan_to_joint_value_target(end_joints, angle_degrees=False,
                                                                custom_start_state=None)
         evaluation = self.robot_commander.evaluate_given_plan(plan)
