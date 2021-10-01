@@ -516,8 +516,6 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_joint_states_by_common_joints(CONST_EXAMPLE_TARGET, executed_joints, TOLERANCE_UNSAFE)
         self.assertFalse(condition)
 
-# --------------------------------------------
-
     def test_plan_to_waypoints_target(self):
         self.reset_to_home()
         waypoints = []
@@ -652,21 +650,13 @@ class TestSrRobotCommander(TestCase):
 
     def test_move_to_named_target(self):
         self.reset_to_home()
-        for name in self.robot_commander._srdf_names:
-            self.robot_commander.move_to_named_target(name)
-            expected_joint_state = self.robot_commander.get_named_target_joint_values(name)
-            end_joint_state = self.robot_commander.get_current_state()
-            if not self.compare_joint_states_by_common_joints(end_joint_state, expected_joint_state):
-                self.fail()
-            break
-
-        for name in self.robot_commander._warehouse_names:
-            self.robot_commander.move_to_named_target(name)
-            expected_pose = self.robot_commander.get_end_effector_pose_from_named_state(name).pose
-            end_pose = self.robot_commander.get_current_pose()
-            if not self.compare_poses(end_pose, expected_pose):
-                self.fail()
-            break
+        name = "home"
+        rospy.logwarn("SRDF {}".format(name))
+        self.robot_commander.move_to_named_target(name)
+        expected_joint_state = self.robot_commander.get_named_target_joint_values(name)
+        end_joint_state = self.robot_commander.get_current_state()
+        if not self.compare_joint_states_by_common_joints(end_joint_state, expected_joint_state):
+            self.fail()
 
     def test_action_is_running(self):
         self.reset_to_home()
