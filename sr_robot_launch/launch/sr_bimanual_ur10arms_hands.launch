@@ -38,26 +38,15 @@
   <!-- Specify if the system has arms or is only a hand bimanual system -->
   <arg name="arms" default="true"/>
   <arg name="robot_model" default="ur10e"/>
-  <arg name="robot_description" unless="$(eval arg('hands') == 'none')" default="'$(find sr_multi_description)/urdf/bimanual_srhand_plus_bt_sp_biotacs_$(arg robot_model).urdf.xacro'"/>
-  <arg name="robot_description" if="$(eval arg('hands') == 'none')" default="'$(find sr_multi_description)/urdf/bimanual_$(arg robot_model).urdf.xacro'"/>
-  <arg name="robot_config_file" unless="$(eval arg('hands') == 'none')" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
-  <arg name="robot_config_file" if="$(eval arg('hands') == 'none')" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_$(arg robot_model).yaml"/>
 
   <!-- HANDS CONFIG-->
-  <arg name="rh_serial" default="1130"/>
-  <arg name="lh_serial" default="2346"/>
-  <arg name="rh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/rh_E_v4.yaml"/>
-  <arg name="lh_mapping_path" default="$(find sr_edc_launch)/mappings/default_mappings/lh_E_v4.yaml"/>
-  <!-- Allows to specify the ethernet interface/s to be used for ethercat devices. It defaults to the value of the env var ETHERCAT_PORT
-       More than one interface can be specified by concatenating them using underscore as a separator (e.g eth1_eth2_eth3) -->
-  <arg name="eth_port" default="$(optenv ETHERCAT_PORT eth0)"/>
   <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
   <!-- The control mode PWM (true) or torque (false) -->
   <!-- Set to true by default for now as torque control is not available yet -->
   <arg name="pwm_control" default="true"/>
-  <!-- Set the hand type here: hand_e_plus, hand_e, hand_lite, hand_extra_lite -->
-  <arg name="hand_type" default="hand_e_plus"/>
+  <!-- Set to true if you want to use hybrid controller -->
+  <arg name="hybrid_controller" default="false"/>
 
   <!-- ARMS CONFIG-->
   <arg name="arm_1_z" default="0.7521" if="$(arg scene)"/>
@@ -66,10 +55,6 @@
   <arg name="arm_2_z" default="0.01" unless="$(arg scene)"/>
   <arg name="arm_x_separation" default="0.0"/>
   <arg name="arm_y_separation" default="1.5"/>
-  <arg name="arm_robot_hw_1" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/right_ur_arm_robot_hw.yaml"/>
-  <arg name="arm_robot_hw_1" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/right_ur10e_arm_robot_hw.yaml"/>
-  <arg name="arm_robot_hw_2" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/left_bimanual_ur_arm_robot_hw.yaml"/>
-  <arg name="arm_robot_hw_2" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/left_bimanual_ur10e_arm_robot_hw.yaml"/>
     <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn group position controllers for the arms -->
@@ -86,26 +71,17 @@
     <arg name="gui" value="$(arg gui)"/>
     <arg name="world" value="$(arg world)"/>
 
-    <arg name="rh_serial" value="$(arg rh_serial)"/>
-    <arg name="lh_serial" value="$(arg lh_serial)"/>
-    <arg name="rh_mapping_path" value="$(arg rh_mapping_path)"/>
-    <arg name="lh_mapping_path" value="$(arg lh_mapping_path)"/>
-    <arg name="eth_port" value="$(arg eth_port)"/>
     <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
-    <arg name="hand_type" value="$(arg hand_type)"/>
+    <arg name="hybrid_controller" value="$(arg hybrid_controller)"/>
     <arg name="arm_1_z" value="$(arg arm_1_z)"/>
     <arg name="arm_2_z" value="$(arg arm_2_z)"/>
     <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
     <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
-    <arg name="arm_robot_hw_1" value="$(arg arm_robot_hw_1)"/>
-    <arg name="arm_robot_hw_2" value="$(arg arm_robot_hw_2)"/>
     <arg name="arm_trajectory" value="$(arg arm_trajectory)"/>
     <arg name="arm_position" value="$(arg arm_position)"/>
     <arg name="right_arm_speed_scale" value="$(arg right_arm_speed_scale)"/>
     <arg name="left_arm_speed_scale" value="$(arg left_arm_speed_scale)"/>
     <arg name="hands" value="$(arg hands)"/>
-    <arg name="robot_description" value="$(arg robot_description)"/>
-    <arg name="robot_config_file" value="$(arg robot_config_file)"/>
     <arg name="robot_model" value="$(arg robot_model)"/>
     <arg name="robot_name" value="$(arg robot_model)srh"/>
     <arg name="external_control_loop" value="$(arg external_control_loop)"/>

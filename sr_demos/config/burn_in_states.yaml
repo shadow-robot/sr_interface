@@ -1,0 +1,119 @@
+# starting position for the hand
+start_pos: {"THJ1": 0, "THJ2": 0, "THJ3": 0, "THJ4": 0, "THJ5": 0,
+             "FFJ1": 0, "FFJ2": 0, "FFJ3": 0, "FFJ4": 0,
+             "MFJ1": 0, "MFJ2": 0, "MFJ3": 0, "MFJ4": 0,
+             "RFJ1": 0, "RFJ2": 0, "RFJ3": 0, "RFJ4": 0,
+             "LFJ1": 0, "LFJ2": 0, "LFJ3": 0, "LFJ4": 0, "LFJ5": 0,
+             "WRJ1": 0, "WRJ2": 0}
+# flex first finger
+flex_ff: {"FFJ1": 90, "FFJ2": 90, "FFJ3": 90, "FFJ4": 0}
+# extend first finger
+ext_ff: {"FFJ1": 0, "FFJ2": 0, "FFJ3": 0, "FFJ4": 0}
+# flex middle finger
+flex_mf: {"MFJ1": 90, "MFJ2": 90, "MFJ3": 90, "MFJ4": 0}
+# extend middle finger
+ext_mf: {"MFJ1": 0, "MFJ2": 0, "MFJ3": 0, "MFJ4": 0}
+# flex ring finger
+flex_rf: {"RFJ1": 90, "RFJ2": 90, "RFJ3": 90, "RFJ4": 0}
+# extend ring finger
+ext_rf: {"RFJ1": 0, "RFJ2": 0, "RFJ3": 0, "RFJ4": 0}
+# flex little finger
+flex_lf: {"LFJ1": 90, "LFJ2": 90, "LFJ3": 90, "LFJ4": 0}
+# extend middle finger
+ext_lf: {"LFJ1": 0, "LFJ2": 0, "LFJ3": 0, "LFJ4": 0}
+# flex thumb step 1
+flex_th_1: {"THJ1": 0, "THJ2": 0, "THJ3": 0, "THJ4": 70, "THJ5": 0}
+# flex thumb step 2
+flex_th_2: {"THJ1": 35, "THJ2": 38, "THJ3": 12, "THJ4": 70, "THJ5": 52}
+# extend thumb step 1
+ext_th_1: {"THJ1": 90, "THJ2": -40, "THJ3": -12, "THJ4": 35, "THJ5": -60}
+# extend thumb step 2
+ext_th_2: {"THJ1": 0, "THJ2": 0, "THJ3": 0, "THJ4": 0, "THJ5": 0}
+# Pre O.K. with first finger
+pre_ff_ok: {"THJ4": 70}
+# O.K. with first finger
+ff_ok: {"THJ1": 36, "THJ2": 11, "THJ3": 0, "THJ4": 60, "THJ5": 18,
+         "FFJ1": 0, "FFJ2": 83, "FFJ3": 37, "FFJ4": 6,
+         "MFJ1": 0, "MFJ2": 42, "MFJ3": 33, "MFJ4": 9,
+         "RFJ1": 0, "RFJ2": 50, "RFJ3": 18, "RFJ4": -7,
+         "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -6, "LFJ5": 7}
+# O.K. transition from first finger to middle finger
+ff2mf_ok: {"THJ1": 5, "THJ2": 12, "THJ3": 4, "THJ4": 60, "THJ5": 2,
+            "FFJ1": 0, "FFJ2": 14, "FFJ3": 7, "FFJ4": -0.4,
+            "MFJ1": 0, "MFJ2": 42, "MFJ3": 33, "MFJ4": -3,
+            "RFJ1": 0, "RFJ2": 50, "RFJ3": 18, "RFJ4": 0.5,
+            "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -6, "LFJ5": 7}
+# O.K. with middle finger
+mf_ok: {"THJ1": 19, "THJ2": 17, "THJ3": 6, "THJ4": 66, "THJ5": 22,
+         "FFJ1": 0, "FFJ2": 15, "FFJ3": 7, "FFJ4": -0.4,
+         "MFJ1": 11, "MFJ2": 71, "MFJ3": 49, "MFJ4": 10,
+         "RFJ1": 0, "RFJ2": 50, "RFJ3": 18, "RFJ4": -10,
+         "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -6, "LFJ5": 7}
+# O.K. transition from middle finger to ring finger
+mf2rf_ok: {"THJ1": 5, "THJ2": -5, "THJ3": 15, "THJ4": 70, "THJ5": 19,
+            "FFJ1": 0, "FFJ2": 14, "FFJ3": 7, "FFJ4": -0.4,
+            "MFJ1": 0, "MFJ2": 45, "MFJ3": 4, "MFJ4": -1,
+            "RFJ1": 0, "RFJ2": 50, "RFJ3": 18, "RFJ4": -19,
+            "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -17, "LFJ5": 7}
+# O.K. with ring finger
+rf_ok: {"THJ1": 8, "THJ2": 15, "THJ3": 15, "THJ4": 70, "THJ5": 42,
+         "FFJ1": 0, "FFJ2": 14, "FFJ3": 7, "FFJ4": -0.4,
+         "MFJ1": 0, "MFJ2": 45, "MFJ3": 4, "MFJ4": -1,
+         "RFJ1": 3, "RFJ2": 90, "RFJ3": 42, "RFJ4": -19,
+         "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -17, "LFJ5": 7}
+# O.K. transition from ring finger to little finger
+rf2lf_ok: {"THJ1": 5, "THJ2": 4.5, "THJ3": 8, "THJ4": 60, "THJ5": 21,
+            "FFJ1": 0, "FFJ2": 14, "FFJ3": 7, "FFJ4": -0.4,
+            "MFJ1": 0, "MFJ2": 45, "MFJ3": 4, "MFJ4": -1,
+            "RFJ1": 0, "RFJ2": 30, "RFJ3": 6, "RFJ4": 0.5,
+            "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -15, "LFJ5": 7}
+# O.K. with little finger
+lf_ok: {"THJ1": 25, "THJ2": 14, "THJ3": 10, "THJ4": 74, "THJ5": 13,
+         "FFJ1": 0, "FFJ2": 14, "FFJ3": 7, "FFJ4": -0.4,
+         "MFJ1": 0, "MFJ2": 15, "MFJ3": 4, "MFJ4": -1,
+         "RFJ1": 0, "RFJ2": 15, "RFJ3": 6, "RFJ4": 0.5,
+         "LFJ1": 0, "LFJ2": 78, "LFJ3": 26, "LFJ4": 5, "LFJ5": 37}
+# zero wrist
+zero_wr: {"WRJ1": 0, "WRJ2": 0}
+# north wrist
+n_wr: {"WRJ1": 15, "WRJ2": 0}
+# south wrist
+s_wr: {"WRJ1": -30, "WRJ2": 0}
+# east wrist
+e_wr: {"WRJ1": 0, "WRJ2": 8}
+# west wrist
+w_wr: {"WRJ1": 0, "WRJ2": -14}
+# northeast wrist
+ne_wr: {"WRJ1": 15, "WRJ2": 8}
+# northwest wrist
+nw_wr: {"WRJ1": 15, "WRJ2": -14}
+# southweast wrist
+sw_wr: {"WRJ1": -30, "WRJ2": -14}
+# southeast wrist
+se_wr: {"WRJ1": -30, "WRJ2": 8}
+# lateral lf ext side
+l_ext_lf: {"LFJ4": -15}
+# lateral rf ext side
+l_ext_rf: {"RFJ4": -15}
+# lateral mf ext side
+l_ext_mf: {"MFJ4": 15}
+# lateral ff ext side
+l_ext_ff: {"FFJ4": 15}
+# lateral all int side
+l_int_all: {"FFJ4": -15, "MFJ4": -15, "RFJ4": 15, "LFJ4": 15}
+# lateral all ext side
+l_ext_all: {"FFJ4": 15, "MFJ4": 15, "RFJ4": -15, "LFJ4": -15}
+# lateral ff int side
+l_int_ff: {"FFJ4": -15}
+# lateral mf int side
+l_int_mf: {"MFJ4": -15}
+# lateral rf int side
+l_int_rf: {"RFJ4": 15}
+# lateral lf int side
+l_int_lf: {"LFJ4": 15}
+# all zero
+l_zero_all: {"FFJ4": 0, "MFJ4": 0, "RFJ4": 0, "LFJ4": 0}
+# spock
+l_spock: {"FFJ4": -20, "MFJ4": -20, "RFJ4": -20, "LFJ4": -20}
+# store step 3
+store_3: {"THJ1": 0, "THJ2": 0, "THJ3": 0, "THJ4": 65, "THJ5": 0}

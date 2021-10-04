@@ -21,7 +21,7 @@
 - git:
     local-name: universal_robot
     uri: https://github.com/shadow-robot/universal_robot.git
-    version: F_#SRC-4392_UR10_CoG
+    version: F_#SRC-4392_UR10_CoG_noetic
 
 - git:
     local-name: shadow_robot_ethercat
@@ -32,6 +32,11 @@
     local-name: ros_control_robot
     uri: https://github.com/shadow-robot/ros_control_robot.git
     version: noetic-devel
+
+- git:
+    local-name: sr_hand_config
+    uri: https://github.com/shadow-robot/sr_hand_config.git
+    version: master
 
 - git:
     local-name: gazebo2rviz
