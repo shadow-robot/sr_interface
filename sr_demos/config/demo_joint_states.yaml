@@ -1,0 +1,236 @@
+# Minimum alllowed range for the joints in this particular script
+min_range: {"THJ2": -40, "THJ3": -12, "THJ4": 0, "THJ5": -55,
+             "FFJ1": 0, "FFJ2": 20, "FFJ3": 0, "FFJ4": -20,
+             "MFJ1": 0, "MFJ2": 20, "MFJ3": 0, "MFJ4": -10,
+             "RFJ1": 0, "RFJ2": 20, "RFJ3": 0, "RFJ4": -10,
+             "LFJ1": 10, "LFJ2": 10, "LFJ3": 0, "LFJ4": -20, "LFJ5": 0,
+             "WRJ1": -20, "WRJ2": -10}
+
+# Maximum alllowed range for the joints in this particular script
+max_range: {"THJ2": 20, "THJ3": 12, "THJ4": 70, "THJ5": 0,
+             "FFJ1": 20, "FFJ2": 90, "FFJ3": 90, "FFJ4": 0,
+             "MFJ1": 20, "MFJ2": 90, "MFJ3": 90, "MFJ4": 0,
+             "RFJ1": 20, "RFJ2": 90, "RFJ3": 90, "RFJ4": 0,
+             "LFJ1": 20, "LFJ2": 90, "LFJ3": 90, "LFJ4": 0, "LFJ5": 1,
+             "WRJ1": 10, "WRJ2": 5}
+
+####################
+# POSE DEFINITIONS #
+####################
+
+# starting position for the hand
+start_pos: {"THJ1": 0, "THJ2": 0, "THJ3": 0, "THJ4": 0, "THJ5": 0,
+             "FFJ1": 0, "FFJ2": 0, "FFJ3": 0, "FFJ4": 0,
+             "MFJ1": 0, "MFJ2": 0, "MFJ3": 0, "MFJ4": 0,
+             "RFJ1": 0, "RFJ2": 0, "RFJ3": 0, "RFJ4": 0,
+             "LFJ1": 0, "LFJ2": 0, "LFJ3": 0, "LFJ4": 0, "LFJ5": 0,
+             "WRJ1": 0, "WRJ2": 0}
+# Start position for the Hand
+pregrasp_pos: {"THJ2": 12, "THJ3": 15, "THJ4": 69, "THJ5": -23,
+                "FFJ1": 0, "FFJ2": 40, "FFJ3": 21, "FFJ4": -15,
+                "MFJ1": 0, "MFJ2": 40, "MFJ3": 21, "MFJ4": 0,
+                "RFJ1": 0, "RFJ2": 40, "RFJ3": 21, "RFJ4": -7,
+                "LFJ1": 0, "LFJ2": 40, "LFJ3": 21, "LFJ4": -10, "LFJ5": 0,
+                "WRJ1": 0, "WRJ2": 0}
+# Close position for the Hand
+grasp_pos: {"THJ2": 30, "THJ3": 15, "THJ4": 69, "THJ5": -3,
+             "FFJ1": 0, "FFJ2": 77, "FFJ3": 67, "FFJ4": -19,
+             "MFJ1": 0, "MFJ2": 82, "MFJ3": 62, "MFJ4": 0,
+             "RFJ1": 0, "RFJ2": 89, "RFJ3": 64, "RFJ4": -18,
+             "LFJ1": 7, "LFJ2": 90, "LFJ3": 64, "LFJ4": -19, "LFJ5": 0,
+             "WRJ1": 0, "WRJ2": 0}
+# Random position for the Hand (initialied at 0)
+rand_pos: {"THJ2": 0, "THJ3": 0, "THJ4": 0, "THJ5": 0,
+            "FFJ1": 0, "FFJ2": 0, "FFJ3": 0, "FFJ4": 0,
+            "MFJ1": 0, "MFJ2": 0, "MFJ3": 0, "MFJ4": 0,
+            "RFJ1": 0, "RFJ2": 0, "RFJ3": 0, "RFJ4": 0,
+            "LFJ1": 0, "LFJ2": 0, "LFJ3": 0, "LFJ4": 0, "LFJ5": 0,
+            "WRJ1": 0, "WRJ2": 0}
+# flex first finger
+flex_ff: {"FFJ1": 80, "FFJ2": 80, "FFJ3": 80, "FFJ4": 0}
+# extend first finger
+ext_ff: {"FFJ1": 0, "FFJ2": 0, "FFJ3": 0, "FFJ4": 0}
+# flex middle finger
+flex_mf: {"MFJ1": 80, "MFJ2": 80, "MFJ3": 80, "MFJ4": 0}
+# extend middle finger
+ext_mf: {"MFJ1": 0, "MFJ2": 0, "MFJ3": 0, "MFJ4": 0}
+# flex ring finger
+flex_rf: {"RFJ1": 80, "RFJ2": 80, "RFJ3": 80, "RFJ4": 0}
+# extend ring finger
+ext_rf: {"RFJ1": 0, "RFJ2": 0, "RFJ3": 0, "RFJ4": 0}
+# flex little finger
+flex_lf: {"LFJ1": 80, "LFJ2": 80, "LFJ3": 80, "LFJ4": 0}
+# extend middle finger
+ext_lf: {"LFJ1": 0, "LFJ2": 0, "LFJ3": 0, "LFJ4": 0}
+# flex thumb step 1
+flex_th_1: {"THJ1": 0, "THJ2": 0, "THJ3": 0, "THJ4": 70, "THJ5": 0}
+# flex thumb step 2
+flex_th_2: {"THJ1": 35, "THJ2": 38, "THJ3": 10, "THJ4": 70, "THJ5": 47}
+# extend thumb step 1
+ext_th_1: {"THJ1": 90, "THJ2": -40, "THJ3": -10, "THJ4": 35, "THJ5": -60}
+# extend thumb step 2
+ext_th_2: {"THJ1": 0, "THJ2": 0, "THJ3": 0, "THJ4": 0, "THJ5": 0}
+# zero thumb
+zero_th: {"THJ1": 0, "THJ2": 0, "THJ3": 0, "THJ4": 0, "THJ5": 0}
+# Pre O.K. with first finger
+pre_ff_ok: {"THJ4": 70}
+# O.K. with first finger
+ff_ok: {"THJ1": 36, "THJ2": 11, "THJ3": 0, "THJ4": 53, "THJ5": 14,
+         "FFJ1": 0, "FFJ2": 83, "FFJ3": 37, "FFJ4": 6,
+         "MFJ1": 0, "MFJ2": 42, "MFJ3": 33, "MFJ4": 9,
+         "RFJ1": 0, "RFJ2": 50, "RFJ3": 18, "RFJ4": -7,
+         "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -6, "LFJ5": 7}
+# O.K. transition from first finger to middle finger
+ff2mf_ok: {"THJ1": 5, "THJ2": 12, "THJ3": 4, "THJ4": 60, "THJ5": 2,
+            "FFJ1": 0, "FFJ2": 14, "FFJ3": 7, "FFJ4": -0.4,
+            "MFJ1": 0, "MFJ2": 42, "MFJ3": 33, "MFJ4": 8,
+            "RFJ1": 0, "RFJ2": 50, "RFJ3": 18, "RFJ4": -9,
+            "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -6, "LFJ5": 7}
+# O.K. with middle finger
+mf_ok: {"THJ1": 7, "THJ2": 24, "THJ3": 0, "THJ4": 62, "THJ5": 29,
+         "FFJ1": 0, "FFJ2": 15, "FFJ3": 7, "FFJ4": -0.4,
+         "MFJ1": 5, "MFJ2": 90, "MFJ3": 24, "MFJ4": 8,
+         "RFJ1": 0, "RFJ2": 50, "RFJ3": 18, "RFJ4": -10,
+         "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -6, "LFJ5": 7}
+# O.K. transition from middle finger to ring finger
+mf2rf_ok: {"THJ1": 5, "THJ2": -5, "THJ3": 15, "THJ4": 70, "THJ5": 15,
+            "FFJ1": 0, "FFJ2": 14, "FFJ3": 7, "FFJ4": -0.4,
+            "MFJ1": 0, "MFJ2": 45, "MFJ3": 4, "MFJ4": -1,
+            "RFJ1": 0, "RFJ2": 50, "RFJ3": 18, "RFJ4": -10,
+            "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -12, "LFJ5": 7}
+# O.K. with ring finger
+rf_ok: {"THJ1": 3, "THJ2": 19, "THJ3": 0, "THJ4": 70, "THJ5": 47,
+         "FFJ1": 0, "FFJ2": 14, "FFJ3": 7, "FFJ4": -0.4,
+         "MFJ1": 0, "MFJ2": 45, "MFJ3": 4, "MFJ4": -1,
+         "RFJ1": 3, "RFJ2": 90, "RFJ3": 28, "RFJ4": -9,
+         "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -12, "LFJ5": 7}
+# O.K. transition from ring finger to little finger
+rf2lf_ok: {"THJ1": 5, "THJ2": 4.5, "THJ3": 8, "THJ4": 60, "THJ5": 17,
+            "FFJ1": 0, "FFJ2": 14, "FFJ3": 7, "FFJ4": -0.4,
+            "MFJ1": 0, "MFJ2": 45, "MFJ3": 4, "MFJ4": -1,
+            "RFJ1": 0, "RFJ2": 30, "RFJ3": 6, "RFJ4": 0.5,
+            "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -10, "LFJ5": 7}
+# O.K. with little finger
+lf_ok: {"THJ1": 25, "THJ2": 14, "THJ3": 10, "THJ4": 69, "THJ5": 15,
+         "FFJ1": 0, "FFJ2": 14, "FFJ3": 7, "FFJ4": -0.4,
+         "MFJ1": 0, "MFJ2": 15, "MFJ3": 4, "MFJ4": -1,
+         "RFJ1": 0, "RFJ2": 15, "RFJ3": 6, "RFJ4": 0.5,
+         "LFJ1": 0, "LFJ2": 78, "LFJ3": 26, "LFJ4": 5, "LFJ5": 37}
+# zero wrist
+zero_wr: {"WRJ1": 0, "WRJ2": 0}
+# north wrist
+n_wr: {"WRJ1": 15, "WRJ2": 0}
+# south wrist
+s_wr: {"WRJ1": -30, "WRJ2": 0}
+# east wrist
+e_wr: {"WRJ1": 0, "WRJ2": 8}
+# west wrist
+w_wr: {"WRJ1": 0, "WRJ2": -14}
+# northeast wrist
+ne_wr: {"WRJ1": 15, "WRJ2": 8}
+# northwest wrist
+nw_wr: {"WRJ1": 15, "WRJ2": -14}
+# southweast wrist
+sw_wr: {"WRJ1": -30, "WRJ2": -14}
+# southeast wrist
+se_wr: {"WRJ1": -30, "WRJ2": 8}
+# lateral lf ext side
+l_ext_lf: {"LFJ4": -15}
+# lateral rf ext side
+l_ext_rf: {"RFJ4": -15}
+# lateral mf ext side
+l_ext_mf: {"MFJ4": 15}
+# lateral ff ext side
+l_ext_ff: {"FFJ4": 15}
+# lateral all int side
+l_int_all: {"FFJ4": -15, "MFJ4": -15, "RFJ4": 15, "LFJ4": 15}
+# lateral all ext side
+l_ext_all: {"FFJ4": 15, "MFJ4": 15, "RFJ4": -15, "LFJ4": -15}
+# lateral ff int side
+l_int_ff: {"FFJ4": -15}
+# lateral mf int side
+l_int_mf: {"MFJ4": -15}
+# lateral rf int side
+l_int_rf: {"RFJ4": 15}
+# lateral lf int side
+l_int_lf: {"LFJ4": 15}
+# all zero
+l_zero_all: {"FFJ4": 0, "MFJ4": 0, "RFJ4": 0, "LFJ4": 0}
+# spock
+l_spock: {"FFJ4": -20, "MFJ4": -20, "RFJ4": -20, "LFJ4": -20}
+# grasp for shaking hands step 1
+shake_grasp_1: {"THJ1": 0, "THJ2": 6, "THJ3": 10, "THJ4": 37, "THJ5": 9,
+                 "FFJ1": 0, "FFJ2": 21, "FFJ3": 26, "FFJ4": 0,
+                 "MFJ1": 0, "MFJ2": 18, "MFJ3": 24, "MFJ4": 0,
+                 "RFJ1": 0, "RFJ2": 30, "RFJ3": 16, "RFJ4": 0,
+                 "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -10, "LFJ5": 10}
+# grasp for shaking hands step 2
+shake_grasp_2: {"THJ1": 21, "THJ2": 21, "THJ3": 10, "THJ4": 42, "THJ5": 21,
+                 "FFJ1": 0, "FFJ2": 75, "FFJ3": 29, "FFJ4": 0,
+                 "MFJ1": 0, "MFJ2": 75, "MFJ3": 41, "MFJ4": 0,
+                 "RFJ1": 0, "RFJ2": 75, "RFJ3": 41, "RFJ4": 0,
+                 "LFJ1": 10, "LFJ2": 90, "LFJ3": 41, "LFJ4": 0, "LFJ5": 0}
+# store step 1 PST
+store_1_PST: {"THJ1": 0, "THJ2": 0, "THJ3": 0, "THJ4": 60, "THJ5": 0,
+               "FFJ1": 90, "FFJ2": 90, "FFJ3": 90, "FFJ4": 0,
+               "MFJ1": 90, "MFJ2": 90, "MFJ3": 90, "MFJ4": 0,
+               "RFJ1": 90, "RFJ2": 90, "RFJ3": 90, "RFJ4": 0,
+               "LFJ1": 90, "LFJ2": 90, "LFJ3": 90, "LFJ4": 0, "LFJ5": 0,
+               "WRJ1": 0, "WRJ2": 0}
+# store step 2 PST
+store_2_PST: {"THJ1": 50, "THJ2": 12, "THJ3": 0, "THJ4": 60, "THJ5": 27,
+               "FFJ1": 90, "FFJ2": 90, "FFJ3": 90, "FFJ4": 0,
+               "MFJ1": 90, "MFJ2": 90, "MFJ3": 90, "MFJ4": 0,
+               "RFJ1": 90, "RFJ2": 90, "RFJ3": 90, "RFJ4": 0,
+               "LFJ1": 90, "LFJ2": 90, "LFJ3": 90, "LFJ4": 0, "LFJ5": 0,
+               "WRJ1": 0, "WRJ2": 0}
+# store step 1 Bio_Tac
+store_1_BioTac: {"THJ1": 0, "THJ2": 0, "THJ3": 0, "THJ4": 30, "THJ5": 0,
+                  "FFJ1": 90, "FFJ2": 90, "FFJ3": 90, "FFJ4": 0,
+                  "MFJ1": 90, "MFJ2": 90, "MFJ3": 90, "MFJ4": 0,
+                  "RFJ1": 90, "RFJ2": 90, "RFJ3": 90, "RFJ4": 0,
+                  "LFJ1": 90, "LFJ2": 90, "LFJ3": 90, "LFJ4": 0, "LFJ5": 0,
+                  "WRJ1": 0, "WRJ2": 0}
+# store step 2 Bio_Tac
+store_2_BioTac: {"THJ1": 20, "THJ2": 36, "THJ3": 0, "THJ4": 30, "THJ5": -3,
+                  "FFJ1": 90, "FFJ2": 90, "FFJ3": 90, "FFJ4": 0,
+                  "MFJ1": 90, "MFJ2": 90, "MFJ3": 90, "MFJ4": 0,
+                  "RFJ1": 90, "RFJ2": 90, "RFJ3": 90, "RFJ4": 0,
+                  "LFJ1": 90, "LFJ2": 90, "LFJ3": 90, "LFJ4": 0, "LFJ5": 0,
+                  "WRJ1": 0, "WRJ2": 0}
+# store step 3
+store_3: {"THJ1": 0, "THJ2": 0, "THJ3": 0, "THJ4": 65, "THJ5": 0}
+# business card pre-zero position
+bc_pre_zero: {"THJ1": 15, "THJ2": 7, "THJ3": -4, "THJ4": 41, "THJ5": -20,
+               "FFJ1": 0, "FFJ2": 14, "FFJ3": 7, "FFJ4": -1,
+               "MFJ1": 0, "MFJ2": 51, "MFJ3": 33, "MFJ4": 20,
+               "RFJ1": 0, "RFJ2": 50, "RFJ3": 18, "RFJ4": -20,
+               "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -20, "LFJ5": 7}
+# business card zero position
+bc_zero: {"THJ1": 38, "THJ2": 4, "THJ3": 0, "THJ4": 48, "THJ5": -5,
+           "MFJ1": 7, "MFJ2": 64, "MFJ3": 20, "MFJ4": 18}
+# business card position 1
+bc_1: {"FFJ1": 47, "FFJ2": 90, "FFJ3": 7}
+# business card position 2
+bc_2: {"FFJ1": 47, "FFJ2": 90, "FFJ3": 58}
+# business card position 3
+bc_3: {"FFJ1": 0, "FFJ2": 60, "FFJ3": 58}
+# business card position 4
+bc_4: {"FFJ1": 90, "FFJ2": 90, "FFJ3": 58, "FFJ4": 15}
+# business card position 5
+bc_5: {"FFJ1": 90, "FFJ2": 90, "FFJ3": 0}
+# business card position 6
+bc_6: {"FFJ1": 0, "FFJ2": 0, "FFJ3": 0, "FFJ4": 10}
+# business card position 7
+bc_7: {"FFJ1": 47, "FFJ2": 90, "FFJ3": 15, "FFJ4": 0}
+# business card position 8
+bc_8: {"FFJ1": 47, "FFJ2": 90, "FFJ3": 58}
+# business card position 9
+bc_9: {"FFJ1": 0, "FFJ2": 71, "FFJ3": 58}
+# business card position 10
+bc_10: {"MFJ3": 64, "FFJ4": 20}
+# business card position 11
+bc_11: {"FFJ1": 0, "FFJ2": 81, "FFJ3": 50, "FFJ4": 20,
+         "THJ4": 57, "THJ5": 20}
+# business card position 12
+bc_12: {"MFJ1": 0, "MFJ2": 20, "MFJ3": 10, "MFJ4": 0}

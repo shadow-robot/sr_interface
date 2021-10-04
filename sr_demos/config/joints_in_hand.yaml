@@ -1,0 +1,5 @@
+hand_e: ["FFJ1", "FFJ2", "FFJ3", "FFJ4", "LFJ1", "LFJ2", "LFJ3", "LFJ4", "LFJ5", "MFJ1", "MFJ2", "MFJ3", "MFJ4", "RFJ1", "RFJ2", "RFJ3", "RFJ4", "THJ1", "THJ2", "THJ3", "THJ4", "THJ5", "WRJ1", "WRJ2"]
+
+hand_lite: ["FFJ1", "FFJ2", "FFJ3", "FFJ4", "MFJ1", "MFJ2", "MFJ3", "MFJ4", "RFJ1", "RFJ2", "RFJ3", "RFJ4", "THJ1", "THJ2", "THJ4", "THJ5"]
+
+hand_extra_lite: ["FFJ1", "FFJ2", "FFJ3", "FFJ4", "MFJ1", "MFJ2", "MFJ3", "MFJ4", "THJ1", "THJ2", "THJ4", "THJ5"]

@@ -1,0 +1,55 @@
+<launch>
+  <arg name="sim"/>
+
+  <!-- ROBOT CONFIGS -->
+  <arg name="side" default="right"/>
+  <arg name="side_letter" value="$(eval side[0])"/>
+  <arg name="arm" default="true"/>
+  <arg name="hand" default="true"/>
+
+  <!-- HAND SPECIFIC CONFIG-->
+  <arg name="hand_type" default="hand_e"/>
+  <arg unless="$(arg arm)" name="initial_z" default="0.0"/>
+  <arg name="hand_id" value="$(arg side_letter)h"/>
+
+  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_motor.urdf.xacro'"/>
+  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_left_motor.urdf.xacro'"/>
+  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_lite')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_lite.urdf.xacro'"/>
+  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_lite')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_left_lite.urdf.xacro'"/>
+  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_extra_lite')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_extra_lite.urdf.xacro'"/>
+  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_extra_lite')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_left_extra_lite.urdf.xacro'"/>
+  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_motor_plus.urdf.xacro'"/>
+  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e_plus')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_left_motor_plus.urdf.xacro'"/>
+
+  <arg unless="$(arg arm)" name="load_robot_description_command" value="xacro $(arg robot_description) initial_z:=$(arg initial_z)"/>
+
+  <!-- ARM SPECIFIC CONFIG-->
+  <arg name="robot_model" default="ur10e"/>
+  <arg name="arm_x_separation" default="0.0"/>
+  <arg name="arm_y_separation" default="0.0"/>
+  <arg if="$(arg arm)" name="initial_z" default="0.1"/>
+
+  <arg name="arm_prefix" value="$(arg side_letter)a"/>
+
+  <arg if="$(eval arm and hand and arg('hand_type') == 'hand_e')" name="robot_description" value="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
+  <arg if="$(eval arm and hand and arg('hand_type') == 'hand_e_plus')" name="robot_description" value="'$(find sr_multi_description)/urdf/$(arg side)_srhand_$(arg robot_model).urdf.xacro'"/>
+  <arg if="$(eval arm and hand and arg('hand_type') == 'hand_lite')" name="robot_description" value="'$(find sr_multi_description)/urdf/$(arg side)_srhand_lite_$(arg robot_model).urdf.xacro'"/>
+  <arg if="$(eval arm and not hand)" name="robot_description" value="'$(find sr_box_ur10_moveit_config)/config/$(arg arm_prefix)_$(arg robot_model)_with_box.urdf.xacro'"/>
+
+  <arg if="$(arg arm)" name="load_robot_description_command" value="xacro $(arg robot_description) initial_z:=$(arg initial_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
+
+  <!-- LOAD THE DESCRIPTION -->
+  <param if="$(arg sim)" name="robot_description" command="$(arg load_robot_description_command)"/>
+  <group unless="$(arg sim)">
+    <node if="$(arg arm)" name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description" output="screen">
+      <param name="arm_type" value="$(arg robot_model)"/>
+      <param name="robot_description_file" value="$(arg robot_description)"/>
+      <param name="arm_x_separation" value="$(arg arm_x_separation)"/>
+      <param name="arm_y_separation" value="$(arg arm_y_separation)"/>
+      <param name="initial_z" value="$(arg initial_z)"/>
+      <param name="prefix" value="$(arg hand_id)_"/>
+    </node>
+
+    <param unless="$(arg arm)" name="robot_description" command="$(arg load_robot_description_command)"/>
+  </group>
+</launch>
