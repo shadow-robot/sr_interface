@@ -1,8 +1,8 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro" name="ursrbox">
 
   <!-- Arm -->
-  <xacro:include filename="$(find ur_description)/urdf/ur5.urdf.xacro"/>
-  <xacro:ur5_robot prefix="la_" joint_limited="false"/>
+  <xacro:include filename="$(find ur_description)/urdf/inc/ur5_macro.xacro"/>
+  <xacro:ur5_robot prefix="la_"/>
   <gazebo>
     <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
       <robotSimType>sr_gazebo_sim/SrGazeboHWSim</robotSimType>
@@ -24,7 +24,7 @@
 
   <!-- Join arm and hand -->
   <joint name="la_arm_to_hand" type="fixed">
-    <parent link="la_ee_link"/>
+    <parent link="la_flange"/>
     <child link="hand_base_attach"/>
     <origin rpy="1.570796325 3.14159265 1.570796325" xyz="0.012 0.0 0.0"/>
   </joint>
