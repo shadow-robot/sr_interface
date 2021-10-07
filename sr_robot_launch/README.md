@@ -53,7 +53,7 @@ roslaunch sr_robot_launch srhand.launch hand_type:=hand_e_plus
 
 To start a real hand, you can run:
 ```bash
-roslaunch sr_ethercat_hand_config sr_rhand.launch
+roslaunch sr_robot_launch srhand.launch sim:=false
 ```
 It has the specific configuration to launch your hand, including the ethernet port, the hand serial and robot description.
 
