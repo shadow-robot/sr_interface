@@ -2,34 +2,41 @@
   <arg name="sim"/>
 
   <!-- ROBOT CONFIGS -->
-  <arg name="hand_version" default="E3M5"/>
   <arg name="side" default="right"/>
-  <arg name="fingers" default="1,1,0,1,1"/>
-  <arg name="tip_sensors" default="str(pst),str(pst),str(pst),str(pst),str(pst)"/>
-
   <!-- No needed -->
   <arg name="side_letter" value="$(eval side[0])"/>
-  
   <arg name="arm" default="true"/>
   <arg name="hand" default="true"/>
 
   <!-- HAND SPECIFIC CONFIG-->
-  <arg name="hand_type" default="hand_e"/>
   <arg unless="$(arg arm)" name="initial_z" default="0.0"/>
+  <arg name="hand_type" default="hand_e"/>
+  <arg name="hand_version" default="E3M5"/>
+  <arg name="fingers" default="th,ff,mf,rf,lf"/>
+  <arg name="tip_sensors" default="th=pst,ff=pst,mf=pst,rf=pst,lf=pst"/>
+  <arg name="mid_sensors" default="none"/>
+  <arg name="prox_sensors" default="none"/>
+  <arg name="palm_sensor" default="none"/>
+
   <arg name="hand_id" value="$(arg side_letter)h"/>
 
-  <!--arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_motor.urdf.xacro'"/>
+  <!--
+  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_motor.urdf.xacro'"/>
   <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_left_motor.urdf.xacro'"/>
   <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_lite')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_lite.urdf.xacro'"/>
   <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_lite')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_left_lite.urdf.xacro'"/>
   <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_extra_lite')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_extra_lite.urdf.xacro'"/>
   <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_extra_lite')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_left_extra_lite.urdf.xacro'"/>
   <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'rh_hand_e_plus')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_motor_plus.urdf.xacro'"/>
-  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e_plus')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_left_motor_plus.urdf.xacro'"/-->
+  <arg if="$(eval not arm and arg('hand_id') + '_' + arg('hand_type') == 'lh_hand_e_plus')" name="robot_description" value="'$(find sr_description)/robots/shadowhand_left_motor_plus.urdf.xacro'"/>
+  -->
 
   <arg if="$(eval not arm)" name="robot_description" value="'$(find sr_description)/robots/sr_hand_e.urdf.xacro'"/>
   
-  <arg unless="$(arg arm)" name="load_robot_description_command" value="xacro $(arg robot_description) hand_version:=$(arg hand_version) side:=$(arg side) fingers:=$(arg fingers) tip_sensors:=$(arg tip_sensors)"/>
+  <arg unless="$(arg arm)" name="load_robot_description_command" value="xacro $(arg robot_description)
+                                 hand_type:=$(arg hand_type) hand_version:=$(arg hand_version) side:=$(arg side)
+                                 fingers:=$(arg fingers) tip_sensors:=$(arg tip_sensors)
+                                 mid_sensors:=$(arg mid_sensors) prox_sensors:=$(arg prox_sensors) palm_sensor:=$(arg palm_sensor)"/>
 
   <!-- ARM SPECIFIC CONFIG-->
   <arg name="robot_model" default="ur10e"/>
