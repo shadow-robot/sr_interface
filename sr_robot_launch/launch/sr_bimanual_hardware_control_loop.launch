@@ -48,10 +48,10 @@
   <arg name="left_arm_speed_scale" default="0.5"/>
 
   <!-- Sets up right payload -->
-  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_e')" name="arm_payload_mass" default="5.0"/>
-  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_e_plus')" name="arm_payload_mass" default="5.0"/>
-  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_lite')" name="arm_payload_mass" default="2.7"/>
-  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_extra_lite')" name="arm_payload_mass" default="2.5"/>
+  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_e')" name="arm_payload_mass" default="'5.0'"/>
+  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_e_plus')" name="arm_payload_mass" default="'5.0'"/>
+  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_lite')" name="arm_payload_mass" default="'2.7'"/>
+  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_extra_lite')" name="arm_payload_mass" default="'2.5'"/>
   <arg unless="$(eval hands == 'none')" name="arm_payload_cog" default="0.0 0.0 0.12"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_mass" default="0.0"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_cog" default="0.0 0.0 0.0"/>
@@ -59,8 +59,8 @@
   <node pkg="rosservice" type="rosservice" name="set_right_speed_scale" args="call --wait /ra_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg right_arm_speed_scale)'"/>
   <node pkg="rosservice" type="rosservice" name="set_left_speed_scale" args="call --wait /la_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg left_arm_speed_scale)'"/>
 
-  <node pkg="rosservice" type="rosservice" name="set_right_arm_payload" args="call --wait /ra_sr_ur_robot_hw/set_payload '['$(arg arm_payload_mass)', $(arg arm_payload_cog)]'"/>
-  <node pkg="rosservice" type="rosservice" name="set_left_arm_payload" args="call --wait /la_sr_ur_robot_hw/set_payload '['$(arg arm_payload_mass)', $(arg arm_payload_cog)]'"/>
+  <node pkg="rosservice" type="rosservice" name="set_right_arm_payload" args="call --wait /ra_sr_ur_robot_hw/set_payload '[$(arg arm_payload_mass), $(arg arm_payload_cog)]'"/>
+  <node pkg="rosservice" type="rosservice" name="set_left_arm_payload" args="call --wait /la_sr_ur_robot_hw/set_payload '[$(arg arm_payload_mass), $(arg arm_payload_cog)]'"/>
 
   <!-- ROBOT CONFIG-->
   <!-- HANDS AND ARMS -->
