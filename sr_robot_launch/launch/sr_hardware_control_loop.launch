@@ -58,19 +58,19 @@
   <arg name="arm_speed_scale" default="0.5"/>
 
   <!-- Sets up right payload -->
-  <arg if="$(eval hand and arg('hand_type') == 'hand_e')" name="arm_payload_mass" default="'5.0'"/>
-  <arg if="$(eval hand and arg('hand_type') == 'hand_e_plus')" name="arm_payload_mass" default="'5.0'"/>
-  <arg if="$(eval hand and arg('hand_type') == 'hand_lite')" name="arm_payload_mass" default="'2.7'"/>
-  <arg if="$(eval hand and arg('hand_type') == 'hand_extra_lite')" name="arm_payload_mass" default="'2.5'"/>
-  <arg if="$(arg hand)" name="arm_payload_cog" default="0.0 0.0 0.12"/>
+  <arg if="$(eval hand and arg('hand_type') == 'hand_e')" name="arm_payload_mass" default="5.0"/>
+  <arg if="$(eval hand and arg('hand_type') == 'hand_e_plus')" name="arm_payload_mass" default="5.0"/>
+  <arg if="$(eval hand and arg('hand_type') == 'hand_lite')" name="arm_payload_mass" default="2.7"/>
+  <arg if="$(eval hand and arg('hand_type') == 'hand_extra_lite')" name="arm_payload_mass" default="2.5"/>
+  <arg if="$(arg hand)" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
   <arg unless="$(arg hand)" name="arm_payload_mass" default="0.0"/>
-  <arg unless="$(arg hand)" name="arm_payload_cog" default="0.0 0.0 0.0"/>
+  <arg unless="$(arg hand)" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
 
   <arg name="kinematics_config" default="$(find ur_description)/config/$(arg robot_model)/default_kinematics.yaml"/>
   <arg name="urcap_program_name" default="external_ctrl.urp"/>
 
   <node pkg="rosservice" type="rosservice" name="set_speed_scale" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg arm_speed_scale)'"/>
-  <node pkg="rosservice" type="rosservice" name="set_payload" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_payload '[$(arg arm_payload_mass), $(arg arm_payload_cog)]'"/>
+  <node pkg="rosservice" type="rosservice" name="set_payload" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_payload '{mass: $(arg arm_payload_mass), center_of_gravity: $(arg arm_payload_cog)}'"/>
 
   <!-- Logging local topics -->
   <group ns="control_box">
