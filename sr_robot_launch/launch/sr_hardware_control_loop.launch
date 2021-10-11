@@ -70,7 +70,7 @@
   <arg name="urcap_program_name" default="external_ctrl.urp"/>
 
   <node pkg="rosservice" type="rosservice" name="set_speed_scale" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg arm_speed_scale)'"/>
-  <node pkg="rosservice" type="rosservice" name="set_payload" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_payload '[$(arg arm_payload_mass) $(arg arm_payload_cog)]'"/>
+  <node pkg="rosservice" type="rosservice" name="set_payload" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_payload '[$(arg arm_payload_mass) [$(arg arm_payload_cog)]]'"/>
 
   <!-- Logging local topics -->
   <group ns="control_box">
