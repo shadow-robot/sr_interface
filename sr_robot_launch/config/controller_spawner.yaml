@@ -51,11 +51,13 @@ controller_groups:
     rh:
       common:
         - rh_trajectory_controller
+        - rw_trajectory_controller
       default:
         - sh_rh_hybrid_controller
     lh:
       common:
         - lh_trajectory_controller
+        - lw_trajectory_controller
       default:
         - sh_lh_hybrid_controller
   position:
@@ -103,6 +105,7 @@ controller_groups:
     rh:
       common:
         - rh_trajectory_controller
+        - rw_trajectory_controller
       default:
         - sh_%joint_name%_position_controller
       necessary_if_joint_present:
@@ -127,6 +130,7 @@ controller_groups:
     lh:
       common:
         - lh_trajectory_controller
+        - lw_trajectory_controller
       default:
         - sh_%joint_name%_position_controller
       necessary_if_joint_present:
@@ -152,5 +156,7 @@ controller_groups:
 controller_configs:
   rh:
     rh_trajectory_controller: rh_trajectory_controller.yaml
+    rw_trajectory_controller: rw_trajectory_controller.yaml
   lh:
     lh_trajectory_controller: lh_trajectory_controller.yaml
+    lw_trajectory_controller: lw_trajectory_controller.yaml
