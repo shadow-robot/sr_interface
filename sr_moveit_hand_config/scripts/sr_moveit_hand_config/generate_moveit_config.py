@@ -130,6 +130,20 @@ def generate_fake_controllers(robot, output_path=None, ns_=None):
     upload_output_params(output_str, output_path, ns_)
 
 
+def generate_follow_joint_trajectory_controller(prefix, joints):
+    output_str = "  - name: " + prefix + "trajectory_controller\n"
+    output_str += "    action_ns: follow_joint_trajectory\n"
+    output_str += "    type: FollowJointTrajectory\n"
+    output_str += "    default: true\n"
+    output_str += "    joints:\n"
+    if len(joints) == 0:
+        output_str += "      []\n"
+    else:
+        for joint in joints:
+            output_str += "      - " + joint + "\n"
+    return output_str
+
+
 def generate_real_controllers(robot, output_path=None, ns_=None):
     """
     Generate controller yaml and direct it to file
@@ -153,18 +167,17 @@ def generate_real_controllers(robot, output_path=None, ns_=None):
             sh_group = group
             break
 
-    controller_name = "  - name: " + prefix + "trajectory_controller\n"
-    output_str += controller_name
-    output_str += "    action_ns: follow_joint_trajectory\n"
-    output_str += "    type: FollowJointTrajectory\n"
-    output_str += "    default: true\n"
-    output_str += "    joints:\n"
-    if len(group.joints) == 0:
-        output_str += "      []\n"
-    else:
-        for joint in group.joints:
-            if joint.name[-3:] != "tip":
-                output_str += "      - " + joint.name + "\n"
+    hand_joints = []
+    wrist_joints = []
+    for joint in group.joints:
+        name = joint.name
+        if name[-3:] != "tip":
+            if name[-4:-2] == "WR":
+                wrist_joints.append(name)
+            else:
+                hand_joints.append(name)
+    output_str += generate_follow_joint_trajectory_controller(prefix, hand_joints)
+    output_str += generate_follow_joint_trajectory_controller(prefix.replace('h', 'w'), wrist_joints)
     # load on param server or output to file
     upload_output_params(output_str, output_path, ns_)
     return output_str
