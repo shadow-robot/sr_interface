@@ -37,8 +37,14 @@
   <!-- hand_id is deprecated but still necessary for this file due to the structure of sr_config repository-->
   <arg if="$(eval arg('hand_id') == 'rh')" name="side" default="right"/>
   <arg if="$(eval arg('hand_id') == 'lh')" name="side" default="left"/>
-  <!-- Set to hand_e, hand_e_plus or hand_lite or hand_extra_lite -->
+  <!-- Set to hand_e or hand_g -->
   <arg name="hand_type" default="hand_e"/>
+  <arg name="hand_version" default="E3M5"/>
+  <arg name="fingers" default="th,ff,mf,rf,lf"/>
+  <arg name="tip_sensors" default="th=pst,ff=pst,mf=pst,rf=pst,lf=pst"/>
+  <arg name="mid_sensors" default="none"/>
+  <arg name="prox_sensors" default="none"/>
+  <arg name="palm_sensor" default="none"/>
 
   <group if="$(arg sim)">
     <include file="$(find sr_robot_launch)/launch/sr_simulation_control_loop.launch">
@@ -52,6 +58,12 @@
       <arg name="hand" value="true"/>
       <arg name="hand_ctrl" value="$(arg hand_ctrl)"/>
       <arg name="hand_type"  value="$(arg hand_type)"/>
+      <arg name="hand_version" value="$(arg hand_version)"/>
+      <arg name="fingers" value="$(arg fingers)"/>
+      <arg name="tip_sensors" value="$(arg tip_sensors)"/>
+      <arg name="mid_sensors" value="$(arg mid_sensors)"/>
+      <arg name="prox_sensors" value="$(arg prox_sensors)"/>
+      <arg name="palm_sensor" value="$(arg palm_sensor)"/>
       <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>
       <arg name="grasp_controller" value="$(arg grasp_controller)"/>
       <arg name="hybrid_controller" value="$(arg hybrid_controller)"/>
