@@ -20,7 +20,7 @@
   <arg name="home_angles" default=""/>
 
   <!-- HAND RELATED CONFIG-->
-  <!-- Wheather the hands have biotacs -->
+  <!-- Wheather the hands have biotacs. Needs to be deleted when arm xacros are refactored -->
   <arg name="biotac" default="false"/>
   <!-- Set to true to spawn the position controllers for the hands-->
   <arg name="hand_ctrl" unless="$(eval hands == 'none')" default="true"/>
@@ -29,6 +29,22 @@
   <arg name="hand_trajectory" default="true"/>
   <!-- Set to true if you want to use hybrid controller -->
   <arg name="hybrid_controller" default="false"/>
+
+  <arg name="hand_type_right" default="hand_e"/>
+  <arg name="hand_version_right" default="E3M5"/>
+  <arg name="fingers_right" default="all"/>
+  <arg name="tip_sensors_right" default="pst"/>
+  <arg name="mid_sensors_right" default="none"/>
+  <arg name="prox_sensors_right" default="none"/>
+  <arg name="palm_sensor_right" default="none"/>
+
+  <arg name="hand_type_left" default="hand_e"/>
+  <arg name="hand_version_left" default="E3M5"/>
+  <arg name="fingers_left" default="all"/>
+  <arg name="tip_sensors_left" default="pst"/>
+  <arg name="mid_sensors_left" default="none"/>
+  <arg name="prox_sensors_left" default="none"/>
+  <arg name="palm_sensor_left" default="none"/>
 
   <!-- Robot description related config-->
   <arg unless="$(arg arms)" name="robot_name" default="bimanual_shadowhand_motor"/>
@@ -75,6 +91,22 @@
     <arg name="arm_1_z" value="$(arg arm_1_z)"/>
     <arg name="arm_2_z" value="$(arg arm_2_z)"/>
     <arg name="biotac" value="$(arg biotac)"/>
+
+    <arg name="hand_type_right" value="$(arg hand_type_right)"/>
+    <arg name="hand_version_right" value="$(arg hand_version_right)"/>
+    <arg name="fingers_right" value="$(arg fingers_right)"/>
+    <arg name="tip_sensors_right" value="$(arg tip_sensors_right)"/>
+    <arg name="mid_sensors_right" value="$(arg mid_sensors_right)"/>
+    <arg name="prox_sensors_right" value="$(arg prox_sensors_right)"/>
+    <arg name="palm_sensor_right" value="$(arg palm_sensor_right)"/>
+
+    <arg name="hand_type_left" value="$(arg hand_type_left)"/>
+    <arg name="hand_version_left" value="$(arg hand_version_left)"/>
+    <arg name="fingers_left" value="$(arg fingers_left)"/>
+    <arg name="tip_sensors_left" value="$(arg tip_sensors_left)"/>
+    <arg name="mid_sensors_left" value="$(arg mid_sensors_left)"/>
+    <arg name="prox_sensors_left" value="$(arg prox_sensors_left)"/>
+    <arg name="palm_sensor_left" value="$(arg palm_sensor_left)"/>
   </include>
 
   <!-- RUNNING THE SIMULATION -->

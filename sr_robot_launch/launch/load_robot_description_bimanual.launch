@@ -8,11 +8,36 @@
 
   <!-- HAND SPECIFIC CONFIG--> 
   <arg name="hand_x_separation" default="-0.4"/>
+  <!-- DELETE biotac after refactoring arm xacros-->
   <arg name="biotac" default="false"/>
 
-  <arg unless="$(arg arms)" name="robot_description" default="'$(find sr_description)/robots/bimanual_shadowhand_motor_plus.urdf.xacro'"/>
+  <arg name="hand_type_right" default="hand_e"/>
+  <arg name="hand_version_right" default="E3M5"/>
+  <arg name="fingers_right" default="all"/>
+  <arg name="tip_sensors_right" default="pst"/>
+  <arg name="mid_sensors_right" default="none"/>
+  <arg name="prox_sensors_right" default="none"/>
+  <arg name="palm_sensor_right" default="none"/>
 
-  <arg unless="$(arg arms)" name="load_robot_description_command" value="xacro $(arg robot_description) arm_x_separation:=$(arg hand_x_separation) "/>
+  <arg name="hand_type_left" default="hand_e"/>
+  <arg name="hand_version_left" default="E3M5"/>
+  <arg name="fingers_left" default="all"/>
+  <arg name="tip_sensors_left" default="pst"/>
+  <arg name="mid_sensors_left" default="none"/>
+  <arg name="prox_sensors_left" default="none"/>
+  <arg name="palm_sensor_left" default="none"/>
+
+  <arg unless="$(arg arms)" name="robot_description" default="'$(find sr_description)/robots/sr_hand_bimanual.urdf.xacro'"/>
+
+  <arg unless="$(arg arms)" name="load_robot_description_command" value="xacro $(arg robot_description) arm_x_separation:=$(arg hand_x_separation)
+                                                                         hand_type_right:=$(arg hand_type_right) hand_version_right:=$(arg hand_version_right)
+                                                                         fingers_right:=$(arg fingers_right) tip_sensors_right:=$(arg tip_sensors_right)
+                                                                         mid_sensors_right:=$(arg mid_sensors_right) prox_sensors_right:=$(arg prox_sensors_right)
+                                                                         palm_sensor_right:=$(arg palm_sensor_right)
+                                                                         hand_type_left:=$(arg hand_type_left) hand_version_left:=$(arg hand_version_left)
+                                                                         fingers_left:=$(arg fingers_left) tip_sensors_left:=$(arg tip_sensors_left)
+                                                                         mid_sensors_left:=$(arg mid_sensors_left) prox_sensors_left:=$(arg prox_sensors_left)
+                                                                         palm_sensor_left:=$(arg palm_sensor_left)"/>
 
   <!-- ARM SPECIFIC CONFIG-->
   <arg name="robot_model" default="ur10e"/>

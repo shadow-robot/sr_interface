@@ -20,7 +20,7 @@
 
   <arg name="hand_id" value="$(arg side_letter)h"/>
 
-  <arg if="$(eval not arm)" name="robot_description" value="'$(find sr_description)/robots/sr_hand_only.urdf.xacro'"/>
+  <arg unless="$(arg arm)" name="robot_description" value="'$(find sr_description)/robots/sr_hand.urdf.xacro'"/>
   <arg unless="$(arg arm)" name="load_robot_description_command" value="xacro $(arg robot_description)
                                  hand_type:=$(arg hand_type) hand_version:=$(arg hand_version) side:=$(arg side)
                                  fingers:=$(arg fingers) tip_sensors:=$(arg tip_sensors)
