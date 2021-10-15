@@ -1,4 +1,4 @@
-lw_trajectory_controller:
+lh_wr_trajectory_controller:
   type: "position_controllers/JointTrajectoryController"
   joints:
     - lh_WRJ1
