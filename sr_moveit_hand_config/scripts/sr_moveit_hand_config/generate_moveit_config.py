@@ -156,8 +156,7 @@ def generate_real_controllers(robot, output_path=None, ns_=None):
         @param ns_: namespace
         @type  ns_: str
     """
-    output_str = ""
-    output_str += "controller_list:\n"
+    output_str = "controller_list:\n"
     prefix = find_prefix(robot)
 
     # find full hand key name
