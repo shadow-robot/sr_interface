@@ -130,7 +130,7 @@ controller_groups:
     lh:
       common:
         - lh_trajectory_controller
-        - lw_trajectory_controller
+        - lh_wr_trajectory_controller
       default:
         - sh_%joint_name%_position_controller
       necessary_if_joint_present:
