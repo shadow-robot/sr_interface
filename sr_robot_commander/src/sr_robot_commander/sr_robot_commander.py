@@ -44,6 +44,10 @@ import tf2_ros
 import copy
 import numpy
 
+# Since Moveit update to noetic, the plan() method returns a tuple where trajectory is indexed at 1.
+# More info here: https://github.com/ros-planning/moveit/blob/master/MIGRATION.md
+CONST_TUPLE_TRAJECTORY_INDEX = 1
+
 
 class SrRobotCommanderException(Exception):
 
@@ -265,7 +269,7 @@ class SrRobotCommander(object):
         else:
             self._move_group_commander.set_start_state(custom_start_state)
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
-        self.__plan = self._move_group_commander.plan()[1]
+        self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
         return self.__plan
 
     def check_plan_is_valid(self):
@@ -321,8 +325,7 @@ class SrRobotCommander(object):
         if plan_quality > medium_threshold:
             rospy.logwarn("Low plan quality! Value: {}".format(plan_quality))
             return 'poor'
-        elif (plan_quality > good_threshold and
-                plan_quality < medium_threshold):
+        elif (plan_quality > good_threshold and plan_quality < medium_threshold):
             rospy.loginfo("Medium plan quality. Value: {}".format(plan_quality))
             return 'medium'
         elif plan_quality < good_threshold:
@@ -470,7 +473,7 @@ class SrRobotCommander(object):
         else:
             self._move_group_commander.set_start_state(custom_start_state)
         if self.set_named_target(name):
-            self.__plan = self._move_group_commander.plan()[1]
+            self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
         else:
             rospy.logwarn("Failed to set to named target")
 
@@ -661,29 +664,41 @@ class SrRobotCommander(object):
 
     def move_to_position_target(self, xyz, end_effector_link="", wait=True):
         """
-        Specify a target position for the end-effector and moves to it.
+        Specify a target position for the end-effector and moves to it
+        preserving the current orientation of the end-effector.
         @param xyz - new position of end-effector.
         @param end_effector_link - name of the end effector link.
         @param wait - should method wait for movement end or not.
         """
+        pose = self._move_group_commander.get_current_pose()
+        pose.pose.position.x = xyz[0]
+        pose.pose.position.y = xyz[1]
+        pose.pose.position.z = xyz[2]
+
         self._move_group_commander.set_start_state_to_current_state()
-        self._move_group_commander.set_position_target(xyz, end_effector_link)
+        self._move_group_commander.set_pose_target(pose, end_effector_link)
         self._move_group_commander.go(wait=wait)
 
     def plan_to_position_target(self, xyz, end_effector_link="", custom_start_state=None):
         """
-        Specify a target position for the end-effector and plans.
+        Specify a target position for the end-effector and plans preserving the current orientation of end-effector.
         This is a blocking method.
         @param xyz - new position of end-effector.
         @param end_effector_link - name of the end effector link.
         @param custom_start_state - specify a start state different than the current state.
         """
+        pose = self._move_group_commander.get_current_pose()
+        pose.pose.position.x = xyz[0]
+        pose.pose.position.y = xyz[1]
+        pose.pose.position.z = xyz[2]
+
         if custom_start_state is None:
             self._move_group_commander.set_start_state_to_current_state()
         else:
             self._move_group_commander.set_start_state(custom_start_state)
-        self._move_group_commander.set_position_target(xyz, end_effector_link)
-        self.__plan = self._move_group_commander.plan()[1]
+        self._move_group_commander.set_pose_target(pose, end_effector_link)
+        self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
+        return self.__plan
 
     def move_to_pose_target(self, pose, end_effector_link="", wait=True):
         """
@@ -717,7 +732,7 @@ class SrRobotCommander(object):
             self._move_group_commander.set_joint_value_target(pose, end_effector_link)
         else:
             self._move_group_commander.set_pose_target(pose, end_effector_link)
-        self.__plan = self._move_group_commander.plan()[1]
+        self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
         return self.__plan
 
     def _joint_states_callback(self, joint_state):
@@ -787,9 +802,7 @@ class SrRobotCommander(object):
                     point.positions.append(joint_states_cpy[x])
 
             point.time_from_start = rospy.Duration.from_sec(time)
-
             goal.trajectory.points = [point]
-
             goals[controller] = goal
 
         self._call_action(goals)
@@ -949,7 +962,7 @@ class SrRobotCommander(object):
         service_request.group_name = self._name
         service_request.ik_link_name = self._move_group_commander.get_end_effector_link()
         service_request.pose_stamped = target_pose
-        service_request.timeout.secs = 0.5
+        service_request.timeout.secs = 1
         service_request.avoid_collisions = avoid_collisions
         if ik_constraints is not None:
             service_request.constraints = ik_constraints
