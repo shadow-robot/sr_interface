@@ -41,6 +41,14 @@
         <joint name="ra_wrist_2_joint" value="0" />
         <joint name="ra_wrist_3_joint" value="0" />
     </group_state>
+    <group_state name="home" group="right_arm">
+        <joint name="ra_elbow_joint" value="2.00" />
+        <joint name="ra_shoulder_lift_joint" value="-1.25" />
+        <joint name="ra_shoulder_pan_joint" value="0.00" />
+        <joint name="ra_wrist_1_joint" value="-0.733" />
+        <joint name="ra_wrist_2_joint" value="1.5708" />
+        <joint name="ra_wrist_3_joint" value="3.1416" />
+    </group_state>
 
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector group="ra_end_effector" name="right_arm_ee" parent_group="right_arm" parent_link="ra_ee_link"/>
