@@ -2,8 +2,6 @@
      <!-- Find launch file-->
      <arg name="scene" value="true"/>
      <arg name="hand_type" default="hand_e"/>
-     <arg name="robot_description" default="right_srhand_ur10.urdf.xacro"/>
-     <arg name="robot_config_file" default="right_sh_ur10.yaml"/>
      <arg name="side" default="right"/>
      <arg name="robot_model" default="ur10"/>
      <arg name="start_home" value="true"/>
@@ -12,8 +10,7 @@
      <arg name="sim" value="true"/>
      <arg name="gui" value="false"/>
      <arg name="scene" value="$( arg scene)"/>
-     <arg name="robot_description" value="$( find sr_multi_description)/urdf/$( arg robot_description)"/>
-     <arg name="robot_config_file" value="$( find sr_multi_moveit_config)/config/robot_configs/$( arg robot_config_file)"/>
+     <arg name="hand_type" value="$(arg hand_type)"/>
      <arg name="side" value="$( arg side)"/>
      <arg name="initial_z" value="0.76"/>
      <arg name="world" value="$(find sr_description_common)/worlds/demo_space_large_bimanual.world"/>

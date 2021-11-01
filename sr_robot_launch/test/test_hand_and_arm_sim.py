@@ -54,12 +54,12 @@ class TestHandAndArmSim(TestCase):
             cls.arm_id = 'ra'
             cls.robot_commander = SrRobotCommander(name="right_arm_and_hand")
             cls.hand_commander = SrHandCommander(name='right_hand')
-            cls.arm_commander = SrArmCommander(name='right_arm', set_ground=False)
+            cls.arm_commander = SrArmCommander(name='right_arm', set_ground=not(cls.scene))
         elif cls.hand_id == 'lh':
             cls.arm_id = 'la'
             cls.robot_commander = SrRobotCommander(name="left_arm_and_hand")
             cls.hand_commander = SrHandCommander(name='left_hand')
-            cls.arm_commander = SrArmCommander(name='left_arm', set_ground=False)
+            cls.arm_commander = SrArmCommander(name='left_arm', set_ground=not(cls.scene))
 
         rospy.Subscriber('/move_group/monitored_planning_scene', PlanningScene, cls.scene_data_cb)
 
