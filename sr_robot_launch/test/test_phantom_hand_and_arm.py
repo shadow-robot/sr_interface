@@ -148,7 +148,7 @@ class TestHandAndArmSim(TestCase):
         arm_joints_target = dict()
         arm_joints_target.update(ra_arm_joints_target)
         arm_joints_target.update(la_arm_joints_target)
-        
+
         self.arm_commander.move_to_joint_value_target(arm_joints_target, wait=True)
         rospy.sleep(5)
         final_arm_joint_values = self.arm_commander.get_current_state()
