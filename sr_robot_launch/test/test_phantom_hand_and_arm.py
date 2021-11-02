@@ -145,8 +145,10 @@ class TestHandAndArmSim(TestCase):
         ra_arm_joints_target = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 1.43,
                                 'ra_shoulder_lift_joint': -1.27, 'ra_wrist_1_joint': -0.1,
                                 'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 3.13}
-        arm_joints_target = dict(la_arm_joints_target.iteritems() | ra_arm_joints_target.iteritems())
-
+        arm_joints_target = dict()
+        arm_joints_target.update(ra_arm_joints_target)
+        arm_joints_target.update(la_arm_joints_target)
+        
         self.arm_commander.move_to_joint_value_target(arm_joints_target, wait=True)
         rospy.sleep(5)
         final_arm_joint_values = self.arm_commander.get_current_state()
@@ -165,9 +167,12 @@ class TestHandAndArmSim(TestCase):
                                 'la_shoulder_lift_joint': -1.89, 'la_wrist_1_joint': 3.8,
                                 'la_wrist_2_joint': -1.5708, 'la_wrist_3_joint': 3.1416}
 
-        arm_joints_target = dict(ra_arm_joints_target.iteritems() | la_arm_joints_target.iteritems())
-
-        hand_and_arm_joints_target = dict(hand_joints_target.iteritems() | arm_joints_target.iteritems())
+        arm_joints_target = dict()
+        arm_joints_target.update(ra_arm_joints_target)
+        arm_joints_target.update(la_arm_joints_target)
+        hand_and_arm_joints_target = dict()
+        hand_and_arm_joints_target.update(hand_joints_target)
+        hand_and_arm_joints_target.update(arm_joints_target)
         self.robot_commander.move_to_joint_value_target_unsafe(hand_and_arm_joints_target, 10.0, True)
 
         rospy.sleep(5)
