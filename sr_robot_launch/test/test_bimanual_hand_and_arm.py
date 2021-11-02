@@ -38,7 +38,7 @@ class TestBiHandAndArmSim(TestCase):
         cls.scene = rospy.get_param('~test_hand_and_arm_sim/scene')
         cls.robot_commander = SrRobotCommander(name="two_arms_and_hands")
         cls.hand_commander = SrHandCommander(name='two_hands')
-        cls.arm_commander = SrArmCommander(name='two_arms', set_ground=False)
+        cls.arm_commander = SrArmCommander(name='two_arms', set_ground=not(cls.scene))
 
         rospy.Subscriber('/move_group/monitored_planning_scene', PlanningScene, cls.scene_data_cb)
 
