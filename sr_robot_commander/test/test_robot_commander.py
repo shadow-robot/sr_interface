@@ -566,6 +566,7 @@ class TestSrRobotCommander(TestCase):
         pose.header.stamp = rospy.get_rostime()
         pose.pose = conversions.list_to_pose([0.71, 0.17, 0.34, 0, 0, 0, 1])
         self.robot_commander.move_to_pose_value_target_unsafe(pose)
+        rospy.sleep(1)
         after_pose = self.robot_commander.get_current_pose()
         condition = self.compare_poses(pose.pose, after_pose, TOLERANCE_UNSAFE)
         self.assertTrue(condition)
