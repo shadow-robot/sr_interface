@@ -134,7 +134,7 @@
         <param name="package_name" value="sr_multi_moveit_config" />
         <param name="executable_name" value="scene.launch" />
         <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
-        <rosparam param="topics_list">[/planning_scene]</rosparam>
+        <rosparam param="topics_list">[/planning_scene, /rviz_*]</rosparam>
         <param name="launch_args_list" value="scene_file:=$(arg scene_file)" />
       </node>
     </group>
