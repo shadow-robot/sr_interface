@@ -133,7 +133,7 @@ class KeyboardPressDetector(object):
                 sequence_rf(self.hand_commander, self.demo_states, self.tactile_reading, self.hand_type)
             elif input_val == "5":
                 if self.hand_type == 'hand_e' or self.hand_type == 'hand_e_plus':
-                    sequence_lf(self.hand_commander, self.demo_states, 4.0, self.tactile_reading)
+                    sequence_lf(self.hand_commander, self.demo_states, self.tactile_reading)
                 else:
                     rospy.logerr("This demo only works for a 5-fingered Hand E. Please try demos 1-4")
 
@@ -372,17 +372,18 @@ def sequence_lf(hand_commander, joint_states_config, inter_time_max, tactile_rea
             # is not in the middle of a movement, generate a random position
             # and interpolation time
             else:
-                complete_random_sequence(wake_time, hand_commander, joint_states_config, inter_time_max)
+                if time.time() < wake_time + 15:
+                    complete_random_sequence(wake_time, hand_commander, joint_states_config)
         else:
-            complete_random_sequence(wake_time, hand_commander, joint_states_config, inter_time_max)
+            if time.time() < wake_time + 15:
+                complete_random_sequence(wake_time, hand_commander, joint_states_config)
 
     rospy.loginfo("'LF' Demo completed")
 
     return
 
 
-def complete_random_sequence(wake_time, hand_commander, joint_states_config, inter_time_max):
-    if time.time() > wake_time:
+def complete_random_sequence(wake_time, hand_commander, joint_states_config):
         for i in joint_states_config['rand_pos']:
             joint_states_config['rand_pos'][i] =\
                 random.randrange(joint_states_config['min_range'][i],
@@ -393,9 +394,8 @@ def complete_random_sequence(wake_time, hand_commander, joint_states_config, int
         joint_states_config['rand_pos']['rh_LFJ4'] =\
             random.randrange(joint_states_config['min_range']['rh_LFJ4'],
                              joint_states_config['rand_pos']['rh_RFJ4'])
-        inter_time = inter_time_max * random.random()
+        inter_time = 4.0 * random.random()
         execute_command_check(hand_commander, joint_states_config, 'rand_pos', 0.0, inter_time)
-        wake_time = time.time() + inter_time * 0.9
 
 
 def correct_joint_states_for_hand_type(joint_states_config, hand_type):
@@ -504,9 +504,9 @@ if __name__ == "__main__":
     rospy.loginfo("\nPRESS ONE OF THE TACTILES or 1-5 ON THE KEYBOARD TO START A DEMO:\
                    \n   TH or 1: Open Hand\
                    \n   FF or 2: Standard Demo\
-                   \n   RF or 3: Card Trick Demo\
-                   \n   LF or 4: Grasp Demo\
-                   \n   MF or 5: Shy Hand Demo (only works with Hand E)")
+                   \n   MF or 3: Card Trick Demo\
+                   \n   RF or 4: Grasp Demo\
+                   \n   LF or 5: Shy Hand Demo (only works with Hand E)")
 
     # Keyboard thread for input
     kpd = KeyboardPressDetector(hand_commander, demo_states,
@@ -542,4 +542,4 @@ if __name__ == "__main__":
         elif touched == "RF":
             sequence_rf(hand_commander, demo_states, tactile_reading, args.hand_type)
         elif touched == "LF":
-            sequence_lf(hand_commander, demo_states, 4.0, tactile_reading)
+            sequence_lf(hand_commander, demo_states, tactile_reading)
