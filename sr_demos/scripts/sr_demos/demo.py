@@ -374,9 +374,13 @@ def sequence_lf(hand_commander, joint_states_config, inter_time_max, tactile_rea
             else:
                 if time.time() < wake_time + 15:
                     complete_random_sequence(hand_commander, joint_states_config)
+                else:
+                    return
         else:
             if time.time() < wake_time + 15:
                 complete_random_sequence(hand_commander, joint_states_config)
+            else:
+                return
 
     rospy.loginfo("'LF' Demo completed")
 
