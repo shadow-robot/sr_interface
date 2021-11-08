@@ -351,7 +351,7 @@ def sequence_rf(hand_commander, joint_states_config, tactile_reading, hand_type)
     return
 
 
-def sequence_lf(hand_commander, joint_states_config, inter_time_max, tactile_reading):
+def sequence_lf(hand_commander, joint_states_config, tactile_reading):
     rospy.sleep(0.5)
     # Initialize wake time
     wake_time = time.time()
