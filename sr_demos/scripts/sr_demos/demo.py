@@ -355,7 +355,7 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
     rospy.sleep(0.5)
     # Initialize wake time
     wake_time = time.time()
-    COST_TIME_TO_COMPLETE_DEMO = 15
+    CONST_TIME_TO_COMPLETE_DEMO = 15
     while True:
         if tactile_reading is not None:
             # Check if any of the tactile senors have been triggered
@@ -372,12 +372,12 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
             # is not in the middle of a movement, generate a random position
             # and interpolation time
             else:
-                if time.time() < wake_time + COST_TIME_TO_COMPLETE_DEMO:
+                if time.time() < wake_time + CONST_TIME_TO_COMPLETE_DEMO:
                     complete_random_sequence(hand_commander, joint_states_config)
                 else:
                     return
         else:
-            if time.time() < wake_time + COST_TIME_TO_COMPLETE_DEMO:
+            if time.time() < wake_time + CONST_TIME_TO_COMPLETE_DEMO:
                 complete_random_sequence(hand_commander, joint_states_config)
             else:
                 return
