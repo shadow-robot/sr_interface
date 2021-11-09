@@ -118,14 +118,14 @@ class TestHandAndArmSim(TestCase):
         joint_state_exists = self.check_topic_prefix('la_')
         self.assertTrue(joint_state_exists)
 
-    def test_8_left_hand(self):
+    def test_8_right_hand(self):
         self.rh_commander.move_to_named_target('pack', wait=True)
         rospy.sleep(2)
         goal_status = rospy.wait_for_message('/move_group/status', GoalStatusArray)
         goal_status = goal_status.status_list[0].status
         self.assertEqual(goal_status, 3)
 
-    def test_9_right_hand(self):
+    def test_9_left_hand(self):
         self.lh_commander.move_to_named_target('pack', wait=True)
         rospy.sleep(2)
         goal_status = rospy.wait_for_message('/move_group/status', GoalStatusArray)
