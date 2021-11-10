@@ -17,11 +17,11 @@
   <run_depend>robot_state_publisher</run_depend>
   <run_depend>moveit_simple_controller_manager</run_depend>
   <run_depend>xacro</run_depend>
-  <build_depend>sr_multi_description</build_depend>
   <run_depend>sr_multi_description</run_depend>
-  <build_depend>rostest</build_depend>
   <run_depend>sr_utilities_common</run_depend>
   <build_depend>moveit_ros_planning_interface</build_depend>
+  <build_depend>sr_multi_description</build_depend>
   <buildtool_depend>catkin</buildtool_depend>
+  <test_depend>rostest</test_depend>
 
 </package>
