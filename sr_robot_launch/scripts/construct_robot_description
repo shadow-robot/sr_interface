@@ -18,6 +18,7 @@ from __future__ import absolute_import
 import os
 import rospy
 import rospkg
+import xacro
 from subprocess import check_output
 from sr_ur_arm_calibration_loader.sr_ur_arm_calibration_loader import SrUrLoadCalibration
 
