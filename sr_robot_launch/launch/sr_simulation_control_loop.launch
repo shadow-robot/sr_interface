@@ -113,6 +113,7 @@
   <group if="$(arg scene)">
     <include file="$(find gazebo2rviz)/launch/gazebo2moveit.launch">
       <arg name="frequency" default="1" />
+      <arg name="ignore_robot_model" default="$(arg ignore_robot_model)" />
     </include>
   </group>
 
