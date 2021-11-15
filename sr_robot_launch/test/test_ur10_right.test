@@ -1,6 +1,6 @@
 <launch>
      <!-- Find launch file-->
-     <arg name="scene" default="true"/>
+     <arg name="scene" default="false"/>
      <arg name="hand_type" value="hand_e"/>
      <arg name="side" value="right"/>
 

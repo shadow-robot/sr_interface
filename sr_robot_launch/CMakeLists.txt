@@ -200,12 +200,12 @@ if (CATKIN_ENABLE_TESTING)
 
 #HAND AND ARM TESTS - GENERIC LAUNCH FILE
     # ur10
-    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_e robot_model:=ur10)
-    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_e robot_model:=ur10)
+    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_e_plus robot_model:=ur10)
+    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_e_plus robot_model:=ur10)
 
     # ur10e
-    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_e robot_model:=ur10e)
-    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_e robot_model:=ur10e)
+    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_e_plus robot_model:=ur10e)
+    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_e_plus robot_model:=ur10e)
     # We dont have this xacro yet
     # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_lite robot_model:=ur10e)
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_lite robot_model:=ur10e)
@@ -214,15 +214,15 @@ if (CATKIN_ENABLE_TESTING)
     # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_extra_lite robot_model:=ur10e)
 
     # ur5
-    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_e robot_model:=ur5)
+    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_e_plus robot_model:=ur5)
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_lite robot_model:=ur5)
-    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_e robot_model:=ur5)
+    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_e_plus robot_model:=ur5)
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_lite robot_model:=ur5)
 
     # ur5e
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_lite robot_model:=ur5e)
-    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_e robot_model:=ur5e)
-    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_e robot_model:=ur5e)
+    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_e_plus robot_model:=ur5e)
+    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_e_plus robot_model:=ur5e)
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_lite robot_model:=ur5e)
     # We dont have this xacro yet
     # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_extra_lite robot_model:=ur5e)
