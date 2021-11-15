@@ -36,7 +36,7 @@ class TestBiHandAndArmSim(TestCase):
     def setUpClass(cls):
         rospy.wait_for_message('/move_group/status', GoalStatusArray)
         cls.scene = rospy.get_param('~test_hand_and_arm_sim/scene')
-        cls.robot_commander = SrRobotCommander(name="two_arms_and_hands")
+        cls.robot_commander = SrRobotCommander(name="two_arms_and_hands", set_ground=not(cls.scene))
         cls.hand_commander = SrHandCommander(name='two_hands')
         cls.arm_commander = SrArmCommander(name='two_arms', set_ground=not(cls.scene))
 
