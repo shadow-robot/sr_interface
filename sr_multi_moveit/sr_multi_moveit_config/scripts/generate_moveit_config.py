@@ -139,7 +139,8 @@ def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
                     else:
                         hand_joints.append(name)
             output_str += generate_follow_joint_trajectory_controller(manipulator.hand.prefix, hand_joints)
-            output_str += generate_follow_joint_trajectory_controller(manipulator.hand.prefix + 'wr_', wrist_joints)
+            if wrist_joints:
+                output_str += generate_follow_joint_trajectory_controller(manipulator.hand.prefix + 'wr_', wrist_joints)
 
     # load on param server or output to file
     upload_output_params(output_str, output_path, ns_)
