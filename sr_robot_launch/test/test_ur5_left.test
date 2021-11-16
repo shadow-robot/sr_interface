@@ -1,6 +1,6 @@
 <launch>
      <!-- Find launch file-->
-     <arg name="scene" default="true"/>
+     <arg name="scene" default="false"/>
      <arg name="hand_type" value="hand_lite"/>
      <arg name="side" value="left"/>
      
@@ -11,7 +11,7 @@
 </include>
 
 <!-- Test script -->
-  <test test-name="test_hand_and_arm_sim" pkg="sr_robot_launch" type="test_hand_and_arm_sim.py" time-limit="300.0">
+  <test test-name="test_hand_and_arm_sim" pkg="sr_robot_launch" type="test_hand_and_arm_sim.py" time-limit="500.0">
   <param name="/test_hand_and_arm_sim/hand_type" value="$(arg hand_type)"/>
   <param name="/test_hand_and_arm_sim/scene" value="$(arg scene)"/>
   <param name="/test_hand_and_arm_sim/side" value="$(arg side)"/>

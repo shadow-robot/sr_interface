@@ -54,12 +54,12 @@ class TestHandAndArmSim(TestCase):
 
         if cls.hand_id == 'rh':
             cls.arm_id = 'ra'
-            cls.robot_commander = SrRobotCommander(name="right_arm_and_hand", set_ground=not(cls.scene))
+            cls.robot_commander = SrRobotCommander(name="right_arm_and_hand")
             cls.hand_commander = SrHandCommander(name='right_hand')
             cls.arm_commander = SrArmCommander(name='right_arm', set_ground=not(cls.scene))
         elif cls.hand_id == 'lh':
             cls.arm_id = 'la'
-            cls.robot_commander = SrRobotCommander(name="left_arm_and_hand", set_ground=not(cls.scene))
+            cls.robot_commander = SrRobotCommander(name="left_arm_and_hand")
             cls.hand_commander = SrHandCommander(name='left_hand')
             cls.arm_commander = SrArmCommander(name='left_arm', set_ground=not(cls.scene))
 
