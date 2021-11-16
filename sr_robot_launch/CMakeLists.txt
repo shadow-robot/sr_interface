@@ -182,9 +182,7 @@ if (CATKIN_ENABLE_TESTING)
     #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_extra_lite hand_id:=lh)
 
 #HAND AND ARM TESTS - SPECIFIC LAUNCH FILES
-    #add_rostest(test/test_ur10_right.test)
     #add_rostest(test/test_ur10_right.test ARGS scene:=true)
-    #add_rostest(test/test_ur10_left.test)
     #add_rostest(test/test_ur10_left.test ARGS scene:=true)
     #add_rostest(test/test_ur5_right.test)
     #add_rostest(test/test_ur5_right.test ARGS scene:=true)
