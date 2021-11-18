@@ -36,6 +36,8 @@ class TestHandAndArmSim(TestCase):
     def setUpClass(cls):
         rospy.wait_for_message('/move_group/status', GoalStatusArray)
         cls.hand_type = rospy.get_param('~test_hand_and_arm_sim/hand_type')
+        if cls.hand_type == 'hand_e_plus':
+            cls.hand_type = 'hand_e'
         cls.scene = rospy.get_param('~test_hand_and_arm_sim/scene')
 
         # ur-specific launch files do not accept 'side' param as it is already set
