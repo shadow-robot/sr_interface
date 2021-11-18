@@ -190,7 +190,8 @@ if (CATKIN_ENABLE_TESTING)
     #add_rostest(test/test_ur5_left.test ARGS scene:=true)
 
 #Bimanual Tests
-    #add_rostest(test/test_bimanual_hand_and_arm.test)
+    # This wont work as robotcommander group cannot have ground for collision so it fails
+    # add_rostest(test/test_bimanual_hand_and_arm.test)
     #add_rostest(test/test_bimanual_hand_and_arm.test ARGS scene:=true)
     
 #ARM UNLOCK/BRAKE/RELEASE TESTS
