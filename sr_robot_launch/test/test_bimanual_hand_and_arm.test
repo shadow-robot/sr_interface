@@ -9,7 +9,7 @@
 </include>
 
 <!-- Test script -->
-  <test test-name="test_bimanual_hand_and_arm" pkg="sr_robot_launch" type="test_bimanual_hand_and_arm.py" time-limit="300.0">
+  <test test-name="test_bimanual_hand_and_arm" pkg="sr_robot_launch" type="test_bimanual_hand_and_arm.py" time-limit="500.0">
   <param name="/test_hand_and_arm_sim/scene" value="$(arg scene)"/>
   </test>
 </launch>
