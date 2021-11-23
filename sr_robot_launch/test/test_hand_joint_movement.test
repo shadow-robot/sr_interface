@@ -13,7 +13,7 @@
 </include>
 
     <!-- Test script -->
-  <test test-name="test_hand_joint_movement" pkg="sr_robot_launch" type="test_hand_joint_movement.py" time-limit="300.0">
+  <test test-name="test_hand_joint_movement" pkg="sr_robot_launch" type="test_hand_joint_movement.py" time-limit="500.0">
     <param name="/test_sim/hand_type" value="$( arg hand_type)"/>
     <param name="/test_sim/hand_id" value="$( arg hand_id)"/>
   </test>
