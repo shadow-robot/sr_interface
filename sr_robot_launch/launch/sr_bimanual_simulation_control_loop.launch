@@ -44,6 +44,7 @@
 
   <!-- Robot description related config-->
   <arg name="robot_model" default="ur10e"/>
+  <arg name="ignore_robot_model" default="" />
   <arg name="arm_x_separation" default="1.0"/>
   <arg name="arm_y_separation" default="1.0"/>
   <arg name="arm_1_z" default="0.0"/>

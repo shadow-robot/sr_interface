@@ -48,6 +48,7 @@
 
   <!-- Robot description related config-->
   <arg name="robot_model" default="ur10e"/>
+  <arg name="ignore_robot_model" default="" />
   <arg name="arm_x_separation" default="0.0"/>
   <arg name="arm_y_separation" default="0.0"/>
   <arg if="$(arg arm)" name="robot_name" default="$(arg robot_model)srh"/>
