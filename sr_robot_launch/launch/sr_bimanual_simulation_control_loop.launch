@@ -50,6 +50,7 @@
   <arg name="arm_1_z" default="0.0"/>
   <arg name="arm_2_z" default="0.0"/>
   <arg if="$(arg arms)" name="robot_name" default="$(arg robot_model)srh"/>
+  <arg if="$(arg arms)" name="ignore_robot_model" default="$(arg robot_name)"/>
 
   <!-- ROBOT CONFIG FILES-->
   <!-- Hands and arms -->
@@ -117,7 +118,7 @@
   <group if="$(arg scene)">
     <include file="$(find gazebo2rviz)/launch/gazebo2moveit.launch">
       <arg name="frequency" default="1" />
-      <arg name="ignore_robot_model" default="$(arg robot_name)"/>
+      <arg name="ignore_robot_model" default="$(arg ignore_robot_model)"/>
     </include>
   </group>
 
