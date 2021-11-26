@@ -44,13 +44,11 @@
 
   <!-- Robot description related config-->
   <arg name="robot_model" default="ur10e"/>
-  <arg name="ignore_robot_model" default="" />
   <arg name="arm_x_separation" default="1.0"/>
   <arg name="arm_y_separation" default="1.0"/>
   <arg name="arm_1_z" default="0.0"/>
   <arg name="arm_2_z" default="0.0"/>
   <arg if="$(arg arms)" name="robot_name" default="$(arg robot_model)srh"/>
-  <arg if="$(arg arms)" name="ignore_robot_model" default="$(arg robot_name)"/>
 
   <!-- ROBOT CONFIG FILES-->
   <!-- Hands and arms -->
@@ -118,7 +116,7 @@
   <group if="$(arg scene)">
     <include file="$(find gazebo2rviz)/launch/gazebo2moveit.launch">
       <arg name="frequency" default="1" />
-      <arg name="ignore_robot_model" default="$(arg ignore_robot_model)"/>
+      <arg if="$(arg arms)" name="ignore_robot_model" value="$(arg robot_name)"/>
     </include>
   </group>
 

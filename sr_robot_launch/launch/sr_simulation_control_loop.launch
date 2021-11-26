@@ -48,12 +48,10 @@
 
   <!-- Robot description related config-->
   <arg name="robot_model" default="ur10e"/>
-  <arg name="ignore_robot_model" default="" />
   <arg name="arm_x_separation" default="0.0"/>
   <arg name="arm_y_separation" default="0.0"/>
   <arg if="$(arg arm)" name="robot_name" default="$(arg robot_model)srh"/>
   <arg if="$(arg arm)" name="initial_z" default="0.1"/>
-  <arg if="$(arg arm)" name="ignore_robot_model" default="$(arg robot_name)"/>
 
   <!-- LOADING ROBOT DESCRIPTION-->
     <include file="$(find sr_robot_launch)/launch/load_robot_description.launch">
@@ -115,7 +113,7 @@
   <group if="$(arg scene)">
     <include file="$(find gazebo2rviz)/launch/gazebo2moveit.launch">
       <arg name="frequency" default="1" />
-      <arg name="ignore_robot_model" default="$(arg ignore_robot_model)" />
+      <arg if="$(arg arm)" name="ignore_robot_model" value="$(arg robot_name)"/>
     </include>
   </group>
 
