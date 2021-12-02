@@ -30,6 +30,7 @@ from unittest import TestCase
 from actionlib_msgs.msg import GoalStatusArray
 from sensor_msgs.msg import JointState
 from multiprocessing import Process
+from std_srvs.srv import Trigger
 
 
 class TestHandAndArmSim(TestCase):
@@ -148,7 +149,11 @@ class TestHandAndArmSim(TestCase):
         arm_joints_target = dict()
         arm_joints_target.update(ra_arm_joints_target)
         arm_joints_target.update(la_arm_joints_target)
-
+        service_call = rospy.ServiceProxy("/la_sr_ur_robot_hw/resend_robot_program", Trigger)
+        response = service_call()
+        service_call = rospy.ServiceProxy("/ra_sr_ur_robot_hw/resend_robot_program", Trigger)
+        response = service_call()
+        rospy.sleep(2)
         self.arm_commander.move_to_joint_value_target(arm_joints_target, wait=True)
         rospy.sleep(5)
         final_arm_joint_values = self.arm_commander.get_current_state()
@@ -173,6 +178,11 @@ class TestHandAndArmSim(TestCase):
         hand_and_arm_joints_target = dict()
         hand_and_arm_joints_target.update(hand_joints_target)
         hand_and_arm_joints_target.update(arm_joints_target)
+        service_call = rospy.ServiceProxy("/la_sr_ur_robot_hw/resend_robot_program", Trigger)
+        response = service_call()
+        service_call = rospy.ServiceProxy("/ra_sr_ur_robot_hw/resend_robot_program", Trigger)
+        response = service_call()
+        rospy.sleep(2)
         self.robot_commander.move_to_joint_value_target_unsafe(hand_and_arm_joints_target, 10.0, True)
 
         rospy.sleep(5)
