@@ -43,4 +43,6 @@
   <run_depend>sr_utilities_common</run_depend>
 
   <test_depend>rostest</test_depend>
+  <test_depend>warehouse_ros</test_depend>
+  <test_depend>warehouse_ros_mongo</test_depend>
 </package>
