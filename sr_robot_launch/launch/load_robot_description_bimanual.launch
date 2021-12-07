@@ -11,33 +11,33 @@
   <!-- DELETE biotac after refactoring arm xacros-->
   <arg name="biotac" default="false"/>
 
-  <arg name="hand_type_right" default="hand_e"/>
-  <arg name="hand_version_right" default="E3M5"/>
-  <arg name="fingers_right" default="all"/>
-  <arg name="tip_sensors_right" default="pst"/>
-  <arg name="mid_sensors_right" default="none"/>
-  <arg name="prox_sensors_right" default="none"/>
-  <arg name="palm_sensor_right" default="none"/>
+  <arg name="right_hand_type" default="hand_e"/>
+  <arg name="right_hand_version" default="E3M5"/>
+  <arg name="right_fingers" default="all"/>
+  <arg name="right_tip_sensors" default="pst"/>
+  <arg name="right_mid_sensors" default="none"/>
+  <arg name="right_prox_sensors" default="none"/>
+  <arg name="right_palm_sensor" default="none"/>
 
-  <arg name="hand_type_left" default="hand_e"/>
-  <arg name="hand_version_left" default="E3M5"/>
-  <arg name="fingers_left" default="all"/>
-  <arg name="tip_sensors_left" default="pst"/>
-  <arg name="mid_sensors_left" default="none"/>
-  <arg name="prox_sensors_left" default="none"/>
-  <arg name="palm_sensor_left" default="none"/>
+  <arg name="left_hand_type" default="hand_e"/>
+  <arg name="left_hand_version" default="E3M5"/>
+  <arg name="left_fingers" default="all"/>
+  <arg name="left_tip_sensors" default="pst"/>
+  <arg name="left_mid_sensors" default="none"/>
+  <arg name="left_prox_sensors" default="none"/>
+  <arg name="left_palm_sensor" default="none"/>
 
   <arg unless="$(arg arms)" name="robot_description" default="'$(find sr_description)/robots/sr_hand_bimanual.urdf.xacro'"/>
 
   <arg unless="$(arg arms)" name="load_robot_description_command" value="xacro $(arg robot_description) arm_x_separation:=$(arg hand_x_separation)
-                                                                         hand_type_right:=$(arg hand_type_right) hand_version_right:=$(arg hand_version_right)
-                                                                         fingers_right:=$(arg fingers_right) tip_sensors_right:=$(arg tip_sensors_right)
-                                                                         mid_sensors_right:=$(arg mid_sensors_right) prox_sensors_right:=$(arg prox_sensors_right)
-                                                                         palm_sensor_right:=$(arg palm_sensor_right)
-                                                                         hand_type_left:=$(arg hand_type_left) hand_version_left:=$(arg hand_version_left)
-                                                                         fingers_left:=$(arg fingers_left) tip_sensors_left:=$(arg tip_sensors_left)
-                                                                         mid_sensors_left:=$(arg mid_sensors_left) prox_sensors_left:=$(arg prox_sensors_left)
-                                                                         palm_sensor_left:=$(arg palm_sensor_left)"/>
+                                                                         right_hand_type:=$(arg right_hand_type) right_hand_version:=$(arg right_hand_version)
+                                                                         right_fingers:=$(arg right_fingers) right_tip_sensors:=$(arg right_tip_sensors)
+                                                                         right_mid_sensors:=$(arg right_mid_sensors) right_prox_sensors:=$(arg right_prox_sensors)
+                                                                         right_palm_sensor:=$(arg right_palm_sensor)
+                                                                         left_hand_type:=$(arg left_hand_type) left_hand_version:=$(arg left_hand_version)
+                                                                         left_fingers:=$(arg left_fingers) left_tip_sensors:=$(arg left_tip_sensors)
+                                                                         left_mid_sensors:=$(arg left_mid_sensors) left_prox_sensors:=$(arg left_prox_sensors)
+                                                                         left_palm_sensor:=$(arg left_palm_sensor)"/>
 
   <!-- ARM SPECIFIC CONFIG-->
   <arg name="robot_model" default="ur10e"/>
