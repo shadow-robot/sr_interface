@@ -34,6 +34,14 @@ trunks:
       - name: code_coverage
       - name: style_check
         settings:
+          machine_type: medium
+          ubuntu:
+            version: focal
+          ros:
+            release: noetic
+          docker:
+            image: public.ecr.aws/shadowrobot/build-tools
+            tag: focal-noetic
           toolset:
             branch: master
             modules:
