@@ -35,8 +35,8 @@
     <xacro:include filename="$(find sr_description)/other/xacro/gazebo.urdf.xacro"/>
 
     <xacro:sr_hand side="$(arg side)" hand_type="$(arg hand_type)" hand_version="$(arg hand_version)"
-                    fingers="$(arg fingers)" tip_sensors="$(arg tip_sensors)" mid_sensors="$(arg mid_sensors)"
-                    prox_sensors="$(arg prox_sensors)" palm_sensor="$(arg palm_sensor)"/>
+                   fingers="$(arg fingers)" tip_sensors="$(arg tip_sensors)" mid_sensors="$(arg mid_sensors)"
+                   prox_sensors="$(arg prox_sensors)" palm_sensor="$(arg palm_sensor)"/>
 
     <joint name="world_joint" type="fixed">
         <parent link="world"/>
