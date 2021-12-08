@@ -73,6 +73,5 @@ trunks:
             tag: bionic-melodic
           toolset:
             branch: master
-          toolset:
             modules:
               - check_install
