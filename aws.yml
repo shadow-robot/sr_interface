@@ -32,16 +32,30 @@ trunks:
   - name: melodic-devel
     jobs:
       - name: code_coverage
+        settings:
+          machine_type: medium
+          ubuntu:
+            version: bionic
+          ros:
+            release: melodic
+          docker:
+            image: shadowrobot/build-tools
+            tag: bionic-melodic
+          toolset:
+            branch: master
+            modules:
+              - code_style_check
+              - check_license
       - name: style_check
         settings:
           machine_type: medium
           ubuntu:
-            version: focal
+            version: bionic
           ros:
-            release: noetic
+            release: melodic
           docker:
-            image: public.ecr.aws/shadowrobot/build-tools
-            tag: focal-noetic
+            image: shadowrobot/build-tools
+            tag: bionic-melodic
           toolset:
             branch: master
             modules:
@@ -49,6 +63,16 @@ trunks:
               - check_license
       - name: install_check
         settings:
+          machine_type: medium
+          ubuntu:
+            version: bionic
+          ros:
+            release: melodic
+          docker:
+            image: shadowrobot/build-tools
+            tag: bionic-melodic
+          toolset:
+            branch: master
           toolset:
             modules:
               - check_install
