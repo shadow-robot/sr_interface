@@ -27,6 +27,6 @@
 
     <xacro:ur10_robot prefix="la_"  transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config_left)"/>
 
-    <xacro:include filename="$(find sr_description)/materials.urdf.xacro"/>
-    <xacro:include filename="$(find sr_description)/other/xacro/gazebo/gazebo.urdf.xacro"/>
+    <xacro:include filename="$(find sr_description)/other/xacro/materials.urdf.xacro"/>
+    <xacro:include filename="$(find sr_description)/other/xacro/gazebo.urdf.xacro"/>
 </robot>

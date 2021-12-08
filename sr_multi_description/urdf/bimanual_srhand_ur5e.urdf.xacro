@@ -1,9 +1,6 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro" name="ur5esrh">
 
     <xacro:include filename="$(find ur_description)/urdf/inc/ur5e_macro.xacro"/>
-    <xacro:arg name="kinematics_config" default="$(find ur_description)/config/ur5e/default_kinematics.yaml"/>
-    <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
-
     <link name="world"/>
     <xacro:arg name="arm_1_z" default="0.0"/>
     <xacro:arg name="arm_2_z" default="0.0"/>
@@ -16,7 +13,11 @@
         <origin xyz="0.0 0.0 $(arg arm_1_z)" rpy="0.0 0.0 0.0"/>
     </joint>
 
-    <xacro:ur5e_robot prefix="ra_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config)"/>
+    <xacro:arg name="kinematics_config_right" default="$(find ur_description)/config/ur5e/default_kinematics.yaml"/>
+    <xacro:arg name="kinematics_config_left" default="$(find ur_description)/config/ur5e/default_kinematics.yaml"/>
+    <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+
+    <xacro:ur5e_robot prefix="ra_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config_right)"/>
 
     <joint name="world_to_arm_2_joint" type="fixed">
         <parent link="world"/>
@@ -24,13 +25,30 @@
         <origin xyz="$(arg arm_x_separation) $(arg arm_y_separation) $(arg arm_2_z)" rpy="0.0 0.0 ${pi}"/>
     </joint>
 
-    <xacro:ur5e_robot prefix="la_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config)"/>
+    <xacro:ur5e_robot prefix="la_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config_left)"/>
 
-    <xacro:include filename="$(find sr_description)/materials.urdf.xacro"/>
-    <xacro:include filename="$(find sr_description)/hand/xacro/full_hand.urdf.xacro"/>
-    <xacro:include filename="$(find sr_description)/other/xacro/gazebo/gazebo.urdf.xacro"/>
+    <xacro:arg name="right_hand_type" default="hand_e"/>
+    <xacro:arg name="right_hand_version" default="E3M5"/>
+    <xacro:arg name="right_fingers" default="all"/>
+    <xacro:arg name="right_tip_sensors" default="pst"/>
+    <xacro:arg name="right_mid_sensors" default="none"/>
+    <xacro:arg name="right_prox_sensors" default="none"/>
+    <xacro:arg name="right_palm_sensor" default="none"/>
+    <xacro:arg name="left_hand_type" default="hand_e"/>
+    <xacro:arg name="left_hand_version" default="E3M5"/>
+    <xacro:arg name="left_fingers" default="all"/>
+    <xacro:arg name="left_tip_sensors" default="pst"/>
+    <xacro:arg name="left_mid_sensors" default="none"/>
+    <xacro:arg name="left_prox_sensors" default="none"/>
+    <xacro:arg name="left_palm_sensor" default="none"/>
 
-    <xacro:shadowhand muscletrans="false" muscle="false" bio="false" bt_sp="false" ubi="false" eli="false" reflect="1.0" prefix="rh_" lf="true" cable_mesh="true"/>
+    <xacro:include filename="$(find sr_description)/other/xacro/materials.urdf.xacro"/>
+    <xacro:include filename="$(find sr_description)/hand/xacro/hand.urdf.xacro"/>
+    <xacro:include filename="$(find sr_description)/other/xacro/gazebo.urdf.xacro"/>
+
+    <xacro:sr_hand side="right" hand_type="$(arg right_hand_type)" hand_version="$(arg right_hand_version)"
+                    fingers="$(arg right_fingers)" tip_sensors="$(arg right_tip_sensors)" mid_sensors="$(arg right_mid_sensors)"
+                    prox_sensors="$(arg right_prox_sensors)" palm_sensor="$(arg right_palm_sensor)"/>
 
     <joint name="ra_arm_to_hand" type="fixed">
         <parent link="ra_flange"/>
@@ -38,7 +56,9 @@
         <origin xyz="0.012 0.0 0.0" rpy="${pi/2.0} ${pi} ${pi/2.0}"/>
     </joint>
 
-    <xacro:shadowhand muscletrans="false" muscle="false" bio="false" bt_sp="false" ubi="false" eli="false" reflect="-1.0" prefix="lh_" lf="true" cable_mesh="true"/>
+    <xacro:sr_hand side="left" hand_type="$(arg left_hand_type)" hand_version="$(arg left_hand_version)"
+                fingers="$(arg left_fingers)" tip_sensors="$(arg left_tip_sensors)" mid_sensors="$(arg left_mid_sensors)"
+                prox_sensors="$(arg left_prox_sensors)" palm_sensor="$(arg left_palm_sensor)"/>
 
     <joint name="la_arm_to_hand" type="fixed">
         <parent link="la_flange"/>
