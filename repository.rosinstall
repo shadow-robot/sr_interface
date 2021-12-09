@@ -32,7 +32,6 @@
     local-name: ros_control_robot
     uri: https://github.com/shadow-robot/ros_control_robot.git
     version: noetic-devel
-
 - git:
     local-name: sr_hand_config
     uri: https://github.com/shadow-robot/sr_hand_config.git
