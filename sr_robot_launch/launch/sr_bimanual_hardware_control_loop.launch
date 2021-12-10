@@ -44,6 +44,9 @@
   <arg name="arm_robot_hw_1" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/right_ur10e_arm_robot_hw.yaml"/>
   <arg name="arm_robot_hw_2" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/left_bimanual_ur_arm_robot_hw.yaml"/>
   <arg name="arm_robot_hw_2" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/left_bimanual_ur10e_arm_robot_hw.yaml"/>
+  <arg name="arm_compliance_control" default="false"/>
+  <arg if="$(arg arm_compliance_control)" name="arm_transmission_interface" default="hardware_interface/VelocityJointInterface"/>
+  <arg unless="$(arg arm_compliance_control)" name="arm_transmission_interface" default="hardware_interface/PositionJointInterface"/>
   <arg name="urcap_program_name" default="external_ctrl.urp"/>
 
   <arg name="arm_trajectory" default="true"/>
@@ -56,8 +59,8 @@
   <arg unless="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_mass" default="0.0"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
+  <arg name="load_robot_description_command" default="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation) transmission_hw_interface:=$(arg arm_transmission_interface)"/>
 
-  <arg name="load_robot_description_command" default="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
 
   <node pkg="rosservice" type="rosservice" name="set_right_speed_scale" args="call --wait /ra_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg right_arm_speed_scale)'"/>
   <node pkg="rosservice" type="rosservice" name="set_left_speed_scale" args="call --wait /la_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg left_arm_speed_scale)'"/>

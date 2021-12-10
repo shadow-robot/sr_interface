@@ -1,0 +1,49 @@
+
+joints: &robot_joints
+  - ra_shoulder_pan_joint
+  - ra_shoulder_lift_joint
+  - ra_elbow_joint
+  - ra_wrist_1_joint
+  - ra_wrist_2_joint
+  - ra_wrist_3_joint
+
+ra_trajectory_controller:
+  type: "velocity_controllers/ComplianceController"
+  joints: *robot_joints
+  compliance_command_timeout: 1.5
+  constraints:
+      goal_time: 6.0
+      stopped_velocity_tolerance: 0.05
+      ra_shoulder_pan_joint: {trajectory: 0.3, goal: 0.1}
+      ra_shoulder_lift_joint: {trajectory: 0.3, goal: 0.1}
+      ra_elbow_joint: {trajectory: 0.3, goal: 0.1}
+      ra_wrist_1_joint: {trajectory: 0.3, goal: 0.1}
+      ra_wrist_2_joint: {trajectory: 0.3, goal: 0.1}
+      ra_wrist_3_joint: {trajectory: 0.3, goal: 0.1}
+  stop_trajectory_duration: 0.5
+  state_publish_rate:  250
+  action_monitor_rate: 10
+  allow_partial_joints_goal: true
+  #!!These values have not been optimized!!
+  gains:
+    p: &p_gain 20.0
+    i: &i_gain 0.0
+    d: &d_gain 0.0
+    clamp: &i_clamp 1.0
+    ra_shoulder_pan_joint:  {p: *p_gain,  i: *i_gain, d: *d_gain, i_clamp: *i_clamp}
+    ra_shoulder_lift_joint: {p: *p_gain,  i: *i_gain, d: *d_gain, i_clamp: *i_clamp}
+    ra_elbow_joint:         {p: *p_gain,  i: *i_gain, d: *d_gain, i_clamp: *i_clamp}
+    ra_wrist_1_joint:       {p: *p_gain,  i: *i_gain, d: *d_gain, i_clamp: *i_clamp}
+    ra_wrist_2_joint:       {p: *p_gain,  i: *i_gain, d: *d_gain, i_clamp: *i_clamp}
+    ra_wrist_3_joint:       {p: *p_gain,  i: *i_gain, d: *d_gain, i_clamp: *i_clamp}
+
+  # Use a feedforward term to reduce the size of PID gains
+  velocity_ff:
+    var: &v_ff 0.0
+    ra_shoulder_pan_joint: *v_ff
+    ra_shoulder_lift_joint: *v_ff
+    ra_elbow_joint: *v_ff
+    ra_wrist_1_joint: *v_ff
+    ra_wrist_2_joint: *v_ff
+    ra_wrist_3_joint: *v_ff
+
