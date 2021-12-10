@@ -1,14 +1,15 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro"
        xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
        xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
-       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface" name="ur5esrh">
-
-    <xacro:include filename="$(find ur_description)/urdf/inc/ur5e_macro.xacro"/>
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface" name="ursrh">
 
     <link name="world"/>
     <xacro:arg name="initial_z" default="0.0"/>
-    <xacro:arg name="kinematics_config" default="$(find ur_description)/config/ur5e/default_kinematics.yaml"/>
     <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+
+    <xacro:arg name="robot_model" default="ur10e"/>
+    <xacro:arg name="kinematics_config" default="$(find ur_description)/config/$(arg robot_model)/default_kinematics.yaml"/>
+    <xacro:include filename="$(find ur_description)/urdf/inc/$(arg robot_model)_macro.xacro"/>
 
     <xacro:arg name="hand_type" default="hand_e"/>
     <xacro:arg name="hand_version" default="E3M5"/>
@@ -28,15 +29,26 @@
         <xacro:arg name="hand_prefix" default="lh" />
     </xacro:if>
 
-    <xacro:ur5e_robot prefix="$(arg arm_prefix)_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config)"/>
+    <xacro:if value="${'$(arg robot_model)' == 'ur10e'}">
+        <xacro:ur10e_robot prefix="$(arg arm_prefix)_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config)"/>
+    </xacro:if>
+    <xacro:if value="${'$(arg robot_model)' == 'ur10'}">
+        <xacro:ur10_robot prefix="$(arg arm_prefix)_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config)"/>
+    </xacro:if>
+    <xacro:if value="${'$(arg robot_model)' == 'ur5e'}">
+        <xacro:ur5e_robot prefix="$(arg arm_prefix)_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config)"/>
+    </xacro:if>
+    <xacro:if value="${'$(arg robot_model)' == 'ur5'}">
+        <xacro:ur5_robot prefix="$(arg arm_prefix)_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config)"/>
+    </xacro:if>
 
     <xacro:include filename="$(find sr_description)/other/xacro/materials.urdf.xacro"/>
     <xacro:include filename="$(find sr_description)/hand/xacro/hand.urdf.xacro"/>
     <xacro:include filename="$(find sr_description)/other/xacro/gazebo.urdf.xacro"/>
 
     <xacro:sr_hand side="$(arg side)" hand_type="$(arg hand_type)" hand_version="$(arg hand_version)"
-                    fingers="$(arg fingers)" tip_sensors="$(arg tip_sensors)" mid_sensors="$(arg mid_sensors)"
-                    prox_sensors="$(arg prox_sensors)" palm_sensor="$(arg palm_sensor)"/>
+                   fingers="$(arg fingers)" tip_sensors="$(arg tip_sensors)" mid_sensors="$(arg mid_sensors)"
+                   prox_sensors="$(arg prox_sensors)" palm_sensor="$(arg palm_sensor)"/>
 
     <joint name="world_joint" type="fixed">
         <parent link="world"/>

@@ -67,6 +67,7 @@ class Subrobot(object):
         self.is_lite = False
         self.prefix = ""
         self.moveit_path = ""
+        self.urdf_args = {}
 
 
 class Manipulator(object):
@@ -170,6 +171,8 @@ class Robot(object):
                                 manipulator.hand.group_states.append(group_state)
                         if "is_lite" in hand_yaml:
                             manipulator.hand.is_lite = bool(hand_yaml["is_lite"])
+                        if "urdf_args" in hand_yaml:
+                            manipulator.hand.urdf_args = hand_yaml["urdf_args"]
 
                     self.manipulators.append(manipulator)
         else:
@@ -209,13 +212,7 @@ class SRDFRobotGenerator(object):
                 xacro.process_doc(self.arm_srdf_xmls[manipulator_id])
 
             if manipulator.has_hand:
-                # Generate and read hand srdf
-                hand_urdf_path = self.rospack.get_path('sr_description') + "/robots/" + manipulator.hand.name
-                with open(hand_urdf_path, 'r') as hand_urdf_xacro_file:
-                    hand_urdf_xml = parse(hand_urdf_xacro_file)
-                xacro.process_doc(hand_urdf_xml)
-
-                hand_urdf = hand_urdf_xml.toprettyxml(indent='  ')
+                hand_urdf = rospy.get_param('hand_description')
                 srdfHandGenerator = SRDFHandGenerator(hand_urdf, load=False, save=False)
                 self.hand_srdf_xmls.append(srdfHandGenerator.get_hand_srdf())
 
