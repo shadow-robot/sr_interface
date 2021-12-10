@@ -4,4 +4,4 @@ robot:
     left_manipulator:
       side: left
       hand:
-        name: shadowhand_left_motor.urdf.xacro
+        name: sr_hand.urdf.xacro

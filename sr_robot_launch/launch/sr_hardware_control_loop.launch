@@ -28,10 +28,8 @@
   <arg name="palm_sensor" default="none"/>
 
   <!-- Robot config file -->
-  <arg if="$(eval arg('hand') and arg('arm') and not arg('hand_type') == 'hand_lite')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
-  <arg if="$(eval arg('hand') and arg('arm') and arg('hand_type') == 'hand_lite')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_lite_$(arg robot_model).yaml"/>
-  <arg if="$(eval arg('hand') and not arg('arm') and not arg('hand_type') == 'hand_lite')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh.yaml"/>
-  <arg if="$(eval arg('hand') and not arg('arm') and arg('hand_type') == 'hand_lite')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_light.yaml"/>
+  <arg if="$(eval arg('hand') and arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
+  <arg if="$(eval arg('hand') and not arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh.yaml"/>
   <arg if="$(eval not arg('hand') and arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
 
   <!-- Set robot config file path in a param in case moveit nodes need it -->
