@@ -1,6 +1,6 @@
 <launch>
   <!-- 'octomap_data_type' options are 'pointcloud' or 'depthmap' -->
-  <arg name="octomap_data_type" default="none"/>
+  <arg name="octomap_data_type" default="depthmap"/>
 
   <!-- This file makes it easy to include the settings for sensor managers -->  
 
