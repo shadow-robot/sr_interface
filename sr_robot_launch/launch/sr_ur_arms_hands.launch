@@ -43,22 +43,6 @@
   <!-- Set to true if you want to use hybrid controller -->
   <arg name="hybrid_controller" default="false"/>
 
-  <arg name="right_hand_type" default="hand_e"/>
-  <arg name="right_hand_version" default="E3M5"/>
-  <arg name="right_fingers" default="all"/>
-  <arg name="right_tip_sensors" default="pst"/>
-  <arg name="right_mid_sensors" default="none"/>
-  <arg name="right_prox_sensors" default="none"/>
-  <arg name="right_palm_sensor" default="none"/>
-
-  <arg name="left_hand_type" default="hand_e"/>
-  <arg name="left_hand_version" default="E3M5"/>
-  <arg name="left_fingers" default="all"/>
-  <arg name="left_tip_sensors" default="pst"/>
-  <arg name="left_mid_sensors" default="none"/>
-  <arg name="left_prox_sensors" default="none"/>
-  <arg name="left_palm_sensor" default="none"/>
-
   <!-- ARMS SPECIFIC CONFIG-->
   <arg name="arm_1_z" default="0.0"/>
   <arg name="arm_2_z" default="0.0"/>
@@ -90,6 +74,22 @@
   <arg name="start_home" default="false"/>
   <!-- home_angles must be input at the launch -->
   <arg name="home_angles" default=""/>
+
+  <arg name="right_hand_type" default="hand_e"/>
+  <arg name="right_hand_version" default="E3M5"/>
+  <arg name="right_fingers" default="all"/>
+  <arg name="right_tip_sensors" default="pst"/>
+  <arg name="right_mid_sensors" default="none"/>
+  <arg name="right_prox_sensors" default="none"/>
+  <arg name="right_palm_sensor" default="none"/>
+
+  <arg name="left_hand_type" default="hand_e"/>
+  <arg name="left_hand_version" default="E3M5"/>
+  <arg name="left_fingers" default="all"/>
+  <arg name="left_tip_sensors" default="pst"/>
+  <arg name="left_mid_sensors" default="none"/>
+  <arg name="left_prox_sensors" default="none"/>
+  <arg name="left_palm_sensor" default="none"/>
 
   <group if="$(arg sim)">
       <include file="$(find sr_robot_launch)/launch/sr_bimanual_simulation_control_loop.launch">
