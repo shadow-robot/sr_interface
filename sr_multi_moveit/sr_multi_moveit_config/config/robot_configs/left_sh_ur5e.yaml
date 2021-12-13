@@ -1,5 +1,5 @@
 robot:
-  name: ur5esrh
+  name: ursrh
   manipulators:
     left_manipulator:
       side: left

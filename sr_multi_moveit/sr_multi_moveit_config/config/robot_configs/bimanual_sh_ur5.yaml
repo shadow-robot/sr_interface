@@ -1,24 +1,10 @@
 robot:
-  name: ur10srh
+  name: ursrh
   manipulators:
     right_manipulator:
       side: right
       arm:
-        name: ur10
-        main_group: manipulator
-        moveit_path: 
-          package: sr_multi_moveit_config
-          relative_path: /config/ur
-        extra_groups_config_path: /config
-        group_states:
-          - home
-          - up
-      hand:
-        name: sr_hand.urdf.xacro
-    left_manipulator:
-      side: left
-      arm:
-        name: ur10
+        name: ur5
         main_group: manipulator
         moveit_path:
           package: sr_multi_moveit_config
@@ -28,7 +14,21 @@ robot:
           - home
           - up
       hand:
-        name: sr_hand.urdf.xacro
+        name: shadowhand_motor.urdf.xacro
+    left_manipulator:
+      side: left
+      arm:
+        name: ur5
+        main_group: manipulator
+        moveit_path:
+          package: sr_multi_moveit_config
+          relative_path: /config/ur
+        extra_groups_config_path: /config
+        group_states:
+          - home
+          - up
+      hand:
+        name: shadowhand_left_motor.urdf.xacro
 
 ra_sr_ur_robot_hw:
   # Hand E payload
