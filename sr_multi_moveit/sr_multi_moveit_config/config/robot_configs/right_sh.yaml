@@ -3,5 +3,4 @@ robot:
   manipulators:
     right_manipulator:
       side: right
-      hand:
-        name: sr_hand.urdf.xacro
+      hand: True

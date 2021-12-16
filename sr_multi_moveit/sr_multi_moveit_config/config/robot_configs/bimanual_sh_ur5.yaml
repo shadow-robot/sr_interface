@@ -13,8 +13,7 @@ robot:
         group_states:
           - home
           - up
-      hand:
-        name: shadowhand_motor.urdf.xacro
+      hand: True
     left_manipulator:
       side: left
       arm:
@@ -27,8 +26,7 @@ robot:
         group_states:
           - home
           - up
-      hand:
-        name: shadowhand_left_motor.urdf.xacro
+      hand: True
 
 ra_sr_ur_robot_hw:
   # Hand E payload

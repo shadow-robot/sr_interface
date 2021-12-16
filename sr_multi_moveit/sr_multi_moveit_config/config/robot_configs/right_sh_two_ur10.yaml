@@ -13,8 +13,7 @@ robot:
         group_states:
           - home
           - up
-      hand:
-        name: sr_hand.urdf.xacro
+      hand: True
     left_manipulator:
       side: left
       arm:

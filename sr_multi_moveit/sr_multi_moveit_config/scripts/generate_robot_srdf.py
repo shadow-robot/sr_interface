@@ -126,7 +126,7 @@ class Robot(object):
                         raise SRDFRobotGeneratorException("robot description did not specify " +
                                                           "a correct side for a manipulator")
                     has_arm = True if "arm" in manipulator_yaml else False
-                    has_hand = True if "hand" in manipulator_yaml else False
+                    has_hand = True if ("hand" in manipulator_yaml and manipulator_yaml["hand"]) else False
                     if not has_hand and not has_arm:
                         raise SRDFRobotGeneratorException("robot description did not specify " +
                                                           "either an arm or hand for a manipulator")
@@ -156,23 +156,6 @@ class Robot(object):
                         if "group_states" in arm_yaml:
                             for group_state in arm_yaml["group_states"]:
                                 manipulator.arm.group_states.append(group_state)
-
-                    if has_hand:
-                        hand_yaml = manipulator_yaml["hand"]
-                        if "name" in hand_yaml:
-                            manipulator.hand.name = hand_yaml["name"]
-                        if "main_group" in hand_yaml:
-                            manipulator.hand.main_group = hand_yaml["main_group"]
-                        if "other_groups" in hand_yaml:
-                            for group in hand_yaml["other_groups"]:
-                                manipulator.hand.other_groups.append(group)
-                        if "group_states" in hand_yaml:
-                            for group_state in hand_yaml["group_states"]:
-                                manipulator.hand.group_states.append(group_state)
-                        if "is_lite" in hand_yaml:
-                            manipulator.hand.is_lite = bool(hand_yaml["is_lite"])
-                        if "urdf_args" in hand_yaml:
-                            manipulator.hand.urdf_args = hand_yaml["urdf_args"]
 
                     self.manipulators.append(manipulator)
         else:
