@@ -374,6 +374,8 @@ def generate_joint_limits(robot,
     group_name = None
     # find full hand key name
     for key in robot.group_map:
+        rospy.logwarn("*******************************************8")
+        rospy.logwarn(key)
         if key.endswith("_hand"):
             group_name = key
 

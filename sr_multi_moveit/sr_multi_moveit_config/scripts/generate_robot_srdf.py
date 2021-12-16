@@ -212,7 +212,7 @@ class SRDFRobotGenerator(object):
                 xacro.process_doc(self.arm_srdf_xmls[manipulator_id])
 
             if manipulator.has_hand:
-                hand_urdf = rospy.get_param('hand_description')
+                hand_urdf = rospy.get_param('{}_hand_description'.format(manipulator.side))
                 srdfHandGenerator = SRDFHandGenerator(hand_urdf, load=False, save=False)
                 self.hand_srdf_xmls.append(srdfHandGenerator.get_hand_srdf())
 

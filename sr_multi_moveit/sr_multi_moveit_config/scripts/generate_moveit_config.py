@@ -395,6 +395,8 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
 
 def generate_joint_limits(robot, robot_config, hand_template_path="joint_limits_template.yaml",
                           output_path=None, ns_=None):
+    rospy.logwarn("************************------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*******")
+    rospy.logwarn(robot)
     output_str = ""
     output_str += "joint_limits:\n"
     for manipulator in robot_config.manipulators:
