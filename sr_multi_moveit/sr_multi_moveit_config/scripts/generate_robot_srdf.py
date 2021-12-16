@@ -67,7 +67,6 @@ class Subrobot(object):
         self.is_lite = False
         self.prefix = ""
         self.moveit_path = ""
-        self.urdf_args = {}
 
 
 class Manipulator(object):
