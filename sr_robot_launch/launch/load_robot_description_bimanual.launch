@@ -26,7 +26,7 @@
   <arg name="left_palm_sensor" default="none"/>
 
 
-  <!-- INDIVIDUAL HANDS CONFIG-->
+  <!-- Individual hand configs, needed for srdf generation -->
   <arg if="$(eval not arg('hands') == 'none')" name="hand_description" value="'$(find sr_description)/robots/sr_hand.urdf.xacro'"/>
   <arg if="$(eval not arg('hands') == 'none')" name="load_right_hand_description_command" value="xacro $(arg hand_description)
                                                      hand_type:=$(arg right_hand_type) hand_version:=$(arg right_hand_version) side:=right
@@ -37,7 +37,7 @@
                                                      fingers:=$(arg left_fingers) tip_sensors:=$(arg left_tip_sensors)
                                                      mid_sensors:=$(arg left_mid_sensors) prox_sensors:=$(arg left_prox_sensors) palm_sensor:=$(arg left_palm_sensor)"/>
 
-  <!-- COMBINED HANDS CONFIG -->
+  <!-- Combined hand configs -->
   <arg unless="$(arg arms)" name="robot_description" default="'$(find sr_description)/robots/sr_hand_bimanual.urdf.xacro'"/>
   <arg unless="$(arg arms)" name="load_robot_description_command" value="xacro $(arg robot_description) arm_x_separation:=$(arg hand_x_separation)
                                                                          right_hand_type:=$(arg right_hand_type) right_hand_version:=$(arg right_hand_version)
