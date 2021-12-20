@@ -20,7 +20,6 @@
   <arg name="home_angles" default=""/>
 
   <!-- HAND RELATED CONFIG-->
-  <arg name="biotac" default="false"/>
   <!-- Set to true to spawn the position controllers for the hands-->
   <arg name="hand_ctrl" unless="$(eval hands == 'none')" default="true"/>
   <arg name="hand_ctrl" if="$(eval hands == 'none')" default="false"/>
