@@ -3,7 +3,6 @@
 
   <!-- ROBOT CONFIGS -->
   <arg name="side"/>
-  <!-- No needed -->
   <arg name="side_letter" value="$(eval side[0])"/>
   <arg name="arm" default="true"/>
   <arg name="hand" default="true"/>
@@ -17,7 +16,6 @@
   <arg name="mid_sensors"/>
   <arg name="prox_sensors"/>
   <arg name="palm_sensor"/>
-  <arg name="hand_id" value="$(arg side_letter)h"/>
 
   <arg unless="$(arg arm)" name="robot_description" value="'$(find sr_description)/robots/sr_hand.urdf.xacro'"/>
   <arg unless="$(arg arm)" name="load_robot_description_command" value="xacro $(arg robot_description)
@@ -57,7 +55,7 @@
       <param name="arm_x_separation" value="$(arg arm_x_separation)"/>
       <param name="arm_y_separation" value="$(arg arm_y_separation)"/>
       <param name="initial_z" value="$(arg initial_z)"/>
-      <param name="prefix" value="$(arg hand_id)_"/>
+      <param name="prefix" value="$(arg side_letter)h_"/>
     </node>
 
     <param unless="$(arg arm)" name="robot_description" command="$(arg load_robot_description_command)"/>
