@@ -59,9 +59,7 @@
 
   <!-- Sets up right payload -->
   <arg if="$(eval hand and arg('hand_type') == 'hand_e')" name="arm_payload_mass" default="5.0"/>
-  <arg if="$(eval hand and arg('hand_type') == 'hand_e_plus')" name="arm_payload_mass" default="5.0"/>
-  <arg if="$(eval hand and arg('hand_type') == 'hand_lite')" name="arm_payload_mass" default="2.7"/>
-  <arg if="$(eval hand and arg('hand_type') == 'hand_extra_lite')" name="arm_payload_mass" default="2.5"/>
+  <arg if="$(eval hand and arg('hand_type') == 'hand_g')" name="arm_payload_mass" default="2.7"/>
   <arg if="$(arg hand)" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
   <arg unless="$(arg hand)" name="arm_payload_mass" default="0.0"/>
   <arg unless="$(arg hand)" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
