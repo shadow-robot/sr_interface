@@ -62,7 +62,7 @@
     <xacro:include filename="$(find sr_description)/other/xacro/gazebo.urdf.xacro"/>
 
     <xacro:sr_hand side="right" hand_type="$(arg right_hand_type)" hand_version="$(arg right_hand_version)"
-                    fingers="$(arg right_fingers)" tip_sensors="$(arg right_tip_sensors)" mid_sensors="$(arg right_mid_sensors)"
+                   fingers="$(arg right_fingers)" tip_sensors="$(arg right_tip_sensors)" mid_sensors="$(arg right_mid_sensors)"
                     prox_sensors="$(arg right_prox_sensors)" palm_sensor="$(arg right_palm_sensor)"/>
 
     <joint name="ra_arm_to_hand" type="fixed">
