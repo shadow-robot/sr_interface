@@ -25,7 +25,7 @@
   <arg name="biotac" default="false"/>
   <!-- Separation between the robots -->
   <arg name="hand_x_separation" default="-0.4"/>
-  <!-- Set the hand type here: hand_e_plus, hand_e, hand_lite, hand_extra_lite -->
+  <!-- Set the hand type here: hand_e, hand_g -->
 
   <arg name="right_hand_type" default="hand_e"/>
   <arg name="right_hand_version" default="E3M5"/>
