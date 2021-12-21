@@ -13,7 +13,7 @@
   <arg name="generate_planning_config" default="true"/>
 
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
-  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/right_srhand_ur10_joint_limited.urdf.xacro'"/>
+  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/right_srhand_ur10.urdf.xacro'"/>
 
   <!-- hand ik solver possible values sr_hand_kinematics/kdl/trac_ik/bio_ik -->
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>

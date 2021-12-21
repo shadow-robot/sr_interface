@@ -2,7 +2,7 @@
   <!-- This launch file is for a bimanual system of ur arms and shadow hands -->
 
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
-  <arg name="sim" default="true"/>
+  <arg name="sim" default="false"/>
   <!-- Set to true for debugging -->
   <arg name="debug" default="false"/>
   <!-- Set to true to allow planning trajectories-->
@@ -134,7 +134,7 @@
         <param name="package_name" value="sr_multi_moveit_config" />
         <param name="executable_name" value="scene.launch" />
         <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
-        <rosparam param="topics_list">[/planning_scene]</rosparam>
+        <rosparam param="topics_list">[/planning_scene, /rviz_*]</rosparam>
         <param name="launch_args_list" value="scene_file:=$(arg scene_file)" />
       </node>
     </group>

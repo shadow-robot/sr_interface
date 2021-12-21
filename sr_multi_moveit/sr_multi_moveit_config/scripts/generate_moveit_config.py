@@ -97,6 +97,20 @@ def generate_fake_controllers(robot, robot_config, output_path=None, ns_=None):
     upload_output_params(output_str, output_path, ns_)
 
 
+def generate_follow_joint_trajectory_controller(prefix, joints):
+    output_str = "  - name: " + prefix + "trajectory_controller\n"
+    output_str += "    action_ns: follow_joint_trajectory\n"
+    output_str += "    type: FollowJointTrajectory\n"
+    output_str += "    default: true\n"
+    output_str += "    joints:\n"
+    if len(joints) == 0:
+        output_str += "      []\n"
+    else:
+        for joint in joints:
+            output_str += "      - " + joint + "\n"
+    return output_str
+
+
 def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
     output_str = "controller_list:\n"
     for manipulator in robot_config.manipulators:
@@ -106,13 +120,8 @@ def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
             with open(arm_yaml_path, 'r') as stream:
                 arm_yamldoc = yaml.safe_load(stream)
 
-            output_str += "  - name: " + manipulator.arm.prefix + "trajectory_controller\n"
-            output_str += "    action_ns: follow_joint_trajectory\n"
-            output_str += "    type: FollowJointTrajectory\n"
-            output_str += "    default: true\n"
-            output_str += "    joints:\n"
-            for joint in arm_yamldoc["controller_list"][0]["joints"]:
-                output_str += "     - " + manipulator.arm.prefix + joint + "\n"
+            arm_joints = [manipulator.arm.prefix + joint for joint in arm_yamldoc["controller_list"][0]["joints"]]
+            output_str += generate_follow_joint_trajectory_controller(manipulator.arm.prefix, arm_joints)
 
         if manipulator.has_hand:
             sh_group = None
@@ -120,18 +129,18 @@ def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
                 if group.name == manipulator.hand.internal_name:
                     sh_group = group
                     break
-            controller_name = "  - name: " + manipulator.hand.prefix + "trajectory_controller\n"
-            output_str += controller_name
-            output_str += "    action_ns: follow_joint_trajectory\n"
-            output_str += "    type: FollowJointTrajectory\n"
-            output_str += "    default: true\n"
-            output_str += "    joints:\n"
-            if len(group.joints) == 0:
-                output_str += "      []\n"
-            else:
-                for joint in group.joints:
-                    if joint.name[-3:] != "tip":
-                        output_str += "      - " + joint.name + "\n"
+            hand_joints = []
+            wrist_joints = []
+            for joint in group.joints:
+                name = joint.name
+                if name[-3:] != "tip":
+                    if name[-4:-2] == "WR":
+                        wrist_joints.append(name)
+                    else:
+                        hand_joints.append(name)
+            output_str += generate_follow_joint_trajectory_controller(manipulator.hand.prefix, hand_joints)
+            if wrist_joints:
+                output_str += generate_follow_joint_trajectory_controller(manipulator.hand.prefix + 'wr_', wrist_joints)
 
     # load on param server or output to file
     upload_output_params(output_str, output_path, ns_)

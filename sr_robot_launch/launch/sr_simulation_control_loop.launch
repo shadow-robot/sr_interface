@@ -113,6 +113,7 @@
   <group if="$(arg scene)">
     <include file="$(find gazebo2rviz)/launch/gazebo2moveit.launch">
       <arg name="frequency" default="1" />
+      <arg if="$(arg arm)" name="ignore_robot_model" value="$(arg robot_name)"/>
     </include>
   </group>
 
@@ -145,7 +146,7 @@
     <arg if="$(eval hand_trajectory and not grasp_controller and not hybrid_controller)" name="hand_controller_group" default="trajectory"/>
     <arg if="$(eval not hand_trajectory and not grasp_controller and not hybrid_controller)" name="hand_controller_group" default="position"/>
     <node name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
-    <param name="controller_group" value="$(arg hand_controller_group)"/>
+      <param name="controller_group" value="$(arg hand_controller_group)"/>
     </node>
   </group>
 </launch>

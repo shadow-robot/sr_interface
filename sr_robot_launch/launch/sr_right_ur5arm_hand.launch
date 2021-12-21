@@ -2,7 +2,7 @@
   <!-- This launch file is for the right ur5 arm and a shadow hand -->
 
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
-  <arg name="sim" default="true"/>
+  <arg name="sim" default="false"/>
   <!-- Set to true for debugging -->
   <arg name="debug" default="false"/>
   <!-- Set to true to allow planning trajectories-->
