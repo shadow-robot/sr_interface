@@ -2,7 +2,7 @@
   <!-- This launch file is for a ur arm and box -->
 
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
-  <arg name="sim" default="true"/>
+  <arg name="sim" default="false"/>
   <!-- Set to true for debugging -->
   <arg name="debug" default="false"/>
   <!-- Set to true to allow planning trajectories-->
@@ -41,8 +41,7 @@
   <!-- ARM CONFIG-->
   <arg name="initial_z" default="0.7521" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
-  <arg name="kinematics_config" if="$(eval robot_model[-1] == 'e')" default="$(find ur_e_description)/config/$(arg robot_model)_default.yaml"/>
-  <arg name="kinematics_config" if="$(eval not robot_model[-1] == 'e')" default="$(find ur_description)/config/$(arg robot_model)_default.yaml"/>
+  <arg name="kinematics_config" default="$(find ur_description)/config/$(arg robot_model)/default_kinematics.yaml"/>
   <rosparam command="load" file="$(arg kinematics_config)" ns="$(arg arm_prefix)_sr_ur_robot_hw"/>
 
   <arg name="arm_speed_scale" default="0.5"/>

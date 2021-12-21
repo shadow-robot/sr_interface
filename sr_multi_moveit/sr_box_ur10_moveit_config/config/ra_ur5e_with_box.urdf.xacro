@@ -1,11 +1,11 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro" name="ursrbox">
 
   <!-- Arm -->
-  <xacro:include filename="$(find ur_e_description)/urdf/ur5e.urdf.xacro"/>
-  <xacro:arg name="kinematics_config" default="$(find ur_e_description)/config/ur5e_default.yaml"/>
+  <xacro:include filename="$(find ur_description)/urdf/inc/ur5e_macro.xacro"/>
+  <xacro:arg name="kinematics_config" default="$(find ur_description)/config/ur5e/default_kinematics.yaml"/>
   <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
 
-  <xacro:ur5e_robot prefix="ra_" joint_limited="false" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_file="${load_yaml('$(arg kinematics_config)')}"/>
+  <xacro:ur5e_robot prefix="la_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config)"/>
 
   <gazebo>
     <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
@@ -28,7 +28,7 @@
 
   <!-- Join arm and hand -->
   <joint name="ra_arm_to_hand" type="fixed">
-    <parent link="ra_ee_link"/>
+    <parent link="ra_flange"/>
     <child link="hand_base_attach"/>
     <origin rpy="1.570796325 3.14159265 1.570796325" xyz="0.012 0.0 0.0"/>
   </joint>
