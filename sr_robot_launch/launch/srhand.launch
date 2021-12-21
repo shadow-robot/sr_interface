@@ -37,7 +37,7 @@
   <!-- hand_id is deprecated but still necessary for this file due to the structure of sr_config repository-->
   <arg if="$(eval arg('hand_id') == 'rh')" name="side" default="right"/>
   <arg if="$(eval arg('hand_id') == 'lh')" name="side" default="left"/>
-  <!-- Set to hand_e, hand_e_plus or hand_lite or hand_extra_lite -->
+  <!-- Set to hand_e or hand_g-->
   <arg name="hand_type" default="hand_e"/>
 
   <group if="$(arg sim)">
