@@ -171,6 +171,7 @@ install(DIRECTORY config/
 if (CATKIN_ENABLE_TESTING)
     find_package(rostest REQUIRED)
 
+# TODO: Add hand extra light in the section below
 #HAND TESTS
     #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_e hand_id:=rh)
     #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_e hand_id:=lh)
@@ -193,6 +194,7 @@ if (CATKIN_ENABLE_TESTING)
 #ARM UNLOCK/BRAKE/RELEASE TESTS
     #add_rostest(test/test_sr_ur_unlock.test)
 
+# TODO: Add hand extra light in the section below
 #HAND AND ARM TESTS - GENERIC LAUNCH FILE
     # ur10
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_e robot_model:=ur10)
@@ -217,6 +219,7 @@ if (CATKIN_ENABLE_TESTING)
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_e robot_model:=ur5e)
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_g robot_model:=ur5e)
 
+# TODO: Remove section below after new xacros are merged
 #FAILS - broken/outdated xacro does not display biotacs correctly
    # add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_ur10_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_biotac.yaml side:=right hand_type:=hand_e)
    # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_biotac.yaml side:=right hand_type:=hand_e robot_model:=ur10)
