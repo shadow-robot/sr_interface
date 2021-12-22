@@ -42,7 +42,7 @@ class TeachModeManager(object):
             "left_arm": ControllerHelper(["la"], ["la_"], hand_joint_names)
         }
 
-        self.modes = ["TRAJECTORY_MODE", "TEACH_MODE", "POSITION_MODE", "GRASP_MODE"]
+        self.modes = ["TRAJECTORY_MODE", "TEACH_MODE", "POSITION_MODE", "DIRECT_PWM_MODE"]
 
     def teach_mode(self, req):
 
@@ -87,36 +87,52 @@ class TeachModeManager(object):
         elif req.robot == "right_hand" or req.robot == "left_hand":
             change_type_msg = ChangeControlType()
             if req.teach_mode == RobotTeachModeRequest.TRAJECTORY_MODE \
-                    or req.teach_mode == RobotTeachModeRequest.POSITION_MODE:
+                    or req.teach_mode == RobotTeachModeRequest.POSITION_MODE \
+                    or req.teach_mode == RobotTeachModeRequest.DIRECT_PWM_MODE:
+
+                rospy.loginfo("Changing all %s controllers to STOP", req.robot)
+                self.ctrl_helpers[req.robot].change_hand_ctrl("stop")
+                self.ctrl_helpers[req.robot].change_trajectory_ctrl("stop")
 
                 change_type_msg.control_type = ControlType.PWM
                 rospy.loginfo("Changing %s Control mode to PWM", req.robot)
                 self.ctrl_helpers[
                     req.robot].change_force_ctrl_type(change_type_msg)
-                rospy.loginfo("Changing %s controllers to position", req.robot)
-                self.ctrl_helpers[req.robot].change_hand_ctrl("position")
+
+                if req.teach_mode == RobotTeachModeRequest.DIRECT_PWM_MODE:
+                    self.ctrl_helpers[
+                        req.robot].change_force_ctrl_type(change_type_msg)
+                    rospy.loginfo("Changing %s controllers to effort", req.robot)
+                    self.ctrl_helpers[req.robot].change_hand_ctrl("effort")
+                    return RobotTeachModeResponse(RobotTeachModeResponse.SUCCESS)
 
                 if req.teach_mode == RobotTeachModeRequest.POSITION_MODE:
                     rospy.loginfo(
-                        "Changing %s trajectory controllers to STOP", req.robot)
-                    self.ctrl_helpers[req.robot].change_trajectory_ctrl("stop")
+                        "Changing %s controllers to position", req.robot)
+                    self.ctrl_helpers[req.robot].change_hand_ctrl("position")
                     return RobotTeachModeResponse(RobotTeachModeResponse.SUCCESS)
 
-                rospy.loginfo(
-                    "Changing %s trajectory controllers to RUN", req.robot)
-                self.ctrl_helpers[req.robot].change_trajectory_ctrl("run")
-                return RobotTeachModeResponse(RobotTeachModeResponse.SUCCESS)
+                if req.teach_mode == RobotTeachModeRequest.TRAJECTORY_MODE:
+                    rospy.loginfo(
+                        "Changing %s controllers to position", req.robot)
+                    self.ctrl_helpers[req.robot].change_hand_ctrl("position")
+                    rospy.loginfo(
+                        "Changing %s trajectory controllers to RUN", req.robot)
+                    self.ctrl_helpers[req.robot].change_trajectory_ctrl("run")
+                    return RobotTeachModeResponse(RobotTeachModeResponse.SUCCESS)
 
             elif req.teach_mode == RobotTeachModeRequest.TEACH_MODE:
+
+                rospy.loginfo("Changing all %s controllers to STOP", req.robot)
+                self.ctrl_helpers[req.robot].change_hand_ctrl("stop")
+                self.ctrl_helpers[req.robot].change_trajectory_ctrl("stop")
+
                 change_type_msg.control_type = ControlType.FORCE
                 rospy.loginfo("Changing %s Control mode to FORCE", req.robot)
                 self.ctrl_helpers[
                     req.robot].change_force_ctrl_type(change_type_msg)
                 rospy.loginfo("Changing %s controllers to effort", req.robot)
                 self.ctrl_helpers[req.robot].change_hand_ctrl("effort")
-                rospy.loginfo(
-                    "Changing %s trajectory controllers to STOP", req.robot)
-                self.ctrl_helpers[req.robot].change_trajectory_ctrl("stop")
 
                 return RobotTeachModeResponse(RobotTeachModeResponse.SUCCESS)
             else:
