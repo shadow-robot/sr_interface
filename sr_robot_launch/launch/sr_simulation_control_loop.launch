@@ -24,7 +24,7 @@
   <arg name="hand_id" value="$(arg side_letter)h"/>
   <!-- Whether to run hand controllers. -->
   <arg name="hand_ctrl" default="$(arg hand)"/>
-  <!-- Set to hand_e, hand_e_plus or hand_lite or hand_extra_lite -->
+  <!-- Set to hand_e or hand_g -->
   <arg name="hand_type" default="hand_e"/>
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="hand_trajectory" default="true"/>
@@ -67,10 +67,10 @@
   </include>
 
   <!-- Robot config -->
-  <arg if="$(eval arg('hand') and arg('arm') and not arg('hand_type') == 'hand_lite')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
-  <arg if="$(eval arg('hand') and arg('arm') and arg('hand_type') == 'hand_lite')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_lite_$(arg robot_model).yaml"/>
-  <arg if="$(eval arg('hand') and not arg('arm') and not arg('hand_type') == 'hand_lite')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh.yaml"/>
-  <arg if="$(eval arg('hand') and not arg('arm') and arg('hand_type') == 'hand_lite')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_light.yaml"/>
+  <arg if="$(eval arg('hand') and arg('arm') and not arg('hand_type') == 'hand_g')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
+  <arg if="$(eval arg('hand') and arg('arm') and arg('hand_type') == 'hand_g')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_lite_$(arg robot_model).yaml"/>
+  <arg if="$(eval arg('hand') and not arg('arm') and not arg('hand_type') == 'hand_g')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh.yaml"/>
+  <arg if="$(eval arg('hand') and not arg('arm') and arg('hand_type') == 'hand_g')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_light.yaml"/>
   <arg if="$(eval not arg('hand') and arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
 
   <!-- Set robot config file path in a param in case moveit nodes need it -->
@@ -129,13 +129,13 @@
   </group>
 
   <!-- HAND SPECIFIC -->
-  <group if="$(eval arg('hand_type') == 'hand_e' or arg('hand_type') == 'hand_e_plus')">
+  <group if="$(eval arg('hand_type') == 'hand_e')">
     <rosparam if="$(eval not grasp_controller and not hybrid_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_grasp_controller_gazebo.yaml"/>
     <rosparam if="$(arg hybrid_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_hybrid_controller_gazebo.yaml"/>
   </group>
 
-  <group if="$(eval arg('hand_type') == 'hand_lite' or arg('hand_type') == 'hand_extra_lite')">
+  <group if="$(eval arg('hand_type') == 'hand_g')">
     <rosparam unless="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_lite_grasp_controller_gazebo.yaml"/>
   </group>

@@ -35,7 +35,7 @@
 
   <!-- HAND CONFIG-->
   <!-- Set hand type. -->
-  <arg name="hand_type" default="hand_lite"/>
+  <arg name="hand_type" default="hand_g"/>
   <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
   <!-- The control mode PWM (true) or torque (false) -->

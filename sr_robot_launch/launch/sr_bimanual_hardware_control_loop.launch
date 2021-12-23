@@ -25,8 +25,8 @@
   <arg name="biotac" default="false"/>
   <!-- Separation between the robots -->
   <arg name="hand_x_separation" default="-0.4"/>
-  <!-- Set the hand type here: hand_e_plus, hand_e, hand_lite, hand_extra_lite -->
-  <arg name="hand_type" default="hand_e_plus"/>
+  <!-- Set the hand type here: hand_e, hand_g -->
+  <arg name="hand_type" default="hand_e"/>
 
   <!-- ARMS CONFIG-->
   <arg name="robot_model" default="ur10e"/>
@@ -49,9 +49,7 @@
 
   <!-- Sets up right payload -->
   <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_e')" name="arm_payload_mass" default="5.0"/>
-  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_e_plus')" name="arm_payload_mass" default="5.0"/>
-  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_lite')" name="arm_payload_mass" default="2.7"/>
-  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_extra_lite')" name="arm_payload_mass" default="2.5"/>
+  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_g')" name="arm_payload_mass" default="2.7"/>
   <arg unless="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_mass" default="0.0"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>

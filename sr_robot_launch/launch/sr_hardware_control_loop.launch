@@ -22,10 +22,10 @@
   <arg name="hand_type" default="hand_e"/>
 
   <!-- Robot config file -->
-  <arg if="$(eval arg('hand') and arg('arm') and not arg('hand_type') == 'hand_lite')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
-  <arg if="$(eval arg('hand') and arg('arm') and arg('hand_type') == 'hand_lite')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_lite_$(arg robot_model).yaml"/>
-  <arg if="$(eval arg('hand') and not arg('arm') and not arg('hand_type') == 'hand_lite')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh.yaml"/>
-  <arg if="$(eval arg('hand') and not arg('arm') and arg('hand_type') == 'hand_lite')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_light.yaml"/>
+  <arg if="$(eval arg('hand') and arg('arm') and not arg('hand_type') == 'hand_g')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
+  <arg if="$(eval arg('hand') and arg('arm') and arg('hand_type') == 'hand_g')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_lite_$(arg robot_model).yaml"/>
+  <arg if="$(eval arg('hand') and not arg('arm') and not arg('hand_type') == 'hand_g')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh.yaml"/>
+  <arg if="$(eval arg('hand') and not arg('arm') and arg('hand_type') == 'hand_g')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_light.yaml"/>
   <arg if="$(eval not arg('hand') and arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
 
   <!-- Set robot config file path in a param in case moveit nodes need it -->
@@ -59,9 +59,7 @@
 
   <!-- Sets up right payload -->
   <arg if="$(eval hand and arg('hand_type') == 'hand_e')" name="arm_payload_mass" default="5.0"/>
-  <arg if="$(eval hand and arg('hand_type') == 'hand_e_plus')" name="arm_payload_mass" default="5.0"/>
-  <arg if="$(eval hand and arg('hand_type') == 'hand_lite')" name="arm_payload_mass" default="2.7"/>
-  <arg if="$(eval hand and arg('hand_type') == 'hand_extra_lite')" name="arm_payload_mass" default="2.5"/>
+  <arg if="$(eval hand and arg('hand_type') == 'hand_g')" name="arm_payload_mass" default="2.7"/>
   <arg if="$(arg hand)" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
   <arg unless="$(arg hand)" name="arm_payload_mass" default="0.0"/>
   <arg unless="$(arg hand)" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
