@@ -45,6 +45,8 @@ class TeachModeManager(object):
         self.modes = ["TRAJECTORY_MODE", "TEACH_MODE", "POSITION_MODE", "DIRECT_PWM_MODE"]
 
     def teach_mode(self, req):
+        rospy.loginfo(
+                    "Changing {} to {}".format(req.robot, self.modes[req.teach_mode]))
 
         if req.robot == "right_arm" or req.robot == "left_arm":
             if req.teach_mode == RobotTeachModeRequest.TRAJECTORY_MODE \
