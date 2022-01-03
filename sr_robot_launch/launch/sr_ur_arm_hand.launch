@@ -65,8 +65,15 @@
        default="[(ra|la)_trajectory_controller/state]"/>
 
   <!-- SIMULATED ROBOTS -->
-  <arg name="hand_type" default="hand_e"/>
   <arg name="side" default="right"/>
+  <arg name="hand_version" default="E3M5"/>
+  <arg name="fingers" default="th,ff,mf,rf,lf"/>
+  <arg name="tip_sensors" default="th=pst,ff=pst,mf=pst,rf=pst,lf=pst"/>
+  <arg name="mid_sensors" default="none"/>
+  <arg name="prox_sensors" default="none"/>
+  <arg name="palm_sensor" default="none"/>
+  <arg name="hand_type" default="hand_e"/>
+
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhands_and_arms.world"/>
   <!-- Set to true if you want the robot to start in the "home" positions -->
@@ -91,9 +98,15 @@
       <arg name="gui" value="$(arg gui)"/>
       <arg name="verbose" value="$(arg verbose)" />
       <arg name="side" value="$(arg side)"/>
+      <arg name="hand_type" value="$(arg hand_type)"/>
+      <arg name="hand_version" value="$(arg hand_version)"/>
+      <arg name="fingers" value="$(arg fingers)"/>
+      <arg name="tip_sensors" value="$(arg tip_sensors)"/>
+      <arg name="mid_sensors" value="$(arg mid_sensors)"/>
+      <arg name="prox_sensors" value="$(arg prox_sensors)"/>
+      <arg name="palm_sensor" value="$(arg palm_sensor)"/>
       <arg name="arm" value="true"/>
       <arg name="hand" value="true"/>
-      <arg name="hand_type" value="$(arg hand_type)"/>
       <arg name="arm_ctrl" value="$(arg arm_ctrl)"/>
       <arg name="arm_trajectory" value="$(arg arm_trajectory)"/>
       <arg name="arm_position" value="$(arg arm_position)"/>

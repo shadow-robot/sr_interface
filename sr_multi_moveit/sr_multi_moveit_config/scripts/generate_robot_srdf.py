@@ -125,7 +125,7 @@ class Robot(object):
                         raise SRDFRobotGeneratorException("robot description did not specify " +
                                                           "a correct side for a manipulator")
                     has_arm = True if "arm" in manipulator_yaml else False
-                    has_hand = True if "hand" in manipulator_yaml else False
+                    has_hand = True if ("hand" in manipulator_yaml and manipulator_yaml["hand"]) else False
                     if not has_hand and not has_arm:
                         raise SRDFRobotGeneratorException("robot description did not specify " +
                                                           "either an arm or hand for a manipulator")
@@ -155,21 +155,6 @@ class Robot(object):
                         if "group_states" in arm_yaml:
                             for group_state in arm_yaml["group_states"]:
                                 manipulator.arm.group_states.append(group_state)
-
-                    if has_hand:
-                        hand_yaml = manipulator_yaml["hand"]
-                        if "name" in hand_yaml:
-                            manipulator.hand.name = hand_yaml["name"]
-                        if "main_group" in hand_yaml:
-                            manipulator.hand.main_group = hand_yaml["main_group"]
-                        if "other_groups" in hand_yaml:
-                            for group in hand_yaml["other_groups"]:
-                                manipulator.hand.other_groups.append(group)
-                        if "group_states" in hand_yaml:
-                            for group_state in hand_yaml["group_states"]:
-                                manipulator.hand.group_states.append(group_state)
-                        if "is_lite" in hand_yaml:
-                            manipulator.hand.is_lite = bool(hand_yaml["is_lite"])
 
                     self.manipulators.append(manipulator)
         else:
@@ -209,13 +194,7 @@ class SRDFRobotGenerator(object):
                 xacro.process_doc(self.arm_srdf_xmls[manipulator_id])
 
             if manipulator.has_hand:
-                # Generate and read hand srdf
-                hand_urdf_path = self.rospack.get_path('sr_description') + "/robots/" + manipulator.hand.name
-                with open(hand_urdf_path, 'r') as hand_urdf_xacro_file:
-                    hand_urdf_xml = parse(hand_urdf_xacro_file)
-                xacro.process_doc(hand_urdf_xml)
-
-                hand_urdf = hand_urdf_xml.toprettyxml(indent='  ')
+                hand_urdf = rospy.get_param('{}_hand_description'.format(manipulator.side))
                 srdfHandGenerator = SRDFHandGenerator(hand_urdf, load=False, save=False)
                 self.hand_srdf_xmls.append(srdfHandGenerator.get_hand_srdf())
 
