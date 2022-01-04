@@ -21,6 +21,7 @@ import collections
 from builtins import round
 import copy
 import rospy
+from rospy import get_rostime
 import rostest
 from unittest import TestCase
 from sr_robot_commander.sr_robot_commander import SrRobotCommander, MoveGroupCommander, PlanningSceneInterface
@@ -62,6 +63,20 @@ class TestSrRobotCommander(TestCase):
         rospy.sleep(10.0)  # Wait for Gazebo to sort itself out
         cls.robot_commander = SrRobotCommander("right_arm")
         cls.eef = cls.robot_commander.get_end_effector_link()
+
+        pose = PoseStamped()
+        height = 0.05
+        z_position = 0.05
+        pose.pose.position.x = 0
+        pose.pose.position.y = 0
+        pose.pose.position.z = z_position - (height / 2.0)
+        pose.pose.orientation.x = 0
+        pose.pose.orientation.y = 0
+        pose.pose.orientation.z = 0
+        pose.pose.orientation.w = 1
+        pose.header.stamp = get_rostime()
+        pose.header.frame_id = cls.robot_commander._robot_commander.get_root_link()
+        cls.robot_commander._planning_scene.add_box("ground", pose, (3, 3, height))
 
     def reset_to_home(self):
         rospy.sleep(1)
