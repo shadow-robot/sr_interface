@@ -1,7 +1,7 @@
 <launch>
      <!-- Find launch file-->
      <arg name="scene" default="false"/>
-     <arg name="hand_type" value="hand_e_plus"/>
+     <arg name="hand_type" value="hand_e"/>
      <arg name="side" value="left"/>
      
 <include file="$(find sr_robot_launch)/launch/sr_left_ur10arm_hand.launch">
