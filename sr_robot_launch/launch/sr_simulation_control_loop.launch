@@ -140,13 +140,13 @@
   </group>
 
   <!-- HAND SPECIFIC -->
-  <group if="$(eval arg('hand_type') == 'hand_e' or arg('hand_type') == 'hand_e_plus')">
+  <group if="$(eval arg('hand_type') == 'hand_e' or arg('hand_type') == 'hand_c')">
     <rosparam if="$(eval not grasp_controller and not hybrid_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_grasp_controller_gazebo.yaml"/>
     <rosparam if="$(arg hybrid_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_hybrid_controller_gazebo.yaml"/>
   </group>
 
-  <group if="$(eval arg('hand_type') == 'hand_lite' or arg('hand_type') == 'hand_extra_lite')">
+  <group if="$(eval arg('hand_type') == 'hand_g')">
     <rosparam unless="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_lite_grasp_controller_gazebo.yaml"/>
   </group>
