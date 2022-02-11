@@ -109,9 +109,8 @@
 
   <group unless="$(arg sim)">
     <group unless="$(arg external_control_loop)">
-      <!--Using this wrapper is temporary! Rosrun directy the sr_hand_autodetect when it's available after 09/2021 debian sync -->
-      <node pkg="sr_utilities_common" type="ros_executable_wrapper.sh" name="bimanual_hardware_control_loop_autodetection" output="screen"
-        args="sr_hand_autodetect roslaunch sr_robot_launch sr_bimanual_hardware_control_loop.launch
+      <node pkg="sr_hand_detector" type="sr_hand_autodetect" name="bimanual_hardware_control_loop_autodetection" output="screen"
+        args="roslaunch sr_robot_launch sr_bimanual_hardware_control_loop.launch
           debug:=$(arg debug)
           robot_state_pub_frequency:=$(arg robot_state_pub_frequency)
           joint_state_pub_frequency:=$(arg joint_state_pub_frequency)
