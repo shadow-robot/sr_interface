@@ -174,12 +174,8 @@ if (CATKIN_ENABLE_TESTING)
 #HAND TESTS
     #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_e hand_id:=rh)
     #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_e hand_id:=lh)
-    #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_e_plus hand_id:=rh)
-    #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_e_plus hand_id:=lh)
-    #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_lite hand_id:=rh)
-    #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_lite hand_id:=lh)
-    #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_extra_lite hand_id:=rh)
-    #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_extra_lite hand_id:=lh)
+    #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_g hand_id:=rh)
+    #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_g hand_id:=lh)
 
 #HAND AND ARM TESTS - SPECIFIC LAUNCH FILES
     #add_rostest(test/test_ur10_right.test ARGS scene:=true)
@@ -206,36 +202,30 @@ if (CATKIN_ENABLE_TESTING)
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_e robot_model:=ur10e)
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_e robot_model:=ur10e)
     # We dont have this xacro yet
-    # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_lite robot_model:=ur10e)
-    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_lite robot_model:=ur10e)
-    # We dont have this xacro yet
-    # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_extra_lite robot_model:=ur10e)
-    # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_extra_lite robot_model:=ur10e)
+    # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_g robot_model:=ur10e)
+    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_g robot_model:=ur10e)
 
     # ur5
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_e robot_model:=ur5)
-    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_lite robot_model:=ur5)
+    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_g robot_model:=ur5)
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_e robot_model:=ur5)
-    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_lite robot_model:=ur5)
+    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_g robot_model:=ur5)
 
     # ur5e
-    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_lite robot_model:=ur5e)
+    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_g robot_model:=ur5e)
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_e robot_model:=ur5e)
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_e robot_model:=ur5e)
-    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_lite robot_model:=ur5e)
-    # We dont have this xacro yet
-    # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_extra_lite robot_model:=ur5e)
-    # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_extra_lite robot_model:=ur5e)
+    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_g robot_model:=ur5e)
 
 #FAILS - broken/outdated xacro does not display biotacs correctly
-   # add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_ur10_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_biotac.yaml side:=right hand_type:=hand_e_plus)
-   # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_biotac.yaml side:=right hand_type:=hand_e_plus robot_model:=ur10)
+   # add_rostest(test/test_hand_and_arm_generic_no_scene.test ARGS robot_description:=right_srhand_ur10_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_biotac.yaml side:=right hand_type:=hand_e)
+   # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_biotac.yaml side:=right hand_type:=hand_e robot_model:=ur10)
    # There is no way to pass sensor type at the moment so this test is excluded
-   # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10_plus_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_plus_biotac.yaml side:=right hand_type:=hand_e_plus robot_model:=ur10)  
-   # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=left_srhand_ur10e_bt_sp_biotacs.urdf.xacro robot_config_file:=left_sh_ur10e_biotac.yaml side:=left hand_type:=hand_e_plus robot_model:=ur10e)
-   # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10_bt_sp_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_btsp_biotac.yaml side:=right hand_type:=hand_e_plus robot_model:=ur10)
-   # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10e_bt_sp_biotacs.urdf.xacro robot_config_file:=right_sh_ur10e_btsp_biotac.yaml side:=right hand_type:=hand_e_plus robot_model:=ur10e)
-   # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=left_srhand_ur10_bt_sp_biotacs.urdf.xacro side:=left hand_type:=hand_e_plus robot_model:=ur10)
+   # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10_plus_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_plus_biotac.yaml side:=right hand_type:=hand_e robot_model:=ur10)  
+   # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=left_srhand_ur10e_bt_sp_biotacs.urdf.xacro robot_config_file:=left_sh_ur10e_biotac.yaml side:=left hand_type:=hand_e robot_model:=ur10e)
+   # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10_bt_sp_biotacs.urdf.xacro robot_config_file:=right_sh_ur10_btsp_biotac.yaml side:=right hand_type:=hand_e robot_model:=ur10)
+   # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=right_srhand_ur10e_bt_sp_biotacs.urdf.xacro robot_config_file:=right_sh_ur10e_btsp_biotac.yaml side:=right hand_type:=hand_e robot_model:=ur10e)
+   # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS robot_description:=left_srhand_ur10_bt_sp_biotacs.urdf.xacro side:=left hand_type:=hand_e robot_model:=ur10)
 
 endif ()
 
