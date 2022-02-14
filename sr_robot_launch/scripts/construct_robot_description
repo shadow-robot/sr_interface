@@ -117,7 +117,7 @@ class SrConstructRobotDescription():
         xacro_command = self._load_robot_description_command
         for key, value in self._robot_description_params.items():
             xacro_command += (' ' + key + ':=' + str(value))
-        return check_output(xacro_command)
+        return check_output(xacro_command.split())
 
 if __name__ == "__main__":
     rospy.init_node("sr_construct_robot_description")
