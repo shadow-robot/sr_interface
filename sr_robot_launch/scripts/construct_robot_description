@@ -32,7 +32,7 @@ class PrefixNotCorrect(SrRobotDescriptionExceptions):
 
 class SrConstructRobotDescription():
     def __init__(self):
-        self._robot_description_file = rospy.get_param("~robot_description_file")
+        self._load_robot_description_command = rospy.get_param("~load_robot_description_command")
         CONST_ARM_TYPE = rospy.get_param("~arm_type")
         self._side = ''
         self._robot_description_params = {}
@@ -50,7 +50,7 @@ class SrConstructRobotDescription():
         self._right_arm_params = {'prefix': 'ra', 'ip_address': right_arm_ip, 'arm_type': CONST_ARM_TYPE}
         self._left_arm_params = {'prefix': 'la', 'ip_address': left_arm_ip, 'arm_type': CONST_ARM_TYPE}
 
-        if 'bimanual' in self._robot_description_file:
+        if 'bimanual' in self._load_robot_description_command:
             self._side = 'both'
         else:
             prefix = rospy.get_param("~prefix")
@@ -114,19 +114,10 @@ class SrConstructRobotDescription():
         return kinematics_configs
 
     def _parse_xacro(self):
-        xacro_commands = []
-        xacro_commands.append("xacro")
-        xacro_commands.append(self._robot_description_file)
+        xacro_command = self._load_robot_description_command
         for key, value in self._robot_description_params.items():
-            xacro_commands.append(key + ':=' + str(value))
-        return self._generate_urdf(xacro_commands)
-
-    def _generate_urdf(self, xacro_commands):
-        clean_commands = []
-        for xacro_command in xacro_commands:
-            clean_commands.append(xacro_command.strip('\''))
-        out = check_output(clean_commands)
-        return out
+            xacro_command += (' ' + key + ':=' + str(value))
+        return xacro_command
 
 
 if __name__ == "__main__":
