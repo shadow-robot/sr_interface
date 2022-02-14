@@ -83,13 +83,6 @@ class SrConstructRobotDescription():
         return right_arm_ip, left_arm_ip
 
     def _process_parameters(self):
-        node_name = rospy.get_name()
-        robot_description_param_names = [param for param in rospy.get_param_names()
-                                         if node_name in param and
-                                         'robot_description_file' not in param and
-                                         'arm_type' not in param]
-        for name in robot_description_param_names:
-            self._robot_description_params[name.rsplit('/', 1)[1]] = rospy.get_param(name)
         kinematics_configs = self._get_kinematics_config()
         if not 'both' == self._side:
             self._robot_description_params['kinematics_config'] = kinematics_configs[0]
