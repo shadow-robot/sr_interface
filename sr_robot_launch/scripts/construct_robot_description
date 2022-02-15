@@ -53,13 +53,7 @@ class SrConstructRobotDescription():
         if 'bimanual' in self._load_robot_description_command:
             self._side = 'both'
         else:
-            prefix = rospy.get_param("~prefix")
-            if 'rh' in prefix:
-                self._side = 'right'
-            elif 'lh' in prefix:
-                self._side = 'left'
-            else:
-                raise PrefixNotCorrect("'prefix' param not specified correctly")
+            self._side = rospy.get_param("~side")
 
         self._process_parameters()
         urdf = self._parse_xacro()

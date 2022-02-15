@@ -52,7 +52,7 @@
     <node if="$(arg arm)" name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description" output="screen">
       <param name="arm_type" value="$(arg robot_model)"/>
       <param name="load_robot_description_command" value="$(arg load_robot_description_command)"/>
-      <param name="prefix" value="$(arg side_letter)h_"/>
+      <param name="side" value="$(arg side)"/>
     </node>
 
     <param unless="$(arg arm)" name="robot_description" command="$(arg load_robot_description_command)"/>
