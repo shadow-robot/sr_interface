@@ -95,7 +95,7 @@ class TestSrRobotCommander(TestCase):
         pose2_list = [round(i, 2) for i in pose2_list]
 
         for coordinate_1, coordinate_2 in zip(pose1_list, pose2_list):
-            if abs(coordinate_1 - coordinate_2) >= tolerance:
+            if abs(coordinate_1) - abs(coordinate_2) >= tolerance:
                 return False
         return True
 
@@ -249,7 +249,7 @@ class TestSrRobotCommander(TestCase):
         end_joints = copy.deepcopy(CONST_RA_HOME_ANGLES)
         end_joints['ra_shoulder_pan_joint'] += 0.8
         end_joints['ra_shoulder_lift_joint'] -= 0.3
-        end_joints['ra_elbow_joint'] += 0.6
+        end_joints['ra_elbow_joint'] -= 0.6
         end_joints['ra_wrist_1_joint'] += 0.4
         end_joints['ra_wrist_2_joint'] -= 0.4
         end_joints['ra_wrist_3_joint'] += 0.3
@@ -257,7 +257,7 @@ class TestSrRobotCommander(TestCase):
                                                                custom_start_state=None)
         evaluation = self.robot_commander.evaluate_given_plan(plan)
         rospy.logerr("TESTING test_evaluate_given_plan_low_quality")
-        rospy.logwarn(evaulation)
+        rospy.logwarn(evaluation)
         self.assertGreater(evaluation, 10)
 
     def test_evaluate_given_plan_high_quality(self):
