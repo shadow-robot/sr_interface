@@ -49,7 +49,7 @@ CONST_RA_HOME_ANGLES = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
 
 CONST_EXAMPLE_TARGET = {'ra_shoulder_pan_joint': 0.2, 'ra_elbow_joint': 1.80,
                         'ra_shoulder_lift_joint': -1.37, 'ra_wrist_1_joint': -0.52,
-                        'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint':3.1415}
+                        'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 3.1415}
 
 TOLERANCE_UNSAFE = 0.04
 PLANNING_ATTEMPTS = 20
@@ -476,7 +476,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_plan_to_pose_target(self):
-        self.reset_to_home()       
+        self.reset_to_home()
         pose = PoseStamped()
         pose.header.stamp = rospy.get_rostime()
         pose.pose = conversions.list_to_pose([0.666, 0.174, 0.575, 1.0, 0.0, 0.0, 0.0])
