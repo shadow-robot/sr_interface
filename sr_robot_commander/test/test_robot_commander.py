@@ -248,12 +248,16 @@ class TestSrRobotCommander(TestCase):
         self.reset_to_home()
         end_joints = copy.deepcopy(CONST_RA_HOME_ANGLES)
         end_joints['ra_shoulder_pan_joint'] += 0.8
-        end_joints['ra_shoulder_lift_joint'] -= 0.4
+        end_joints['ra_shoulder_lift_joint'] -= 0.3
         end_joints['ra_elbow_joint'] += 0.6
         end_joints['ra_wrist_1_joint'] += 0.4
+        end_joints['ra_wrist_2_joint'] -= 0.4
+        end_joints['ra_wrist_3_joint'] += 0.3
         plan = self.robot_commander.plan_to_joint_value_target(end_joints, angle_degrees=False,
                                                                custom_start_state=None)
         evaluation = self.robot_commander.evaluate_given_plan(plan)
+        rospy.logerr("TESTING test_evaluate_given_plan_low_quality")
+        rospy.logwarn(evaulation)
         self.assertGreater(evaluation, 10)
 
     def test_evaluate_given_plan_high_quality(self):
@@ -466,7 +470,7 @@ class TestSrRobotCommander(TestCase):
 
     def test_move_to_pose_target(self):
         self.reset_to_home()
-        pose = conversions.list_to_pose([0.7261, 0.1733, 0.4007, -0.9999, 0.0005, 0.0084, 0.0])
+        pose = conversions.list_to_pose([0.7261, 0.1733, 0.4007, 3.1415, 0.00, 0.00])
         self.robot_commander.move_to_pose_target(pose, self.eef, wait=True)
         time.sleep(5)
         after_pose = self.robot_commander.get_current_pose()
