@@ -44,8 +44,6 @@
 
   <!-- ARMS CONFIG-->
   <arg name="initial_z" default="0.1"/>
-  <arg name="arm_x_separation" default="0.0"/>
-  <arg name="arm_y_separation" default="0.0"/>
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn group position controllers for the arms -->
@@ -91,8 +89,6 @@
       <arg name="start_home" value="$(arg start_home)"/>
       <arg name="home_angles" value="$(arg home_angles)"/>
       <arg name="initial_z" value="$(arg initial_z)"/>
-      <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
-      <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
       <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       <arg name="gui" value="$(arg gui)"/>
@@ -128,8 +124,6 @@
         args="sr_hand_autodetect roslaunch sr_robot_launch sr_hardware_control_loop.launch
           debug:=$(arg debug)
           initial_z:=$(arg initial_z)
-          arm_x_separation:=$(arg arm_x_separation)
-          arm_y_separation:=$(arg arm_y_separation)
           robot_model:=$(arg robot_model)
           arm_speed_scale:=$(arg arm_speed_scale)
           grasp_controller:=$(arg grasp_controller)

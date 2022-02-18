@@ -53,8 +53,6 @@
 
   <!-- Robot description related config-->
   <arg name="robot_model" default="ur10e"/>
-  <arg name="arm_x_separation" default="0.0"/>
-  <arg name="arm_y_separation" default="0.0"/>
   <arg if="$(arg arm)" name="robot_name" default="$(arg robot_model)srh"/>
   <arg if="$(arg arm)" name="initial_z" default="0.1"/>
 
@@ -73,8 +71,6 @@
     <arg name="prox_sensors" value="$(arg prox_sensors)"/>
     <arg name="palm_sensor" value="$(arg palm_sensor)"/>
     <arg name="initial_z" value="$(arg initial_z)"/>
-    <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
-    <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
   </include>
 
   <!-- Robot config -->
