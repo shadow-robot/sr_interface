@@ -185,7 +185,6 @@ class TestSrRobotCommander(TestCase):
                                                                custom_start_state=None)
         tries = 0
         while len(plan.joint_trajectory.points) == 0 and tries < PLANNING_ATTEMPTS:
-            rospy.logwarn("test_plan_to_joint_value_target")
             plan = self.robot_commander.plan_to_joint_value_target(CONST_EXAMPLE_TARGET, angle_degrees=False,
                                                                    custom_start_state=None)
             time.sleep(1)
@@ -256,8 +255,6 @@ class TestSrRobotCommander(TestCase):
         plan = self.robot_commander.plan_to_joint_value_target(end_joints, angle_degrees=False,
                                                                custom_start_state=None)
         evaluation = self.robot_commander.evaluate_given_plan(plan)
-        rospy.logerr("TESTING test_evaluate_given_plan_low_quality")
-        rospy.logwarn(evaluation)
         self.assertGreater(evaluation, 10)
 
     def test_evaluate_given_plan_high_quality(self):
@@ -474,8 +471,6 @@ class TestSrRobotCommander(TestCase):
         self.robot_commander.move_to_pose_target(pose, self.eef, wait=True)
         time.sleep(5)
         after_pose = self.robot_commander.get_current_pose()
-        rospy.logerr("TESTING test_move_to_pose_target")
-        rospy.logwarn(after_pose)
         condition = self.compare_poses(pose, after_pose)
         self.assertTrue(condition)
 
@@ -492,7 +487,6 @@ class TestSrRobotCommander(TestCase):
                                                         alternative_method=False, custom_start_state=None)
         tries = 0
         while len(plan.joint_trajectory.points) == 0 and tries < PLANNING_ATTEMPTS:
-            rospy.logwarn("test_plan_to_pose_target")
             plan = self.robot_commander.plan_to_pose_target(pose.pose, end_effector_link=self.eef,
                                                             alternative_method=False, custom_start_state=None)
             time.sleep(1)
@@ -640,9 +634,7 @@ class TestSrRobotCommander(TestCase):
         target_xyz.position.y = xyz[1]
         target_xyz.position.z = xyz[2]
         target_xyz.orientation = end_pose.orientation
-        rospy.logwarn("TEST MOVE TO POSITION TARGET")
-        rospy.logwarn(target_xyz)
-        rospy.logwarn(end_pose)
+
         condition = self.compare_poses(target_xyz, end_pose)
         self.assertTrue(condition)
 
@@ -666,7 +658,6 @@ class TestSrRobotCommander(TestCase):
         '''
         tries = 0
         while len(plan.joint_trajectory.points) == 0 and tries < PLANNING_ATTEMPTS:
-            rospy.logwarn("test_plan_to_position_target")
             plan = self.robot_commander.plan_to_position_target(xyz, self.eef)
             time.sleep(1)
             tries += 1
