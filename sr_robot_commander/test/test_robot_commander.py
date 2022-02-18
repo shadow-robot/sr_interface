@@ -26,7 +26,7 @@ from unittest import TestCase
 from sr_robot_commander.sr_robot_commander import SrRobotCommander, MoveGroupCommander, PlanningSceneInterface
 from geometry_msgs.msg import Pose, PoseStamped
 from control_msgs.msg import FollowJointTrajectoryActionGoal
-from moveit_msgs.msg import RobotState, RobotTrajectory
+from moveit_msgs.msg import RobotState, RobotTrajectory, Constraints, JointConstraint
 from moveit_msgs.srv import GetPositionFK, SaveRobotStateToWarehouse
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
 from std_msgs.msg import Header
@@ -44,12 +44,12 @@ from math import fmod
 
 PKG = "sr_robot_commander"
 CONST_RA_HOME_ANGLES = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
-                        'ra_shoulder_lift_joint': -1.57, 'ra_wrist_1_joint': -0.73,
-                        'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 3.14}
+                        'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
+                        'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 3.1415}
 
 CONST_EXAMPLE_TARGET = {'ra_shoulder_pan_joint': 0.2, 'ra_elbow_joint': 1.80,
                         'ra_shoulder_lift_joint': -1.37, 'ra_wrist_1_joint': -0.52,
-                        'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 3.14}
+                        'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint':3.1415}
 
 TOLERANCE_UNSAFE = 0.04
 PLANNING_ATTEMPTS = 20
@@ -62,6 +62,7 @@ class TestSrRobotCommander(TestCase):
         rospy.wait_for_service("/gazebo/set_model_configuration")
         rospy.sleep(10.0)  # Wait for Gazebo to sort itself out
         cls.robot_commander = SrRobotCommander("right_arm")
+        cls.robot_commander.set_planner_id("BiTRRT")
         cls.eef = cls.robot_commander.get_end_effector_link()
         cls.set_ground()
 
@@ -465,7 +466,7 @@ class TestSrRobotCommander(TestCase):
 
     def test_move_to_pose_target(self):
         self.reset_to_home()
-        pose = conversions.list_to_pose([0.71, 0.17, 0.34, 0, 0, 0, 1])
+        pose = conversions.list_to_pose([0.7261, 0.1733, 0.4007, -0.9999, 0.0005, 0.0084, 0.0])
         self.robot_commander.move_to_pose_target(pose, self.eef, wait=True)
         time.sleep(5)
         after_pose = self.robot_commander.get_current_pose()
@@ -475,12 +476,14 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(condition)
 
     def test_plan_to_pose_target(self):
-        self.reset_to_home()
+        self.reset_to_home()       
         pose = PoseStamped()
         pose.header.stamp = rospy.get_rostime()
-        pose.pose = conversions.list_to_pose([0.71, 0.17, 0.34, 0, 0, 0, 1])
+        pose.pose = conversions.list_to_pose([0.666, 0.174, 0.575, 1.0, 0.0, 0.0, 0.0])
+        '''
         expected_joint_state = self.robot_commander.get_ik(pose)
         expected_joint_state = dict(zip(expected_joint_state.name, expected_joint_state.position))
+        '''
         plan = self.robot_commander.plan_to_pose_target(pose.pose, end_effector_link=self.eef,
                                                         alternative_method=False, custom_start_state=None)
         tries = 0
