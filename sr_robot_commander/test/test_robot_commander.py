@@ -190,6 +190,8 @@ class TestSrRobotCommander(TestCase):
             time.sleep(1)
             tries += 1
         condition = len(plan.joint_trajectory.points) != 0
+        if not condition:
+            rospy.logerr("Method: test_plan_to_joint_value_target, failed due to exceeding {} planning attempts".format(tries))
         self.assertTrue(condition)
 
     def test_execute(self):
@@ -392,8 +394,8 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_joint_states_by_common_joints(CONST_RA_HOME_ANGLES, joint_state)
         if not condition:
             rospy.logerr("Method: test_run_joint_trajectory")
-            rospy.logerr("Expected end joint state:".format(CONST_RA_HOME_ANGLES))
-            rospy.logerr("Actuall end joint state:".format(joint_state))
+            rospy.logerr("Expected end joint state: {}".format(CONST_RA_HOME_ANGLES))
+            rospy.logerr("Actuall end joint state: {}".format(joint_state))
         self.assertTrue(condition)
 
     def test_make_named_trajectory(self):
@@ -445,10 +447,10 @@ class TestSrRobotCommander(TestCase):
         joint_state = self.robot_commander.get_current_state()
         expected_joint_state = trajectory[-1]['joint_angles']
         condition = self.compare_joint_states_by_common_joints(expected_joint_state, joint_state, TOLERANCE_UNSAFE)
-        if not condition:
+        if condition:
             rospy.logerr("Method: test_run_named_trajectory_unsafe_cancelled")
-            rospy.logerr("Expected end joint state:".format(expected_joint_state))
-            rospy.logerr("Actuall end joint state:".format(joint_state))
+            rospy.logerr("Expected end joint state: {}".format(expected_joint_state))
+            rospy.logerr("Actuall end joint state: {}".format(joint_state))
         self.assertFalse(condition)
 
     def test_run_named_trajectory_unsafe_executed(self):
@@ -473,8 +475,8 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_joint_states_by_common_joints(expected_joint_state, joint_state)
         if not condition:
             rospy.logerr("Method: test_run_named_trajectory")
-            rospy.logerr("Expected end joint state:".format(expected_joint_state))
-            rospy.logerr("Actuall end joint state:".format(joint_state))
+            rospy.logerr("Expected end joint state: {}".format(expected_joint_state))
+            rospy.logerr("Actuall end joint state: {}".format(joint_state))
         self.assertTrue(condition)
 
     def test_move_to_pose_target(self):
@@ -482,8 +484,12 @@ class TestSrRobotCommander(TestCase):
         pose = conversions.list_to_pose([0.7261, 0.1733, 0.4007, 3.1415, 0.00, 0.00])
         self.robot_commander.move_to_pose_target(pose, self.eef, wait=True)
         time.sleep(5)
-        after_pose = self.robot_commander.get_current_pose()
-        condition = self.compare_poses(pose, after_pose)
+        end_pose = self.robot_commander.get_current_pose()
+        condition = self.compare_poses(pose, end_pose)
+        if not condition:
+            rospy.logerr("Method: test_move_to_pose_target")
+            rospy.logerr("Expected pose: {}".format(pose))
+            rospy.logerr("Actuall pose: {}".format(end_pose))
         self.assertTrue(condition)
 
     def test_plan_to_pose_target(self):
@@ -504,6 +510,8 @@ class TestSrRobotCommander(TestCase):
             time.sleep(1)
             tries += 1
         condition = len(plan.joint_trajectory.points) != 0
+        if not condition:
+            rospy.logerr("Method: test_plan_to_pose_target, failed due to exceeding {} planning attempts".format(tries))
         self.assertTrue(condition)
 
     # The 'move_to_joint_value_target_unsafe' is unreliable and won't be tested.
@@ -570,8 +578,8 @@ class TestSrRobotCommander(TestCase):
         condition = self.compare_poses(actual_pose, expected_pose)
         if not condition:
             rospy.logerr("Method: test_plan_to_waypoints_target")
-            rospy.logerr("Expected end joint state:".format(actual_pose))
-            rospy.logerr("Actuall end joint state:".format(expected_pose))
+            rospy.logerr("Expected end joint state: {}".format(actual_pose))
+            rospy.logerr("Actuall end joint state: {}".format(expected_pose))
         self.assertTrue(condition)
 
     def test_move_to_trajectory_start_trajecotry_exists(self):
@@ -582,6 +590,12 @@ class TestSrRobotCommander(TestCase):
         self.robot_commander.move_to_trajectory_start(trajectory)
         current_joints = self.robot_commander.get_current_state()
         condition = self.compare_joint_states_by_common_joints(joints_from_trajectory, current_joints)
+        
+        if not condition:
+            rospy.logerr("Method: test_move_to_trajectory_start_trajecotry_exists")
+            rospy.logerr("Expected joint states: {}".format(joints_from_trajectory))
+            rospy.logerr("Actuall joint states: {}".format(current_joints))
+
         self.assertTrue(condition)
 
     def test_get_ik(self):
@@ -624,7 +638,7 @@ class TestSrRobotCommander(TestCase):
         pose = PoseStamped()
         pose.header.stamp = rospy.get_rostime()
 
-        before_pose = self.robot_commander.get_current_pose()
+        start_pose = self.robot_commander.get_current_pose()
         pose.pose = conversions.list_to_pose([0.91, 0.17, 0.34, 0, 0, 0, 1])
         self.robot_commander.move_to_pose_value_target_unsafe(pose, time=1, wait=False)
         rospy.sleep(0.5)
@@ -633,26 +647,39 @@ class TestSrRobotCommander(TestCase):
             self.robot_commander._action_running[client] = True
             self.robot_commander._clients[client].cancel_goal()
 
-        after_pose = self.robot_commander.get_current_pose()
+        stopped_pose = self.robot_commander.get_current_pose()
 
-        condition_1 = self.compare_poses(before_pose, pose.pose, TOLERANCE_UNSAFE)
-        condition_2 = self.compare_poses(pose.pose, after_pose, TOLERANCE_UNSAFE)
-        self.assertFalse(condition_1 is True and condition_2 is False)
+        condition_1 = self.compare_poses(start_pose, pose.pose, TOLERANCE_UNSAFE)
+        condition_2 = self.compare_poses(pose.pose, stopped_pose, TOLERANCE_UNSAFE)
+
+        if not (condition_1 is False and condition_2 is False):
+            rospy.logerr("Method: test_move_to_pose_value_target_unsafe_cancelled")
+            rospy.logerr("Starting position: {}".format(start_pose))
+            rospy.logerr("Current position: {}".format(stopped_pose))
+            rospy.logerr("End position: {}".format(pose.pose))
+
+        self.assertFalse(condition_1 is False and condition_2 is False)
 
     def test_move_to_position_target(self):
         self.reset_to_home()
         xyz = [0.71, 0.17, 0.34]
         self.robot_commander.move_to_position_target(xyz, self.eef)
         time.sleep(0.5)
-        end_pose = self.robot_commander.get_current_pose()
+        end_position = self.robot_commander.get_current_pose()
 
         target_xyz = Pose()
         target_xyz.position.x = xyz[0]
         target_xyz.position.y = xyz[1]
         target_xyz.position.z = xyz[2]
-        target_xyz.orientation = end_pose.orientation
+        target_xyz.orientation = end_position.orientation
 
-        condition = self.compare_poses(target_xyz, end_pose)
+        condition = self.compare_poses(target_xyz, end_position)
+
+        if not condition:
+            rospy.logerr("Method: test_move_to_position_target")
+            rospy.logerr("Target position: {}".format(target_xyz))
+            rospy.logerr("End position: {}".format(end_position))
+
         self.assertTrue(condition)
 
     def test_plan_to_position_target(self):
@@ -679,6 +706,8 @@ class TestSrRobotCommander(TestCase):
             time.sleep(1)
             tries += 1
         condition = len(plan.joint_trajectory.points) != 0
+        if not condition:
+            rospy.logerr("Method: test_plan_to_position_target, failed due to exceeding {} planning attempts".format(tries))
         self.assertTrue(condition)
 
     def test_move_to_named_target(self):
