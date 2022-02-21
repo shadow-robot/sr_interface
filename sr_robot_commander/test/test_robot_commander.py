@@ -45,11 +45,11 @@ from math import fmod
 PKG = "sr_robot_commander"
 CONST_RA_HOME_ANGLES = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
                         'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                        'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 3.1415}
+                        'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
 
 CONST_EXAMPLE_TARGET = {'ra_shoulder_pan_joint': 0.2, 'ra_elbow_joint': 1.80,
                         'ra_shoulder_lift_joint': -1.37, 'ra_wrist_1_joint': -0.52,
-                        'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 3.1415}
+                        'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 0.00}
 
 TOLERANCE_UNSAFE = 0.04
 PLANNING_ATTEMPTS = 20
@@ -388,8 +388,12 @@ class TestSrRobotCommander(TestCase):
         trajectory = self.robot_commander.plan_to_joint_value_target(CONST_RA_HOME_ANGLES, angle_degrees=False,
                                                                      custom_start_state=None).joint_trajectory
         self.robot_commander.run_joint_trajectory(trajectory)
-        end_state = self.robot_commander.get_current_state()
-        condition = self.compare_joint_states_by_common_joints(CONST_RA_HOME_ANGLES, end_state)
+        joint_state = self.robot_commander.get_current_state()
+        condition = self.compare_joint_states_by_common_joints(CONST_RA_HOME_ANGLES, joint_state)
+        if not condition:
+            rospy.logerr("Method: test_run_joint_trajectory")
+            rospy.logerr("Expected end joint state:".format(CONST_RA_HOME_ANGLES))
+            rospy.logerr("Actuall end joint state:".format(joint_state))
         self.assertTrue(condition)
 
     def test_make_named_trajectory(self):
@@ -441,6 +445,10 @@ class TestSrRobotCommander(TestCase):
         joint_state = self.robot_commander.get_current_state()
         expected_joint_state = trajectory[-1]['joint_angles']
         condition = self.compare_joint_states_by_common_joints(expected_joint_state, joint_state, TOLERANCE_UNSAFE)
+        if not condition:
+            rospy.logerr("Method: test_run_named_trajectory_unsafe_cancelled")
+            rospy.logerr("Expected end joint state:".format(expected_joint_state))
+            rospy.logerr("Actuall end joint state:".format(joint_state))
         self.assertFalse(condition)
 
     def test_run_named_trajectory_unsafe_executed(self):
@@ -463,6 +471,10 @@ class TestSrRobotCommander(TestCase):
         joint_state = self.robot_commander.get_current_state()
         expected_joint_state = trajectory[-1]['joint_angles']
         condition = self.compare_joint_states_by_common_joints(expected_joint_state, joint_state)
+        if not condition:
+            rospy.logerr("Method: test_run_named_trajectory")
+            rospy.logerr("Expected end joint state:".format(expected_joint_state))
+            rospy.logerr("Actuall end joint state:".format(joint_state))
         self.assertTrue(condition)
 
     def test_move_to_pose_target(self):
@@ -553,8 +565,13 @@ class TestSrRobotCommander(TestCase):
         waypoints.append(conversions.list_to_pose([0.71, 0.17, 0.34, 0, 0, 0, 1]))
         (plan, f) = self.robot_commander.plan_to_waypoints_target(waypoints)
         self.robot_commander.run_joint_trajectory_unsafe(plan.joint_trajectory)
-        after_pose = self.robot_commander.get_current_pose()
-        condition = self.compare_poses(after_pose, waypoints[-1])
+        actual_pose = self.robot_commander.get_current_pose()
+        expected_pose = waypoints[-1]
+        condition = self.compare_poses(actual_pose, expected_pose)
+        if not condition:
+            rospy.logerr("Method: test_plan_to_waypoints_target")
+            rospy.logerr("Expected end joint state:".format(actual_pose))
+            rospy.logerr("Actuall end joint state:".format(expected_pose))
         self.assertTrue(condition)
 
     def test_move_to_trajectory_start_trajecotry_exists(self):
