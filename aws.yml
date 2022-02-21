@@ -1,5 +1,5 @@
 settings:
-  machine_type: medium
+  machine_type: xlarge
   ubuntu:
     version: focal
   ros:
@@ -18,7 +18,6 @@ trunks:
   - name: noetic-devel
     jobs:
       - name: code_coverage
-        machine_type: xlarge
       - name: style_check
         settings:
           toolset:
