@@ -18,6 +18,7 @@ trunks:
   - name: noetic-devel
     jobs:
       - name: code_coverage
+        machine_type: xlarge
       - name: style_check
         settings:
           toolset:
