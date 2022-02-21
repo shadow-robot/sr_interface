@@ -62,6 +62,7 @@ class TestSrRobotCommander(TestCase):
     def setUpClass(cls):
         rospy.wait_for_message("/move_group/status", GoalStatusArray)
         rospy.wait_for_service("/gazebo/set_model_configuration")
+        rospy.wait_for_message("/clock", Clock)
         rospy.sleep(10.0)  # Wait for Gazebo to sort itself out
         cls.robot_commander = SrRobotCommander("right_arm")
         cls.robot_commander.set_planner_id("BiTRRT")
@@ -83,9 +84,6 @@ class TestSrRobotCommander(TestCase):
         cls.robot_commander._planning_scene.add_box("ground", pose, (3, 3, height))
 
     def reset_to_home(self):
-        rospy.logwarn("Checking clock sync")
-        rospy.logwarn(rospy.wait_for_message("/clock", Clock))
-        rospy.logwarn(rospy.get_rostime())
         rospy.sleep(1)
         self.robot_commander._reset_plan()
         self.robot_commander.move_to_joint_value_target(CONST_RA_HOME_ANGLES, wait=True, angle_degrees=False)
@@ -196,7 +194,7 @@ class TestSrRobotCommander(TestCase):
             tries += 1
         condition = len(plan.joint_trajectory.points) != 0
         if not condition:
-            rospy.logerr("Method: test_plan_to_joint_value_target, failed due to exceeding {} planning attempts".format(tries))
+            rospy.logerr("Method: test_plan_to_joint_value_target")
         self.assertTrue(condition)
 
     def test_execute(self):
@@ -595,7 +593,7 @@ class TestSrRobotCommander(TestCase):
         self.robot_commander.move_to_trajectory_start(trajectory)
         current_joints = self.robot_commander.get_current_state()
         condition = self.compare_joint_states_by_common_joints(joints_from_trajectory, current_joints)
-        
+
         if not condition:
             rospy.logerr("Method: test_move_to_trajectory_start_trajecotry_exists")
             rospy.logerr("Expected joint states: {}".format(joints_from_trajectory))
@@ -712,7 +710,7 @@ class TestSrRobotCommander(TestCase):
             tries += 1
         condition = len(plan.joint_trajectory.points) != 0
         if not condition:
-            rospy.logerr("Method: test_plan_to_position_target, failed due to exceeding {} planning attempts".format(tries))
+            rospy.logerr("Method: test_plan_to_position_target")
         self.assertTrue(condition)
 
     def test_move_to_named_target(self):
