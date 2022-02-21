@@ -39,6 +39,8 @@ import time
 import numpy as np
 from math import fmod
 
+from rosgraph_msgs.msg import Clock
+
 # Some of the test cases do not have an assert method. In case of these methods the test verifies if
 # the API of moveit_commander changed - i.e. change of methods name, number of arguments, return type
 
@@ -81,6 +83,9 @@ class TestSrRobotCommander(TestCase):
         cls.robot_commander._planning_scene.add_box("ground", pose, (3, 3, height))
 
     def reset_to_home(self):
+        rospy.logwarn("Checking clock sync")
+        rospy.logwarn(rospy.wait_for_message("/clock", Clock))
+        rospy.logwarn(rospy.get_rostime())
         rospy.sleep(1)
         self.robot_commander._reset_plan()
         self.robot_commander.move_to_joint_value_target(CONST_RA_HOME_ANGLES, wait=True, angle_degrees=False)
@@ -483,7 +488,7 @@ class TestSrRobotCommander(TestCase):
         self.reset_to_home()
         pose = conversions.list_to_pose([0.7261, 0.1733, 0.4007, 3.1415, 0.00, 0.00])
         self.robot_commander.move_to_pose_target(pose, self.eef, wait=True)
-        time.sleep(5)
+        rospy.sleep(5)
         end_pose = self.robot_commander.get_current_pose()
         condition = self.compare_poses(pose, end_pose)
         if not condition:
