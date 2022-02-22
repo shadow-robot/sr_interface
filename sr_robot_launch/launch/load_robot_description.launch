@@ -8,7 +8,6 @@
   <arg name="hand" default="true"/>
 
   <!-- HAND SPECIFIC CONFIG-->
-  <arg unless="$(arg arm)" name="initial_z" default="0.0"/>
   <arg name="hand_type"/>
   <arg name="hand_version"/>
   <arg name="fingers"/>
