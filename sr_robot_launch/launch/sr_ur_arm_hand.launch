@@ -71,6 +71,10 @@
   <arg name="prox_sensors" default="none"/>
   <arg name="palm_sensor" default="none"/>
   <arg name="hand_type" default="hand_e"/>
+  <arg if="$(eval arg('side') == 'right')" name="initial_y" default="0.0"/>
+  <arg if="$(eval arg('side') == 'right')" name="initial_yaw" default="0.0"/>
+  <arg if="$(eval arg('side') == 'left')" name="initial_y" default="1.5"/>
+  <arg if="$(eval arg('side') == 'left')" name="initial_yaw" default="3.1415"/>
 
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhands_and_arms.world"/>
@@ -89,6 +93,8 @@
       <arg name="start_home" value="$(arg start_home)"/>
       <arg name="home_angles" value="$(arg home_angles)"/>
       <arg name="initial_z" value="$(arg initial_z)"/>
+      <arg name="initial_y" value="$(arg initial_y)"/>
+      <arg name="initial_yaw" value="$(arg initial_yaw)"/>
       <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       <arg name="gui" value="$(arg gui)"/>
