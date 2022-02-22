@@ -106,6 +106,7 @@ class SrConstructRobotDescription():
             xacro_command += (' ' + key + ':=' + str(value))
         return check_output([command.strip('\'') for command in xacro_command.split()])
 
+
 if __name__ == "__main__":
     rospy.init_node("sr_construct_robot_description")
     sr_construct_robot_description = SrConstructRobotDescription()

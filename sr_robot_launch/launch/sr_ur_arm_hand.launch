@@ -44,6 +44,8 @@
 
   <!-- ARMS CONFIG-->
   <arg name="initial_z" default="0.1"/>
+  <arg name="initial_y" default="0.0"/>
+  <arg name="initial_yaw" default="0.0"/>
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn group position controllers for the arms -->
@@ -71,10 +73,6 @@
   <arg name="prox_sensors" default="none"/>
   <arg name="palm_sensor" default="none"/>
   <arg name="hand_type" default="hand_e"/>
-  <arg if="$(eval arg('side') == 'right')" name="initial_y" default="0.0"/>
-  <arg if="$(eval arg('side') == 'right')" name="initial_yaw" default="0.0"/>
-  <arg if="$(eval arg('side') == 'left')" name="initial_y" default="1.5"/>
-  <arg if="$(eval arg('side') == 'left')" name="initial_yaw" default="3.1415"/>
 
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhands_and_arms.world"/>
