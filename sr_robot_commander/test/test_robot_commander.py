@@ -67,10 +67,10 @@ class TestSrRobotCommander(TestCase):
         cls.robot_commander = SrRobotCommander("right_arm")
         cls.robot_commander.set_planner_id("BiTRRT")
         cls.eef = cls.robot_commander.get_end_effector_link()
-        cls.set_ground()
+        cls.add_ground_plane()
 
     @classmethod
-    def set_ground(cls, height=0.05, z_position=0.05):
+    def add_ground_plane(cls, height=0.05, z_position=0.05):
         pose = PoseStamped()
         pose.pose.position.x = 0
         pose.pose.position.y = 0
@@ -81,7 +81,7 @@ class TestSrRobotCommander(TestCase):
         pose.pose.orientation.w = 1
         pose.header.stamp = rospy.get_rostime()
         pose.header.frame_id = cls.robot_commander._robot_commander.get_root_link()
-        cls.robot_commander._planning_scene.add_box("ground", pose, (3, 3, height))
+        cls.robot_commander._planning_scene.add_box("ground_plane", pose, (3, 3, height))
 
     def reset_to_home(self):
         rospy.sleep(1)
@@ -98,7 +98,7 @@ class TestSrRobotCommander(TestCase):
         pose2_list = [round(i, 2) for i in pose2_list]
 
         for coordinate_1, coordinate_2 in zip(pose1_list, pose2_list):
-            if abs(coordinate_1) - abs(coordinate_2) >= tolerance:
+            if abs(abs(coordinate_1) - abs(coordinate_2)) >= tolerance:
                 return False
         return True
 
@@ -484,15 +484,25 @@ class TestSrRobotCommander(TestCase):
 
     def test_move_to_pose_target(self):
         self.reset_to_home()
-        pose = conversions.list_to_pose([0.7261, 0.1733, 0.4007, 3.1415, 0.00, 0.00])
+        pose = conversions.list_to_pose([0.7261, 0.1733, 0.4007, 1.00, 0.00, 0.00, 00])
         self.robot_commander.move_to_pose_target(pose, self.eef, wait=True)
-        rospy.sleep(5)
         end_pose = self.robot_commander.get_current_pose()
         condition = self.compare_poses(pose, end_pose)
+        tries = 0
+        while not condition and tries < 5:
+            self.reset_to_home()
+            tries += 1
+            rospy.logwarn("moving to pose target attempt {}".format(tries))
+            self.robot_commander.move_to_pose_target(pose, self.eef, wait=True)
+            condition = self.compare_poses(pose, end_pose)
+            end_pose = self.robot_commander.get_current_pose()
+            rospy.logwarn(end_pose)
+
         if not condition:
             rospy.logerr("Method: test_move_to_pose_target")
             rospy.logerr("Expected pose: {}".format(pose))
             rospy.logerr("Actuall pose: {}".format(end_pose))
+
         self.assertTrue(condition)
 
     def test_plan_to_pose_target(self):
@@ -591,6 +601,7 @@ class TestSrRobotCommander(TestCase):
                                                                      custom_start_state=None).joint_trajectory
         joints_from_trajectory = dict(zip(trajectory.joint_names, trajectory.points[0].positions))
         self.robot_commander.move_to_trajectory_start(trajectory)
+        time.sleep(5)
         current_joints = self.robot_commander.get_current_state()
         condition = self.compare_joint_states_by_common_joints(joints_from_trajectory, current_joints)
 
@@ -638,13 +649,13 @@ class TestSrRobotCommander(TestCase):
 
     def test_move_to_pose_value_target_unsafe_cancelled(self):
         self.reset_to_home()
-        pose = PoseStamped()
-        pose.header.stamp = rospy.get_rostime()
-
         start_pose = self.robot_commander.get_current_pose()
-        pose.pose = conversions.list_to_pose([0.91, 0.17, 0.34, 0, 0, 0, 1])
-        self.robot_commander.move_to_pose_value_target_unsafe(pose, time=1, wait=False)
-        rospy.sleep(0.5)
+        target_pose = PoseStamped()
+        target_pose.header.stamp = rospy.get_rostime()
+        target_pose.pose = conversions.list_to_pose([0.91, 0.17, 0.34, 0, 0, 0, 1])
+
+        self.robot_commander.move_to_pose_value_target_unsafe(target_pose, time=2, wait=False)
+        rospy.sleep(1)
 
         for client in self.robot_commander._clients:
             self.robot_commander._action_running[client] = True
@@ -652,36 +663,46 @@ class TestSrRobotCommander(TestCase):
 
         stopped_pose = self.robot_commander.get_current_pose()
 
-        condition_1 = self.compare_poses(start_pose, pose.pose, TOLERANCE_UNSAFE)
-        condition_2 = self.compare_poses(pose.pose, stopped_pose, TOLERANCE_UNSAFE)
+        condition_1 = self.compare_poses(start_pose, target_pose.pose, TOLERANCE_UNSAFE)
+        condition_2 = self.compare_poses(target_pose.pose, stopped_pose, TOLERANCE_UNSAFE)
 
         if not (condition_1 is False and condition_2 is False):
             rospy.logerr("Method: test_move_to_pose_value_target_unsafe_cancelled")
             rospy.logerr("Starting position: {}".format(start_pose))
+            rospy.logerr("Target position: {}".format(target_pose.pose))
             rospy.logerr("Current position: {}".format(stopped_pose))
-            rospy.logerr("End position: {}".format(pose.pose))
 
-        self.assertFalse(condition_1 is False and condition_2 is False)
+        self.assertTrue(condition_1 is False and condition_2 is False)
 
     def test_move_to_position_target(self):
         self.reset_to_home()
-        xyz = [0.71, 0.17, 0.34]
-        self.robot_commander.move_to_position_target(xyz, self.eef)
-        time.sleep(0.5)
-        end_position = self.robot_commander.get_current_pose()
 
+        xyz = [0.71, 0.17, 0.34]
         target_xyz = Pose()
         target_xyz.position.x = xyz[0]
         target_xyz.position.y = xyz[1]
         target_xyz.position.z = xyz[2]
-        target_xyz.orientation = end_position.orientation
+        target_xyz.orientation = self.robot_commander.get_current_pose().orientation
 
-        condition = self.compare_poses(target_xyz, end_position)
+        self.robot_commander.move_to_position_target(xyz, self.eef)
+        time.sleep(5)
+        end_pose = self.robot_commander.get_current_pose()
+
+        condition = self.compare_poses(target_xyz, end_pose)
+        tries = 0
+        while not condition and tries < 5:
+            self.reset_to_home()
+            tries += 1
+            rospy.logwarn("test_move_to_position_target {}".format(tries))
+            self.robot_commander.move_to_position_target(xyz, self.eef)
+            condition = self.compare_poses(target_xyz, end_pose)
+            end_pose = self.robot_commander.get_current_pose()
+            rospy.logwarn(end_pose)
 
         if not condition:
             rospy.logerr("Method: test_move_to_position_target")
             rospy.logerr("Target position: {}".format(target_xyz))
-            rospy.logerr("End position: {}".format(end_position))
+            rospy.logerr("End position: {}".format(end_pose))
 
         self.assertTrue(condition)
 
