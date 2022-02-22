@@ -26,6 +26,12 @@
   <!-- ARM SPECIFIC CONFIG-->
   <arg name="robot_model" default="ur10e"/>
   <arg if="$(arg arm)" name="initial_z" default="0.1"/>
+  
+  <arg if="$(eval arg('arm') and arg('side') == 'right')" name="initial_y" default="0.0"/>
+  <arg if="$(eval arg('arm') and arg('side') == 'right')" name="initial_yaw" default="0.0"/>
+  <arg if="$(eval arg('arm') and arg('side') == 'left')" name="initial_y" default="1.5"/>
+  <arg if="$(eval arg('arm') and arg('side') == 'left')" name="initial_yaw" default="3.1415"/>
+  
   <arg name="arm_prefix" value="$(arg side_letter)a"/>
 
   <!-- Hand-only description, needed for srdf generation -->
@@ -37,7 +43,7 @@
 
   <arg if="$(arg arm)" name="load_robot_description_command" value="xacro $(arg robot_description) robot_model:=$(arg robot_model) hand_type:=$(arg hand_type) hand_version:=$(arg hand_version) side:=$(arg side)
                                                                     fingers:=$(arg fingers) tip_sensors:=$(arg tip_sensors)
-                                                                    mid_sensors:=$(arg mid_sensors) prox_sensors:=$(arg prox_sensors) palm_sensor:=$(arg palm_sensor) initial_z:=$(arg initial_z)"/>
+                                                                    mid_sensors:=$(arg mid_sensors) prox_sensors:=$(arg prox_sensors) palm_sensor:=$(arg palm_sensor) initial_z:=$(arg initial_z) initial_y:=$(arg initial_y) initial_yaw:=$(arg initial_yaw)"/>
   <arg if="$(eval arm and hand)" name="load_hand_description_command" value="xacro $(arg hand_description)
                                                                              hand_type:=$(arg hand_type) hand_version:=$(arg hand_version) side:=$(arg side)
                                                                              fingers:=$(arg fingers) tip_sensors:=$(arg tip_sensors)
