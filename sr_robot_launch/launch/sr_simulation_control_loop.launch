@@ -41,10 +41,8 @@
   <!-- Robot description related config-->
   <arg unless="$(arg arm)" name="robot_name" default="usrh"/>
   <arg unless="$(arg arm)" name="initial_z" default="0.0"/>
-  <arg if="$(eval arg('arm') and arg('side') == 'right')" name="initial_y" default="0.0"/>
-  <arg if="$(eval arg('arm') and arg('side') == 'right')" name="initial_yaw" default="0.0"/>
-  <arg if="$(eval arg('arm') and arg('side') == 'left')" name="initial_y" default="1.5"/>
-  <arg if="$(eval arg('arm') and arg('side') == 'left')" name="initial_yaw" default="3.1415"/>
+  <arg name="initial_y" default="0.0"/>
+  <arg name="initial_yaw" default="0.0"/>
 
   <!-- ARM SPECIFIC CONFIG-->
   <arg name="arm_prefix" value="$(arg side_letter)a"/>
