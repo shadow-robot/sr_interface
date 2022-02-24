@@ -44,6 +44,8 @@
 
   <!-- ARMS CONFIG-->
   <arg name="initial_z" default="0.1"/>
+  <arg name="initial_y" default="0.0"/>
+  <arg name="initial_yaw" default="0.0"/>
   <!-- Set to true to spawn trajectory controllers for the arms (the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="arm_trajectory" default="true"/>
   <!-- Set to true to spawn group position controllers for the arms -->
@@ -89,6 +91,8 @@
       <arg name="start_home" value="$(arg start_home)"/>
       <arg name="home_angles" value="$(arg home_angles)"/>
       <arg name="initial_z" value="$(arg initial_z)"/>
+      <arg name="initial_y" value="$(arg initial_y)"/>
+      <arg name="initial_yaw" value="$(arg initial_yaw)"/>
       <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       <arg name="gui" value="$(arg gui)"/>

@@ -4,7 +4,9 @@
        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface" name="ursrh">
 
     <link name="world"/>
+    <xacro:arg name="initial_y" default="0.0"/>
     <xacro:arg name="initial_z" default="0.0"/>
+    <xacro:arg name="initial_yaw" default="0.0"/>
     <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
 
     <xacro:arg name="robot_model" default="ur10e"/>
@@ -53,7 +55,7 @@
     <joint name="world_joint" type="fixed">
         <parent link="world"/>
         <child link="$(arg arm_prefix)_base_link"/>
-        <origin xyz="0.0 0.0 $(arg initial_z)" rpy="0.0 0.0 0.0"/>
+        <origin xyz="0.0 $(arg initial_y) $(arg initial_z)" rpy="0.0 0.0 $(arg initial_yaw)"/>
     </joint> 
 
     <joint name="$(arg arm_prefix)_arm_to_hand" type="fixed">

@@ -38,6 +38,8 @@
   <!-- ARM CONFIG-->
   <arg name="initial_z" default="0.7521" if="$(arg scene)"/>
   <arg name="initial_z" default="0.1" unless="$(arg scene)"/>
+  <arg name="initial_y" default="0.0"/>
+  <arg name="initial_yaw" default="0.0"/>
   <!-- You can select ur10 or ur10e -->
   <arg name="robot_model" default="ur10e"/>
   <arg name="arm_speed_scale" default="0.5"/>
@@ -85,6 +87,8 @@
 
     <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
     <arg name="initial_z" value="$(arg initial_z)"/>
+    <arg name="initial_y" value="$(arg initial_y)"/>
+    <arg name="initial_yaw" value="$(arg initial_yaw)"/>
     <arg name="arm_trajectory" default="$(arg arm_trajectory)"/>
     <arg name="arm_position" default="$(arg arm_position)"/>
     <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
