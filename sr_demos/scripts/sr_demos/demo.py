@@ -132,7 +132,7 @@ class KeyboardPressDetector(object):
             elif input_val == "4":
                 sequence_rf(self.hand_commander, self.demo_states, self.tactile_reading, self.hand_type)
             elif input_val == "5":
-                if self.hand_type == 'hand_e' or self.hand_type == 'hand_e_plus':
+                if self.hand_type == 'hand_e':
                     sequence_lf(self.hand_commander, self.demo_states, self.tactile_reading)
                 else:
                     rospy.logerr("This demo only works for a 5-fingered Hand E. Please try demos 1-4")
@@ -408,9 +408,6 @@ def correct_joint_states_for_hand_type(joint_states_config, hand_type):
     with open(hand_type_joints_filename) as f:
         hand_type_joints = yaml.load(f, Loader=yaml.FullLoader)
 
-    if hand_type == 'hand_e_plus':
-        hand_type = 'hand_e'
-
     for joint_state_dicts_no_id in joint_states_config.keys():
         for key in list(joint_states_config[joint_state_dicts_no_id]):
             if key not in hand_type_joints[hand_type]:
@@ -456,9 +453,9 @@ if __name__ == "__main__":
                         dest="hand_type",
                         type=str,
                         required=True,
-                        help="Please select hand type, can be 'hand_e', 'hand_e_plus', 'hand_lite', 'hand_extra_lite'.",
+                        help="Please select hand type, can be 'hand_e', 'hand_lite', 'hand_extra_lite'.",
                         default="hand_e",
-                        choices=["hand_e", "hand_e_plus", "hand_lite", "hand_extra_lite"])
+                        choices=["hand_e", "hand_lite", "hand_extra_lite"])
     parser.add_argument("-tac", "--tactiles",
                         dest="tactiles",
                         required=False,
