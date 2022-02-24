@@ -14,7 +14,6 @@ install(TARGETS test_iksolvers DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 if (CATKIN_ENABLE_TESTING)
     find_package(rostest REQUIRED)
-    add_rostest(test/test_biotac_collada_name.test)
     add_rostest_gtest(test_end_effector test/test_end_effector.test test/test_end_effector.cpp)
 	target_link_libraries(test_end_effector ${catkin_LIBRARIES})
 endif ()

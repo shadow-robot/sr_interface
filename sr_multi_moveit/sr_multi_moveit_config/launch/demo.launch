@@ -13,17 +13,21 @@
   <arg name="generate_planning_config" default="true"/>
 
   <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
-  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/right_srhand_ur10.urdf.xacro'"/>
+  <arg name="robot_description" default="'$(find sr_multi_description)/urdf/srhand_ur.urdf.xacro'"/>
+  <arg name="hand_description" value="'$(find sr_description)/robots/sr_hand.urdf.xacro'"/>
 
   <!-- hand ik solver possible values sr_hand_kinematics/kdl/trac_ik/bio_ik -->
   <arg name="hand_ik_solver" default="sr_hand_kinematics"/>
   <arg name="hand_ik_solver_path" value="$(find sr_moveit_hand_config)/config/kinematics_template.yaml" if="$(eval hand_ik_solver == 'sr_hand_kinematics')" />
   <arg name="hand_ik_solver_path" value="$(find sr_moveit_hand_config)/config/kinematics_$(arg hand_ik_solver)_template.yaml" unless="$(eval hand_ik_solver == 'sr_hand_kinematics')" />
+  
+    <!-- Load necessary URDFs on the param server -->
+  <param name="right_hand_description" command="xacro $(arg hand_description)"/>
+  <param name="robot_description" command="xacro $(arg robot_description)"/>
 
-  <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
+  <!-- Load the SRDF and other .yaml configuration files on the param server -->
   <include file="$(find sr_multi_moveit_config)/launch/planning_context.launch">
-    <arg name="load_robot_description" value="true"/>
-    <arg name="robot_description" value="$(arg robot_description)"/>
+    <arg name="load_robot_description" value="false"/>
     <arg name="robot_config_file" value="$(arg robot_config_file)"/>
     <arg name="hand_ik_solver_path" value="$(arg hand_ik_solver_path)"/>
   </include>
