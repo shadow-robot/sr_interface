@@ -34,7 +34,7 @@
   <arg if="$(eval arm and hand)" name="hand_description" value="'$(find sr_description)/robots/sr_hand.urdf.xacro'"/>
 
   <arg if="$(eval arm and hand)" name="robot_description" value="'$(find sr_multi_description)/urdf/srhand_ur.urdf.xacro'"/>
-  <arg if="$(eval arm and not hand)" name="robot_description" value="'$(find sr_box_ur10_moveit_config)/config/$(arg arm_prefix)_$(arg robot_model)_with_box.urdf.xacro'"/>
+  <arg if="$(eval arm and not hand)" name="robot_description" value="'$(find sr_multi_description)/urdf/sr_ur.urdf.xacro'"/>
 
 
   <arg if="$(arg arm)" name="load_robot_description_command" value="xacro $(arg robot_description) robot_model:=$(arg robot_model) hand_type:=$(arg hand_type) hand_version:=$(arg hand_version) side:=$(arg side)
