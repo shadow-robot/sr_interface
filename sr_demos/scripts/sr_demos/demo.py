@@ -136,8 +136,8 @@ class KeyboardPressDetector(object):
                     sequence_lf(self.hand_commander, self.demo_states, self.tactile_reading)
                 else:
                     rospy.logerr("This demo only works for a 5-fingered Hand E. Please try demos 1-4")
-
-            if '0x1b' == hex(ord(input_val)):
+            elif input_val == "6":
+                rospy.signal_shutdown("Ending demo as key 6 has been pressed.")
                 sys.exit(0)
 
 
@@ -223,7 +223,7 @@ def sequence_ff(hand_commander, joint_states_config):
     execute_command_check(hand_commander, joint_states_config, 'zero_wr', 0.4, 0.4)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.5, 1.5)
 
-    rospy.loginfo("'FF' Demo completed")
+    rospy.loginfo("FF demo completed")
 
     return
 
@@ -246,7 +246,7 @@ def sequence_mf(hand_commander, joint_states_config):
     execute_command_check(hand_commander, joint_states_config, 'bc_12', 4.0, 3.0)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.5, 1.5)
 
-    rospy.loginfo("'MF' Demo completed")
+    rospy.loginfo("MF demo completed")
 
     return
 
@@ -347,7 +347,7 @@ def sequence_rf(hand_commander, joint_states_config, tactile_reading, hand_type)
     execute_command_check(hand_commander, joint_states_config, 'pregrasp_pos', 2.0, 2.0)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 2.0, 2.0)
 
-    rospy.loginfo("'RF' Demo completed")
+    rospy.loginfo("RF demo completed")
     return
 
 
@@ -382,7 +382,7 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
             else:
                 return
 
-    rospy.loginfo("'LF' Demo completed")
+    rospy.loginfo("LF demo completed")
 
     return
 
@@ -510,7 +510,8 @@ if __name__ == "__main__":
                    \n   FF or 2: Standard Demo\
                    \n   MF or 3: Card Trick Demo\
                    \n   RF or 4: Grasp Demo\
-                   \n   LF or 5: Shy Hand Demo (only works with Hand E)")
+                   \n   LF or 5: Shy Hand Demo (only works with Hand E).\
+                   \n   PRESS 6 TO END THE PROGRAM")
 
     # Keyboard thread for input
     kpd = KeyboardPressDetector(hand_commander, demo_states,
