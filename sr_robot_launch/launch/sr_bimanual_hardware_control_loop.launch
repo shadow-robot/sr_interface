@@ -26,7 +26,22 @@
   <!-- Separation between the robots -->
   <arg name="hand_x_separation" default="-0.4"/>
   <!-- Set the hand type here: hand_e, hand_g -->
-  <arg name="hand_type" default="hand_e"/>
+
+  <arg name="right_hand_type" default="hand_e"/>
+  <arg name="right_hand_version" default="E3M5"/>
+  <arg name="right_fingers" default="all"/>
+  <arg name="right_tip_sensors" default="pst"/>
+  <arg name="right_mid_sensors" default="none"/>
+  <arg name="right_prox_sensors" default="none"/>
+  <arg name="right_palm_sensor" default="none"/>
+
+  <arg name="left_hand_type" default="hand_e"/>
+  <arg name="left_hand_version" default="E3M5"/>
+  <arg name="left_fingers" default="all"/>
+  <arg name="left_tip_sensors" default="pst"/>
+  <arg name="left_mid_sensors" default="none"/>
+  <arg name="left_prox_sensors" default="none"/>
+  <arg name="left_palm_sensor" default="none"/>
 
   <!-- ARMS CONFIG-->
   <arg name="robot_model" default="ur10e"/>
@@ -48,8 +63,10 @@
   <arg name="left_arm_speed_scale" default="0.5"/>
 
   <!-- Sets up right payload -->
-  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_e')" name="arm_payload_mass" default="5.0"/>
-  <arg if="$(eval not hands == 'none' and arg('hand_type') == 'hand_g')" name="arm_payload_mass" default="2.7"/>
+  <arg if="$(eval not hands == 'none' and arg('right_hand_type') == 'hand_e')" name="right_arm_payload_mass" default="5.0"/>
+  <arg if="$(eval not hands == 'none' and arg('right_hand_type') == 'hand_g')" name="right_arm_payload_mass" default="2.7"/>
+  <arg if="$(eval not hands == 'none' and arg('left_hand_type') == 'hand_e')" name="left_arm_payload_mass" default="5.0"/>
+  <arg if="$(eval not hands == 'none' and arg('left_hand_type') == 'hand_g')" name="left_arm_payload_mass" default="2.7"/>
   <arg unless="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_mass" default="0.0"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
@@ -57,8 +74,8 @@
   <node pkg="rosservice" type="rosservice" name="set_right_speed_scale" args="call --wait /ra_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg right_arm_speed_scale)'"/>
   <node pkg="rosservice" type="rosservice" name="set_left_speed_scale" args="call --wait /la_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg left_arm_speed_scale)'"/>
 
-  <node pkg="rosservice" type="rosservice" name="set_right_arm_payload" args="call --wait /ra_sr_ur_robot_hw/set_payload '{mass: $(arg arm_payload_mass), center_of_gravity: $(arg arm_payload_cog)}'"/>
-  <node pkg="rosservice" type="rosservice" name="set_left_arm_payload" args="call --wait /la_sr_ur_robot_hw/set_payload '{mass: $(arg arm_payload_mass), center_of_gravity: $(arg arm_payload_cog)}'"/>
+  <node pkg="rosservice" type="rosservice" name="set_right_arm_payload" args="call --wait /ra_sr_ur_robot_hw/set_payload '{mass: $(arg right_arm_payload_mass), center_of_gravity: $(arg arm_payload_cog)}'"/>
+  <node pkg="rosservice" type="rosservice" name="set_left_arm_payload" args="call --wait /la_sr_ur_robot_hw/set_payload '{mass: $(arg left_arm_payload_mass), center_of_gravity: $(arg arm_payload_cog)}'"/>
 
   <!-- ROBOT CONFIG-->
   <!-- HANDS AND ARMS -->
@@ -95,7 +112,23 @@
     <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
     <arg name="arm_1_z" value="$(arg arm_1_z)"/>
     <arg name="arm_2_z" value="$(arg arm_2_z)"/>
-    <arg name="biotac" value="$(arg biotac)"/>
+
+    <arg name="right_hand_type" value="$(arg right_hand_type)"/>
+    <arg name="right_hand_version" value="$(arg right_hand_version)"/>
+    <arg name="right_fingers" value="$(arg right_fingers)"/>
+    <arg name="right_tip_sensors" value="$(arg right_tip_sensors)"/>
+    <arg name="right_mid_sensors" value="$(arg right_mid_sensors)"/>
+    <arg name="right_prox_sensors" value="$(arg right_prox_sensors)"/>
+    <arg name="right_palm_sensor" value="$(arg right_palm_sensor)"/>
+
+    <arg name="left_hand_type" value="$(arg left_hand_type)"/>
+    <arg name="left_hand_version" value="$(arg left_hand_version)"/>
+    <arg name="left_fingers" value="$(arg left_fingers)"/>
+    <arg name="left_tip_sensors" value="$(arg left_tip_sensors)"/>
+    <arg name="left_mid_sensors" value="$(arg left_mid_sensors)"/>
+    <arg name="left_prox_sensors" value="$(arg left_prox_sensors)"/>
+    <arg name="left_palm_sensor" value="$(arg left_palm_sensor)"/>
+
   </include>
 
   <!-- Default hand controller groups -->
