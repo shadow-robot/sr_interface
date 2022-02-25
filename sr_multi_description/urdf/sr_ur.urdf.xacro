@@ -14,12 +14,6 @@
   <xacro:arg name="kinematics_config" default="$(find ur_description)/config/$(arg robot_model)/default_kinematics.yaml"/>
   <xacro:include filename="$(find ur_description)/urdf/inc/$(arg robot_model)_macro.xacro"/>
 
-  <gazebo>
-    <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
-      <robotSimType>sr_gazebo_sim/SrGazeboHWSim</robotSimType>
-    </plugin>
-  </gazebo>
-
   <xacro:if value="${'$(arg side)' == 'right'}">
       <xacro:arg name="arm_prefix" default="ra" />
   </xacro:if>
@@ -39,6 +33,8 @@
     <xacro:if value="${'$(arg robot_model)' == 'ur5'}">
       <xacro:ur5_robot prefix="$(arg arm_prefix)_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config)"/>
   </xacro:if>
+
+  <xacro:include filename="$(find sr_description)/other/xacro/gazebo/gazebo.urdf.xacro"/>
 
   <joint name="world_joint" type="fixed">
     <parent link="world"/>
