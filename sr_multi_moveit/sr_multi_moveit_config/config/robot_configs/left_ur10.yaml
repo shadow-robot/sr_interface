@@ -2,9 +2,9 @@ robot:
   name: ursr
   manipulators:
     right_manipulator:
-      side: right
+      side: left
       arm:
-        name: ur10e
+        name: ur10
         main_group: manipulator
         moveit_path:
           package: sr_multi_moveit_config
