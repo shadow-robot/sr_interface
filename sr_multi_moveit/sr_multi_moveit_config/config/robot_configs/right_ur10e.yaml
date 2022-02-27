@@ -7,7 +7,7 @@ robot:
         name: ur10e
         main_group: manipulator
         other_groups:
-          - endeffector
+          - endeffector        
         moveit_path:
           package: sr_multi_moveit_config
           relative_path: /config/ur
