@@ -34,7 +34,8 @@
       <xacro:ur5_robot prefix="$(arg arm_prefix)_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config)"/>
   </xacro:if>
 
-  <xacro:include filename="$(find sr_description)/other/xacro/gazebo/gazebo.urdf.xacro"/>
+  <xacro:include filename="$(find sr_description)/other/xacro/gazebo.urdf.xacro"/>
+  <xacro:include filename="$(find sr_description)/other/xacro/materials.urdf.xacro"/>
 
   <joint name="world_joint" type="fixed">
     <parent link="world"/>
