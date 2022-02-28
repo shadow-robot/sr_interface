@@ -7,7 +7,7 @@ Here are some examples of demo's used for Hand E. To run these, the robot should
 | open.py       | -s --side  |     'right', 'left' or 'both' |
 | close.py      | -s --side  | 'right', 'left' or 'both' |
 | burn_in.py    | -s --side <br> -ht --hand_type | 'right', 'left' or 'both' <br> 'hand_e', 'hand_e_plus', 'hand_lite' or 'hand_extra_lite' |
-|  demo.py      | -s --side <br> -ht --hand_type <br> -tac --tactiles | 'right', 'left' or 'both' <br> 'hand_e', 'hand_e_plus', 'hand_lite' or 'hand_extra_lite' <br> Include this argument if the hand has tactiles |
+|  demo.py      | -s --side <br> -ht --hand_type <br> -tac --tactiles | 'right', 'left' or 'both' <br> 'hand_e', 'hand_lite' or 'hand_extra_lite' <br> Include this argument if the hand has tactiles |
 
 ## Example launch
 

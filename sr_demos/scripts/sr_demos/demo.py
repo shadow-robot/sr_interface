@@ -50,8 +50,8 @@ class TactileReading():
 
     def zero_tactile_sensors(self):
         rospy.sleep(0.5)
-        rospy.logwarn('\n\nPLEASE ENSURE THAT THE TACTILE SENSORS ARE NOT PRESSED\n')
-        input('Press ENTER to continue...')
+        rospy.logwarn('\nPLEASE ENSURE THAT THE TACTILE SENSORS ARE NOT PRESSED')
+        input('\nPress ENTER to continue...')
         rospy.sleep(1.0)
 
         for x in range(1, 1000):
@@ -60,9 +60,9 @@ class TactileReading():
 
             for finger in ["FF", "MF", "RF", "LF", "TH"]:
                 if self.tactile_values[finger] > self.force_zero[finger]:
-                    self.force_zero[finger] = self.tactile_values[finger] + 5
+                    self.force_zero[finger] = self.tactile_values[finger] + 20
 
-        rospy.loginfo('\nForce Zero: ' + str(self.force_zero))
+        rospy.loginfo('Force Zero: ' + str(self.force_zero))
 
     def read_tactile_values(self):
         # Read current state of tactile sensors
@@ -74,7 +74,6 @@ class TactileReading():
             self.tactile_values['RF'] = tactile_state.tactiles[2].pdc
             self.tactile_values['LF'] = tactile_state.tactiles[3].pdc
             self.tactile_values['TH'] = tactile_state.tactiles[4].pdc
-
         elif self.tactile_type == "PST":
             self.tactile_values['FF'] = tactile_state.pressure[0]
             self.tactile_values['MF'] = tactile_state.pressure[1]
@@ -132,7 +131,7 @@ class KeyboardPressDetector(object):
             elif input_val == "4":
                 sequence_rf(self.hand_commander, self.demo_states, self.tactile_reading, self.hand_type)
             elif input_val == "5":
-                if self.hand_type == 'hand_e' or self.hand_type == 'hand_e_plus':
+                if self.hand_type == 'hand_e':
                     sequence_lf(self.hand_commander, self.demo_states, self.tactile_reading)
                 else:
                     rospy.logerr("This demo only works for a 5-fingered Hand E. Please try demos 1-4")
@@ -408,9 +407,6 @@ def correct_joint_states_for_hand_type(joint_states_config, hand_type):
     with open(hand_type_joints_filename) as f:
         hand_type_joints = yaml.load(f, Loader=yaml.FullLoader)
 
-    if hand_type == 'hand_e_plus':
-        hand_type = 'hand_e'
-
     for joint_state_dicts_no_id in joint_states_config.keys():
         for key in list(joint_states_config[joint_state_dicts_no_id]):
             if key not in hand_type_joints[hand_type]:
@@ -456,9 +452,9 @@ if __name__ == "__main__":
                         dest="hand_type",
                         type=str,
                         required=True,
-                        help="Please select hand type, can be 'hand_e', 'hand_e_plus', 'hand_lite', 'hand_extra_lite'.",
+                        help="Please select hand type, can be 'hand_e', 'hand_lite', 'hand_extra_lite'.",
                         default="hand_e",
-                        choices=["hand_e", "hand_e_plus", "hand_lite", "hand_extra_lite"])
+                        choices=["hand_e", "hand_lite", "hand_extra_lite"])
     parser.add_argument("-tac", "--tactiles",
                         dest="tactiles",
                         required=False,
@@ -506,12 +502,12 @@ if __name__ == "__main__":
             tactile_reading = TactileReading(hand_commander, demo_states, joint_prefix)
 
     rospy.loginfo("\nPRESS ONE OF THE TACTILES or 1-5 ON THE KEYBOARD TO START A DEMO:\
-                   \n   TH or 1: Open Hand\
-                   \n   FF or 2: Standard Demo\
-                   \n   MF or 3: Card Trick Demo\
-                   \n   RF or 4: Grasp Demo\
-                   \n   LF or 5: Shy Hand Demo (only works with Hand E).\
-                   \n   PRESS 6 TO END THE PROGRAM")
+                   \nTH or 1: Open Hand\
+                   \nFF or 2: Standard Demo\
+                   \nMF or 3: Card Trick Demo\
+                   \nRF or 4: Grasp Demo\
+                   \nLF or 5: Shy Hand Demo (only works with Hand E).\
+                   \nPRESS 6 TO END THE PROGRAM")
 
     # Keyboard thread for input
     kpd = KeyboardPressDetector(hand_commander, demo_states,
