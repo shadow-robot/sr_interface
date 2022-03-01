@@ -35,6 +35,22 @@
   <!-- Separation between the robots -->
   <arg name="hand_x_separation" default="-0.4"/>
 
+  <arg name="right_hand_type" default="hand_e"/>
+  <arg name="right_hand_version" default="E3M5"/>
+  <arg name="right_fingers" default="all"/>
+  <arg name="right_tip_sensors" default="pst"/>
+  <arg name="right_mid_sensors" default="none"/>
+  <arg name="right_prox_sensors" default="none"/>
+  <arg name="right_palm_sensor" default="none"/>
+
+  <arg name="left_hand_type" default="hand_e"/>
+  <arg name="left_hand_version" default="E3M5"/>
+  <arg name="left_fingers" default="all"/>
+  <arg name="left_tip_sensors" default="pst"/>
+  <arg name="left_mid_sensors" default="none"/>
+  <arg name="left_prox_sensors" default="none"/>
+  <arg name="left_palm_sensor" default="none"/>
+
   <!-- SIMULATED ROBOTS -->
   <group if="$(arg sim)">
     <include file="$(find sr_robot_launch)/launch/sr_bimanual_simulation_control_loop.launch">
@@ -49,6 +65,22 @@
       <arg name="arm_ctrl" value="false"/>
       <arg name="hand_ctrl" value="$(arg hand_ctrl)"/>
       <arg name="hand_trajectory" value="$(arg hand_trajectory)"/>
+
+      <arg name="right_hand_type" value="$(arg right_hand_type)"/>
+      <arg name="right_hand_version" value="$(arg right_hand_version)"/>
+      <arg name="right_fingers" value="$(arg right_fingers)"/>
+      <arg name="right_tip_sensors" value="$(arg right_tip_sensors)"/>
+      <arg name="right_mid_sensors" value="$(arg right_mid_sensors)"/>
+      <arg name="right_prox_sensors" value="$(arg right_prox_sensors)"/>
+      <arg name="right_palm_sensor" value="$(arg right_palm_sensor)"/>
+
+      <arg name="left_hand_type" value="$(arg left_hand_type)"/>
+      <arg name="left_hand_version" value="$(arg left_hand_version)"/>
+      <arg name="left_fingers" value="$(arg left_fingers)"/>
+      <arg name="left_tip_sensors" value="$(arg left_tip_sensors)"/>
+      <arg name="left_mid_sensors" value="$(arg left_mid_sensors)"/>
+      <arg name="left_prox_sensors" value="$(arg left_prox_sensors)"/>
+      <arg name="left_palm_sensor" value="$(arg left_palm_sensor)"/>
     </include>
   </group>
 

@@ -8,11 +8,46 @@
 
   <!-- HAND SPECIFIC CONFIG--> 
   <arg name="hand_x_separation" default="-0.4"/>
-  <arg name="biotac" default="false"/>
 
-  <arg unless="$(arg arms)" name="robot_description" default="'$(find sr_description)/robots/bimanual_shadowhand_motor_plus.urdf.xacro'"/>
+  <arg name="right_hand_type" default="hand_e"/>
+  <arg name="right_hand_version" default="E3M5"/>
+  <arg name="right_fingers" default="all"/>
+  <arg name="right_tip_sensors" default="pst"/>
+  <arg name="right_mid_sensors" default="none"/>
+  <arg name="right_prox_sensors" default="none"/>
+  <arg name="right_palm_sensor" default="none"/>
 
-  <arg unless="$(arg arms)" name="load_robot_description_command" value="xacro $(arg robot_description) arm_x_separation:=$(arg hand_x_separation) "/>
+  <arg name="left_hand_type" default="hand_e"/>
+  <arg name="left_hand_version" default="E3M5"/>
+  <arg name="left_fingers" default="all"/>
+  <arg name="left_tip_sensors" default="pst"/>
+  <arg name="left_mid_sensors" default="none"/>
+  <arg name="left_prox_sensors" default="none"/>
+  <arg name="left_palm_sensor" default="none"/>
+
+
+  <!-- Individual hand configs, needed for srdf generation -->
+  <arg if="$(eval not arg('hands') == 'none')" name="hand_description" value="'$(find sr_description)/robots/sr_hand.urdf.xacro'"/>
+  <arg if="$(eval not arg('hands') == 'none')" name="load_right_hand_description_command" value="xacro $(arg hand_description)
+                                                     hand_type:=$(arg right_hand_type) hand_version:=$(arg right_hand_version) side:=right
+                                                     fingers:=$(arg right_fingers) tip_sensors:=$(arg right_tip_sensors)
+                                                     mid_sensors:=$(arg right_mid_sensors) prox_sensors:=$(arg right_prox_sensors) palm_sensor:=$(arg right_palm_sensor)"/>
+  <arg if="$(eval not arg('hands') == 'none')" name="load_left_hand_description_command" value="xacro $(arg hand_description)
+                                                     hand_type:=$(arg left_hand_type) hand_version:=$(arg left_hand_version) side:=left
+                                                     fingers:=$(arg left_fingers) tip_sensors:=$(arg left_tip_sensors)
+                                                     mid_sensors:=$(arg left_mid_sensors) prox_sensors:=$(arg left_prox_sensors) palm_sensor:=$(arg left_palm_sensor)"/>
+
+  <!-- Combined hand configs -->
+  <arg unless="$(arg arms)" name="robot_description" default="'$(find sr_description)/robots/sr_hand_bimanual.urdf.xacro'"/>
+  <arg unless="$(arg arms)" name="load_robot_description_command" value="xacro $(arg robot_description) arm_x_separation:=$(arg hand_x_separation)
+                                                                         right_hand_type:=$(arg right_hand_type) right_hand_version:=$(arg right_hand_version)
+                                                                         right_fingers:=$(arg right_fingers) right_tip_sensors:=$(arg right_tip_sensors)
+                                                                         right_mid_sensors:=$(arg right_mid_sensors) right_prox_sensors:=$(arg right_prox_sensors)
+                                                                         right_palm_sensor:=$(arg right_palm_sensor)
+                                                                         left_hand_type:=$(arg left_hand_type) left_hand_version:=$(arg left_hand_version)
+                                                                         left_fingers:=$(arg left_fingers) left_tip_sensors:=$(arg left_tip_sensors)
+                                                                         left_mid_sensors:=$(arg left_mid_sensors) left_prox_sensors:=$(arg left_prox_sensors)
+                                                                         left_palm_sensor:=$(arg left_palm_sensor)"/>
 
   <!-- ARM SPECIFIC CONFIG-->
   <arg name="robot_model" default="ur10e"/>
@@ -21,22 +56,29 @@
   <arg name="arm_1_z" default="0.0"/>
   <arg name="arm_2_z" default="0.0"/>
 
-  <arg if="$(eval arms and arg('hands') == 'none')" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_$(arg robot_model).urdf.xacro'"/>
-  <arg if="$(eval arms and not arg('hands') == 'none' and not biotac)" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_$(arg robot_model).urdf.xacro'"/>
-  <arg if="$(eval arms and not arg('hands') == 'none' and biotac)" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_plus_bt_sp_biotacs_$(arg robot_model).urdf.xacro'"/>
+  <arg if="$(eval arms and arg('hands') == 'none')" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_ur.urdf.xacro'"/>
+  <arg if="$(eval arms and not arg('hands') == 'none')" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_ur.urdf.xacro'"/>
 
-  <arg if="$(arg arms)" name="load_robot_description_command" value="xacro $(arg robot_description) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
+  <arg if="$(eval arms and arg('hands') == 'none')" name="load_robot_description_command" value="xacro $(arg robot_description) robot_model:=$(arg robot_model) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
+  <arg if="$(eval arms and not arg('hands') == 'none')" name="load_robot_description_command" value="xacro $(arg robot_description) robot_model:=$(arg robot_model) right_hand_type:=$(arg right_hand_type) right_hand_version:=$(arg right_hand_version)
+                                                                                                     right_fingers:=$(arg right_fingers) right_tip_sensors:=$(arg right_tip_sensors)
+                                                                                                     right_mid_sensors:=$(arg right_mid_sensors) right_prox_sensors:=$(arg right_prox_sensors)
+                                                                                                     right_palm_sensor:=$(arg right_palm_sensor)
+                                                                                                     left_hand_type:=$(arg left_hand_type) left_hand_version:=$(arg left_hand_version)
+                                                                                                     left_fingers:=$(arg left_fingers) left_tip_sensors:=$(arg left_tip_sensors)
+                                                                                                     left_mid_sensors:=$(arg left_mid_sensors) left_prox_sensors:=$(arg left_prox_sensors)
+                                                                                                     left_palm_sensor:=$(arg left_palm_sensor) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
+
 
   <!-- LOAD THE DESCRIPTION -->
+  <param if="$(eval not arg('hands') == 'none')" name="right_hand_description" command="$(arg load_right_hand_description_command)"/>
+  <param if="$(eval not arg('hands') == 'none')" name="left_hand_description" command="$(arg load_left_hand_description_command)"/>
+
   <param if="$(arg sim)" name="robot_description" command="$(arg load_robot_description_command)"/>
   <group unless="$(arg sim)">
     <node if="$(arg arms)" name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description" output="screen">
       <param name="arm_type" value="$(arg robot_model)"/>
-      <param name="robot_description_file" value="$(arg robot_description)"/>
-      <param name="arm_1_z" value="$(arg arm_1_z)"/>
-      <param name="arm_2_z" value="$(arg arm_2_z)"/>
-      <param name="arm_x_separation" value="$(arg arm_x_separation)"/>
-      <param name="arm_y_separation" value="$(arg arm_y_separation)"/>
+      <param name="load_robot_description_command" value="$(arg load_robot_description_command)"/>
     </node>
 
     <param unless="$(arg arms)" name="robot_description" command="$(arg load_robot_description_command)"/>
