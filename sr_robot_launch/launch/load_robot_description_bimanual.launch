@@ -57,10 +57,9 @@
   <arg name="arm_2_z" default="0.0"/>
 
   <arg if="$(eval arms and arg('hands') == 'none')" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_ur.urdf.xacro'"/>
-  <arg if="$(eval arms and not arg('hands') == 'none')" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_ur.urdf.xacro'"/>
-
+  <arg if="$(eval arms and not arg('hands') == 'none')" name="robot_description" default="'$(find sr_multi_description)/urdf/bimanual_srhand_ur.urdf.xacro'"/>  
   <arg if="$(eval arms and arg('hands') == 'none')" name="load_robot_description_command" value="xacro $(arg robot_description) robot_model:=$(arg robot_model) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
-  <arg if="$(eval arms and not arg('hands') == 'none')" name="load_robot_description_command" value="xacro $(arg robot_description) robot_model:=$(arg robot_model) right_hand_type:=$(arg right_hand_type) right_hand_version:=$(arg right_hand_version)
+  <arg if="$(eval arms and not arg('hands') == 'none')" name="load_robot_description_command" value="xacro $(arg robot_description) hands:=$(arg hands) robot_model:=$(arg robot_model) right_hand_type:=$(arg right_hand_type) right_hand_version:=$(arg right_hand_version)
                                                                                                      right_fingers:=$(arg right_fingers) right_tip_sensors:=$(arg right_tip_sensors)
                                                                                                      right_mid_sensors:=$(arg right_mid_sensors) right_prox_sensors:=$(arg right_prox_sensors)
                                                                                                      right_palm_sensor:=$(arg right_palm_sensor)
@@ -71,8 +70,8 @@
 
 
   <!-- LOAD THE DESCRIPTION -->
-  <param if="$(eval not arg('hands') == 'none')" name="right_hand_description" command="$(arg load_right_hand_description_command)"/>
-  <param if="$(eval not arg('hands') == 'none')" name="left_hand_description" command="$(arg load_left_hand_description_command)"/>
+  <param if="$(eval arg('hands') == 'both' or arg('hands') == 'right')" name="right_hand_description" command="$(arg load_right_hand_description_command)"/>
+  <param if="$(eval arg('hands') == 'both' or arg('hands') == 'left')" name="left_hand_description" command="$(arg load_left_hand_description_command)"/>
 
   <param if="$(arg sim)" name="robot_description" command="$(arg load_robot_description_command)"/>
   <group unless="$(arg sim)">

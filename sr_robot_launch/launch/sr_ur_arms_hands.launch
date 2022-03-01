@@ -59,12 +59,18 @@
 
   <!-- OTHER CONFIGS-->
   <!-- Trajectory controllers list for moveit-->
-  <arg if="$(eval hand_ctrl and arm_trajectory)" name="trajectory_controllers_list" 
+  <arg if="$(eval hand_ctrl and arm_trajectory and hands=='both')" name="trajectory_controllers_list" 
        default="[/ra_trajectory_controller/state, /la_trajectory_controller/state, /rh_trajectory_controller/state, /lh_trajectory_controller/state]"/>
+  
+  <arg if="$(eval hand_ctrl and arm_trajectory and hands=='right')" name="trajectory_controllers_list" 
+       default="[/ra_trajectory_controller/state, /la_trajectory_controller/state, /rh_trajectory_controller/state]"/>
+
+  <arg if="$(eval hand_ctrl and arm_trajectory and hands=='left')" name="trajectory_controllers_list" 
+       default="[/ra_trajectory_controller/state, /la_trajectory_controller/state, /lh_trajectory_controller/state]"/>
   
   <arg if="$(eval not hand_ctrl and not arm_trajectory)" name="trajectory_controllers_list" value="[]"/>
   
-  <arg if="$(eval hand_ctrl and not arm_trajectory)" name="trajectory_controllers_list"
+  <arg if="$(eval hand_ctrl and not arm_trajectory and hands=='both')" name="trajectory_controllers_list"
        value="[/rh_trajectory_controller/state, /lh_trajectory_controller/state]"/>
 
   <arg if="$(eval not hand_ctrl and arm_trajectory)" name="trajectory_controllers_list"
