@@ -219,8 +219,8 @@ class SrRobotCommander(object):
             self.__plan = None
             if not success:
                 rospy.logerr("Execution failed.")
-                return success
-            rospy.loginfo("Execution succeeded.")
+            else:
+                rospy.loginfo("Execution succeeded.")
             return success
         else:
             rospy.logwarn("No plans were made, not executing anything.")
@@ -238,8 +238,8 @@ class SrRobotCommander(object):
             self.__plan = None
             if not success:
                 rospy.logerr("Execution failed.")
-                return success
-            rospy.loginfo("Execution succeeded.")
+            else:
+                rospy.loginfo("Execution succeeded.")
             return success
         else:
             rospy.logwarn("Plan is not valid, not executing anything.")
@@ -560,8 +560,8 @@ class SrRobotCommander(object):
         success = self._move_group_commander.execute(plan)
         if not success:
             rospy.logerr("Execution failed.")
-            return success
-        rospy.loginfo("Execution succeeded.")
+        else:
+            rospy.loginfo("Execution succeeded.")
         return success
 
     def make_named_trajectory(self, trajectory):
