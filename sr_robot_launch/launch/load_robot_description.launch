@@ -24,9 +24,9 @@
 
   <!-- ARM SPECIFIC CONFIG-->
   <arg name="robot_model" default="ur10e"/>
-  <arg if="$(arg arm)" name="initial_z" default="0.1"/>
-  <arg if="$(arg arm)" name="initial_y"/>
-  <arg if="$(arg arm)" name="initial_yaw"/>
+  <arg name="initial_z" default="0.1"/>
+  <arg name="initial_y"/>
+  <arg name="initial_yaw"/>
 
   <arg name="arm_prefix" value="$(arg side_letter)a"/>
 

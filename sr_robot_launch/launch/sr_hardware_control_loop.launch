@@ -51,6 +51,8 @@
   <!-- ARMS CONFIG-->
   <arg name="initial_z" if="$(arg arm)" default="0.7551"/>
   <arg name="initial_z" unless="$(arg arm)" default="0.0"/>
+  <arg unless="$(arg arm)" name="initial_y" default="0.0"/>
+  <arg unless="$(arg arm)" name="initial_yaw" default="0.0"/>
   <arg if="$(eval arg('arm') and arg('side') == 'right')" name="initial_y" default="0.0"/>
   <arg if="$(eval arg('arm') and arg('side') == 'right')" name="initial_yaw" default="0.0"/>
   <arg if="$(eval arg('arm') and arg('side') == 'left')" name="initial_y" default="1.5"/>
