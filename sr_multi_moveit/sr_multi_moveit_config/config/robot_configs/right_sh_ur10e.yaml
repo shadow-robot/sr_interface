@@ -1,5 +1,5 @@
 robot:
-  name: ur10esrh
+  name: ursrh
   manipulators:
     right_manipulator:
       side: right
@@ -13,8 +13,7 @@ robot:
         group_states:
           - home
           - up
-      hand:
-        name: shadowhand_motor.urdf.xacro
+      hand: True
 
 ra_sr_ur_robot_hw:
   # Hand E payload

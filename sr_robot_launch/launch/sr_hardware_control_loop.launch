@@ -18,14 +18,18 @@
   <arg name="arm_ctrl" default="$(arg arm)"/>
   <!-- Whether to run hand controllers. -->
   <arg name="hand_ctrl" default="$(arg hand)"/>
-  <!-- Set hand type. -->
+
   <arg name="hand_type" default="hand_e"/>
+  <arg name="hand_version" default="E3M5"/>
+  <arg name="fingers" default="th,ff,mf,rf,lf"/>
+  <arg name="tip_sensors" default="th=pst,ff=pst,mf=pst,rf=pst,lf=pst"/>
+  <arg name="mid_sensors" default="none"/>
+  <arg name="prox_sensors" default="none"/>
+  <arg name="palm_sensor" default="none"/>
 
   <!-- Robot config file -->
-  <arg if="$(eval arg('hand') and arg('arm') and not arg('hand_type') == 'hand_g')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
-  <arg if="$(eval arg('hand') and arg('arm') and arg('hand_type') == 'hand_g')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_lite_$(arg robot_model).yaml"/>
-  <arg if="$(eval arg('hand') and not arg('arm') and not arg('hand_type') == 'hand_g')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh.yaml"/>
-  <arg if="$(eval arg('hand') and not arg('arm') and arg('hand_type') == 'hand_g')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_light.yaml"/>
+  <arg if="$(eval arg('hand') and arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
+  <arg if="$(eval arg('hand') and not arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh.yaml"/>
   <arg if="$(eval not arg('hand') and arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
 
   <!-- Set robot config file path in a param in case moveit nodes need it -->
@@ -47,8 +51,13 @@
   <!-- ARMS CONFIG-->
   <arg name="initial_z" if="$(arg arm)" default="0.7551"/>
   <arg name="initial_z" unless="$(arg arm)" default="0.0"/>
-  <arg name="arm_x_separation" default="0.0"/>
-  <arg name="arm_y_separation" default="0.0"/>
+  <arg unless="$(arg arm)" name="initial_y" default="0.0"/>
+  <arg unless="$(arg arm)" name="initial_yaw" default="0.0"/>
+  <arg if="$(eval arg('arm') and arg('side') == 'right')" name="initial_y" default="0.0"/>
+  <arg if="$(eval arg('arm') and arg('side') == 'right')" name="initial_yaw" default="0.0"/>
+  <arg if="$(eval arg('arm') and arg('side') == 'left')" name="initial_y" default="1.5"/>
+  <arg if="$(eval arg('arm') and arg('side') == 'left')" name="initial_yaw" default="3.1415"/>
+
   <arg name="arm_robot_hw" if="$(eval not arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/$(arg side)_ur_arm_robot_hw.yaml"/>
   <arg name="arm_robot_hw" if="$(eval arg('robot_model') == 'ur10e')" default="$(find sr_robot_launch)/config/$(arg side)_ur10e_arm_robot_hw.yaml"/>
   <arg name="force_torque_sensor_hw" default="$(find sr_robot_launch)/config/$(arg arm_prefix)_force_torque_controller.yaml"/>
@@ -91,9 +100,15 @@
     <arg name="hand" value="$(arg hand)"/>
     <arg name="robot_model" value="$(arg robot_model)"/>
     <arg name="hand_type" value="$(arg hand_type)"/>
+    <arg name="hand_version" value="$(arg hand_version)"/>
+    <arg name="fingers" value="$(arg fingers)"/>
+    <arg name="tip_sensors" value="$(arg tip_sensors)"/>
+    <arg name="mid_sensors" value="$(arg mid_sensors)"/>
+    <arg name="prox_sensors" value="$(arg prox_sensors)"/>
+    <arg name="palm_sensor" value="$(arg palm_sensor)"/>
     <arg name="initial_z" value="$(arg initial_z)"/>
-    <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
-    <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
+    <arg name="initial_y" value="$(arg initial_y)"/>
+    <arg name="initial_yaw" value="$(arg initial_yaw)"/>
   </include>
   
   <!-- Default hand controller groups -->
@@ -118,8 +133,6 @@
       <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
       <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
       <arg name="initial_z" value="$(arg initial_z)"/>
-      <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
-      <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
     </include>
     <node if="$(arg hand_ctrl)" name="$(arg hand_id)_controller_spawner" pkg="sr_utilities" type="controller_spawner.py" output="screen">
       <param name="controller_group" value="$(arg hand_controller_group)"/>
