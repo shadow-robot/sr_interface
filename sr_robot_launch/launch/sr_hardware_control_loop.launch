@@ -43,8 +43,6 @@
   <arg name="eth_port" default="$(optenv ETHERCAT_PORT enp2s0)"/>
   <arg name="pwm_control" default="true"/>
   <arg name="hand_trajectory" default="true"/>
-  <arg unless="$(arg arm)" name="initial_y" default="0.0"/>
-  <arg unless="$(arg arm)" name="initial_yaw" default="0.0"/>
   <!-- Set to true if you want to use grasp controller -->
   <arg name="grasp_controller" default="false"/>
   <!-- Set to true if you want to use hybrid controller -->
@@ -53,6 +51,8 @@
   <!-- ARMS CONFIG-->
   <arg name="initial_z" if="$(arg arm)" default="0.7551"/>
   <arg name="initial_z" unless="$(arg arm)" default="0.0"/>
+  <arg unless="$(arg arm)" name="initial_y" default="0.0"/>
+  <arg unless="$(arg arm)" name="initial_yaw" default="0.0"/>
   <arg if="$(eval arg('arm') and arg('side') == 'right')" name="initial_y" default="0.0"/>
   <arg if="$(eval arg('arm') and arg('side') == 'right')" name="initial_yaw" default="0.0"/>
   <arg if="$(eval arg('arm') and arg('side') == 'left')" name="initial_y" default="1.5"/>
