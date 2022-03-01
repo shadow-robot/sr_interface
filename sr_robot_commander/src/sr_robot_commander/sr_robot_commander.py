@@ -561,7 +561,7 @@ class SrRobotCommander(object):
         if not success:
             rospy.logerr("Execution failed.")
             return success
-        rospy.logerr("Execution succeeded.")
+        rospy.loginfo("Execution succeeded.")
         return success
 
     def make_named_trajectory(self, trajectory):
