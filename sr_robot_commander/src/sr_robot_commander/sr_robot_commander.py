@@ -249,6 +249,9 @@ class SrRobotCommander(object):
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
         self._move_group_commander.go(wait=wait)
 
+    def set_start_state_to_current_state(self):
+        return self._move_group_commander.set_start_state_to_current_state()
+
     def plan_to_joint_value_target(self, joint_states, angle_degrees=False, custom_start_state=None):
         """
         Set target of the robot's links and plans.
@@ -426,6 +429,10 @@ class SrRobotCommander(object):
         else:
             return self._move_group_commander.get_current_pose().pose
 
+    def get_current_joint_values(self):
+        joint_values = self._move_group_commander._g.get_current_joint_values()
+        return joint_values
+
     def get_current_state(self):
         """
         Get the current joint state of the group being used.
@@ -543,7 +550,7 @@ class SrRobotCommander(object):
         """
         plan = RobotTrajectory()
         plan.joint_trajectory = joint_trajectory
-        self._move_group_commander.execute(plan)
+        return self._move_group_commander.execute(plan)
 
     def make_named_trajectory(self, trajectory):
         """
