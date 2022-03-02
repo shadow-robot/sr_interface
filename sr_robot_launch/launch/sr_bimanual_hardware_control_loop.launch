@@ -68,7 +68,8 @@
   <arg if="$(eval not hands == 'none' and arg('left_hand_type') == 'hand_e')" name="left_arm_payload_mass" default="5.0"/>
   <arg if="$(eval not hands == 'none' and arg('left_hand_type') == 'hand_g')" name="left_arm_payload_mass" default="2.7"/>
   <arg unless="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
-  <arg if="$(eval hands == 'none')" name="arm_payload_mass" default="0.0"/>
+  <arg if="$(eval hands == 'none')" name="right_arm_payload_mass" default="0.0"/>
+  <arg if="$(eval hands == 'none')" name="left_arm_payload_mass" default="0.0"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
 
   <node pkg="rosservice" type="rosservice" name="set_right_speed_scale" args="call --wait /ra_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg right_arm_speed_scale)'"/>
