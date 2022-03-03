@@ -11,7 +11,6 @@ find_package(catkin REQUIRED COMPONENTS
         rospy
         rostest
         sr_robot_msgs
-        sr_hand
 )
 
 ## System dependencies are found with CMake's conventions
