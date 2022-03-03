@@ -63,13 +63,13 @@
   <arg name="left_arm_speed_scale" default="0.5"/>
 
   <!-- Sets up right payload -->
-  <arg if="$(eval not hands == 'none' and arg('right_hand_type') == 'hand_e')" name="right_arm_payload_mass" default="5.0"/>
-  <arg if="$(eval not hands == 'none' and arg('right_hand_type') == 'hand_g')" name="right_arm_payload_mass" default="2.7"/>
-  <arg if="$(eval not hands == 'none' and arg('left_hand_type') == 'hand_e')" name="left_arm_payload_mass" default="5.0"/>
-  <arg if="$(eval not hands == 'none' and arg('left_hand_type') == 'hand_g')" name="left_arm_payload_mass" default="2.7"/>
+  <arg if="$(eval (hands == 'both' or hands == 'right') and arg('right_hand_type') == 'hand_e')" name="right_arm_payload_mass" default="5.0"/>
+  <arg if="$(eval (hands == 'both' or hands == 'right') and arg('right_hand_type') == 'hand_g')" name="right_arm_payload_mass" default="2.7"/>
+  <arg if="$(eval (hands == 'both' or hands == 'left') and arg('left_hand_type') == 'hand_e')" name="left_arm_payload_mass" default="5.0"/>
+  <arg if="$(eval (hands == 'both' or hands == 'left') and arg('left_hand_type') == 'hand_g')" name="left_arm_payload_mass" default="2.7"/>
   <arg unless="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
-  <arg if="$(eval hands == 'none')" name="right_arm_payload_mass" default="0.0"/>
-  <arg if="$(eval hands == 'none')" name="left_arm_payload_mass" default="0.0"/>
+  <arg if="$(eval hands == 'none' or hands == 'left')" name="right_arm_payload_mass" default="0.0"/>
+  <arg if="$(eval hands == 'none' or hands == 'right')" name="left_arm_payload_mass" default="0.0"/>
   <arg if="$(eval hands == 'none')" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
 
   <node pkg="rosservice" type="rosservice" name="set_right_speed_scale" args="call --wait /ra_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg right_arm_speed_scale)'"/>
@@ -86,9 +86,9 @@
   <!-- HANDS BUT NO ARMS -->
   <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
   <!-- ARMS AND RIGHT HAND ONLY -->
-  <arg name="robot_config_file" if="$(eval arg('hands') == 'right' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_shr_$(arg robot_model).yaml"/>
+  <arg name="robot_config_file" if="$(eval arg('hands') == 'right' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_right_$(arg robot_model).yaml"/>
   <!-- ARMS AND LEFT HAND ONLY -->
-  <arg name="robot_config_file" if="$(eval arg('hands') == 'left' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_shl_$(arg robot_model).yaml"/>
+  <arg name="robot_config_file" if="$(eval arg('hands') == 'left' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_left_$(arg robot_model).yaml"/>
 
   <!-- Set robot config file path in a param in case moveit nodes need it -->
   <param name="robot_config_file" value="$(arg robot_config_file)" type="str"/>

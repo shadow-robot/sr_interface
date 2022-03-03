@@ -1,7 +1,7 @@
 robot:
   name: ursr
   manipulators:
-    right_manipulator:
+    left_manipulator:
       side: left
       arm:
         name: ur5e
@@ -17,6 +17,6 @@ robot:
           - up
         hand: False
 
-ra_sr_ur_robot_hw:
+la_sr_ur_robot_hw:
   # No hand
   payload_mass_kg: 0.0

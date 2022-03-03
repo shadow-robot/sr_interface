@@ -72,9 +72,9 @@
   <!-- Hands but no arms -->
   <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
   <!-- Arms and right hand only -->
-  <arg name="robot_config_file" if="$(eval arg('hands') == 'right' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_shr_$(arg robot_model).yaml"/>
+  <arg name="robot_config_file" if="$(eval arg('hands') == 'right' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_right_$(arg robot_model).yaml"/>
   <!-- Arms and left hand only -->
-  <arg name="robot_config_file" if="$(eval arg('hands') == 'left' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_shl_$(arg robot_model).yaml"/>
+  <arg name="robot_config_file" if="$(eval arg('hands') == 'left' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_left_$(arg robot_model).yaml"/>
 
   <!-- Set robot config file path in a param in case moveit nodes need it -->
   <param name="robot_config_file" value="$(arg robot_config_file)" type="str"/>
