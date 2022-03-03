@@ -177,18 +177,24 @@ class TestSrRobotCommander(TestCase):
         self.reset_to_home()
         self.robot_commander.plan_to_joint_value_target(CONST_EXAMPLE_TARGET, angle_degrees=False,
                                                         custom_start_state=None)
-        self.robot_commander.execute()
-        executed_joints = self.robot_commander.get_current_state()
-        condition = self.compare_joint_states_by_common_joints(CONST_EXAMPLE_TARGET, executed_joints)
+        execute_success = self.robot_commander.execute()
+        if execute_success:
+            executed_joints = self.robot_commander.get_current_state()
+            condition = self.compare_joint_states_by_common_joints(CONST_EXAMPLE_TARGET, executed_joints)
+        else:
+            condition = False
         self.assertTrue(condition)
 
     def test_execute_plan(self):
         self.reset_to_home()
         plan = self.robot_commander.plan_to_joint_value_target(CONST_RA_HOME_ANGLES, angle_degrees=False,
                                                                custom_start_state=None)
-        self.robot_commander.execute_plan(plan)
-        executed_joints = self.robot_commander.get_current_state()
-        condition = self.compare_joint_states_by_common_joints(executed_joints, CONST_RA_HOME_ANGLES)
+        execute_success = self.robot_commander.execute_plan(plan)
+        if execute_success:
+            executed_joints = self.robot_commander.get_current_state()
+            condition = self.compare_joint_states_by_common_joints(executed_joints, CONST_RA_HOME_ANGLES)
+        else:
+            condition = False
         self.assertTrue(condition)
 
     def test_check_plan_is_valid_ok(self):
