@@ -67,7 +67,6 @@
   <arg if="$(eval (hands == 'both' or hands == 'right') and arg('right_hand_type') == 'hand_g')" name="right_arm_payload_mass" default="2.7"/>
   <arg if="$(eval (hands == 'both' or hands == 'left') and arg('left_hand_type') == 'hand_e')" name="left_arm_payload_mass" default="5.0"/>
   <arg if="$(eval (hands == 'both' or hands == 'left') and arg('left_hand_type') == 'hand_g')" name="left_arm_payload_mass" default="2.7"/>
-  
   <arg if="$(eval hands == 'none' or hands == 'left')" name="right_arm_payload_mass" default="0.0"/>
   <arg if="$(eval hands == 'none' or hands == 'right')" name="left_arm_payload_mass" default="0.0"/>
 
