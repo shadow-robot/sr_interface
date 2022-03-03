@@ -16,7 +16,3 @@ robot:
           - home
           - up
         hand: False
-
-ra_sr_ur_robot_hw:
-  # No hand
-  payload_mass_kg: 0.0
