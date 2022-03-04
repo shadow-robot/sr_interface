@@ -1,5 +1,5 @@
 <launch>
-  <!-- This launch file is for a ur arm and box -->
+  <!-- This launch file is for a ur arm -->
 
   <!-- set to false if you want to use real robots, true if you need the gazebo simulation -->
   <arg name="sim" default="false"/>
@@ -72,6 +72,7 @@
       <arg name="gui" value="$(arg gui)"/>
       <arg name="verbose" value="$(arg verbose)" />
       <arg name="side" value="$(arg side)"/>
+      <arg name="robot_model" value="$(arg robot_model)"/>
       <arg name="arm" value="true"/>
       <arg name="hand" value="false"/>
       <arg name="arm_ctrl" value="true"/>
@@ -101,7 +102,7 @@
     <!-- Set scene for robot after delay to start after moveit - restrains movement -->
     <group if="$(arg scene)">
       <node name="conditional_delayed_rostool_arm_scene" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
-        <param name="package_name" value="sr_box_ur10_moveit_config" />
+        <param name="package_name" value="sr_multi_moveit_config" />
         <param name="executable_name" value="scene.launch" />
         <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
         <param name="launch_args_list" value="scene_file:=$(arg scene_file)" />
@@ -113,8 +114,8 @@
   <!-- Launch moveit configuration after delay to wait for robot description to be avalible -->
   <group if="$(arg use_moveit)">
     <node name="conditional_delayed_rostool_rviz_multi" pkg="sr_utilities_common" type="conditional_delayed_rostool.py" output="screen">
-      <param name="package_name" value="sr_box_ur10_moveit_config" />
-      <param name="executable_name" value="planning_and_execution.launch" />
+      <param name="package_name" value="sr_multi_moveit_config" />
+      <param name="executable_name" value="moveit_planning_and_execution.launch" />
       <rosparam param="params_list">[/robot_description]</rosparam>
       <param name="launch_args_list" value="side:=$(arg side) use_gui:=$(arg gui)" />
       <param name="timeout" value="20.0" />

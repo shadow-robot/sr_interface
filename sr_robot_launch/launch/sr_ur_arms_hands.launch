@@ -59,11 +59,20 @@
 
   <!-- OTHER CONFIGS-->
   <!-- Trajectory controllers list for moveit-->
-  <arg if="$(eval hand_ctrl and arm_trajectory)" name="trajectory_controllers_list" 
+  <arg if="$(eval hand_ctrl and arm_trajectory and hands=='both')" name="trajectory_controllers_list" 
        default="[/ra_trajectory_controller/state, /la_trajectory_controller/state, /rh_trajectory_controller/state, /lh_trajectory_controller/state]"/>
+  
+  <arg if="$(eval hand_ctrl and arm_trajectory and hands=='right')" name="trajectory_controllers_list" 
+       default="[/ra_trajectory_controller/state, /la_trajectory_controller/state, /rh_trajectory_controller/state]"/>
+
+  <arg if="$(eval hand_ctrl and arm_trajectory and hands=='left')" name="trajectory_controllers_list" 
+       default="[/ra_trajectory_controller/state, /la_trajectory_controller/state, /lh_trajectory_controller/state]"/>
+  
   <arg if="$(eval not hand_ctrl and not arm_trajectory)" name="trajectory_controllers_list" value="[]"/>
-  <arg if="$(eval hand_ctrl and not arm_trajectory)" name="trajectory_controllers_list"
+  
+  <arg if="$(eval hand_ctrl and not arm_trajectory and hands=='both')" name="trajectory_controllers_list"
        value="[/rh_trajectory_controller/state, /lh_trajectory_controller/state]"/>
+
   <arg if="$(eval not hand_ctrl and arm_trajectory)" name="trajectory_controllers_list"
        value="[/ra_trajectory_controller/state, /la_trajectory_controller/state]"/>
 
@@ -105,7 +114,7 @@
         <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
         <arg name="arm_1_z" value="$(arg arm_1_z)"/>
         <arg name="arm_2_z" value="$(arg arm_2_z)"/>
-        <arg name="hands" value="both"/>
+        <arg name="hands" value="$(arg hands)"/>
         <arg name="arms" value="true"/>
         <arg name="robot_model" value="$(arg robot_model)"/>
         <arg name="arm_ctrl" value="$(arg arm_ctrl)"/>
