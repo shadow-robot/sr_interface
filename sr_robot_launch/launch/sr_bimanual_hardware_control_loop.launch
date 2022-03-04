@@ -62,14 +62,13 @@
   <arg name="right_arm_speed_scale" default="0.5"/>
   <arg name="left_arm_speed_scale" default="0.5"/>
 
-  <!-- Sets up right payload -->
+  <!-- Sets up right payload and cog -->
   <arg if="$(eval (hands == 'both' or hands == 'right') and arg('right_hand_type') == 'hand_e')" name="right_arm_payload_mass" default="5.0"/>
   <arg if="$(eval (hands == 'both' or hands == 'right') and arg('right_hand_type') == 'hand_g')" name="right_arm_payload_mass" default="2.7"/>
   <arg if="$(eval (hands == 'both' or hands == 'left') and arg('left_hand_type') == 'hand_e')" name="left_arm_payload_mass" default="5.0"/>
   <arg if="$(eval (hands == 'both' or hands == 'left') and arg('left_hand_type') == 'hand_g')" name="left_arm_payload_mass" default="2.7"/>
   <arg if="$(eval hands == 'none' or hands == 'left')" name="right_arm_payload_mass" default="0.0"/>
   <arg if="$(eval hands == 'none' or hands == 'right')" name="left_arm_payload_mass" default="0.0"/>
-
   <arg if="$(eval hands == 'both' or hands == 'right')" name="right_arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
   <arg if="$(eval hands == 'none' or hands == 'left')" name="right_arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
   <arg if="$(eval hands == 'both' or hands == 'left')" name="left_arm_payload_cog" default="[0.0, 0.0, 0.12]"/>
