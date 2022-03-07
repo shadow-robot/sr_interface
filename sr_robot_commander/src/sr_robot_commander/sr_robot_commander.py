@@ -213,11 +213,14 @@ class SrRobotCommander(object):
         """
         Executes the last plan made.
         """
+        is_executed = True
         if self.check_plan_is_valid():
-            self._move_group_commander.execute(self.__plan)
+            is_executed = self._move_group_commander.execute(self.__plan)
             self.__plan = None
         else:
             rospy.logwarn("No plans were made, not executing anything.")
+            is_executed = False
+        return is_executed
 
     def execute_plan(self, plan):
         """
@@ -225,11 +228,14 @@ class SrRobotCommander(object):
         @param plan - RobotTrajectory msg that contains the trajectory
         to the set goal state.
         """
+        is_executed = True
         if self.check_given_plan_is_valid(plan):
-            self._move_group_commander.execute(plan)
+            is_executed = self._move_group_commander.execute(plan)
             self.__plan = None
         else:
             rospy.logwarn("Plan is not valid, not executing anything.")
+            is_executed = False
+        return is_executed
 
     def move_to_joint_value_target(self, joint_states, wait=True,
                                    angle_degrees=False):
@@ -429,10 +435,6 @@ class SrRobotCommander(object):
         else:
             return self._move_group_commander.get_current_pose().pose
 
-    def get_current_joint_values(self):
-        joint_values = self._move_group_commander._g.get_current_joint_values()
-        return joint_values
-
     def get_current_state(self):
         """
         Get the current joint state of the group being used.
@@ -482,7 +484,9 @@ class SrRobotCommander(object):
         if self.set_named_target(name):
             self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
         else:
-            rospy.logwarn("Failed to set to named target")
+            rospy.logwarn("Could not find named target, plan not generated")
+            return False
+        return True
 
     def __get_warehouse_names(self):
         try:
