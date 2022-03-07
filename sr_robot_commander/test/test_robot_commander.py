@@ -94,11 +94,11 @@ class TestSrRobotCommander(TestCase):
 
     def create_test_pose_rpy_from_current_pose(self):
         current_pose = self.robot_commander.get_current_pose(reference_frame="world")
-        euler_pose_rot = tf.transformations.euler_from_quaternion([current_pose.orientation.x, current_pose.orientation.y, 
-                                                                   current_pose.orientation.z, current_pose.orientation.w])
+        euler_pose_rot = tf.transformations.euler_from_quaternion(
+                                                        [current_pose.orientation.x, current_pose.orientation.y,
+                                                         current_pose.orientation.z, current_pose.orientation.w])
         test_pose_rpy = [current_pose.position.x, current_pose.position.y, current_pose.position.z + 0.1,
-                        euler_pose_rot[0], euler_pose_rot[1], euler_pose_rot[2] + 0.5]
-        
+                         euler_pose_rot[0], euler_pose_rot[1], euler_pose_rot[2] + 0.5]
         return test_pose_rpy
 
     def get_pose_msg_from_pose_rpy(self, pose_rpy):
@@ -128,7 +128,7 @@ class TestSrRobotCommander(TestCase):
         return True
 
     def compare_orientation(self, initial_orientation, desired_orientation, tolerance):
-        initial_euler = tf.transformations.euler_from_quaternion([initial_orientation.x, initial_orientation.y, 
+        initial_euler = tf.transformations.euler_from_quaternion([initial_orientation.x, initial_orientation.y,
                                                                   initial_orientation.z, initial_orientation.w])
         desired_euler = tf.transformations.euler_from_quaternion([desired_orientation.x, desired_orientation.y,
                                                                   desired_orientation.z, desired_orientation.w])
@@ -137,15 +137,15 @@ class TestSrRobotCommander(TestCase):
         euler_delta_yaw = desired_euler[2] - initial_euler[2]
 
         if (abs(euler_delta_roll) > tolerance and
-            abs(euler_delta_pitch) > tolerance and 
-            abs(euler_delta_yaw) > tolerance):
+           abs(euler_delta_pitch) > tolerance and
+           abs(euler_delta_yaw) > tolerance):
             return False
         return True
 
     def compare_poses(self, pose1, pose2, position_threshold=0.02, orientation_threshold=0.04):
         if (self.compare_position(pose1.position, pose2.position, position_threshold) and
-            self.compare_orientation(pose1.orientation, pose2.orientation, orientation_threshold)):
-           return True
+           self.compare_orientation(pose1.orientation, pose2.orientation, orientation_threshold)):
+            return True
         return False
 
     def test_get_and_set_planner_id(self):
@@ -476,7 +476,8 @@ class TestSrRobotCommander(TestCase):
         self.robot_commander.move_to_joint_value_target_unsafe(desired_joint_state, time=0.002, wait=True,
                                                                angle_degrees=False)
         executed_joints_list = list(self.robot_commander.get_current_state().values())
-        np.testing.assert_allclose(list(desired_joint_state.values()), executed_joints_list, TOLERANCE_UNSAFE, TOLERANCE_UNSAFE)
+        np.testing.assert_allclose(list(desired_joint_state.values()), executed_joints_list,
+                                   TOLERANCE_UNSAFE, TOLERANCE_UNSAFE)
 
     def test_run_joint_trajectory_unsafe_executed(self):
         self.reset_to_home()
@@ -496,7 +497,8 @@ class TestSrRobotCommander(TestCase):
 
         self.robot_commander.run_joint_trajectory_unsafe(desired_joint_trajectory)
         executed_joints_list = list(self.robot_commander.get_current_state().values())
-        np.testing.assert_allclose(list(desired_joint_state.values()), executed_joints_list, TOLERANCE_UNSAFE, TOLERANCE_UNSAFE)
+        np.testing.assert_allclose(list(desired_joint_state.values()), executed_joints_list,
+                                   TOLERANCE_UNSAFE, TOLERANCE_UNSAFE)
 
     def test_plan_to_pose_target(self):
         pose = PoseStamped()
@@ -533,7 +535,7 @@ class TestSrRobotCommander(TestCase):
         self.robot_commander.move_to_joint_value_target(desired_joint_state, wait=True,
                                                         angle_degrees=False)
         executed_joints_list = list(self.robot_commander.get_current_state().values())
-        np.testing.assert_allclose(list(desired_joint_state.values()), executed_joints_list, TOLERANCE_UNSAFE, TOLERANCE_UNSAFE)
+        np.testing.assert_allclose(list(desired_joint_state.values()), executed_joints_list, 0.01, 0.01)
 
     def test_move_to_pose_target(self):
         self.reset_to_home()
