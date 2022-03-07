@@ -212,14 +212,18 @@ class SrRobotCommander(object):
     def execute(self):
         """
         Executes the last plan made.
+        @return - Success of execution.
         """
-        is_executed = True
+        is_executed = False
         if self.check_plan_is_valid():
             is_executed = self._move_group_commander.execute(self.__plan)
             self.__plan = None
         else:
             rospy.logwarn("No plans were made, not executing anything.")
-            is_executed = False
+        if not is_executed:
+            rospy.logerr("Execution failed.")
+        else:
+            rospy.loginfo("Execution succeeded.")
         return is_executed
 
     def execute_plan(self, plan):
@@ -227,14 +231,18 @@ class SrRobotCommander(object):
         Executes a given plan.
         @param plan - RobotTrajectory msg that contains the trajectory
         to the set goal state.
+        @return - Success of execution.
         """
-        is_executed = True
+        is_executed = False
         if self.check_given_plan_is_valid(plan):
             is_executed = self._move_group_commander.execute(plan)
             self.__plan = None
         else:
             rospy.logwarn("Plan is not valid, not executing anything.")
-            is_executed = False
+        if not is_executed:
+            rospy.logerr("Execution failed.")
+        else:
+            rospy.loginfo("Execution succeeded.")
         return is_executed
 
     def move_to_joint_value_target(self, joint_states, wait=True,
@@ -551,6 +559,7 @@ class SrRobotCommander(object):
         Moves robot through all joint states with specified timeouts.
         @param joint_trajectory - JointTrajectory class object. Represents
         trajectory of the joints which would be executed.
+        @return - Success of execution.
         """
         plan = RobotTrajectory()
         plan.joint_trajectory = joint_trajectory

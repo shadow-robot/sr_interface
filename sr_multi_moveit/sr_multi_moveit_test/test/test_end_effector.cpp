@@ -100,8 +100,8 @@ protected:
 
 TEST_F(LoadRobotModel, InitOK)
 {
-  ASSERT_EQ(urdf_model->getName(), "ur10srh");
-  ASSERT_EQ(srdf_model->getName(), "ur10srh");
+  ASSERT_EQ(urdf_model->getName(), "ursrh");
+  ASSERT_EQ(srdf_model->getName(), "ursrh");
 }
 
 TEST_F(LoadRobotModel, Model)

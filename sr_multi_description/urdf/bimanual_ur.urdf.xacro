@@ -1,0 +1,47 @@
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="ursrh">
+
+    <link name="world"/>
+    <xacro:arg name="arm_1_z" default="0.0"/>
+    <xacro:arg name="arm_2_z" default="0.0"/>
+    <xacro:arg name="arm_x_separation" default="1.5"/>
+    <xacro:arg name="arm_y_separation" default="0.0"/>
+
+    <xacro:arg name="robot_model" default="ur10e"/>
+    <xacro:include filename="$(find ur_description)/urdf/inc/$(arg robot_model)_macro.xacro"/>
+
+    <xacro:arg name="kinematics_config_right" default="$(find ur_description)/config/$(arg robot_model)/default_kinematics.yaml"/>
+    <xacro:arg name="kinematics_config_left" default="$(find ur_description)/config/$(arg robot_model)/default_kinematics.yaml"/>
+    <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+
+    <xacro:if value="${'$(arg robot_model)' == 'ur10e'}">
+        <xacro:ur10e_robot prefix="ra_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config_right)"/>
+        <xacro:ur10e_robot prefix="la_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config_left)"/>
+    </xacro:if>
+    <xacro:if value="${'$(arg robot_model)' == 'ur10'}">
+        <xacro:ur1e_robot prefix="ra_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config_right)"/>
+        <xacro:ur10_robot prefix="la_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config_left)"/>
+    </xacro:if>
+    <xacro:if value="${'$(arg robot_model)' == 'ur5e'}">
+        <xacro:ur5e_robot prefix="ra_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config_right)"/>
+        <xacro:ur5e_robot prefix="la_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config_left)"/>
+    </xacro:if>
+    <xacro:if value="${'$(arg robot_model)' == 'ur5'}">
+        <xacro:ur5_robot prefix="ra_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config_right)"/>
+        <xacro:ur5_robot prefix="la_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config_left)"/>
+    </xacro:if>
+
+    <joint name="world_to_arm_1_joint" type="fixed">
+        <parent link="world"/>
+        <child link="ra_base_link"/>
+        <origin xyz="0.0 0.0 $(arg arm_1_z)" rpy="0.0 0.0 0.0"/>
+    </joint>
+
+    <joint name="world_to_arm_2_joint" type="fixed">
+        <parent link="world"/>
+        <child link="la_base_link"/>
+        <origin xyz="$(arg arm_x_separation) $(arg arm_y_separation) $(arg arm_2_z)" rpy="0.0 0.0 ${pi}"/>
+    </joint>
+
+    <xacro:include filename="$(find sr_description)/other/xacro/materials.urdf.xacro"/>
+    <xacro:include filename="$(find sr_description)/other/xacro/gazebo.urdf.xacro"/>
+</robot>

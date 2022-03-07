@@ -24,8 +24,13 @@
   <arg name="hand_id" value="$(arg side_letter)h"/>
   <!-- Whether to run hand controllers. -->
   <arg name="hand_ctrl" default="$(arg hand)"/>
-  <!-- Set to hand_e or hand_g -->
   <arg name="hand_type" default="hand_e"/>
+  <arg name="hand_version" default="E3M5"/>
+  <arg name="fingers" default="th,ff,mf,rf,lf"/>
+  <arg name="tip_sensors" default="th=pst,ff=pst,mf=pst,rf=pst,lf=pst"/>
+  <arg name="mid_sensors" default="none"/>
+  <arg name="prox_sensors" default="none"/>
+  <arg name="palm_sensor" default="none"/>
   <!-- Set to true to spawn trajectory controllers for the hands(the trajectory controller overwrites continuously the joint position command, preventing direct control via topics-->
   <arg name="hand_trajectory" default="true"/>
   <!-- Set to true if you want to use grasp controller -->
@@ -36,6 +41,8 @@
   <!-- Robot description related config-->
   <arg unless="$(arg arm)" name="robot_name" default="usrh"/>
   <arg unless="$(arg arm)" name="initial_z" default="0.0"/>
+  <arg name="initial_y" default="0.0"/>
+  <arg name="initial_yaw" default="0.0"/>
 
   <!-- ARM SPECIFIC CONFIG-->
   <arg name="arm_prefix" value="$(arg side_letter)a"/>
@@ -48,22 +55,26 @@
 
   <!-- Robot description related config-->
   <arg name="robot_model" default="ur10e"/>
-  <arg name="arm_x_separation" default="0.0"/>
-  <arg name="arm_y_separation" default="0.0"/>
   <arg if="$(arg arm)" name="robot_name" default="$(arg robot_model)srh"/>
   <arg if="$(arg arm)" name="initial_z" default="0.1"/>
 
   <!-- LOADING ROBOT DESCRIPTION-->
-    <include file="$(find sr_robot_launch)/launch/load_robot_description.launch">
+  <include file="$(find sr_robot_launch)/launch/load_robot_description.launch">
     <arg name="sim" default="true"/>
     <arg name="side" default="$(arg side)"/>
     <arg name="arm" default="$(arg arm)"/>
     <arg name="hand" value="$(arg hand)"/>
     <arg name="robot_model" value="$(arg robot_model)"/>
     <arg name="hand_type" value="$(arg hand_type)"/>
+    <arg name="hand_version" value="$(arg hand_version)"/>
+    <arg name="fingers" value="$(arg fingers)"/>
+    <arg name="tip_sensors" value="$(arg tip_sensors)"/>
+    <arg name="mid_sensors" value="$(arg mid_sensors)"/>
+    <arg name="prox_sensors" value="$(arg prox_sensors)"/>
+    <arg name="palm_sensor" value="$(arg palm_sensor)"/>
     <arg name="initial_z" value="$(arg initial_z)"/>
-    <arg name="arm_x_separation" value="$(arg arm_x_separation)"/>
-    <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
+    <arg name="initial_y" value="$(arg initial_y)"/>
+    <arg name="initial_yaw" value="$(arg initial_yaw)"/>
   </include>
 
   <!-- Robot config -->
@@ -71,7 +82,7 @@
   <arg if="$(eval arg('hand') and arg('arm') and arg('hand_type') == 'hand_g')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_lite_$(arg robot_model).yaml"/>
   <arg if="$(eval arg('hand') and not arg('arm') and not arg('hand_type') == 'hand_g')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh.yaml"/>
   <arg if="$(eval arg('hand') and not arg('arm') and arg('hand_type') == 'hand_g')" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_light.yaml"/>
-  <arg if="$(eval not arg('hand') and arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_sh_$(arg robot_model).yaml"/>
+  <arg if="$(eval not arg('hand') and arg('arm'))" name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/$(arg side)_$(arg robot_model).yaml"/>
 
   <!-- Set robot config file path in a param in case moveit nodes need it -->
   <param name="robot_config_file" value="$(arg robot_config_file)" type="str"/>
@@ -129,7 +140,7 @@
   </group>
 
   <!-- HAND SPECIFIC -->
-  <group if="$(eval arg('hand_type') == 'hand_e')">
+  <group if="$(eval arg('hand_type') == 'hand_e' or arg('hand_type') == 'hand_c')">
     <rosparam if="$(eval not grasp_controller and not hybrid_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_controller_gazebo.yaml"/>
     <rosparam if="$(arg grasp_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_grasp_controller_gazebo.yaml"/>
     <rosparam if="$(arg hybrid_controller)" command="load" file="$(find sr_description)/hand/config/$(arg hand_id)_hybrid_controller_gazebo.yaml"/>

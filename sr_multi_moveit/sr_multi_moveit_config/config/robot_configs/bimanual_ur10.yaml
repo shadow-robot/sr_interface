@@ -1,5 +1,5 @@
 robot:
-  name: ur10srh
+  name: ursrh
   manipulators:
     right_manipulator:
       side: right
@@ -29,11 +29,3 @@ robot:
         group_states:
           - home
           - up
-
-ra_sr_ur_robot_hw:
-  # No hand
-  payload_mass_kg: 0.0
-
-la_sr_ur_robot_hw:
-  # No hand
-  payload_mass_kg: 0.0

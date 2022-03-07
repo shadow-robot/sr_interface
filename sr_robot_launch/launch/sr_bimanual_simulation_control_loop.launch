@@ -20,8 +20,6 @@
   <arg name="home_angles" default=""/>
 
   <!-- HAND RELATED CONFIG-->
-  <!-- Wheather the hands have biotacs -->
-  <arg name="biotac" default="false"/>
   <!-- Set to true to spawn the position controllers for the hands-->
   <arg name="hand_ctrl" unless="$(eval hands == 'none')" default="true"/>
   <arg name="hand_ctrl" if="$(eval hands == 'none')" default="false"/>
@@ -29,6 +27,22 @@
   <arg name="hand_trajectory" default="true"/>
   <!-- Set to true if you want to use hybrid controller -->
   <arg name="hybrid_controller" default="false"/>
+
+  <arg name="right_hand_type" default="hand_e"/>
+  <arg name="right_hand_version" default="E3M5"/>
+  <arg name="right_fingers" default="all"/>
+  <arg name="right_tip_sensors" default="pst"/>
+  <arg name="right_mid_sensors" default="none"/>
+  <arg name="right_prox_sensors" default="none"/>
+  <arg name="right_palm_sensor" default="none"/>
+
+  <arg name="left_hand_type" default="hand_e"/>
+  <arg name="left_hand_version" default="E3M5"/>
+  <arg name="left_fingers" default="all"/>
+  <arg name="left_tip_sensors" default="pst"/>
+  <arg name="left_mid_sensors" default="none"/>
+  <arg name="left_prox_sensors" default="none"/>
+  <arg name="left_palm_sensor" default="none"/>
 
   <!-- Robot description related config-->
   <arg unless="$(arg arms)" name="robot_name" default="bimanual_shadowhand_motor"/>
@@ -52,11 +66,15 @@
 
   <!-- ROBOT CONFIG FILES-->
   <!-- Hands and arms -->
-  <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
+  <arg name="robot_config_file" if="$(eval arg('hands') == 'both' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_$(arg robot_model).yaml"/>
   <!-- Arms but no hands -->
   <arg name="robot_config_file" if="$(eval arg('hands') == 'none' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_$(arg robot_model).yaml"/>
   <!-- Hands but no arms -->
   <arg name="robot_config_file" if="$(eval not arg('hands') == 'none' and not arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh.yaml"/>
+  <!-- Arms and right hand only -->
+  <arg name="robot_config_file" if="$(eval arg('hands') == 'right' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_right_$(arg robot_model).yaml"/>
+  <!-- Arms and left hand only -->
+  <arg name="robot_config_file" if="$(eval arg('hands') == 'left' and arg('arm_ctrl'))" default="$(find sr_multi_moveit_config)/config/robot_configs/bimanual_sh_left_$(arg robot_model).yaml"/>
 
   <!-- Set robot config file path in a param in case moveit nodes need it -->
   <param name="robot_config_file" value="$(arg robot_config_file)" type="str"/>
@@ -74,7 +92,22 @@
     <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
     <arg name="arm_1_z" value="$(arg arm_1_z)"/>
     <arg name="arm_2_z" value="$(arg arm_2_z)"/>
-    <arg name="biotac" value="$(arg biotac)"/>
+
+    <arg name="right_hand_type" value="$(arg right_hand_type)"/>
+    <arg name="right_hand_version" value="$(arg right_hand_version)"/>
+    <arg name="right_fingers" value="$(arg right_fingers)"/>
+    <arg name="right_tip_sensors" value="$(arg right_tip_sensors)"/>
+    <arg name="right_mid_sensors" value="$(arg right_mid_sensors)"/>
+    <arg name="right_prox_sensors" value="$(arg right_prox_sensors)"/>
+    <arg name="right_palm_sensor" value="$(arg right_palm_sensor)"/>
+
+    <arg name="left_hand_type" value="$(arg left_hand_type)"/>
+    <arg name="left_hand_version" value="$(arg left_hand_version)"/>
+    <arg name="left_fingers" value="$(arg left_fingers)"/>
+    <arg name="left_tip_sensors" value="$(arg left_tip_sensors)"/>
+    <arg name="left_mid_sensors" value="$(arg left_mid_sensors)"/>
+    <arg name="left_prox_sensors" value="$(arg left_prox_sensors)"/>
+    <arg name="left_palm_sensor" value="$(arg left_palm_sensor)"/>
   </include>
 
   <!-- RUNNING THE SIMULATION -->
