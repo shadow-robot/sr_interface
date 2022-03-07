@@ -454,7 +454,6 @@ class TestSrRobotCommander(TestCase):
         self.robot_commander.run_named_trajectory(trajectory)
         desired_joint_state = sorted(list(trajectory[0]['joint_angles'].values()))
         executed_joints_list = sorted(self.robot_commander.get_current_state().values())
-        zip_object = zip(desired_joint_state, executed_joints_list)
         np.testing.assert_allclose(desired_joint_state, executed_joints_list, 0.01, 0.01)
 
     def test_plan_to_pose_target(self):
