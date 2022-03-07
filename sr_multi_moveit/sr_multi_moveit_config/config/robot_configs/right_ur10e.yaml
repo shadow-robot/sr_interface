@@ -1,16 +1,18 @@
 robot:
-  name: ursrh
+  name: ursr
   manipulators:
     right_manipulator:
       side: right
       arm:
-        name: ur10
+        name: ur10e
         main_group: manipulator
-        moveit_path: 
+        other_groups:
+          - endeffector        
+        moveit_path:
           package: sr_multi_moveit_config
           relative_path: /config/ur
         extra_groups_config_path: /config
         group_states:
           - home
           - up
-      hand: True
+        hand: False

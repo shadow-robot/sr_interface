@@ -59,11 +59,20 @@
 
   <!-- OTHER CONFIGS-->
   <!-- Trajectory controllers list for moveit-->
-  <arg if="$(eval hand_ctrl and arm_trajectory)" name="trajectory_controllers_list" 
+  <arg if="$(eval hand_ctrl and arm_trajectory and hands=='both')" name="trajectory_controllers_list" 
        default="[/ra_trajectory_controller/state, /la_trajectory_controller/state, /rh_trajectory_controller/state, /lh_trajectory_controller/state]"/>
+  
+  <arg if="$(eval hand_ctrl and arm_trajectory and hands=='right')" name="trajectory_controllers_list" 
+       default="[/ra_trajectory_controller/state, /la_trajectory_controller/state, /rh_trajectory_controller/state]"/>
+
+  <arg if="$(eval hand_ctrl and arm_trajectory and hands=='left')" name="trajectory_controllers_list" 
+       default="[/ra_trajectory_controller/state, /la_trajectory_controller/state, /lh_trajectory_controller/state]"/>
+  
   <arg if="$(eval not hand_ctrl and not arm_trajectory)" name="trajectory_controllers_list" value="[]"/>
-  <arg if="$(eval hand_ctrl and not arm_trajectory)" name="trajectory_controllers_list"
+  
+  <arg if="$(eval hand_ctrl and not arm_trajectory and hands=='both')" name="trajectory_controllers_list"
        value="[/rh_trajectory_controller/state, /lh_trajectory_controller/state]"/>
+
   <arg if="$(eval not hand_ctrl and arm_trajectory)" name="trajectory_controllers_list"
        value="[/ra_trajectory_controller/state, /la_trajectory_controller/state]"/>
 
@@ -74,6 +83,22 @@
   <arg name="start_home" default="false"/>
   <!-- home_angles must be input at the launch -->
   <arg name="home_angles" default=""/>
+
+  <arg name="right_hand_type" default="hand_e"/>
+  <arg name="right_hand_version" default="E3M5"/>
+  <arg name="right_fingers" default="all"/>
+  <arg name="right_tip_sensors" default="pst"/>
+  <arg name="right_mid_sensors" default="none"/>
+  <arg name="right_prox_sensors" default="none"/>
+  <arg name="right_palm_sensor" default="none"/>
+
+  <arg name="left_hand_type" default="hand_e"/>
+  <arg name="left_hand_version" default="E3M5"/>
+  <arg name="left_fingers" default="all"/>
+  <arg name="left_tip_sensors" default="pst"/>
+  <arg name="left_mid_sensors" default="none"/>
+  <arg name="left_prox_sensors" default="none"/>
+  <arg name="left_palm_sensor" default="none"/>
 
   <group if="$(arg sim)">
       <include file="$(find sr_robot_launch)/launch/sr_bimanual_simulation_control_loop.launch">
@@ -89,7 +114,7 @@
         <arg name="arm_y_separation" value="$(arg arm_y_separation)"/>
         <arg name="arm_1_z" value="$(arg arm_1_z)"/>
         <arg name="arm_2_z" value="$(arg arm_2_z)"/>
-        <arg name="hands" value="both"/>
+        <arg name="hands" value="$(arg hands)"/>
         <arg name="arms" value="true"/>
         <arg name="robot_model" value="$(arg robot_model)"/>
         <arg name="arm_ctrl" value="$(arg arm_ctrl)"/>
@@ -100,6 +125,20 @@
         <arg name="arm_trajectory" value="$(arg arm_trajectory)"/>
         <arg name="arm_position" value="$(arg arm_position)"/>
         <arg name="hybrid_controller" value="$(arg hybrid_controller)"/>
+        <arg name="right_hand_type" value="$(arg right_hand_type)"/>
+        <arg name="right_hand_version" value="$(arg right_hand_version)"/>
+        <arg name="right_fingers" value="$(arg right_fingers)"/>
+        <arg name="right_tip_sensors" value="$(arg right_tip_sensors)"/>
+        <arg name="right_mid_sensors" value="$(arg right_mid_sensors)"/>
+        <arg name="right_prox_sensors" value="$(arg right_prox_sensors)"/>
+        <arg name="right_palm_sensor" value="$(arg right_palm_sensor)"/>
+        <arg name="left_hand_type" value="$(arg left_hand_type)"/>
+        <arg name="left_hand_version" value="$(arg left_hand_version)"/>
+        <arg name="left_fingers" value="$(arg left_fingers)"/>
+        <arg name="left_tip_sensors" value="$(arg left_tip_sensors)"/>
+        <arg name="left_mid_sensors" value="$(arg left_mid_sensors)"/>
+        <arg name="left_prox_sensors" value="$(arg left_prox_sensors)"/>
+        <arg name="left_palm_sensor" value="$(arg left_palm_sensor)"/>
       </include>
   </group>
 

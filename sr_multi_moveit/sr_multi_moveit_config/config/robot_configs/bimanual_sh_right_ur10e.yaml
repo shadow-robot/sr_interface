@@ -6,8 +6,6 @@ robot:
       arm:
         name: ur10e
         main_group: manipulator
-        other_groups:
-          - endeffector
         moveit_path:
           package: sr_multi_moveit_config
           relative_path: /config/ur
@@ -15,6 +13,7 @@ robot:
         group_states:
           - home
           - up
+      hand: True
     left_manipulator:
       side: left
       arm:
@@ -29,3 +28,4 @@ robot:
         group_states:
           - home
           - up
+      hand: False
