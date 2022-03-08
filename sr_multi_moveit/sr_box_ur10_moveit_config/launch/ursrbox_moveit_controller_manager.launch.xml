@@ -1,6 +1,0 @@
-<launch>
-  <arg name="side" default="right"/>
-  <arg name="side_letter" value="$(eval side[0])"/>
-  <param name="moveit_controller_manager" value="moveit_simple_controller_manager/MoveItSimpleControllerManager"/>
-  <rosparam command="load" file="$(find sr_box_ur10_moveit_config)/config/$(arg side_letter)a_controllers.yaml"/>
-</launch>
