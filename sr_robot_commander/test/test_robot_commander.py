@@ -26,7 +26,7 @@ from unittest import TestCase
 from sr_robot_commander.sr_robot_commander import SrRobotCommander, MoveGroupCommander, PlanningSceneInterface
 from geometry_msgs.msg import Pose, PoseStamped
 from control_msgs.msg import FollowJointTrajectoryActionGoal
-from moveit_msgs.msg import RobotState, RobotTrajectory, Constraints, JointConstraint
+from moveit_msgs.msg import RobotState, RobotTrajectory
 from moveit_msgs.srv import GetPositionFK, SaveRobotStateToWarehouse
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
 from std_msgs.msg import Header
@@ -54,18 +54,18 @@ CONST_EXAMPLE_TARGET = {'ra_shoulder_pan_joint': 0.2, 'ra_elbow_joint': 1.80,
                         'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 0.00}
 
 TOLERANCE_UNSAFE = 0.04
-PLANNING_ATTEMPTS = 20
+PLANNING_ATTEMPTS = 5
 
 
 class TestSrRobotCommander(TestCase):
     @classmethod
     def setUpClass(cls):
-        rospy.wait_for_message("/move_group/status", GoalStatusArray)
-        rospy.wait_for_service("/gazebo/set_model_configuration")
-        rospy.wait_for_message("/clock", Clock)
+        rospy.wait_for_message("/move_group/status", GoalStatusArray, 60.0)
+        rospy.wait_for_service("/gazebo/set_model_configuration", 60.0)
+        rospy.wait_for_message("/clock", Clock, 60.0)
         rospy.sleep(10.0)  # Wait for Gazebo to sort itself out
         cls.robot_commander = SrRobotCommander("right_arm")
-        cls.robot_commander.set_planner_id("RRTstar")
+        cls.robot_commander.set_planner_id("BiTRRT")
         cls.eef = cls.robot_commander.get_end_effector_link()
         cls.add_ground_plane()
 
@@ -119,7 +119,7 @@ class TestSrRobotCommander(TestCase):
 
     def compare_position(self, initial_position, desired_position, tolerance):
         initial_position_list = [initial_position.x, initial_position.y, initial_position.z]
-        desired_position_list = [initial_position.x, initial_position.y, initial_position.z]
+        desired_position_list = [desired_position.x, desired_position.y, desired_position.z]
 
         for coordinate_1, coordinate_2 in zip(initial_position_list, desired_position_list):
             delta_position = abs(coordinate_1 - coordinate_2)
@@ -132,13 +132,11 @@ class TestSrRobotCommander(TestCase):
                                                                   initial_orientation.z, initial_orientation.w])
         desired_euler = tf.transformations.euler_from_quaternion([desired_orientation.x, desired_orientation.y,
                                                                   desired_orientation.z, desired_orientation.w])
-        euler_delta_roll = desired_euler[0] - initial_euler[0]
-        euler_delta_pitch = desired_euler[1] - initial_euler[1]
-        euler_delta_yaw = desired_euler[2] - initial_euler[2]
+        euler_delta_roll = abs(desired_euler[0] - initial_euler[0])
+        euler_delta_pitch = abs(desired_euler[1] - initial_euler[1])
+        euler_delta_yaw = abs(desired_euler[2] - initial_euler[2])
 
-        if (abs(euler_delta_roll) > tolerance and
-           abs(euler_delta_pitch) > tolerance and
-           abs(euler_delta_yaw) > tolerance):
+        if (euler_delta_roll > tolerance and euler_delta_pitch > tolerance and euler_delta_yaw > tolerance):
             return False
         return True
 
@@ -163,7 +161,7 @@ class TestSrRobotCommander(TestCase):
         self.robot_commander.set_planning_time(prev_planning_time)
 
     def test_set_num_planning_attempts(self):
-        self.robot_commander.set_num_planning_attempts(3)
+        self.robot_commander.set_num_planning_attempts(PLANNING_ATTEMPTS)
 
     def test_get_end_effector_pose_from_state(self):
         robot_state = RobotState()
@@ -186,9 +184,8 @@ class TestSrRobotCommander(TestCase):
 
     def test_refresh_named_targets(self):
         self.robot_commander.refresh_named_targets()
-        is_srdf_list = type(self.robot_commander._srdf_names) == list
-        is_warehouse_names_list = type(self.robot_commander._warehouse_names) == list
-        self.assertTrue(is_srdf_list and is_warehouse_names_list)
+        self.assertIsInstance(self.robot_commander._srdf_names, list)
+        self.assertIsInstance(self.robot_commander._warehouse_names, list)
 
     def test_set_max_velocity_scaling_factor_range_ok(self):
         self.robot_commander.set_max_velocity_scaling_factor(0.2)
@@ -289,7 +286,7 @@ class TestSrRobotCommander(TestCase):
 
     # if launched sr_ur_arm_box.launch
     def test_named_target_in_srdf_exist(self):
-        const_test_names = ['lifted', 'flat']
+        const_test_names = ['ra_home', 'ra_up']
         for name in const_test_names:
             if self.robot_commander.named_target_in_srdf(name) is False:
                 self.fail()
@@ -386,11 +383,11 @@ class TestSrRobotCommander(TestCase):
         self.assertIsInstance(ret_val, JointState)
 
     def test_run_joint_trajectory_executed(self):
-        self.reset_to_home()
+        self.robot_commander.set_start_state_to_current_state()
         initial_joint_state = self.robot_commander.get_current_state()
         desired_joint_state = {}
         for key in initial_joint_state:
-            desired_joint_state[key] = initial_joint_state[key] + 0.05
+            desired_joint_state[key] = initial_joint_state[key] + 0.03
 
         # create joint trajectory message
         desired_joint_trajectory = JointTrajectory()
@@ -400,7 +397,7 @@ class TestSrRobotCommander(TestCase):
         point.positions = list(desired_joint_state.values())
         point.time_from_start = rospy.Time.now()
         desired_joint_trajectory.points.append(point)
-
+        self.robot_commander.set_start_state_to_current_state()
         self.assertTrue(self.robot_commander.run_joint_trajectory(desired_joint_trajectory))
 
     def test_make_named_trajectory(self):
@@ -426,7 +423,6 @@ class TestSrRobotCommander(TestCase):
         self.assertIsInstance(self.robot_commander.make_named_trajectory(trajectory), JointTrajectory)
 
     def test_send_stop_trajectory_unsafe(self):
-        self.reset_to_home()
         start_joints = sorted(list(self.robot_commander.get_current_state().values()))
         self.robot_commander.send_stop_trajectory_unsafe()
         end_joints = sorted(list(self.robot_commander.get_current_state().values()))
@@ -483,7 +479,8 @@ class TestSrRobotCommander(TestCase):
         initial_joint_state = self.robot_commander.get_current_state()
         desired_joint_state = {}
         for key in initial_joint_state:
-            desired_joint_state[key] = initial_joint_state[key] + 0.05
+            # goal traj delta needs to be smaller than initial_start_state_threshold or it will fail since it's a unsafe traj state
+            desired_joint_state[key] = initial_joint_state[key] + 0.01
 
         # create joint trajectory message
         desired_joint_trajectory = JointTrajectory()
@@ -498,16 +495,6 @@ class TestSrRobotCommander(TestCase):
         executed_joints_list = list(self.robot_commander.get_current_state().values())
         np.testing.assert_allclose(list(desired_joint_state.values()), executed_joints_list,
                                    TOLERANCE_UNSAFE, TOLERANCE_UNSAFE)
-
-    def test_plan_to_pose_target(self):
-        pose = PoseStamped()
-        pose.header.stamp = rospy.get_rostime()
-        desired_pose_rpy = self.create_test_pose_rpy_from_current_pose()
-        pose.pose = self.get_pose_msg_from_pose_rpy(desired_pose_rpy)
-
-        plan = self.robot_commander.plan_to_pose_target(pose.pose, end_effector_link=self.eef,
-                                                        alternative_method=False, custom_start_state=None)
-        self.assertIsInstance(plan, RobotTrajectory)
 
     def test_plan_to_waypoints_target(self):
         waypoints = []
@@ -542,7 +529,7 @@ class TestSrRobotCommander(TestCase):
         is_pose_reached = False
         tries = 0
         desired_pose_msg = self.get_pose_msg_from_pose_rpy(desired_pose_rpy)
-        while not is_pose_reached and tries < 5:
+        while not is_pose_reached and tries < PLANNING_ATTEMPTS:
             tries += 1
             rospy.loginfo("Moving to pose target attempt {}".format(tries))
             self.robot_commander.move_to_pose_target(desired_pose_rpy, self.eef, wait=True)
@@ -556,7 +543,7 @@ class TestSrRobotCommander(TestCase):
         is_pose_reached = False
         tries = 0
         desired_pose_msg = self.get_pose_msg_from_pose_rpy(desired_pose_rpy)
-        while not is_pose_reached and tries < 5:
+        while not is_pose_reached and tries < PLANNING_ATTEMPTS:
             tries += 1
             rospy.loginfo("Moving to pose target attempt {}".format(tries))
             self.robot_commander.move_to_pose_value_target_unsafe(desired_pose_msg, wait=True)
@@ -571,7 +558,7 @@ class TestSrRobotCommander(TestCase):
         xyz = [desired_pose_msg.pose.position.x, desired_pose_msg.pose.position.y, desired_pose_msg.pose.position.z]
         is_position_reached = False
         tries = 0
-        while not is_position_reached and tries < 5:
+        while not is_position_reached and tries < PLANNING_ATTEMPTS:
             tries += 1
             rospy.loginfo("test_move_to_position_target {}".format(tries))
             self.robot_commander.move_to_position_target(xyz, self.eef, wait=True)
@@ -592,7 +579,7 @@ class TestSrRobotCommander(TestCase):
 
     def test_move_to_named_target(self):
         self.robot_commander.set_start_state_to_current_state()
-        named_target = "home"
+        named_target = "ra_start"
         desired_joint_state = sorted(self.robot_commander.get_named_target_joint_values(named_target).values())
         self.robot_commander.move_to_named_target(named_target, wait=True)
         executed_joints_list = sorted(self.robot_commander.get_current_state().values())
