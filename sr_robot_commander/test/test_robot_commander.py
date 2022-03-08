@@ -382,12 +382,37 @@ class TestSrRobotCommander(TestCase):
         ret_val = self.robot_commander.get_joints_state()
         self.assertIsInstance(ret_val, JointState)
 
+    def test_run_joint_trajectory_unsafe_executed(self):
+        self.reset_to_home()
+        initial_joint_state = self.robot_commander.get_current_state()
+        desired_joint_state = {}
+        for key in initial_joint_state:
+            # goal traj delta needs to be smaller than initial_start_state_threshold
+            # or it will fail since it's a traj state
+            desired_joint_state[key] = initial_joint_state[key] + 0.01
+
+        # create joint trajectory message
+        desired_joint_trajectory = JointTrajectory()
+        desired_joint_trajectory.header.stamp = rospy.Time.now()
+        desired_joint_trajectory.joint_names = list(desired_joint_state.keys())
+        point = JointTrajectoryPoint()
+        point.positions = list(desired_joint_state.values())
+        point.time_from_start = rospy.Duration(0.5)
+        desired_joint_trajectory.points.append(point)
+
+        self.robot_commander.run_joint_trajectory_unsafe(desired_joint_trajectory)
+        executed_joints_list = list(self.robot_commander.get_current_state().values())
+        np.testing.assert_allclose(list(desired_joint_state.values()), executed_joints_list,
+                                   TOLERANCE_UNSAFE, TOLERANCE_UNSAFE)
+
     def test_run_joint_trajectory_executed(self):
         self.robot_commander.set_start_state_to_current_state()
         initial_joint_state = self.robot_commander.get_current_state()
         desired_joint_state = {}
         for key in initial_joint_state:
-            desired_joint_state[key] = initial_joint_state[key] + 0.03
+            # goal traj delta needs to be smaller than initial_start_state_threshold
+            # or it will fail since it's a traj state
+            desired_joint_state[key] = initial_joint_state[key] + 0.01
 
         # create joint trajectory message
         desired_joint_trajectory = JointTrajectory()
@@ -470,28 +495,6 @@ class TestSrRobotCommander(TestCase):
             desired_joint_state[key] = initial_joint_state[key] + 0.05
         self.robot_commander.move_to_joint_value_target_unsafe(desired_joint_state, time=0.002, wait=True,
                                                                angle_degrees=False)
-        executed_joints_list = list(self.robot_commander.get_current_state().values())
-        np.testing.assert_allclose(list(desired_joint_state.values()), executed_joints_list,
-                                   TOLERANCE_UNSAFE, TOLERANCE_UNSAFE)
-
-    def test_run_joint_trajectory_unsafe_executed(self):
-        self.reset_to_home()
-        initial_joint_state = self.robot_commander.get_current_state()
-        desired_joint_state = {}
-        for key in initial_joint_state:
-            # goal traj delta needs to be smaller than initial_start_state_threshold or it will fail since it's a unsafe traj state
-            desired_joint_state[key] = initial_joint_state[key] + 0.01
-
-        # create joint trajectory message
-        desired_joint_trajectory = JointTrajectory()
-        desired_joint_trajectory.header.stamp = rospy.Time.now()
-        desired_joint_trajectory.joint_names = list(desired_joint_state.keys())
-        point = JointTrajectoryPoint()
-        point.positions = list(desired_joint_state.values())
-        point.time_from_start = rospy.Duration(0.5)
-        desired_joint_trajectory.points.append(point)
-
-        self.robot_commander.run_joint_trajectory_unsafe(desired_joint_trajectory)
         executed_joints_list = list(self.robot_commander.get_current_state().values())
         np.testing.assert_allclose(list(desired_joint_state.values()), executed_joints_list,
                                    TOLERANCE_UNSAFE, TOLERANCE_UNSAFE)
