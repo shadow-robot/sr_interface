@@ -214,17 +214,17 @@ class SrRobotCommander(object):
         Executes the last plan made.
         @return - Success of execution.
         """
+        is_executed = False
         if self.check_plan_is_valid():
-            success = self._move_group_commander.execute(self.__plan)
+            is_executed = self._move_group_commander.execute(self.__plan)
             self.__plan = None
-            if not success:
-                rospy.logerr("Execution failed.")
-            else:
-                rospy.loginfo("Execution succeeded.")
-            return success
         else:
             rospy.logwarn("No plans were made, not executing anything.")
-            return False
+        if not is_executed:
+            rospy.logerr("Execution failed.")
+        else:
+            rospy.loginfo("Execution succeeded.")
+        return is_executed
 
     def execute_plan(self, plan):
         """
@@ -233,16 +233,17 @@ class SrRobotCommander(object):
         to the set goal state.
         @return - Success of execution.
         """
+        is_executed = False
         if self.check_given_plan_is_valid(plan):
-            success = self._move_group_commander.execute(plan)
+            is_executed = self._move_group_commander.execute(plan)
             self.__plan = None
-            if not success:
-                rospy.logerr("Execution failed.")
-            else:
-                rospy.loginfo("Execution succeeded.")
-            return success
         else:
             rospy.logwarn("Plan is not valid, not executing anything.")
+        if not is_executed:
+            rospy.logerr("Execution failed.")
+        else:
+            rospy.loginfo("Execution succeeded.")
+        return is_executed
 
     def move_to_joint_value_target(self, joint_states, wait=True,
                                    angle_degrees=False):
@@ -261,6 +262,9 @@ class SrRobotCommander(object):
         self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
         self._move_group_commander.go(wait=wait)
+
+    def set_start_state_to_current_state(self):
+        return self._move_group_commander.set_start_state_to_current_state()
 
     def plan_to_joint_value_target(self, joint_states, angle_degrees=False, custom_start_state=None):
         """
@@ -488,7 +492,9 @@ class SrRobotCommander(object):
         if self.set_named_target(name):
             self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
         else:
-            rospy.logwarn("Failed to set to named target")
+            rospy.logwarn("Could not find named target, plan not generated")
+            return False
+        return True
 
     def __get_warehouse_names(self):
         try:
@@ -557,12 +563,7 @@ class SrRobotCommander(object):
         """
         plan = RobotTrajectory()
         plan.joint_trajectory = joint_trajectory
-        success = self._move_group_commander.execute(plan)
-        if not success:
-            rospy.logerr("Execution failed.")
-        else:
-            rospy.loginfo("Execution succeeded.")
-        return success
+        return self._move_group_commander.execute(plan)
 
     def make_named_trajectory(self, trajectory):
         """
