@@ -534,7 +534,6 @@ class TestSrRobotCommander(TestCase):
         desired_pose_msg = self.get_pose_msg_from_pose_rpy(desired_pose_rpy)
         while not is_pose_reached and tries < PLANNING_ATTEMPTS:
             tries += 1
-            rospy.loginfo("Moving to pose target attempt {}".format(tries))
             self.robot_commander.move_to_pose_target(desired_pose_rpy, self.eef, wait=True)
             current_pose = self.robot_commander.get_current_pose()
             is_pose_reached = self.compare_poses(current_pose, desired_pose_msg.pose)
@@ -548,7 +547,6 @@ class TestSrRobotCommander(TestCase):
         desired_pose_msg = self.get_pose_msg_from_pose_rpy(desired_pose_rpy)
         while not is_pose_reached and tries < PLANNING_ATTEMPTS:
             tries += 1
-            rospy.loginfo("Moving to pose target attempt {}".format(tries))
             self.robot_commander.move_to_pose_value_target_unsafe(desired_pose_msg, wait=True)
             current_pose = self.robot_commander.get_current_pose()
             is_pose_reached = self.compare_poses(current_pose, desired_pose_msg.pose)
