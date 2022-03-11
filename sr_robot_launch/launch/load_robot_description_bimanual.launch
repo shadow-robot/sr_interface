@@ -47,7 +47,7 @@
                                                                          left_hand_type:=$(arg left_hand_type) left_hand_version:=$(arg left_hand_version)
                                                                          left_fingers:=$(arg left_fingers) left_tip_sensors:=$(arg left_tip_sensors)
                                                                          left_mid_sensors:=$(arg left_mid_sensors) left_prox_sensors:=$(arg left_prox_sensors)
-                                                                         left_palm_sensor:=$(arg left_palm_sensor)"/>
+                                                                         left_palm_sensor:=$(arg left_palm_sensor) arms:=$(arg arms)"/>
 
   <!-- ARM SPECIFIC CONFIG-->
   <arg name="robot_model" default="ur10e"/>
