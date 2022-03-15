@@ -43,7 +43,7 @@
   <arg name="hand_type" default="hand_e"/>
   <arg name="hand_version" default="E3M5"/>
   <arg name="fingers" default="th,ff,mf,rf,lf"/>
-  <arg name="tip_sensors" default="th=bt_sp,ff=bt_2p,mf=pst,rf=pst,lf=pst"/>
+  <arg name="tip_sensors" default="th=pst,ff=pst,mf=pst,rf=pst,lf=pst"/>
   <arg name="mid_sensors" default="none"/>
   <arg name="prox_sensors" default="none"/>
   <arg name="palm_sensor" default="none"/>
