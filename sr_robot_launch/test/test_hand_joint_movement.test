@@ -7,7 +7,6 @@
     <!-- Can be right or left-->
     <arg name="hand_id" default="rh"/>
 
-
     <!-- include the  launch file for hand -->
     <include file="$(find sr_robot_launch)/launch/srhand.launch" >
         <arg name="sim" value="true"/>
