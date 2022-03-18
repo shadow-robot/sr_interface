@@ -1,20 +1,25 @@
 <launch>
     <!-- Decide on the hand type-->
+    <arg name="hand_version" default="E3M5"/>
+    <arg name="fingers" default="th,ff,mf,rf,lf"/>
     <arg name="hand_type" default="hand_e"/>
+  
     <!-- Can be right or left-->
     <arg name="hand_id" default="rh"/>
 
     <!-- include the  launch file for hand -->
-<include file="$(find sr_robot_launch)/launch/srhand.launch" >
-    <arg name="sim" value="true"/>
-    <arg name="gui" value="false"/>
-    <arg name="hand_type" value="$( arg hand_type)"/>
-    <arg name="hand_id" value="$( arg hand_id)"/>
-</include>
+    <include file="$(find sr_robot_launch)/launch/srhand.launch" >
+        <arg name="sim" value="true"/>
+        <arg name="gui" value="false"/>
+        <arg name="hand_type" value="$( arg hand_type)"/>
+        <arg name="hand_version" value="$( arg hand_version)"/>
+        <arg name="fingers" value="$( arg fingers)"/>    
+        <arg name="hand_id" value="$( arg hand_id)"/>
+    </include>
 
     <!-- Test script -->
-  <test test-name="test_hand_joint_movement" pkg="sr_robot_launch" type="test_hand_joint_movement.py" time-limit="500.0">
-    <param name="/test_sim/hand_type" value="$( arg hand_type)"/>
-    <param name="/test_sim/hand_id" value="$( arg hand_id)"/>
-  </test>
+    <test test-name="test_hand_joint_movement" pkg="sr_robot_launch" type="test_hand_joint_movement.py" time-limit="500.0">
+        <param name="/test_sim/hand_type" value="$( arg hand_type)"/>
+        <param name="/test_sim/hand_id" value="$( arg hand_id)"/>
+    </test>
 </launch>
