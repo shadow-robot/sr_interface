@@ -2,6 +2,8 @@
      <!-- Find launch file-->
      <arg name="scene" value="true"/>
      <arg name="hand_type" default="hand_e"/>
+     <arg name="hand_version" default="E3M5"/>
+     <arg name="fingers" default="th,ff,mf,rf,lf"/>
      <arg name="side" default="right"/>
      <arg name="robot_model" default="ur10"/>
      <arg name="start_home" value="true"/>
@@ -13,6 +15,8 @@
      <arg name="hand_type" value="$(arg hand_type)"/>
      <arg name="side" value="$( arg side)"/>
      <arg name="initial_z" value="0.76"/>
+     <arg name="hand_version" value="$( arg hand_version)"/>
+     <arg name="fingers" value="$( arg fingers)"/>  
      <arg name="world" value="$(find sr_description_common)/worlds/demo_space_large_bimanual.world"/>
      <arg name="robot_model" value="$( arg robot_model)"/>
      <arg if="$(eval arg('side') == 'right')" name="home_angles" value="-J ra_shoulder_pan_joint 0.0 -J ra_elbow_joint 2.0 -J ra_wrist_1_joint -1 -J ra_wrist_2_joint 1.5708 -J ra_shoulder_lift_joint -1.25 -J ra_wrist_3_joint -2"/>

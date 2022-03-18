@@ -175,8 +175,8 @@ if (CATKIN_ENABLE_TESTING)
 #HAND TESTS
     #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_e hand_id:=rh)
     #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_e hand_id:=lh)
-    #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_g hand_id:=rh)
-    #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_g hand_id:=lh)
+    #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_g hand_id:=rh hand_version:=G1M5 fingers:=th,ff,mf,rf)
+    #add_rostest(test/test_hand_joint_movement.test ARGS hand_type:=hand_g hand_id:=lh hand_version:=G1M5 fingers:=th,ff,mf,rf)
 
 #HAND AND ARM TESTS - SPECIFIC LAUNCH FILES
     #add_rostest(test/test_ur10_right.test ARGS scene:=true)
@@ -204,20 +204,20 @@ if (CATKIN_ENABLE_TESTING)
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_e robot_model:=ur10e)
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_e robot_model:=ur10e)
     # We dont have this xacro yet
-    # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_g robot_model:=ur10e)
-    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_g robot_model:=ur10e)
+    # add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_g robot_model:=ur10e hand_version:=G1M5 fingers:=th,ff,mf,rf)
+    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_g robot_model:=ur10e hand_version:=G1M5 fingers:=th,ff,mf,rf)
 
     # ur5
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_e robot_model:=ur5)
-    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_g robot_model:=ur5)
+    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_g robot_model:=ur5 hand_version:=G1M5 fingers:=th,ff,mf,rf)
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_e robot_model:=ur5)
-    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_g robot_model:=ur5)
+    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_g robot_model:=ur5 hand_version:=G1M5 fingers:=th,ff,mf,rf)
 
     # ur5e
-    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_g robot_model:=ur5e)
+    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_g robot_model:=ur5e hand_version:=G1M5 fingers:=th,ff,mf,rf)
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=left hand_type:=hand_e robot_model:=ur5e)
     #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_e robot_model:=ur5e)
-    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_g robot_model:=ur5e)
+    #add_rostest(test/test_hand_and_arm_generic_scene.test ARGS side:=right hand_type:=hand_g robot_model:=ur5e hand_version:=G1M5 fingers:=th,ff,mf,rf)
 
 # TODO: Remove section below after new xacros are merged
 #FAILS - broken/outdated xacro does not display biotacs correctly
