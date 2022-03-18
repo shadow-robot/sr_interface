@@ -849,8 +849,9 @@ class SrRobotCommander(object):
     def _call_action(self, goals):
         for client in self._clients:
             self._action_running[client] = True
-            self._clients[client].send_goal(
-                goals[client], lambda terminal_state, result: self._action_done_cb(client, terminal_state, result))
+            if goals[client].trajectory.joint_names:
+                self._clients[client].send_goal(
+                    goals[client], lambda terminal_state, result: self._action_done_cb(client, terminal_state, result))
 
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
         """
