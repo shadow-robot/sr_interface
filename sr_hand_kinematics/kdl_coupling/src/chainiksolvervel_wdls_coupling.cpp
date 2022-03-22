@@ -33,19 +33,19 @@ namespace KDL
           chain(_chain),
           jnt2jac(chain),
           jac(chain.getNrOfIndJoints()),
-          U(MatrixXd::Zero(6, chain.getNrOfIndJoints())),
-          S(VectorXd::Zero(chain.getNrOfIndJoints())),
-          V(MatrixXd::Zero(chain.getNrOfIndJoints(), chain.getNrOfIndJoints())),
+          U(Eigen::MatrixXd::Zero(6, chain.getNrOfIndJoints())),
+          S(Eigen::VectorXd::Zero(chain.getNrOfIndJoints())),
+          V(Eigen::MatrixXd::Zero(chain.getNrOfIndJoints(), chain.getNrOfIndJoints())),
           eps(_eps),
           maxiter(_maxiter),
-          tmp(VectorXd::Zero(chain.getNrOfIndJoints())),
-          tmp_jac(MatrixXd::Zero(6, chain.getNrOfJoints())),
-          tmp_jac_weight1(MatrixXd::Zero(6, chain.getNrOfIndJoints())),
-          tmp_jac_weight2(MatrixXd::Zero(6, chain.getNrOfIndJoints())),
-          tmp_ts(MatrixXd::Zero(6, 6)),
-          tmp_js(MatrixXd::Zero(chain.getNrOfIndJoints(), chain.getNrOfIndJoints())),
-          weight_ts(MatrixXd::Identity(6, 6)),
-          weight_js(MatrixXd::Identity(chain.getNrOfIndJoints(), chain.getNrOfIndJoints())),
+          tmp(Eigen::VectorXd::Zero(chain.getNrOfIndJoints())),
+          tmp_jac(Eigen::MatrixXd::Zero(6, chain.getNrOfJoints())),
+          tmp_jac_weight1(Eigen::MatrixXd::Zero(6, chain.getNrOfIndJoints())),
+          tmp_jac_weight2(Eigen::MatrixXd::Zero(6, chain.getNrOfIndJoints())),
+          tmp_ts(Eigen::MatrixXd::Zero(6, 6)),
+          tmp_js(Eigen::MatrixXd::Zero(chain.getNrOfIndJoints(), chain.getNrOfIndJoints())),
+          weight_ts(Eigen::MatrixXd::Identity(6, 6)),
+          weight_js(Eigen::MatrixXd::Identity(chain.getNrOfIndJoints(), chain.getNrOfIndJoints())),
           lambda(0.0)
   {
   }
@@ -54,22 +54,22 @@ namespace KDL
   {
   }
 
-  void ChainIkSolverVel_wdls_coupling::setWeightJS(const MatrixXd &Mq)
+  void ChainIkSolverVel_wdls_coupling::setWeightJS(const Eigen::MatrixXd &Mq)
   {
     weight_js = Mq;
   }
 
-  MatrixXd ChainIkSolverVel_wdls_coupling::getWeightJS()
+  Eigen::MatrixXd ChainIkSolverVel_wdls_coupling::getWeightJS()
   {
     return weight_js;
   }
 
-  void ChainIkSolverVel_wdls_coupling::setWeightTS(const MatrixXd &Mx)
+  void ChainIkSolverVel_wdls_coupling::setWeightTS(const Eigen::MatrixXd &Mx)
   {
     weight_ts = Mx;
   }
 
-  MatrixXd ChainIkSolverVel_wdls_coupling::getWeightTS()
+  Eigen::MatrixXd ChainIkSolverVel_wdls_coupling::getWeightTS()
   {
     return weight_ts;
   }

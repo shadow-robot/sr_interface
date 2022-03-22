@@ -7,6 +7,8 @@
   <arg name="hand_trajectory" default="true"/>
   <!-- Set to true to spawn the position controllers for the hands-->
   <arg name="hand_ctrl" default="true"/>
+  <!-- Argument to autodetect specific hand in bimanual setup -->
+  <arg name="hand_side_ad" default=""/>
   <!-- The control mode PWM (true) or torque (false) -->
   <!-- Set to true by default for now as torque control is not available yet -->
   <arg name="pwm_control" default="true"/>
@@ -72,9 +74,8 @@
 
   <!-- REAL ROBOTS -->
   <group if="$(eval not sim and not external_control_loop)">
-      <!--Using this wrapper is temporary! Rosrun directy the sr_hand_autodetect when it's available after 09/2021 debian sync -->
-      <node pkg="sr_utilities_common" type="ros_executable_wrapper.sh" name="hardware_control_loop_autodetection" output="screen"
-        args="sr_hand_autodetect roslaunch sr_robot_launch sr_hardware_control_loop.launch
+      <node pkg="sr_hand_detector" type="sr_hand_autodetect" name="hardware_control_loop_autodetection" output="screen"
+        args="$(arg hand_side_ad) roslaunch sr_robot_launch sr_hardware_control_loop.launch
           debug:=$(arg debug)
           pwm_control:=$(arg pwm_control)
           robot_state_pub_frequency:=$(arg robot_state_pub_frequency)
