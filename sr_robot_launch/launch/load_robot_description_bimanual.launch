@@ -43,11 +43,11 @@
                                                                          right_hand_type:=$(arg right_hand_type) right_hand_version:=$(arg right_hand_version)
                                                                          right_fingers:=$(arg right_fingers) right_tip_sensors:=$(arg right_tip_sensors)
                                                                          right_mid_sensors:=$(arg right_mid_sensors) right_prox_sensors:=$(arg right_prox_sensors)
-                                                                         right_palm_sensor:=$(arg right_palm_sensor)
+                                                                         right_palm_sensor:=$(arg right_palm_sensor) right_mounting_plate:=$(arg arms)
                                                                          left_hand_type:=$(arg left_hand_type) left_hand_version:=$(arg left_hand_version)
                                                                          left_fingers:=$(arg left_fingers) left_tip_sensors:=$(arg left_tip_sensors)
                                                                          left_mid_sensors:=$(arg left_mid_sensors) left_prox_sensors:=$(arg left_prox_sensors)
-                                                                         left_palm_sensor:=$(arg left_palm_sensor)"/>
+                                                                         left_palm_sensor:=$(arg left_palm_sensor) left_mounting_plate:=$(arg arms)"/>
 
   <!-- ARM SPECIFIC CONFIG-->
   <arg name="robot_model" default="ur10e"/>
@@ -62,12 +62,12 @@
   <arg if="$(eval arms and not arg('hands') == 'none')" name="load_robot_description_command" value="xacro $(arg robot_description) hands:=$(arg hands) robot_model:=$(arg robot_model) right_hand_type:=$(arg right_hand_type) right_hand_version:=$(arg right_hand_version)
                                                                                                      right_fingers:=$(arg right_fingers) right_tip_sensors:=$(arg right_tip_sensors)
                                                                                                      right_mid_sensors:=$(arg right_mid_sensors) right_prox_sensors:=$(arg right_prox_sensors)
-                                                                                                     right_palm_sensor:=$(arg right_palm_sensor)
+                                                                                                     right_palm_sensor:=$(arg right_palm_sensor) right_mounting_plate:=$(arg arms)
                                                                                                      left_hand_type:=$(arg left_hand_type) left_hand_version:=$(arg left_hand_version)
                                                                                                      left_fingers:=$(arg left_fingers) left_tip_sensors:=$(arg left_tip_sensors)
                                                                                                      left_mid_sensors:=$(arg left_mid_sensors) left_prox_sensors:=$(arg left_prox_sensors)
-                                                                                                     left_palm_sensor:=$(arg left_palm_sensor) arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
-
+                                                                                                     left_palm_sensor:=$(arg left_palm_sensor) left_mounting_plate:=$(arg arms)
+                                                                                                     arm_1_z:=$(arg arm_1_z) arm_2_z:=$(arg arm_2_z) arm_x_separation:=$(arg arm_x_separation) arm_y_separation:=$(arg arm_y_separation)"/>
 
   <!-- LOAD THE DESCRIPTION -->
   <param if="$(eval arg('hands') == 'both' or arg('hands') == 'right')" name="right_hand_description" command="$(arg load_right_hand_description_command)"/>
