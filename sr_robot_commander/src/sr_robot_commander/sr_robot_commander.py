@@ -831,7 +831,7 @@ class SrRobotCommander(object):
             return
 
         for i in self._clients.keys():
-            if not self._action_running[i]:
+            if not self.action_is_running(i):
                 continue
             if not self._clients[i].wait_for_result():
                 rospy.loginfo("Trajectory not completed")
