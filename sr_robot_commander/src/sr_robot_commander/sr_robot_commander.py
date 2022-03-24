@@ -830,10 +830,10 @@ class SrRobotCommander(object):
         if not wait:
             return
 
-        for i in self._clients.keys():
-            if not self.action_is_running(i):
+        for client in self._clients.keys():
+            if not self.action_is_running(client):
                 continue
-            if not self._clients[i].wait_for_result():
+            if not self._clients[client].wait_for_result():
                 rospy.loginfo("Trajectory not completed")
 
     def action_is_running(self, controller=None):
@@ -892,10 +892,10 @@ class SrRobotCommander(object):
         if not wait:
             return
 
-        for i in self._clients.keys():
-            if not self.action_is_running(i):
+        for client in self._clients.keys():
+            if not self.action_is_running(client):
                 continue
-            if not self._clients[i].wait_for_result():
+            if not self._clients[client].wait_for_result():
                 rospy.loginfo("Trajectory not completed")
 
     def plan_to_waypoints_target(self, waypoints, reference_frame=None,
