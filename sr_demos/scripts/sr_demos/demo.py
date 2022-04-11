@@ -277,10 +277,9 @@ def sequence_rf(hand_commander, joint_states_config, tactile_reading, hand_type)
     # Initialize end time
     end_time = time.time() + 11
 
+    prefix = "lh_"
     if "rh_" in joint_states_config['start_pos']:
-        prefix = "rh_"
-    else:
-        prefix = "lh_"
+        prefix = "rh_"   
 
     while True and tactile_reading is not None:
         # Record current joint positions
@@ -289,31 +288,36 @@ def sequence_rf(hand_commander, joint_states_config, tactile_reading, hand_type)
         # If any tacticle sensor has been triggered, send
         # the corresponding digit to its current position
         if (tactile_reading.confirm_touched() == 'FF' and trigger[0] == 0):
-            hand_pos_incr_f = {f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset1, f"{prefix}FFJ3": hand_pos[f'{prefix}FFJ3'] + offset1}
+            hand_pos_incr_f = {f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset1,
+                               f"{prefix}FFJ3": hand_pos[f'{prefix}FFJ3'] + offset1}
             hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_f, 0.5, wait=False, angle_degrees=True)
             rospy.loginfo('First finger contact')
             trigger[0] = 1
 
         if (tactile_reading.confirm_touched() == 'MF' and trigger[1] == 0):
-            hand_pos_incr_m = {f"{prefix}MFJ1": hand_pos[f'{prefix}MFJ1'] + offset1, f"{prefix}MFJ3": hand_pos[f'{prefix}MFJ3'] + offset1}
+            hand_pos_incr_m = {f"{prefix}MFJ1": hand_pos[f'{prefix}MFJ1'] + offset1,
+                               f"{prefix}MFJ3": hand_pos[f'{prefix}MFJ3'] + offset1}
             hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_m, 0.5, wait=False, angle_degrees=True)
             rospy.loginfo('Middle finger contact')
             trigger[1] = 1
 
         if (tactile_reading.confirm_touched() == 'RF' and trigger[2] == 0):
-            hand_pos_incr_r = {f"{prefix}RFJ1": hand_pos[f'{prefix}RFJ1'] + offset1, f"{prefix}RFJ3": hand_pos[f'{prefix}RFJ3'] + offset1}
+            hand_pos_incr_r = {f"{prefix}RFJ1": hand_pos[f'{prefix}RFJ1'] + offset1,
+                               f"{prefix}RFJ3": hand_pos[f'{prefix}RFJ3'] + offset1}
             hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_r, 0.5, wait=False, angle_degrees=True)
             rospy.loginfo('Ring finger contact')
             trigger[2] = 1
 
         if (tactile_reading.confirm_touched() == 'LF' and trigger[3] == 0):
-            hand_pos_incr_l = {f"{prefix}LFJ1": hand_pos[f'{prefix}LFJ1'] + offset1, f"{prefix}LFJ3": hand_pos[f'{prefix}LFJ3'] + offset1}
+            hand_pos_incr_l = {f"{prefix}LFJ1": hand_pos[f'{prefix}LFJ1'] + offset1,
+                               f"{prefix}LFJ3": hand_pos[f'{prefix}LFJ3'] + offset1}
             hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_l, 0.5, wait=False, angle_degrees=True)
             rospy.loginfo('Little finger contact')
             trigger[3] = 1
 
         if (tactile_reading.confirm_touched() == 'TH' and trigger[4] == 0):
-            hand_pos_incr_th = {f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset1, f"{prefix}THJ5": hand_pos[f'{prefix}THJ5'] + offset1}
+            hand_pos_incr_th = {f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset1,
+                                f"{prefix}THJ5": hand_pos[f'{prefix}THJ5'] + offset1}
             hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_th, 0.5, wait=False, angle_degrees=True)
             rospy.loginfo('Thumb contact')
             trigger[4] = 1
@@ -334,20 +338,32 @@ def sequence_rf(hand_commander, joint_states_config, tactile_reading, hand_type)
     offset2 = 3
     squeeze = hand_pos.copy()
     if hand_type == 'hand_lite':
-        squeeze.update({f"{prefix}THJ5": hand_pos[f'{prefix}THJ5'] + offset2, f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset2,
-                        f"{prefix}FFJ3": hand_pos[f'{prefix}FFJ3'] + offset2, f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset2,
-                        f"{prefix}MFJ3": hand_pos[f'{prefix}MFJ3'] + offset2, f"{prefix}MFJ1": hand_pos[f'{prefix}MFJ1'] + offset2,
-                        f"{prefix}RFJ3": hand_pos[f'{prefix}RFJ3'] + offset2, f"{prefix}RFJ1": hand_pos[f'{prefix}RFJ1'] + offset2})
+        squeeze.update({f"{prefix}THJ5": hand_pos[f'{prefix}THJ5'] + offset2,
+                        f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset2,
+                        f"{prefix}FFJ3": hand_pos[f'{prefix}FFJ3'] + offset2,
+                        f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset2,
+                        f"{prefix}MFJ3": hand_pos[f'{prefix}MFJ3'] + offset2,
+                        f"{prefix}MFJ1": hand_pos[f'{prefix}MFJ1'] + offset2,
+                        f"{prefix}RFJ3": hand_pos[f'{prefix}RFJ3'] + offset2,
+                        f"{prefix}RFJ1": hand_pos[f'{prefix}RFJ1'] + offset2})
     elif hand_type == 'hand_extra_lite':
-        squeeze.update({f"{prefix}THJ5": hand_pos[f'{prefix}THJ5'] + offset2, f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset2,
-                        f"{prefix}FFJ3": hand_pos[f'{prefix}FFJ3'] + offset2, f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset2,
-                        f"{prefix}MFJ3": hand_pos[f'{prefix}MFJ3'] + offset2, f"{prefix}MFJ1": hand_pos[f'{prefix}MFJ1'] + offset2})
+        squeeze.update({f"{prefix}THJ5": hand_pos[f'{prefix}THJ5'] + offset2,
+                        f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset2,
+                        f"{prefix}FFJ3": hand_pos[f'{prefix}FFJ3'] + offset2,
+                        f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset2,
+                        f"{prefix}MFJ3": hand_pos[f'{prefix}MFJ3'] + offset2,
+                        f"{prefix}MFJ1": hand_pos[f'{prefix}MFJ1'] + offset2})
     else:
-        squeeze.update({f"{prefix}THJ5": hand_pos[f'{prefix}THJ5'] + offset2, f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset2,
-                        f"{prefix}FFJ3": hand_pos[f'{prefix}FFJ3'] + offset2, f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset2,
-                        f"{prefix}MFJ3": hand_pos[f'{prefix}MFJ3'] + offset2, f"{prefix}MFJ1": hand_pos[f'{prefix}MFJ1'] + offset2,
-                        f"{prefix}RFJ3": hand_pos[f'{prefix}RFJ3'] + offset2, f"{prefix}RFJ1": hand_pos[f'{prefix}RFJ1'] + offset2,
-                        f"{prefix}LFJ3": hand_pos[f'{prefix}LFJ3'] + offset2, f"{prefix}LFJ1": hand_pos[f'{prefix}LFJ1'] + offset2})
+        squeeze.update({f"{prefix}THJ5": hand_pos[f'{prefix}THJ5'] + offset2,
+                        f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset2,
+                        f"{prefix}FFJ3": hand_pos[f'{prefix}FFJ3'] + offset2,
+                        f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset2,
+                        f"{prefix}MFJ3": hand_pos[f'{prefix}MFJ3'] + offset2,
+                        f"{prefix}MFJ1": hand_pos[f'{prefix}MFJ1'] + offset2,
+                        f"{prefix}RFJ3": hand_pos[f'{prefix}RFJ3'] + offset2,
+                        f"{prefix}RFJ1": hand_pos[f'{prefix}RFJ1'] + offset2,
+                        f"{prefix}LFJ3": hand_pos[f'{prefix}LFJ3'] + offset2,
+                        f"{prefix}LFJ1": hand_pos[f'{prefix}LFJ1'] + offset2})
 
     # Squeeze object gently
     hand_commander.move_to_joint_value_target_unsafe(squeeze, 0.5, wait=False, angle_degrees=True)
@@ -406,10 +422,9 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
 
 
 def complete_random_sequence(hand_commander, joint_states_config):
+    prefix = "lh_"
     if "rh_" in joint_states_config['start_pos']:
-        prefix = "rh_"
-    else:
-        prefix = "lh_"
+        prefix = "rh_"   
 
     for i in joint_states_config['rand_pos']:
         joint_states_config['rand_pos'][i] =\
