@@ -29,34 +29,34 @@ import argparse
 
 rospy.init_node("print_hand_joints_position", anonymous=True)
 
-# parser = argparse.ArgumentParser(description='A script to print hand joint positions. ',
-#                                  add_help=True, usage='%(prog)s [-h] --angle_type ANGLE_TYPE',
-#                                  formatter_class=argparse.RawTextHelpFormatter)
+parser = argparse.ArgumentParser(description='A script to print hand joint positions. ',
+                                 add_help=True, usage='%(prog)s [-h] --angle_type ANGLE_TYPE',
+                                 formatter_class=argparse.RawTextHelpFormatter)
 
-# parser.add_argument("--angle_type", default="radians", help="ANGLE_TYPE should be either degrees or radians")
-# args = parser.parse_args()
+parser.add_argument("--angle_type", default="radians", help="ANGLE_TYPE should be either degrees or radians")
+args = parser.parse_args()
 
-# angle_type = args.angle_type
+angle_type = args.angle_type
 
-# # Use the hand finder to get the hand prefix, to allow this script to be used with either left or right hands
-# hand_finder = HandFinder()
-# hand_parameters = hand_finder.get_hand_parameters()
+# Use the hand finder to get the hand prefix, to allow this script to be used with either left or right hands
+hand_finder = HandFinder()
+hand_parameters = hand_finder.get_hand_parameters()
 
-# prefix = hand_parameters.mapping.values()
-# hand_serial = hand_parameters.mapping.keys()
-# scale = 1
+prefix = hand_parameters.mapping.values()
+hand_serial = hand_parameters.mapping.keys()
+scale = 1
 
-# if angle_type == "degrees":
-#     scale = 1 * (180 / pi)
+if angle_type == "degrees":
+    scale = 1 * (180 / pi)
 
-# for i in arange(0, len(prefix)):
-hand_commander = SrHandCommander(name="right_hand")
+for i in arange(0, len(prefix)):
+    hand_commander = SrHandCommander(hand_parameters=hand_parameters, hand_serial=hand_serial[i])
 
-print("Joints positions")
+    print("Joints positions")
 
-all_joints_state = hand_commander.get_joints_position()
+    all_joints_state = hand_commander.get_joints_position()
 
-# hand_joints_state = {
-#     k: (v * scale) for k, v in all_joints_state.items() if k.startswith(prefix[i] + "_")}
+    hand_joints_state = {
+        k: (v * scale) for k, v in all_joints_state.items() if k.startswith(prefix[i] + "_")}
 
-print("Hand joints position \n " + str(all_joints_state) + "\n")
+    print("Hand joints position \n " + str(hand_joints_state) + "\n")
