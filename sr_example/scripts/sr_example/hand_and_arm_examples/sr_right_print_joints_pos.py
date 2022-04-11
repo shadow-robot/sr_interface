@@ -66,6 +66,9 @@ arm_joints_state = {
     k: (v * scale) for k, v in all_joints_state.items()
     if k.startswith("ra_") or k.startswith("rh_W")}
 
+hand_joints_state = str(hand_joints_state).replace("'", '"')
+arm_joints_state = str(arm_joints_state).replace("'", '"')
+
 rospy.loginfo("Joints positions:")
 rospy.loginfo("Hand joints position \n " + str(hand_joints_state) + "\n")
 rospy.loginfo("Arm joints position \n " + str(arm_joints_state) + "\n")

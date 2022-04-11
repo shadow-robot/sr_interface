@@ -141,13 +141,19 @@ class KeyboardPressDetector(object):
 
 
 def sequence_th(hand_commander, joint_states_config):
+    rospy.loginfo("TH demo started")
+
     rospy.sleep(0.5)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.5, 1.5)
+
+    rospy.loginfo("TH demo completed")
 
     return
 
 
 def sequence_ff(hand_commander, joint_states_config):
+    rospy.loginfo("FF demo started")
+
     rospy.sleep(1)
     execute_command_check(hand_commander, joint_states_config, 'store_3', 1.1, 1.1)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.1, 1.1)
@@ -228,6 +234,8 @@ def sequence_ff(hand_commander, joint_states_config):
 
 
 def sequence_mf(hand_commander, joint_states_config):
+    rospy.loginfo("MF demo started")
+
     rospy.sleep(0.5)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.0, 1.0)
     execute_command_check(hand_commander, joint_states_config, 'bc_pre_zero', 2.0, 2.0)
@@ -251,6 +259,8 @@ def sequence_mf(hand_commander, joint_states_config):
 
 
 def sequence_rf(hand_commander, joint_states_config, tactile_reading, hand_type):
+    rospy.loginfo("RF demo started")
+
     # Trigger flag array
     trigger = [0, 0, 0, 0, 0]
 
@@ -267,6 +277,11 @@ def sequence_rf(hand_commander, joint_states_config, tactile_reading, hand_type)
     # Initialize end time
     end_time = time.time() + 11
 
+    if "rh_" in joint_states_config['start_pos']:
+        prefix = "rh_"
+    else:
+        prefix = "lh_"
+
     while True and tactile_reading is not None:
         # Record current joint positions
         hand_pos = {joint: degrees(i) for joint, i in hand_commander.get_joints_position().items()}
@@ -274,31 +289,31 @@ def sequence_rf(hand_commander, joint_states_config, tactile_reading, hand_type)
         # If any tacticle sensor has been triggered, send
         # the corresponding digit to its current position
         if (tactile_reading.confirm_touched() == 'FF' and trigger[0] == 0):
-            hand_pos_incr_f = {"rh_FFJ1": hand_pos['rh_FFJ1'] + offset1, "rh_FFJ3": hand_pos['rh_FFJ3'] + offset1}
+            hand_pos_incr_f = {f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset1, f"{prefix}FFJ3": hand_pos[f'{prefix}FFJ3'] + offset1}
             hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_f, 0.5, wait=False, angle_degrees=True)
             rospy.loginfo('First finger contact')
             trigger[0] = 1
 
         if (tactile_reading.confirm_touched() == 'MF' and trigger[1] == 0):
-            hand_pos_incr_m = {"rh_MFJ1": hand_pos['rh_MFJ1'] + offset1, "rh_MFJ3": hand_pos['rh_MFJ3'] + offset1}
+            hand_pos_incr_m = {f"{prefix}MFJ1": hand_pos[f'{prefix}MFJ1'] + offset1, f"{prefix}MFJ3": hand_pos[f'{prefix}MFJ3'] + offset1}
             hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_m, 0.5, wait=False, angle_degrees=True)
             rospy.loginfo('Middle finger contact')
             trigger[1] = 1
 
         if (tactile_reading.confirm_touched() == 'RF' and trigger[2] == 0):
-            hand_pos_incr_r = {"rh_RFJ1": hand_pos['rh_RFJ1'] + offset1, "rh_RFJ3": hand_pos['rh_RFJ3'] + offset1}
+            hand_pos_incr_r = {f"{prefix}RFJ1": hand_pos[f'{prefix}RFJ1'] + offset1, f"{prefix}RFJ3": hand_pos[f'{prefix}RFJ3'] + offset1}
             hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_r, 0.5, wait=False, angle_degrees=True)
             rospy.loginfo('Ring finger contact')
             trigger[2] = 1
 
         if (tactile_reading.confirm_touched() == 'LF' and trigger[3] == 0):
-            hand_pos_incr_l = {"rh_LFJ1": hand_pos['rh_LFJ1'] + offset1, "rh_LFJ3": hand_pos['rh_LFJ3'] + offset1}
+            hand_pos_incr_l = {f"{prefix}LFJ1": hand_pos[f'{prefix}LFJ1'] + offset1, f"{prefix}LFJ3": hand_pos[f'{prefix}LFJ3'] + offset1}
             hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_l, 0.5, wait=False, angle_degrees=True)
             rospy.loginfo('Little finger contact')
             trigger[3] = 1
 
         if (tactile_reading.confirm_touched() == 'TH' and trigger[4] == 0):
-            hand_pos_incr_th = {"rh_THJ2": hand_pos['rh_THJ2'] + offset1, "rh_THJ5": hand_pos['rh_THJ5'] + offset1}
+            hand_pos_incr_th = {f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset1, f"{prefix}THJ5": hand_pos[f'{prefix}THJ5'] + offset1}
             hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_th, 0.5, wait=False, angle_degrees=True)
             rospy.loginfo('Thumb contact')
             trigger[4] = 1
@@ -319,20 +334,20 @@ def sequence_rf(hand_commander, joint_states_config, tactile_reading, hand_type)
     offset2 = 3
     squeeze = hand_pos.copy()
     if hand_type == 'hand_lite':
-        squeeze.update({"rh_THJ5": hand_pos['rh_THJ5'] + offset2, "rh_THJ2": hand_pos['rh_THJ2'] + offset2,
-                        "rh_FFJ3": hand_pos['rh_FFJ3'] + offset2, "rh_FFJ1": hand_pos['rh_FFJ1'] + offset2,
-                        "rh_MFJ3": hand_pos['rh_MFJ3'] + offset2, "rh_MFJ1": hand_pos['rh_MFJ1'] + offset2,
-                        "rh_RFJ3": hand_pos['rh_RFJ3'] + offset2, "rh_RFJ1": hand_pos['rh_RFJ1'] + offset2})
+        squeeze.update({f"{prefix}THJ5": hand_pos[f'{prefix}THJ5'] + offset2, f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset2,
+                        f"{prefix}FFJ3": hand_pos[f'{prefix}FFJ3'] + offset2, f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset2,
+                        f"{prefix}MFJ3": hand_pos[f'{prefix}MFJ3'] + offset2, f"{prefix}MFJ1": hand_pos[f'{prefix}MFJ1'] + offset2,
+                        f"{prefix}RFJ3": hand_pos[f'{prefix}RFJ3'] + offset2, f"{prefix}RFJ1": hand_pos[f'{prefix}RFJ1'] + offset2})
     elif hand_type == 'hand_extra_lite':
-        squeeze.update({"rh_THJ5": hand_pos['rh_THJ5'] + offset2, "rh_THJ2": hand_pos['rh_THJ2'] + offset2,
-                        "rh_FFJ3": hand_pos['rh_FFJ3'] + offset2, "rh_FFJ1": hand_pos['rh_FFJ1'] + offset2,
-                        "rh_MFJ3": hand_pos['rh_MFJ3'] + offset2, "rh_MFJ1": hand_pos['rh_MFJ1'] + offset2})
+        squeeze.update({f"{prefix}THJ5": hand_pos[f'{prefix}THJ5'] + offset2, f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset2,
+                        f"{prefix}FFJ3": hand_pos[f'{prefix}FFJ3'] + offset2, f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset2,
+                        f"{prefix}MFJ3": hand_pos[f'{prefix}MFJ3'] + offset2, f"{prefix}MFJ1": hand_pos[f'{prefix}MFJ1'] + offset2})
     else:
-        squeeze.update({"rh_THJ5": hand_pos['rh_THJ5'] + offset2, "rh_THJ2": hand_pos['rh_THJ2'] + offset2,
-                        "rh_FFJ3": hand_pos['rh_FFJ3'] + offset2, "rh_FFJ1": hand_pos['rh_FFJ1'] + offset2,
-                        "rh_MFJ3": hand_pos['rh_MFJ3'] + offset2, "rh_MFJ1": hand_pos['rh_MFJ1'] + offset2,
-                        "rh_RFJ3": hand_pos['rh_RFJ3'] + offset2, "rh_RFJ1": hand_pos['rh_RFJ1'] + offset2,
-                        "rh_LFJ3": hand_pos['rh_LFJ3'] + offset2, "rh_LFJ1": hand_pos['rh_LFJ1'] + offset2})
+        squeeze.update({f"{prefix}THJ5": hand_pos[f'{prefix}THJ5'] + offset2, f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset2,
+                        f"{prefix}FFJ3": hand_pos[f'{prefix}FFJ3'] + offset2, f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset2,
+                        f"{prefix}MFJ3": hand_pos[f'{prefix}MFJ3'] + offset2, f"{prefix}MFJ1": hand_pos[f'{prefix}MFJ1'] + offset2,
+                        f"{prefix}RFJ3": hand_pos[f'{prefix}RFJ3'] + offset2, f"{prefix}RFJ1": hand_pos[f'{prefix}RFJ1'] + offset2,
+                        f"{prefix}LFJ3": hand_pos[f'{prefix}LFJ3'] + offset2, f"{prefix}LFJ1": hand_pos[f'{prefix}LFJ1'] + offset2})
 
     # Squeeze object gently
     hand_commander.move_to_joint_value_target_unsafe(squeeze, 0.5, wait=False, angle_degrees=True)
@@ -351,6 +366,8 @@ def sequence_rf(hand_commander, joint_states_config, tactile_reading, hand_type)
 
 
 def sequence_lf(hand_commander, joint_states_config, tactile_reading):
+    rospy.loginfo("LF demo started")
+
     rospy.sleep(0.5)
     # Initialize wake time
     wake_time = time.time()
@@ -374,12 +391,14 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
                 if time.time() < wake_time + CONST_TIME_TO_COMPLETE_DEMO:
                     complete_random_sequence(hand_commander, joint_states_config)
                 else:
-                    return
+                    break
         else:
             if time.time() < wake_time + CONST_TIME_TO_COMPLETE_DEMO:
                 complete_random_sequence(hand_commander, joint_states_config)
             else:
-                return
+                break
+
+    execute_command_check(hand_commander, joint_states_config, 'start_pos', 2.0, 2.0)
 
     rospy.loginfo("LF demo completed")
 
@@ -387,16 +406,21 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
 
 
 def complete_random_sequence(hand_commander, joint_states_config):
+    if "rh_" in joint_states_config['start_pos']:
+        prefix = "rh_"
+    else:
+        prefix = "lh_"
+
     for i in joint_states_config['rand_pos']:
         joint_states_config['rand_pos'][i] =\
             random.randrange(joint_states_config['min_range'][i],
                              joint_states_config['max_range'][i])
-    joint_states_config['rand_pos']['rh_FFJ4'] =\
-        random.randrange(joint_states_config['min_range']['rh_FFJ4'],
-                         joint_states_config['rand_pos']['rh_MFJ4'])
-    joint_states_config['rand_pos']['rh_LFJ4'] =\
-        random.randrange(joint_states_config['min_range']['rh_LFJ4'],
-                         joint_states_config['rand_pos']['rh_RFJ4'])
+    joint_states_config['rand_pos'][f'{prefix}FFJ4'] =\
+        random.randrange(joint_states_config['min_range'][f'{prefix}FFJ4'],
+                         joint_states_config['rand_pos'][f'{prefix}MFJ4'])
+    joint_states_config['rand_pos'][f'{prefix}LFJ4'] =\
+        random.randrange(joint_states_config['min_range'][f'{prefix}LFJ4'],
+                         joint_states_config['rand_pos'][f'{prefix}RFJ4'])
     inter_time = 4.0 * random.random()
     execute_command_check(hand_commander, joint_states_config, 'rand_pos', 0.0, inter_time)
 
