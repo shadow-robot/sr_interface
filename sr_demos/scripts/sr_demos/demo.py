@@ -278,8 +278,10 @@ def sequence_rf(hand_commander, joint_states_config, tactile_reading, hand_type)
     end_time = time.time() + 11
 
     prefix = "lh_"
-    if "rh_" in joint_states_config['start_pos']:
-        prefix = "rh_"
+    for joint_state in joint_states_config['start_pos'].keys():
+        if "rh_" in joint_state:
+            prefix = "rh_"
+            break
 
     while True and tactile_reading is not None:
         # Record current joint positions
@@ -423,8 +425,10 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
 
 def complete_random_sequence(hand_commander, joint_states_config):
     prefix = "lh_"
-    if "rh_" in joint_states_config['start_pos']:
-        prefix = "rh_"
+    for joint_state in joint_states_config['start_pos'].keys():
+        if "rh_" in joint_state:
+            prefix = "rh_"
+            break
 
     for i in joint_states_config['rand_pos']:
         joint_states_config['rand_pos'][i] =\
