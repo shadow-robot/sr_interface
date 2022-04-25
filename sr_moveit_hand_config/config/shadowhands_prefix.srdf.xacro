@@ -285,7 +285,26 @@
       </xacro:if>
     </xacro:unless>
   </group_state>
-
+  <group_state name="first_finger_point" group="$(arg prefix)fingers">
+    <xacro:if value="$(arg th)">
+        <xacro:thumb_state_pack  prefix="$(arg prefix)" is_biotac="$(arg is_biotac)" />
+    </xacro:if>
+    <xacro:if value="$(arg ff)">
+        <xacro:finger_state_open  prefix="$(arg prefix)" joint_prefix="FF" lf="0" />
+    </xacro:if>
+    <xacro:if value="$(arg mf)">
+        <xacro:finger_state_pack  prefix="$(arg prefix)" joint_prefix="MF" lf="0" is_biotac="$(arg is_biotac)"/>
+    </xacro:if>
+    <xacro:if value="$(arg rf)">
+        <xacro:finger_state_pack  prefix="$(arg prefix)" joint_prefix="RF" lf="0" is_biotac="$(arg is_biotac)"/>
+    </xacro:if>
+    <xacro:unless value="$(arg is_lite)">
+      <xacro:if value="$(arg lf)">
+          <xacro:finger_state_pack  prefix="$(arg prefix)" joint_prefix="LF" lf="1" is_biotac="$(arg is_biotac)"/>
+      </xacro:if>
+    </xacro:unless>
+  </group_state>
+  
   <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
 
   <!-- single finger end-effectors --> 
