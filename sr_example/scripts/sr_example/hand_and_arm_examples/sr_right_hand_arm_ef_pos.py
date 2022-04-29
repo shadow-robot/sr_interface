@@ -36,6 +36,8 @@
 from __future__ import absolute_import
 import rospy
 import sys
+import tf
+import copy
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from sr_robot_commander.sr_arm_commander import SrArmCommander
@@ -47,6 +49,8 @@ rospy.init_node("right_hand_arm_ef_pos", anonymous=True)
 # take a name parameter that should match the group name of the robot to be used.
 # How to command the arm separately
 arm_commander = SrArmCommander(name="right_arm")
+arm_commander.set_planner_id("BiTRRT")
+arm_commander.set_pose_reference_frame("ra_base")
 # How to command the arm and hand together
 robot_commander = SrRobotCommander(name="right_arm_and_hand")
 arm_commander.set_max_velocity_scaling_factor(0.1)
@@ -55,11 +59,11 @@ rospy.sleep(2.0)
 
 arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
                         'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                        'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
+                        'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': -3.1416}
 
 arm_hand_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
                              'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                             'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00,
+                             'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': -3.1416,
                              'rh_THJ1': 0.52, 'rh_THJ2': 0.61, 'rh_THJ3': 0.0, 'rh_THJ4': 1.20,
                              'rh_THJ5': 0.17, 'rh_FFJ1': 1.5707, 'rh_FFJ2': 1.5707, 'rh_FFJ3': 1.5707,
                              'rh_FFJ4': 0.0, 'rh_MFJ1': 1.5707, 'rh_MFJ2': 1.5707, 'rh_MFJ3': 1.5707,
@@ -67,9 +71,28 @@ arm_hand_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.
                              'rh_RFJ4': 0.0, 'rh_LFJ1': 1.5707, 'rh_LFJ2': 1.5707, 'rh_LFJ3': 1.5707,
                              'rh_LFJ4': 0.0, 'rh_LFJ5': 0.0, 'rh_WRJ1': 0.0, 'rh_WRJ2': 0.0}
 
-example_goal_1 = [0.9, 0.16, 0.95, -0.99, 8.27, -0.0, 1.4]
+tf_listener = tf.TransformListener()
+rospy.sleep(0.2)
+pose_xyzw = []
+try:
+    (position, quaternion) = tf_listener.lookupTransform('ra_base', 'ra_flange',
+                                                         tf_listener.getLatestCommonTime('ra_base',
+                                                                                         'ra_flange'))
+    pose_xyzw.extend(position)
+    pose_xyzw.extend(quaternion)
+except Exception as e:
+    raise ValueError(str(e))
 
-example_goal_2 = [0.7, 0.16, 0.95, -0.99, 8.27, -0.0, 1.4]
+print(str(pose_xyzw))
+
+example_goal_1 = copy.deepcopy(pose_xyzw)
+example_goal_1[0] += 0.2
+# example_goal_1[1] += 0.2
+
+example_goal_2 = copy.deepcopy(pose_xyzw)
+example_goal_2[0] -= 0.4
+example_goal_2[2] -= 0.2
+
 
 # Evaluate the plan quality from starting position of robot.
 # https://github.com/shadow-robot/sr_interface/blob/melodic-devel/sr_robot_commander/src/sr_robot_commander/sr_robot_commander.py#L263-L310
@@ -95,7 +118,8 @@ rospy.sleep(2.0)
 # https://github.com/shadow-robot/sr_interface/blob/melodic-devel/sr_robot_commander/src/sr_robot_commander/sr_robot_commander.py#L668
 input("Press Enter to continue...")
 rospy.loginfo("Planning the move to the first pose:\n" + str(example_goal_1) + "\n")
-arm_commander.plan_to_pose_target(example_goal_1)
+arm_commander.plan_to_pose_target(example_goal_1, end_effector_link="ra_flange")
+
 rospy.loginfo("Finished planning, moving the arm now.")
 # Can only execute if a plan has been generated.
 arm_commander.execute()
@@ -103,10 +127,10 @@ rospy.sleep(2.0)
 
 # Here a pose is provided and the arm commander moves the arm to it
 # https://github.com/shadow-robot/sr_interface/blob/melodic-devel/sr_robot_commander/src/sr_robot_commander/sr_robot_commander.py#L655
-input("Press Enter to continue...")
-rospy.loginfo("Moving arm to pose:\n" + str(example_goal_2) + "\n")
-arm_commander.move_to_pose_target(example_goal_2, wait=True)
-rospy.sleep(2.0)
+# input("Press Enter to continue...")
+# rospy.loginfo("Moving arm to pose:\n" + str(example_goal_2) + "\n")
+# arm_commander.move_to_pose_target(example_goal_2, end_effector_link="ra_flange")
+# rospy.sleep(2.0)
 
 # Finish arm at home and hand at pack
 input("Press Enter to continue...")

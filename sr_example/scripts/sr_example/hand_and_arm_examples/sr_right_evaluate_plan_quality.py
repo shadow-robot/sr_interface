@@ -44,7 +44,7 @@ rospy.sleep(2.0)
 
 arm_manipulator_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
                                     'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                                    'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00,
+                                    'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': -3.1416,
                                     'rh_WRJ1': 0.0, 'rh_WRJ2': 0.0}
 
 example_goal_1 = [1.18773740212, 0.175152574887,

@@ -54,11 +54,11 @@ arm_commander.set_max_velocity_scaling_factor(0.1)
 # Specify goals for hand and arm if not a saved state
 arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
                         'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                        'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
+                        'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': -3.1416}
 
 arm_hand_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
                              'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                             'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00,
+                             'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': -3.1416,
                              'rh_THJ1': 0.52, 'rh_THJ2': 0.61, 'rh_THJ3': 0.0, 'rh_THJ4': 1.20,
                              'rh_THJ5': 0.17, 'rh_FFJ1': 1.5707, 'rh_FFJ2': 1.5707, 'rh_FFJ3': 1.5707,
                              'rh_FFJ4': 0.0, 'rh_MFJ1': 1.5707, 'rh_MFJ2': 1.5707, 'rh_MFJ3': 1.5707,
