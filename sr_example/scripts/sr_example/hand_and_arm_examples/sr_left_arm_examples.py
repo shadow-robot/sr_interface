@@ -53,8 +53,8 @@ arm_commander.set_max_velocity_scaling_factor(0.1)
 rospy.sleep(2.0)
 
 arm_home_joints_goal = {'la_shoulder_pan_joint': 1.47, 'la_elbow_joint': -1.695,
-                        'la_shoulder_lift_joint': -1.22, 'la_wrist_1_joint': -01.75,
-                        'la_wrist_2_joint': 1.57, 'la_wrist_3_joint': -1.830}
+                        'la_shoulder_lift_joint': -1.22, 'la_wrist_1_joint': -2.4,
+                        'la_wrist_2_joint': -1.57, 'la_wrist_3_joint': 3.1416}
 
 example_pose_1 = [0.6, 0.3, 1.5, -0.7, 0.04, -0.67]
 

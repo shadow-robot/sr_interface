@@ -974,7 +974,6 @@ class SrRobotCommander(object):
             rospy.logerr("Failed to call service teach_mode")
 
     def get_ik(self, target_pose, avoid_collisions=False, joint_states=None, ik_constraints=None):
-
         """
         Computes the inverse kinematics for a given pose. It returns a JointState.
         @param target_pose - A given pose of type PoseStamped.
@@ -1010,6 +1009,13 @@ class SrRobotCommander(object):
                     rospy.logerr("Unreachable point (error: %s)" % resp.error_code)
                 return
             else:
+                if resp.solution.joint_state is not None:
+                    joint_state = resp.solution.joint_state
+                    active_joints = self._move_group_commander.get_active_joints()
+                    current_indices = [i for i, x in enumerate(joint_state.name) if any(thing in x for thing in active_joints)]
+                    current_names = [joint_state.name[i] for i in current_indices]
+                    current_positions = [joint_state.position[i] for i in current_indices]
+                    resp.solution.joint_state = dict(zip(current_names, current_positions))
                 return resp.solution.joint_state
 
         except rospy.ServiceException as e:
@@ -1029,11 +1035,6 @@ class SrRobotCommander(object):
         @param wait - should method wait for movement end or not.
         @param ik_constraints - Set constraints of type Constraints for computing the IK solution.
         """
-        joint_state = self.get_ik(target_pose, avoid_collisions, ik_constraints=ik_constraints)
-        if joint_state is not None:
-            active_joints = self._move_group_commander.get_active_joints()
-            current_indices = [i for i, x in enumerate(joint_state.name) if any(thing in x for thing in active_joints)]
-            current_names = [joint_state.name[i] for i in current_indices]
-            current_positions = [joint_state.position[i] for i in current_indices]
-            state_as_dict = dict(zip(current_names, current_positions))
-            self.move_to_joint_value_target_unsafe(state_as_dict, time=time, wait=wait)
+        joint_states = self.get_ik(target_pose, avoid_collisions, ik_constraints=ik_constraints)
+        if joint_states is not None:
+            self.move_to_joint_value_target_unsafe(joint_states, time=time, wait=wait)
