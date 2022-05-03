@@ -41,9 +41,11 @@
   <arg if="$(eval arg('hand_id') == 'lh')" name="side" default="left"/>
   <!-- Set to hand_e or hand_g -->
   <arg name="hand_type" default="hand_e"/>
-  <arg name="hand_version" default="E3M5"/>
-  <arg name="fingers" default="th,ff,mf,rf,lf"/>
-  <arg name="tip_sensors" default="th=pst,ff=pst,mf=pst,rf=pst,lf=pst"/>
+  <arg if="$(eval arg('hand_type') == 'hand_e')" name="hand_version" default="E3M5"/>
+  <arg if="$(eval arg('hand_type') == 'hand_g')" name="hand_version" default="G1M5"/>
+  <arg if="$(eval arg('hand_type') == 'hand_c')" name="hand_version" default="C6M2"/>
+  <arg name="fingers" default="all"/>
+  <arg name="tip_sensors" default="pst"/>
   <arg name="mid_sensors" default="none"/>
   <arg name="prox_sensors" default="none"/>
   <arg name="palm_sensor" default="none"/>
