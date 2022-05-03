@@ -1012,7 +1012,8 @@ class SrRobotCommander(object):
                 if resp.solution.joint_state is not None:
                     joint_state = resp.solution.joint_state
                     active_joints = self._move_group_commander.get_active_joints()
-                    current_indices = [i for i, x in enumerate(joint_state.name) if any(thing in x for thing in active_joints)]
+                    current_indices = [i for i, x in enumerate(joint_state.name)
+                                       if any(thing in x for thing in active_joints)]
                     current_names = [joint_state.name[i] for i in current_indices]
                     current_positions = [joint_state.position[i] for i in current_indices]
                     resp.solution.joint_state = dict(zip(current_names, current_positions))
