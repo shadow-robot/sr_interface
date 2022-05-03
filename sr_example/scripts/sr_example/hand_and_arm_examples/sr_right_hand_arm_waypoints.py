@@ -82,8 +82,8 @@ rospy.sleep(0.2)
 pose_xyzw = []
 try:
     (position, orientation) = tf_listener.lookupTransform('ra_base', 'ra_flange',
-                                                         tf_listener.getLatestCommonTime('ra_base',
-                                                                                         'ra_flange'))
+                                                          tf_listener.getLatestCommonTime('ra_base',
+                                                                                          'ra_flange'))
 except Exception as e:
     raise ValueError(str(e))
 

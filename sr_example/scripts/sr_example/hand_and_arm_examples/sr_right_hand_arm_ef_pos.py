@@ -84,8 +84,8 @@ rospy.sleep(0.2)
 pose_xyzw = []
 try:
     (position, orientation) = tf_listener.lookupTransform('ra_base', 'ra_flange',
-                                                         tf_listener.getLatestCommonTime('ra_base',
-                                                                                         'ra_flange'))
+                                                          tf_listener.getLatestCommonTime('ra_base',
+                                                                                          'ra_flange'))
 except Exception as e:
     raise ValueError(str(e))
 
@@ -128,7 +128,7 @@ rospy.loginfo("Moving hand to home joint states\n" + str(arm_home_joints_goal) +
 robot_commander.move_to_joint_value_target_unsafe(hand_home_joints_goal, 4.0, True)
 rospy.sleep(2.0)
 
-# The arm commander generates a plan to a new pose before the pose is executed. 
+# The arm commander generates a plan to a new pose before the pose is executed.
 # This also includes a plan quality evaluation.
 input("Press Enter to continue...")
 ik_solution = arm_commander.get_ik(pose_msg_1, avoid_collisions=True)
