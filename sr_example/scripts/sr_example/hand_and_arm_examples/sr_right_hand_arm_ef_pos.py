@@ -94,7 +94,7 @@ pose_msg_1.header.frame_id = 'ra_base'
 pose_msg_1.header.stamp = rospy.get_rostime()
 
 pose_msg_1.pose.position.x = position[0]
-pose_msg_1.pose.position.y = position[1] + 0.1
+pose_msg_1.pose.position.y = position[1] - 0.1
 pose_msg_1.pose.position.z = position[2] + 0.1
 
 pose_msg_1.pose.orientation.x = orientation[0]
