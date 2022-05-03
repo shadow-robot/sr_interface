@@ -36,6 +36,9 @@
 from __future__ import absolute_import
 import rospy
 import sys
+import tf
+import copy
+import geometry_msgs.msg
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from sr_robot_commander.sr_arm_commander import SrArmCommander
@@ -47,6 +50,8 @@ rospy.init_node("right_hand_arm_ef_pos", anonymous=True)
 # take a name parameter that should match the group name of the robot to be used.
 # How to command the arm separately
 arm_commander = SrArmCommander(name="right_arm")
+arm_commander.set_planner_id("BiTRRT")
+arm_commander.set_pose_reference_frame("ra_base")
 # How to command the arm and hand together
 robot_commander = SrRobotCommander(name="right_arm_and_hand")
 arm_commander.set_max_velocity_scaling_factor(0.1)
@@ -55,11 +60,18 @@ rospy.sleep(2.0)
 
 arm_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
                         'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                        'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00}
+                        'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': -3.1416}
+
+hand_home_joints_goal = {'rh_THJ1': 0.52, 'rh_THJ2': 0.61, 'rh_THJ3': 0.0, 'rh_THJ4': 1.20,
+                         'rh_THJ5': 0.17, 'rh_FFJ1': 1.5707, 'rh_FFJ2': 1.5707, 'rh_FFJ3': 1.5707,
+                         'rh_FFJ4': 0.0, 'rh_MFJ1': 1.5707, 'rh_MFJ2': 1.5707, 'rh_MFJ3': 1.5707,
+                         'rh_MFJ4': 0.0, 'rh_RFJ1': 1.5707, 'rh_RFJ2': 1.5707, 'rh_RFJ3': 1.5707,
+                         'rh_RFJ4': 0.0, 'rh_LFJ1': 1.5707, 'rh_LFJ2': 1.5707, 'rh_LFJ3': 1.5707,
+                         'rh_LFJ4': 0.0, 'rh_LFJ5': 0.0, 'rh_WRJ1': 0.0, 'rh_WRJ2': 0.0}
 
 arm_hand_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.00,
                              'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.733,
-                             'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': 0.00,
+                             'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': -3.1416,
                              'rh_THJ1': 0.52, 'rh_THJ2': 0.61, 'rh_THJ3': 0.0, 'rh_THJ4': 1.20,
                              'rh_THJ5': 0.17, 'rh_FFJ1': 1.5707, 'rh_FFJ2': 1.5707, 'rh_FFJ3': 1.5707,
                              'rh_FFJ4': 0.0, 'rh_MFJ1': 1.5707, 'rh_MFJ2': 1.5707, 'rh_MFJ3': 1.5707,
@@ -67,12 +79,35 @@ arm_hand_home_joints_goal = {'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.
                              'rh_RFJ4': 0.0, 'rh_LFJ1': 1.5707, 'rh_LFJ2': 1.5707, 'rh_LFJ3': 1.5707,
                              'rh_LFJ4': 0.0, 'rh_LFJ5': 0.0, 'rh_WRJ1': 0.0, 'rh_WRJ2': 0.0}
 
-example_goal_1 = [0.9, 0.16, 0.95, -0.99, 8.27, -0.0, 1.4]
+tf_listener = tf.TransformListener()
+rospy.sleep(0.2)
+pose_xyzw = []
+try:
+    (position, orientation) = tf_listener.lookupTransform('ra_base', 'ra_flange',
+                                                          tf_listener.getLatestCommonTime('ra_base',
+                                                                                          'ra_flange'))
+except Exception as e:
+    raise ValueError(str(e))
 
-example_goal_2 = [0.7, 0.16, 0.95, -0.99, 8.27, -0.0, 1.4]
+pose_msg_1 = geometry_msgs.msg.PoseStamped()
+pose_msg_1.header.frame_id = 'ra_base'
+pose_msg_1.header.stamp = rospy.get_rostime()
+
+pose_msg_1.pose.position.x = position[0]
+pose_msg_1.pose.position.y = position[1] - 0.1
+pose_msg_1.pose.position.z = position[2] + 0.1
+
+pose_msg_1.pose.orientation.x = orientation[0]
+pose_msg_1.pose.orientation.y = orientation[1]
+pose_msg_1.pose.orientation.z = orientation[2]
+pose_msg_1.pose.orientation.w = orientation[3]
+
+pose_msg_2 = copy.deepcopy(pose_msg_1)
+pose_msg_2.header.stamp = rospy.get_rostime()
+pose_msg_2.pose.position.y -= 0.1
+pose_msg_2.pose.position.z += 0.1
 
 # Evaluate the plan quality from starting position of robot.
-# https://github.com/shadow-robot/sr_interface/blob/melodic-devel/sr_robot_commander/src/sr_robot_commander/sr_robot_commander.py#L263-L310
 # This is to confirm that the arm is in a safe place to move to the home joints goal,
 # if the outcome is poor please refer to the readthedocs of where the start arm home position is.
 arm_to_home_plan = arm_commander.plan_to_joint_value_target(arm_home_joints_goal)
@@ -89,23 +124,33 @@ if eval_arm_home_plan_quality != 'good':
 # Execute arm to home plan
 rospy.loginfo("Planning and moving arm to home joint states\n" + str(arm_home_joints_goal) + "\n")
 arm_commander.execute_plan(arm_to_home_plan)
+rospy.loginfo("Moving hand to home joint states\n" + str(hand_home_joints_goal) + "\n")
+robot_commander.move_to_joint_value_target_unsafe(hand_home_joints_goal, 4.0, True)
 rospy.sleep(2.0)
 
 # The arm commander generates a plan to a new pose before the pose is executed.
-# https://github.com/shadow-robot/sr_interface/blob/melodic-devel/sr_robot_commander/src/sr_robot_commander/sr_robot_commander.py#L668
+# This also includes a plan quality evaluation.
 input("Press Enter to continue...")
-rospy.loginfo("Planning the move to the first pose:\n" + str(example_goal_1) + "\n")
-arm_commander.plan_to_pose_target(example_goal_1)
-rospy.loginfo("Finished planning, moving the arm now.")
-# Can only execute if a plan has been generated.
-arm_commander.execute()
-rospy.sleep(2.0)
+ik_solution = arm_commander.get_ik(pose_msg_1, avoid_collisions=True)
+if ik_solution is not None:
+    ik_plan = arm_commander.plan_to_joint_value_target(ik_solution)
+    ik_plan_quality = arm_commander.evaluate_given_plan(ik_plan)
+    eval_ik_plan_quality = arm_commander.evaluate_plan_quality(ik_plan_quality)
+    if eval_ik_plan_quality != 'good':
+        rospy.logfatal("Plan quality to the ik solution is poor!")
+        sys.exit("Exiting script to allow for the arm to be manually moved to better start position ...")
+    # Execute plan
+    rospy.loginfo("Moving arm to pose:\n" + str(pose_msg_1) + "\n")
+    arm_commander.execute_plan(ik_plan)
+    rospy.sleep(2.0)
+else:
+    rospy.logerr("IK solution was None!")
+    sys.exit("Exiting script as IK solution was None...")
 
-# Here a pose is provided and the arm commander moves the arm to it
-# https://github.com/shadow-robot/sr_interface/blob/melodic-devel/sr_robot_commander/src/sr_robot_commander/sr_robot_commander.py#L655
+# Here a pose is provided and the arm commander moves the arm to it.
 input("Press Enter to continue...")
-rospy.loginfo("Moving arm to pose:\n" + str(example_goal_2) + "\n")
-arm_commander.move_to_pose_target(example_goal_2, wait=True)
+rospy.loginfo("Moving arm to pose:\n" + str(pose_msg_2) + "\n")
+arm_commander.move_to_pose_value_target_unsafe(pose_msg_2, time=2, avoid_collisions=True)
 rospy.sleep(2.0)
 
 # Finish arm at home and hand at pack
