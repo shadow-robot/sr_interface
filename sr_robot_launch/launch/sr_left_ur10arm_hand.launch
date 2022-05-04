@@ -63,9 +63,9 @@
   <arg if="$(eval arg('hand_type') == 'hand_e')" name="hand_version" default="E3M5"/>
   <arg if="$(eval arg('hand_type') == 'hand_g')" name="hand_version" default="G1M5"/>
   <arg if="$(eval arg('hand_type') == 'hand_c')" name="hand_version" default="C6M2"/>
-  <!-- Use all available - allowed values are a list of th,ff,mf,rf,lf -->
+  <!-- Set to all allowed fingers by default but you can specify less using a list like this "th,ff,mf,rf,lf" -->
   <arg name="fingers" default="all"/>
-  <!-- Use pst on all - allowed values are a list of th=pst,ff=pst,mf=pst,rf=pst,lf=pst -->
+  <!-- Set to pst sensors by default but they can be specified by finger using a list like this "th=pst,ff=pst,mf=pst,rf=pst,lf=pst" -->
   <arg name="tip_sensors" default="pst"/>
   <arg name="mid_sensors" default="none"/>
   <arg name="prox_sensors" default="none"/>
