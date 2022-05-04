@@ -513,7 +513,7 @@ class TestSrRobotCommander(TestCase):
         pose.header.stamp = rospy.get_rostime()
         pose.pose = conversions.list_to_pose([0.71, 0.17, 0.34, 0, 0, 0, 1])
         joint_state_from_ik = self.robot_commander.get_ik(pose)
-        self.assertIsInstance(joint_state_from_ik, JointState)
+        self.assertIsInstance(joint_state_from_ik, dict)
 
     def test_move_to_joint_value_target_executed(self):
         self.reset_to_home()
