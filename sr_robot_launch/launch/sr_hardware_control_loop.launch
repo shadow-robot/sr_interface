@@ -73,7 +73,8 @@
   <arg unless="$(arg hand)" name="arm_payload_mass" default="0.0"/>
   <arg unless="$(arg hand)" name="arm_payload_cog" default="[0.0, 0.0, 0.0]"/>
 
-  <arg name="kinematics_config" default="$(find ur_description)/config/$(arg robot_model)/default_kinematics.yaml"/>
+  <arg name="kinematics_config" if="$(arg arm)" default="$(find ur_description)/config/$(arg robot_model)/default_kinematics.yaml"/>
+  <arg name="kinematics_config" unless="$(arg arm)" default=""/>
   <arg name="urcap_program_name" default="external_ctrl.urp"/>
 
   <node pkg="rosservice" type="rosservice" name="set_speed_scale" args="call --wait /$(arg arm_prefix)_sr_ur_robot_hw/set_speed_slider 'speed_slider_fraction: $(arg arm_speed_scale)'"/>
@@ -170,8 +171,8 @@
       - unique_robot_hw
   </rosparam>
 
-  <!-- These will be loaded if hand is false so UR10 with box will load instead. -->
-  <group unless="$(arg hand)">
+  <!-- These will be loaded if hand is false but arm is used so UR10 with box will load instead. -->
+  <group if="$(eval arg('arm') and not arg('hand'))">
     <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch">
       <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
     </include>
