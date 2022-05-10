@@ -59,11 +59,14 @@
   <arg name="home_angles" default="-J ra_shoulder_pan_joint 0.0 -J ra_elbow_joint 2.0 -J ra_wrist_1_joint -1 -J ra_wrist_2_joint 1.5708 -J ra_shoulder_lift_joint -1.25 -J ra_wrist_3_joint -2"/>
   <!-- Robot side -->
   <arg name="side" value="right"/>
-
   <arg name="hand_type" default="hand_e"/>
-  <arg name="hand_version" default="E3M5"/>
-  <arg name="fingers" default="th,ff,mf,rf,lf"/>
-  <arg name="tip_sensors" default="th=pst,ff=pst,mf=pst,rf=pst,lf=pst"/>
+  <arg if="$(eval arg('hand_type') == 'hand_e')" name="hand_version" default="E3M5"/>
+  <arg if="$(eval arg('hand_type') == 'hand_g')" name="hand_version" default="G1M5"/>
+  <arg if="$(eval arg('hand_type') == 'hand_c')" name="hand_version" default="C6M2"/>
+  <!-- Set to all allowed fingers by default but you can specify less using a list like this "th,ff,mf,rf,lf" -->
+  <arg name="fingers" default="all"/>
+  <!-- Set to pst sensors by default but they can be specified by finger using a list like this "th=pst,ff=pst,mf=pst,rf=pst,lf=pst" -->
+  <arg name="tip_sensors" default="pst"/>
   <arg name="mid_sensors" default="none"/>
   <arg name="prox_sensors" default="none"/>
   <arg name="palm_sensor" default="none"/>
