@@ -47,8 +47,6 @@ class TeachModeManager(object):
         except (rospy.exceptions.ROSException, IndexError):
             rospy.logwarn("No hand connected")
 
-        print(f"{hand_joint_names}")
-
         self.s = rospy.Service('teach_mode', RobotTeachMode, self.teach_mode)
 
         # ARM REMOVED BECAUSE CANNOT CHANGE CONTROL
