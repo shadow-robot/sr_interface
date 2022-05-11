@@ -18,7 +18,7 @@ from __future__ import absolute_import
 from controller_manager_msgs.srv import (ListControllers, LoadController,
                                          SwitchController, SwitchControllerRequest)
 import rospy
-from sr_utilities.hand_finder import HandFinder
+from sensor_msgs.msg import JointState
 from sr_controllers_tools.sr_controller_helper import ControllerHelper
 from sr_robot_msgs.msg import ControlType
 from sr_robot_msgs.srv import (ChangeControlType, RobotTeachMode,
@@ -28,18 +28,33 @@ from sr_robot_msgs.srv import (ChangeControlType, RobotTeachMode,
 class TeachModeManager(object):
 
     def __init__(self):
-        hand_joint_names = ["ffj0", "ffj3", "ffj4",
-                            "mfj0", "mfj3", "mfj4",
-                            "rfj0", "rfj3", "rfj4",
-                            "lfj0", "lfj3", "lfj4", "lfj5",
-                            "thj1", "thj2", "thj3", "thj4", "thj5",
-                            "wrj1", "wrj2"]
+        hand_joint_names = {
+            "rh_": [],
+            "lh_": []
+        }
+        try:
+            joint_states_msg = rospy.wait_for_message("/joint_states", JointState, timeout=1)
+            for prefix in hand_joint_names.keys():
+                for joint in joint_states_msg.name:
+                    if prefix in joint:
+                        if "_THJ" not in joint:
+                            if "J1" in joint:
+                                hand_joint_names[prefix].append(joint[len(prefix):-1].lower() + "0")
+                            elif "J2" not in joint:
+                                hand_joint_names[prefix].append(joint[len(prefix):].lower())
+                        else:
+                            hand_joint_names[prefix].append(joint[len(prefix):].lower())
+        except (rospy.exceptions.ROSException, IndexError):
+            rospy.logwarn("No hand connected")
+
+        print(f"{hand_joint_names}")
+
         self.s = rospy.Service('teach_mode', RobotTeachMode, self.teach_mode)
+
+        # ARM REMOVED BECAUSE CANNOT CHANGE CONTROL
         self.ctrl_helpers = {
-            "right_hand": ControllerHelper(["rh"], ["rh_"], hand_joint_names),
-            "left_hand": ControllerHelper(["lh"], ["lh_"], hand_joint_names),
-            "right_arm": ControllerHelper(["ra"], ["ra_"], hand_joint_names),
-            "left_arm": ControllerHelper(["la"], ["la_"], hand_joint_names)
+            "right_hand": ControllerHelper(["rh"], ["rh_"], hand_joint_names["rh_"]),
+            "left_hand": ControllerHelper(["lh"], ["lh_"], hand_joint_names["rh_"])
         }
 
         self.modes = ["TRAJECTORY_MODE", "TEACH_MODE", "POSITION_MODE", "DIRECT_PWM_MODE"]
