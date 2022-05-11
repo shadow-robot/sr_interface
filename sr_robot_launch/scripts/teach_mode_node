@@ -28,6 +28,19 @@ from sr_robot_msgs.srv import (ChangeControlType, RobotTeachMode,
 class TeachModeManager(object):
 
     def __init__(self):
+        hand_joint_names = self._create_hand_joints()
+
+        rospy.Service('teach_mode', RobotTeachMode, self.teach_mode)
+
+        # ARM REMOVED BECAUSE CANNOT CHANGE CONTROL
+        self.ctrl_helpers = {
+            "right_hand": ControllerHelper(["rh"], ["rh_"], hand_joint_names["rh_"]),
+            "left_hand": ControllerHelper(["lh"], ["lh_"], hand_joint_names["rh_"])
+        }
+
+        self.modes = ["TRAJECTORY_MODE", "TEACH_MODE", "POSITION_MODE", "DIRECT_PWM_MODE"]
+
+    def _create_hand_joints(self):
         hand_joint_names = {
             "rh_": [],
             "lh_": []
@@ -44,18 +57,11 @@ class TeachModeManager(object):
                                 hand_joint_names[prefix].append(joint[len(prefix):].lower())
                         else:
                             hand_joint_names[prefix].append(joint[len(prefix):].lower())
-        except (rospy.exceptions.ROSException, IndexError):
-            rospy.logwarn("No hand connected")
+        except Exception as error:
+            rospy.logerr(f"{error}")
+            raise Exception(f"{error}")
 
-        self.s = rospy.Service('teach_mode', RobotTeachMode, self.teach_mode)
-
-        # ARM REMOVED BECAUSE CANNOT CHANGE CONTROL
-        self.ctrl_helpers = {
-            "right_hand": ControllerHelper(["rh"], ["rh_"], hand_joint_names["rh_"]),
-            "left_hand": ControllerHelper(["lh"], ["lh_"], hand_joint_names["rh_"])
-        }
-
-        self.modes = ["TRAJECTORY_MODE", "TEACH_MODE", "POSITION_MODE", "DIRECT_PWM_MODE"]
+        return hand_joint_names
 
     def teach_mode(self, req):
         rospy.loginfo(
