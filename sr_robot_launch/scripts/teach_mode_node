@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2019 Shadow Robot Company Ltd.
+# Copyright 2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -35,7 +35,7 @@ class TeachModeManager(object):
         # ARM REMOVED BECAUSE CANNOT CHANGE CONTROL
         self.ctrl_helpers = {
             "right_hand": ControllerHelper(["rh"], ["rh_"], hand_joint_names["rh_"]),
-            "left_hand": ControllerHelper(["lh"], ["lh_"], hand_joint_names["rh_"])
+            "left_hand": ControllerHelper(["lh"], ["lh_"], hand_joint_names["lh_"])
         }
 
         self.modes = ["TRAJECTORY_MODE", "TEACH_MODE", "POSITION_MODE", "DIRECT_PWM_MODE"]
@@ -51,7 +51,6 @@ class TeachModeManager(object):
                 for joint in joint_states_msg.name:
                     if prefix in joint:
                         if "_THJ" not in joint and "_WRJ" not in joint:
-                            print(f"{joint}")
                             if "J1" in joint:
                                 hand_joint_names[prefix].append(joint[len(prefix):-1].lower() + "0")
                             elif "J2" not in joint:
