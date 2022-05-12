@@ -63,7 +63,7 @@ class TeachModeManager(object):
 
         if not any(hand_joint_names.values()):
             raise ValueError("No joint states have been found for a hand. " +
-                             "Please check your connections")
+                             "Please check the connections.")
 
         return hand_joint_names
 
