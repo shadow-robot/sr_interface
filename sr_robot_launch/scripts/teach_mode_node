@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2019 Shadow Robot Company Ltd.
+# Copyright 2019-2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -18,7 +18,7 @@ from __future__ import absolute_import
 from controller_manager_msgs.srv import (ListControllers, LoadController,
                                          SwitchController, SwitchControllerRequest)
 import rospy
-from sr_utilities.hand_finder import HandFinder
+from sensor_msgs.msg import JointState
 from sr_controllers_tools.sr_controller_helper import ControllerHelper
 from sr_robot_msgs.msg import ControlType
 from sr_robot_msgs.srv import (ChangeControlType, RobotTeachMode,
@@ -28,21 +28,44 @@ from sr_robot_msgs.srv import (ChangeControlType, RobotTeachMode,
 class TeachModeManager(object):
 
     def __init__(self):
-        hand_joint_names = ["ffj0", "ffj3", "ffj4",
-                            "mfj0", "mfj3", "mfj4",
-                            "rfj0", "rfj3", "rfj4",
-                            "lfj0", "lfj3", "lfj4", "lfj5",
-                            "thj1", "thj2", "thj3", "thj4", "thj5",
-                            "wrj1", "wrj2"]
-        self.s = rospy.Service('teach_mode', RobotTeachMode, self.teach_mode)
+        hand_joint_names = self._create_hand_joints()
+
+        rospy.Service('teach_mode', RobotTeachMode, self.teach_mode)
+
+        # ARM REMOVED BECAUSE CANNOT CHANGE CONTROL
         self.ctrl_helpers = {
-            "right_hand": ControllerHelper(["rh"], ["rh_"], hand_joint_names),
-            "left_hand": ControllerHelper(["lh"], ["lh_"], hand_joint_names),
-            "right_arm": ControllerHelper(["ra"], ["ra_"], hand_joint_names),
-            "left_arm": ControllerHelper(["la"], ["la_"], hand_joint_names)
+            "right_hand": ControllerHelper(["rh"], ["rh_"], hand_joint_names["rh_"]),
+            "left_hand": ControllerHelper(["lh"], ["lh_"], hand_joint_names["lh_"])
         }
 
         self.modes = ["TRAJECTORY_MODE", "TEACH_MODE", "POSITION_MODE", "DIRECT_PWM_MODE"]
+
+    def _create_hand_joints(self):
+        hand_joint_names = {
+            "rh_": [],
+            "lh_": []
+        }
+        try:
+            joint_states_msg = rospy.wait_for_message("/joint_states", JointState, timeout=1)
+            for prefix in hand_joint_names.keys():
+                for joint in joint_states_msg.name:
+                    if prefix in joint:
+                        if "_THJ" not in joint and "_WRJ" not in joint:
+                            if "J1" in joint:
+                                hand_joint_names[prefix].append(joint[len(prefix):-1].lower() + "0")
+                            elif "J2" not in joint:
+                                hand_joint_names[prefix].append(joint[len(prefix):].lower())
+                        else:
+                            hand_joint_names[prefix].append(joint[len(prefix):].lower())
+        except Exception as error:
+            rospy.logerr(f"{error}")
+            raise Exception(f"{error}")
+
+        if not any(hand_joint_names.values()):
+            raise ValueError("No joint states have been found for a hand. " +
+                             "Please check the connections.")
+
+        return hand_joint_names
 
     def teach_mode(self, req):
         rospy.loginfo(
