@@ -66,8 +66,6 @@ class TeachModeManager(object):
             raise ValueError("No joint states have been found for a hand. " +
                              "Please check your connections")
 
-        print(f"{hand_joint_names}")
-
         return hand_joint_names
 
     def teach_mode(self, req):
