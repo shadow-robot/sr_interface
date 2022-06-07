@@ -22,6 +22,7 @@ import argparse
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
 
+test="Test"
 
 def execute_trajectory(hand_commander, joint_states_no_id, joint_prefix, msg, time=5.0):
     joints_target = {}

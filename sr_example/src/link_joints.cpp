@@ -55,6 +55,7 @@ const char* controller_type = "_position_controller";
 ros::Subscriber sub;
 // a ros publisher (will be instantiated later on)
 ros::Publisher pub;
+/// Hello there general kenobi
 
 /**
 * The callback function is called each time a message is received on the

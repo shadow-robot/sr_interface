@@ -64,6 +64,8 @@
 
 using std::string;
 
+int alphabet = 5;
+
 static const char IK_SERVICE[] = "get_ik";
 static const char FK_SERVICE[] = "get_fk";
 

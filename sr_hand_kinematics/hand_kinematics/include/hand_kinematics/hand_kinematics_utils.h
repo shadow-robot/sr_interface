@@ -54,6 +54,8 @@
 #include <moveit_msgs/GetPositionIK.h>
 #include <moveit_msgs/KinematicSolverInfo.h>
 
+int meme = 2;
+
 namespace hand_kinematics
 {
   bool loadRobotModel(ros::NodeHandle node_handle,

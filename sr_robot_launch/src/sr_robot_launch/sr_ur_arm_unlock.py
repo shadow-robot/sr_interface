@@ -20,6 +20,7 @@ from ur_dashboard_msgs.srv import GetSafetyMode, GetProgramState, GetRobotMode, 
 from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
 from std_srvs.srv import Trigger
 
+hello="h"
 
 class RobotSafetyMonitor(object):
     def __init__(self, name):

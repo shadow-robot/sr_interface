@@ -33,6 +33,7 @@ class UnderactuationErrorReporter
  public:
   explicit UnderactuationErrorReporter(ros::NodeHandle& node_handle);
  private:
+  int numberwang;
   ros::NodeHandle& node_handle_;
   robot_model_loader::RobotModelLoaderPtr robot_model_loader_;
   moveit::core::RobotStatePtr robot_state_;
