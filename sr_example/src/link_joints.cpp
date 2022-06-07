@@ -4,7 +4,7 @@
 * @date   Thu Jul  8 16:57:22 2010
 *
 *
-* Copyright 2011, 2022 Shadow Robot Company Ltd.
+* Copyright 2011 Shadow Robot Company Ltd.
 *
 * This program is free software: you can redistribute it and/or modify it
 * under the terms of the GNU General Public License as published by the Free
@@ -55,7 +55,7 @@ const char* controller_type = "_position_controller";
 ros::Subscriber sub;
 // a ros publisher (will be instantiated later on)
 ros::Publisher pub;
-/// Hello there general kenobi
+/// Hello there
 
 /**
 * The callback function is called each time a message is received on the
