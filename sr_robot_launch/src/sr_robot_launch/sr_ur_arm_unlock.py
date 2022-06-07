@@ -18,7 +18,6 @@ import rospy
 from std_msgs.msg import Bool
 from ur_dashboard_msgs.srv import GetSafetyMode, GetProgramState, GetRobotMode, Load, IsProgramRunning
 from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
-from std_srvs.srv import Trigger
 
 hello="h"
 

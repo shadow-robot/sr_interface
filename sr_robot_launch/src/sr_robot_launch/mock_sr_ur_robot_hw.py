@@ -28,8 +28,7 @@ from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
 from std_srvs.srv import Trigger, TriggerResponse
 
 
-class IllegalArgumentError(ValueError):
-    pass
+
 
 
 class ArmState(object):
