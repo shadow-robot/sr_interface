@@ -93,6 +93,7 @@
         <arg name="arm_speed_scale" value="$(arg arm_speed_scale)"/>
         <arg name="arm_payload_mass" value="$(arg arm_payload_mass)"/>
         <arg name="arm_payload_cog" value="$(arg arm_payload_cog)"/>
+        <arg name="arm" value="true"/>
         <arg name="hand" default="false"/>
         <arg name="robot_state_pub_frequency" value="$(arg robot_state_pub_frequency)"/>
         <arg name="joint_state_pub_frequency" value="$(arg joint_state_pub_frequency)"/>
@@ -105,6 +106,7 @@
         <param name="package_name" value="sr_multi_moveit_config" />
         <param name="executable_name" value="scene.launch" />
         <rosparam param="params_list">[/robot_description, /robot_description_semantic]</rosparam>
+        <!-- <rosparam param="topics_list">[/planning_scene, /rviz_*]</rosparam> -->
         <param name="launch_args_list" value="scene_file:=$(arg scene_file)" />
         <param name="timeout" value="20.0" />
       </node>
