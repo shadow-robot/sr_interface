@@ -28,6 +28,8 @@ from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
 import sys
 
 
+beans = 2
+
 class CommonTests:
     def arm_setup(self, side):
         self.press_pedal()
