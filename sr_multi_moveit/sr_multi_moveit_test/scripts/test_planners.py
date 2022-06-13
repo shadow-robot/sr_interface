@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2019 Shadow Robot Company Ltd.
+# Copyright 2019, 2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -16,20 +16,18 @@
 
 # A script to test planners, to be run on the command line with group name as the argument (left_arm or right_arm)
 
-from __future__ import absolute_import
-import rospy
-import sys
-import numpy
-from moveit_commander import RobotCommander, PlanningSceneInterface, MoveGroupCommander
-from moveit_msgs.msg import RobotState
-import geometry_msgs.msg
 import copy
 import time
 import argparse
-import rosgraph
+import sys
+import numpy
+import rospy
+from moveit_commander import RobotCommander, PlanningSceneInterface, MoveGroupCommander
+from moveit_msgs.msg import RobotState
+import geometry_msgs.msg
 
 
-class TestPlanners(object):
+class TestPlanners:
     def __init__(self, group_id, planner):
 
         rospy.init_node('moveit_test_planners', anonymous=True)
@@ -55,53 +53,50 @@ class TestPlanners(object):
 
     def _add_walls_and_ground(self):
         # publish a scene
-        p = geometry_msgs.msg.PoseStamped()
-        p.header.frame_id = self.robot.get_planning_frame()
+        pose = geometry_msgs.msg.PoseStamped()
+        pose.header.frame_id = self.robot.get_planning_frame()
 
-        p.pose.position.x = 0
-        p.pose.position.y = 0
+        pose.pose.position.x = 0
+        pose.pose.position.y = 0
         # offset such that the box is below ground (to prevent collision with
         # the robot itself)
-        p.pose.position.z = -0.11
-        p.pose.orientation.x = 0
-        p.pose.orientation.y = 0
-        p.pose.orientation.z = 0
-        p.pose.orientation.w = 1
-        self.scene.add_box("ground", p, (3, 3, 0.1))
+        pose.pose.position.z = -0.11
+        pose.pose.orientation.x = 0
+        pose.pose.orientation.y = 0
+        pose.pose.orientation.z = 0
+        pose.pose.orientation.w = 1
+        self.scene.add_box("ground", pose, (3, 3, 0.1))
 
-        p.pose.position.x = 0.4
-        p.pose.position.y = 0.85
-        p.pose.position.z = 0.4
-        p.pose.orientation.x = 0.5
-        p.pose.orientation.y = -0.5
-        p.pose.orientation.z = 0.5
-        p.pose.orientation.w = 0.5
-        self.scene.add_box("wall_front", p, (0.8, 2, 0.01))
+        pose.pose.position.x = 0.4
+        pose.pose.position.y = 0.85
+        pose.pose.position.z = 0.4
+        pose.pose.orientation.x = 0.5
+        pose.pose.orientation.y = -0.5
+        pose.pose.orientation.z = 0.5
+        pose.pose.orientation.w = 0.5
+        self.scene.add_box("wall_front", pose, (0.8, 2, 0.01))
 
-        p.pose.position.x = 1.33
-        p.pose.position.y = 0.4
-        p.pose.position.z = 0.4
-        p.pose.orientation.x = 0.0
-        p.pose.orientation.y = -0.707388
-        p.pose.orientation.z = 0.0
-        p.pose.orientation.w = 0.706825
-        self.scene.add_box("wall_right", p, (0.8, 2, 0.01))
+        pose.pose.position.x = 1.33
+        pose.pose.position.y = 0.4
+        pose.pose.position.z = 0.4
+        pose.pose.orientation.x = 0.0
+        pose.pose.orientation.y = -0.707388
+        pose.pose.orientation.z = 0.0
+        pose.pose.orientation.w = 0.706825
+        self.scene.add_box("wall_right", pose, (0.8, 2, 0.01))
 
-        p.pose.position.x = -0.5
-        p.pose.position.y = 0.4
-        p.pose.position.z = 0.4
-        p.pose.orientation.x = 0.0
-        p.pose.orientation.y = -0.707107
-        p.pose.orientation.z = 0.0
-        p.pose.orientation.w = 0.707107
-        self.scene.add_box("wall_left", p, (0.8, 2, 0.01))
+        pose.pose.position.x = -0.5
+        pose.pose.position.y = 0.4
+        pose.pose.position.z = 0.4
+        pose.pose.orientation.x = 0.0
+        pose.pose.orientation.y = -0.707107
+        pose.pose.orientation.z = 0.0
+        pose.pose.orientation.w = 0.707107
+        self.scene.add_box("wall_left", pose, (0.8, 2, 0.01))
         # rospy.sleep(1)
 
-    def _check_plan(self, plan):
-        if len(plan.joint_trajectory.points) > 0:
-            return True
-        else:
-            return False
+    def _check_plan(self, plan):  # pylint: disable=R0201
+        return len(plan.joint_trajectory.points) > 0
 
     def _plan_joints(self, joints):
         self.group.clear_pose_targets()

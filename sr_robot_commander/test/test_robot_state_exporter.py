@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2018-2021 Shadow Robot Company Ltd.
+# Copyright 2018-2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -14,14 +14,12 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
-import rospy
 import sys
 import os
 import shutil
-from sr_robot_commander.sr_robot_state_exporter import SrRobotStateExporter
 from unittest import TestCase
-from std_srvs.srv import SetBool
+import rospy
+from sr_robot_commander.sr_robot_state_exporter import SrRobotStateExporter
 
 PKG = "sr_robot_commander"
 

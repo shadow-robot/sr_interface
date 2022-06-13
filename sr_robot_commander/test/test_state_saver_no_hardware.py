@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2018 Shadow Robot Company Ltd.
+# Copyright 2018, 2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -14,11 +14,9 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
+from unittest import TestCase
 import rospy
 from sr_robot_commander.sr_robot_state_saver import SrStateSaverUnsafe
-
-from unittest import TestCase
 
 PKG = "sr_robot_commander"
 
@@ -36,10 +34,10 @@ class TestSrStateSaverExceptions(TestCase):
         exception_string = ''
 
         try:
-            state_saver = SrStateSaverUnsafe('')
-        except Exception as e:
+            SrStateSaverUnsafe('')
+        except Exception as exception:
             exception_raised = True
-            exception_string = str(e)
+            exception_string = str(exception)
 
         self.assertTrue(exception_raised)
         self.assertEqual(exception_string, "Cannot save with empty name.")
@@ -49,10 +47,10 @@ class TestSrStateSaverExceptions(TestCase):
         exception_string = ''
 
         try:
-            state_saver = SrStateSaverUnsafe("test_name", "hand")
-        except Exception as e:
+            SrStateSaverUnsafe("test_name", "hand")
+        except Exception as exception:
             exception_raised = True
-            exception_string = str(e)
+            exception_string = str(exception)
 
         self.assertTrue(exception_raised)
         self.assertEqual(exception_string, "Unable to construct robot model. Please make"
@@ -63,10 +61,10 @@ class TestSrStateSaverExceptions(TestCase):
         exception_string = ''
 
         try:
-            state_saver = SrStateSaverUnsafe("test_name", "arm")
-        except Exception as e:
+            SrStateSaverUnsafe("test_name", "arm")
+        except Exception as exception:
             exception_raised = True
-            exception_string = str(e)
+            exception_string = str(exception)
 
         self.assertTrue(exception_raised)
         self.assertEqual(exception_string, "Group right_arm not found.")
@@ -76,10 +74,10 @@ class TestSrStateSaverExceptions(TestCase):
         exception_string = ''
 
         try:
-            state_saver = SrStateSaverUnsafe("test_name", "both")
-        except Exception as e:
+            SrStateSaverUnsafe("test_name", "both")
+        except Exception as exception:
             exception_raised = True
-            exception_string = str(e)
+            exception_string = str(exception)
 
         self.assertTrue(exception_raised)
         self.assertEqual(exception_string, "Unable to construct robot model. Please make"

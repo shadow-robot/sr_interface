@@ -14,11 +14,10 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
-import rospy
-from sr_robot_commander.sr_hand_commander import SrHandCommander
-from sr_utilities.hand_finder import HandFinder
 from unittest import TestCase
+import rospy
+from sr_utilities.hand_finder import HandFinder
+from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 PKG = "sr_robot_commander"
 
@@ -32,6 +31,7 @@ class TestSrHandCommander(TestCase):
         rospy.init_node('test_hand_commander', anonymous=True)
 
     def test_strip_prefix(self):
+        # pylint: disable=W0212
         hand_commander = SrHandCommander()
 
         self.assertEqual(hand_commander._strip_prefix("rh_ffj3"), "ffj3", msg="Strip failed")

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2021 Shadow Robot Company Ltd.
+# Copyright 2021-2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -14,32 +14,25 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+# Disable protected variables from being called out as this is a test class.
+# pylint: disable=W0212
 
-from __future__ import absolute_import
-
-import collections
+from unittest import TestCase
 from builtins import round
 import copy
+import numpy as np
+import tf
 import rospy
 import rostest
-from unittest import TestCase
-from sr_robot_commander.sr_robot_commander import SrRobotCommander, MoveGroupCommander, PlanningSceneInterface
 from geometry_msgs.msg import Pose, PoseStamped
-from control_msgs.msg import FollowJointTrajectoryActionGoal
 from moveit_msgs.msg import RobotState, RobotTrajectory
-from moveit_msgs.srv import GetPositionFK, SaveRobotStateToWarehouse
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
-from std_msgs.msg import Header
 from sensor_msgs.msg import JointState
 from moveit_commander.exception import MoveItCommanderException
 from moveit_commander import conversions
 from actionlib_msgs.msg import GoalStatusArray
-import tf2_ros
-import time
-import numpy as np
-from math import fmod
-import tf
 from rosgraph_msgs.msg import Clock
+from sr_robot_commander.sr_robot_commander import SrRobotCommander
 
 # Some of the test cases do not have an assert method. In case of these methods the test verifies if
 # the API of moveit_commander changed - i.e. change of methods name, number of arguments, return type
@@ -116,35 +109,6 @@ class TestSrRobotCommander(TestCase):
         pose_msg.pose.orientation.z = quaternion[2]
         pose_msg.pose.orientation.w = quaternion[3]
         return pose_msg
-
-    def compare_position(self, initial_position, desired_position, tolerance):
-        initial_position_list = [initial_position.x, initial_position.y, initial_position.z]
-        desired_position_list = [desired_position.x, desired_position.y, desired_position.z]
-
-        for coordinate_1, coordinate_2 in zip(initial_position_list, desired_position_list):
-            delta_position = abs(coordinate_1 - coordinate_2)
-            if round(delta_position, 2) >= tolerance:
-                return False
-        return True
-
-    def compare_orientation(self, initial_orientation, desired_orientation, tolerance):
-        initial_euler = tf.transformations.euler_from_quaternion([initial_orientation.x, initial_orientation.y,
-                                                                  initial_orientation.z, initial_orientation.w])
-        desired_euler = tf.transformations.euler_from_quaternion([desired_orientation.x, desired_orientation.y,
-                                                                  desired_orientation.z, desired_orientation.w])
-        euler_delta_roll = abs(desired_euler[0] - initial_euler[0])
-        euler_delta_pitch = abs(desired_euler[1] - initial_euler[1])
-        euler_delta_yaw = abs(desired_euler[2] - initial_euler[2])
-
-        if (euler_delta_roll > tolerance and euler_delta_pitch > tolerance and euler_delta_yaw > tolerance):
-            return False
-        return True
-
-    def compare_poses(self, pose1, pose2, position_threshold=0.02, orientation_threshold=0.04):
-        if (self.compare_position(pose1.position, pose2.position, position_threshold) and
-           self.compare_orientation(pose1.orientation, pose2.orientation, orientation_threshold)):
-            return True
-        return False
 
     def test_get_and_set_planner_id(self):
         prev_planner_id = self.robot_commander._move_group_commander.get_planner_id()
@@ -360,7 +324,7 @@ class TestSrRobotCommander(TestCase):
             for key, value in CONST_RA_HOME_ANGLES .items():
                 robot_state.joint_state.name.append(key)
                 robot_state.joint_state.position.append(value)
-            plan = self.robot_commander.plan_to_named_target(target_names[0], robot_state)
+            self.robot_commander.plan_to_named_target(target_names[0], robot_state)
         self.assertIsInstance(self.robot_commander._SrRobotCommander__plan, RobotTrajectory)
 
     def test_plan_to_named_target_target_not_exists(self):
@@ -505,7 +469,7 @@ class TestSrRobotCommander(TestCase):
         waypoints.append(conversions.list_to_pose([0.71, 0.15, 0.34, 0, 0, 0, 1]))
         waypoints.append(conversions.list_to_pose([0.69, 0.15, 0.34, 0, 0, 0, 1]))
         waypoints.append(conversions.list_to_pose([0.71, 0.17, 0.34, 0, 0, 0, 1]))
-        (plan, f) = self.robot_commander.plan_to_waypoints_target(waypoints)
+        (plan, _) = self.robot_commander.plan_to_waypoints_target(waypoints)
         self.assertIsInstance(plan, RobotTrajectory)
 
     def test_get_ik(self):
@@ -536,7 +500,7 @@ class TestSrRobotCommander(TestCase):
             tries += 1
             self.robot_commander.move_to_pose_target(desired_pose_rpy, self.eef, wait=True)
             current_pose = self.robot_commander.get_current_pose()
-            is_pose_reached = self.compare_poses(current_pose, desired_pose_msg.pose)
+            is_pose_reached = compare_poses(current_pose, desired_pose_msg.pose)
         self.assertTrue(is_pose_reached)
 
     def test_move_to_pose_target_unsafe(self):
@@ -549,7 +513,7 @@ class TestSrRobotCommander(TestCase):
             tries += 1
             self.robot_commander.move_to_pose_value_target_unsafe(desired_pose_msg, wait=True)
             current_pose = self.robot_commander.get_current_pose()
-            is_pose_reached = self.compare_poses(current_pose, desired_pose_msg.pose)
+            is_pose_reached = compare_poses(current_pose, desired_pose_msg.pose)
         self.assertTrue(is_pose_reached)
 
     def test_move_to_position_target(self):
@@ -564,7 +528,7 @@ class TestSrRobotCommander(TestCase):
             rospy.loginfo("test_move_to_position_target {}".format(tries))
             self.robot_commander.move_to_position_target(xyz, self.eef, wait=True)
             current_pose = self.robot_commander.get_current_pose()
-            is_position_reached = self.compare_poses(current_pose, desired_pose_msg.pose)
+            is_position_reached = compare_poses(current_pose, desired_pose_msg.pose)
         self.assertTrue(is_position_reached)
 
     def test_plan_to_position_target(self):
@@ -595,6 +559,34 @@ class TestSrRobotCommander(TestCase):
     # no working teach mode so far
     # def test_set_teach_mode(self):
 
+def compare_position(initial_position, desired_position, tolerance):
+    initial_position_list = [initial_position.x, initial_position.y, initial_position.z]
+    desired_position_list = [desired_position.x, desired_position.y, desired_position.z]
+
+    for coordinate_1, coordinate_2 in zip(initial_position_list, desired_position_list):
+        delta_position = abs(coordinate_1 - coordinate_2)
+        if round(delta_position, 2) >= tolerance:
+            return False
+    return True
+
+def compare_orientation(initial_orientation, desired_orientation, tolerance):
+    initial_euler = tf.transformations.euler_from_quaternion([initial_orientation.x, initial_orientation.y,
+                                                                initial_orientation.z, initial_orientation.w])
+    desired_euler = tf.transformations.euler_from_quaternion([desired_orientation.x, desired_orientation.y,
+                                                                desired_orientation.z, desired_orientation.w])
+    euler_delta_roll = abs(desired_euler[0] - initial_euler[0])
+    euler_delta_pitch = abs(desired_euler[1] - initial_euler[1])
+    euler_delta_yaw = abs(desired_euler[2] - initial_euler[2])
+
+    if (euler_delta_roll > tolerance and euler_delta_pitch > tolerance and euler_delta_yaw > tolerance):
+        return False
+    return True
+
+def compare_poses(pose1, pose2, position_threshold=0.02, orientation_threshold=0.04):
+    if (compare_position(pose1.position, pose2.position, position_threshold) and
+        compare_orientation(pose1.orientation, pose2.orientation, orientation_threshold)):
+        return True
+    return False
 
 if __name__ == "__main__":
     rospy.init_node('test_sr_robot_commander', anonymous=True)

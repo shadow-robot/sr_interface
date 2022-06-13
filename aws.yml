@@ -9,7 +9,7 @@ settings:
     tag: focal-noetic
   template_project_name: template_unit_tests_and_code_coverage
   toolset:
-    branch: master
+    branch: lint
     modules:
       - check_cache
       - code_coverage
@@ -42,7 +42,7 @@ trunks:
             image: shadowrobot/build-tools
             tag: bionic-melodic
           toolset:
-            branch: master
+            branch: legacy
             modules:
               - code_style_check
               - check_license
@@ -57,7 +57,7 @@ trunks:
             image: shadowrobot/build-tools
             tag: bionic-melodic
           toolset:
-            branch: master
+            branch: legacy
             modules:
               - code_style_check
               - check_license
@@ -72,6 +72,6 @@ trunks:
             image: shadowrobot/build-tools
             tag: bionic-melodic
           toolset:
-            branch: master
+            branch: legacy
             modules:
               - check_install
