@@ -31,7 +31,7 @@ from std_msgs.msg import Header
 import geometry_msgs.msg
 
 
-class WarehousePlanner(object):
+class WarehousePlanner:
     def __init__(self):
         rospy.init_node('moveit_warehouse_planner', anonymous=True)
         self.scene = PlanningSceneInterface()
@@ -106,25 +106,25 @@ class WarehousePlanner(object):
         return waypoints
 
     def _add_ground(self):
-        p = geometry_msgs.msg.PoseStamped()
-        p.header.frame_id = self.robot.get_planning_frame()
+        pose = geometry_msgs.msg.PoseStamped()
+        pose.header.frame_id = self.robot.get_planning_frame()
 
-        p.pose.position.x = 0
-        p.pose.position.y = 0
+        pose.pose.position.x = 0
+        pose.pose.position.y = 0
         # offset such that the box is below the dome
-        p.pose.position.z = -0.11
-        p.pose.orientation.x = 0
-        p.pose.orientation.y = 0
-        p.pose.orientation.z = 0
-        p.pose.orientation.w = 1
-        self.scene.add_box("ground", p, (3, 3, 0.01))
+        pose.pose.position.z = -0.11
+        pose.pose.orientation.x = 0
+        pose.pose.orientation.y = 0
+        pose.pose.orientation.z = 0
+        pose.pose.orientation.w = 1
+        self.scene.add_box("ground", pose, (3, 3, 0.01))
         rospy.sleep(1)
 
     def plan_from_filter(self, prefix):
         waypoint_names = self.get_waypoint_names_by_prefix(prefix)
         waypoint_names.sort()
 
-        if 0 == len(waypoint_names):
+        if len(waypoint_names) == 0:
             rospy.logerr("No waypoints found for robot %s with prefix %s. " +
                          "Can't make trajectory :(",
                          self._robot_name, str(prefix))

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2015 Shadow Robot Company Ltd.
+# Copyright 2015, 2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -14,14 +14,11 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
 import rospy
-
-from sr_robot_commander.sr_robot_commander import SrRobotCommander, SrRobotCommanderException
 from sr_robot_msgs.srv import ForceController
 from sr_hand.tactile_receiver import TactileReceiver
 from sr_utilities.hand_finder import HandFinder
-from sys import exit
+from sr_robot_commander.sr_robot_commander import SrRobotCommander, SrRobotCommanderException
 
 
 class SrHandCommander(SrRobotCommander):
@@ -73,7 +70,7 @@ class SrHandCommander(SrRobotCommander):
             if prefix is None:
                 prefix = "rh_"
 
-        super(SrHandCommander, self).__init__(name)
+        super().__init__(name)
 
         if not self._hand_h:
             self._tactiles = TactileReceiver(prefix)
@@ -117,9 +114,9 @@ class SrHandCommander(SrRobotCommander):
         try:
             motor_settings = rospy.get_param(self._topic_prefix +
                                              joint_name.lower() + "/pid")
-        except KeyError as e:
+        except KeyError as exception:
             rospy.logerr("Couldn't get the motor parameters for joint " +
-                         joint_name + " -> " + str(e))
+                         joint_name + " -> " + str(exception))
 
         motor_settings["torque_limit"] = value
 
@@ -137,9 +134,9 @@ class SrHandCommander(SrRobotCommander):
                                              motor_settings["sign"],
                                              motor_settings["torque_limit"],
                                              motor_settings["torque_limiter_gain"])
-        except rospy.ServiceException as e:
+        except rospy.ServiceException as exception:
             rospy.logerr("Couldn't set the max force for joint " +
-                         joint_name + ": " + str(e))
+                         joint_name + ": " + str(exception))
 
     def get_tactile_type(self):
         """
@@ -155,7 +152,7 @@ class SrHandCommander(SrRobotCommander):
         """
         return self._tactiles.get_tactile_state()
 
-    def _strip_prefix(self, joint_name):
+    def _strip_prefix(self, joint_name):  # pylint: disable=R0201
         """
         Strips the prefix from the joint name (e.g. rh_ffj3 -> ffj3) if present, returns the joint name otherwise.
 

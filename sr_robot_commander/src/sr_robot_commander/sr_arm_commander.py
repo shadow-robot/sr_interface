@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright 2019 Shadow Robot Company Ltd.
+# Copyright 2019, 2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -13,12 +13,10 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
-from sr_robot_commander.sr_robot_commander import SrRobotCommander
-from geometry_msgs.msg import PoseStamped, Pose
+from geometry_msgs.msg import PoseStamped
 from rospy import get_rostime
 import rospy
-from tf import TransformerROS
+from sr_robot_commander.sr_robot_commander import SrRobotCommander
 
 
 class SrArmCommander(SrRobotCommander):
@@ -33,11 +31,11 @@ class SrArmCommander(SrRobotCommander):
         @param set_ground - sets the ground plane in moveit for planning
         """
         try:
-            super(SrArmCommander, self).__init__(name)
-        except Exception as e:
+            super().__init__(name)
+        except Exception as exception:
             # TODO(@dg-shadow): Raise SrRobotCommanderException here. Not doing
             # now as no time to check for and repair unforseen consequences.
-            rospy.logerr("Couldn't initialise robot commander - is there an arm running?: " + str(e))
+            rospy.logerr(f"Couldn't initialise robot commander - is there an arm running?: {str(exception)}")
             self._move_group_commander = None
             return
 

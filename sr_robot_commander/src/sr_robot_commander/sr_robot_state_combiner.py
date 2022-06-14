@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright 2019 Shadow Robot Company Ltd.
+# Copyright 2019, 2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -13,14 +13,13 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
 import rospy
 from moveit_msgs.srv import SaveRobotStateToWarehouse as SaveState
 from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
 from moveit_msgs.srv import GetRobotStateFromWarehouseResponse as GetStateResp
 
 
-class SrRobotStateCombiner(object):
+class SrRobotStateCombiner:
 
     _arm_joints = ['shoulder_pan_joint', 'elbow_joint', 'shoulder_lift_joint',
                    'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint', 'WRJ2', 'WRJ1']
@@ -46,10 +45,10 @@ class SrRobotStateCombiner(object):
         """
         name = []
         position = []
-        for n, pos in zip(state.state.joint_state.name, state.state.joint_state.position):
-            if (remove_arm and all(s not in n for s in self._arm_joints)) \
-                    or (not remove_arm and any(s in n for s in self._arm_joints)):
-                name.append(n)
+        for name, pos in zip(state.state.joint_state.name, state.state.joint_state.position):
+            if (remove_arm and all(s not in name for s in self._arm_joints)) \
+                    or (not remove_arm and any(s in name for s in self._arm_joints)):
+                name.append(name)
                 position.append(pos)
         state.state.joint_state.name = name
         state.state.joint_state.position = position

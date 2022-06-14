@@ -1,4 +1,4 @@
-# Copyright 2019 Shadow Robot Company Ltd.
+# Copyright 2019, 2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -12,10 +12,9 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
-import rospy
 import pprint
 from copy import deepcopy
+import rospy
 
 from moveit_msgs.srv import CheckIfRobotStateExistsInWarehouse as HasState
 from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
@@ -24,8 +23,10 @@ from moveit_msgs.srv import ListRobotStatesInWarehouse as ListState
 from moveit_msgs.msg import RobotState
 
 
-class SrRobotStateExporter(object):
-    def __init__(self, start_dictionary={}):
+class SrRobotStateExporter:
+    def __init__(self, start_dictionary=None):
+        if not start_dictionary:
+            start_dictionary = {}
         self._get_state = rospy.ServiceProxy("/get_robot_state", GetState)
         self._has_state = rospy.ServiceProxy("/has_robot_state", HasState)
         self._list_states = rospy.ServiceProxy("/list_robot_states", ListState)
@@ -55,9 +56,9 @@ class SrRobotStateExporter(object):
             self.extract_one_state(state)
 
     def output_module(self, file_name):
-        pp = pprint.PrettyPrinter()
+        prettyprint = pprint.PrettyPrinter()
         with open(file_name, "w") as output:
-            output.write('warehouse_states = %s\n' % pp.pformat(self._dictionary))
+            output.write(f'warehouse_states = {prettyprint.pformat(self._dictionary)}\n')
 
     def convert_trajectory(self, named_trajectory):
         new_trajectory = []
@@ -68,14 +69,14 @@ class SrRobotStateExporter(object):
                     new_entry['joint_angles'] = self._dictionary[new_entry['name']]
                     new_entry.pop('name')
                 else:
-                    rospy.logwarn("Entry named %s not present in dictionary. Not replacing." % name)
+                    rospy.logwarn(f"Entry named {new_entry['name']} not present in dictionary. Not replacing.")
             new_trajectory.append(new_entry)
         return new_trajectory
 
     def repopulate_warehouse(self):
         for name in self._dictionary:
             if self._has_state(name, '').exists:
-                rospy.logwarn("State named %s already in warehouse, not re-adding." % name)
+                rospy.logwarn(f"State named {name} already in warehouse, not re-adding.")
             else:
                 state = RobotState()
                 state.joint_state.name = self._dictionary[name].keys()
