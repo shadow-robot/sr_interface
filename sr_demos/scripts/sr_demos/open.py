@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2021 Shadow Robot Company Ltd.
+# Copyright 2021-2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -16,11 +16,9 @@
 
 # Script to move a shadow hand into open position.
 
-from __future__ import absolute_import
-import rospy
 import argparse
+import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
-from sr_utilities.hand_finder import HandFinder
 
 
 def execute_trajectory(hand_commander, joint_states_no_id, joint_prefix, msg, time=5.0):
@@ -53,20 +51,20 @@ if __name__ == "__main__":
     args = parser.parse_args(rospy.myargv()[1:])
 
     if args.side == 'right':
-        joint_prefix = 'rh_'
+        joint_prefix_main = 'rh_'
     elif args.side == 'left':
-        joint_prefix = 'lh_'
+        joint_prefix_main = 'lh_'
     else:
-        joint_prefix = 'both'
+        joint_prefix_main = 'both'
 
-    if 'rh_' == joint_prefix:
+    if joint_prefix_main == 'rh_':
         hand_name = 'right_hand'
-    elif 'lh_' == joint_prefix:
+    elif joint_prefix_main == 'lh_':
         hand_name = 'left_hand'
     else:
         hand_name = 'two_hands'
 
-    hand_commander = SrHandCommander(name=hand_name)
+    hand_commander_class = SrHandCommander(name=hand_name)
 
     open_hand_no_id = {'FFJ1': 0.0, 'FFJ2': 0.0, 'FFJ3': 0.0, 'FFJ4': 0.0,
                        'MFJ1': 0.0, 'MFJ2': 0.0, 'MFJ3': 0.0, 'MFJ4': 0.0,
@@ -75,4 +73,4 @@ if __name__ == "__main__":
                        'THJ1': 0.0, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 0.0, 'THJ5': 0.0,
                        'WRJ1': 0.0, 'WRJ2': 0.0}
 
-    execute_trajectory(hand_commander, open_hand_no_id, joint_prefix, "Moving to open position")
+    execute_trajectory(hand_commander_class, open_hand_no_id, joint_prefix_main, "Moving to open position")
