@@ -46,7 +46,7 @@ class TeachModeManager(object):
             "lh_": []
         }
         try:
-            joint_states_msg = rospy.wait_for_message("/joint_states", JointState, timeout=180)
+            joint_states_msg = rospy.wait_for_message("/joint_states", JointState, timeout=10)
             for prefix in hand_joint_names.keys():
                 for joint in joint_states_msg.name:
                     if prefix in joint:
