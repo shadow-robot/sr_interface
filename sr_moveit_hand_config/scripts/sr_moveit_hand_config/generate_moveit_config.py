@@ -39,17 +39,14 @@ generate_moveit_config provides:
     generate_joint_limits : generate joint limits config file
 """
 
-from __future__ import absolute_import
 import argparse
-import yaml
+from copy import deepcopy
 import re
-
+import yaml
 import rospy
 import rosparam
 from srdfdom.srdf import SRDF
-from copy import deepcopy
 import rospkg
-
 from urdf_parser_py.urdf import URDF
 
 
@@ -97,9 +94,8 @@ def upload_output_params(upload_str, output_path=None, upload=True, ns_=None):
         for params, namespace in paramlist:
             rosparam.upload_params(namespace, params)
     if output_path is not None:
-        file_writer = open(output_path, "wb")
-        file_writer.write(upload_str)
-        file_writer.close()
+        with open(output_path, "wb") as file_writer:
+            file_writer.write(upload_str)
 
 
 def generate_fake_controllers(robot, output_path=None, ns_=None):
@@ -201,8 +197,8 @@ def generate_ompl_planning(robot,
     '''
     output_str = ""
 
-    stream = open(template_path, 'r')
-    yamldoc = yaml.safe_load(stream)
+    with open(template_path, 'r') as stream:
+        yamldoc = yaml.safe_load(stream)
     output_str += "planner_configs:\n"
     output_str += yaml_reindent(yaml.dump(
         yamldoc["planner_configs"],
@@ -243,7 +239,6 @@ def generate_ompl_planning(robot,
                                    allow_unicode=True)
             output_str += yaml_reindent(group_dump, 2)
             output_str += "\n"
-    stream.close()
     # load on param server or output to file
     upload_output_params(output_str, output_path, ns_)
 
@@ -274,9 +269,8 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
     robot_urdf = URDF.from_xml_string(urdf_str)
 
     # open template file
-    stream = open(template_path, 'r')
-    yamldoc = yaml.safe_load(stream)
-    stream.close()
+    with open(template_path, 'r') as stream:
+        yamldoc = yaml.safe_load(stream)
 
     if 'kinematics_template' in template_path:
         default_solver_for_fixed_joint = "trac_ik"
@@ -368,8 +362,8 @@ def generate_joint_limits(robot,
         @type  ns_: str
     """
     output_str = ""
-    stream = open(template_path, 'r')
-    yamldoc = yaml.safe_load(stream)
+    with open(template_path, 'r') as stream:
+        yamldoc = yaml.safe_load(stream)
     output_str += "joint_limits:\n"
     group_name = None
     # find full hand key name
@@ -390,7 +384,6 @@ def generate_joint_limits(robot,
                     allow_unicode=True)
                 output_str += yaml_reindent(joint_limits_dump, 4)
                 output_str += "\n"
-        stream.close()
         # load on param server or output to file
         upload_output_params(output_str, output_path, ns_)
 

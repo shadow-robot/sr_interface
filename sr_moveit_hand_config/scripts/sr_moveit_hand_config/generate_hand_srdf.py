@@ -35,7 +35,6 @@
     syntax  generate_hand_srdf [output filename]
 """
 
-from __future__ import absolute_import
 import sys
 import os
 from xml.dom.minidom import parse
@@ -48,7 +47,7 @@ from rosgraph.names import load_mappings
 from urdf_parser_py.urdf import URDF
 
 
-class SRDFHandGenerator(object):
+class SRDFHandGenerator:
     def __init__(self, urdf_str=None, load=True, save=True):
         if urdf_str is None:
             while not rospy.has_param('robot_description'):
@@ -62,7 +61,7 @@ class SRDFHandGenerator(object):
 
         extracted_prefix = False
         prefix = ""
-        ff = mf = rf = lf = th = False
+        ff = mf = rf = lf = th = False  # pylint: disable=C0103
         is_lite = True
         is_biotac = False
         hand_name = "right_hand"
@@ -87,15 +86,15 @@ class SRDFHandGenerator(object):
                     hand_name = "left_hand"
 
             if not ff and key.endswith("FFJ4"):
-                ff = True
+                ff = True  # pylint: disable=C0103
             if not mf and key.endswith("MFJ4"):
-                mf = True
+                mf = True  # pylint: disable=C0103
             if not rf and key.endswith("RFJ4"):
-                rf = True
+                rf = True  # pylint: disable=C0103
             if not lf and key.endswith("LFJ4"):
-                lf = True
+                lf = True  # pylint: disable=C0103
             if not th and key.endswith("THJ4"):
-                th = True
+                th = True  # pylint: disable=C0103
             if is_lite and key.endswith("WRJ2"):
                 is_lite = False
 
@@ -123,20 +122,20 @@ class SRDFHandGenerator(object):
         rospy.loginfo("File loaded " + srdf_xacro_filename)
 
         # open and parse the xacro.srdf file
-        srdf_xacro_file = open(srdf_xacro_filename, 'r')
+        srdf_xacro_file = open(srdf_xacro_filename, 'r')  # pylint: disable=R1732
         self.srdf_xacro_xml = parse(srdf_xacro_file)
 
         # expand the xacro
         xacro.process_doc(self.srdf_xacro_xml, mappings=mappings)
 
         if len(sys.argv) > 1:
-            OUTPUT_PATH = sys.argv[1]
+            output_path = sys.argv[1]
             # reject ROS internal parameters and detect termination
-            if (OUTPUT_PATH.startswith("_") or
-                    OUTPUT_PATH.startswith("--")):
-                OUTPUT_PATH = None
+            if (output_path.startswith("_") or
+                    output_path.startswith("--")):
+                output_path = None
         else:
-            OUTPUT_PATH = None
+            output_path = None
 
         if load:
             rospy.loginfo("Loading SRDF on parameter server")
@@ -144,15 +143,13 @@ class SRDFHandGenerator(object):
             rospy.set_param(robot_description_param,
                             self.srdf_xacro_xml.toprettyxml(indent='  '))
         if save:
-            OUTPUT_PATH = package_path + "/config/generated_shadowhand.srdf"
-            FW = open(OUTPUT_PATH, "w")
-            FW.write(self.srdf_xacro_xml.toprettyxml(indent='  '))
-            FW.close()
+            output_path = package_path + "/config/generated_shadowhand.srdf"
+            with open(output_path, "w") as output_file:
+                output_file.write(self.srdf_xacro_xml.toprettyxml(indent='  '))
 
-            OUTPUT_PATH = package_path + "/config/generated_shadowhand.urdf"
-            FW = open(OUTPUT_PATH, "w")
-            FW.write(urdf_str)
-            FW.close()
+            output_path = package_path + "/config/generated_shadowhand.urdf"
+            with open(output_path, "w") as output_file:
+                output_file.write(urdf_str)
 
         srdf_xacro_file.close()
 
