@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2021 Shadow Robot Company Ltd.
+# Copyright 2021-2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -14,21 +14,13 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
 import rospy
-import rostest
-from actionlib_msgs.msg import GoalStatusArray
-from unittest import TestCase, TestSuite
 from std_msgs.msg import Bool
-from std_srvs.srv import Trigger
 from ur_dashboard_msgs.srv import IsProgramRunning
-from sr_robot_launch.sr_ur_arm_unlock import SrUrUnlock
-from sr_robot_launch.mock_sr_ur_robot_hw import MockUrRobotHW
-from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
-import sys
+from ur_dashboard_msgs.msg import SafetyMode, RobotMode
 
 
-class CommonTests:
+class CommonTests:  # pylint: disable=E1101
     def arm_setup(self, side):
         self.press_pedal()
         self.assertTrue(self.get_program_running(side))
@@ -36,7 +28,7 @@ class CommonTests:
     def arm_mock_dashboard_server(self, side):
         self.assertFalse(self.get_program_running(side))
 
-    def e_stop(self, side, release_estop_before_pedal=True):
+    def e_stop(self, side):
         self.assertFalse(self.get_program_running(side))
         self.assertFalse(self.mock_dashboard[side].robot_state.get_robot_mode().robot_mode.mode ==
                          RobotMode.RUNNING)

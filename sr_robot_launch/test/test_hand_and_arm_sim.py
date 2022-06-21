@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2020 Shadow Robot Company Ltd.
+# Copyright 2020, 2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -14,17 +14,14 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
+from unittest import TestCase
 import rospy
 import rostest
 from moveit_msgs.msg import PlanningScene
+from actionlib_msgs.msg import GoalStatusArray
 from sr_robot_commander.sr_arm_commander import SrArmCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
-from geometry_msgs.msg import PoseStamped, Pose
-from rospy import get_rostime
-from actionlib_msgs.msg import GoalStatusArray
-from unittest import TestCase
 
 
 class TestHandAndArmSim(TestCase):
@@ -37,6 +34,8 @@ class TestHandAndArmSim(TestCase):
         rospy.wait_for_message('/move_group/status', GoalStatusArray)
         cls.hand_type = rospy.get_param('~test_hand_and_arm_sim/hand_type')
         cls.scene = rospy.get_param('~test_hand_and_arm_sim/scene')
+        cls.expected_home_angles = None
+        cls.scene_value = None
 
         # ur-specific launch files do not accept 'side' param as it is already set
         # for phantom hands use hand finder
@@ -54,12 +53,12 @@ class TestHandAndArmSim(TestCase):
             cls.arm_id = 'ra'
             cls.robot_commander = SrRobotCommander(name="right_arm_and_hand")
             cls.hand_commander = SrHandCommander(name='right_hand')
-            cls.arm_commander = SrArmCommander(name='right_arm', set_ground=not(cls.scene))
+            cls.arm_commander = SrArmCommander(name='right_arm', set_ground=not cls.scene)
         elif cls.hand_id == 'lh':
             cls.arm_id = 'la'
             cls.robot_commander = SrRobotCommander(name="left_arm_and_hand")
             cls.hand_commander = SrHandCommander(name='left_hand')
-            cls.arm_commander = SrArmCommander(name='left_arm', set_ground=not(cls.scene))
+            cls.arm_commander = SrArmCommander(name='left_arm', set_ground=not cls.scene)
 
         rospy.Subscriber('/move_group/monitored_planning_scene', PlanningScene, cls.scene_data_cb)
 
@@ -71,15 +70,7 @@ class TestHandAndArmSim(TestCase):
 
     @classmethod
     def scene_data_cb(cls, result):
-        scene_data = ()
         cls.scene_data = result.world.collision_objects
-
-    def joints_error_check(self, expected_joint_values, recieved_joint_values):
-        expected_and_final_joint_value_diff = 0
-        for expected_value, recieved_value in zip(sorted(expected_joint_values), sorted(recieved_joint_values)):
-            expected_and_final_joint_value_diff += abs(expected_joint_values[expected_value] -
-                                                       recieved_joint_values[recieved_value])
-        return expected_and_final_joint_value_diff
 
     def wait_for_topic_with_scene(self, timeout=50):
         counter = 0
@@ -108,11 +99,10 @@ class TestHandAndArmSim(TestCase):
         for key, value in home_angles_no_id.items():
             expected_start_angles[self.arm_id + '_' + key] = value
 
-        expected_and_actual_home_angles = self.joints_error_check(expected_start_angles, start_arm_angles)
+        expected_and_actual_home_angles = joints_error_check(expected_start_angles, start_arm_angles)
         self.assertAlmostEqual(expected_and_actual_home_angles, 0, delta=0.2)
 
     def test_2_scene(self):
-        scene = ()
         self.scene = rospy.get_param('~test_hand_and_arm_sim/scene')
         self.scene_value = self.wait_for_topic_with_scene()
         if self.scene is True:
@@ -146,7 +136,7 @@ class TestHandAndArmSim(TestCase):
         rospy.sleep(5)
         final_hand_joint_values = self.hand_commander.get_current_state()
 
-        expected_and_final_joint_value_diff_hand = self.joints_error_check(hand_joints_target, final_hand_joint_values)
+        expected_and_final_joint_value_diff_hand = joints_error_check(hand_joints_target, final_hand_joint_values)
 
         self.assertAlmostEqual(expected_and_final_joint_value_diff_hand, 0, delta=1.0)
 
@@ -170,7 +160,7 @@ class TestHandAndArmSim(TestCase):
         rospy.sleep(5)
         final_arm_joint_values = self.arm_commander.get_current_state()
 
-        expected_and_final_joint_value_diff_arm = self.joints_error_check(arm_joints_target, final_arm_joint_values)
+        expected_and_final_joint_value_diff_arm = joints_error_check(arm_joints_target, final_arm_joint_values)
 
         self.assertAlmostEqual(expected_and_final_joint_value_diff_arm, 0, delta=0.2)
 
@@ -219,11 +209,18 @@ class TestHandAndArmSim(TestCase):
 
         final_hand_and_arm_joint_values = self.robot_commander.get_current_state()
 
-        joint_value_diff_arm_and_hand = self.joints_error_check(hand_and_arm_joints_target,
+        joint_value_diff_arm_and_hand = joints_error_check(hand_and_arm_joints_target,
                                                                 final_hand_and_arm_joint_values)
 
         self.assertAlmostEqual(joint_value_diff_arm_and_hand, 0, delta=0.4)
 
+
+def joints_error_check(expected_joint_values, recieved_joint_values):
+    expected_and_final_joint_value_diff = 0
+    for expected_value, recieved_value in zip(sorted(expected_joint_values), sorted(recieved_joint_values)):
+        expected_and_final_joint_value_diff += abs(expected_joint_values[expected_value] -
+                                                    recieved_joint_values[recieved_value])
+    return expected_and_final_joint_value_diff
 
 if __name__ == "__main__":
     PKGNAME = 'sr_robot_launch'

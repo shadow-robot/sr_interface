@@ -31,7 +31,6 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from __future__ import absolute_import
 import rospy
 import tf
 from urdf_parser_py.urdf import URDF
@@ -42,16 +41,15 @@ def publish_world_to_base_transform():
         rospy.sleep(0.5)
         rospy.loginfo("waiting for robot_description")
     urdf_str = rospy.get_param('/robot_description')
-    robot_urdf = URDF.from_xml_string(urdf_str)
     robot = URDF.from_xml_string(urdf_str)
     robot_root = robot.get_root()
 
     if robot_root is not None and robot_root != "world":
         rate = rospy.Rate(10)
         while not rospy.is_shutdown():
-            br = tf.TransformBroadcaster()
-            br.sendTransform((0.0, 0.0, 0.0), (0.0, 0.0, 0.0, 1.0),
-                             rospy.Time.now(), robot_root, "world")
+            transform_broacaster = tf.TransformBroadcaster()
+            transform_broacaster.sendTransform((0.0, 0.0, 0.0), (0.0, 0.0, 0.0, 1.0),
+                                               rospy.Time.now(), robot_root, "world")
             rate.sleep()
 
 

@@ -14,12 +14,11 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
+from unittest import TestCase
 import rospy
 import rostest
-from sr_robot_commander.sr_hand_commander import SrHandCommander
 from actionlib_msgs.msg import GoalStatusArray
-from unittest import TestCase
+from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 PKG = "sr_robot_launch"
 
@@ -48,13 +47,6 @@ class TestHandJointMovement(TestCase):
     def tearDownClass(cls):
         pass
 
-    def joints_error_check(self, expected_joint_values, recieved_joint_values):
-        expected_and_final_joint_value_diff = 0
-        for expected_value, recieved_value in zip(sorted(expected_joint_values), sorted(recieved_joint_values)):
-            expected_and_final_joint_value_diff += abs(expected_joint_values[expected_value] -
-                                                       recieved_joint_values[recieved_value])
-        return expected_and_final_joint_value_diff
-
     def test_hand_open(self):
         open_joints_target = self.hand_commander.get_joints_position()
         for key in open_joints_target:
@@ -64,7 +56,7 @@ class TestHandJointMovement(TestCase):
         rospy.sleep(5)
         final_joint_values = self.hand_commander.get_current_state()
 
-        expected_and_final_joint_value_diff = self.joints_error_check(open_joints_target, final_joint_values)
+        expected_and_final_joint_value_diff = joints_error_check(open_joints_target, final_joint_values)
 
         self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, delta=0.1)
 
@@ -94,10 +86,16 @@ class TestHandJointMovement(TestCase):
         rospy.sleep(5)
         final_joint_values = self.hand_commander.get_current_state()
 
-        expected_and_final_joint_value_diff = self.joints_error_check(pack_joints_target, final_joint_values)
+        expected_and_final_joint_value_diff = joints_error_check(pack_joints_target, final_joint_values)
 
         self.assertAlmostEqual(expected_and_final_joint_value_diff, 0, delta=0.1)
 
+def joints_error_check(expected_joint_values, recieved_joint_values):
+    expected_and_final_joint_value_diff = 0
+    for expected_value, recieved_value in zip(sorted(expected_joint_values), sorted(recieved_joint_values)):
+        expected_and_final_joint_value_diff += abs(expected_joint_values[expected_value] -
+                                                    recieved_joint_values[recieved_value])
+    return expected_and_final_joint_value_diff
 
 if __name__ == "__main__":
     rospy.init_node('test_sim', anonymous=True)

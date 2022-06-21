@@ -31,20 +31,15 @@
 # Author: Guillaume Walck <gwalck@techfak.uni-bielefeld.de>
 # Author: Shadow Robot Software Team <software@shadowrobot.com>
 
-from __future__ import absolute_import
 import argparse
-import yaml
+from copy import deepcopy
 import re
-
+import yaml
 import rospy
 import rospkg
 import rosparam
 from srdfdom.srdf import SRDF
-from copy import deepcopy
-
 from urdf_parser_py.urdf import URDF
-import generate_robot_srdf
-import sr_moveit_hand_config.generate_moveit_config as hand_config
 
 
 def yaml_reindent(in_str, numspaces):
@@ -59,9 +54,8 @@ def upload_output_params(upload_str, output_path=None, upload=True, ns_=None):
         for params, namespace in paramlist:
             rosparam.upload_params(namespace, params)
     if output_path is not None:
-        file_writer = open(output_path, "wb")
-        file_writer.write(upload_str)
-        file_writer.close()
+        with open(output_path, "wb") as file_writer:
+            file_writer.write(upload_str)
 
 
 def generate_fake_controllers(robot, robot_config, output_path=None, ns_=None):
@@ -147,7 +141,7 @@ def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
 
 
 def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_planning_template.yaml",
-                           output_path=None, ns_=None):
+                           output_path=None, ns_=None):  # pylint: dsiable=R0915
     with open(hand_template_path, 'r') as stream:
         hand_yamldoc = yaml.safe_load(stream)
     output_str = ""

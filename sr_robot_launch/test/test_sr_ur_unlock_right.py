@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright 2021 Shadow Robot Company Ltd.
+# Copyright 2021-2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -13,19 +13,12 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
+from unittest import TestCase
 import rospy
 import rostest
-from actionlib_msgs.msg import GoalStatusArray
-from unittest import TestCase
-from std_msgs.msg import Bool
-from std_srvs.srv import Trigger
-from ur_dashboard_msgs.srv import IsProgramRunning
+from sr_robot_launch.common_sr_ur_unlock_tests import CommonTests
 from sr_robot_launch.sr_ur_arm_unlock import SrUrUnlock
 from sr_robot_launch.mock_sr_ur_robot_hw import MockUrRobotHW
-from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
-from sr_robot_launch.common_sr_ur_unlock_tests import CommonTests
-import sys
 
 
 class TestSrUrUnlockRight(TestCase, CommonTests):
@@ -37,16 +30,16 @@ class TestSrUrUnlockRight(TestCase, CommonTests):
         cls.service_string = {}
         cls.namespaces = ['/ra_sr_ur_robot_hw']
         cls.params = ['/headless_mode']
-        for ns in cls.namespaces:
+        for namespace in cls.namespaces:
             for param in cls.params:
-                rospy.set_param(ns + param, True)
+                rospy.set_param(namespace + param, True)
         cls.service_string['right'] = '/ra_sr_ur_robot_hw/dashboard/program_running'
         cls.sr_ur_arm_unlock = SrUrUnlock()
         cls.mock_dashboard = {}
         cls.mock_dashboard['right'] = MockUrRobotHW('right')
 
     def setUp(self):
-        for key, value in self.mock_dashboard.items():
+        for _, value in self.mock_dashboard.items():
             value.reinitialize()
 
     def tearDown(self):
@@ -63,10 +56,10 @@ class TestSrUrUnlockRight(TestCase, CommonTests):
         self.fault('right')
 
     def test_e_stop_right_1(self):
-        self.e_stop('right', release_estop_before_pedal=True)
+        self.e_stop('right')
 
     def test_e_stop_right_2(self):
-        self.e_stop('right', release_estop_before_pedal=False)
+        self.e_stop('right')
 
     def test_arm_power_cycle_right(self):
         self.arm_power_cycle('right')
