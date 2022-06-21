@@ -1,8 +1,6 @@
-from __future__ import absolute_import
 from copy import deepcopy
 import os
 import yaml
-import string
 from rospy import logerr, loginfo, get_param
 import rospkg
 import genpy
@@ -11,14 +9,14 @@ from trajectory_msgs.msg import JointTrajectoryPoint
 from sr_robot_msgs.msg import GraspArray
 
 
-def reindent(s, numSpaces):
+def reindent(text, num_spaces):
     """
     http://code.activestate.com/recipes/66055-changing-the-indentation-of-a-multi-line-string/
     """
-    s = str.split(s, '\n')
-    s = [(numSpaces * ' ') + line for line in s]
-    s = str.join(s, '\n')
-    return s
+    text = str.split(text, '\n')
+    text = [(num_spaces * ' ') + line for line in text]
+    text = str.join(text, '\n')
+    return text
 
 
 class Grasp(moveit_msgs.msg.Grasp):
@@ -29,6 +27,15 @@ class Grasp(moveit_msgs.msg.Grasp):
 
     def __init__(self):
         moveit_msgs.msg.Grasp.__init__(self)
+        self.id = None  # pylint: disable=C0103
+        self.pre_grasp_posture = None
+        self.grasp_posture = None
+        self.grasp_pose = None
+        self.pre_grasp_approach = None
+        self.post_grasp_retreat = None
+        self.post_place_retreat = None
+        self.max_contact_force = None
+        self.allowed_touch_objects = None
         self.grasp_quality = 0.001
         self.joint_names = [
             'FFJ1', 'FFJ2', 'FFJ3', 'FFJ4',
@@ -58,18 +65,18 @@ class Grasp(moveit_msgs.msg.Grasp):
         grasp.allowed_touch_objects = deepcopy(msg.allowed_touch_objects)
         return grasp
 
-    def to_msg(self):
+    def to_msg(self):  # pylint: disable=R0201
         """Return plain moveit_msgs/Grasp version of self."""
         raise Exception("TODO - to_msg")
 
     @classmethod
-    def from_yaml(self, y):
+    def from_yaml(cls, yaml_file):  # pylint: disable=R0201
         """
         Construct a shadow grasp object from YAML object. For example YAML
         grabbed from rostopic to a file.
         """
         grasp = Grasp()
-        genpy.message.fill_message_args(grasp, y)
+        genpy.message.fill_message_args(grasp, yaml_file)
         return grasp
 
     def set_pre_grasp_point(self, *args, **kwargs):
@@ -86,7 +93,7 @@ class Grasp(moveit_msgs.msg.Grasp):
         """
         self._set_posture_point(self.grasp_posture, * args, ** kwargs)
 
-    def _set_posture_point(self, posture, positions, point=0):
+    def _set_posture_point(self, posture, positions, point=0):  # pylint: disable=R0201
         """Set the posture positions using a dict of joint positions."""
         # XXX: Why have we been doing this?
         # posture.header.stamp = now
@@ -104,7 +111,7 @@ class Grasp(moveit_msgs.msg.Grasp):
         posture.points[point] = jtp
 
 
-class GraspStash(object):
+class GraspStash:
     """
     Interface to the list of grasps stored in the system. Clients should all
     use this library so that it can deal with the detail of the undelying
@@ -114,10 +121,10 @@ class GraspStash(object):
     def __init__(self):
         # Store of all loaded grasps, indexed on grasp.id.
         self._store = {}
-        rp = rospkg.RosPack()
+        rospack = rospkg.RosPack()
         self.grasps_file = get_param('~grasps_file',
                                      default=os.path.join(
-                                         rp.get_path('sr_grasp'), 'resource', 'grasps.yaml'))
+                                         rospack.get_path('sr_grasp'), 'resource', 'grasps.yaml'))
 
     def get_all(self):
         """Return list of all grasps."""
@@ -159,10 +166,10 @@ class GraspStash(object):
     def load_yaml_file(self, fname):
         """Load a set of grasps from a YAML file."""
         try:
-            data = yaml.safe_load(file(fname))
+            data = yaml.safe_load(fname)
             self.load_yaml(data)
-        except Exception as e:
-            logerr("Failed to load YAML grasp file: %s error:%s" % (fname, e))
+        except Exception as exception:
+            logerr(f"Failed to load YAML grasp file: {fname} error:{exception}")
             return False
         else:
             loginfo("Loaded grasps from file: %s" % (fname))
@@ -170,8 +177,8 @@ class GraspStash(object):
 
     def load_yaml(self, data):
         """Load a set of grasps from a YAML object. Throws exceptions on errors."""
-        for g in data:
-            grasp = Grasp.from_yaml(g)
+        for g_data in data:
+            grasp = Grasp.from_yaml(g_data)
             self.put_grasp(grasp)
 
     def save_yaml_file(self, fname=""):

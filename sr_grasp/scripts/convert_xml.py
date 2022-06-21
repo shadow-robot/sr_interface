@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2019 Shadow Robot Company Ltd.
+# Copyright 2019, 2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -19,12 +19,12 @@
 # rosrun sr_grasp convert_xml.py sr_hand/scripts/sr_hand/grasps.xml > converted.yaml
 #
 
-from __future__ import absolute_import
 import sys
 import genpy
 from sr_hand.grasps_parser import GraspParser
-import sr_grasp
 from sr_robot_msgs.msg import GraspArray
+import sr_grasp
+
 
 parser = GraspParser()
 parser.parse_tree(xml_filename=sys.argv[1])
