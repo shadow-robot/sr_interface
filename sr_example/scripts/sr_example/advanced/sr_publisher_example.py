@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright 2011 Shadow Robot Company Ltd.
+# Copyright 2011, 2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -27,11 +27,10 @@ plugins > Shadow Robot > Change controllers
 
 """
 
-from __future__ import absolute_import
-import roslib
-import rospy
 import time
 import math
+import roslib
+import rospy
 from std_msgs.msg import Float64
 
 roslib.load_manifest('sr_example')

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright 2019 Shadow Robot Company Ltd.
+# Copyright 2019, 2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -19,13 +19,13 @@
 # recording those positions with this script. Angles can be printed in radians or degrees, an argument should be added
 # when the script is called of either 'radians' or 'degrees', default is radians
 
-from __future__ import absolute_import
-import rospy
-from sr_robot_commander.sr_hand_commander import SrHandCommander
-from sr_utilities.hand_finder import HandFinder
-from numpy import arange
-from math import pi
 import argparse
+from math import pi
+from numpy import arange
+import rospy
+from sr_utilities.hand_finder import HandFinder
+from sr_robot_commander.sr_hand_commander import SrHandCommander
+
 
 rospy.init_node("print_hand_joints_position", anonymous=True)
 

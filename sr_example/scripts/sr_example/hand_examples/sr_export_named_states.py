@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright 2019 Shadow Robot Company Ltd.
+# Copyright 2019, 2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -13,20 +13,17 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
-import rospy
 from sr_robot_commander.sr_robot_state_exporter import SrRobotStateExporter
 
-"""
-The following example shows how to use the warehouse state exporter to save
-robot states from the warehouse as plain text python files. States can be
-extracted one by one, as a list of state names, or all states from a named
-trajectory can be extracted together.
+# The following example shows how to use the warehouse state exporter to save
+# robot states from the warehouse as plain text python files. States can be
+# extracted one by one, as a list of state names, or all states from a named
+# trajectory can be extracted together.
 
-Once states have been extracted, the resulting dictionary can be exported to
- a specified file location. The generated file can then be used as a modules
-for importing into subsequent scripts.
-"""
+# Once states have been extracted, the resulting dictionary can be exported to
+#  a specified file location. The generated file can then be used as a modules
+# for importing into subsequent scripts.
+
 # Below is a named trajectory, of the sort used by SrRobotCommander. It is
 # assumed that the states "state_1" and "state_2" exist in the warehouse.
 

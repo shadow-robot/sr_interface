@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright 2011 Shadow Robot Company Ltd.
+# Copyright 2011, 2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -22,10 +22,9 @@ To view the joint_states, type the following in a terminal:
 
 """
 
-from __future__ import absolute_import
+import math
 import roslib
 import rospy
-import math
 from sensor_msgs.msg import JointState
 
 roslib.load_manifest('sr_example')

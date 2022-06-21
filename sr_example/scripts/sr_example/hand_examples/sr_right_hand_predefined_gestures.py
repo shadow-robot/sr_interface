@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright 2021 Shadow Robot Company Ltd.
+# Copyright 2021-2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -15,17 +15,16 @@
 
 # Reading the tactiles from the hand.
 
-from __future__ import absolute_import
-import rospy
 from threading import Thread
 import termios
 import sys
 import tty
 import yaml
+import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 
-class GraspExecution(object):
+class GraspExecution:
     def __init__(self):
         self.keyboard_pressed = False
         self.hand_commander = SrHandCommander(name='right_hand')
@@ -34,18 +33,18 @@ class GraspExecution(object):
     def _open_yaml(self):
         grasp_config_filename = '/home/user/projects/shadow_robot/base/src/'\
                                 'sr_interface/sr_example/config/demo_grasps.yaml'
-        with open(grasp_config_filename) as f:
-            self.grasp_yaml = yaml.load(f, Loader=yaml.FullLoader)
+        with open(grasp_config_filename) as graps_conf_file:
+            self.grasp_yaml = yaml.load(graps_conf_file, Loader=yaml.FullLoader)
 
-    def _get_input(self):
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
+    def _get_input(self):  # pylint: disable=R0201
+        file_descriptor = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(file_descriptor)
         try:
             tty.setraw(sys.stdin.fileno())
-            ch = sys.stdin.read(1)
+            input_content = sys.stdin.read(1)
         finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return ch
+            termios.tcsetattr(file_descriptor, termios.TCSADRAIN, old_settings)
+        return input_content
 
     def run(self):
         self._open_yaml()
@@ -67,7 +66,7 @@ class GraspExecution(object):
             elif input_val == "7":
                 self.execute_grasp("grasp_sphere")
 
-            if '0x1b' == hex(ord(input_val)):
+            if hex(ord(input_val)) == '0x1b':
                 sys.exit(0)
 
     def execute_grasp(self, grasp):

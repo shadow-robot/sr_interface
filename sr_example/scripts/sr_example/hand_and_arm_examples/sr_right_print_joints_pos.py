@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright 2019 Shadow Robot Company Ltd.
+# Copyright 2019, 2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -27,11 +27,11 @@
 # simulated robot:
 #     roslaunch sr_right_ur10arm_hand.launch sim:=true scene:=true
 
-from __future__ import absolute_import
+from math import pi
+import sys
+import argparse
 import rospy
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
-from math import pi
-import argparse
 
 rospy.init_node("print_joints_position", anonymous=True)
 
@@ -46,7 +46,7 @@ args = parser.parse_args()
 angle_type = args.angle_type
 if angle_type not in ['radians', 'degrees']:
     parser.print_help()
-    exit(1)
+    sys.exit(1)
 
 scale = 1
 if angle_type == "degrees":

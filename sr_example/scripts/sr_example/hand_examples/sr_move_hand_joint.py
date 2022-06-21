@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2019 Shadow Robot Company Ltd.
+# Copyright 2019, 2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -14,10 +14,9 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
-import rospy
 from copy import deepcopy
 from builtins import input
+import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 ####################
 # POSE DEFINITIONS #
@@ -91,11 +90,11 @@ def select_finger():
         correct_joint_number = True
         joint_number_str = input("select joint number to move: ")
         joint_number_int = int(joint_number_str)
-        if finger == "FF" or finger == "MF" or finger == "RF":
+        if finger in ("FF", "MF", "RF"):
             if joint_number_int not in range(5):
                 rospy.logerr("The finger you selected doesn't have joint {}".format(joint_number_int))
                 correct_joint_number = False
-        elif finger == "LF" or finger == "TH":
+        elif finger in ("LF", "TH"):
             if joint_number_int not in range(6):
                 rospy.logerr("The finger you selected doesn't have joint {}".format(joint_number_int))
                 correct_joint_number = False
@@ -106,7 +105,6 @@ def select_finger():
 def sequence_ff():
     rospy.sleep(1.2)
     while True:
-        joints = list()
         finger, flex, extend, joint_number_str, joint_number_int = select_finger()
         if joint_number_int == 0:
             joint_1 = "rh_" + finger + "J1"
@@ -170,7 +168,7 @@ def sequence_ff():
                 "Press return to run again, 'change' to change parameters or 'exit' to exit the program: ")
             if user_input == 'exit':
                 return
-            elif user_input == 'change':
+            if user_input == "change":
                 break
 
 

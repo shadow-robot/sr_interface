@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright 2019 Shadow Robot Company Ltd.
+# Copyright 2019, 2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -17,12 +17,10 @@
 # The partial trajectory can then be run during an existing motion and define a new goal for
 # the joints specified in this sub list
 
-from __future__ import absolute_import
 import rospy
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
-
-from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
+from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 rospy.init_node("partial_traj_example", anonymous=True)
 rospy.sleep(1)  # Do not start at time zero
@@ -69,8 +67,8 @@ position = [1.07, 0.26, 0.88, -0.34, 0.85, 0.60,
 grasp_pose = dict(zip(keys, position))
 
 # Adjust poses according to the hand loaded
-open_hand_current = dict([(i, open_hand[i]) for i in joints if i in open_hand])
-grasp_pose_current = dict([(i, grasp_pose[i]) for i in joints if i in grasp_pose])
+open_hand_current = {i: open_hand[i] for i in joints if i in open_hand}
+grasp_pose_current = {i: grasp_pose[i] for i in joints if i in grasp_pose}
 
 # Partial list of goals
 grasp_partial_1 = {'rh_FFJ3': 0.50}
@@ -92,8 +90,8 @@ joint_trajectory = JointTrajectory()
 joint_trajectory.header.stamp = start_time + rospy.Duration.from_sec(float(trajectory_start_time))
 joint_trajectory.joint_names = list(grasp_partial_1.keys())
 joint_trajectory.points = []
-trajectory_point = construct_trajectory_point(grasp_partial_1, 1.0)
-joint_trajectory.points.append(trajectory_point)
+constructed_trajectory_point = construct_trajectory_point(grasp_partial_1, 1.0)
+joint_trajectory.points.append(constructed_trajectory_point)
 
 hand_commander.run_joint_trajectory_unsafe(joint_trajectory, True)
 rospy.sleep(2)

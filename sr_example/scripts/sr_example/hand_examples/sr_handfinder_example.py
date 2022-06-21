@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright 2019 Shadow Robot Company Ltd.
+# Copyright 2019, 2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -17,11 +17,9 @@
 # are read and it is detected whether the hand is left or right and if there are tactiles present.
 # The correct prefix and parameters are then configured.
 
-from __future__ import absolute_import
-import sys
 import rospy
-from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
+from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 rospy.init_node("basic_hand_examples", anonymous=True)
 
