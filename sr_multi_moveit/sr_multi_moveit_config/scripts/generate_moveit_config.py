@@ -80,10 +80,10 @@ def generate_fake_controllers(robot, robot_config, output_path=None, ns_=None):
                     break
             output_str += "  - name: fake_" + manipulator.hand.prefix + "controller\n"
             output_str += "    joints:\n"
-            if len(group.joints) == 0:
+            if len(sh_group.joints) == 0:
                 output_str += "      []\n"
             else:
-                for joint in group.joints:
+                for joint in sh_group.joints:
                     if joint.name[-3:] != "tip":
                         output_str += "      - " + joint.name + "\n"
 
@@ -125,7 +125,7 @@ def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
                     break
             hand_joints = []
             wrist_joints = []
-            for joint in group.joints:
+            for joint in sh_group.joints:
                 name = joint.name
                 if name[-3:] != "tip":
                     if name[-4:-2] == "WR":
@@ -141,7 +141,7 @@ def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
 
 
 def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_planning_template.yaml",
-                           output_path=None, ns_=None):  # pylint: dsiable=R0915
+                           output_path=None, ns_=None):  # pylint: disable=R0915
     with open(hand_template_path, 'r') as stream:
         hand_yamldoc = yaml.safe_load(stream)
     output_str = ""
@@ -440,10 +440,11 @@ if __name__ == '__main__':
     if ARGS.file is not None:
 
         ROBOT = SRDF.from_xml_string(ARGS.file.read())
-        generate_fake_controllers(ROBOT,
-                                  output_path="fake_controllers.yaml")
-        generate_real_controllers(ROBOT,
-                                  output_path="controllers.yaml")
+        # TODO add robot config here. (create story)
+        # generate_fake_controllers(ROBOT,
+        #                           output_path="fake_controllers.yaml")
+        # generate_real_controllers(ROBOT,
+        #                           output_path="controllers.yaml")
         generate_ompl_planning(ROBOT,
                                "ompl_planning_template.yaml",
                                output_path="ompl_planning.yaml")

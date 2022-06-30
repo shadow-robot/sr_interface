@@ -164,7 +164,7 @@ def generate_real_controllers(robot, output_path=None, ns_=None):
 
     hand_joints = []
     wrist_joints = []
-    for joint in group.joints:
+    for joint in sh_group.joints:
         name = joint.name
         if name[-3:] != "tip":
             if name[-4:-2] == "WR":
@@ -315,7 +315,7 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
     is_fixed['thumb'] = finger_with_fixed_joint[4]
 
     # for each group
-    for group in robot.groups:
+    for group in sh_group.groups:
         kinematics_config = None
         # strip prefix if any
         group_name = group.name[len(prefix):]
