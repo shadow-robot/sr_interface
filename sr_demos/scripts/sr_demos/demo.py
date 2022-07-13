@@ -81,7 +81,7 @@ class TactileReading():
             self.tactile_values['LF'] = tactile_state.pressure[3]
             self.tactile_values['TH'] = tactile_state.pressure[4]
 
-    def get_tactiles(self):
+    def get_tactiles(self): # Not used??
         if self.tactile_type is None:
             rospy.loginfo("You don't have tactile sensors. " +
                           "Talk to your Shadow representative to purchase some " +
@@ -537,7 +537,7 @@ if __name__ == "__main__":
     execute_command_check(hand_commander, demo_states, 'start_pos', 0.0, 1.0)
 
     tactile_reading = None
-    if args.tactiles:
+    if args.tactiles: # We could potentially just get the tactile_righ/_left/reading. If None returns, no sensor has been found. But does oneliner need --tactile??
         if joint_prefix == 'both':
             tactile_right = TactileReading(hand_commander, demo_states, 'rh_')
             tactile_left = TactileReading(hand_commander, demo_states, 'lh_')
@@ -570,7 +570,7 @@ if __name__ == "__main__":
                     touched = touched_right
                 elif touched_left is not None:
                     touched = touched_left
-                elif touched_right is not None and touched_left is not None:
+                elif touched_right is not None and touched_left is not None: #Does this make sense??
                     rospy.loginfo("You touched fingers on both hands at the same time. Defaulting to right touch")
                     touched = touched_right
             else:
@@ -587,3 +587,5 @@ if __name__ == "__main__":
             sequence_rf(hand_commander, demo_states, tactile_reading, args.hand_type)
         elif touched == "LF":
             sequence_lf(hand_commander, demo_states, tactile_reading)
+
+        rospy.sleep() #Define frequence
