@@ -41,6 +41,11 @@ class TactileReading():
         self.tactile_reciever = TactileReceiver(prefix)
         self.tactile_type = self.tactile_reciever.get_tactile_type()
 
+        if self.get_tactiles() is None:
+            rospy.loginfo("You don't have tactile sensors. " +
+                          "Talk to your Shadow representative to purchase some " +
+                          "or use the keyboard to access this demo.")
+
         # Zero values in dictionary for tactile sensors (initialized at 0)
         self.force_zero = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
         # Initialize values for current tactile values
