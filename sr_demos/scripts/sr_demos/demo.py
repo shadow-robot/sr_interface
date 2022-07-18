@@ -523,7 +523,7 @@ if __name__ == "__main__":
     else:
         hand_name = "two_hands"
 
-    hand_commander = SrHandCommander(name=hand_name)
+    hand_commander = SrHandCommander(name=hand_name, prefix = joint_prefix)
 
     # Get joint states for demo from yaml
     joint_states_config_filename = '/home/user/projects/shadow_robot/base/src/'\
