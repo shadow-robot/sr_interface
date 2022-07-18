@@ -81,14 +81,14 @@ class TactileReading():
             self.tactile_values['LF'] = tactile_state.pressure[3]
             self.tactile_values['TH'] = tactile_state.pressure[4]
 
-    def get_tactiles(self): # Not used??
-        if self.tactile_type is None:
-            rospy.loginfo("You don't have tactile sensors. " +
-                          "Talk to your Shadow representative to purchase some " +
-                          "or use the keyboard to access this demo.")
-        else:
-            # Zero tactile sensors
-            self.zero_tactile_sensors()
+    def get_tactiles(self):  # Not used??
+        # if self.tactile_type is None:
+        #     rospy.loginfo("You don't have tactile sensors. " +
+        #                   "Talk to your Shadow representative to purchase some " +
+        #                   "or use the keyboard to access this demo.")
+        # else:
+        #     # Zero tactile sensors
+        #     self.zero_tactile_sensors()
         return self.tactile_type
 
     def confirm_touched(self):
@@ -283,6 +283,7 @@ def sequence_rf(hand_commander, joint_states_config, tactile_reading, hand_type)
             prefix = "rh_"
             break
 
+    # For now, tactile_reading is only being considered for uni-manual
     while True and tactile_reading is not None:
         # Record current joint positions
         hand_pos = {joint: degrees(i) for joint, i in hand_commander.get_joints_position().items()}
@@ -391,6 +392,7 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
     wake_time = time.time()
     CONST_TIME_TO_COMPLETE_DEMO = 15
     while True:
+        # For now, tactile_reading is only being considered for uni-manual
         if tactile_reading is not None:
             # Check if any of the tactile senors have been triggered
             # If so, send the Hand to its start position
@@ -498,12 +500,12 @@ if __name__ == "__main__":
                         help="Please select hand type, can be 'hand_e', 'hand_lite', 'hand_extra_lite'.",
                         default="hand_e",
                         choices=["hand_e", "hand_lite", "hand_extra_lite"])
-    parser.add_argument("-tac", "--tactiles",
-                        dest="tactiles",
-                        required=False,
-                        help="Please add this argument if the hand has tactiles.",
-                        default=False,
-                        action='store_true')
+    # parser.add_argument("-tac", "--tactiles",
+    #                     dest="tactiles",
+    #                     required=False,
+    #                     help="Please add this argument if the hand has tactiles.",
+    #                     default=False,
+    #                     action='store_true')
 
     args = parser.parse_args(rospy.myargv()[1:])
 
@@ -536,13 +538,13 @@ if __name__ == "__main__":
 
     execute_command_check(hand_commander, demo_states, 'start_pos', 0.0, 1.0)
 
+    # TactileReading is going to search for any available sensors (Biotact, PST, etc)
     tactile_reading = None
-    if args.tactiles: # We could potentially just get the tactile_righ/_left/reading. If None returns, no sensor has been found. But does oneliner need --tactile??
-        if joint_prefix == 'both':
-            tactile_right = TactileReading(hand_commander, demo_states, 'rh_')
-            tactile_left = TactileReading(hand_commander, demo_states, 'lh_')
-        else:
-            tactile_reading = TactileReading(hand_commander, demo_states, joint_prefix)
+    if joint_prefix == 'both':
+        tactile_right = TactileReading(hand_commander, demo_states, 'rh_')
+        tactile_left = TactileReading(hand_commander, demo_states, 'lh_')
+    else:
+        tactile_reading = TactileReading(hand_commander, demo_states, joint_prefix)
 
     rospy.loginfo("\nPRESS ONE OF THE TACTILES or 1-5 ON THE KEYBOARD TO START A DEMO:\
                    \nTH or 1: Open Hand\
@@ -559,20 +561,20 @@ if __name__ == "__main__":
     keyboard_thread.start()
 
     while not rospy.is_shutdown():
-        # Check the state of the tactile senors
+        # Check the state of the tactile sensors
         touched = None
 
-        if args.tactiles:
+        if tactile_reading.get_tactiles is not None:  # check if tactile sensors have been previously found
             if joint_prefix == 'both':
                 touched_right = tactile_right.confirm_touched()
                 touched_left = tactile_left.confirm_touched()
-                if touched_right is not None:
+                if touched_right is not None and touched_left is not None:
+                    rospy.loginfo("You touched fingers on both hands at the same time. Defaulting to right touch")
+                    touched = touched_right
+                elif touched_right is not None:
                     touched = touched_right
                 elif touched_left is not None:
                     touched = touched_left
-                elif touched_right is not None and touched_left is not None: #Does this make sense??
-                    rospy.loginfo("You touched fingers on both hands at the same time. Defaulting to right touch")
-                    touched = touched_right
             else:
                 touched = tactile_reading.confirm_touched()
 
@@ -588,4 +590,4 @@ if __name__ == "__main__":
         elif touched == "LF":
             sequence_lf(hand_commander, demo_states, tactile_reading)
 
-        rospy.sleep() #Define frequence
+        rospy.sleep(0.1)
