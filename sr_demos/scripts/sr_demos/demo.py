@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2021 Shadow Robot Company Ltd.
+# Copyright 2021, 2022 Shadow Robot Company Ltd.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -41,6 +41,11 @@ class TactileReading():
         self.tactile_reciever = TactileReceiver(prefix)
         self.tactile_type = self.tactile_reciever.get_tactile_type()
 
+        if self.get_tactiles() is None:
+            rospy.loginfo("You don't have tactile sensors. " +
+                          "Talk to your Shadow representative to purchase some " +
+                          "or use the keyboard to access this demo.")
+
         # Zero values in dictionary for tactile sensors (initialized at 0)
         self.force_zero = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
         # Initialize values for current tactile values
@@ -49,55 +54,51 @@ class TactileReading():
         self.zero_tactile_sensors()
 
     def zero_tactile_sensors(self):
-        rospy.sleep(0.5)
-        rospy.logwarn('\nPLEASE ENSURE THAT THE TACTILE SENSORS ARE NOT PRESSED')
-        input('\nPress ENTER to continue...')
-        rospy.sleep(1.0)
+        if self.get_tactiles() is not None:
+            rospy.sleep(0.5)
+            rospy.logwarn('\nPLEASE ENSURE THAT THE TACTILE SENSORS ARE NOT PRESSED')
+            input('\nPress ENTER to continue...')
+            rospy.sleep(1.0)
 
-        for x in range(1, 1000):
-            # Read current state of tactile sensors to zero them
-            self.read_tactile_values()
+            for x in range(1, 1000):
+                # Read current state of tactile sensors to zero them
+                self.read_tactile_values()
 
-            for finger in ["FF", "MF", "RF", "LF", "TH"]:
-                if self.tactile_values[finger] > self.force_zero[finger]:
-                    self.force_zero[finger] = self.tactile_values[finger] + 20
+                for finger in ["FF", "MF", "RF", "LF", "TH"]:
+                    if self.tactile_values[finger] > self.force_zero[finger]:
+                        self.force_zero[finger] = self.tactile_values[finger] + 20
 
-        rospy.loginfo('Force Zero: ' + str(self.force_zero))
+            rospy.loginfo('Force Zero: ' + str(self.force_zero))
 
     def read_tactile_values(self):
-        # Read current state of tactile sensors
-        tactile_state = self.tactile_reciever.get_tactile_state()
+        if self.get_tactiles() is not None:
+            # Read current state of tactile sensors
+            tactile_state = self.tactile_reciever.get_tactile_state()
 
-        if self.tactile_type == "biotac":
-            self.tactile_values['FF'] = tactile_state.tactiles[0].pdc
-            self.tactile_values['MF'] = tactile_state.tactiles[1].pdc
-            self.tactile_values['RF'] = tactile_state.tactiles[2].pdc
-            self.tactile_values['LF'] = tactile_state.tactiles[3].pdc
-            self.tactile_values['TH'] = tactile_state.tactiles[4].pdc
-        elif self.tactile_type == "PST":
-            self.tactile_values['FF'] = tactile_state.pressure[0]
-            self.tactile_values['MF'] = tactile_state.pressure[1]
-            self.tactile_values['RF'] = tactile_state.pressure[2]
-            self.tactile_values['LF'] = tactile_state.pressure[3]
-            self.tactile_values['TH'] = tactile_state.pressure[4]
+            if self.tactile_type == "biotac":
+                self.tactile_values['FF'] = tactile_state.tactiles[0].pdc
+                self.tactile_values['MF'] = tactile_state.tactiles[1].pdc
+                self.tactile_values['RF'] = tactile_state.tactiles[2].pdc
+                self.tactile_values['LF'] = tactile_state.tactiles[3].pdc
+                self.tactile_values['TH'] = tactile_state.tactiles[4].pdc
+            elif self.tactile_type == "PST":
+                self.tactile_values['FF'] = tactile_state.pressure[0]
+                self.tactile_values['MF'] = tactile_state.pressure[1]
+                self.tactile_values['RF'] = tactile_state.pressure[2]
+                self.tactile_values['LF'] = tactile_state.pressure[3]
+                self.tactile_values['TH'] = tactile_state.pressure[4]
 
     def get_tactiles(self):
-        if self.tactile_type is None:
-            rospy.loginfo("You don't have tactile sensors. " +
-                          "Talk to your Shadow representative to purchase some " +
-                          "or use the keyboard to access this demo.")
-        else:
-            # Zero tactile sensors
-            self.zero_tactile_sensors()
         return self.tactile_type
 
     def confirm_touched(self):
-        self.read_tactile_values()
         touched = None
-        for finger in ["FF", "MF", "RF", "LF", "TH"]:
-            if self.tactile_values[finger] > self.force_zero[finger]:
-                touched = finger
-                rospy.loginfo("{} contact".format(touched))
+        if self.get_tactiles() is not None:
+            self.read_tactile_values()
+            for finger in ["FF", "MF", "RF", "LF", "TH"]:
+                if self.tactile_values[finger] > self.force_zero[finger]:
+                    touched = finger
+                    rospy.loginfo("{} contact".format(touched))
         return touched
 
 
@@ -283,6 +284,7 @@ def sequence_rf(hand_commander, joint_states_config, tactile_reading, hand_type)
             prefix = "rh_"
             break
 
+    # For now, tactile_reading is only being considered for uni-manual
     while True and tactile_reading is not None:
         # Record current joint positions
         hand_pos = {joint: degrees(i) for joint, i in hand_commander.get_joints_position().items()}
@@ -391,6 +393,7 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
     wake_time = time.time()
     CONST_TIME_TO_COMPLETE_DEMO = 15
     while True:
+        # For now, tactile_reading is only being considered for uni-manual
         if tactile_reading is not None:
             # Check if any of the tactile senors have been triggered
             # If so, send the Hand to its start position
@@ -498,12 +501,6 @@ if __name__ == "__main__":
                         help="Please select hand type, can be 'hand_e', 'hand_lite', 'hand_extra_lite'.",
                         default="hand_e",
                         choices=["hand_e", "hand_lite", "hand_extra_lite"])
-    parser.add_argument("-tac", "--tactiles",
-                        dest="tactiles",
-                        required=False,
-                        help="Please add this argument if the hand has tactiles.",
-                        default=False,
-                        action='store_true')
 
     args = parser.parse_args(rospy.myargv()[1:])
 
@@ -521,7 +518,7 @@ if __name__ == "__main__":
     else:
         hand_name = "two_hands"
 
-    hand_commander = SrHandCommander(name=hand_name)
+    hand_commander = SrHandCommander(name=hand_name, prefix=joint_prefix)
 
     # Get joint states for demo from yaml
     joint_states_config_filename = '/home/user/projects/shadow_robot/base/src/'\
@@ -536,13 +533,13 @@ if __name__ == "__main__":
 
     execute_command_check(hand_commander, demo_states, 'start_pos', 0.0, 1.0)
 
+    # TactileReading is going to search for any available sensors (Biotact, PST, etc)
     tactile_reading = None
-    if args.tactiles:
-        if joint_prefix == 'both':
-            tactile_right = TactileReading(hand_commander, demo_states, 'rh_')
-            tactile_left = TactileReading(hand_commander, demo_states, 'lh_')
-        else:
-            tactile_reading = TactileReading(hand_commander, demo_states, joint_prefix)
+    if joint_prefix == 'both':
+        tactile_right = TactileReading(hand_commander, demo_states, 'rh_')
+        tactile_left = TactileReading(hand_commander, demo_states, 'lh_')
+    else:
+        tactile_reading = TactileReading(hand_commander, demo_states, joint_prefix)
 
     rospy.loginfo("\nPRESS ONE OF THE TACTILES or 1-5 ON THE KEYBOARD TO START A DEMO:\
                    \nTH or 1: Open Hand\
@@ -559,22 +556,25 @@ if __name__ == "__main__":
     keyboard_thread.start()
 
     while not rospy.is_shutdown():
-        # Check the state of the tactile senors
+        # Check the state of the tactile sensors
         touched = None
 
-        if args.tactiles:
-            if joint_prefix == 'both':
+        if joint_prefix == 'both':  # Bimanual mode
+            # check if tactile sensors have been previously found for at least one hand
+            if tactile_right.get_tactiles is not None or tactile_left.get_tactiles is not None:
+                # confirm_touched() will return None if no sensors are found
                 touched_right = tactile_right.confirm_touched()
                 touched_left = tactile_left.confirm_touched()
-                if touched_right is not None:
+                if touched_right is not None and touched_left is not None:
+                    rospy.loginfo("You touched fingers on both hands at the same time. Defaulting to right touch")
+                    touched = touched_right
+                elif touched_right is not None:
                     touched = touched_right
                 elif touched_left is not None:
                     touched = touched_left
-                elif touched_right is not None and touched_left is not None:
-                    rospy.loginfo("You touched fingers on both hands at the same time. Defaulting to right touch")
-                    touched = touched_right
-            else:
-                touched = tactile_reading.confirm_touched()
+        # check if tactile sensors have been previously found
+        elif tactile_reading.get_tactiles is not None:  # Unimanual mode
+            touched = tactile_reading.confirm_touched()
 
         # If the tactile is touched, trigger the corresponding function
         if touched == "TH":
@@ -587,3 +587,5 @@ if __name__ == "__main__":
             sequence_rf(hand_commander, demo_states, tactile_reading, args.hand_type)
         elif touched == "LF":
             sequence_lf(hand_commander, demo_states, tactile_reading)
+
+        rospy.sleep(0.1)
