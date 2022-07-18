@@ -81,14 +81,7 @@ class TactileReading():
             self.tactile_values['LF'] = tactile_state.pressure[3]
             self.tactile_values['TH'] = tactile_state.pressure[4]
 
-    def get_tactiles(self):  # Not used??
-        # if self.tactile_type is None:
-        #     rospy.loginfo("You don't have tactile sensors. " +
-        #                   "Talk to your Shadow representative to purchase some " +
-        #                   "or use the keyboard to access this demo.")
-        # else:
-        #     # Zero tactile sensors
-        #     self.zero_tactile_sensors()
+    def get_tactiles(self):
         return self.tactile_type
 
     def confirm_touched(self):
@@ -500,12 +493,6 @@ if __name__ == "__main__":
                         help="Please select hand type, can be 'hand_e', 'hand_lite', 'hand_extra_lite'.",
                         default="hand_e",
                         choices=["hand_e", "hand_lite", "hand_extra_lite"])
-    # parser.add_argument("-tac", "--tactiles",
-    #                     dest="tactiles",
-    #                     required=False,
-    #                     help="Please add this argument if the hand has tactiles.",
-    #                     default=False,
-    #                     action='store_true')
 
     args = parser.parse_args(rospy.myargv()[1:])
 
@@ -523,7 +510,7 @@ if __name__ == "__main__":
     else:
         hand_name = "two_hands"
 
-    hand_commander = SrHandCommander(name=hand_name, prefix = joint_prefix)
+    hand_commander = SrHandCommander(name=hand_name, prefix=joint_prefix)
 
     # Get joint states for demo from yaml
     joint_states_config_filename = '/home/user/projects/shadow_robot/base/src/'\
