@@ -38,8 +38,8 @@ class TactileReading():
         self.prefix = prefix
 
         # Read tactile type
-        self.tactile_reciever = TactileReceiver(prefix)
-        self.tactile_type = self.tactile_reciever.get_tactile_type()
+        self.tactile_receiver = TactileReceiver(prefix)
+        self.tactile_type = self.tactile_receiver.get_tactile_type()
 
         if self.get_tactiles() is None:
             rospy.loginfo("You don't have tactile sensors. " +
@@ -73,7 +73,7 @@ class TactileReading():
     def read_tactile_values(self):
         if self.get_tactiles() is not None:
             # Read current state of tactile sensors
-            tactile_state = self.tactile_reciever.get_tactile_state()
+            tactile_state = self.tactile_receiver.get_tactile_state()
 
             if self.tactile_type == "biotac":
                 self.tactile_values['FF'] = tactile_state.tactiles[0].pdc
@@ -561,7 +561,7 @@ if __name__ == "__main__":
 
         if joint_prefix == 'both':  # Bimanual mode
             # check if tactile sensors have been previously found for at least one hand
-            if tactile_right.get_tactiles is not None or tactile_left.get_tactiles is not None:
+            if tactile_right.get_tactiles() is not None or tactile_left.get_tactiles() is not None:
                 # confirm_touched() will return None if no sensors are found
                 touched_right = tactile_right.confirm_touched()
                 touched_left = tactile_left.confirm_touched()
@@ -573,7 +573,7 @@ if __name__ == "__main__":
                 elif touched_left is not None:
                     touched = touched_left
         # check if tactile sensors have been previously found
-        elif tactile_reading.get_tactiles is not None:  # Unimanual mode
+        elif tactile_reading.get_tactiles() is not None:  # Unimanual mode
             touched = tactile_reading.confirm_touched()
 
         # If the tactile is touched, trigger the corresponding function
