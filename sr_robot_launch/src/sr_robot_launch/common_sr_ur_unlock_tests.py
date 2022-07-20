@@ -27,7 +27,7 @@ from sr_robot_launch.mock_sr_ur_robot_hw import MockUrRobotHW
 from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
 import sys
 
-
+# ADDED COMMENT
 class CommonTests:
     def arm_setup(self, side):
         self.press_pedal()
