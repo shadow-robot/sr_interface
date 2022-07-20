@@ -30,6 +30,8 @@
 
 # Author: Guillaume Walck <gwalck@techfak.uni-bielefeld.de>
 
+# random change
+
 """
 generate_moveit_config provides:
     generate_fake_controllers : generate a fake controllers config file
