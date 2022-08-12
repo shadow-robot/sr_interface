@@ -69,14 +69,12 @@ if __name__ == "__main__":
     hand_commander = SrHandCommander(name=hand_name)
 
     open_thumb = {'THJ1': 0.0, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 0.0, 'THJ5': 0.0}
-    rospy.sleep(1)
     open_fingers = {'FFJ1': 0.0, 'FFJ2': 0.0, 'FFJ3': 0.0, 'FFJ4': 0.0,
                     'MFJ1': 0.0, 'MFJ2': 0.0, 'MFJ3': 0.0, 'MFJ4': 0.0,
                     'RFJ1': 0.0, 'RFJ2': 0.0, 'RFJ3': 0.0, 'RFJ4': 0.0,
                     'LFJ1': 0.0, 'LFJ2': 0.0, 'LFJ3': 0.0, 'LFJ4': 0.0, 'LFJ5': 0.0,
                     'THJ1': 0.0, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 0.0, 'THJ5': 0.0,
                     'WRJ1': 0.0, 'WRJ2': 0.0}
-
 
     execute_trajectory(hand_commander, open_thumb, joint_prefix, "Moving thumb to open position")
     execute_trajectory(hand_commander, open_fingers, joint_prefix, "Moving fingers to open position")
