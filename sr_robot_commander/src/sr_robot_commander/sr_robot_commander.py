@@ -23,7 +23,7 @@ from control_msgs.msg import FollowJointTrajectoryAction, \
     FollowJointTrajectoryGoal
 from moveit_commander import MoveGroupCommander, RobotCommander, \
     PlanningSceneInterface
-from moveit_msgs.msg import RobotTrajectory, PositionIKRequest
+from moveit_msgs.msg import RobotTrajectory, PositionIKRequest, RobotState
 from sensor_msgs.msg import JointState
 import geometry_msgs.msg
 from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, \
@@ -282,8 +282,9 @@ class SrRobotCommander(object):
             joint_states_cpy.update((joint, radians(i))
                                     for joint, i in joint_states_cpy.items())
         if custom_start_state is None:
-            self._move_group_commander.set_start_state_to_current_state()
-        else:
+            custom_start_state = self.get_current_state_to_move()
+            # self._move_group_commander.set_start_state_to_current_state()
+        # else:
             self._move_group_commander.set_start_state(custom_start_state)
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
         self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
@@ -440,6 +441,17 @@ class SrRobotCommander(object):
         else:
             return self._move_group_commander.get_current_pose().pose
 
+    def get_current_state_to_move(self):
+        joint_state = JointState()
+        joint_state.header = Header()
+        joint_state.header.stamp = rospy.Time.now()
+        joint_state.name = self._move_group_commander._g.get_active_joints()
+        joint_state.position = self._move_group_commander._g.get_current_joint_values()
+        moveit_robot_state = RobotState()
+        moveit_robot_state.joint_state = joint_state
+
+        return moveit_robot_state
+
     def get_current_state(self):
         """
         Get the current joint state of the group being used.
@@ -483,8 +495,9 @@ class SrRobotCommander(object):
         @return - a motion plan (RobotTrajectory msg) that contains the trajectory to the named target.
         """
         if custom_start_state is None:
-            self._move_group_commander.set_start_state_to_current_state()
-        else:
+            custom_start_state = self.get_current_state_to_move()
+            # self._move_group_commander.set_start_state_to_current_state()
+        # else:
             self._move_group_commander.set_start_state(custom_start_state)
         if self.set_named_target(name):
             self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
@@ -710,8 +723,9 @@ class SrRobotCommander(object):
         pose.pose.position.z = xyz[2]
 
         if custom_start_state is None:
-            self._move_group_commander.set_start_state_to_current_state()
-        else:
+            custom_start_state = self.get_current_state_to_move()
+            # self._move_group_commander.set_start_state_to_current_state()
+        # else:
             self._move_group_commander.set_start_state(custom_start_state)
         self._move_group_commander.set_pose_target(pose, end_effector_link)
         self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
@@ -742,8 +756,9 @@ class SrRobotCommander(object):
         @param custom_start_state - specify a start state different than the current state.
         """
         if custom_start_state is None:
-            self._move_group_commander.set_start_state_to_current_state()
-        else:
+            custom_start_state = self.get_current_state_to_move()
+            # self._move_group_commander.set_start_state_to_current_state()
+        # else:
             self._move_group_commander.set_start_state(custom_start_state)
         if alternative_method:
             self._move_group_commander.set_joint_value_target(pose, end_effector_link)
@@ -909,8 +924,9 @@ class SrRobotCommander(object):
         @return - motion plan (RobotTrajectory msg) that contains the trajectory to the set wayapoints targets.
         """
         if custom_start_state is None:
-            self._move_group_commander.set_start_state_to_current_state()
-        else:
+            custom_start_state = self.get_current_state_to_move()
+            # self._move_group_commander.set_start_state_to_current_state()
+        # else:
             self._move_group_commander.set_start_state(custom_start_state)
         old_frame = self._move_group_commander.get_pose_reference_frame()
         if reference_frame is not None:
