@@ -46,29 +46,22 @@ class TactileReading():
                           "Talk to your Shadow representative to purchase some " +
                           "or use the keyboard to access this demo.")
 
-        # Zero values in dictionary for tactile sensors (initialized at 0)
-        self.force_zero = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
         # Initialize values for current tactile values
         self.tactile_values = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
-
-        self.zero_tactile_sensors()
+        # Zero values in dictionary for tactile sensors (initialized at 0)
+        self.reference_tactile_values = dict(self.tactile_values)
 
     def zero_tactile_sensors(self):
         if self.get_tactiles() is not None:
-            rospy.sleep(0.5)
-            rospy.logwarn('\nPLEASE ENSURE THAT THE TACTILE SENSORS ARE NOT PRESSED')
+            rospy.loginfo('\nPLEASE ENSURE THAT THE TACTILE SENSORS ARE NOT PRESSED')
             input('\nPress ENTER to continue...')
-            rospy.sleep(1.0)
 
-            for x in range(1, 1000):
-                # Read current state of tactile sensors to zero them
-                self.read_tactile_values()
+            # Read current state of tactile sensors to zero them
+            self.read_tactile_values()
+            for finger in ["FF", "MF", "RF", "LF", "TH"]:
+                self.reference_tactile_values[finger] = self.tactile_values[finger] + 100
 
-                for finger in ["FF", "MF", "RF", "LF", "TH"]:
-                    if self.tactile_values[finger] > self.force_zero[finger]:
-                        self.force_zero[finger] = self.tactile_values[finger] + 20
-
-            rospy.loginfo('Force Zero: ' + str(self.force_zero))
+            rospy.loginfo('Reference values: ' + str(self.reference_tactile_values))
 
     def read_tactile_values(self):
         if self.get_tactiles() is not None:
@@ -96,7 +89,7 @@ class TactileReading():
         if self.get_tactiles() is not None:
             self.read_tactile_values()
             for finger in ["FF", "MF", "RF", "LF", "TH"]:
-                if self.tactile_values[finger] > self.force_zero[finger]:
+                if self.tactile_values[finger] > self.reference_tactile_values[finger]:
                     touched = finger
                     rospy.loginfo("{} contact".format(touched))
         return touched
@@ -121,7 +114,7 @@ class KeyboardPressDetector(object):
         return ch
 
     def run(self):
-        while True:
+        while not rospy.is_shutdown():
             input_val = self._get_input()
             if input_val == "1":
                 sequence_th(self.hand_commander, self.demo_states)
@@ -139,6 +132,7 @@ class KeyboardPressDetector(object):
             elif input_val == "6":
                 rospy.signal_shutdown("Ending demo as key 6 has been pressed.")
                 sys.exit(0)
+            rospy.sleep(0.05)
 
 
 def sequence_th(hand_commander, joint_states_config):
