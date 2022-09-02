@@ -36,6 +36,7 @@ class TactileReading():
         self.hand_commander = hand_commander
         self.demo_joint_states = demo_joint_states
         self.prefix = prefix
+        self.touch_threshold = 75
 
         # Read tactile type
         self.tactile_receiver = TactileReceiver(prefix)
@@ -50,6 +51,7 @@ class TactileReading():
         self.tactile_values = {"FF": 0, "MF": 0, "RF": 0, "LF": 0, "TH": 0}
         # Zero values in dictionary for tactile sensors (initialized at 0)
         self.reference_tactile_values = dict(self.tactile_values)
+        self.zero_tactile_sensors()
 
     def zero_tactile_sensors(self):
         if self.get_tactiles() is not None:
@@ -59,7 +61,7 @@ class TactileReading():
             # Read current state of tactile sensors to zero them
             self.read_tactile_values()
             for finger in ["FF", "MF", "RF", "LF", "TH"]:
-                self.reference_tactile_values[finger] = self.tactile_values[finger] + 100
+                self.reference_tactile_values[finger] = self.tactile_values[finger] + self.touch_threshold
 
             rospy.loginfo('Reference values: ' + str(self.reference_tactile_values))
 
