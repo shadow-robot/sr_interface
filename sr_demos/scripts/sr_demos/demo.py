@@ -55,13 +55,17 @@ class TactileReading():
 
     def zero_tactile_sensors(self):
         if self.get_tactiles() is not None:
-            rospy.loginfo('\nPLEASE ENSURE THAT THE TACTILE SENSORS ARE NOT PRESSED')
+            rospy.logwarn('\nPLEASE ENSURE THAT THE TACTILE SENSORS ARE NOT PRESSED')
             input('\nPress ENTER to continue...')
 
-            # Read current state of tactile sensors to zero them
-            self.read_tactile_values()
-            for finger in ["FF", "MF", "RF", "LF", "TH"]:
-                self.reference_tactile_values[finger] = self.tactile_values[finger] + self.touch_threshold
+            # Collect 50 next samples and average them to filter out possible noise
+            accumulator = []
+            for i in range(0, 50):
+                self.read_tactile_values()
+                accumulator.append(self.tactile_values)
+
+            for key in ["FF", "MF", "RF", "LF", "TH"]:
+                self.reference_tactile_values[key] = sum(entry[key] for entry in accumulator) / len(accumulator)
 
             rospy.loginfo('Reference values: ' + str(self.reference_tactile_values))
 
@@ -91,7 +95,7 @@ class TactileReading():
         if self.get_tactiles() is not None:
             self.read_tactile_values()
             for finger in ["FF", "MF", "RF", "LF", "TH"]:
-                if self.tactile_values[finger] > self.reference_tactile_values[finger]:
+                if self.tactile_values[finger] > self.reference_tactile_values[finger] + self.touch_threshold:
                     touched = finger
                     rospy.loginfo("{} contact".format(touched))
         return touched
