@@ -285,9 +285,11 @@ class SrRobotCommander(object):
             self._move_group_commander.set_start_state_to_current_state()
         else:
             self._move_group_commander.set_start_state(custom_start_state)
-        self._move_group_commander.set_joint_value_target(self._move_group_commander.get_current_joint_values())
+
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
         self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
+
+        self.__plan = self.remove_joints_from_plan(self.__plan, list(joint_states.keys()))
         return self.__plan
 
     def check_plan_is_valid(self):
@@ -970,6 +972,38 @@ class SrRobotCommander(object):
                               mode, resp.result)
         except rospy.ServiceException:
             rospy.logerr("Failed to call service teach_mode")
+
+    @staticmethod
+    def remove_joints_from_plan(plan, joints):
+        """
+        Remove the specified joints from a given plan that contains a trajectory for these joints.
+        It returns a new plan without these joints.
+        @param plan - Plan from which the specified joints will be removed
+        @param joints - List with the name of the joints to be removed
+        """
+        new_plan = RobotTrajectory()
+
+        joint_idxs = []
+        for i in range(0, len(plan.joint_trajectory.joint_names)):
+            if not joints:
+                break
+            if plan.joint_trajectory.joint_names[i] in joints:
+                new_plan.joint_trajectory.joint_names.append(plan.joint_trajectory.joint_names[i])
+                joint_idxs.append(i)
+                joints.remove(plan.joint_trajectory.joint_names[i])
+        
+        # Iterate over points in the trajectory
+        for i in range(0, len(plan.joint_trajectory.points)):
+            new_point = JointTrajectoryPoint()
+            new_point.time_from_start = plan.joint_trajectory.points[i].time_from_start
+            for idx in joint_idxs:
+                new_point.positions.append(plan.joint_trajectory.points[i].positions[idx])
+                new_point.velocities.append(plan.joint_trajectory.points[i].velocities[idx])
+                new_point.accelerations.append(plan.joint_trajectory.points[i].accelerations[idx])
+
+            new_plan.joint_trajectory.points.append(new_point)
+
+        return new_plan
 
     def get_ik(self, target_pose, avoid_collisions=False, joint_states=None, ik_constraints=None):
         """
