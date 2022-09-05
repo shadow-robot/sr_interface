@@ -991,7 +991,7 @@ class SrRobotCommander(object):
                 new_plan.joint_trajectory.joint_names.append(plan.joint_trajectory.joint_names[i])
                 joint_idxs.append(i)
                 joints.remove(plan.joint_trajectory.joint_names[i])
-        
+
         # Iterate over points in the trajectory
         for i in range(0, len(plan.joint_trajectory.points)):
             new_point = JointTrajectoryPoint()
