@@ -986,22 +986,22 @@ class SrRobotCommander(object):
         """
         new_plan = RobotTrajectory()
 
-        joint_idxs = []
-        for i in range(0, len(plan.joint_trajectory.joint_names)):
+        joint_ids_to_keep = []
+        for joint_id in range(0, len(plan.joint_trajectory.joint_names)):
             if not joints:
                 break
-            if plan.joint_trajectory.joint_names[i] in joints:
-                new_plan.joint_trajectory.joint_names.append(plan.joint_trajectory.joint_names[i])
-                joint_idxs.append(i)
-                joints.remove(plan.joint_trajectory.joint_names[i])
+            if plan.joint_trajectory.joint_names[joint_id] in joints:
+                new_plan.joint_trajectory.joint_names.append(plan.joint_trajectory.joint_names[joint_id])
+                joint_ids_to_keep.append(joint_id)
+                joints.remove(plan.joint_trajectory.joint_names[joint_id])
 
-        for i in range(0, len(plan.joint_trajectory.points)):
+        for joint_id in range(0, len(plan.joint_trajectory.points)):
             new_point = JointTrajectoryPoint()
-            new_point.time_from_start = plan.joint_trajectory.points[i].time_from_start
-            for idx in joint_idxs:
-                new_point.positions.append(plan.joint_trajectory.points[i].positions[idx])
-                new_point.velocities.append(plan.joint_trajectory.points[i].velocities[idx])
-                new_point.accelerations.append(plan.joint_trajectory.points[i].accelerations[idx])
+            new_point.time_from_start = plan.joint_trajectory.points[joint_id].time_from_start
+            for joint_id_to_keep in joint_ids_to_keep:
+                new_point.positions.append(plan.joint_trajectory.points[joint_id].positions[joint_id_to_keep])
+                new_point.velocities.append(plan.joint_trajectory.points[joint_id].velocities[joint_id_to_keep])
+                new_point.accelerations.append(plan.joint_trajectory.points[joint_id].accelerations[joint_id_to_keep])
 
             new_plan.joint_trajectory.points.append(new_point)
 

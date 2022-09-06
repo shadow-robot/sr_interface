@@ -155,9 +155,8 @@ class TestSrRobotCommander(TestCase):
 
     def compare_joint_positions(self, joint_configuration_1, joint_configuration_2, tolerance=0.02):
         for key in joint_configuration_1.keys():
-            if joint_configuration_1[key] - joint_configuration_2[key] > tolerance or \
-               joint_configuration_1[key] - joint_configuration_2[key] < -tolerance:
-               return False
+            if abs(joint_configuration_1[key] - joint_configuration_2[key]) > tolerance:
+                return False
         return True
 
     def test_get_and_set_planner_id(self):
