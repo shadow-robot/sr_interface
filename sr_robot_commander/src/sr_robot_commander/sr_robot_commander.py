@@ -261,7 +261,10 @@ class SrRobotCommander(object):
                                     for joint, i in joint_states_cpy.items())
         self._move_group_commander.set_start_state_to_current_state()
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
-        self._move_group_commander.go(wait=wait)
+
+        self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
+        self.__plan = self.remove_joints_from_plan(self.__plan, list(joint_states.keys()))
+        self.execute_plan(self.__plan)
 
     def set_start_state_to_current_state(self):
         return self._move_group_commander.set_start_state_to_current_state()
@@ -992,7 +995,6 @@ class SrRobotCommander(object):
                 joint_idxs.append(i)
                 joints.remove(plan.joint_trajectory.joint_names[i])
 
-        # Iterate over points in the trajectory
         for i in range(0, len(plan.joint_trajectory.points)):
             new_point = JointTrajectoryPoint()
             new_point.time_from_start = plan.joint_trajectory.points[i].time_from_start
