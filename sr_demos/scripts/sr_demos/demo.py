@@ -30,13 +30,15 @@ from builtins import input
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_hand.tactile_receiver import TactileReceiver
 
+SAMPLES_TO_COLLECT = 50
+TOUCH_THRESHOLD = 75
+
 
 class TactileReading():
     def __init__(self, hand_commander, demo_joint_states, prefix):
         self.hand_commander = hand_commander
         self.demo_joint_states = demo_joint_states
         self.prefix = prefix
-        self.touch_threshold = 75
 
         # Read tactile type
         self.tactile_receiver = TactileReceiver(prefix)
@@ -58,9 +60,9 @@ class TactileReading():
             rospy.logwarn('\nPLEASE ENSURE THAT THE TACTILE SENSORS ARE NOT PRESSED')
             input('\nPress ENTER to continue...')
 
-            # Collect 50 next samples and average them to filter out possible noise
+            # Collect SAMPLES_TO_COLLECT next samples and average them to filter out possible noise
             accumulator = []
-            for i in range(0, 50):
+            for i in range(0, SAMPLES_TO_COLLECT):
                 self.read_tactile_values()
                 accumulator.append(self.tactile_values)
 
@@ -95,7 +97,7 @@ class TactileReading():
         if self.get_tactiles() is not None:
             self.read_tactile_values()
             for finger in ["FF", "MF", "RF", "LF", "TH"]:
-                if self.tactile_values[finger] > self.reference_tactile_values[finger] + self.touch_threshold:
+                if self.tactile_values[finger] > self.reference_tactile_values[finger] + TOUCH_THRESHOLD:
                     touched = finger
                     rospy.loginfo("{} contact".format(touched))
         return touched
