@@ -53,7 +53,15 @@ CONST_EXAMPLE_TARGET = {'ra_shoulder_pan_joint': 0.2, 'ra_elbow_joint': 1.80,
                         'ra_shoulder_lift_joint': -1.37, 'ra_wrist_1_joint': -0.52,
                         'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 0.00}
 
+CONST_PARTIAL_TARGET = {'ra_shoulder_pan_joint': 0.2, 'ra_wrist_1_joint': -0.52,
+                        'ra_wrist_2_joint': 1.57}
+
+CONST_FULL_TARGET = {'ra_shoulder_pan_joint': 0.2, 'ra_elbow_joint': 2.00,
+                     'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.52,
+                     'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 3.14}
+
 TOLERANCE_UNSAFE = 0.04
+TOLERANCE_SAFE = 0.01
 PLANNING_ATTEMPTS = 5
 
 
@@ -146,6 +154,12 @@ class TestSrRobotCommander(TestCase):
             return True
         return False
 
+    def compare_joint_positions(self, joint_configuration_1, joint_configuration_2, tolerance=0.02):
+        for key in joint_configuration_1.keys():
+            if abs(joint_configuration_1[key] - joint_configuration_2[key]) > tolerance:
+                return False
+        return True
+
     def test_get_and_set_planner_id(self):
         prev_planner_id = self.robot_commander._move_group_commander.get_planner_id()
         test_planner_id = "RRTstarkConfigDefault"
@@ -209,6 +223,24 @@ class TestSrRobotCommander(TestCase):
         plan = self.robot_commander.plan_to_joint_value_target(CONST_EXAMPLE_TARGET, angle_degrees=False,
                                                                custom_start_state=None)
         self.assertIsInstance(plan, RobotTrajectory)
+
+    def test_plan_joint_value_target_and_execute(self):
+        self.reset_to_home()
+        self.robot_commander._move_group_commander.set_joint_value_target([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        plan = self.robot_commander.plan_to_joint_value_target(CONST_PARTIAL_TARGET, angle_degrees=False,
+                                                               custom_start_state=None)
+        self.robot_commander.execute_plan(plan)
+        self.assertTrue(self.compare_joint_positions(self.robot_commander.get_current_state(),
+                                                     CONST_FULL_TARGET,
+                                                     tolerance=TOLERANCE_SAFE))
+
+    def test_move_to_joint_value_target_partial(self):
+        self.reset_to_home()
+        self.robot_commander._move_group_commander.set_joint_value_target([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        self.robot_commander.move_to_joint_value_target(CONST_PARTIAL_TARGET, wait=True)
+        self.assertTrue(self.compare_joint_positions(self.robot_commander.get_current_state(),
+                                                     CONST_FULL_TARGET,
+                                                     tolerance=TOLERANCE_SAFE))
 
     def test_execute(self):
         self.reset_to_home()
