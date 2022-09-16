@@ -15,6 +15,9 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
+from cmath import pi
+from ntpath import join
+from socket import timeout
 import threading
 
 import rospy
@@ -32,6 +35,7 @@ from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, \
 from moveit_msgs.srv import GetPositionIK
 from moveit_msgs.srv import ListRobotStatesInWarehouse as ListStates
 from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
+from moveit_msgs.msg import RobotState
 from moveit_msgs.msg import OrientationConstraint, Constraints
 
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
@@ -39,6 +43,7 @@ from math import radians
 
 from moveit_msgs.srv import GetPositionFK
 from std_msgs.msg import Header
+from control_msgs.msg import JointControllerState
 
 import tf2_ros
 import copy
@@ -259,8 +264,11 @@ class SrRobotCommander(object):
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
                                     for joint, i in joint_states_cpy.items())
-        self._move_group_commander.set_start_state_to_current_state()
-        self._move_group_commander.set_joint_value_target(self.get_current_state_bounded())
+        current_state_dict, current_robot_state = self.get_current_position_set_points()
+
+        print(current_state_dict)
+        self._move_group_commander.set_start_state(current_robot_state)
+        self._move_group_commander.set_joint_value_target(current_state_dict)
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
         self._move_group_commander.go(wait=wait)
 
@@ -286,7 +294,10 @@ class SrRobotCommander(object):
             self._move_group_commander.set_start_state_to_current_state()
         else:
             self._move_group_commander.set_start_state(custom_start_state)
-        self._move_group_commander.set_joint_value_target(self.get_current_state_bounded())
+        
+        current_state, _ = self._move_group_commander.get_current_position_set_points()
+
+        self._move_group_commander.set_joint_value_target(current_state)
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
         self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
         return self.__plan
@@ -451,6 +462,75 @@ class SrRobotCommander(object):
         joint_values = self._move_group_commander._g.get_current_joint_values()
 
         return dict(zip(joint_names, joint_values))
+
+    def get_current_position_set_points(self):
+        """
+        Problem: What to do to set the current state. The current state of the trajectory is NOT ONLY position, but also
+        velocity and acceleration
+        """
+        set_points_active_joints_dict = dict()
+        set_points_active_joints_robot_state = RobotState()
+        joint_state = JointState()
+        joint_state.header = Header()
+        joint_names = self._move_group_commander.get_active_joints()
+        joint_states = self.get_current_state_bounded()
+
+        for joint in joint_names:
+            if "ra_" in joint:
+                # Append directly the current state for the joints in the arm
+                set_points_active_joints_dict.update({joint: joint_states[joint]})
+                joint_state.name.append(joint)
+                joint_state.position.append(joint_states[joint])
+                continue
+
+            joint_finger_wrist = joint[3:-2]
+            joint_number = joint[5:]
+            if joint_number in ["J1", "J2"] and joint_finger_wrist not in ["WR", "TH"]:
+                # Underactuated joints
+                topic_name = f"/sh_{joint[:-2].lower()}j0_position_controller/state"
+
+                j0_set_point = rospy.wait_for_message(
+                                    topic_name,
+                                    topic_type=JointControllerState,
+                                    timeout=0.1).set_point
+
+                underactuation_ratio = joint_states[f"{joint[:-2]}J1"]/joint_states[f"{joint[:-2]}J2"]
+                print(f"ratio {underactuation_ratio}")
+                print(f"j0_set_point {j0_set_point}")
+                ratio_part = j0_set_point/(underactuation_ratio+1)
+                set_point_j1 = underactuation_ratio*ratio_part
+                set_point_j2 = ratio_part
+                print(set_point_j1)
+                print(set_point_j2)
+            
+                set_points_active_joints_dict.update({f"{joint[:-2]}J2": set_point_j2})
+                set_points_active_joints_dict.update({f"{joint[:-2]}J1": set_point_j1})
+                joint_state.name.extend([f"{joint[:-2]}J2", f"{joint[:-2]}J1"])
+                joint_state.position.extend([set_point_j2, set_point_j1])
+
+                # Avoid looking up again for J1 or J2 of this finger
+                joint_names.remove(f"{joint[:-2]}J1")
+                joint_names.remove(f"{joint[:-2]}J2")
+                
+                continue
+            
+            # Normal joints of the hand
+            topic_name = f"/sh_{joint.lower()}_position_controller/state"
+
+            set_point = rospy.wait_for_message(
+                topic_name,
+                topic_type=JointControllerState,
+                timeout=0.1).set_point
+
+            set_points_active_joints_dict.update({joint: set_point})
+            joint_state.name.append(joint)
+            joint_state.position.append(set_point)
+
+        set_points_active_joints_robot_state.joint_state = joint_state
+        joint_state.header.stamp = rospy.Time.now()
+
+        return set_points_active_joints_dict, set_points_active_joints_robot_state
+
 
     def get_current_state_bounded(self):
         """
