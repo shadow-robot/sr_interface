@@ -1,3 +1,28 @@
+# Software License Agreement (BSD License)
+# Copyright © 2022 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
+#
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
+
 joint_names: [rh_FFJ1, rh_FFJ2, rh_FFJ3, rh_FFJ4, rh_LFJ1, rh_LFJ2, rh_LFJ3, rh_LFJ4, rh_LFJ5, rh_MFJ1, rh_MFJ2, rh_MFJ3, rh_MFJ4, rh_RFJ1, rh_RFJ2, rh_RFJ3, rh_RFJ4, rh_THJ1, rh_THJ2, rh_THJ3, rh_THJ4, rh_THJ5, rh_WRJ1, rh_WRJ2]
 grasps:
   open_hand: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
@@ -10,4 +35,3 @@ grasps:
   pre_grasp: [-0.008296459472508233, 0.14242971875083255, 0.10740066610709606, -0.34968263167935043, -0.0015877321362482433, -0.0069096612615611175, 0.144526338177246, -0.35930142306765883, 0.15512644602811101, 0.01033418636049277, 0.4658292678313947, -0.07509255490964817, -0.05406322735649921, 0.02586067123381841, 0.0012506340181487885, 0.2738423745656099, -0.1061669558830419, 0.12908994526955717, 0.4945206171247581, 0.19902598074615235, 0.8383478675431763, -0.14128718472413826, -0.5694126100169419, -0.03896112056168329]
   grasp_soft: [0.0022123891926689176, 0.5084050611278125, 1.0127641768231386, -0.3126318715373979, 0.019582029680394575, 0.8261499548944857, 0.8024302414251719, -0.296751439504807, 0.3183365219656456, 0.01894600832757004, 0.9553723927894333, 0.6853962750353514, -0.13900202685970464, 0.029691881786976737, 0.04252155661705931, 1.1295833315367265, 0.16591294738929452, 0.10110378405558912, 0.5457043544254692, 0.19317204167528665, 0.9199550167694834, -0.04933570429548442, -0.570638062386673, -0.013859020997409977]
   grasp_hard: [0.0016592918945017021, 0.5066519402273717, 1.1277894899747898, -0.3098599199143929, 0.019582029680394575, 0.7928075800332732, 0.9553090697796391, -0.35400225399877283, 0.3116304322281175, 0.012630672218380046, 0.9299739447193667, 0.8652358087750869, -0.13520395880167885, 0.034001993659279806, 0.27263821595643906, 1.165330446517299, 0.17244641421608348, 0.24822587096281643, 0.5577794405072231, 0.19471102205869464, 1.18184206399704, 0.05755087329472704, -0.537728234179986, -0.0671327647213824]
-  
