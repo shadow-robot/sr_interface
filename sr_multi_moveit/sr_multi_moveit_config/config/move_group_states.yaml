@@ -1,0 +1,69 @@
+left_arm:
+  la_start:
+    joint_angles:
+      la_elbow_joint: -2.0
+      la_shoulder_lift_joint: -1.89
+      la_shoulder_pan_joint: 0.0
+      la_wrist_1_joint: -2.4
+      la_wrist_2_joint: -1.5708
+      la_wrist_3_joint: 3.1416
+left_arm_and_wrist:
+  la_start:
+    inherit_from:
+      - move_group: left_arm
+        move_group_state: la_start
+    joint_angles:
+      lh_WRJ1: 0.0
+      lh_WRJ2: 0.0
+left_arm_and_hand:
+  la_start:
+    inherit_from:
+      - move_group: left_arm_and_wrist
+        move_group_state: la_start
+      - move_group: left_hand
+        move_group_state: relaxed
+right_arm:
+  ra_start:
+    joint_angles:
+      ra_elbow_joint: 2.0
+      ra_shoulder_lift_joint: -1.25
+      ra_shoulder_pan_joint: 0.0
+      ra_wrist_1_joint: -0.733
+      ra_wrist_2_joint: 1.5708
+      ra_wrist_3_joint: -3.1416
+right_arm_and_wrist:
+  ra_start:
+    inherit_from:
+      - move_group: right_arm
+        move_group_state: ra_start
+    joint_angles:
+      rh_WRJ1: 0.0
+      rh_WRJ2: 0.0
+right_arm_and_hand:
+  ra_start:
+    inherit_from:
+      - move_group: right_arm_and_wrist
+        move_group_state: ra_start
+      - move_group: right_hand
+        move_group_state: relaxed
+two_arms:
+  start:
+    inherit_from:
+      - move_group: right_arm
+        move_group_state: ra_start
+      - move_group: left_arm
+        move_group_state: la_start
+two_arms_and_wrists:
+  start:
+    inherit_from:
+      - move_group: right_arm_and_wrist
+        move_group_state: ra_start
+      - move_group: left_arm_and_wrist
+        move_group_state: la_start
+two_arms_and_hands:
+  start:
+    inherit_from:
+      - move_group: right_arm_and_hand
+        move_group_state: ra_start
+      - move_group: left_arm_and_hand
+        move_group_state: la_start
