@@ -15,12 +15,13 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
+from ntpath import join
 import threading
 
 import rospy
 from actionlib import SimpleActionClient
 from control_msgs.msg import FollowJointTrajectoryAction, \
-    FollowJointTrajectoryGoal
+    FollowJointTrajectoryGoal, JointControllerState
 from moveit_commander import MoveGroupCommander, RobotCommander, \
     PlanningSceneInterface
 from moveit_msgs.msg import RobotTrajectory, PositionIKRequest
@@ -33,7 +34,7 @@ from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, \
 from moveit_msgs.srv import GetPositionIK
 from moveit_msgs.srv import ListRobotStatesInWarehouse as ListStates
 from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
-from moveit_msgs.msg import OrientationConstraint, Constraints
+from moveit_msgs.msg import OrientationConstraint, Constraints, RobotState
 
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
 from math import radians
@@ -287,16 +288,17 @@ class SrRobotCommander(object):
         @return - motion plan (RobotTrajectory msg) that contains the trajectory to the set goal state.
         """
         joint_states_cpy = copy.deepcopy(joint_states)
+        set_points, move_group_robot_state = self.get_current_set_points()
 
+        #TODO: handle degrees argument
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
                                     for joint, i in joint_states_cpy.items())
         if custom_start_state is None:
-            self._move_group_commander.set_start_state_to_current_state()
+            self._move_group_commander.set_start_state(move_group_robot_state)
         else:
             self._move_group_commander.set_start_state(custom_start_state)
 
-        set_points = self.get_current_set_points()
         self._move_group_commander.set_joint_value_target(set_points)
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
         self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
@@ -480,13 +482,34 @@ class SrRobotCommander(object):
         @return - Dictionary which contains the set points of the joints that belong to the move group
         """
         with self._set_points_lock:
-            set_points = self._set_points
-            move_group_set_points = {}
-            for joint_name in set_points:
-                if joint_name in self._move_group_commander._g.get_active_joints():
-                    move_group_set_points.update({joint_name: set_points[joint_name]})
+            raw_set_points = copy.deepcopy(self._set_points)
 
-            return move_group_set_points
+        current_state = self.get_current_state()
+        set_points = {}
+
+        for joint in raw_set_points:
+            if "J0" in joint:
+                # Get j1 j2 ratio from current state
+                underactuation_ratio = current_state[f"{joint[:-2]}J1"]/current_state[f"{joint[:-2]}J2"]
+                ratio_part = raw_set_points[joint]/(underactuation_ratio+1)
+                set_point_j1 = underactuation_ratio*ratio_part
+                set_point_j2 = ratio_part
+                set_points.update({f"{joint[:-2]}J1": set_point_j1})
+                set_points.update({f"{joint[:-2]}J2": set_point_j2})
+            elif joint[5:] not in ["J1", "J2"] or joint[3:-2] in ["WR", "TH"]:
+                set_points.update({joint: raw_set_points[joint]})
+
+        joint_state = JointState()
+        joint_state.header = Header()
+        joint_state.header.stamp = rospy.Time.now()
+        for joint in set_points:
+            joint_state.name.append(joint)
+            joint_state.position.append(set_points[joint])
+
+        move_group_robot_state = RobotState()
+        move_group_robot_state.joint_state = joint_state
+
+        return set_points, move_group_robot_state
 
     def get_robot_state_bounded(self):
         return self._move_group_commander._g.get_current_state_bounded()
@@ -802,8 +825,27 @@ class SrRobotCommander(object):
         Sets up the required subscribers to read from the set points of each given controller
         @param controller_list - Dictionary mapping a trajectory controller with the list of the joints it has
         """
+        # Get joint names of the group
+        joint_names_group = self._move_group_commander.get_active_joints()
+        topics_subscribed = []
+
         for controller_name in controllers_list.keys():
-            rospy.Subscriber(f"/{controller_name}/state", JointTrajectoryControllerState, self._set_point_cb, queue_size=1)
+            for joint_name in joint_names_group:
+                if joint_name in controllers_list[controller_name]:
+                    topic_name = f"/{controller_name}/state"
+                    if topic_name not in topics_subscribed:
+                        rospy.Subscriber(topic_name, JointTrajectoryControllerState, self._set_point_cb, queue_size=1)
+                        topics_subscribed.append(topic_name)
+                        continue
+
+        for joint_name in joint_names_group:
+            joint_member = joint_name[3:-2]
+            joint_number = joint_name[5:]
+            if joint_number in ["J1", "J2"] and joint_member not in ["WR", "TH"]:
+                topic_name = f"/sh_{joint_name.lower()[0:5]}j0_position_controller/state"
+                rospy.Subscriber(topic_name, JointControllerState, self._set_point_j0_cb, f"{joint_name[0:5]}J0", queue_size=1)
+                joint_names_group.remove(f"{joint_name[0:5]}J1")
+                joint_names_group.remove(f"{joint_name[0:5]}J2")
 
     def _set_up_action_client(self, controller_list):
         """
@@ -892,19 +934,33 @@ class SrRobotCommander(object):
         Updates the dictionary mapping joint names with their desired position in the trajectory controllers
         @param msg - ROS message of type JointTrajectoryControllerState
         """
+        joint_names_group = self._move_group_commander.get_active_joints()
         with self._set_points_lock:
             for i in range(0, len(msg.joint_names)):
+                if msg.joint_names[i] not in joint_names_group:
+                    continue
                 self._set_points.update({msg.joint_names[i]: msg.desired.positions[i]})
-
             if not self._are_set_points_ready:
                 with self._set_points_cv:
                     joint_names_group = self._move_group_commander.get_active_joints()
+                    for joint_name in joint_names_group:
+                        if joint_name[5:] in ["J1", "J2"] and joint_name[3:-2] not in ["WR", "TH"]:
+                            joint_names_group.append(f"{joint_name[0:5]}J0")
                     for joint_name in joint_names_group:
                         if joint_name not in self._set_points.keys():
                             break
                     else:
                         self._are_set_points_ready = True
                         self._set_points_cv.notifyAll()
+    
+    def _set_point_j0_cb(self, msg, joint_name):
+        """
+        Updates the dictionary mapping joint names with their desired position in the trajectory controllers
+        This callback is associated to the position controller of j0
+        @param msg - ROS message of type JointControllerState
+        """
+        with self._set_points_lock:
+            self._set_points.update({joint_name: msg.set_point})
 
     def _wait_for_set_points(self):
         """
