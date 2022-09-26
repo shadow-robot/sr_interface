@@ -1,6 +1,8 @@
-left_arm:
-  la_start:
-    joint_angles:
+# This file is used to define move group states that span multiple robots, and therefore can't be defined in the
+# individual robot SRDFs. It is parsed in generate_robot_srdf.py.
+left_arm:  # Must be an existing move group; ignored if not.
+  la_start:  # The name of the new move group state that will be created.
+    joint_angles:  # A dictionary of joint names and angles (in radians) that define the new move group state.
       la_elbow_joint: -2.0
       la_shoulder_lift_joint: -1.89
       la_shoulder_pan_joint: 0.0
@@ -9,19 +11,19 @@ left_arm:
       la_wrist_3_joint: 3.1416
 left_arm_and_wrist:
   la_start:
-    inherit_from:
+    inherit_from:  # States can inherit from other states, which must be defined either in this file or in a robot SRDF.
       - move_group: left_arm
-        move_group_state: la_start
+        move_group_state: la_start  # Defined in this file.
     joint_angles:
       lh_WRJ1: 0.0
       lh_WRJ2: 0.0
 left_arm_and_hand:
   la_start:
-    inherit_from:
+    inherit_from:  # States can inherit from multiple other states.
       - move_group: left_arm_and_wrist
         move_group_state: la_start
       - move_group: left_hand
-        move_group_state: relaxed
+        move_group_state: relaxed  # Defined in the robot SRDF.
 right_arm:
   ra_start:
     joint_angles:

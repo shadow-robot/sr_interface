@@ -18,7 +18,7 @@
   <arg name="robot_config_file" default=""/>
 
   <!-- The name of the config file to load saved move groups states from -->
-  <arg name="move_group_states_file" default="$(find sr_multi_moveit_config)/config/move_group_states.yaml"/>
+  <arg name="move_group_states_file" default="$(find sr_multi_moveit_config)/config/multi_robot_move_group_states.yaml"/>
 
   <!-- The semantic description that corresponds to the URDF -->
   <node name="generate_robot_srdf" pkg="sr_multi_moveit_config" type="generate_robot_srdf.py" respawn="false" output="screen" args="$(arg robot_config_file) $(arg move_group_states_file)" />

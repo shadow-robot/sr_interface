@@ -168,11 +168,12 @@ class SRDFRobotGenerator(object):
             description_file = sys.argv[1]
 
         # If specified, load the combined robot move group joint states from the config file
-        self._combined_move_group_states = {}
+        # These are states that span multiple robots, so can't de defined in the individual robot SRDFs
+        self._multi_robot_move_group_states = {}
         if len(sys.argv) > 2:
             try:
                 with open(sys.argv[2], "r") as stream:
-                    self._combined_move_group_states = yaml.safe_load(stream)
+                    self._multi_robot_move_group_states = yaml.safe_load(stream)
             except FileNotFoundError:
                 rospy.logwarn(f'Could not open the specified move group saved states definition file: '
                               f'"{sys.argv[2]}". No move group saved states loaded.')
@@ -266,7 +267,7 @@ class SRDFRobotGenerator(object):
                 self.parse_hand_collisions(manipulator_id, manipulator)
 
         # Add the config-file-defined multi-robot move group states
-        self.add_move_group_states()
+        self.add_multi_robot_move_group_states()
 
         # Finish and close file
         self.new_robot_srdf.write('</robot>\n')
@@ -422,34 +423,34 @@ class SRDFRobotGenerator(object):
                         group_state_child.getAttribute("value")
         return group_states
 
-    # Generate multi-robot move group states
-    def add_move_group_states(self):
+    # Generates states for move groups that span multiple robots, and therefore can't be defined in their SRDFs
+    def add_multi_robot_move_group_states(self):
         # Check which move groups are in the generated SRDF
         self.new_robot_srdf.seek(0)
         move_group_names = list(set(re.findall(r'<group\s+.*name="([^"]*)"', self.new_robot_srdf.read())))
-        # Collect the move group states defined in the seperate robot SRDFs
-        self._original_move_group_states = {}
+        # Collect the move group states defined in the separate robot SRDFs
+        self._single_robot_move_group_states = {}
         for hand_xml in self.hand_srdf_xmls:
-            SRDFRobotGenerator.parse_move_group_states(hand_xml, self._original_move_group_states)
+            SRDFRobotGenerator.parse_move_group_states(hand_xml, self._single_robot_move_group_states)
         for arm_xml in self.arm_srdf_xmls:
-            SRDFRobotGenerator.parse_move_group_states(arm_xml, self._original_move_group_states)
+            SRDFRobotGenerator.parse_move_group_states(arm_xml, self._single_robot_move_group_states)
         # Put the original move group states in the list of all move group states
-        self._move_group_states = deepcopy(self._original_move_group_states)
+        self._all_move_group_states = deepcopy(self._single_robot_move_group_states)
         # Keep track of the combined move group states we are newly generating
-        self._new_move_group_states = {}
+        self._new_multi_robot_move_group_states = {}
         # For any existing move groups
         for move_group_name in move_group_names:
             # If there are combined move group states defined
-            if move_group_name in self._combined_move_group_states:
+            if move_group_name in self._multi_robot_move_group_states:
                 # For each combined move group state
-                for move_group_state_name in self._combined_move_group_states[move_group_name]:
+                for move_group_state_name in self._multi_robot_move_group_states[move_group_name]:
                     # If it has not already been defined
-                    if (move_group_name not in self._move_group_states or
-                            move_group_state_name not in self._move_group_states[move_group_name]):
+                    if (move_group_name not in self._all_move_group_states or
+                            move_group_state_name not in self._all_move_group_states[move_group_name]):
                         # Create the move group state, resolving any inherited values
                         self.create_move_group_state(move_group_name, move_group_state_name)
         # Write all of the newly generated move group states to the generated SRDF
-        for move_group_name, move_group_states in self._new_move_group_states.items():
+        for move_group_name, move_group_states in self._new_multi_robot_move_group_states.items():
             for move_group_state_name, move_group_state in move_group_states.items():
                 new_group_state = xml.dom.minidom.Document().createElement('group_state')
                 new_group_state.setAttribute("group", move_group_name)
@@ -461,7 +462,7 @@ class SRDFRobotGenerator(object):
 
     # Creates a new move group state, resolving any values inherited from other move groups
     def create_move_group_state(self, group_name, group_state_name):
-        combined_move_group_state = self._combined_move_group_states[group_name][group_state_name]
+        combined_move_group_state = self._multi_robot_move_group_states[group_name][group_state_name]
         if "joint_angles" not in combined_move_group_state:
             combined_move_group_state["joint_angles"] = {}
         # If the new move group state inherits from any others
@@ -470,11 +471,11 @@ class SRDFRobotGenerator(object):
                 ancestor_group = ancestor["move_group"]
                 ancestor_group_state = ancestor["move_group_state"]
                 # If the ancestor group state is not defined yet
-                if (ancestor_group not in self._move_group_states or
-                        ancestor_group_state not in self._move_group_states[ancestor_group]):
+                if (ancestor_group not in self._all_move_group_states or
+                        ancestor_group_state not in self._all_move_group_states[ancestor_group]):
                     # If the ancestor group state is not even defined in the combined move group states
-                    if (ancestor_group not in self._combined_move_group_states or
-                            ancestor_group_state not in self._combined_move_group_states[ancestor_group]):
+                    if (ancestor_group not in self._multi_robot_move_group_states or
+                            ancestor_group_state not in self._multi_robot_move_group_states[ancestor_group]):
                         rospy.logwarn(f'Unable to create move group "{group_name}" state "{group_state_name}", as it '
                                       f'inherits from move group "{ancestor_group}" state "{ancestor_group_state}", '
                                       f'which is not defined.')
@@ -484,16 +485,17 @@ class SRDFRobotGenerator(object):
                         if not self.create_move_group_state(ancestor_group, ancestor_group_state):
                             return False
                 # The ancestor group state either already existed or has been created
-                ancestor_move_group_state = self._move_group_states[ancestor_group][ancestor_group_state]
+                ancestor_move_group_state = self._all_move_group_states[ancestor_group][ancestor_group_state]
                 for joint, value in ancestor_move_group_state.items():
                     if joint not in combined_move_group_state["joint_angles"]:
                         combined_move_group_state["joint_angles"][joint] = value
-        if group_name not in self._move_group_states:
-            self._move_group_states[group_name] = {}
-        self._move_group_states[group_name][group_state_name] = combined_move_group_state["joint_angles"]
-        if group_name not in self._new_move_group_states:
-            self._new_move_group_states[group_name] = {}
-        self._new_move_group_states[group_name][group_state_name] = combined_move_group_state["joint_angles"]
+        if group_name not in self._all_move_group_states:
+            self._all_move_group_states[group_name] = {}
+        self._all_move_group_states[group_name][group_state_name] = combined_move_group_state["joint_angles"]
+        if group_name not in self._new_multi_robot_move_group_states:
+            self._new_multi_robot_move_group_states[group_name] = {}
+        self._new_multi_robot_move_group_states[group_name][group_state_name] = \
+            combined_move_group_state["joint_angles"]
         return True
 
     def add_bimanual_arm_groups(self, group_1, group_2, hands=True):
