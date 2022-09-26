@@ -26,18 +26,15 @@
 # software, even if advised of the possibility of such damage.
 
 from __future__ import absolute_import
-import rospy
-import random
-import time
-import yaml
 import argparse
+import yaml
+import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
-from sr_utilities.hand_finder import HandFinder
 
 
 def burn_in_demo(hand_commander, burn_in_config):
-    for x in range(0, 100):
-        rospy.loginfo("We're on iteration number %d" % (x))
+    for iteration in range(0, 100):
+        rospy.loginfo("We're on iteration number %d" % iteration)
         rospy.sleep(1)
         execute_command_check(hand_commander, burn_in_config, 'store_3', 1.1, 1.1)
         execute_command_check(hand_commander, burn_in_config, 'start_pos', 1.1, 1.1)
@@ -116,8 +113,8 @@ def burn_in_demo(hand_commander, burn_in_config):
 def correct_joint_states_for_hand_type(joint_states_config, hand_type):
     hand_type_joints_filename = '/home/user/projects/shadow_robot/base/src/'\
                        'sr_interface/sr_demos/config/joints_in_hand.yaml'
-    with open(hand_type_joints_filename) as f:
-        hand_type_joints = yaml.load(f, Loader=yaml.FullLoader)
+    with open(hand_type_joints_filename) as file:
+        hand_type_joints = yaml.load(file, Loader=yaml.FullLoader)
 
     for joint_state_dicts_no_id in joint_states_config.keys():
         for key in list(joint_states_config[joint_state_dicts_no_id]):
@@ -170,30 +167,30 @@ if __name__ == "__main__":
     args = parser.parse_args(rospy.myargv()[1:])
 
     if args.side == 'right':
-        joint_prefix = 'rh_'
+        joint_prefix_name = 'rh_'
     elif args.side == 'left':
-        joint_prefix = 'lh_'
+        joint_prefix_name = 'lh_'
     else:
-        joint_prefix = 'both'
+        joint_prefix_name = 'both'
 
-    if 'rh_' == joint_prefix:
+    if joint_prefix_name == 'rh_':
         hand_name = 'right_hand'
-    elif 'lh_' == joint_prefix:
+    elif joint_prefix_name == 'lh_':
         hand_name = 'left_hand'
     else:
         hand_name = 'two_hands'
 
-    hand_commander = SrHandCommander(name=hand_name)
+    hand_commander_ptr = SrHandCommander(name=hand_name)
 
     # Get joint states for burn in demo
     burn_in_config_filename = '/home/user/projects/shadow_robot/base/src/'\
                               'sr_interface/sr_demos/config/burn_in_states.yaml'
     with open(burn_in_config_filename) as f:
-        burn_in_config = yaml.load(f, Loader=yaml.FullLoader)
+        burn_in_config_file = yaml.load(f, Loader=yaml.FullLoader)
 
-    corrected_burn_in_config = correct_joint_states_for_hand_type(burn_in_config, args.hand_type)
+    corrected_burn_in_config = correct_joint_states_for_hand_type(burn_in_config_file, args.hand_type)
 
     # Add prefix to joint states
-    burn_in_states = add_prefix_to_joint_states(corrected_burn_in_config, joint_prefix)
+    burn_in_states = add_prefix_to_joint_states(corrected_burn_in_config, joint_prefix_name)
 
-    burn_in_demo(hand_commander, burn_in_states)
+    burn_in_demo(hand_commander_ptr, burn_in_states)
