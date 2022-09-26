@@ -21,6 +21,7 @@ RUN cd /workspace/shadow_robot/base_deps/src && \
     catkin_make && \
     pip install tabulate
 
+
 RUN cd /workspace/shadow_robot/base/src && \
     wstool set -y sr_interface --version-new "F#64_planner_test_suite_ugo" && \
     wstool up sr_interface && \
