@@ -55,12 +55,13 @@ CONST_EXAMPLE_TARGET = {'ra_shoulder_pan_joint': 0.2, 'ra_elbow_joint': 1.80,
 
 CONST_PARTIAL_TARGET = {'ra_shoulder_pan_joint': 0.2, 'ra_wrist_1_joint': -0.52,
                         'ra_wrist_2_joint': 1.57}
+
 CONST_FULL_TARGET = {'ra_shoulder_pan_joint': 0.2, 'ra_elbow_joint': 2.00,
                      'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -0.52,
                      'ra_wrist_2_joint': 1.57, 'ra_wrist_3_joint': 3.14}
 
 TOLERANCE_UNSAFE = 0.04
-TOLERANCE_SAFE = 0.02
+TOLERANCE_SAFE = 0.01
 PLANNING_ATTEMPTS = 5
 
 
@@ -153,7 +154,7 @@ class TestSrRobotCommander(TestCase):
             return True
         return False
 
-    def compare_joint_positions(self, joint_configuration_1, joint_configuration_2, tolerance=0.02):
+    def compare_joint_positions(self, joint_configuration_1, joint_configuration_2, tolerance=0.01):
         for key in joint_configuration_1.keys():
             if abs(joint_configuration_1[key] - joint_configuration_2[key]) > tolerance:
                 return False
