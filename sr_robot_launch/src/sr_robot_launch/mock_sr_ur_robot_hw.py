@@ -43,7 +43,7 @@ class IllegalArgumentError(ValueError):
     pass
 
 
-class ArmState(object):
+class ArmState():
     def __init__(self, arm_prefix):
         self._arm_prefix = arm_prefix
         self._safety_mode_publisher = rospy.Publisher('/' + arm_prefix + '_sr_ur_robot_hw/safety_mode',
@@ -191,7 +191,7 @@ class ArmState(object):
         self._set_program_running(False)
 
 
-class MockUrRobotHW(object):
+class MockUrRobotHW():
     def __init__(self, side='right'):
         if 'left' not in side and 'right' not in side:
             rospy.logerr("side: %s not valid. Valid sides are: 'left, 'right'", side)

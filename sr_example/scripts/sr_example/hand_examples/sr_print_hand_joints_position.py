@@ -32,12 +32,13 @@
 # when the script is called of either 'radians' or 'degrees', default is radians
 
 from __future__ import absolute_import
+from math import pi
+import argparse
 import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
 from numpy import arange
-from math import pi
-import argparse
+
 
 rospy.init_node("print_hand_joints_position", anonymous=True)
 

@@ -36,7 +36,7 @@ from sr_robot_msgs.srv import (ChangeControlType, RobotTeachMode,
                                RobotTeachModeRequest, RobotTeachModeResponse, SetTeachMode)
 
 
-class TeachModeManager(object):
+class TeachModeManager():
 
     def __init__(self):
         hand_joint_names = self._create_hand_joints()

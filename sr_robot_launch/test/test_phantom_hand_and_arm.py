@@ -75,8 +75,8 @@ class TestHandAndArmSim(TestCase):
         return expected_and_final_joint_value_diff
 
     def open_yaml(self, path):
-        with open(path) as f:
-            hands_config = yaml.load(f, Loader=yaml.FullLoader)
+        with open(path) as file:
+            hands_config = yaml.load(file, Loader=yaml.FullLoader)
         return hands_config
 
     def check_topic_prefix(self, prefix):

@@ -26,20 +26,14 @@
 # software, even if advised of the possibility of such damage.
 
 from __future__ import absolute_import
-import rospy
 from copy import deepcopy
 from builtins import input
+import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
+
 ####################
 # POSE DEFINITIONS #
 ####################
-
-joints = ["rh_THJ1", "rh_THJ2", "rh_THJ3", "rh_THJ4", "rh_THJ5",
-          "rh_FFJ1", "rh_FFJ2", "rh_FFJ3", "rh_FFJ4",
-          "rh_MFJ1", "rh_MFJ2", "rh_MFJ3", "rh_MFJ4",
-          "rh_RFJ1", "rh_RFJ2", "rh_RFJ3", "rh_RFJ4",
-          "rh_LFJ1", "rh_LFJ2", "rh_LFJ3", "rh_LFJ4", "rh_LFJ5",
-          "rh_WRJ1", "rh_WRJ2"]
 
 # starting position for the hand
 start_pos = {"rh_THJ1": 0, "rh_THJ2": 0, "rh_THJ3": 0, "rh_THJ4": 0, "rh_THJ5": 0,
@@ -102,11 +96,11 @@ def select_finger():
         correct_joint_number = True
         joint_number_str = input("select joint number to move: ")
         joint_number_int = int(joint_number_str)
-        if finger == "FF" or finger == "MF" or finger == "RF":
+        if finger in ('FF', 'MF', 'RF'):
             if joint_number_int not in range(5):
                 rospy.logerr("The finger you selected doesn't have joint {}".format(joint_number_int))
                 correct_joint_number = False
-        elif finger == "LF" or finger == "TH":
+        elif finger in ('LF', 'TH'):
             if joint_number_int not in range(6):
                 rospy.logerr("The finger you selected doesn't have joint {}".format(joint_number_int))
                 correct_joint_number = False
@@ -117,7 +111,6 @@ def select_finger():
 def sequence_ff():
     rospy.sleep(1.2)
     while True:
-        joints = list()
         finger, flex, extend, joint_number_str, joint_number_int = select_finger()
         if joint_number_int == 0:
             joint_1 = "rh_" + finger + "J1"
@@ -181,7 +174,7 @@ def sequence_ff():
                 "Press return to run again, 'change' to change parameters or 'exit' to exit the program: ")
             if user_input == 'exit':
                 return
-            elif user_input == 'change':
+            if user_input == 'change':
                 break
 
 

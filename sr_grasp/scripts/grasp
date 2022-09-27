@@ -37,7 +37,7 @@ from sr_robot_msgs.msg import ShadowPST, ShadowContactStateStamped, GraspAction
 from gazebo_msgs.msg import ContactsState
 
 
-class InterpolatedJoint(object):
+class InterpolatedJoint():
 
     def __init__(self, name, start=0, end=0, active=True):
         self.name = name
@@ -64,7 +64,7 @@ class InterpolatedJoint(object):
         return False
 
 
-class GraspNode(object):
+class GraspNode():
 
     def __init__(self, ):
         """

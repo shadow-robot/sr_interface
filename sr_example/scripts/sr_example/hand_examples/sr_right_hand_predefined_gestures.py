@@ -28,16 +28,16 @@
 # Reading the tactiles from the hand.
 
 from __future__ import absolute_import
-import rospy
 from threading import Thread
 import termios
 import sys
 import tty
 import yaml
+import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 
-class GraspExecution(object):
+class GraspExecution():
     def __init__(self):
         self.keyboard_pressed = False
         self.hand_commander = SrHandCommander(name='right_hand')
@@ -46,18 +46,19 @@ class GraspExecution(object):
     def _open_yaml(self):
         grasp_config_filename = '/home/user/projects/shadow_robot/base/src/'\
                                 'sr_interface/sr_example/config/demo_grasps.yaml'
-        with open(grasp_config_filename) as f:
-            self.grasp_yaml = yaml.load(f, Loader=yaml.FullLoader)
+        with open(grasp_config_filename) as file:
+            self.grasp_yaml = yaml.load(file, Loader=yaml.FullLoader)
 
-    def _get_input(self):
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
+    @staticmethod
+    def _get_input():
+        file_description = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(file_description)
         try:
             tty.setraw(sys.stdin.fileno())
-            ch = sys.stdin.read(1)
+            char_read = sys.stdin.read(1)
         finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return ch
+            termios.tcsetattr(file_description, termios.TCSADRAIN, old_settings)
+        return char_read
 
     def run(self):
         self._open_yaml()
@@ -79,7 +80,7 @@ class GraspExecution(object):
             elif input_val == "7":
                 self.execute_grasp("grasp_sphere")
 
-            if '0x1b' == hex(ord(input_val)):
+            if hex(ord(input_val)) == '0x1b':
                 sys.exit(0)
 
     def execute_grasp(self, grasp):

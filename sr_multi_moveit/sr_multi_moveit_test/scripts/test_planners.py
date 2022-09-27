@@ -40,7 +40,7 @@ import argparse
 import rosgraph
 
 
-class TestPlanners(object):
+class TestPlanners():
     def __init__(self, group_id, planner):
 
         rospy.init_node('moveit_test_planners', anonymous=True)

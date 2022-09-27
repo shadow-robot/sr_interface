@@ -46,18 +46,18 @@ hand_serial = hand_parameters.mapping.keys()[0]
 hand_commander = SrHandCommander(hand_parameters=hand_parameters, hand_serial=hand_serial)
 
 # cycles per second of sine wave
-f = 1
+frequency = 1
 # angular frequency, rads/s
-w = 2 * pi * f
+angular_frequency = 2 * pi * frequency
 # time for motion to complete
-ts = 20
+time_to_complete = 20
 
 # specify 2 joints to move
 joint_names = [prefix[0] + '_FFJ3', prefix[0] + '_RFJ3']
 
 # set max and min joint positions
-min_pos_J3 = 0.0
-max_pos_J3 = pi / 2
+min_pos_j3 = 0.0
+max_pos_j3 = pi / 2
 
 rospy.sleep(rospy.Duration(2))
 
@@ -72,7 +72,7 @@ joint_trajectory.joint_names = list(hand_joints_goal.keys())
 joint_trajectory.points = []
 
 # generate sinusoidal list of data points, two joints moving out of phase
-for t in arange(0.002, ts, 0.02):
+for t in arange(0.002, time_to_complete, 0.02):
     trajectory_point = JointTrajectoryPoint()
     trajectory_point.time_from_start = rospy.Duration.from_sec(float(t))
     trajectory_point.positions = []
@@ -82,10 +82,12 @@ for t in arange(0.002, ts, 0.02):
 
     for key in joint_trajectory.joint_names:
         if key in joint_names[0]:  # generate joint positions for first joint
-            joint_position = sin(w * t) * (max_pos_J3 - min_pos_J3) / 2 + (max_pos_J3 - min_pos_J3) / 2 + min_pos_J3
+            joint_position = sin(angular_frequency * t) * (max_pos_j3 - min_pos_j3) / 2 + \
+                             (max_pos_j3 - min_pos_j3) / 2 + min_pos_j3
             trajectory_point.positions.append(joint_position)
         elif key in joint_names[1]:  # generate joint positions for second joint
-            joint_position = cos(w * t) * (max_pos_J3 - min_pos_J3) / 2 + (max_pos_J3 - min_pos_J3) / 2 + min_pos_J3
+            joint_position = cos(angular_frequency * t) * (max_pos_j3 - min_pos_j3) / 2 + \
+                             (max_pos_j3 - min_pos_j3) / 2 + min_pos_j3
             trajectory_point.positions.append(joint_position)
         else:
             trajectory_point.positions.append(hand_joints_goal[key])

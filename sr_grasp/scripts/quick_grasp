@@ -39,7 +39,7 @@ from sr_grasp import Grasp, GraspStash
 from builtins import input
 
 
-class QuickGraspNode(object):
+class QuickGraspNode():
 
     def __init__(self):
         self.stash = GraspStash()

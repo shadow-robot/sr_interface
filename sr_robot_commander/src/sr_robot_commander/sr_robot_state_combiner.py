@@ -32,7 +32,7 @@ from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
 from moveit_msgs.srv import GetRobotStateFromWarehouseResponse as GetStateResp
 
 
-class SrRobotStateCombiner(object):
+class SrRobotStateCombiner():
 
     _arm_joints = ['shoulder_pan_joint', 'elbow_joint', 'shoulder_lift_joint',
                    'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint', 'WRJ2', 'WRJ1']

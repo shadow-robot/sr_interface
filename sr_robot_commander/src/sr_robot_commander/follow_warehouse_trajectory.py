@@ -43,7 +43,7 @@ from std_msgs.msg import Header
 import geometry_msgs.msg
 
 
-class WarehousePlanner(object):
+class WarehousePlanner():
     def __init__(self):
         rospy.init_node('moveit_warehouse_planner', anonymous=True)
         self.scene = PlanningSceneInterface()

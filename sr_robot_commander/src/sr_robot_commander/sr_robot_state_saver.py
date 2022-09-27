@@ -41,7 +41,7 @@ from control_msgs.msg import JointTrajectoryControllerState
 from threading import Lock
 
 
-class SrStateSaverUnsafe(object):
+class SrStateSaverUnsafe():
     def __init__(self, name, hand_or_arm="both", side="right", save_target=False):
 
         self._save = rospy.ServiceProxy(

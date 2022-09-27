@@ -185,8 +185,8 @@ if __name__ == "__main__":
     # Get joint states for burn in demo
     burn_in_config_filename = '/home/user/projects/shadow_robot/base/src/'\
                               'sr_interface/sr_demos/config/burn_in_states.yaml'
-    with open(burn_in_config_filename) as f:
-        burn_in_config_file = yaml.load(f, Loader=yaml.FullLoader)
+    with open(burn_in_config_filename) as file:
+        burn_in_config_file = yaml.load(file, Loader=yaml.FullLoader)
 
     corrected_burn_in_config = correct_joint_states_for_hand_type(burn_in_config_file, args.hand_type)
 

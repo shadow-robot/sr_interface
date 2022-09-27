@@ -37,7 +37,7 @@ from moveit_msgs.srv import ListRobotStatesInWarehouse as ListState
 from moveit_msgs.msg import RobotState
 
 
-class SrRobotStateExporter(object):
+class SrRobotStateExporter():
     def __init__(self, start_dictionary={}):
         self._get_state = rospy.ServiceProxy("/get_robot_state", GetState)
         self._has_state = rospy.ServiceProxy("/has_robot_state", HasState)

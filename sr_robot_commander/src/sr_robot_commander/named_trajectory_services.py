@@ -38,7 +38,7 @@ from builtins import map
 from copy import deepcopy
 
 
-class WaypointNamedServices(object):
+class WaypointNamedServices():
     def __init__(self):
 
         rospy.init_node('waypoint_named_services')

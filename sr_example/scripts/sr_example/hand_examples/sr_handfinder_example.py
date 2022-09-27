@@ -26,7 +26,6 @@
 # software, even if advised of the possibility of such damage.
 
 from __future__ import absolute_import
-import sys
 import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder

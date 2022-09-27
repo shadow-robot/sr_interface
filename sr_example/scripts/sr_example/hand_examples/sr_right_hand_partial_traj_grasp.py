@@ -32,7 +32,6 @@
 from __future__ import absolute_import
 import rospy
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
-
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
 
@@ -81,8 +80,8 @@ position = [1.07, 0.26, 0.88, -0.34, 0.85, 0.60,
 grasp_pose = dict(zip(keys, position))
 
 # Adjust poses according to the hand loaded
-open_hand_current = dict([(i, open_hand[i]) for i in joints if i in open_hand])
-grasp_pose_current = dict([(i, grasp_pose[i]) for i in joints if i in grasp_pose])
+open_hand_current = {i: open_hand[i] for i in joints if i in open_hand}
+grasp_pose_current = {i: grasp_pose[i] for i in joints if i in grasp_pose}
 
 # Partial list of goals
 grasp_partial_1 = {'rh_FFJ3': 0.50}
@@ -104,8 +103,8 @@ joint_trajectory = JointTrajectory()
 joint_trajectory.header.stamp = start_time + rospy.Duration.from_sec(float(trajectory_start_time))
 joint_trajectory.joint_names = list(grasp_partial_1.keys())
 joint_trajectory.points = []
-trajectory_point = construct_trajectory_point(grasp_partial_1, 1.0)
-joint_trajectory.points.append(trajectory_point)
+this_trajectory_point = construct_trajectory_point(grasp_partial_1, 1.0)
+joint_trajectory.points.append(this_trajectory_point)
 
 hand_commander.run_joint_trajectory_unsafe(joint_trajectory, True)
 rospy.sleep(2)

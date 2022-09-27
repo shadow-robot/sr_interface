@@ -104,7 +104,7 @@ class Grasp(moveit_msgs.msg.Grasp):
         posture.points[point] = jtp
 
 
-class GraspStash(object):
+class GraspStash():
     """
     Interface to the list of grasps stored in the system. Clients should all
     use this library so that it can deal with the detail of the undelying

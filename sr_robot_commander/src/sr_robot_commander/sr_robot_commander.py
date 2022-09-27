@@ -69,7 +69,7 @@ class SrRobotCommanderException(Exception):
         return repr(self._value)
 
 
-class SrRobotCommander(object):
+class SrRobotCommander():
 
     """
     Base class for hand and arm commanders.
