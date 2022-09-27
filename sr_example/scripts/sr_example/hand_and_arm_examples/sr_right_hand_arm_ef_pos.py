@@ -46,15 +46,14 @@
 # It is recommended to run this script in simulation first.
 
 from __future__ import absolute_import
-import rospy
 import sys
-import tf
 import copy
+from builtins import input
+import tf
+import rospy
 import geometry_msgs.msg
-from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from sr_robot_commander.sr_arm_commander import SrArmCommander
-from builtins import input
 
 rospy.init_node("right_hand_arm_ef_pos", anonymous=True)
 
@@ -98,8 +97,8 @@ try:
     (position, orientation) = tf_listener.lookupTransform('ra_base', 'ra_flange',
                                                           tf_listener.getLatestCommonTime('ra_base',
                                                                                           'ra_flange'))
-except Exception as e:
-    raise ValueError(str(e))
+except Exception as exception:
+    raise ValueError(str(exception))
 
 pose_msg_1 = geometry_msgs.msg.PoseStamped()
 pose_msg_1.header.frame_id = 'ra_base'

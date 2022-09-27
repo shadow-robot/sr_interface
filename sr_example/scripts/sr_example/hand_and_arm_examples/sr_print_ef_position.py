@@ -34,9 +34,7 @@ from __future__ import absolute_import
 import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_arm_commander import SrArmCommander
-from sr_utilities.hand_finder import HandFinder
-from math import pi
-import argparse
+
 
 rospy.init_node("print_ef_position", anonymous=True)
 

@@ -40,10 +40,11 @@
 #     roslaunch sr_right_ur10arm_hand.launch sim:=true scene:=true
 
 from __future__ import absolute_import
-import rospy
-from sr_robot_commander.sr_robot_commander import SrRobotCommander
+import sys
 from math import pi
 import argparse
+from sr_robot_commander.sr_robot_commander import SrRobotCommander
+import rospy
 
 rospy.init_node("print_joints_position", anonymous=True)
 
@@ -58,7 +59,7 @@ args = parser.parse_args()
 angle_type = args.angle_type
 if angle_type not in ['radians', 'degrees']:
     parser.print_help()
-    exit(1)
+    sys.exit()
 
 scale = 1
 if angle_type == "degrees":
