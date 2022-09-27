@@ -39,10 +39,10 @@ plugins > Shadow Robot > Change controllers
 """
 
 from __future__ import absolute_import
-import roslib
-import rospy
 import time
 import math
+import rospy
+import roslib
 from std_msgs.msg import Float64
 
 roslib.load_manifest('sr_example')

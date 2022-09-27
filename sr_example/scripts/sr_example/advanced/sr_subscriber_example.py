@@ -34,9 +34,9 @@ To view the joint_states, type the following in a terminal:
 """
 
 from __future__ import absolute_import
-import roslib
-import rospy
 import math
+import rospy
+import roslib
 from sensor_msgs.msg import JointState
 
 roslib.load_manifest('sr_example')

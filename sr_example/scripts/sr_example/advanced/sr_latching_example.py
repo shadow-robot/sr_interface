@@ -35,12 +35,12 @@ the data.
 """
 
 from __future__ import absolute_import
-import rospy
 import time
+import rospy
 from std_msgs.msg import Float64
 
 
-class LatchingExample(object):
+class LatchingExample():
     # type of controller that is running
     controller_type = "_position_controller"
 
@@ -54,7 +54,7 @@ class LatchingExample(object):
                      'RFJ0', 'RFJ3', 'RFJ4',
                      'LFJ0', 'LFJ3', 'LFJ4', 'LFJ5',
                      'THJ1', 'THJ2', 'THJ3', 'THJ4', 'THJ5',
-                                                     'WRJ1', 'WRJ2']
+                     'WRJ1', 'WRJ2']
 
         self.keys_prefixed = ["{0}_{1}".format(self.prefix, joint)
                               for joint in self.keys]
