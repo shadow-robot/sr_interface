@@ -324,7 +324,6 @@ class SrRobotCommander(object):
         joint_states_cpy = copy.deepcopy(joint_states)
         set_points, move_group_robot_state = self.get_current_set_points(bound=True)
 
-        #TODO: handle degrees argument
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
                                     for joint, i in joint_states_cpy.items())
