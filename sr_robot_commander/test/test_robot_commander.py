@@ -224,7 +224,7 @@ class TestSrRobotCommander(TestCase):
                                                                custom_start_state=None)
         self.assertIsInstance(plan, RobotTrajectory)
 
-    def test_plan_joint_value_target_and_execute(self):
+    def test_plan_to_joint_value_target_and_execute_partial(self):
         self.reset_to_home()
         self.robot_commander._move_group_commander.set_joint_value_target([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
         plan = self.robot_commander.plan_to_joint_value_target(CONST_PARTIAL_TARGET, angle_degrees=False,
@@ -241,9 +241,6 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(self.compare_joint_positions(self.robot_commander.get_current_state(),
                                                      CONST_FULL_TARGET,
                                                      tolerance=TOLERANCE_SAFE))
-
-    def test_remove_joints_from_plan(self):
-        raise NotImplementedError
 
     def test_execute(self):
         self.reset_to_home()

@@ -31,13 +31,15 @@ import geometry_msgs.msg
 from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, \
     RobotTeachModeResponse
 
+from xml.dom import minidom
+
 from moveit_msgs.srv import GetPositionIK
 from moveit_msgs.srv import ListRobotStatesInWarehouse as ListStates
 from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
 from moveit_msgs.msg import OrientationConstraint, Constraints, RobotState
 
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
-from math import radians
+from math import radians, pi
 
 from moveit_msgs.srv import GetPositionFK
 from std_msgs.msg import Header
@@ -103,6 +105,10 @@ class SrRobotCommander(object):
 
         controller_list_param = rospy.get_param("/move_group/controller_list")
 
+        robot_description = rospy.get_param("/robot_description")
+        self._joint_limits = dict()
+        self._get_joint_limits(robot_description)
+
         # create dictionary with name of controllers and corresponding joints
         self._controllers = {item["name"]: item["joints"] for item in controller_list_param}
 
@@ -121,6 +127,32 @@ class SrRobotCommander(object):
         threading.Thread(None, rospy.spin)
 
         self._wait_for_set_points()
+    
+    def _get_joint_limits(self, robot_description):
+        robot_dom = minidom.parseString(robot_description)
+        robot = robot_dom.getElementsByTagName('robot')[0]
+
+        for child in robot.childNodes:
+            if child.nodeType is child.TEXT_NODE:
+                continue
+            if child.localName == 'joint':
+                jtype = child.getAttribute('type')
+                if jtype in ['fixed', 'floating', 'planar']:
+                    continue
+                name = child.getAttribute('name')
+
+                if jtype == 'continuous':
+                    minval = -pi
+                    maxval = pi
+                else:
+                    try:
+                        limit = child.getElementsByTagName('limit')[0]
+                        minval = float(limit.getAttribute('lower'))
+                        maxval = float(limit.getAttribute('upper'))
+                    except:
+                        rospy.logwarn("%s is not fixed, nor continuous, but limits are not specified!" % name)
+                        continue
+                self._joint_limits.update({name: (minval, maxval)})
 
     def _is_trajectory_valid(self, trajectory, required_keys):
         if type(trajectory) != list:
@@ -270,7 +302,9 @@ class SrRobotCommander(object):
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
                                     for joint, i in joint_states_cpy.items())
-        self._move_group_commander.set_start_state_to_current_state()
+        set_points, move_group_robot_state = self.get_current_set_points(bound=True)
+        self._move_group_commander.set_start_state(move_group_robot_state)
+        self._move_group_commander.set_joint_value_target(set_points)
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
         self._move_group_commander.go(wait=wait)
 
@@ -288,7 +322,7 @@ class SrRobotCommander(object):
         @return - motion plan (RobotTrajectory msg) that contains the trajectory to the set goal state.
         """
         joint_states_cpy = copy.deepcopy(joint_states)
-        set_points, move_group_robot_state = self.get_current_set_points()
+        set_points, move_group_robot_state = self.get_current_set_points(bound=True)
 
         #TODO: handle degrees argument
         if angle_degrees:
@@ -476,9 +510,24 @@ class SrRobotCommander(object):
 
         return output
 
-    def get_current_set_points(self):
+    @staticmethod
+    def _bound_joint(joint_value, joint_limits):
+        """
+        Forces a joint value to be within the given joint limits
+        @joint_value - Value of the joint to be bounded
+        @joint_limits - Tuple with the lower limit and upper limit of the joint
+        @return - Joint value within the given joints
+        """
+        if joint_value < joint_limits[0]:
+            joint_value = joint_limits[0]
+        elif joint_value > joint_limits[1]:
+            joint_value = joint_limits[1]
+        return joint_value
+
+    def get_current_set_points(self, bound=False):
         """
         Reads from the set points
+        @bound - Boolean to choose if the set points should be bounded within the joint limits. Default False.
         @return - Dictionary which contains the set points of the joints that belong to the move group
         """
         with self._set_points_lock:
@@ -494,9 +543,15 @@ class SrRobotCommander(object):
                 ratio_part = raw_set_points[joint]/(underactuation_ratio+1)
                 set_point_j1 = underactuation_ratio*ratio_part
                 set_point_j2 = ratio_part
+                if bound:
+                    set_point_j1 = self._bound_joint(set_point_j1, self._joint_limits[f"{joint[:-2]}J1"])
+                    set_point_j2 = self._bound_joint(set_point_j2, self._joint_limits[f"{joint[:-2]}J2"])
                 set_points.update({f"{joint[:-2]}J1": set_point_j1})
                 set_points.update({f"{joint[:-2]}J2": set_point_j2})
             elif joint[5:] not in ["J1", "J2"] or joint[3:-2] in ["WR", "TH"]:
+                set_point_value = raw_set_points[joint]
+                if bound:
+                    set_point_value = self._bound_joint(set_point_value, self._joint_limits[joint])
                 set_points.update({joint: raw_set_points[joint]})
 
         joint_state = JointState()
@@ -510,9 +565,6 @@ class SrRobotCommander(object):
         move_group_robot_state.joint_state = joint_state
 
         return set_points, move_group_robot_state
-
-    def get_robot_state_bounded(self):
-        return self._move_group_commander._g.get_current_state_bounded()
 
     def move_to_named_target(self, name, wait=True):
         """
