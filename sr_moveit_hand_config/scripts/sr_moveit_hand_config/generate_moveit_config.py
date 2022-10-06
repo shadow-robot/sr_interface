@@ -66,13 +66,13 @@ generate_moveit_config provides:
 
 from __future__ import absolute_import
 import argparse
-import yaml
-import re
 
+import re
+from copy import deepcopy
+import yaml
 import rospy
 import rosparam
 from srdfdom.srdf import SRDF
-from copy import deepcopy
 import rospkg
 
 from urdf_parser_py.urdf import URDF
@@ -193,7 +193,7 @@ def generate_real_controllers(robot, output_path=None, ns_=None):
 
     hand_joints = []
     wrist_joints = []
-    for joint in group.joints:
+    for joint in sh_group.joints:
         name = joint.name
         if name[-3:] != "tip":
             if name[-4:-2] == "WR":
@@ -232,8 +232,7 @@ def generate_ompl_planning(robot,
     output_str += yaml_reindent(yaml.dump(
         yamldoc["planner_configs"],
         default_flow_style=False,
-        allow_unicode=True),
-        2)
+        allow_unicode=True), 2)
     output_str += "\n"
     # find prefix
     prefix = find_prefix(robot)
@@ -290,7 +289,6 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
         @type  ns_: str
     """
     output_str = ""
-    group_name = None
 
     while not rospy.has_param('/robot_description'):
         rospy.sleep(0.5)
@@ -316,13 +314,6 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
     # find prefix
     prefix = find_prefix(robot)
     finger_prefixes = ["FF", "MF", "RF", "LF", "TH"]
-
-    # find full hand key name
-    sh_group = None
-    for group in robot.groups:
-        if group.name.endswith("_hand"):
-            sh_group = group
-            break
 
     # detect biotac fingers. I think this is not needed any more as all links are called the same even for biotac hand
     is_fixed = {"first_finger": False,
