@@ -66,6 +66,7 @@ class TestSrRobotStateExporter(TestCase):
         state_exporter.extract_all()
         state_exporter.output_module(self.test_path + "/exporter_output_all.py")
         from exporter_output_all import warehouse_states
+        rospy.sleep(1)
         self.assertEqual(warehouse_states, self.expected_states, msg="Export all states failed:" +
                          str(warehouse_states) + " not " + str(self.expected_states))
 
@@ -75,6 +76,7 @@ class TestSrRobotStateExporter(TestCase):
         state_exporter.extract_one_state("state1")
         state_exporter.output_module(self.test_path + "/exporter_output_state.py")
         from exporter_output_state import warehouse_states
+        rospy.sleep(1)
         self.assertEqual(warehouse_states, self.expected_state, msg="Export all states failed:" +
                          str(warehouse_states) + " not " + str(self.expected_state))
 
@@ -85,6 +87,7 @@ class TestSrRobotStateExporter(TestCase):
         state_exporter.extract_list(["state1"])
         state_exporter.output_module(self.test_path + "/exporter_output_list.py")
         from exporter_output_list import warehouse_states
+        rospy.sleep(1)
         self.assertEqual(warehouse_states, self.expected_state, msg="Export all states failed:" +
                          str(warehouse_states) + " not " + str(self.expected_state))
 
