@@ -2,7 +2,6 @@ from __future__ import absolute_import
 from copy import deepcopy
 import os
 import yaml
-import string
 from rospy import logerr, loginfo, get_param
 import rospkg
 import genpy
@@ -11,14 +10,14 @@ from trajectory_msgs.msg import JointTrajectoryPoint
 from sr_robot_msgs.msg import GraspArray
 
 
-def reindent(s, numSpaces):
+def reindent(multiline_string, num_spaces):
     """
     http://code.activestate.com/recipes/66055-changing-the-indentation-of-a-multi-line-string/
     """
-    s = str.split(s, '\n')
-    s = [(numSpaces * ' ') + line for line in s]
-    s = str.join(s, '\n')
-    return s
+    splitted_string = str.split(multiline_string, '\n')
+    splitted_string = [(num_spaces * ' ') + line for line in splitted_string]
+    splitted_string = str.join(splitted_string, '\n')
+    return splitted_string
 
 
 class Grasp(moveit_msgs.msg.Grasp):
@@ -46,30 +45,26 @@ class Grasp(moveit_msgs.msg.Grasp):
     def from_msg(cls, msg):
         """Construct a shadow grasp object from moveit grasp object."""
         grasp = Grasp()
-        grasp.id = msg.id
-        grasp.pre_grasp_posture = deepcopy(msg.pre_grasp_posture)
-        grasp.grasp_posture = deepcopy(msg.grasp_posture)
-        grasp.grasp_pose = deepcopy(msg.grasp_pose)
-        grasp.grasp_quality = msg.grasp_quality
-        grasp.pre_grasp_approach = deepcopy(msg.pre_grasp_approach)
-        grasp.post_grasp_retreat = deepcopy(msg.post_grasp_retreat)
-        grasp.post_place_retreat = deepcopy(msg.post_place_retreat)
-        grasp.max_contact_force = msg.max_contact_force
-        grasp.allowed_touch_objects = deepcopy(msg.allowed_touch_objects)
+        grasp.id = msg.id  # pylint: disable=C0103,W0201
+        grasp.pre_grasp_posture = deepcopy(msg.pre_grasp_posture)  # pylint: disable=W0201
+        grasp.grasp_posture = deepcopy(msg.grasp_posture)  # pylint: disable=W0201
+        grasp.grasp_pose = deepcopy(msg.grasp_pose)  # pylint: disable=W0201
+        grasp.grasp_quality = msg.grasp_quality  # pylint: disable=W0201
+        grasp.pre_grasp_approach = deepcopy(msg.pre_grasp_approach)  # pylint: disable=W0201
+        grasp.post_grasp_retreat = deepcopy(msg.post_grasp_retreat)  # pylint: disable=W0201
+        grasp.post_place_retreat = deepcopy(msg.post_place_retreat)  # pylint: disable=W0201
+        grasp.max_contact_force = msg.max_contact_force  # pylint: disable=W0201
+        grasp.allowed_touch_objects = deepcopy(msg.allowed_touch_objects)  # pylint: disable=W0201
         return grasp
 
-    def to_msg(self):
-        """Return plain moveit_msgs/Grasp version of self."""
-        raise Exception("TODO - to_msg")
-
     @classmethod
-    def from_yaml(self, y):
+    def from_yaml(cls, yaml_code):
         """
         Construct a shadow grasp object from YAML object. For example YAML
         grabbed from rostopic to a file.
         """
         grasp = Grasp()
-        genpy.message.fill_message_args(grasp, y)
+        genpy.message.fill_message_args(grasp, yaml_code)
         return grasp
 
     def set_pre_grasp_point(self, *args, **kwargs):
@@ -86,7 +81,8 @@ class Grasp(moveit_msgs.msg.Grasp):
         """
         self._set_posture_point(self.grasp_posture, * args, ** kwargs)
 
-    def _set_posture_point(self, posture, positions, point=0):
+    @staticmethod
+    def _set_posture_point(posture, positions, point=0):
         """Set the posture positions using a dict of joint positions."""
         # XXX: Why have we been doing this?
         # posture.header.stamp = now
@@ -114,10 +110,10 @@ class GraspStash():
     def __init__(self):
         # Store of all loaded grasps, indexed on grasp.id.
         self._store = {}
-        rp = rospkg.RosPack()
+        ros_pack = rospkg.RosPack()
         self.grasps_file = get_param('~grasps_file',
                                      default=os.path.join(
-                                         rp.get_path('sr_grasp'), 'resource', 'grasps.yaml'))
+                                         ros_pack.get_path('sr_grasp'), 'resource', 'grasps.yaml'))
 
     def get_all(self):
         """Return list of all grasps."""
@@ -158,20 +154,21 @@ class GraspStash():
 
     def load_yaml_file(self, fname):
         """Load a set of grasps from a YAML file."""
-        try:
-            data = yaml.safe_load(file(fname))
-            self.load_yaml(data)
-        except Exception as e:
-            logerr("Failed to load YAML grasp file: %s error:%s" % (fname, e))
-            return False
-        else:
-            loginfo("Loaded grasps from file: %s" % (fname))
-            return True
+        with open(fname, "r") as stream:
+            try:
+                pdata = yaml.safe_load(stream)
+                self.load_yaml(pdata)
+            except Exception as exc:
+                logerr("Failed to load YAML grasp file: %s error:%s" % (fname, exc))
+                return False
+            else:
+                loginfo("Loaded grasps from file: %s" % (fname))
+                return True
 
     def load_yaml(self, data):
         """Load a set of grasps from a YAML object. Throws exceptions on errors."""
-        for g in data:
-            grasp = Grasp.from_yaml(g)
+        for each_grasp in data:
+            grasp = Grasp.from_yaml(each_grasp)
             self.put_grasp(grasp)
 
     def save_yaml_file(self, fname=""):

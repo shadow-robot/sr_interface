@@ -26,7 +26,6 @@
 # software, even if advised of the possibility of such damage.
 
 from __future__ import absolute_import
-import os
 import unittest
 import rospy
 import rostest
