@@ -304,6 +304,46 @@
       </xacro:if>
     </xacro:unless>
   </group_state>
+  <group_state name="relaxed" group="$(arg prefix)fingers">
+    <xacro:if value="$(arg th)">
+        <xacro:thumb_state_relaxed  prefix="$(arg prefix)"/>
+    </xacro:if>
+    <xacro:if value="$(arg ff)">
+        <xacro:finger_state_relaxed  prefix="$(arg prefix)" joint_prefix="FF"/>
+    </xacro:if>
+    <xacro:if value="$(arg mf)">
+        <xacro:finger_state_relaxed  prefix="$(arg prefix)" joint_prefix="MF"/>
+    </xacro:if>
+    <xacro:if value="$(arg rf)">
+        <xacro:finger_state_relaxed  prefix="$(arg prefix)" joint_prefix="RF"/>
+    </xacro:if>
+    <xacro:unless value="$(arg is_lite)">
+      <xacro:if value="$(arg lf)">
+          <xacro:finger_state_relaxed  prefix="$(arg prefix)" joint_prefix="LF"/>
+      </xacro:if>
+    </xacro:unless>
+  </group_state>
+  <group_state name="relaxed" group="$(arg hand_name)">
+    <xacro:if value="$(arg th)">
+        <xacro:thumb_state_relaxed  prefix="$(arg prefix)"/>
+    </xacro:if>
+    <xacro:if value="$(arg ff)">
+        <xacro:finger_state_relaxed  prefix="$(arg prefix)" joint_prefix="FF"/>
+    </xacro:if>
+    <xacro:if value="$(arg mf)">
+        <xacro:finger_state_relaxed  prefix="$(arg prefix)" joint_prefix="MF"/>
+    </xacro:if>
+    <xacro:if value="$(arg rf)">
+        <xacro:finger_state_relaxed  prefix="$(arg prefix)" joint_prefix="RF"/>
+    </xacro:if>
+    <xacro:unless value="$(arg is_lite)">
+      <xacro:if value="$(arg lf)">
+          <xacro:finger_state_relaxed  prefix="$(arg prefix)" joint_prefix="LF"/>
+      </xacro:if>
+      <joint name="$(arg prefix)WRJ1" value="0" />
+      <joint name="$(arg prefix)WRJ2" value="0" />
+    </xacro:unless>
+  </group_state>
 
   <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
 
