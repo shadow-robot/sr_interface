@@ -15,6 +15,7 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
+from __future__ import division
 import threading
 
 import rospy
@@ -126,7 +127,7 @@ class SrRobotCommander(object):
         threading.Thread(None, rospy.spin)
 
         self._wait_for_set_points()
-    
+
     def _get_joint_limits(self, robot_description):
         robot_dom = minidom.parseString(robot_description)
         robot = robot_dom.getElementsByTagName('robot')[0]
@@ -148,8 +149,9 @@ class SrRobotCommander(object):
                         limit = child.getElementsByTagName('limit')[0]
                         minval = float(limit.getAttribute('lower'))
                         maxval = float(limit.getAttribute('upper'))
-                    except:
-                        rospy.logwarn("%s is not fixed, nor continuous, but limits are not specified!" % name)
+                    except Exception as exception:
+                        rospy.logwarn(f"{exception}: {name} is not fixed, nor continuous, \
+                            but limits are not specified!")
                         continue
                 self._joint_limits.update({name: (minval, maxval)})
 
@@ -540,9 +542,10 @@ class SrRobotCommander(object):
                                                         self._joint_limits[joint])
 
         elif type(joint_states) == RobotState:
-            for i in range(0,len(joint_states.joint_state.name)):
-                joint_states.joint_state.position[i] = self._bound_joint(joint_states.joint_state.position[i],
-                                                                         self._joint_limits[joint_states.joint_state.name[i]])
+            for i in range(0, len(joint_states.joint_state.name)):
+                joint_states.joint_state.position[i] = \
+                    self._bound_joint(joint_states.joint_state.position[i],
+                                      self._joint_limits[joint_states.joint_state.name[i]])
 
         return joint_states
 
@@ -909,7 +912,10 @@ class SrRobotCommander(object):
             joint_number = joint_name[5:]
             if joint_number in ["J1", "J2"] and joint_member not in ["WR", "TH"]:
                 topic_name = f"/sh_{joint_name.lower()[0:5]}j0_position_controller/state"
-                rospy.Subscriber(topic_name, JointControllerState, self._set_point_j0_cb, f"{joint_name[0:5]}J0", queue_size=1)
+                rospy.Subscriber(topic_name,
+                                 JointControllerState,
+                                 self._set_point_j0_cb, f"{joint_name[0:5]}J0",
+                                 queue_size=1)
                 joint_names_group.remove(f"{joint_name[0:5]}J1")
                 joint_names_group.remove(f"{joint_name[0:5]}J2")
 
@@ -1018,7 +1024,7 @@ class SrRobotCommander(object):
                     else:
                         self._are_set_points_ready = True
                         self._set_points_cv.notifyAll()
-    
+
     def _set_point_j0_cb(self, msg, joint_name):
         """
         Updates the dictionary mapping joint names with their desired position in the trajectory controllers
