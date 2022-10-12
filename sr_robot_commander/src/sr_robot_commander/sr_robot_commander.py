@@ -15,7 +15,6 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
-from ntpath import join
 import threading
 
 import rospy
@@ -904,7 +903,6 @@ class SrRobotCommander(object):
                     if topic_name not in topics_subscribed:
                         rospy.Subscriber(topic_name, JointTrajectoryControllerState, self._set_point_cb, queue_size=1)
                         topics_subscribed.append(topic_name)
-                        continue
 
         for joint_name in joint_names_group:
             joint_member = joint_name[3:-2]
