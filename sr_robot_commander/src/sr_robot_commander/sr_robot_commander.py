@@ -107,7 +107,7 @@ class SrRobotCommander(object):
 
         robot_description = rospy.get_param("/robot_description")
         self._joint_limits = dict()
-        self._get_joint_limits(robot_description)
+        self._read_joint_limits(robot_description)
 
         # create dictionary with name of controllers and corresponding joints
         self._controllers = {item["name"]: item["joints"] for item in controller_list_param}
@@ -128,7 +128,7 @@ class SrRobotCommander(object):
 
         self._wait_for_set_points()
 
-    def _get_joint_limits(self, robot_description):
+    def _read_joint_limits(self, robot_description):
         robot_dom = minidom.parseString(robot_description)
         robot = robot_dom.getElementsByTagName('robot')[0]
 
@@ -154,6 +154,13 @@ class SrRobotCommander(object):
                             but limits are not specified!")
                         continue
                 self._joint_limits.update({name: (minval, maxval)})
+
+    def get_joint_limits(self):
+        """
+        @return - dictionary mapping joint names with a tuple containing the lower limit
+        and the upper limit of a joint
+        """
+        return self._joint_limits
 
     def _is_trajectory_valid(self, trajectory, required_keys):
         if type(trajectory) != list:
