@@ -302,8 +302,9 @@ class SrRobotCommander(object):
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
                                     for joint, i in joint_states_cpy.items())
-        set_points, move_group_robot_state = self.get_current_set_points(bound=True)
+        set_points, move_group_robot_state = self.get_current_set_points()
         self._move_group_commander.set_start_state(move_group_robot_state)
+        set_points = self._bound_state(set_points)
         self._move_group_commander.set_joint_value_target(set_points)
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
         self._move_group_commander.go(wait=wait)
@@ -322,17 +323,18 @@ class SrRobotCommander(object):
         @return - motion plan (RobotTrajectory msg) that contains the trajectory to the set goal state.
         """
         joint_states_cpy = copy.deepcopy(joint_states)
-        set_points, move_group_robot_state = self.get_current_set_points(bound=True)
+        set_points, robot_state = self.get_current_set_points()
 
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
                                     for joint, i in joint_states_cpy.items())
         if custom_start_state is None:
-            self._move_group_commander.set_start_state(move_group_robot_state)
+            self._move_group_commander.set_start_state(robot_state)
         else:
             self._move_group_commander.set_start_state(custom_start_state)
 
-        self._move_group_commander.set_joint_value_target(set_points)
+        set_points_bounded = self._bound_state(set_points)
+        self._move_group_commander.set_joint_value_target(set_points_bounded)
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
         self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
         return self.__plan
@@ -509,6 +511,9 @@ class SrRobotCommander(object):
 
         return output
 
+    def get_robot_state_bounded(self):
+        return self._move_group_commander._g.get_current_state_bounded()
+
     @staticmethod
     def _bound_joint(joint_value, joint_limits):
         """
@@ -523,10 +528,28 @@ class SrRobotCommander(object):
             joint_value = joint_limits[1]
         return joint_value
 
-    def get_current_set_points(self, bound=False):
+    def _bound_state(self, joint_states):
+        """
+        Bounds the joint states within the limits of the joints
+        @param joint_states - It can be of type dict or RobotState. This param should contain the joints to be bounded
+        within their limits
+        @return - The joint states updated with the joint poisitions bounded
+        """
+        if type(joint_states) == dict:
+            for joint in joint_states:
+                joint_states[joint] = self._bound_joint(joint_states[joint],
+                                                        self._joint_limits[joint])
+
+        elif type(joint_states) == RobotState:
+            for i in range(0,len(joint_states.joint_state.name)):
+                joint_states.joint_state.position[i] = self._bound_joint(joint_states.joint_state.position[i],
+                                                                         self._joint_limits[joint_states.joint_state.name[i]])
+
+        return joint_states
+
+    def get_current_set_points(self):
         """
         Reads from the set points
-        @bound - Boolean to choose if the set points should be bounded within the joint limits. Default False.
         @return - Dictionary which contains the set points of the joints that belong to the move group
         """
         with self._set_points_lock:
@@ -542,15 +565,9 @@ class SrRobotCommander(object):
                 ratio_part = raw_set_points[joint]/(underactuation_ratio+1)
                 set_point_j1 = underactuation_ratio*ratio_part
                 set_point_j2 = ratio_part
-                if bound:
-                    set_point_j1 = self._bound_joint(set_point_j1, self._joint_limits[f"{joint[:-2]}J1"])
-                    set_point_j2 = self._bound_joint(set_point_j2, self._joint_limits[f"{joint[:-2]}J2"])
                 set_points.update({f"{joint[:-2]}J1": set_point_j1})
                 set_points.update({f"{joint[:-2]}J2": set_point_j2})
             elif joint[5:] not in ["J1", "J2"] or joint[3:-2] in ["WR", "TH"]:
-                set_point_value = raw_set_points[joint]
-                if bound:
-                    set_point_value = self._bound_joint(set_point_value, self._joint_limits[joint])
                 set_points.update({joint: raw_set_points[joint]})
 
         joint_state = JointState()
