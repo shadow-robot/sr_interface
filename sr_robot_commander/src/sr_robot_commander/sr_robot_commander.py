@@ -28,31 +28,23 @@
 from __future__ import absolute_import
 import threading
 
-import rospy
 from actionlib import SimpleActionClient
-from control_msgs.msg import FollowJointTrajectoryAction, \
-    FollowJointTrajectoryGoal
-from moveit_commander import MoveGroupCommander, RobotCommander, \
-    PlanningSceneInterface
-from moveit_msgs.msg import RobotTrajectory, PositionIKRequest
+from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal
 from sensor_msgs.msg import JointState
 import geometry_msgs.msg
-from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, \
-    RobotTeachModeResponse
-
+from sr_robot_msgs.srv import RobotTeachMode, RobotTeachModeRequest, RobotTeachModeResponse
+from moveit_commander import MoveGroupCommander, RobotCommander, PlanningSceneInterface
 from moveit_msgs.srv import GetPositionIK
 from moveit_msgs.srv import ListRobotStatesInWarehouse as ListStates
 from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
-from moveit_msgs.msg import OrientationConstraint, Constraints
-
+from moveit_msgs.srv import GetPositionFK
+from moveit_msgs.msg import RobotTrajectory, PositionIKRequest
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
 from math import radians
-
-from moveit_msgs.srv import GetPositionFK
 from std_msgs.msg import Header
-
 import tf2_ros
 import copy
+import rospy
 import numpy
 
 # Since Moveit update to noetic, the plan() method returns a tuple where trajectory is indexed at 1.
@@ -61,13 +53,11 @@ CONST_TUPLE_TRAJECTORY_INDEX = 1
 
 
 class SrRobotCommanderException(Exception):
-
     def __init__(self, value):
+        super(SrRobotCommanderException, self).__init__(value)
         self._value = value
-
     def __str__(self):
         return repr(self._value)
-
 
 class SrRobotCommander():
 
@@ -122,8 +112,9 @@ class SrRobotCommander():
 
         threading.Thread(None, rospy.spin)
 
-    def _is_trajectory_valid(self, trajectory, required_keys):
-        if type(trajectory) != list:
+    @staticmethod
+    def _is_trajectory_valid(trajectory, required_keys):
+        if isinstance(trajectory, list):
             rospy.logerr("Trajectory is not a list of waypoints")
             return False
 
@@ -159,6 +150,15 @@ class SrRobotCommander():
         """
         self._move_group_commander.set_planning_time(seconds)
 
+    def get_moveit_robot_commander(self):
+        return self._robot_commander
+
+    def get_moveit_planning_scene(self):
+        return self._planning_scene
+
+    def get_move_group_commander(self):
+        return self._move_group_commander
+
     def get_end_effector_pose_from_named_state(self, name):
         state = self._warehouse_name_get_srv(name, self._robot_name).state
         return self.get_end_effector_pose_from_state(state)
@@ -188,8 +188,8 @@ class SrRobotCommander():
         return self._name
 
     def refresh_named_targets(self):
-        self._srdf_names = self.__get_srdf_names()
-        self._warehouse_names = self.__get_warehouse_names()
+        self._srdf_names = self.get_srdf_names()
+        self._warehouse_names = self.get_warehouse_names()
 
     def set_max_velocity_scaling_factor(self, value):
         """
@@ -304,15 +304,17 @@ class SrRobotCommander():
         """
         Checks if current plan contains a valid trajectory
         """
-        return (self.__plan is not None and len(self.__plan.joint_trajectory.points) > 0)
+        return self.__plan is not None and len(self.__plan.joint_trajectory.points) > 0
 
-    def check_given_plan_is_valid(self, plan):
+    @staticmethod
+    def check_given_plan_is_valid(plan):
         """
         Checks if given plan contains a valid trajectory
         """
-        return (plan is not None and len(plan.joint_trajectory.points) > 0)
+        return plan is not None and len(plan.joint_trajectory.points) > 0
 
-    def evaluate_given_plan(self, plan):
+    @staticmethod
+    def evaluate_given_plan(plan):
         """
         Returns given plan quality calculated by a weighted sum of angles traveled by each
         of the joints, giving higher weights to the joints closer to the base of the robot,
@@ -346,16 +348,16 @@ class SrRobotCommander():
     def evaluate_plan(self):
         return self.evaluate_given_plan(self.__plan)
 
-    def evaluate_plan_quality(self, plan_quality, good_threshold=20, medium_threshold=50):
+    @staticmethod
+    def evaluate_plan_quality(plan_quality, good_threshold=20, medium_threshold=50):
         if plan_quality > medium_threshold:
             rospy.logwarn("Low plan quality! Value: {}".format(plan_quality))
             return 'poor'
-        elif (plan_quality > good_threshold and plan_quality < medium_threshold):
+        if good_threshold < plan_quality < medium_threshold:
             rospy.loginfo("Medium plan quality. Value: {}".format(plan_quality))
             return 'medium'
-        elif plan_quality < good_threshold:
-            rospy.loginfo("Good plan quality. Value: {}".format(plan_quality))
-            return 'good'
+        rospy.loginfo("Good plan quality. Value: {}".format(plan_quality))
+        return 'good'
 
     def get_robot_name(self):
         return self._robot_name
@@ -372,25 +374,26 @@ class SrRobotCommander():
         """
         if name in self._srdf_names:
             self._move_group_commander.set_named_target(name)
-        elif (name in self._warehouse_names):
+            return True
+        if name in self._warehouse_names:
             response = self._warehouse_name_get_srv(name, self._robot_name)
 
             active_names = self._move_group_commander._g.get_active_joints()
             joints = response.state.joint_state.name
             positions = response.state.joint_state.position
-            js = {}
+            joint_state = {}
 
-            for n, this_name in enumerate(joints):
+            for name_index, this_name in enumerate(joints):
                 if this_name in active_names:
-                    js[this_name] = positions[n]
+                    joint_state[this_name] = positions[name_index]
             try:
-                self._move_group_commander.set_joint_value_target(js)
-            except Exception as e:
-                rospy.loginfo(e)
-        else:
-            rospy.logerr("Unknown named state '%s'..." % name)
-            return False
-        return True
+                self._move_group_commander.set_joint_value_target(joint_state)
+            except Exception as exception:
+                rospy.loginfo(exception)
+            return True
+        rospy.logerr("Unknown named state '%s'..." % name)
+        return False
+
 
     def get_named_target_joint_values(self, name):
         """
@@ -401,16 +404,15 @@ class SrRobotCommander():
         """
         output = dict()
 
-        if (name in self._srdf_names):
+        if name in self._srdf_names:
             output = self._move_group_commander._g.get_named_target_values(str(name))
 
-        elif (name in self._warehouse_names):
-            js = self._warehouse_name_get_srv(
-                name, self._robot_name).state.joint_state
+        elif name in self._warehouse_names:
+            service = self._warehouse_name_get_srv(name, self._robot_name).state.joint_state
 
-            for x, n in enumerate(js.name):
-                if n in self._move_group_commander._g.get_joints():
-                    output[n] = js.position[x]
+            for js_index, js_name in enumerate(service.name):
+                if js_name in self._move_group_commander._g.get_joints():
+                    output[js_name] = service.position[js_index]
 
         else:
             rospy.logerr("No target named %s" % name)
@@ -448,8 +450,7 @@ class SrRobotCommander():
                 rospy.logwarn("Couldn't get the pose from " + self._move_group_commander.get_end_effector_link() +
                               " in " + reference_frame + " reference frame")
             return None
-        else:
-            return self._move_group_commander.get_current_pose().pose
+        return self._move_group_commander.get_current_pose().pose
 
     def get_current_state(self):
         """
@@ -504,7 +505,7 @@ class SrRobotCommander():
             return False
         return True
 
-    def __get_warehouse_names(self):
+    def get_warehouse_names(self):
         try:
             list_srv = rospy.ServiceProxy("list_robot_states", ListStates)
             return list_srv("", self._robot_name).states
@@ -513,13 +514,15 @@ class SrRobotCommander():
             rospy.logwarn("Couldn't access warehouse: " + str(exc))
             return list()
 
-    def _reset_plan(self):
+    def reset_plan(self):
         self.__plan = None
 
     def _set_plan(self, plan):
         self.__plan = plan
 
-    def __get_srdf_names(self):
+    def get_plan(self):
+        return self.__plan
+    def get_srdf_names(self):
         return self._move_group_commander._g.get_named_targets()
 
     def get_named_targets(self):
@@ -588,7 +591,7 @@ class SrRobotCommander():
         """
 
         if not self._is_trajectory_valid(trajectory, ["name|joint_angles", "interpolate_time"]):
-            return
+            return None
 
         current = self.get_current_state_bounded()
 
@@ -603,14 +606,13 @@ class SrRobotCommander():
 
         time_from_start = 0.0
 
-        for wp in trajectory:
-
+        for way_point in trajectory:
             joint_positions = None
-            if 'name' in wp.keys():
-                joint_positions = self.get_named_target_joint_values(wp['name'])
-            elif 'joint_angles' in wp.keys():
-                joint_positions = copy.deepcopy(wp['joint_angles'])
-                if 'degrees' in wp.keys() and wp['degrees']:
+            if 'name' in way_point.keys():
+                joint_positions = self.get_named_target_joint_values(way_point['name'])
+            elif 'joint_angles' in way_point.keys():
+                joint_positions = copy.deepcopy(way_point['joint_angles'])
+                if 'degrees' in way_point.keys() and way_point['degrees']:
                     for joint, angle in joint_positions.items():
                         joint_positions[joint] = radians(angle)
 
@@ -620,22 +622,22 @@ class SrRobotCommander():
 
             new_positions = {}
 
-            for n in joint_names:
-                new_positions[n] = joint_positions[n] if n in joint_positions else current[n]
+            for name in joint_names:
+                new_positions[name] = joint_positions[name] if name in joint_positions else current[name]
 
             trajectory_point = JointTrajectoryPoint()
             trajectory_point.positions = [new_positions[n] for n in joint_names]
 
             current = new_positions
 
-            time_from_start += wp['interpolate_time']
+            time_from_start += way_point['interpolate_time']
             trajectory_point.time_from_start = rospy.Duration.from_sec(time_from_start)
             joint_trajectory.points.append(trajectory_point)
 
-            if 'pause_time' in wp and wp['pause_time'] > 0:
+            if 'pause_time' in way_point and way_point['pause_time'] > 0:
                 extra = JointTrajectoryPoint()
                 extra.positions = trajectory_point.positions
-                time_from_start += wp['pause_time']
+                time_from_start += way_point['pause_time']
                 extra.time_from_start = rospy.Duration.from_sec(time_from_start)
                 joint_trajectory.points.append(extra)
 
@@ -773,11 +775,9 @@ class SrRobotCommander():
         with self._joint_states_lock:
             self._joints_state = joint_state
             self._joints_position = {n: p for n, p in
-                                     zip(joint_state.name,
-                                         joint_state.position)}
+                                     zip(joint_state.name, joint_state.position)}
             self._joints_velocity = {n: v for n, v in
-                                     zip(joint_state.name,
-                                         joint_state.velocity)}
+                                     zip(joint_state.name, joint_state.velocity)}
             self._joints_effort = {n: v for n, v in
                                    zip(joint_state.name, joint_state.effort)}
 
@@ -824,10 +824,10 @@ class SrRobotCommander():
             point = JointTrajectoryPoint()
             point.positions = []
 
-            for x in joint_states_cpy.keys():
-                if x in controller_joints:
-                    goal.trajectory.joint_names.append(x)
-                    point.positions.append(joint_states_cpy[x])
+            for key in joint_states_cpy.keys():
+                if key in controller_joints:
+                    goal.trajectory.joint_names.append(key)
+                    point.positions.append(joint_states_cpy[key])
 
             point.time_from_start = rospy.Duration.from_sec(time)
             goal.trajectory.points = [point]
@@ -957,7 +957,7 @@ class SrRobotCommander():
 
         if len(trajectory.points) <= 0:
             rospy.logerr("Trajectory has no points in it, can't reverse...")
-            return None
+            return
 
         first_point = trajectory.points[0]
         end_state = dict(zip(trajectory.joint_names, first_point.positions))
@@ -1015,20 +1015,20 @@ class SrRobotCommander():
                     rospy.logerr("Unreachable point: No IK solution")
                 else:
                     rospy.logerr("Unreachable point (error: %s)" % resp.error_code)
-                return
-            else:
-                if resp.solution.joint_state is not None:
-                    joint_state = resp.solution.joint_state
-                    active_joints = self._move_group_commander.get_active_joints()
-                    current_indices = [i for i, x in enumerate(joint_state.name)
-                                       if any(thing in x for thing in active_joints)]
-                    current_names = [joint_state.name[i] for i in current_indices]
-                    current_positions = [joint_state.position[i] for i in current_indices]
-                    resp.solution.joint_state = dict(zip(current_names, current_positions))
-                return resp.solution.joint_state
+                return None
 
-        except rospy.ServiceException as e:
-            rospy.logerr("Service call failed: %s" % e)
+            if resp.solution.joint_state is not None:
+                joint_state = resp.solution.joint_state
+                active_joints = self._move_group_commander.get_active_joints()
+                current_indices = [i for i, x in enumerate(joint_state.name)
+                                   if any(thing in x for thing in active_joints)]
+                current_names = [joint_state.name[i] for i in current_indices]
+                current_positions = [joint_state.position[i] for i in current_indices]
+                resp.solution.joint_state = dict(zip(current_names, current_positions))
+            return resp.solution.joint_state
+
+        except rospy.ServiceException as exception:
+            rospy.logerr("Service call failed: %s" % exception)
 
     def move_to_pose_value_target_unsafe(self, target_pose, avoid_collisions=False,
                                          time=0.002, wait=True, ik_constraints=None):

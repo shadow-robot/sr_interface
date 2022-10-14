@@ -28,16 +28,18 @@
 # A script to test planners, to be run on the command line with group name as the argument (left_arm or right_arm)
 
 from __future__ import absolute_import
-import rospy
 import sys
-import numpy
-from moveit_commander import RobotCommander, PlanningSceneInterface, MoveGroupCommander
-from moveit_msgs.msg import RobotState
-import geometry_msgs.msg
 import copy
 import time
 import argparse
-import rosgraph
+from moveit_commander import RobotCommander, PlanningSceneInterface, MoveGroupCommander
+from moveit_msgs.msg import RobotState
+import geometry_msgs.msg
+
+
+
+import rospy
+import numpy
 
 
 class TestPlanners():
@@ -66,53 +68,51 @@ class TestPlanners():
 
     def _add_walls_and_ground(self):
         # publish a scene
-        p = geometry_msgs.msg.PoseStamped()
-        p.header.frame_id = self.robot.get_planning_frame()
+        pose_stamped = geometry_msgs.msg.PoseStamped()
+        pose_stamped.header.frame_id = self.robot.get_planning_frame()
 
-        p.pose.position.x = 0
-        p.pose.position.y = 0
+        pose_stamped.pose.position.x = 0
+        pose_stamped.pose.position.y = 0
         # offset such that the box is below ground (to prevent collision with
         # the robot itself)
-        p.pose.position.z = -0.11
-        p.pose.orientation.x = 0
-        p.pose.orientation.y = 0
-        p.pose.orientation.z = 0
-        p.pose.orientation.w = 1
-        self.scene.add_box("ground", p, (3, 3, 0.1))
+        pose_stamped.pose.position.z = -0.11
+        pose_stamped.pose.orientation.x = 0
+        pose_stamped.pose.orientation.y = 0
+        pose_stamped.pose.orientation.z = 0
+        pose_stamped.pose.orientation.w = 1
+        self.scene.add_box("ground", pose_stamped, (3, 3, 0.1))
 
-        p.pose.position.x = 0.4
-        p.pose.position.y = 0.85
-        p.pose.position.z = 0.4
-        p.pose.orientation.x = 0.5
-        p.pose.orientation.y = -0.5
-        p.pose.orientation.z = 0.5
-        p.pose.orientation.w = 0.5
-        self.scene.add_box("wall_front", p, (0.8, 2, 0.01))
+        pose_stamped.pose.position.x = 0.4
+        pose_stamped.pose.position.y = 0.85
+        pose_stamped.pose.position.z = 0.4
+        pose_stamped.pose.orientation.x = 0.5
+        pose_stamped.pose.orientation.y = -0.5
+        pose_stamped.pose.orientation.z = 0.5
+        pose_stamped.pose.orientation.w = 0.5
+        self.scene.add_box("wall_front", pose_stamped, (0.8, 2, 0.01))
 
-        p.pose.position.x = 1.33
-        p.pose.position.y = 0.4
-        p.pose.position.z = 0.4
-        p.pose.orientation.x = 0.0
-        p.pose.orientation.y = -0.707388
-        p.pose.orientation.z = 0.0
-        p.pose.orientation.w = 0.706825
-        self.scene.add_box("wall_right", p, (0.8, 2, 0.01))
+        pose_stamped.pose.position.x = 1.33
+        pose_stamped.pose.position.y = 0.4
+        pose_stamped.pose.position.z = 0.4
+        pose_stamped.pose.orientation.x = 0.0
+        pose_stamped.pose.orientation.y = -0.707388
+        pose_stamped.pose.orientation.z = 0.0
+        pose_stamped.pose.orientation.w = 0.706825
+        self.scene.add_box("wall_right", pose_stamped, (0.8, 2, 0.01))
 
-        p.pose.position.x = -0.5
-        p.pose.position.y = 0.4
-        p.pose.position.z = 0.4
-        p.pose.orientation.x = 0.0
-        p.pose.orientation.y = -0.707107
-        p.pose.orientation.z = 0.0
-        p.pose.orientation.w = 0.707107
-        self.scene.add_box("wall_left", p, (0.8, 2, 0.01))
+        pose_stamped.pose.position.x = -0.5
+        pose_stamped.pose.position.y = 0.4
+        pose_stamped.pose.position.z = 0.4
+        pose_stamped.pose.orientation.x = 0.0
+        pose_stamped.pose.orientation.y = -0.707107
+        pose_stamped.pose.orientation.z = 0.0
+        pose_stamped.pose.orientation.w = 0.707107
+        self.scene.add_box("wall_left", pose_stamped, (0.8, 2, 0.01))
         # rospy.sleep(1)
 
-    def _check_plan(self, plan):
-        if len(plan.joint_trajectory.points) > 0:
-            return True
-        else:
-            return False
+    @staticmethod
+    def _check_plan(plan):
+        return bool(len(plan.joint_trajectory.points) > 0)
 
     def _plan_joints(self, joints):
         self.group.clear_pose_targets()

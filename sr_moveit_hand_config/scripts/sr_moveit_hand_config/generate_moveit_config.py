@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2015, CITEC, Bielefeld University
@@ -29,6 +30,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 # Author: Guillaume Walck <gwalck@techfak.uni-bielefeld.de>
+# Author: Shadow Robot Software Team <software@shadowrobot.com>
 
 # Software License Agreement (BSD License)
 # Copyright © 2022 belongs to Shadow Robot Company Ltd.

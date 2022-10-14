@@ -26,10 +26,10 @@
 # software, even if advised of the possibility of such damage.
 
 from __future__ import absolute_import
-import rospy
+from unittest import TestCase
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
-from unittest import TestCase
+import rospy
 
 PKG = "sr_robot_commander"
 
@@ -45,8 +45,8 @@ class TestSrHandCommander(TestCase):
     def test_strip_prefix(self):
         hand_commander = SrHandCommander()
 
-        self.assertEqual(hand_commander._strip_prefix("rh_ffj3"), "ffj3", msg="Strip failed")
-        self.assertEqual(hand_commander._strip_prefix("ffj3"), "ffj3", msg="Strip failed")
+        self.assertEqual(hand_commander.strip_prefix("rh_ffj3"), "ffj3", msg="Strip failed")
+        self.assertEqual(hand_commander.strip_prefix("ffj3"), "ffj3", msg="Strip failed")
 
     def test_hand_finder_init(self):
         hand_finder = HandFinder()

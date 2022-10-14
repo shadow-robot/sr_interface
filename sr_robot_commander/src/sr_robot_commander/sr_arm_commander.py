@@ -27,10 +27,9 @@
 
 from __future__ import absolute_import
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
-from geometry_msgs.msg import PoseStamped, Pose
+from geometry_msgs.msg import PoseStamped
 from rospy import get_rostime
 import rospy
-from tf import TransformerROS
 
 
 class SrArmCommander(SrRobotCommander):
@@ -46,10 +45,10 @@ class SrArmCommander(SrRobotCommander):
         """
         try:
             super(SrArmCommander, self).__init__(name)
-        except Exception as e:
+        except Exception as exception:
             # TODO(@dg-shadow): Raise SrRobotCommanderException here. Not doing
-            # now as no time to check for and repair unforseen consequences.
-            rospy.logerr("Couldn't initialise robot commander - is there an arm running?: " + str(e))
+            # now as no time to check for and repair unforeseen consequences.
+            rospy.logerr("Couldn't initialise robot commander - is there an arm running?: " + str(exception))
             self._move_group_commander = None
             return
 

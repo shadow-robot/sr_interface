@@ -32,7 +32,6 @@ from sr_robot_commander.sr_robot_commander import SrRobotCommander, SrRobotComma
 from sr_robot_msgs.srv import ForceController
 from sr_hand.tactile_receiver import TactileReceiver
 from sr_utilities.hand_finder import HandFinder
-from sys import exit
 
 
 class SrHandCommander(SrRobotCommander):
@@ -114,7 +113,7 @@ class SrHandCommander(SrRobotCommander):
         Set maximum force for hand
         @param value - maximum force value
         """
-        joint_name = self._strip_prefix(joint_name)
+        joint_name = self.strip_prefix(joint_name)
 
         if not self.__set_force_srv.get(joint_name):
             service_name = "sr_hand_robot/" + self._topic_prefix + \
@@ -128,9 +127,9 @@ class SrHandCommander(SrRobotCommander):
         try:
             motor_settings = rospy.get_param(self._topic_prefix +
                                              joint_name.lower() + "/pid")
-        except KeyError as e:
+        except KeyError as exception:
             rospy.logerr("Couldn't get the motor parameters for joint " +
-                         joint_name + " -> " + str(e))
+                         joint_name + " -> " + str(exception))
 
         motor_settings["torque_limit"] = value
 
@@ -148,9 +147,9 @@ class SrHandCommander(SrRobotCommander):
                                              motor_settings["sign"],
                                              motor_settings["torque_limit"],
                                              motor_settings["torque_limiter_gain"])
-        except rospy.ServiceException as e:
+        except rospy.ServiceException as exception:
             rospy.logerr("Couldn't set the max force for joint " +
-                         joint_name + ": " + str(e))
+                         joint_name + ": " + str(exception))
 
     def get_tactile_type(self):
         """
@@ -166,7 +165,8 @@ class SrHandCommander(SrRobotCommander):
         """
         return self._tactiles.get_tactile_state()
 
-    def _strip_prefix(self, joint_name):
+    @staticmethod
+    def strip_prefix(joint_name):
         """
         Strips the prefix from the joint name (e.g. rh_ffj3 -> ffj3) if present, returns the joint name otherwise.
 

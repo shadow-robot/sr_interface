@@ -58,10 +58,10 @@ class SrRobotStateCombiner():
         """
         name = []
         position = []
-        for n, pos in zip(state.state.joint_state.name, state.state.joint_state.position):
-            if (remove_arm and all(s not in n for s in self._arm_joints)) \
-                    or (not remove_arm and any(s in n for s in self._arm_joints)):
-                name.append(n)
+        for name_index, pos in zip(state.state.joint_state.name, state.state.joint_state.position):
+            if (remove_arm and all(s not in name_index for s in self._arm_joints)) \
+                    or (not remove_arm and any(s in name_index for s in self._arm_joints)):
+                name.append(name_index)
                 position.append(pos)
         state.state.joint_state.name = name
         state.state.joint_state.position = position

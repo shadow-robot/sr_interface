@@ -26,16 +26,13 @@
 # software, even if advised of the possibility of such damage.
 
 from __future__ import absolute_import
-import rospy
-
+from builtins import map
 from sr_robot_msgs.srv import PlanTrajectoryFromList as PlanFromList
 from sr_robot_msgs.srv import PlanTrajectoryFromPrefix as PlanFromPrefix
-from sr_robot_msgs.srv import ExecutePlannedTrajectory as ExecutePlan
 from sr_robot_msgs.srv import PlanNamedTrajectory as PlanNamed
 from sr_robot_msgs.srv import ListNamedTrajectories as ListNamed
-from functools import partial
-from builtins import map
-from copy import deepcopy
+import rospy
+
 
 
 class WaypointNamedServices():
@@ -65,26 +62,26 @@ class WaypointNamedServices():
             req.name]
         if len(mapping) > 1:
             rospy.logfatal("Trajectory name is not unique")
-        elif len(mapping) is 0:
+        elif len(mapping) == 0:
             rospy.logfatal("Trajectory name does not exist")
         else:
-            m = mapping[0]
+            mapping = mapping[0]
 
-            if "list" not in m.keys() and "prefix" not in m.keys():
+            if "list" not in mapping.keys() and "prefix" not in mapping.keys():
                 rospy.logfatal("Service must specify either prefix " +
                                "or list for choosing waypoints")
-            elif "list" in m.keys() and "prefix" in m.keys():
+            elif "list" in mapping.keys() and "prefix" in mapping.keys():
                 rospy.logfatal("Service mapping has both list and " +
                                "prefix specified. Can only be one.")
             else:
-                if "list" in m.keys():
-                    return self.__from_list(m["list"]).success
-                else:
-                    return self.__from_prefix(m["prefix"]).success
+                if "list" in mapping.keys():
+                    return self.__from_list(mapping["list"]).success
+
+                return self.__from_prefix(mapping["prefix"]).success
 
         return False
 
-    def __list_named_trajectories(self, req):
+    def __list_named_trajectories(self, _req):
         return [map(lambda x: x["name"], self.service_mapping)]
 
     def define_services(self):
@@ -98,5 +95,5 @@ class WaypointNamedServices():
 
 
 if __name__ == "__main__":
-    sf = WaypointNamedServices()
+    services = WaypointNamedServices()
     rospy.spin()

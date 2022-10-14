@@ -28,29 +28,23 @@
 
 from __future__ import absolute_import
 
-import collections
 from builtins import round
 import copy
-import rospy
-import rostest
 from unittest import TestCase
-from sr_robot_commander.sr_robot_commander import SrRobotCommander, MoveGroupCommander, PlanningSceneInterface
+import rostest
+from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from geometry_msgs.msg import Pose, PoseStamped
-from control_msgs.msg import FollowJointTrajectoryActionGoal
 from moveit_msgs.msg import RobotState, RobotTrajectory
-from moveit_msgs.srv import GetPositionFK, SaveRobotStateToWarehouse
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
-from std_msgs.msg import Header
 from sensor_msgs.msg import JointState
 from moveit_commander.exception import MoveItCommanderException
 from moveit_commander import conversions
 from actionlib_msgs.msg import GoalStatusArray
-import tf2_ros
-import time
 import numpy as np
-from math import fmod
 import tf
 from rosgraph_msgs.msg import Clock
+import rospy
+
 
 # Some of the test cases do not have an assert method. In case of these methods the test verifies if
 # the API of moveit_commander changed - i.e. change of methods name, number of arguments, return type
@@ -91,14 +85,14 @@ class TestSrRobotCommander(TestCase):
         pose.pose.orientation.z = 0
         pose.pose.orientation.w = 1
         pose.header.stamp = rospy.get_rostime()
-        pose.header.frame_id = cls.robot_commander._robot_commander.get_root_link()
-        cls.robot_commander._planning_scene.add_box("ground_plane", pose, (3, 3, height))
+        pose.header.frame_id = cls.robot_commander.get_moveit_robot_commander().get_root_link()
+        cls.robot_commander.get_moveit_planning_scene().add_box("ground_plane", pose, (3, 3, height))
 
     def reset_to_home(self):
         rospy.sleep(1)
         self.robot_commander.set_max_velocity_scaling_factor(1.0)
         self.robot_commander.set_max_acceleration_scaling_factor(1.0)
-        self.robot_commander._reset_plan()
+        self.robot_commander.reset_plan()
         self.robot_commander.move_to_joint_value_target(CONST_RA_HOME_ANGLES, wait=True, angle_degrees=False)
         self.robot_commander.set_start_state_to_current_state()
         rospy.sleep(1)
@@ -106,8 +100,8 @@ class TestSrRobotCommander(TestCase):
     def create_test_pose_rpy_from_current_pose(self):
         current_pose = self.robot_commander.get_current_pose(reference_frame="world")
         euler_pose_rot = tf.transformations.euler_from_quaternion(
-                                                        [current_pose.orientation.x, current_pose.orientation.y,
-                                                         current_pose.orientation.z, current_pose.orientation.w])
+            [current_pose.orientation.x, current_pose.orientation.y,
+             current_pose.orientation.z, current_pose.orientation.w])
         test_pose_rpy = [current_pose.position.x, current_pose.position.y, current_pose.position.z + 0.1,
                          euler_pose_rot[0], euler_pose_rot[1], euler_pose_rot[2] + 0.5]
         return test_pose_rpy
@@ -115,7 +109,7 @@ class TestSrRobotCommander(TestCase):
     def get_pose_msg_from_pose_rpy(self, pose_rpy):
         pose_msg = PoseStamped()
         pose_msg.header.stamp = rospy.get_rostime()
-        pose_msg.header.frame_id = self.robot_commander._robot_commander.get_root_link()
+        pose_msg.header.frame_id = self.robot_commander.get_moveit_robot_commander().get_root_link()
         pose_msg.pose.position.x = pose_rpy[0]
         pose_msg.pose.position.y = pose_rpy[1]
         pose_msg.pose.position.z = pose_rpy[2]
@@ -128,7 +122,8 @@ class TestSrRobotCommander(TestCase):
         pose_msg.pose.orientation.w = quaternion[3]
         return pose_msg
 
-    def compare_position(self, initial_position, desired_position, tolerance):
+    @staticmethod
+    def compare_position(initial_position, desired_position, tolerance):
         initial_position_list = [initial_position.x, initial_position.y, initial_position.z]
         desired_position_list = [desired_position.x, desired_position.y, desired_position.z]
 
@@ -138,7 +133,8 @@ class TestSrRobotCommander(TestCase):
                 return False
         return True
 
-    def compare_orientation(self, initial_orientation, desired_orientation, tolerance):
+    @staticmethod
+    def compare_orientation(initial_orientation, desired_orientation, tolerance):
         initial_euler = tf.transformations.euler_from_quaternion([initial_orientation.x, initial_orientation.y,
                                                                   initial_orientation.z, initial_orientation.w])
         desired_euler = tf.transformations.euler_from_quaternion([desired_orientation.x, desired_orientation.y,
@@ -153,22 +149,22 @@ class TestSrRobotCommander(TestCase):
 
     def compare_poses(self, pose1, pose2, position_threshold=0.02, orientation_threshold=0.04):
         if (self.compare_position(pose1.position, pose2.position, position_threshold) and
-           self.compare_orientation(pose1.orientation, pose2.orientation, orientation_threshold)):
+                self.compare_orientation(pose1.orientation, pose2.orientation, orientation_threshold)):
             return True
         return False
 
     def test_get_and_set_planner_id(self):
-        prev_planner_id = self.robot_commander._move_group_commander.get_planner_id()
+        prev_planner_id = self.robot_commander.get_move_group_commander().get_planner_id()
         test_planner_id = "RRTstarkConfigDefault"
         self.robot_commander.set_planner_id(test_planner_id)
-        self.assertEqual(test_planner_id, self.robot_commander._move_group_commander.get_planner_id())
+        self.assertEqual(test_planner_id, self.robot_commander.get_move_group_commander().get_planner_id())
         self.robot_commander.set_planner_id(prev_planner_id)
 
     def test_get_and_set_planning_time(self):
-        prev_planning_time = self.robot_commander._move_group_commander.get_planning_time()
+        prev_planning_time = self.robot_commander.get_move_group_commander().get_planning_time()
         test_planning_time = 3
         self.robot_commander.set_planning_time(test_planning_time)
-        self.assertEqual(test_planning_time, self.robot_commander._move_group_commander.get_planning_time())
+        self.assertEqual(test_planning_time, self.robot_commander.get_move_group_commander().get_planning_time())
         self.robot_commander.set_planning_time(prev_planning_time)
 
     def test_set_num_planning_attempts(self):
@@ -187,16 +183,9 @@ class TestSrRobotCommander(TestCase):
 
     def test_set_and_get_pose_reference_frame(self):
         const_reference_frame = "world"
-        self.robot_commander._move_group_commander.set_pose_reference_frame(const_reference_frame)
-        self.assertEqual(self.robot_commander._move_group_commander.get_pose_reference_frame(), const_reference_frame)
-
-    def test_get_group_name(self):
-        self.assertEqual(self.robot_commander._name, self.robot_commander.get_group_name())
-
-    def test_refresh_named_targets(self):
-        self.robot_commander.refresh_named_targets()
-        self.assertIsInstance(self.robot_commander._srdf_names, list)
-        self.assertIsInstance(self.robot_commander._warehouse_names, list)
+        self.robot_commander.get_move_group_commander().set_pose_reference_frame(const_reference_frame)
+        self.assertEqual(self.robot_commander.get_move_group_commander().get_pose_reference_frame(),
+                         const_reference_frame)
 
     def test_set_max_velocity_scaling_factor_range_ok(self):
         self.robot_commander.set_max_velocity_scaling_factor(0.2)
@@ -239,7 +228,7 @@ class TestSrRobotCommander(TestCase):
         self.assertTrue(self.robot_commander.check_plan_is_valid())
 
     def test_check_plan_is_valid_not_ok(self):
-        self.robot_commander._SrRobotCommander__plan = None
+        self.robot_commander.reset_plan()
         condition = self.robot_commander.check_plan_is_valid()
         self.assertFalse(condition)
 
@@ -292,8 +281,9 @@ class TestSrRobotCommander(TestCase):
     def test_evaluate_plan_quality_medium(self):
         self.assertEqual('medium', self.robot_commander.evaluate_plan_quality(32))
 
-    def test_get_robot_name(self):
-        self.assertTrue(self.robot_commander.get_robot_name() == self.robot_commander._robot_name)
+    # It shouldn't be tested like this but assigning a robot name
+    # def test_get_robot_name(self):
+    #     self.assertTrue(self.robot_commander.get_robot_name() == self.robot_commander._robot_name)
 
     # if launched sr_ur_arm_box.launch
     def test_named_target_in_srdf_exist(self):
@@ -318,13 +308,13 @@ class TestSrRobotCommander(TestCase):
         self.assertFalse(result)
 
     def test_get_named_target_joint_values_srdf(self):
-        test_names = self.robot_commander._srdf_names
+        test_names = self.robot_commander.get_srdf_names()
         if len(test_names) > 0:
             output = self.robot_commander.get_named_target_joint_values(test_names[0])
             self.assertIsInstance(output, dict)
 
     def test_get_named_target_joint_values_warehouse(self):
-        test_names = self.robot_commander._warehouse_names
+        test_names = self.robot_commander.get_warehouse_names()
         if len(test_names) > 0:
             output = self.robot_commander.get_named_target_joint_values(test_names[0])
             self.assertIsInstance(output, dict)
@@ -362,7 +352,7 @@ class TestSrRobotCommander(TestCase):
         target_names = self.robot_commander.get_named_targets()
         if len(target_names) > 0:
             self.robot_commander.plan_to_named_target(target_names[0], None)
-        self.assertIsInstance(self.robot_commander._SrRobotCommander__plan, RobotTrajectory)
+        self.assertIsInstance(self.robot_commander.get_plan(), RobotTrajectory)
 
     def test_plan_to_named_target_custom_start_state_exists(self):
         target_names = self.robot_commander.get_named_targets()
@@ -371,8 +361,8 @@ class TestSrRobotCommander(TestCase):
             for key, value in CONST_RA_HOME_ANGLES .items():
                 robot_state.joint_state.name.append(key)
                 robot_state.joint_state.position.append(value)
-            plan = self.robot_commander.plan_to_named_target(target_names[0], robot_state)
-        self.assertIsInstance(self.robot_commander._SrRobotCommander__plan, RobotTrajectory)
+            self.robot_commander.plan_to_named_target(target_names[0], robot_state)
+        self.assertIsInstance(self.robot_commander.get_plan(), RobotTrajectory)
 
     def test_plan_to_named_target_target_not_exists(self):
         const_test_name = "test_non_existing_target"
@@ -516,7 +506,7 @@ class TestSrRobotCommander(TestCase):
         waypoints.append(conversions.list_to_pose([0.71, 0.15, 0.34, 0, 0, 0, 1]))
         waypoints.append(conversions.list_to_pose([0.69, 0.15, 0.34, 0, 0, 0, 1]))
         waypoints.append(conversions.list_to_pose([0.71, 0.17, 0.34, 0, 0, 0, 1]))
-        (plan, f) = self.robot_commander.plan_to_waypoints_target(waypoints)
+        (plan, _) = self.robot_commander.plan_to_waypoints_target(waypoints)
         self.assertIsInstance(plan, RobotTrajectory)
 
     def test_get_ik(self):

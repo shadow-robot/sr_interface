@@ -26,13 +26,12 @@
 # software, even if advised of the possibility of such damage.
 
 from __future__ import absolute_import
-import rospy
 import sys
 import os
 import shutil
-from sr_robot_commander.sr_robot_state_exporter import SrRobotStateExporter
 from unittest import TestCase
-from std_srvs.srv import SetBool
+from sr_robot_commander.sr_robot_state_exporter import SrRobotStateExporter
+import rospy
 
 PKG = "sr_robot_commander"
 

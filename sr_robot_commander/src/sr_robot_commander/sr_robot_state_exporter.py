@@ -26,10 +26,9 @@
 # software, even if advised of the possibility of such damage.
 
 from __future__ import absolute_import
-import rospy
 import pprint
 from copy import deepcopy
-
+import rospy
 from moveit_msgs.srv import CheckIfRobotStateExistsInWarehouse as HasState
 from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
 from moveit_msgs.srv import SaveRobotStateToWarehouse as SaveState
@@ -38,7 +37,9 @@ from moveit_msgs.msg import RobotState
 
 
 class SrRobotStateExporter():
-    def __init__(self, start_dictionary={}):
+    def __init__(self, start_dictionary=None):
+        if start_dictionary is None:
+            start_dictionary = {}
         self._get_state = rospy.ServiceProxy("/get_robot_state", GetState)
         self._has_state = rospy.ServiceProxy("/has_robot_state", HasState)
         self._list_states = rospy.ServiceProxy("/list_robot_states", ListState)
@@ -68,9 +69,9 @@ class SrRobotStateExporter():
             self.extract_one_state(state)
 
     def output_module(self, file_name):
-        pp = pprint.PrettyPrinter()
+        pretty_printer = pprint.PrettyPrinter()
         with open(file_name, "w") as output:
-            output.write('warehouse_states = %s\n' % pp.pformat(self._dictionary))
+            output.write('warehouse_states = %s\n' % pretty_printer.pformat(self._dictionary))
 
     def convert_trajectory(self, named_trajectory):
         new_trajectory = []
@@ -81,7 +82,7 @@ class SrRobotStateExporter():
                     new_entry['joint_angles'] = self._dictionary[new_entry['name']]
                     new_entry.pop('name')
                 else:
-                    rospy.logwarn("Entry named %s not present in dictionary. Not replacing." % name)
+                    rospy.logwarn("Entry named %s not present in dictionary. Not replacing." % new_entry['name'])
             new_trajectory.append(new_entry)
         return new_trajectory
 

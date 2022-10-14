@@ -26,19 +26,16 @@
 # software, even if advised of the possibility of such damage.
 
 from __future__ import absolute_import
-from sys import argv
-
+from threading import Lock
+import sys
 import rospy
 from moveit_msgs.srv import SaveRobotStateToWarehouse as SaveState
-from sensor_msgs.msg import JointState
 from moveit_msgs.msg import RobotState
+from sensor_msgs.msg import JointState
 from sr_robot_commander.sr_arm_commander import SrArmCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
-from sr_utilities.hand_finder import HandFinder
-from controller_manager_msgs.srv import ListControllers
 from control_msgs.msg import JointTrajectoryControllerState
-from threading import Lock
 
 
 class SrStateSaverUnsafe():
@@ -78,8 +75,8 @@ class SrStateSaverUnsafe():
         if len(double_error) != 0:
             raise ValueError(" ".join(double_error))
 
-        self._save_hand = (hand_or_arm == "hand" or hand_or_arm == "both")
-        self._save_arm = (hand_or_arm == "arm" or hand_or_arm == "both")
+        self._save_hand = (hand_or_arm in ("hand", "both"))
+        self._save_arm = (hand_or_arm in ("arm", "both"))
         self._save_bimanual = (side == 'bimanual')
 
         if save_target:
@@ -126,21 +123,21 @@ class SrStateSaverUnsafe():
                     rospy.loginfo(self._target_values)
                     rospy.sleep(1)
         if rospy.is_shutdown():
-            exit(0)
+            sys.exit()
 
         self.save_state(current_dict, robot_name)
 
     def _target_cb(self, data):
         self._mutex.acquire()
-        for n, joint in enumerate(data.joint_names):
-            self._target_values[joint] = data.desired.positions[n]
+        for joint_index, joint in enumerate(data.joint_names):
+            self._target_values[joint] = data.desired.positions[joint_index]
         self._mutex.release()
 
     def save_state(self, current_dict, robot_name):
-        rs = RobotState()
+        robot_state = RobotState()
         rospy.loginfo(current_dict)
-        rs.joint_state = JointState()
-        rs.joint_state.name = current_dict.keys()
-        rs.joint_state.position = current_dict.values()
-        rospy.logwarn(rs)
-        self._save(self._name, robot_name, rs)
+        robot_state.joint_state = JointState()
+        robot_state.joint_state.name = current_dict.keys()
+        robot_state.joint_state.position = current_dict.values()
+        rospy.logwarn(robot_state)
+        self._save(self._name, robot_name, robot_state)

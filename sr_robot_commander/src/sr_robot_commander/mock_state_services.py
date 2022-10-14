@@ -45,26 +45,23 @@ def mock_get_state_callback(req):
     return resp
 
 
-def mock_has_state_callback(req):
+def mock_has_state_callback(_req):
     return True
 
 
-def mock_list_state_callback(req):
+def mock_list_state_callback(_req):
     states = {"state1", "state2"}
     return states
 
 
 def mock_save_state_callback(req):
-    if "state1" in req.name:
-        return True
-    else:
-        return False
+    return bool("state1" in req.name)
 
 
 if __name__ == "__main__":
     rospy.init_node('mock_services', anonymous=True)
-    s1 = rospy.Service('/get_robot_state', GetState, mock_get_state_callback)
-    s2 = rospy.Service('/has_robot_state', HasState, mock_has_state_callback)
-    s3 = rospy.Service('/list_robot_states', ListState, mock_list_state_callback)
-    s4 = rospy.Service('/save_robot_state', SaveState, mock_save_state_callback)
+    service_1 = rospy.Service('/get_robot_state', GetState, mock_get_state_callback)
+    service_2 = rospy.Service('/has_robot_state', HasState, mock_has_state_callback)
+    service_3 = rospy.Service('/list_robot_states', ListState, mock_list_state_callback)
+    service_4 = rospy.Service('/save_robot_state', SaveState, mock_save_state_callback)
     rospy.spin()
