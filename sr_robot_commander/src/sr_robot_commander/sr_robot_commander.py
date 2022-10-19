@@ -106,8 +106,8 @@ class SrRobotCommander(object):
         controller_list_param = rospy.get_param("/move_group/controller_list")
 
         robot_description = rospy.get_param("/robot_description")
-        self._joint_limits = dict()
-        self._read_joint_limits(robot_description)
+        self._joint_limits = {}
+        self._initialize_joint_limits(robot_description)
 
         # create dictionary with name of controllers and corresponding joints
         self._controllers = {item["name"]: item["joints"] for item in controller_list_param}
@@ -128,7 +128,11 @@ class SrRobotCommander(object):
 
         self._wait_for_set_points()
 
-    def _read_joint_limits(self, robot_description):
+    def _initialize_joint_limits(self, robot_description):
+        """
+        It reads a robot descritpion and updates the joint limits dictionary of the class
+        @param robot_description - Robot description from which the joint limits are going to be read
+        """
         robot_dom = minidom.parseString(robot_description)
         robot = robot_dom.getElementsByTagName('robot')[0]
 
@@ -136,12 +140,12 @@ class SrRobotCommander(object):
             if child.nodeType is child.TEXT_NODE:
                 continue
             if child.localName == 'joint':
-                jtype = child.getAttribute('type')
-                if jtype in ['fixed', 'floating', 'planar']:
+                joint_type = child.getAttribute('type')
+                if joint_type in ['fixed', 'floating', 'planar']:
                     continue
                 name = child.getAttribute('name')
 
-                if jtype == 'continuous':
+                if joint_type == 'continuous':
                     minval = -pi
                     maxval = pi
                 else:
@@ -543,13 +547,13 @@ class SrRobotCommander(object):
         within their limits
         @return - The joint states updated with the joint poisitions bounded
         """
-        if type(joint_states) == dict:
+        if isinstance(joint_states, dict):
             for joint in joint_states:
                 joint_states[joint] = self._bound_joint(joint_states[joint],
                                                         self._joint_limits[joint])
 
-        elif type(joint_states) == RobotState:
-            for i in range(0, len(joint_states.joint_state.name)):
+        elif isinstance(joint_states, RobotState):
+            for i in range(len(joint_states.joint_state.name)):
                 joint_states.joint_state.position[i] = \
                     self._bound_joint(joint_states.joint_state.position[i],
                                       self._joint_limits[joint_states.joint_state.name[i]])
@@ -1015,7 +1019,7 @@ class SrRobotCommander(object):
         """
         joint_names_group = self._move_group_commander.get_active_joints()
         with self._set_points_lock:
-            for i in range(0, len(msg.joint_names)):
+            for i in range(len(msg.joint_names)):
                 if msg.joint_names[i] not in joint_names_group:
                     continue
                 self._set_points.update({msg.joint_names[i]: msg.desired.positions[i]})
