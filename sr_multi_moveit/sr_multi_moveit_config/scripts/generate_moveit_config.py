@@ -175,7 +175,7 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
     output_str += yaml_reindent(yaml.dump(hand_yamldoc["planner_configs"],
                                           default_flow_style=False, allow_unicode=True), 2) + "\n"
 
-    for manipulator in robot_config.manipulators:
+    for manipulator in robot_config.manipulators:  # pylint: disable=R1702
         if manipulator.has_arm:
             with open(manipulator.arm.moveit_path + "/" + "ompl_planning.yaml", 'r') as stream:
                 arm_yamldoc = yaml.safe_load(stream)
@@ -281,7 +281,7 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
         rospy.sleep(0.5)
         rospy.loginfo("waiting for robot_description")
 
-    for manipulator in robot_config.manipulators:
+    for manipulator in robot_config.manipulators:  # pylint: disable=R1702
         if manipulator.has_arm:
             with open(manipulator.arm.moveit_path + "/" + kinematics_file, 'r') as stream:
                 arm_yamldoc = yaml.safe_load(stream)

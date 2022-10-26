@@ -1,12 +1,8 @@
 #!/usr/bin/env python3
 
-<<<<<<< HEAD
 # Software License Agreement (BSD License)
 # Copyright © 2018-2022 belongs to Shadow Robot Company Ltd.
 # All rights reserved.
-=======
-# Copyright 2018-2022 Shadow Robot Company Ltd.
->>>>>>> 20cb4af67c47588de2bb86227b7af76822b59cf6
 #
 # Redistribution and use in source and binary forms, with or without modification,
 # are permitted provided that the following conditions are met:

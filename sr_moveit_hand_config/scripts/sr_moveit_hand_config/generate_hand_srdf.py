@@ -171,7 +171,7 @@ class SRDFHandGenerator():
             with open(output_path, "w") as file_to_save:
                 file_to_save.write(self.srdf_xacro_xml.toprettyxml(indent='  '))
 
-            output_path =  f"{package_path}/config/generated_shadowhand.urdf"
+            output_path = f"{package_path}/config/generated_shadowhand.urdf"
             with open(output_path, "w") as file_to_save:
                 file_to_save.write(urdf_str)
 

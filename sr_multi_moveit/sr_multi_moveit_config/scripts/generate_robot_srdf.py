@@ -105,7 +105,7 @@ class Robot():
 
     def set_parameters(self, yamldoc):
         # Read robot description yaml
-        if "robot" in yamldoc:
+        if "robot" in yamldoc:  # pylint: disable=R1702
             robot_yaml = yamldoc["robot"]
             self.name = robot_yaml["name"]
             if "manipulators" in robot_yaml:
@@ -289,7 +289,7 @@ class SRDFRobotGenerator():
 
     def start_new_srdf(self, file_name):
         # Generate new robot srdf with arm information
-        self.new_robot_srdf = open(f"{self.package_path}/config/{file_name}", 'w+')  # pylint: disable=R1732
+        self.new_robot_srdf = open(f"{self.package_path}/config/{file_name}", 'w+')
 
         self.new_robot_srdf.write('<?xml version="1.0" ?>\n')
         banner = ["This does not replace URDF, and is not an extension of URDF.\n" +
@@ -314,7 +314,7 @@ class SRDFRobotGenerator():
     def parse_arm_groups(self, manipulator_id, manipulator):
         previous = self.arm_srdf_xmls[manipulator_id].documentElement
         elt = next_element(previous)
-        while elt:
+        while elt:   # pylint: disable=R1702
             if elt.tagName == 'group':
                 # Check it is not a subgroup
                 if len(elt.childNodes) > 0:
