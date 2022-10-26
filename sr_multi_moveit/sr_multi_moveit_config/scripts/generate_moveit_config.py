@@ -57,20 +57,16 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
 import argparse
 
 import re
 from copy import deepcopy
 import yaml
-import rospy
-import rosparam
+from urdf_parser_py.urdf import URDF
 from srdfdom.srdf import SRDF
 import rospkg
-
-from urdf_parser_py.urdf import URDF
-import generate_robot_srdf
-import sr_moveit_hand_config.generate_moveit_config as hand_config
+import rospy
+import rosparam
 
 
 def yaml_reindent(in_str, numspaces):
@@ -85,9 +81,8 @@ def upload_output_params(upload_str, output_path=None, upload=True, ns_=None):
         for params, namespace in paramlist:
             rosparam.upload_params(namespace, params)
     if output_path is not None:
-        file_writer = open(output_path, "wb")
-        file_writer.write(upload_str)
-        file_writer.close()
+        with open(output_path, "wb") as file_writer:
+            file_writer.write(upload_str)
 
 
 def generate_fake_controllers(robot, robot_config, output_path=None, ns_=None):
@@ -278,7 +273,7 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
     upload_output_params(output_str, output_path, ns_)
 
 
-def generate_kinematics(robot, robot_config, hand_template_path="kinematics_template.yaml",
+def generate_kinematics(robot, robot_config, hand_template_path="kinematics_template.yaml",  # pylint: disable=R0914, R0915
                         output_path=None, kinematics_file="kinematics.yaml",
                         kinematics_extra_file="kinematics_extra_groups.yaml", ns_=None):
     output_str = ""
@@ -447,9 +442,9 @@ if __name__ == '__main__':
     if ARGS.file is not None:
 
         ROBOT = SRDF.from_xml_string(ARGS.file.read())
-        generate_fake_controllers(ROBOT,
+        generate_fake_controllers(ROBOT,  # pylint: disable=E1120
                                   output_path="fake_controllers.yaml")
-        generate_real_controllers(ROBOT,
+        generate_real_controllers(ROBOT,  # pylint: disable=E1120
                                   output_path="controllers.yaml")
         generate_ompl_planning(ROBOT,
                                "ompl_planning_template.yaml",
