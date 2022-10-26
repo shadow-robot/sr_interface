@@ -26,22 +26,17 @@
 # software, even if advised of the possibility of such damage.
 
 from __future__ import absolute_import
-import rospy
-import rostest
-import rospkg
-import rostopic
+from unittest import TestCase
+from multiprocessing import Process
 import yaml
-from moveit_msgs.msg import PlanningScene
 from sr_robot_commander.sr_arm_commander import SrArmCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
-from geometry_msgs.msg import PoseStamped, Pose
-from rospy import get_rostime
-from unittest import TestCase
 from actionlib_msgs.msg import GoalStatusArray
 from sensor_msgs.msg import JointState
-from multiprocessing import Process
 from std_srvs.srv import Trigger
+import rostest
+import rospy
 
 
 class TestHandAndArmSim(TestCase):
@@ -67,19 +62,22 @@ class TestHandAndArmSim(TestCase):
     def tearDownClass(cls):
         pass
 
-    def joints_error_check(self, expected_joint_values, recieved_joint_values):
+    @staticmethod
+    def joints_error_check(expected_joint_values, received_joint_values):
         expected_and_final_joint_value_diff = 0
-        for expected_value, recieved_value in zip(sorted(expected_joint_values), sorted(recieved_joint_values)):
+        for expected_value, received_value in zip(sorted(expected_joint_values), sorted(received_joint_values)):
             expected_and_final_joint_value_diff += abs(expected_joint_values[expected_value] -
-                                                       recieved_joint_values[recieved_value])
+                                                       received_joint_values[received_value])
         return expected_and_final_joint_value_diff
 
-    def open_yaml(self, path):
+    @staticmethod
+    def open_yaml(path):
         with open(path) as file:
             hands_config = yaml.load(file, Loader=yaml.FullLoader)
         return hands_config
 
-    def check_topic_prefix(self, prefix):
+    @staticmethod
+    def check_topic_prefix(prefix):
         joint_state = rospy.wait_for_message('/joint_states', JointState)
         joints_exist = False
         for joint in joint_state.name:
@@ -161,9 +159,9 @@ class TestHandAndArmSim(TestCase):
         arm_joints_target.update(ra_arm_joints_target)
         arm_joints_target.update(la_arm_joints_target)
         service_call = rospy.ServiceProxy("/la_sr_ur_robot_hw/resend_robot_program", Trigger)
-        response = service_call()
+        service_call()
         service_call = rospy.ServiceProxy("/ra_sr_ur_robot_hw/resend_robot_program", Trigger)
-        response = service_call()
+        service_call()
         rospy.sleep(2)
         self.arm_commander.move_to_joint_value_target(arm_joints_target, wait=True)
         rospy.sleep(5)
@@ -190,9 +188,9 @@ class TestHandAndArmSim(TestCase):
         hand_and_arm_joints_target.update(hand_joints_target)
         hand_and_arm_joints_target.update(arm_joints_target)
         service_call = rospy.ServiceProxy("/la_sr_ur_robot_hw/resend_robot_program", Trigger)
-        response = service_call()
+        service_call()
         service_call = rospy.ServiceProxy("/ra_sr_ur_robot_hw/resend_robot_program", Trigger)
-        response = service_call()
+        service_call()
         rospy.sleep(2)
         self.robot_commander.move_to_joint_value_target_unsafe(hand_and_arm_joints_target, 10.0, True)
 
@@ -209,10 +207,10 @@ class TestHandAndArmSim(TestCase):
 def run_unit_tests():
     """This function is used to execute all the tests within this file.
         Its in a seperate func so a timeout can be added to the function call."""
-    PKGNAME = 'sr_robot_launch'
-    NODENAME = 'test_phantom_hand_and_arm'
-    rospy.init_node(NODENAME, anonymous=True)
-    rostest.rosrun(PKGNAME, NODENAME, TestHandAndArmSim)
+    pkg_name = 'sr_robot_launch'
+    node_name = 'test_phantom_hand_and_arm'
+    rospy.init_node(node_name, anonymous=True)
+    rostest.rosrun(pkg_name, node_name, TestHandAndArmSim)
 
 
 if __name__ == "__main__":

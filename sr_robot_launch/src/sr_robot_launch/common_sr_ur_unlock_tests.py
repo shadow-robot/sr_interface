@@ -26,20 +26,20 @@
 # software, even if advised of the possibility of such damage.
 
 from __future__ import absolute_import
-import rospy
-import rostest
-from actionlib_msgs.msg import GoalStatusArray
-from unittest import TestCase, TestSuite
+from unittest import TestCase
 from std_msgs.msg import Bool
-from std_srvs.srv import Trigger
 from ur_dashboard_msgs.srv import IsProgramRunning
-from sr_robot_launch.sr_ur_arm_unlock import SrUrUnlock
-from sr_robot_launch.mock_sr_ur_robot_hw import MockUrRobotHW
-from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
-import sys
+from ur_dashboard_msgs.msg import SafetyMode, RobotMode
+import rospy
 
 
-class CommonTests:
+class CommonTests(TestCase):
+    def __init__(self):
+        super().__init__()
+        self.mock_dashboard = {}
+        self.service_string = {}
+        self.sr_ur_arm_unlock = None
+
     def arm_setup(self, side):
         self.press_pedal()
         self.assertTrue(self.get_program_running(side))

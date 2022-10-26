@@ -26,18 +26,12 @@
 # software, even if advised of the possibility of such damage.
 
 from __future__ import absolute_import
-import rospy
-import rostest
-from actionlib_msgs.msg import GoalStatusArray
 from unittest import TestCase
-from std_msgs.msg import Bool
-from std_srvs.srv import Trigger
-from ur_dashboard_msgs.srv import IsProgramRunning
 from sr_robot_launch.sr_ur_arm_unlock import SrUrUnlock
 from sr_robot_launch.mock_sr_ur_robot_hw import MockUrRobotHW
-from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
 from sr_robot_launch.common_sr_ur_unlock_tests import CommonTests
-import sys
+import rostest
+import rospy
 
 
 class TestSrUrUnlockLeft(TestCase, CommonTests):
@@ -49,16 +43,16 @@ class TestSrUrUnlockLeft(TestCase, CommonTests):
         cls.service_string = {}
         cls.namespaces = ['/la_sr_ur_robot_hw']
         cls.params = ['/headless_mode']
-        for ns in cls.namespaces:
+        for namespace in cls.namespaces:
             for param in cls.params:
-                rospy.set_param(ns + param, True)
+                rospy.set_param(namespace + param, True)
         cls.service_string['left'] = '/la_sr_ur_robot_hw/dashboard/program_running'
         cls.sr_ur_arm_unlock = SrUrUnlock()
         cls.mock_dashboard = {}
         cls.mock_dashboard['left'] = MockUrRobotHW('left')
 
     def setUp(self):
-        for key, value in self.mock_dashboard.items():
+        for _, value in self.mock_dashboard.items():
             value.reinitialize()
 
     def tearDown(self):
@@ -91,7 +85,7 @@ class TestSrUrUnlockLeft(TestCase, CommonTests):
 
 
 if __name__ == "__main__":
-    PKGNAME = 'sr_robot_launch'
-    NODENAME = 'test_sr_ur_unlock_left'
-    rospy.init_node(NODENAME)
-    rostest.rosrun(PKGNAME, NODENAME, TestSrUrUnlockLeft)
+    pkg_name = 'sr_robot_launch'
+    node_name = 'test_sr_ur_unlock_left'
+    rospy.init_node(node_name)
+    rostest.rosrun(pkg_name, node_name, TestSrUrUnlockLeft)

@@ -26,13 +26,11 @@
 # software, even if advised of the possibility of such damage.
 
 from __future__ import absolute_import
-import rospy
-import rostest
+from unittest import TestCase
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from actionlib_msgs.msg import GoalStatusArray
-from unittest import TestCase
-
-PKG = "sr_robot_launch"
+import rostest
+import rospy
 
 
 class TestHandJointMovement(TestCase):
@@ -59,11 +57,12 @@ class TestHandJointMovement(TestCase):
     def tearDownClass(cls):
         pass
 
-    def joints_error_check(self, expected_joint_values, recieved_joint_values):
+    @staticmethod
+    def joints_error_check(expected_joint_values, received_joint_values):
         expected_and_final_joint_value_diff = 0
-        for expected_value, recieved_value in zip(sorted(expected_joint_values), sorted(recieved_joint_values)):
+        for expected_value, received_value in zip(sorted(expected_joint_values), sorted(received_joint_values)):
             expected_and_final_joint_value_diff += abs(expected_joint_values[expected_value] -
-                                                       recieved_joint_values[recieved_value])
+                                                       received_joint_values[received_value])
         return expected_and_final_joint_value_diff
 
     def test_hand_open(self):
@@ -111,5 +110,6 @@ class TestHandJointMovement(TestCase):
 
 
 if __name__ == "__main__":
+    pkg_name = "sr_robot_launch"
     rospy.init_node('test_sim', anonymous=True)
-    rostest.rosrun(PKG, "test_sim", TestHandJointMovement)
+    rostest.rosrun(pkg_name, "test_sim", TestHandJointMovement)

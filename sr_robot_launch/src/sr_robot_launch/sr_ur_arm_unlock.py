@@ -47,7 +47,6 @@ class RobotSafetyMonitor():
         self.estop_pressed = False
 
     def _safety_mode_callback(self, message):
-        self.mode = message.mode
         if message.mode == SafetyMode.ROBOT_EMERGENCY_STOP:
             self.press_estop()
 
@@ -60,7 +59,7 @@ class SrUrUnlock():
             self._arms.append('ra')
         if rospy.has_param('la_sr_ur_robot_hw'):
             self._arms.append('la')
-        if 0 == len(self._arms):
+        if len(self._arms) == 0:
             rospy.logerr("No arms detected, shutting down %s", rospy.get_name())
             rospy.signal_shutdown("No arms detected")
         rospy.Subscriber("/sr_arm/release_or_brake", Bool, self.release_or_brake_arm_cb)
@@ -82,20 +81,21 @@ class SrUrUnlock():
 
         self.brake_arm()
 
-    def call_arm_service(self, side, service_name, service_type, dashboard=True, service_data=""):
+    @staticmethod
+    def call_arm_service(side, service_name, service_type, dashboard=True, service_data=""):
         if dashboard:
             service_string = "/" + side + "_sr_ur_robot_hw/dashboard/" + service_name
         else:
             service_string = "/" + side + "_sr_ur_robot_hw/" + service_name
         try:
             service_call = rospy.ServiceProxy(service_string, service_type)
-            if "" == service_data:
+            if service_data == "":
                 response = service_call()
             else:
                 response = service_call(service_data)
             return response
-        except rospy.ServiceException as e:
-            rospy.logerr("Service call to '%s' failed for arm %s. %s", service_name, side, e)
+        except rospy.ServiceException as exception:
+            rospy.logerr("Service call to '%s' failed for arm %s. %s", service_name, side, exception)
             raise
 
     def startup_arms(self):
@@ -188,7 +188,7 @@ class SrUrUnlock():
                 headless_mode = False
             if not headless_mode:
                 play_msg = self.call_arm_service(arm, "program_state", GetProgramState)
-                if "null" == play_msg.program_name:
+                if play_msg.program_name == "null":
                     rospy.loginfo("Not in headless mode. Loading program: %s for arm: %s",
                                   self._external_control_program_name, arm)
                     resp = self.call_arm_service(arm, "load_program", Load,
@@ -240,14 +240,14 @@ class SrUrUnlock():
             self.load_arms_program_if_unloaded()
             rospy.loginfo("Checking if program is running ...")
             self.start_arms_program_if_stopped()
-        except rospy.ServiceException as e:
+        except rospy.ServiceException as exception:
             for arm in self._arms:
-                rospy.logerr("Arm checking/restarting failed for arm: %s. %s", arm, e)
+                rospy.logerr("Arm checking/restarting failed for arm: %s. %s", arm, exception)
 
     def brake_arm(self):
         rospy.loginfo("Brake arm signal received.")
         for arm in self._arms:
             try:
                 self.call_arm_service(arm, "power_off", Trigger)
-            except rospy.ServiceException as e:
-                rospy.logerr("Arm braking failed for arm: %s. %s", arm, e)
+            except rospy.ServiceException as exception:
+                rospy.logerr("Arm braking failed for arm: %s. %s", arm, exception)
