@@ -37,6 +37,8 @@ la_sr_ur_robot_hw:
   # ra for right side arm la for left side arm
   robot_id: la
   
+  tf_prefix: la_
+  
   # for sending robot programs
   # aurora (https://github.com/shadow-robot/aurora) uses sed to replace this IP with the user-defined IP
   robot_ip: 10.8.2.1

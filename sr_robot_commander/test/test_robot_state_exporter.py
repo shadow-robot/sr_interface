@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 
+<<<<<<< HEAD
 # Software License Agreement (BSD License)
 # Copyright © 2018-2022 belongs to Shadow Robot Company Ltd.
 # All rights reserved.
+=======
+# Copyright 2018-2022 Shadow Robot Company Ltd.
+>>>>>>> 20cb4af67c47588de2bb86227b7af76822b59cf6
 #
 # Redistribution and use in source and binary forms, with or without modification,
 # are permitted provided that the following conditions are met:
@@ -76,6 +80,7 @@ class TestSrRobotStateExporter(TestCase):
         state_exporter.extract_all()
         state_exporter.output_module(self.test_path + "/exporter_output_all.py")
         from exporter_output_all import warehouse_states
+        rospy.sleep(1)
         self.assertEqual(warehouse_states, self.expected_states, msg="Export all states failed:" +
                          str(warehouse_states) + " not " + str(self.expected_states))
 
@@ -85,6 +90,7 @@ class TestSrRobotStateExporter(TestCase):
         state_exporter.extract_one_state("state1")
         state_exporter.output_module(self.test_path + "/exporter_output_state.py")
         from exporter_output_state import warehouse_states
+        rospy.sleep(1)
         self.assertEqual(warehouse_states, self.expected_state, msg="Export all states failed:" +
                          str(warehouse_states) + " not " + str(self.expected_state))
 
@@ -95,6 +101,7 @@ class TestSrRobotStateExporter(TestCase):
         state_exporter.extract_list(["state1"])
         state_exporter.output_module(self.test_path + "/exporter_output_list.py")
         from exporter_output_list import warehouse_states
+        rospy.sleep(1)
         self.assertEqual(warehouse_states, self.expected_state, msg="Export all states failed:" +
                          str(warehouse_states) + " not " + str(self.expected_state))
 

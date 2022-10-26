@@ -24,7 +24,7 @@
 # software, even if advised of the possibility of such damage.
 
 settings:
-  machine_type: xlarge
+  machine_type: large
   ubuntu:
     version: focal
   ros:
@@ -38,6 +38,7 @@ settings:
     modules:
       - check_cache
       - code_coverage
+      - codecov_tool
 
 trunks:
   - name: noetic-devel

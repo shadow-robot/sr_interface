@@ -137,6 +137,42 @@
       <joint name="${prefix}THJ5" value="0.19" />
     </xacro:if>
   </xacro:macro>
+  <xacro:macro name="finger_state_relaxed" params="prefix joint_prefix">
+    <xacro:if value="${joint_prefix == 'FF'}">
+      <joint name="${prefix}${joint_prefix}J1" value="0.0128" />
+      <joint name="${prefix}${joint_prefix}J2" value="0.8508" />
+      <joint name="${prefix}${joint_prefix}J3" value="0.0156" />
+      <joint name="${prefix}${joint_prefix}J4" value="-0.05" />
+    </xacro:if>
+    <xacro:if value="${joint_prefix == 'MF'}">
+      <joint name="${prefix}${joint_prefix}J1" value="0.0246" />
+      <joint name="${prefix}${joint_prefix}J2" value="0.7201" />
+      <joint name="${prefix}${joint_prefix}J3" value="0.1918" />
+      <joint name="${prefix}${joint_prefix}J4" value="-0.0160" />
+    </xacro:if>
+    <xacro:if value="${joint_prefix == 'RF'}">
+      <joint name="${prefix}${joint_prefix}J1" value="0.0189" />
+      <joint name="${prefix}${joint_prefix}J2" value="0.5994" />
+      <joint name="${prefix}${joint_prefix}J3" value="0.4371" />
+      <joint name="${prefix}${joint_prefix}J4" value="-0.0297" />
+    </xacro:if>
+    <xacro:if value="${joint_prefix == 'LF'}">
+      <joint name="${prefix}${joint_prefix}J1" value="0.0093" />
+      <joint name="${prefix}${joint_prefix}J2" value="0.7751" />
+      <joint name="${prefix}${joint_prefix}J3" value="0.0861" />
+      <joint name="${prefix}${joint_prefix}J4" value="-0.2209" />
+      <joint name="${prefix}${joint_prefix}J5" value="0.3325" /> 
+    </xacro:if> 
+  </xacro:macro>
+  <xacro:macro name="thumb_state_relaxed" params="prefix">
+    <joint name="${prefix}THJ1" value="0.0837" />
+    <joint name="${prefix}THJ2" value="0.2629" />
+    <xacro:unless value="$(arg is_lite)">
+      <joint name="${prefix}THJ3" value="-0.0944" />
+    </xacro:unless>
+    <joint name="${prefix}THJ4" value="0.5838" />
+    <joint name="${prefix}THJ5" value="0.1794" />
+  </xacro:macro>
   <xacro:macro name="finger_thumb_state_open" params="prefix finger_name joint_prefix lf is_lite">
    <group_state name="${finger_name}_thumb_open" group="${prefix}${finger_name}_thumb">
       <joint name="${prefix}${joint_prefix}J1" value="0" />
