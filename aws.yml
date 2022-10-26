@@ -1,5 +1,5 @@
 settings:
-  machine_type: xlarge
+  machine_type: large
   ubuntu:
     version: focal
   ros:
