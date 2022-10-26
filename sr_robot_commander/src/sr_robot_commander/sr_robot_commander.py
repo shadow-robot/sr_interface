@@ -30,6 +30,7 @@ import threading
 
 from math import radians
 import copy
+import functools
 from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal
 from sensor_msgs.msg import JointState
 import geometry_msgs.msg
@@ -701,9 +702,9 @@ class SrRobotCommander():
         """
         with self._joint_states_lock:
             self._joints_state = joint_state
-            self._joints_position = {n: p for n, p in zip(joint_state.name, joint_state.position)}
-            self._joints_velocity = {n: v for n, v in zip(joint_state.name, joint_state.velocity)}
-            self._joints_effort = {n: v for n, v in zip(joint_state.name, joint_state.effort)}
+            self._joints_position = dict(zip(joint_state.name, joint_state.position))
+            self._joints_velocity = dict(zip(joint_state.name, joint_state.velocity))
+            self._joints_effort = dict(zip(joint_state.name, joint_state.effort))
 
     def _set_up_action_client(self, controller_list):
         """
@@ -770,8 +771,8 @@ class SrRobotCommander():
         for client in self._clients:
             if goals[client].trajectory.joint_names:
                 self._action_running[client] = True
-                self._clients[client].send_goal(
-                    goals[client], lambda terminal_state, result: self._action_done_cb(client, terminal_state, result))
+                terminal_state, result = functools.partial(self._action_done_cb, client, terminal_state, result)
+                self._clients[client].send_goal(goals[client], terminal_state, result)
 
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
         """
