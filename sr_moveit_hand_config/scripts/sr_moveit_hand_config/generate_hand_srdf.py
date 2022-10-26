@@ -60,11 +60,9 @@
     syntax  generate_hand_srdf [output filename]
 """
 
-from __future__ import absolute_import
 import sys
 import os
 from xml.dom.minidom import parse
-
 import xacro
 import rospy
 import rospkg
@@ -124,32 +122,32 @@ class SRDFHandGenerator():
             if is_lite and key.endswith("WRJ2"):
                 is_lite = False
 
-        rospy.logdebug("Found fingers (ff mf rf lf th)" + str(first_finger) + str(middle_finger) + str(ring_finger) +
-                       str(little_finger) + str(thumb))
-        rospy.logdebug("is_lite: " + str(is_lite))
-        rospy.logdebug("is_biotac: " + str(is_biotac))
-        rospy.logdebug("Hand name: " + str(hand_name))
+        rospy.logdebug(f"Found fingers (ff mf rf lf th) {str(first_finger)} {str(middle_finger)} " +
+                       f"{str(ring_finger)} {str(little_finger)} {str(thumb)}")
+        rospy.logdebug(f"is_lite: {str(is_lite)}")
+        rospy.logdebug(f"is_biotac: {str(is_biotac)}")
+        rospy.logdebug(f"Hand name: {str(hand_name)}")
 
-        mappings = load_mappings(['prefix:=' + str(prefix),
-                                  'robot_name:=' + robot.name,
-                                  'ff:=' + str(int(first_finger)),
-                                  'mf:=' + str(int(middle_finger)),
-                                  'rf:=' + str(int(ring_finger)),
-                                  'lf:=' + str(int(little_finger)),
-                                  'th:=' + str(int(thumb)),
-                                  'is_lite:=' + str(int(is_lite)),
-                                  'is_biotac:=' + str(int(is_biotac)),
-                                  'hand_name:=' + str(hand_name)
+        mappings = load_mappings([f'prefix:={str(prefix)}',
+                                  f'robot_name:={robot.name}',
+                                  f'ff:={str(int(first_finger))}',
+                                  f'mf:={str(int(middle_finger))}',
+                                  f'rf:={str(int(ring_finger))}',
+                                  f'lf:={str(int(little_finger))}',
+                                  f'th:={str(int(thumb))}',
+                                  f'is_lite:={str(int(is_lite))}',
+                                  f'is_biotac:={str(int(is_biotac))}',
+                                  f'hand_name:={str(hand_name)}'
                                   ])
 
         # the prefix version of the srdf_xacro must be loaded
         package_path = rospkg.RosPack().get_path('sr_moveit_hand_config')
-        srdf_xacro_filename = package_path + "/config/shadowhands_prefix.srdf.xacro"
-        rospy.loginfo("File loaded " + srdf_xacro_filename)
+        srdf_xacro_filename = f"{package_path}/config/shadowhands_prefix.srdf.xacro"
+        rospy.loginfo(f"File loaded {srdf_xacro_filename}")
 
         # open and parse the xacro.srdf file
-        srdf_xacro_file = open(srdf_xacro_filename, 'r')
-        self.srdf_xacro_xml = parse(srdf_xacro_file)
+        with open(srdf_xacro_filename, 'r') as srdf_xacro_file:
+            self.srdf_xacro_xml = parse(srdf_xacro_file)
 
         # expand the xacro
         xacro.process_doc(self.srdf_xacro_xml, mappings=mappings)
@@ -169,15 +167,13 @@ class SRDFHandGenerator():
             rospy.set_param(robot_description_param,
                             self.srdf_xacro_xml.toprettyxml(indent='  '))
         if save:
-            output_path = package_path + "/config/generated_shadowhand.srdf"
-            file_to_save = open(output_path, "w")
-            file_to_save.write(self.srdf_xacro_xml.toprettyxml(indent='  '))
-            file_to_save.close()
+            output_path = f"{package_path}/config/generated_shadowhand.srdf"
+            with open(output_path, "w") as file_to_save:
+                file_to_save.write(self.srdf_xacro_xml.toprettyxml(indent='  '))
 
-            output_path = package_path + "/config/generated_shadowhand.urdf"
-            file_to_save = open(output_path, "w")
-            file_to_save.write(urdf_str)
-            file_to_save.close()
+            output_path =  f"{package_path}/config/generated_shadowhand.urdf"
+            with open(output_path, "w") as file_to_save:
+                file_to_save.write(urdf_str)
 
         srdf_xacro_file.close()
 
