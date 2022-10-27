@@ -26,13 +26,15 @@
 # software, even if advised of the possibility of such damage.
 
 
-from __future__ import absolute_import
 
 from builtins import round
 import copy
 from unittest import TestCase
+import numpy as np
+import tf
+import rospy
+from rosgraph_msgs.msg import Clock
 import rostest
-from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from geometry_msgs.msg import Pose, PoseStamped
 from moveit_msgs.msg import RobotState, RobotTrajectory
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
@@ -40,10 +42,7 @@ from sensor_msgs.msg import JointState
 from moveit_commander.exception import MoveItCommanderException
 from moveit_commander import conversions
 from actionlib_msgs.msg import GoalStatusArray
-import numpy as np
-import tf
-from rosgraph_msgs.msg import Clock
-import rospy
+from sr_robot_commander.sr_robot_commander import SrRobotCommander
 
 
 # Some of the test cases do not have an assert method. In case of these methods the test verifies if

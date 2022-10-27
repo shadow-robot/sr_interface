@@ -289,7 +289,7 @@ class SRDFRobotGenerator():
 
     def start_new_srdf(self, file_name):
         # Generate new robot srdf with arm information
-        self.new_robot_srdf = open(f"{self.package_path}/config/{file_name}", 'w+')
+        self.new_robot_srdf = open(f"{self.package_path}/config/{file_name}", 'w+')  # pylint: disable=R1732
 
         self.new_robot_srdf.write('<?xml version="1.0" ?>\n')
         banner = ["This does not replace URDF, and is not an extension of URDF.\n" +

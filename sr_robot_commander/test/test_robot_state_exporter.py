@@ -25,13 +25,12 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
 import sys
 import os
 import shutil
 from unittest import TestCase
-from sr_robot_commander.sr_robot_state_exporter import SrRobotStateExporter
 import rospy
+from sr_robot_commander.sr_robot_state_exporter import SrRobotStateExporter
 
 PKG = "sr_robot_commander"
 
