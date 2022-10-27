@@ -25,13 +25,11 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
 import rospy
-
-from sr_robot_commander.sr_robot_commander import SrRobotCommander, SrRobotCommanderException
 from sr_robot_msgs.srv import ForceController
 from sr_hand.tactile_receiver import TactileReceiver
 from sr_utilities.hand_finder import HandFinder
+from sr_robot_commander.sr_robot_commander import SrRobotCommander, SrRobotCommanderException
 
 
 class SrHandCommander(SrRobotCommander):
@@ -83,7 +81,7 @@ class SrHandCommander(SrRobotCommander):
             if prefix is None:
                 prefix = "rh_"
 
-        super(SrHandCommander, self).__init__(name)
+        super().__init__(name)
 
         if not self._hand_h:
             self._tactiles = TactileReceiver(prefix)

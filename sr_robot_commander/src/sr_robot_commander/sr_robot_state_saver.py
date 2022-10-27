@@ -25,17 +25,16 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
 from threading import Lock
 import sys
 import rospy
+from control_msgs.msg import JointTrajectoryControllerState
 from moveit_msgs.srv import SaveRobotStateToWarehouse as SaveState
 from moveit_msgs.msg import RobotState
 from sensor_msgs.msg import JointState
 from sr_robot_commander.sr_arm_commander import SrArmCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
-from control_msgs.msg import JointTrajectoryControllerState
 
 
 class SrStateSaverUnsafe():
@@ -110,7 +109,7 @@ class SrStateSaverUnsafe():
             rospy.loginfo("Getting targets")
             waiting_for_targets = True
             while waiting_for_targets and not rospy.is_shutdown():
-                self._mutex.acquire()
+                self._mutex.acquire()  # pylint: disable=R1732
                 waiting_for_targets = False
                 for joint in current_dict:
                     if joint in self._target_values:
@@ -118,7 +117,6 @@ class SrStateSaverUnsafe():
                     else:
                         waiting_for_targets = True
                         rospy.loginfo("Still waiting for %s target" % joint)
-                self._mutex.release()
                 if waiting_for_targets:
                     rospy.loginfo(self._target_values)
                     rospy.sleep(1)
@@ -128,10 +126,9 @@ class SrStateSaverUnsafe():
         self.save_state(current_dict, robot_name)
 
     def _target_cb(self, data):
-        self._mutex.acquire()
+        self._mutex.acquire()  # pylint: disable=R1732
         for joint_index, joint in enumerate(data.joint_names):
             self._target_values[joint] = data.desired.positions[joint_index]
-        self._mutex.release()
 
     def save_state(self, current_dict, robot_name):
         robot_state = RobotState()

@@ -25,12 +25,15 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
 import threading
 
 from math import radians
 import copy
 import functools
+import rospy
+import numpy
+from std_msgs.msg import Header
+
 from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal
 from sensor_msgs.msg import JointState
 import geometry_msgs.msg
@@ -42,10 +45,7 @@ from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
 from moveit_msgs.srv import GetPositionFK
 from moveit_msgs.msg import RobotTrajectory, PositionIKRequest
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
-from std_msgs.msg import Header
 import tf2_ros
-import rospy
-import numpy
 from actionlib import SimpleActionClient
 
 # Since Moveit update to noetic, the plan() method returns a tuple where trajectory is indexed at 1.
@@ -55,7 +55,7 @@ CONST_TUPLE_TRAJECTORY_INDEX = 1
 
 class SrRobotCommanderException(Exception):
     def __init__(self, value):
-        super(SrRobotCommanderException, self).__init__(value)
+        super().__init__(value)
         self._value = value
 
     def __str__(self):
@@ -750,10 +750,10 @@ class SrRobotCommander():
         self._call_action(goals)
         if not wait:
             return
-        for client in self._clients.keys():
+        for client, action_client in self._clients.items():
             if not self.action_is_running(client):
                 continue
-            if not self._clients[client].wait_for_result():
+            if not action_client.wait_for_result():
                 rospy.loginfo("Trajectory not completed")
 
     def action_is_running(self, controller=None):
@@ -768,11 +768,11 @@ class SrRobotCommander():
         self._action_running[controller] = False
 
     def _call_action(self, goals):
-        for client in self._clients:
+        for client, action_client in self._clients.items():
             if goals[client].trajectory.joint_names:
                 self._action_running[client] = True
                 terminal_state, result = functools.partial(self._action_done_cb, client, terminal_state, result)
-                self._clients[client].send_goal(goals[client], terminal_state, result)
+                action_client.send_goal(goals[client], terminal_state, result)
 
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
         """
@@ -802,10 +802,10 @@ class SrRobotCommander():
         self._call_action(goals)
         if not wait:
             return
-        for client in self._clients.keys():
+        for client, action_client in self._clients.items():
             if not self.action_is_running(client):
                 continue
-            if not self._clients[client].wait_for_result():
+            if not action_client.wait_for_result():
                 rospy.loginfo("Trajectory not completed")
 
     def plan_to_waypoints_target(self, waypoints, reference_frame=None,
@@ -931,6 +931,7 @@ class SrRobotCommander():
 
         except rospy.ServiceException as exception:
             rospy.logerr("Service call failed: %s" % exception)
+            return None
 
     def move_to_pose_value_target_unsafe(self, target_pose, avoid_collisions=False,
                                          time=0.002, wait=True, ik_constraints=None):

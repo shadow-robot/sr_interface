@@ -25,7 +25,6 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
 from builtins import map
 from sr_robot_msgs.srv import PlanTrajectoryFromList as PlanFromList
 from sr_robot_msgs.srv import PlanTrajectoryFromPrefix as PlanFromPrefix
@@ -49,7 +48,7 @@ class WaypointNamedServices():
             'plan_trajectory_from_list', PlanFromList)
         self.__from_prefix = rospy.ServiceProxy(
             'plan_trajectory_from_prefix', PlanFromPrefix)
-        self.__execute_plan = rospy.ServiceProxy(
+        self.__execute_plan = rospy.ServiceProxy(  # pylint: disable=W0238
             'execute_planned_trajectory', PlanFromPrefix)
         rospy.loginfo("Service proxies connected.")
 
@@ -88,9 +87,9 @@ class WaypointNamedServices():
         plan_service_name = rospy.get_param("~plan_named_trajectory_service")
         list_service_name = rospy.get_param("~list_named_trajectories_service")
 
-        self.__plan_server = rospy.Service(plan_service_name, PlanNamed,
+        self.__plan_server = rospy.Service(plan_service_name, PlanNamed,  # pylint: disable=W0238
                                            self.__plan_named_trajectory)
-        self.__list_server = rospy.Service(list_service_name, ListNamed,
+        self.__list_server = rospy.Service(list_service_name, ListNamed,  # pylint: disable=W0238
                                            self.__list_named_trajectories)
 
 

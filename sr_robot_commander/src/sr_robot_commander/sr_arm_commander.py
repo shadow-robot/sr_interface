@@ -25,11 +25,9 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
-from sr_robot_commander.sr_robot_commander import SrRobotCommander
-from geometry_msgs.msg import PoseStamped
-from rospy import get_rostime
 import rospy
+from geometry_msgs.msg import PoseStamped
+from sr_robot_commander.sr_robot_commander import SrRobotCommander
 
 
 class SrArmCommander(SrRobotCommander):
@@ -44,11 +42,11 @@ class SrArmCommander(SrRobotCommander):
         @param set_ground - sets the ground plane in moveit for planning
         """
         try:
-            super(SrArmCommander, self).__init__(name)
+            super().__init__(name)
         except Exception as exception:
             # TODO(@dg-shadow): Raise SrRobotCommanderException here. Not doing
             # now as no time to check for and repair unforeseen consequences.
-            rospy.logerr("Couldn't initialise robot commander - is there an arm running?: " + str(exception))
+            rospy.logerr(f"Couldn't initialise robot commander - is there an arm running?: {str(exception)}")
             self._move_group_commander = None
             return
 
@@ -73,7 +71,7 @@ class SrArmCommander(SrRobotCommander):
         pose.pose.orientation.y = 0
         pose.pose.orientation.z = 0
         pose.pose.orientation.w = 1
-        pose.header.stamp = get_rostime()
+        pose.header.stamp = rospy.get_rostime()
         pose.header.frame_id = self._robot_commander.get_root_link()
         self._planning_scene.add_box("ground", pose, (3, 3, height))
 
