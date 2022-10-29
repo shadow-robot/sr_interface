@@ -221,20 +221,10 @@ class SRDFRobotGenerator(object):
 
         # Add groups for bimanual arm and hand systems
         if len(self.robot.manipulators) == 2:
-            if self.robot.manipulators[0].has_arm and self.robot.manipulators[1].has_arm:
-                if self.robot.manipulators[0].has_hand and self.robot.manipulators[1].has_hand:
-                    comment = ["Bimanual groups with hands"]
-                    self.add_bimanual_arm_groups(self.robot.manipulators[0].arm.internal_name,
-                                                 self.robot.manipulators[1].arm.internal_name)
-                else:
-                    comment = ["Bimanual groups without hands"]
-                    self.add_bimanual_arm_groups(self.robot.manipulators[0].arm.internal_name,
-                                                 self.robot.manipulators[1].arm.internal_name,
-                                                 False)
-                self.add_comments(comment)
+            self.add_bimanual_arm_groups(self.robot.manipulators)
 
             if self.robot.manipulators[0].has_hand and self.robot.manipulators[1].has_hand:
-                comment = ["Bimanual groups with hands"]
+                comment = ["Bimanual hand groups"]
                 self.add_bimanual_hand_groups(self.robot.manipulators[0].hand.internal_name,
                                               self.robot.manipulators[1].hand.internal_name)
                 self.add_comments(comment)
@@ -498,31 +488,47 @@ class SRDFRobotGenerator(object):
             combined_move_group_state["joint_angles"]
         return True
 
-    def add_bimanual_arm_groups(self, group_1, group_2, hands=True):
+    def add_bimanual_arm_groups(self, manipulators):
+        self.add_comments(comments=["Bimanual arm groups without hands"])
+        # Add two arms (no hands) group
+        self.add_move_group_combining_others('two_arms',
+            [manipulators[0].arm.internal_name, manipulators[1].arm.internal_name])
+        if manipulators[0].has_hand or manipulators[0].has_hand:
+            self.add_comments(comments=["Bimanual arm groups with hand(s)"])
+        if manipulators[0].has_hand:
+            # Add two arms and first hand group
+            self.add_move_group_combining_others(f'two_arms_and_{manipulators[0].hand.internal_name}',
+                [f'{manipulators[0].arm.internal_name}_and_hand', f'{manipulators[1].arm.internal_name}'])
+            if not manipulators[0].hand.is_lite:
+                # Add two arms and first hand wrist group
+                self.add_move_group_combining_others(f'two_arms_and_{manipulators[0].side}_wrist',
+                    [f'{manipulators[0].arm.internal_name}_and_wrist', f'{manipulators[1].arm.internal_name}'])
+        if manipulators[1].has_hand:
+            # Add two arms and second hand group
+            self.add_move_group_combining_others(f'two_arms_and_{manipulators[1].hand.internal_name}',
+                [f'{manipulators[1].arm.internal_name}_and_hand', f'{manipulators[0].arm.internal_name}'])
+            if not manipulators[1].hand.is_lite:
+                # Add two arms and second hand wrist group
+                self.add_move_group_combining_others(f'two_arms_and_{manipulators[1].side}_wrist',
+                    [f'{manipulators[1].arm.internal_name}_and_wrist', f'{manipulators[0].arm.internal_name}'])
+        if manipulators[0].has_hand and manipulators[1].has_hand:
+            # Add two arms and two hands group
+            self.add_move_group_combining_others(f'two_arms_and_hands',
+                [f'{manipulators[0].arm.internal_name}_and_hand', f'{manipulators[1].arm.internal_name}_and_hand'])
+            if (not manipulators[0].hand.is_lite) and (not manipulators[1].hand.is_lite):
+                # Add two arms and two wrists group
+                self.add_move_group_combining_others(f'two_arms_and_wrists',
+                    [f'{manipulators[1].arm.internal_name}_and_wrist',
+                        f'{manipulators[0].arm.internal_name}_and_wrist'])
+
+    def add_move_group_combining_others(self, new_group_name, existing_group_names = None):
+        """ Adds a new move group to the SRDF that includes other, existing move groups. """
         new_group = xml.dom.minidom.Document().createElement('group')
-        new_group.setAttribute("name", "two_arms")
-        arm_group_1 = xml.dom.minidom.Document().createElement('group name="' + group_1 + '"')
-        new_group.appendChild(arm_group_1)
-        arm_group_2 = xml.dom.minidom.Document().createElement('group name="' + group_2 + '"')
-        new_group.appendChild(arm_group_2)
+        new_group.setAttribute("name", new_group_name)
+        for existing_group_name in existing_group_names:
+            new_group.appendChild(xml.dom.minidom.Document().createElement(f'group name="{existing_group_name}"'))
         new_group.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
 
-        if hands:
-            new_group = xml.dom.minidom.Document().createElement('group')
-            new_group.setAttribute("name", "two_arms_and_hands")
-            arm_group_1 = xml.dom.minidom.Document().createElement('group name="' + group_1 + '_and_hand"')
-            arm_group_2 = xml.dom.minidom.Document().createElement('group name="' + group_2 + '_and_hand"')
-            new_group.appendChild(arm_group_1)
-            new_group.appendChild(arm_group_2)
-            new_group.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
-
-            new_group = xml.dom.minidom.Document().createElement('group')
-            new_group.setAttribute("name", "two_arms_and_wrists")
-            arm_group_1 = xml.dom.minidom.Document().createElement('group name="' + group_1 + '_and_wrist"')
-            arm_group_2 = xml.dom.minidom.Document().createElement('group name="' + group_2 + '_and_wrist"')
-            new_group.appendChild(arm_group_1)
-            new_group.appendChild(arm_group_2)
-            new_group.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
 
     def add_bimanual_hand_groups(self, group_1, group_2):
         new_group = xml.dom.minidom.Document().createElement('group')

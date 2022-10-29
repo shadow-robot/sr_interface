@@ -55,6 +55,12 @@ two_arms:
         move_group_state: ra_start
       - move_group: left_arm
         move_group_state: la_start
+  up:
+    inherit_from:
+      - move_group: right_arm
+        move_group_state: ra_up
+      - move_group: left_arm
+        move_group_state: la_up
 two_arms_and_wrists:
   start:
     inherit_from:
@@ -62,10 +68,38 @@ two_arms_and_wrists:
         move_group_state: ra_start
       - move_group: left_arm_and_wrist
         move_group_state: la_start
+two_arms_and_left_wrist:
+  start:
+    inherit_from:
+      - move_group: right_arm
+        move_group_state: ra_start
+      - move_group: left_arm_and_wrist
+        move_group_state: la_start
+two_arms_and_right_wrist:
+  start:
+    inherit_from:
+      - move_group: right_arm_and_wrist
+        move_group_state: ra_start
+      - move_group: left_arm
+        move_group_state: la_start
 two_arms_and_hands:
   start:
     inherit_from:
       - move_group: right_arm_and_hand
         move_group_state: ra_start
       - move_group: left_arm_and_hand
+        move_group_state: la_start
+two_arms_and_left_hand:
+  start:
+    inherit_from:
+      - move_group: right_arm
+        move_group_state: ra_start
+      - move_group: left_arm_and_hand
+        move_group_state: la_start
+two_arms_and_right_hand:
+  start:
+    inherit_from:
+      - move_group: right_arm_and_hand
+        move_group_state: ra_start
+      - move_group: left_arm
         move_group_state: la_start
