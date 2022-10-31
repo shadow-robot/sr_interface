@@ -17,6 +17,7 @@
 from __future__ import absolute_import
 from __future__ import division
 import threading
+import re
 
 import rospy
 from actionlib import SimpleActionClient
@@ -99,6 +100,8 @@ class SrRobotCommander(object):
 
         self._controllers = {}
 
+        self._underactuated_joint_finder = re.compile('[r,l]h_[F,M,R,L]FJ[1,2]')
+
         rospy.wait_for_service('compute_ik')
         self._compute_ik = rospy.ServiceProxy('compute_ik', GetPositionIK)
         self._forward_k = rospy.ServiceProxy('compute_fk', GetPositionFK)
@@ -137,13 +140,15 @@ class SrRobotCommander(object):
         robot = robot_dom.getElementsByTagName('robot')[0]
 
         for child in robot.childNodes:
+            name = child.getAttribute('name')
+
             if child.nodeType is child.TEXT_NODE:
                 continue
+
             if child.localName == 'joint':
                 joint_type = child.getAttribute('type')
                 if joint_type in ['fixed', 'floating', 'planar']:
                     continue
-                name = child.getAttribute('name')
 
                 if joint_type == 'continuous':
                     minval = -pi
@@ -560,6 +565,13 @@ class SrRobotCommander(object):
 
         return joint_states
 
+    def _is_joint_underactuated(self, joint_name):
+        """
+        @param joint_name - Name of the joint to check if it is underactuated or not, example format rh_FFJ1
+        @return - boolean indicating if the joint is underactuated or not
+        """
+        return bool(self._underactuated_joint_finder.findall(joint_name))
+
     def get_current_set_points(self):
         """
         Reads from the set points
@@ -572,15 +584,15 @@ class SrRobotCommander(object):
         set_points = {}
 
         for joint in raw_set_points:
-            if "J0" in joint:
-                # Get j1 j2 ratio from current state
+            if self._is_joint_underactuated(joint):
+                # Underactuated joint, get j1 j2 ratio from current state
                 underactuation_ratio = current_state[f"{joint[:-2]}J1"]/current_state[f"{joint[:-2]}J2"]
                 ratio_part = raw_set_points[joint]/(underactuation_ratio+1)
                 set_point_j1 = underactuation_ratio*ratio_part
                 set_point_j2 = ratio_part
                 set_points.update({f"{joint[:-2]}J1": set_point_j1})
                 set_points.update({f"{joint[:-2]}J2": set_point_j2})
-            elif joint[5:] not in ["J1", "J2"] or joint[3:-2] in ["WR", "TH"]:
+            else:
                 set_points.update({joint: raw_set_points[joint]})
 
         joint_state = JointState()
