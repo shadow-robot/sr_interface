@@ -1036,8 +1036,7 @@ class SrRobotCommander(object):
             if not self._are_set_points_ready:
                 with self._set_points_cv:
                     for joint_name in joint_names_group:
-                        if self._is_joint_underactuated(joint_name) and \
-                        f"{joint_name[0:5]}J0" not in joint_names_group:
+                        if self._is_joint_underactuated(joint_name) and f"{joint_name[0:5]}J0" not in joint_names_group:
                             joint_names_group.append(f"{joint_name[0:5]}J0")
                     for joint_name in joint_names_group:
                         if joint_name not in self._set_points.keys():
