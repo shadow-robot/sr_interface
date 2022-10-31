@@ -140,8 +140,6 @@ class SrRobotCommander(object):
         robot = robot_dom.getElementsByTagName('robot')[0]
 
         for child in robot.childNodes:
-            name = child.getAttribute('name')
-
             if child.nodeType is child.TEXT_NODE:
                 continue
 
@@ -149,6 +147,7 @@ class SrRobotCommander(object):
                 joint_type = child.getAttribute('type')
                 if joint_type in ['fixed', 'floating', 'planar']:
                     continue
+                name = child.getAttribute('name')
 
                 if joint_type == 'continuous':
                     minval = -pi
@@ -577,6 +576,7 @@ class SrRobotCommander(object):
         Reads from the set points
         @return - Dictionary which contains the set points of the joints that belong to the move group
         """
+        raw_set_points = {}
         with self._set_points_lock:
             raw_set_points = copy.deepcopy(self._set_points)
 
@@ -592,7 +592,8 @@ class SrRobotCommander(object):
                 set_point_j2 = ratio_part
                 set_points.update({f"{joint[:-2]}J1": set_point_j1})
                 set_points.update({f"{joint[:-2]}J2": set_point_j2})
-            else:
+            elif "J0" not in joint:
+                # Avoind adding set points of J0 to the output
                 set_points.update({joint: raw_set_points[joint]})
 
         joint_state = JointState()
@@ -1034,9 +1035,9 @@ class SrRobotCommander(object):
                 self._set_points.update({joint: msg.desired.positions[index]})
             if not self._are_set_points_ready:
                 with self._set_points_cv:
-                    joint_names_group = self._move_group_commander.get_active_joints()
                     for joint_name in joint_names_group:
-                        if self._is_joint_underactuated(joint):
+                        if self._is_joint_underactuated(joint_name) and \
+                        f"{joint_name[0:5]}J0" not in joint_names_group:
                             joint_names_group.append(f"{joint_name[0:5]}J0")
                     for joint_name in joint_names_group:
                         if joint_name not in self._set_points.keys():
