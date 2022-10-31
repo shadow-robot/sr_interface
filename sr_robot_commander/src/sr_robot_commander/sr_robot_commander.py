@@ -596,7 +596,6 @@ class SrRobotCommander(object):
                 set_points.update({joint: raw_set_points[joint]})
 
         joint_state = JointState()
-        joint_state.header = Header()
         joint_state.header.stamp = rospy.Time.now()
         for joint in set_points:
             joint_state.name.append(joint)
@@ -931,9 +930,7 @@ class SrRobotCommander(object):
                         topics_subscribed.append(topic_name)
 
         for joint_name in joint_names_group:
-            joint_member = joint_name[3:-2]
-            joint_number = joint_name[5:]
-            if joint_number in ["J1", "J2"] and joint_member not in ["WR", "TH"]:
+            if self._is_joint_underactuated(joint_name):
                 topic_name = f"/sh_{joint_name.lower()[0:5]}j0_position_controller/state"
                 rospy.Subscriber(topic_name,
                                  JointControllerState,
@@ -1031,15 +1028,15 @@ class SrRobotCommander(object):
         """
         joint_names_group = self._move_group_commander.get_active_joints()
         with self._set_points_lock:
-            for i in range(len(msg.joint_names)):
-                if msg.joint_names[i] not in joint_names_group:
+            for index, joint in enumerate(msg.joint_names):
+                if joint not in joint_names_group:
                     continue
-                self._set_points.update({msg.joint_names[i]: msg.desired.positions[i]})
+                self._set_points.update({joint: msg.desired.positions[index]})
             if not self._are_set_points_ready:
                 with self._set_points_cv:
                     joint_names_group = self._move_group_commander.get_active_joints()
                     for joint_name in joint_names_group:
-                        if joint_name[5:] in ["J1", "J2"] and joint_name[3:-2] not in ["WR", "TH"]:
+                        if self._is_joint_underactuated(joint):
                             joint_names_group.append(f"{joint_name[0:5]}J0")
                     for joint_name in joint_names_group:
                         if joint_name not in self._set_points.keys():
