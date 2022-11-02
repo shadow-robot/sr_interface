@@ -318,8 +318,8 @@ class SrRobotCommander(object):
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
                                     for joint, i in joint_states_cpy.items())
-        set_points, move_group_robot_state = self.get_current_set_points()
-        self._move_group_commander.set_start_state(move_group_robot_state)
+        set_points, robot_state_set_points = self.get_current_set_points()
+        self._move_group_commander.set_start_state(robot_state_set_points)
         set_points = self._bound_state(set_points)
         self._move_group_commander.set_joint_value_target(set_points)
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
@@ -339,13 +339,13 @@ class SrRobotCommander(object):
         @return - motion plan (RobotTrajectory msg) that contains the trajectory to the set goal state.
         """
         joint_states_cpy = copy.deepcopy(joint_states)
-        set_points, robot_state = self.get_current_set_points()
+        set_points, robot_state_set_points = self.get_current_set_points()
 
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
                                     for joint, i in joint_states_cpy.items())
         if custom_start_state is None:
-            self._move_group_commander.set_start_state(robot_state)
+            self._move_group_commander.set_start_state(robot_state_set_points)
         else:
             self._move_group_commander.set_start_state(custom_start_state)
 
