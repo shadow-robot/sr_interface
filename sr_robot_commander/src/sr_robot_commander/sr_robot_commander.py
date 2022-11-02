@@ -574,7 +574,8 @@ class SrRobotCommander(object):
     def get_current_set_points(self):
         """
         Reads from the set points
-        @return - Dictionary which contains the set points of the joints that belong to the move group
+        @return - Tuple that contains a dictionary mapping joint names with their respective set point, and
+        a RobotState object which contains the same set points.
         """
         raw_set_points = {}
         with self._set_points_lock:
