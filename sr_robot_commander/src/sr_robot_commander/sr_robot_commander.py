@@ -586,10 +586,8 @@ class SrRobotCommander(object):
         for joint in raw_set_points:
             if self._is_joint_underactuated(joint):
                 # Underactuated joint, get j1 j2 ratio from current state
-                underactuation_ratio = current_state[f"{joint[:-2]}J1"]/current_state[f"{joint[:-2]}J2"]
-                ratio_part = raw_set_points[joint]/(underactuation_ratio+1)
-                set_point_j1 = underactuation_ratio*ratio_part
-                set_point_j2 = ratio_part
+                set_point_j1 = current_state[f"{joint[:-2]}J1"] * raw_set_points[joint] / (current_state[f"{joint[:-2]}J1"] + current_state[f"{joint[:-2]}J2"])
+                set_point_j2 = current_state[f"{joint[:-2]}J2"] * raw_set_points[joint] / (current_state[f"{joint[:-2]}J1"] + current_state[f"{joint[:-2]}J2"])
                 set_points.update({f"{joint[:-2]}J1": set_point_j1})
                 set_points.update({f"{joint[:-2]}J2": set_point_j2})
             elif "J0" not in joint:
