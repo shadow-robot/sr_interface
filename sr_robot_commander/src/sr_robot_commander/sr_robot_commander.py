@@ -582,14 +582,35 @@ class SrRobotCommander(object):
 
         current_state = self.get_current_state()
         set_points = {}
+        joint_names = list(raw_set_points.keys())
 
-        for joint in raw_set_points:
+        for joint in joint_names:
             if self._is_joint_underactuated(joint):
-                # Underactuated joint, get j1 j2 ratio from current state
-                set_point_j1 = current_state[f"{joint[:-2]}J1"] * raw_set_points[joint] / (current_state[f"{joint[:-2]}J1"] + current_state[f"{joint[:-2]}J2"])
-                set_point_j2 = current_state[f"{joint[:-2]}J2"] * raw_set_points[joint] / (current_state[f"{joint[:-2]}J1"] + current_state[f"{joint[:-2]}J2"])
-                set_points.update({f"{joint[:-2]}J1": set_point_j1})
-                set_points.update({f"{joint[:-2]}J2": set_point_j2})
+                # Underactuated joint, split the set point of j0 given the state of j1 and j2
+                joint_0_name = f"{joint[:-2]}J0"
+                joint_1_name = f"{joint[:-2]}J1"
+                joint_2_name = f"{joint[:-2]}J2"
+
+                state_j1 = current_state[joint_1_name]
+                state_j2 = current_state[joint_2_name]
+                set_point_j0 = raw_set_points[joint_0_name]
+
+                if (state_j1 + state_j2) == 0:
+                    # Avoid division by 0, use directly the set point of J1 and J2
+                    # from the trajectory controller
+                    set_point_j1 = raw_set_points[joint_1_name]
+                    set_point_j2 = raw_set_points[joint_2_name]
+                else:
+                    # Split j0 given state of j1 and j2
+                    set_point_j1 = state_j1 * set_point_j0 / (state_j1 + state_j2)
+                    set_point_j2 = state_j2 * set_point_j0 / (state_j1 + state_j2)
+
+                set_points.update({joint_1_name: set_point_j1})
+                set_points.update({joint_2_name: set_point_j2})
+
+                # Avoid executing again this
+                joint_names.remove(joint_1_name)
+                joint_names.remove(joint_2_name)
             elif "J0" not in joint:
                 # Avoind adding set points of J0 to the output
                 set_points.update({joint: raw_set_points[joint]})
