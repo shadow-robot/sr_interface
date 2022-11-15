@@ -39,7 +39,6 @@
 # simulated robot:
 #     roslaunch sr_right_ur10arm_hand.launch sim:=true scene:=true
 
-from __future__ import absolute_import
 import sys
 from math import pi
 import argparse

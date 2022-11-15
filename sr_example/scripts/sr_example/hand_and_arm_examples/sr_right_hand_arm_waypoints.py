@@ -42,7 +42,6 @@
 
 # It is recommended to run this script in simulation first.
 
-from __future__ import absolute_import
 from builtins import input
 import sys
 import rospy

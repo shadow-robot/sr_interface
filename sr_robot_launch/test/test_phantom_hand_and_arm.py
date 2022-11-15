@@ -25,18 +25,17 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
 from unittest import TestCase
 from multiprocessing import Process
 import yaml
-from sr_robot_commander.sr_arm_commander import SrArmCommander
-from sr_robot_commander.sr_hand_commander import SrHandCommander
-from sr_robot_commander.sr_robot_commander import SrRobotCommander
+import rostest
+import rospy
 from actionlib_msgs.msg import GoalStatusArray
 from sensor_msgs.msg import JointState
 from std_srvs.srv import Trigger
-import rostest
-import rospy
+from sr_robot_commander.sr_arm_commander import SrArmCommander
+from sr_robot_commander.sr_hand_commander import SrHandCommander
+from sr_robot_commander.sr_robot_commander import SrRobotCommander
 
 
 class TestHandAndArmSim(TestCase):
@@ -80,7 +79,7 @@ class TestHandAndArmSim(TestCase):
     def check_topic_prefix(prefix):
         joint_state = rospy.wait_for_message('/joint_states', JointState)
         joints_exist = False
-        for joint in joint_state.name:
+        for joint in joint_state.name:  # pylint: disable=E1101
             if joint.startswith(prefix):
                 joints_exist = True
         return joints_exist
@@ -91,7 +90,7 @@ class TestHandAndArmSim(TestCase):
         hands_detected = self.open_yaml('/tmp/sr_hand_detector.yaml')
 
         hand_in_config = False
-        for hand_serial, hand_eth in hand_to_confirm.items():
+        for hand_serial, hand_eth in hands_detected.items():
             if hand_serial in hand_to_confirm and hand_to_confirm[hand_serial] == hand_eth:
                 hand_in_config = True
         self.assertTrue(hand_in_config)
@@ -102,14 +101,14 @@ class TestHandAndArmSim(TestCase):
         hands_detected = self.open_yaml('/tmp/sr_hand_detector.yaml')
 
         hand_in_config = False
-        for hand_serial, hand_eth in hand_to_confirm.items():
+        for hand_serial, hand_eth in hands_detected.items():
             if hand_serial in hand_to_confirm and hand_to_confirm[hand_serial] == hand_eth:
                 hand_in_config = True
         self.assertTrue(hand_in_config)
 
     def test_3_joint_state_topic(self):
         joint_state = rospy.wait_for_message('/joint_states', JointState)
-        joints = len(joint_state.name)
+        joints = len(joint_state.name)  # pylint: disable=E1101
         self.assertEqual(joints, 60)
 
     def test_4_joint_state_prefix_right_hand(self):
@@ -132,19 +131,19 @@ class TestHandAndArmSim(TestCase):
         self.rh_commander.move_to_named_target('pack', wait=True)
         rospy.sleep(2)
         goal_status = rospy.wait_for_message('/move_group/status', GoalStatusArray)
-        goal_status = goal_status.status_list[0].status
+        goal_status = goal_status.status_list[0].status  # pylint: disable=E1101
         self.assertEqual(goal_status, 3)
 
     def test_9_left_hand(self):
         self.lh_commander.move_to_named_target('pack', wait=True)
         rospy.sleep(2)
         goal_status = rospy.wait_for_message('/move_group/status', GoalStatusArray)
-        goal_status = goal_status.status_list[0].status
+        goal_status = goal_status.status_list[0].status  # pylint: disable=E1101
         self.assertEqual(goal_status, 3)
 
     def test_10_joint_states(self):
         joint_state = rospy.wait_for_message('/joint_states', JointState)
-        joints = len(joint_state.name)
+        joints = len(joint_state.name)  # pylint: disable=E1101
         self.assertEqual(joints, 60)
 
     def test_11_arms(self):

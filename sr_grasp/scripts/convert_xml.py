@@ -28,7 +28,7 @@
 # Convert the old style XML grasps file to new style YAML.
 # rosrun sr_grasp convert_xml.py sr_hand/scripts/sr_hand/grasps.xml > converted.yaml
 
-from __future__ import absolute_import
+
 import sys
 import genpy
 from sr_hand.grasps_parser import GraspParser

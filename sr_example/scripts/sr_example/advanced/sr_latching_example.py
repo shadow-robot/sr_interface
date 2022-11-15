@@ -34,7 +34,6 @@ the data.
 
 """
 
-from __future__ import absolute_import
 import time
 import rospy
 from std_msgs.msg import Float64

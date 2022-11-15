@@ -25,7 +25,6 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
 from unittest import TestCase
 from std_msgs.msg import Bool
 from ur_dashboard_msgs.srv import IsProgramRunning
@@ -47,7 +46,7 @@ class CommonTests(TestCase):
     def arm_mock_dashboard_server(self, side):
         self.assertFalse(self.get_program_running(side))
 
-    def e_stop(self, side, release_estop_before_pedal=True):
+    def e_stop(self, side, _release_estop_before_pedal=True):
         self.assertFalse(self.get_program_running(side))
         self.assertFalse(self.mock_dashboard[side].robot_state.get_robot_mode().robot_mode.mode ==
                          RobotMode.RUNNING)

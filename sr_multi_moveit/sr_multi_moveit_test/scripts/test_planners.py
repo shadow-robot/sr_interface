@@ -27,7 +27,7 @@
 
 # A script to test planners, to be run on the command line with group name as the argument (left_arm or right_arm)
 
-from __future__ import absolute_import
+
 import sys
 import copy
 import time

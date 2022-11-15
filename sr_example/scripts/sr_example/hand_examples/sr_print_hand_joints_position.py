@@ -31,7 +31,7 @@
 # recording those positions with this script. Angles can be printed in radians or degrees, an argument should be added
 # when the script is called of either 'radians' or 'degrees', default is radians
 
-from __future__ import absolute_import
+
 from math import pi
 import argparse
 import rospy

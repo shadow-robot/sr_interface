@@ -28,7 +28,7 @@
 # This example gives a more advanced use case for sending partial trajectories.
 # A plot is generated to show the output of the desired and achieved positions and velocities.
 
-from __future__ import absolute_import
+
 import numpy as np
 
 import rospy

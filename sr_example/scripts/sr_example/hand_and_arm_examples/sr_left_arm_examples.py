@@ -44,7 +44,6 @@
 
 # It is recommended to run this script in simulation first.
 
-from __future__ import absolute_import
 from builtins import input
 import rospy
 from sr_robot_commander.sr_robot_commander import SrRobotCommander

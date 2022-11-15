@@ -25,7 +25,7 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
+
 import unittest
 import rospy
 import rostest

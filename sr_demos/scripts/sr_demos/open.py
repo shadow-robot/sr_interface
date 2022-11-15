@@ -27,7 +27,6 @@
 
 # Script to move a shadow hand into open position.
 
-from __future__ import absolute_import
 import argparse
 import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander

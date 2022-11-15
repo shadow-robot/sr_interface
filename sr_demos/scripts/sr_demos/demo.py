@@ -25,7 +25,6 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import, division
 import random
 import time
 from builtins import input
@@ -37,8 +36,8 @@ from threading import Thread
 from math import degrees
 import yaml
 import rospy
-from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_hand.tactile_receiver import TactileReceiver
+from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 SAMPLES_TO_COLLECT = 50
 TOUCH_THRESHOLD = 75
@@ -294,7 +293,7 @@ def sequence_rf(hand_commander, joint_states_config, tactile_reading, hand_type)
             break
 
     # For now, tactile_reading is only being considered for uni-manual
-    while True and tactile_reading is not None:
+    while tactile_reading is not None:
         # Record current joint positions
         hand_pos = {joint: degrees(i) for joint, i in hand_commander.get_joints_position().items()}
 

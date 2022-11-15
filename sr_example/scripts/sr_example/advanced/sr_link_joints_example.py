@@ -45,7 +45,6 @@ using the joint sliders in the gui, plugins > Shadow Robot > joint slider
 If you move the joint slider for the parent joint, the child joint will move as well.
 """
 
-from __future__ import absolute_import
 import roslib
 import rospy
 from std_msgs.msg import Float64

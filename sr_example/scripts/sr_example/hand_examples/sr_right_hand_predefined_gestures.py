@@ -27,7 +27,7 @@
 
 # Reading the tactiles from the hand.
 
-from __future__ import absolute_import
+
 from threading import Thread
 import termios
 import sys

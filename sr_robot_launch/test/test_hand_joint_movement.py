@@ -25,12 +25,11 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
 from unittest import TestCase
-from sr_robot_commander.sr_hand_commander import SrHandCommander
-from actionlib_msgs.msg import GoalStatusArray
 import rostest
 import rospy
+from actionlib_msgs.msg import GoalStatusArray
+from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 
 class TestHandJointMovement(TestCase):

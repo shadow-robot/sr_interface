@@ -27,7 +27,7 @@
 
 # Reading the tactiles from the hand.
 
-from __future__ import absolute_import
+
 import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder

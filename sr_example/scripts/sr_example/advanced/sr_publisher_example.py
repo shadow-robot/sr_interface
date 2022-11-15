@@ -38,7 +38,6 @@ plugins > Shadow Robot > Change controllers
 
 """
 
-from __future__ import absolute_import
 import time
 import math
 import rospy

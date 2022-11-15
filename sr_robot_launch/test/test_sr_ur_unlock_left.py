@@ -25,13 +25,12 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
 from unittest import TestCase
+import rostest
+import rospy
 from sr_robot_launch.sr_ur_arm_unlock import SrUrUnlock
 from sr_robot_launch.mock_sr_ur_robot_hw import MockUrRobotHW
 from sr_robot_launch.common_sr_ur_unlock_tests import CommonTests
-import rostest
-import rospy
 
 
 class TestSrUrUnlockLeft(TestCase, CommonTests):

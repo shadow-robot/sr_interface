@@ -33,7 +33,6 @@ To view the joint_states, type the following in a terminal:
 
 """
 
-from __future__ import absolute_import
 import math
 import rospy
 import roslib

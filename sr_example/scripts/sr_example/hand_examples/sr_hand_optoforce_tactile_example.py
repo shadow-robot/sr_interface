@@ -27,7 +27,7 @@
 
 # Reading the optoforce tactiles from the hand.
 
-from __future__ import absolute_import
+
 import rospy
 from geometry_msgs.msg import WrenchStamped
 
