@@ -45,4 +45,5 @@
   <test_depend>rostest</test_depend>
   <test_depend>warehouse_ros</test_depend>
   <test_depend>warehouse_ros_mongo</test_depend>
+  <test_depend>code_coverage</test_depend>
 </package>
