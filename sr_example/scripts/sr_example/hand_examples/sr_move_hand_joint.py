@@ -62,8 +62,8 @@ ext_th = {"rh_THJ1": 0, "rh_THJ2": 0, "rh_THJ3": 0, "rh_THJ4": 0, "rh_THJ5": 0}
 
 
 def select_finger():
-    flex = dict()
-    extend = dict()
+    flex = {}
+    extend = {}
     finger = input("select which finger to move (options: ff, mf, rf, lf, th  default: ff): ")
     if finger == "ff":
         finger = "FF"

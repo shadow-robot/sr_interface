@@ -46,7 +46,7 @@ class GraspExecution():
     def _open_yaml(self):
         grasp_config_filename = '/home/user/projects/shadow_robot/base/src/'\
                                 'sr_interface/sr_example/config/demo_grasps.yaml'
-        with open(grasp_config_filename) as file:
+        with open(grasp_config_filename, encoding="utf-8") as file:
             self.grasp_yaml = yaml.load(file, Loader=yaml.FullLoader)
 
     @staticmethod

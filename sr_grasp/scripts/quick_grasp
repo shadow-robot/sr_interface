@@ -26,15 +26,11 @@
 # software, even if advised of the possibility of such damage.
 
 
-import os
-import unittest
 import rospy
-import rostest
 from math import radians
 from actionlib import SimpleActionClient, GoalStatus
 from sr_robot_msgs.msg import GraspAction, GraspGoal
 from sr_hand.shadowhand_ros import ShadowHand_ROS
-from sr_grasp.utils import mk_grasp
 from sr_grasp import Grasp, GraspStash
 from builtins import input
 
@@ -48,16 +44,15 @@ class QuickGraspNode():
         if self.stash.size() == 0:
             rospy.logerr("No grasps found!")
             raise Exception("No Grasps")
-        else:
-            self.grasp = self.stash.get_all()[0]
+        self.grasp = self.stash.get_all()[0]
         # print self.grasp
         rospy.loginfo("Looking for hand...")
         self.hand = ShadowHand_ROS()
         rospy.loginfo("Found")
 
     def zero_hand(self):
-        for j in self.hand.allJoints:
-            self.hand.sendupdate(j.name, 0.0)
+        for joint in self.hand.allJoints:
+            self.hand.sendupdate(joint.name, 0.0)
         rospy.sleep(2)
 
     def run_grasp(self, pre=False):
@@ -77,8 +72,8 @@ class QuickGraspNode():
         grasp = Grasp()
         grasp.id = name
         positions = self.hand.read_all_current_positions()
-        for k, v in positions.items():
-            positions[k] = radians(v)
+        for key, value in positions.items():
+            positions[key] = radians(value)
         grasp.set_grasp_point(positions=positions)
         self.stash.put_grasp(grasp)
         node.grasp = grasp
@@ -91,8 +86,8 @@ if __name__ == '__main__':
         print("")
         print("Grasps:")
         for i, g in enumerate(node.stash.get_all()):
-            print(str(i) + " - " + g.id)
-        print("Current grasp: %s" % node.grasp.id)
+            print(f"{str(i)} - {g.id}")
+        print(f"Current grasp: {node.grasp.id}")
         print("Number select grasp, z zero hand, g grasp, p pre-grasp, n new grasp, s save grasps, q quit")
         act = input(": ")
         num = None
@@ -111,8 +106,8 @@ if __name__ == '__main__':
         elif act == "g":
             node.run_grasp()
         elif act == "n":
-            name = input("Enter name: ")
-            node.new_grasp(name=name)
+            name_input = input("Enter name: ")
+            node.new_grasp(name=name_input)
         elif act == "s":
             node.stash.save_yaml_file()
         elif act == "q":

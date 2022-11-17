@@ -170,6 +170,7 @@ def sequence_ff(hand_commander, joint_states_config):
 
     rospy.loginfo("FF demo completed")
 
+
 def sequence_ff_commands(hand_commander, joint_states_config):
     execute_command_check(hand_commander, joint_states_config, 'store_3', 1.1, 1.1)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.1, 1.1)
@@ -243,6 +244,7 @@ def sequence_ff_commands(hand_commander, joint_states_config):
     execute_command_check(hand_commander, joint_states_config, 'se_wr', 0.7, 0.7)
     execute_command_check(hand_commander, joint_states_config, 'zero_wr', 0.4, 0.4)
     execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.5, 1.5)
+
 
 def sequence_mf(hand_commander, joint_states_config):
     rospy.loginfo("MF demo started")
@@ -455,7 +457,7 @@ def complete_random_sequence(hand_commander, joint_states_config):
 def correct_joint_states_for_hand_type(joint_states_config, hand_type):
     hand_type_joints_filename = '/home/user/projects/shadow_robot/base/src/'\
                        'sr_interface/sr_demos/config/joints_in_hand.yaml'
-    with open(hand_type_joints_filename) as hand_type_joints_file:
+    with open(hand_type_joints_filename, encoding="utf-8") as hand_type_joints_file:
         hand_type_joints = yaml.load(hand_type_joints_file, Loader=yaml.FullLoader)
 
     for joint_state_dicts_no_id in joint_states_config.keys():
@@ -517,7 +519,7 @@ if __name__ == "__main__":
     else:
         joint_prefix_name = 'both'
 
-    if  joint_prefix_name == 'rh_':
+    if joint_prefix_name == 'rh_':
         hand_name = "right_hand"
     elif joint_prefix_name == 'lh_':
         hand_name = "left_hand"
@@ -529,7 +531,7 @@ if __name__ == "__main__":
     # Get joint states for demo from yaml
     joint_states_config_filename = '/home/user/projects/shadow_robot/base/src/'\
                                    'sr_interface/sr_demos/config/demo_joint_states.yaml'
-    with open(joint_states_config_filename) as file:
+    with open(joint_states_config_filename, encoding="utf-8") as file:
         joint_states_config_yaml = yaml.load(file, Loader=yaml.FullLoader)
 
     corrected_joint_states_config_for_this_hand = correct_joint_states_for_hand_type(joint_states_config_yaml,

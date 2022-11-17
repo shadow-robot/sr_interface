@@ -27,15 +27,11 @@
 
 
 import rospy
-
 from sr_grasp.utils import mk_grasp
-
-from dynamic_reconfigure.server import Server
 from sr_grasp.cfg import GraspPlannerConfig
-
+from dynamic_reconfigure.server import Server
 from actionlib import SimpleActionServer
 from sr_robot_msgs.msg import PlanGraspAction, PlanGraspResult
-from moveit_msgs.msg import Grasp
 
 
 class GraspPlanner():
@@ -74,7 +70,8 @@ class GraspPlanner():
         res.grasps = self.get_grasps()
         self._action_server.set_succeeded(result=res)
 
-    def get_grasps(self):
+    @staticmethod
+    def get_grasps():
         grasps = []
 
         # power grasp for vertical objects
