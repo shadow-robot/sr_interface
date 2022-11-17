@@ -23,7 +23,6 @@
  or tort (including negligence or otherwise) arising in any way out of the use of this
  software, even if advised of the possibility of such damage.
 -->
-
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="$(arg robot_name)">
   <xacro:include filename="$(find sr_moveit_hand_config)/config/shadowhand.srdf.xacro"/>
   <xacro:arg name="prefix" default="rh_"/>
