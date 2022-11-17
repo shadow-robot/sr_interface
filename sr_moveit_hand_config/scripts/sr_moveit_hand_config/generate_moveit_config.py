@@ -29,34 +29,6 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-# Author: Guillaume Walck <gwalck@techfak.uni-bielefeld.de>
-# Author: Shadow Robot Software Team <software@shadowrobot.com>
-
-# Software License Agreement (BSD License)
-# Copyright © 2022 belongs to Shadow Robot Company Ltd.
-# All rights reserved.
-#
-# Redistribution and use in source and binary forms, with or without modification,
-# are permitted provided that the following conditions are met:
-#   1. Redistributions of source code must retain the above copyright notice,
-#      this list of conditions and the following disclaimer.
-#   2. Redistributions in binary form must reproduce the above copyright notice,
-#      this list of conditions and the following disclaimer in the documentation
-#      and/or other materials provided with the distribution.
-#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
-#      may be used to endorse or promote products derived from this software without
-#      specific prior written permission.
-#
-# This software is provided by Shadow Robot Company Ltd "as is" and any express
-# or implied warranties, including, but not limited to, the implied warranties of
-# merchantability and fitness for a particular purpose are disclaimed. In no event
-# shall the copyright holder be liable for any direct, indirect, incidental, special,
-# exemplary, or consequential damages (including, but not limited to, procurement of
-# substitute goods or services; loss of use, data, or profits; or business interruption)
-# however caused and on any theory of liability, whether in contract, strict liability,
-# or tort (including negligence or otherwise) arising in any way out of the use of this
-# software, even if advised of the possibility of such damage.
-
 """
 generate_moveit_config provides:
     generate_fake_controllers : generate a fake controllers config file
@@ -122,7 +94,7 @@ def upload_output_params(upload_str, output_path=None, upload=True, ns_=None):
         for params, namespace in paramlist:
             rosparam.upload_params(namespace, params)
     if output_path is not None:
-        with open(output_path, "wb") as file_writer:
+        with open(output_path, "wb", encoding="utf-8") as file_writer:
             file_writer.write(upload_str)
 
 
@@ -225,7 +197,7 @@ def generate_ompl_planning(robot,
     '''
     output_str = ""
 
-    with open(template_path, 'r') as stream:
+    with open(template_path, 'r', encoding="utf-8") as stream:
         yamldoc = yaml.safe_load(stream)
     output_str += "planner_configs:\n"
     output_str += yaml_reindent(yaml.dump(
@@ -295,15 +267,15 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
     robot_urdf = URDF.from_xml_string(urdf_str)
 
     # open template file
-    with open(template_path, 'r') as stream:
+    with open(template_path, 'r', encoding="utf-8") as stream:
         yamldoc = yaml.safe_load(stream)
 
     if 'kinematics_template' in template_path:
         default_solver_for_fixed_joint = "trac_ik"
         fixed_joint_template_path = rospkg.RosPack().get_path(
-            'sr_moveit_hand_config') + "/config/kinematics_" + default_solver_for_fixed_joint + "_template.yaml"
+            'sr_moveit_hand_config') + f"/config/kinematics_{default_solver_for_fixed_joint}_template.yaml"
 
-        with open(fixed_joint_template_path, 'r') as stream:
+        with open(fixed_joint_template_path, 'r', encoding="utf-8") as stream:
             yamldoc_fixed_joint = yaml.safe_load(stream)
     else:
         yamldoc_fixed_joint = deepcopy(yamldoc)
@@ -312,7 +284,7 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
     prefix = find_prefix(robot)
     finger_prefixes = ["FF", "MF", "RF", "LF", "TH"]
 
-    # detect biotac fingers. I think this is not needed any more as all links are called the same even for biotac hand
+    # detect biotac fingers. Could not be needed any more as all links are called the same even for biotac hand
     is_fixed = {"first_finger": False,
                 "middle_finger": False,
                 "ring_finger": False,
@@ -381,7 +353,7 @@ def generate_joint_limits(robot,
         @type  ns_: str
     """
     output_str = ""
-    with open(template_path, 'r') as stream:
+    with open(template_path, 'r', encoding="utf-8") as stream:
         yamldoc = yaml.safe_load(stream)
     output_str += "joint_limits:\n"
     group_name = None

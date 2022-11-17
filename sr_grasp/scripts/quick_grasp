@@ -25,14 +25,13 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-
-import rospy
 from math import radians
+from builtins import input
+import rospy
 from actionlib import SimpleActionClient, GoalStatus
 from sr_robot_msgs.msg import GraspAction, GraspGoal
 from sr_hand.shadowhand_ros import ShadowHand_ROS
 from sr_grasp import Grasp, GraspStash
-from builtins import input
 
 
 class QuickGraspNode():

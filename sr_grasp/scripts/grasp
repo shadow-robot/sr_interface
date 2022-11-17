@@ -45,8 +45,6 @@ class InterpolatedJoint():
         self.active = active
         self.i = 0
         self.current = self.start
-        self.start_position = None
-        self.joints = None
 
     def inc(self, amt=1):
         self.i += amt
@@ -86,6 +84,8 @@ class GraspNode():
         # sensor types
         self.tactiles = {}
         self.pst_bias = None
+        self.start_position = None
+        self.joints = None
 
         # ROS setup
         #

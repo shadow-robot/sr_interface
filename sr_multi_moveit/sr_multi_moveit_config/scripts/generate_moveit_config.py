@@ -81,7 +81,7 @@ def upload_output_params(upload_str, output_path=None, upload=True, ns_=None):
         for params, namespace in paramlist:
             rosparam.upload_params(namespace, params)
     if output_path is not None:
-        with open(output_path, "wb") as file_writer:
+        with open(output_path, "wb", encoding="utf-8") as file_writer:
             file_writer.write(upload_str)
 
 
@@ -91,7 +91,7 @@ def generate_fake_controllers(robot, robot_config, output_path=None, ns_=None):
         if manipulator.has_arm:
             # Read arm srdf
             arm_yaml_path = manipulator.arm.moveit_path + "/" + "fake_controllers.yaml"
-            with open(arm_yaml_path, 'r') as stream:
+            with open(arm_yaml_path, 'r', encoding="utf-8") as stream:
                 arm_yamldoc = yaml.safe_load(stream)
 
             output_str += "  - name: fake_" + manipulator.arm.prefix + "controller" + "\n"
@@ -138,7 +138,7 @@ def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
         if manipulator.has_arm:
             # Read arm srdf
             arm_yaml_path = manipulator.arm.moveit_path + "/" + "controllers.yaml"
-            with open(arm_yaml_path, 'r') as stream:
+            with open(arm_yaml_path, 'r', encoding="utf-8") as stream:
                 arm_yamldoc = yaml.safe_load(stream)
 
             arm_joints = [manipulator.arm.prefix + joint for joint in arm_yamldoc["controller_list"][0]["joints"]]
@@ -169,7 +169,7 @@ def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
 
 def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_planning_template.yaml",
                            output_path=None, ns_=None):
-    with open(hand_template_path, 'r') as stream:
+    with open(hand_template_path, 'r', encoding="utf-8") as stream:
         hand_yamldoc = yaml.safe_load(stream)
     output_str = "planner_configs:\n"
     output_str += yaml_reindent(yaml.dump(hand_yamldoc["planner_configs"],
@@ -177,11 +177,11 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
 
     for manipulator in robot_config.manipulators:  # pylint: disable=R1702
         if manipulator.has_arm:
-            with open(manipulator.arm.moveit_path + "/" + "ompl_planning.yaml", 'r') as stream:
+            with open(f"{manipulator.arm.moveit_path}/ompl_planning.yaml", 'r', encoding="utf-8") as stream:
                 arm_yamldoc = yaml.safe_load(stream)
             if manipulator.arm.extra_groups_config_path:
-                with open((manipulator.arm.extra_groups_config_path + "/" +
-                           "ompl_planning_extra_groups.yaml"), 'r') as stream:
+                filename = f"{manipulator.arm.extra_groups_config_path}/ompl_planning_extra_groups.yaml"
+                with open(filename, 'r', encoding="utf-8") as stream:
                     arm_yamldoc_extra_groups = yaml.safe_load(stream)
             prefix = manipulator.arm.prefix
             for group in robot.groups:
@@ -234,7 +234,7 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
                         output_str += "\n"
 
         if manipulator.has_hand:
-            with open(hand_template_path, 'r') as stream:
+            with open(hand_template_path, 'r', encoding="utf-8") as stream:
                 hand_yamldoc = yaml.safe_load(stream)
             prefix = manipulator.hand.prefix
             if prefix:
@@ -273,7 +273,7 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
     upload_output_params(output_str, output_path, ns_)
 
 
-def generate_kinematics(robot, robot_config, hand_template_path="kinematics_template.yaml",  # pylint: disable=R0914, R0915
+def generate_kinematics(robot, robot_config, hand_template_path="kinematics_template.yaml",  # pylint: disable=R0914,R0915
                         output_path=None, kinematics_file="kinematics.yaml",
                         kinematics_extra_file="kinematics_extra_groups.yaml", ns_=None):
     output_str = ""
@@ -283,11 +283,11 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
 
     for manipulator in robot_config.manipulators:  # pylint: disable=R1702
         if manipulator.has_arm:
-            with open(manipulator.arm.moveit_path + "/" + kinematics_file, 'r') as stream:
+            with open(f"{manipulator.arm.moveit_path}/{kinematics_file}", 'r', encoding="utf-8") as stream:
                 arm_yamldoc = yaml.safe_load(stream)
             if manipulator.arm.extra_groups_config_path:
-                with open((manipulator.arm.extra_groups_config_path + "/" +
-                           kinematics_extra_file), 'r') as stream:
+                filename = f"{manipulator.arm.extra_groups_config_path}/{kinematics_extra_file}"
+                with open(filename, 'r', encoding="utf-8") as stream:
                     arm_yamldoc_extra_groups = yaml.safe_load(stream)
             prefix = manipulator.arm.prefix
             for group in robot.groups:
@@ -330,13 +330,13 @@ def generate_kinematics(robot, robot_config, hand_template_path="kinematics_temp
                                                           allow_unicode=True), 2) + "\n"
         if manipulator.has_hand:
             # open hand template files
-            with open(hand_template_path, 'r') as stream:
+            with open(hand_template_path, 'r', encoding="utf-8") as stream:
                 hand_yamldoc = yaml.safe_load(stream)
 
             if 'kinematics_template' in hand_template_path:
-                fixed_joint_template_path = rospkg.RosPack().get_path(
-                    'sr_moveit_hand_config') + "/config/kinematics_" + "trac_ik" + "_template.yaml"
-                with open(fixed_joint_template_path, 'r') as stream:
+                fixed_joint_template_path = rospkg.RosPack().get_path('sr_moveit_hand_config') + \
+                                            "/config/kinematics_trac_ik_template.yaml"
+                with open(fixed_joint_template_path, 'r', encoding="utf-8") as stream:
                     hand_yamldoc_fixed_joint = yaml.safe_load(stream)
             else:
                 hand_yamldoc_fixed_joint = deepcopy(hand_yamldoc)
@@ -396,8 +396,8 @@ def generate_joint_limits(robot, robot_config, hand_template_path="joint_limits_
     for manipulator in robot_config.manipulators:
         if manipulator.has_arm:
             # Read arm srdf
-            arm_yaml_path = manipulator.arm.moveit_path + "/" + "joint_limits.yaml"
-            with open(arm_yaml_path, 'r') as stream:
+            arm_yaml_path = f"{manipulator.arm.moveit_path}/joint_limits.yaml"
+            with open(arm_yaml_path, 'r', encoding="utf-8") as stream:
                 arm_yamldoc = yaml.safe_load(stream)
             for joint in arm_yamldoc["joint_limits"]:
                 joint_limits_config = arm_yamldoc["joint_limits"][joint]
@@ -409,7 +409,7 @@ def generate_joint_limits(robot, robot_config, hand_template_path="joint_limits_
                 output_str += yaml_reindent(joint_limits_dump, 4)
                 output_str += "\n"
         if manipulator.has_hand:
-            with open(hand_template_path, 'r') as stream:
+            with open(hand_template_path, 'r', encoding="utf-8") as stream:
                 hand_yamldoc = yaml.safe_load(stream)
             group_name = manipulator.hand.internal_name
             if group_name is not None:
