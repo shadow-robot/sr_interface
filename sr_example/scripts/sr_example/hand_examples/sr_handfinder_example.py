@@ -27,8 +27,8 @@
 
 
 import rospy
-from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
+from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 rospy.init_node("basic_hand_examples", anonymous=True)
 

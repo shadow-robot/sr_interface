@@ -27,9 +27,9 @@
 
 
 import rospy
+from exported_states import warehouse_states
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_state_exporter import SrRobotStateExporter
-from exported_states import warehouse_states
 
 # It's assumed that a module containing states and named named exported_states.py has already
 # been exported and is found somewhere on the path (e.g. in the same directory as this script).

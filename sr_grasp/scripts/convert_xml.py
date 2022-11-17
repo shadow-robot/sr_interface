@@ -32,8 +32,8 @@
 import sys
 import genpy
 from sr_hand.grasps_parser import GraspParser
-import sr_grasp
 from sr_robot_msgs.msg import GraspArray
+import sr_grasp
 
 parser = GraspParser()
 parser.parse_tree(xml_filename=sys.argv[1])

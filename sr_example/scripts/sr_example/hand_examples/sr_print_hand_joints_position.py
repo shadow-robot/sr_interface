@@ -34,10 +34,10 @@
 
 from math import pi
 import argparse
+from numpy import arange
+from sr_utilities.hand_finder import HandFinder
 import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
-from sr_utilities.hand_finder import HandFinder
-from numpy import arange
 
 
 rospy.init_node("print_hand_joints_position", anonymous=True)

@@ -30,15 +30,13 @@
 
 
 import numpy as np
-
 import rospy
 from control_msgs.msg import JointTrajectoryControllerState, \
     FollowJointTrajectoryActionResult, FollowJointTrajectoryActionGoal
 import matplotlib.pyplot as plt
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
-
-from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
+from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 
 class PartialTrajListener():

@@ -27,13 +27,11 @@
 
 # Example where two joints are specified and move with a sinusoidal trajectory, with a pi/4 phase difference
 
-
-from __future__ import division
 import rospy
-from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
-from sr_robot_commander.sr_hand_commander import SrHandCommander
-from sr_utilities.hand_finder import HandFinder
 from numpy import sin, cos, pi, arange
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+from sr_utilities.hand_finder import HandFinder
+from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 rospy.init_node("joint_sine_example", anonymous=True)
 

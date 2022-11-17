@@ -31,9 +31,9 @@
 
 
 import rospy
+from sr_utilities.hand_finder import HandFinder
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sr_robot_commander.sr_hand_commander import SrHandCommander
-from sr_utilities.hand_finder import HandFinder
 
 rospy.init_node("partial_traj_example", anonymous=True)
 rospy.sleep(1)  # Do not start at time zero

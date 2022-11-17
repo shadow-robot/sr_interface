@@ -42,8 +42,8 @@
 import sys
 from math import pi
 import argparse
-from sr_robot_commander.sr_robot_commander import SrRobotCommander
 import rospy
+from sr_robot_commander.sr_robot_commander import SrRobotCommander
 
 rospy.init_node("print_joints_position", anonymous=True)
 

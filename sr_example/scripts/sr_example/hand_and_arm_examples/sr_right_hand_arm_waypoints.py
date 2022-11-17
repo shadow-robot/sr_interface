@@ -46,10 +46,10 @@ from builtins import input
 import sys
 import rospy
 import tf
+import geometry_msgs.msg
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
 from sr_robot_commander.sr_arm_commander import SrArmCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
-import geometry_msgs.msg
 
 
 rospy.init_node("hand_arm_waypoints", anonymous=True)
@@ -94,7 +94,7 @@ try:
                                                           tf_listener.getLatestCommonTime('ra_base',
                                                                                           'ra_flange'))
 except Exception as exception:
-    raise ValueError(str(exception))
+    raise ValueError(str(exception)) from exception
 
 pose_msg = geometry_msgs.msg.PoseStamped()
 pose_msg.header.frame_id = 'ra_base'
