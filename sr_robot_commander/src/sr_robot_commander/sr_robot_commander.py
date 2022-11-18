@@ -349,6 +349,10 @@ class SrRobotCommander(object):
         else:
             self._move_group_commander.set_start_state(custom_start_state)
 
+        states = self.get_current_state()
+        for joint_name in set_points.keys():
+            print(f"Joint {joint_name}, state: {states[joint_name]} and set point: {set_points[joint_name]}")
+
         set_points_bounded = self._bound_state(set_points)
         self._move_group_commander.set_joint_value_target(set_points_bounded)
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
@@ -580,13 +584,16 @@ class SrRobotCommander(object):
         raw_set_points = {}
         with self._set_points_lock:
             raw_set_points = copy.deepcopy(self._set_points)
+            print(f"Raw set points: {raw_set_points}")
 
         current_state = self.get_current_state()
         set_points = {}
         joint_names = list(raw_set_points.keys())
 
+        underactuated_done = {"FF": False, "MF": False, "RF": False, "LF": False}
+
         for joint in joint_names:
-            if self._is_joint_underactuated(joint):
+            if self._is_joint_underactuated(joint) and not underactuated_done[joint[3:5]]:
                 # Underactuated joint, split the set point of j0 given the state of j1 and j2
                 joint_0_name = f"{joint[:-2]}J0"
                 joint_1_name = f"{joint[:-2]}J1"
@@ -606,14 +613,25 @@ class SrRobotCommander(object):
                     set_point_j1 = state_j1 * set_point_j0 / (state_j1 + state_j2)
                     set_point_j2 = state_j2 * set_point_j0 / (state_j1 + state_j2)
 
+                # Check if the set point is very far from the real state
+                if abs(set_point_j1 - current_state[joint_1_name]) > 0.1:
+                    print(f"Joint {joint_1_name} set point {set_point_j1} deviates more than 0.1 to {current_state[joint_1_name]}")
+                    set_point_j1 = current_state[joint_1_name]
+                if abs(set_point_j2 - current_state[joint_2_name]) > 0.1:
+                    print(f"Joint {joint_2_name} set point {set_point_j2} deviates more than 0.1 to {current_state[joint_2_name]}")
+                    set_point_j2 = current_state[joint_2_name]
+
                 set_points.update({joint_1_name: set_point_j1})
                 set_points.update({joint_2_name: set_point_j2})
 
                 # Avoid executing again this
-                joint_names.remove(joint_1_name)
-                joint_names.remove(joint_2_name)
+                underactuated_done[joint[3:5]] = True
             elif "J0" not in joint:
                 # Avoind adding set points of J0 to the output
+                set_point_value = raw_set_points[joint]
+                if abs(set_point_value - current_state[joint]) > 0.1:
+                    print(f"Joint {joint} set point {set_point_value} deviates more than 0.1 to {current_state[joint]}")
+                    set_point_value = current_state[joint]
                 set_points.update({joint: raw_set_points[joint]})
 
         joint_state = JointState()
