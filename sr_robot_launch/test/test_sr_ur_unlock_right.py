@@ -32,6 +32,7 @@ from sr_robot_launch.sr_ur_arm_unlock import SrUrUnlock
 from sr_robot_launch.mock_sr_ur_robot_hw import MockUrRobotHW
 from sr_robot_launch.common_sr_ur_unlock_tests import CommonTests
 
+
 class TestSrUrUnlockRight(TestCase, CommonTests):
     """
     Tests sr_ur_arm_unlock

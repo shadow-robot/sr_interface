@@ -76,7 +76,7 @@ class TeachModeManager():
 
         return hand_joint_names
 
-    def teach_mode(self, req):
+    def teach_mode(self, req):  # pylint: disable=R0911
         rospy.loginfo(f"Changing {req.robot} to {self.modes[req.teach_mode]}")
 
         if req.robot == "right_arm" or req.robot == "left_arm":
@@ -157,7 +157,7 @@ class TeachModeManager():
                 self.ctrl_helpers[req.robot].change_hand_ctrl("effort")
 
                 return RobotTeachModeResponse(RobotTeachModeResponse.SUCCESS)
-        
+
             rospy.logerr(f"Unknown mode: {self.modes[req.teach_mode]}")
             return RobotTeachModeResponse(RobotTeachModeResponse.ERROR)
 
