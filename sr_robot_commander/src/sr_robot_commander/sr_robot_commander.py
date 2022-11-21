@@ -26,7 +26,6 @@
 # software, even if advised of the possibility of such damage.
 
 import threading
-
 from math import radians
 import copy
 import functools
@@ -368,7 +367,7 @@ class SrRobotCommander():
         either in the srdf or in the mongo warehouse database.
         @return - joint values of the named target.
         """
-        output = dict()
+        output = {}
         if name in self._srdf_names:
             output = self._move_group_commander.get_named_target_values(str(name))
         elif name in self._warehouse_names:
@@ -405,9 +404,10 @@ class SrRobotCommander():
                 current_pose.orientation.z = trans.transform.rotation.z
                 current_pose.orientation.w = trans.transform.rotation.w
                 return current_pose
-            except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
-                rospy.logwarn("Couldn't get the pose from " + self._move_group_commander.get_end_effector_link() +
-                              " in " + reference_frame + " reference frame")
+            except (tf2_ros.LookupException, tf2_ros.ConnectivityException,  # pylint: disable=E1101
+                    tf2_ros.ExtrapolationException):  # pylint: disable=E1101
+                rospy.logwarn(f"Couldn't get the pose from {self._move_group_commander.get_end_effector_link()}" +
+                              f" in {reference_frame} reference frame")
             return None
         return self._move_group_commander.get_current_pose().pose
 
@@ -467,7 +467,7 @@ class SrRobotCommander():
             return list_srv("", self._robot_name).states
         except rospy.ServiceException as exc:
             rospy.logwarn("Couldn't access warehouse: " + str(exc))
-            return list()
+            return []
 
     def reset_plan(self):
         self.__plan = None

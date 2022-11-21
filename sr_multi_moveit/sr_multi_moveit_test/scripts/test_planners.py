@@ -35,9 +35,6 @@ import argparse
 from moveit_commander import RobotCommander, PlanningSceneInterface, MoveGroupCommander
 from moveit_msgs.msg import RobotState
 import geometry_msgs.msg
-
-
-
 import rospy
 import numpy
 

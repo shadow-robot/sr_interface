@@ -81,7 +81,7 @@ class SrStateSaverUnsafe():
         if save_target:
             rospy.loginfo("Saving targets instead of current values")
             self._mutex = Lock()
-            self._target_values = dict()
+            self._target_values = {}
             if self._save_hand:
                 self._hand_subscriber = rospy.Subscriber("/" + prefix + "_trajectory_controller/state",
                                                          JointTrajectoryControllerState, self._target_cb)

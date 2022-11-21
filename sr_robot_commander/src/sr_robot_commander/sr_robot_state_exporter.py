@@ -70,7 +70,7 @@ class SrRobotStateExporter():
 
     def output_module(self, file_name):
         pretty_printer = pprint.PrettyPrinter()
-        with open(file_name, "w") as output:
+        with open(file_name, "w", encoding="utf-8") as output:
             output.write('warehouse_states = %s\n' % pretty_printer.pformat(self._dictionary))
 
     def convert_trajectory(self, named_trajectory):

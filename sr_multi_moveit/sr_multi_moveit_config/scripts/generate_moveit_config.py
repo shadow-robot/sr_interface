@@ -142,8 +142,8 @@ def generate_real_controllers(robot, robot_config, output_path=None, ns_=None):
     upload_output_params(output_str, output_path, ns_)
 
 
-def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_planning_template.yaml",
-                           output_path=None, ns_=None):
+def generate_ompl_planning(robot, robot_config,  # pylint: disable=R0915
+                           hand_template_path="ompl_planning_template.yaml", output_path=None, ns_=None):
     with open(hand_template_path, 'r', encoding="utf-8") as stream:
         hand_yamldoc = yaml.safe_load(stream)
     output_str = "planner_configs:\n"
@@ -248,9 +248,9 @@ def generate_ompl_planning(robot, robot_config, hand_template_path="ompl_plannin
     upload_output_params(output_str, output_path, ns_)
 
 
-def generate_kinematics(robot, robot_config, hand_template_path="kinematics_template.yaml",  # pylint: disable=R0914,R0915
-                        output_path=None, kinematics_file="kinematics.yaml",
-                        kinematics_extra_file="kinematics_extra_groups.yaml", ns_=None):
+def generate_kinematics(robot, robot_config, ns_=None, # pylint: disable=R0914,R0915
+                        hand_template_path="kinematics_template.yaml", output_path=None,
+                        kinematics_file="kinematics.yaml", kinematics_extra_file="kinematics_extra_groups.yaml"):
     output_str = ""
     while not rospy.has_param('/robot_description'):
         rospy.sleep(0.5)

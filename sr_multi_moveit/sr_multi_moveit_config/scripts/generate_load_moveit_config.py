@@ -98,9 +98,9 @@ if __name__ == '__main__':
                     hand_template_path = None
                 if save_file:
                     output_path = f"{multi_moveit_path}/config/kinematics.yaml"
-                generate_kinematics(robot, robot_config, hand_template_path,
+                generate_kinematics(robot, robot_config, ns_=NS, hand_template_path=hand_template_path,
                                     output_path=output_path, kinematics_file=kinematics_file_name,
-                                    kinematics_extra_file=kinematics_extra_file_name, ns_=NS)
+                                    kinematics_extra_file=kinematics_extra_file_name)
             elif command == "joint_limits":
                 hand_template_path = sh_config_path + "joint_limits_template.yaml"
                 if save_file:

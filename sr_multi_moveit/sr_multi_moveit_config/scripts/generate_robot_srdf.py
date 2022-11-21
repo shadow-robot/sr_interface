@@ -73,9 +73,11 @@ class Manipulator():
             if self.side == "right":
                 self.arm.prefix = "ra_"
                 self.arm.internal_name = "right_arm"
+                self.arm.extra_groups_config_path = ""
             else:
                 self.arm.prefix = "la_"
                 self.arm.internal_name = "left_arm"
+                self.arm.extra_groups_config_path = ""
         if has_hand:
             self.hand = Subrobot("hand")
             if self.side == "right":
@@ -136,7 +138,7 @@ class Robot():
                         if "extra_groups_config_path" in arm_yaml:
                             relative_path = arm_yaml["extra_groups_config_path"]
                             manipulator.arm.extra_groups_config_path = \
-                                rospkg.RosPack().get_path("sr_multi_moveit_config") + relative_path  # pylint: disable=W0201
+                                rospkg.RosPack().get_path("sr_multi_moveit_config") + relative_path
                         if "main_group" in arm_yaml:
                             manipulator.arm.main_group = arm_yaml["main_group"]
                         else:
@@ -163,7 +165,7 @@ class SRDFRobotGenerator():
         self._multi_robot_move_group_states = {}
         if len(sys.argv) > 2:
             try:
-                with open(sys.argv[2], "r") as stream:
+                with open(sys.argv[2], "r", encoding="utf-8") as stream:
                     self._multi_robot_move_group_states = yaml.safe_load(stream)
             except FileNotFoundError:
                 rospy.logwarn(f'Could not open the specified move group saved states definition file: '
@@ -179,7 +181,7 @@ class SRDFRobotGenerator():
 
         self.robot = Robot()
 
-        with open(description_file, "r") as stream:
+        with open(description_file, "r", encoding="utf-8") as stream:
             yamldoc = yaml.safe_load(stream)
 
         self.robot.set_parameters(yamldoc)
@@ -192,7 +194,7 @@ class SRDFRobotGenerator():
             if manipulator.has_arm:
                 # Read arm srdf
                 arm_srdf_path = manipulator.arm.moveit_path + "/" + manipulator.arm.name + ".srdf"
-                with open(arm_srdf_path, 'r') as stream:
+                with open(arm_srdf_path, 'r', encoding="utf-8") as stream:
                     self.arm_srdf_xmls.append(parse(stream))
                 xacro.process_doc(self.arm_srdf_xmls[manipulator_id])
 
@@ -264,7 +266,7 @@ class SRDFRobotGenerator():
         self.new_robot_srdf.write('</robot>\n')
         self.new_robot_srdf.close()
         if load:
-            with open(f"{self.package_path}/config/{new_srdf_file_name}", 'r') as stream:
+            with open(f"{self.package_path}/config/{new_srdf_file_name}", 'r', encoding="utf-8") as stream:
                 srdf = parse(stream)
 
             rospy.loginfo("Loading SRDF on parameter server")
@@ -282,14 +284,15 @@ class SRDFRobotGenerator():
             # urdf: File can be copied from rosparam
             if rospy.has_param('/robot_description'):
                 urdf_str = rospy.get_param('/robot_description')
-                with open(f"{self._path_to_save_files}/{self._file_name}.urdf", "wb") as urdf_file:
+                with open(f"{self._path_to_save_files}/{self._file_name}.urdf", "wb", encoding="utf-8") as urdf_file:
                     urdf_file.write(urdf_str)
 
         rospy.loginfo("generated_robot.srdf has been generated and saved.")
 
     def start_new_srdf(self, file_name):
         # Generate new robot srdf with arm information
-        self.new_robot_srdf = open(f"{self.package_path}/config/{file_name}", 'w+')  # pylint: disable=R1732
+        self.new_robot_srdf = open(f"{self.package_path}/config/{file_name}", 'w+',  # pylint: disable=R1732
+                                   encoding="utf-8")
 
         self.new_robot_srdf.write('<?xml version="1.0" ?>\n')
         banner = ["This does not replace URDF, and is not an extension of URDF.\n" +

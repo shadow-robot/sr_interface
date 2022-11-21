@@ -26,7 +26,6 @@
 # software, even if advised of the possibility of such damage.
 
 
-
 from builtins import round
 import copy
 from unittest import TestCase
