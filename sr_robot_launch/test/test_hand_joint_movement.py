@@ -31,7 +31,7 @@ class TestHandJointMovement(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.hand_type = rospy.get_param('~test_sim/hand_type', 'hand_e')
+        cls.HAND_type = rospy.get_param('~test_sim/hand_type', 'hand_e')
         if cls.hand_type not in ('hand_e', 'hand_g'):
             raise TypeError("The specified hand_type is incorrect.")
         cls.hand_id = rospy.get_param('~test_sim/hand_id', 'rh')
@@ -43,6 +43,7 @@ class TestHandJointMovement(TestCase):
             cls.hand_commander = SrHandCommander(name='left_hand')
         else:
             raise TypeError("The specified hand_id is incorrect.")
+
 
     @classmethod
     def tearDownClass(cls):
