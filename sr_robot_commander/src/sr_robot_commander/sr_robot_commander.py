@@ -318,13 +318,20 @@ class SrRobotCommander(object):
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
                                     for joint, i in joint_states_cpy.items())
+        # Create the set points dictionary and robot state
         set_points, robot_state_set_points = self.get_current_set_points()
+        # In case that the set points are far from the state, use the state of the joints
         set_points, robot_state_set_points = self.fix_set_points_if_far_from_state(set_points, robot_state_set_points)
+        # Setting the start state of the plan
         self._move_group_commander.set_start_state(robot_state_set_points)
+        # Bound the set points to make sure they lay within the joint limits
         set_points = self._bound_state(set_points)
+        # Set the target of the plan
         self._move_group_commander.set_joint_value_target(set_points)
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
-        self._move_group_commander.go(wait=wait)
+
+        # Create and execute the plan
+        self._move_group_commander.execute(self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX], wait=wait)
 
     def set_start_state_to_current_state(self):
         return self._move_group_commander.set_start_state_to_current_state()
@@ -340,20 +347,26 @@ class SrRobotCommander(object):
         @return - motion plan (RobotTrajectory msg) that contains the trajectory to the set goal state.
         """
         joint_states_cpy = copy.deepcopy(joint_states)
+        # Create the set points dictionary and robot state
         set_points, robot_state_set_points = self.get_current_set_points()
+        # In case that the set points are far from the state, use the state of the joints
         set_points, robot_state_set_points = self.fix_set_points_if_far_from_state(set_points, robot_state_set_points)
 
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
                                     for joint, i in joint_states_cpy.items())
+        # Set the first point of the plan
         if custom_start_state is None:
             self._move_group_commander.set_start_state(robot_state_set_points)
         else:
             self._move_group_commander.set_start_state(custom_start_state)
 
+        # Make sure that the set points lay within the joint limits
         set_points_bounded = self._bound_state(set_points)
+        # Set the target of the plan
         self._move_group_commander.set_joint_value_target(set_points_bounded)
         self._move_group_commander.set_joint_value_target(joint_states_cpy)
+        # Create the plan
         self.__plan = self._move_group_commander.plan()[CONST_TUPLE_TRAJECTORY_INDEX]
         return self.__plan
 
