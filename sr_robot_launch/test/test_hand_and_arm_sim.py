@@ -83,7 +83,6 @@ class TestHandAndArmSim(TestCase):
 
     @staticmethod
     def joints_error_check(expected_joint_values, received_joint_values):
-        #def joints_error_check(self, expected_joint_values, recieved_joint_values):  # pylint: disable=R0201
         expected_and_final_joint_value_diff = 0
         for expected_value, received_value in zip(sorted(expected_joint_values), sorted(received_joint_values)):
             expected_and_final_joint_value_diff += abs(expected_joint_values[expected_value] -
@@ -218,7 +217,7 @@ class TestHandAndArmSim(TestCase):
         for key, value in arm_joints_target_no_id.items():
             arm_joints_target[self.arm_id + '_' + key] = value
 
-        hand_and_arm_joints_target = dict()
+        hand_and_arm_joints_target = {}
         hand_and_arm_joints_target.update(hand_joints_target)
         hand_and_arm_joints_target.update(arm_joints_target)
         self.robot_commander.move_to_joint_value_target_unsafe(hand_and_arm_joints_target, 10.0, True)

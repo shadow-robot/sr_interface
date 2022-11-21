@@ -248,7 +248,7 @@ def generate_ompl_planning(robot, robot_config,  # pylint: disable=R0915
     upload_output_params(output_str, output_path, ns_)
 
 
-def generate_kinematics(robot, robot_config, ns_=None, # pylint: disable=R0914,R0915
+def generate_kinematics(robot, robot_config, ns_=None,  # pylint: disable=R0914,R0915
                         hand_template_path="kinematics_template.yaml", output_path=None,
                         kinematics_file="kinematics.yaml", kinematics_extra_file="kinematics_extra_groups.yaml"):
     output_str = ""

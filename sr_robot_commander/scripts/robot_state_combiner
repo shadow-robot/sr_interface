@@ -26,7 +26,7 @@
 # software, even if advised of the possibility of such damage.
 
 
-from sys import argv, exit
+import sys
 import rospy
 from sr_robot_commander.sr_robot_state_combiner import SrRobotStateCombiner
 
@@ -44,13 +44,13 @@ from sr_robot_commander.sr_robot_state_combiner import SrRobotStateCombiner
 
 if __name__ == "__main__":
     rospy.init_node("state_saver")
-    if len(argv) <= 3 or argv[1] == '' or argv[2] == '' or argv[3] == '':
+    if len(sys.argv) <= 3 or sys.argv[1] == '' or sys.argv[2] == '' or sys.argv[3] == '':
         rospy.logerr("You didn't enter names for ARM_STATE_NAME HAND_STATE_NAME and NAME_TO_SAVE.")
-        exit(-1)
+        sys.exit(-1)
 
-    if len(argv) > 3:
-        arm_state = argv[1]
-        hand_state = argv[2]
-        new_state = argv[3]
+    if len(sys.argv) > 3:
+        arm_state = sys.argv[1]
+        hand_state = sys.argv[2]
+        new_state = sys.argv[3]
         combiner = SrRobotStateCombiner(arm_state, hand_state, new_state)
         combiner.combine()

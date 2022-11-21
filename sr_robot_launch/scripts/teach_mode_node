@@ -98,7 +98,7 @@ class TeachModeManager():
                 self.ctrl_helpers[req.robot].change_trajectory_ctrl("run")
                 return RobotTeachModeResponse(RobotTeachModeResponse.SUCCESS)
 
-            elif req.teach_mode == RobotTeachModeRequest.TEACH_MODE:
+            if req.teach_mode == RobotTeachModeRequest.TEACH_MODE:
                 rospy.loginfo(f"Changing {req.robot} to teach mode")
 
                 if not self.ctrl_helpers[req.robot].change_arm_teach_mode(True):
@@ -109,9 +109,8 @@ class TeachModeManager():
                 self.ctrl_helpers[req.robot].change_trajectory_ctrl("stop")
                 return RobotTeachModeResponse(RobotTeachModeResponse.SUCCESS)
 
-            else:
-                rospy.logerr(f"Unknown teach mode: {req.teach_mode}")
-                return RobotTeachModeResponse(RobotTeachModeResponse.ERROR)
+            rospy.logerr(f"Unknown teach mode: {req.teach_mode}")
+            return RobotTeachModeResponse(RobotTeachModeResponse.ERROR)
 
         if req.robot == "right_hand" or req.robot == "left_hand":
             change_type_msg = ChangeControlType()
@@ -158,10 +157,10 @@ class TeachModeManager():
                 self.ctrl_helpers[req.robot].change_hand_ctrl("effort")
 
                 return RobotTeachModeResponse(RobotTeachModeResponse.SUCCESS)
-            else:
-                rospy.logerr(f"Unknown mode: {self.modes[req.teach_mode]}")
-                return RobotTeachModeResponse(RobotTeachModeResponse.ERROR)
         
+            rospy.logerr(f"Unknown mode: {self.modes[req.teach_mode]}")
+            return RobotTeachModeResponse(RobotTeachModeResponse.ERROR)
+
         rospy.logerr(f"Unknown robot: {req.robot}")
         return RobotTeachModeResponse(RobotTeachModeResponse.ERROR)
 

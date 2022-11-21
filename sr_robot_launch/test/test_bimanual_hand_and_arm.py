@@ -132,7 +132,7 @@ class TestBiHandAndArmSim(TestCase):
         for key, value in hand_joints_target_no_id.items():
             hand_joints_target_right['rh' + '_' + key] = value
 
-        hands_joints_target = dict()
+        hands_joints_target = {}
         hands_joints_target.update(hand_joints_target_right)
         hands_joints_target.update(hand_joints_target_left)
         self.hand_commander.move_to_joint_value_target(hands_joints_target, wait=True)
@@ -169,7 +169,7 @@ class TestBiHandAndArmSim(TestCase):
         for key, value in hand_joints_target_no_id.items():
             hand_joints_target_right['rh' + '_' + key] = value
 
-        hands_and_arms_joints_target = dict()
+        hands_and_arms_joints_target = {}
         hands_and_arms_joints_target.update(hand_joints_target_right)
         hands_and_arms_joints_target.update(arm_joints_target_right)
         hands_and_arms_joints_target.update(hand_joints_target_left)
