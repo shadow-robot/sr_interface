@@ -107,7 +107,7 @@ class SrRobotCommander(object):
         self._forward_k = rospy.ServiceProxy('compute_fk', GetPositionFK)
 
         controller_list_param = rospy.get_param("/move_group/controller_list")
-
+        self._allowed_start_tolerance = rospy.get_param("/move_group/trajectory_execution/allowed_start_tolerance", 0.1)
         robot_description = rospy.get_param("/robot_description")
         self._joint_limits = {}
         self._initialize_joint_limits(robot_description)
@@ -319,6 +319,7 @@ class SrRobotCommander(object):
             joint_states_cpy.update((joint, radians(i))
                                     for joint, i in joint_states_cpy.items())
         set_points, robot_state_set_points = self.get_current_set_points()
+        set_points, robot_state_set_points = self.fix_set_points_if_far_from_state(set_points, robot_state_set_points)
         self._move_group_commander.set_start_state(robot_state_set_points)
         set_points = self._bound_state(set_points)
         self._move_group_commander.set_joint_value_target(set_points)
@@ -340,6 +341,7 @@ class SrRobotCommander(object):
         """
         joint_states_cpy = copy.deepcopy(joint_states)
         set_points, robot_state_set_points = self.get_current_set_points()
+        set_points, robot_state_set_points = self.fix_set_points_if_far_from_state(set_points, robot_state_set_points)
 
         if angle_degrees:
             joint_states_cpy.update((joint, radians(i))
@@ -348,10 +350,6 @@ class SrRobotCommander(object):
             self._move_group_commander.set_start_state(robot_state_set_points)
         else:
             self._move_group_commander.set_start_state(custom_start_state)
-
-        states = self.get_current_state()
-        for joint_name in set_points.keys():
-            print(f"Joint {joint_name}, state: {states[joint_name]} and set point: {set_points[joint_name]}")
 
         set_points_bounded = self._bound_state(set_points)
         self._move_group_commander.set_joint_value_target(set_points_bounded)
@@ -584,20 +582,20 @@ class SrRobotCommander(object):
         raw_set_points = {}
         with self._set_points_lock:
             raw_set_points = copy.deepcopy(self._set_points)
-            print(f"Raw set points: {raw_set_points}")
 
         current_state = self.get_current_state()
         set_points = {}
         joint_names = list(raw_set_points.keys())
 
-        underactuated_done = {"FF": False, "MF": False, "RF": False, "LF": False}
+        # Lookup table to avoid processing the same underactuated joint group more than one time
+        underactuated_done = {"FF": False, "MF": False, "RF": False, "LF": False, "TH": True, "WR": True}
 
-        for joint in joint_names:
-            if self._is_joint_underactuated(joint) and not underactuated_done[joint[3:5]]:
+        for joint_name in joint_names:
+            if self._is_joint_underactuated(joint_name) and not underactuated_done[joint_name[3:5]]:
                 # Underactuated joint, split the set point of j0 given the state of j1 and j2
-                joint_0_name = f"{joint[:-2]}J0"
-                joint_1_name = f"{joint[:-2]}J1"
-                joint_2_name = f"{joint[:-2]}J2"
+                joint_0_name = f"{joint_name[:-2]}J0"
+                joint_1_name = f"{joint_name[:-2]}J1"
+                joint_2_name = f"{joint_name[:-2]}J2"
 
                 state_j1 = current_state[joint_1_name]
                 state_j2 = current_state[joint_2_name]
@@ -613,37 +611,54 @@ class SrRobotCommander(object):
                     set_point_j1 = state_j1 * set_point_j0 / (state_j1 + state_j2)
                     set_point_j2 = state_j2 * set_point_j0 / (state_j1 + state_j2)
 
-                # Check if the set point is very far from the real state
-                if abs(set_point_j1 - current_state[joint_1_name]) > 0.1:
-                    print(f"Joint {joint_1_name} set point {set_point_j1} deviates more than 0.1 to {current_state[joint_1_name]}")
-                    set_point_j1 = current_state[joint_1_name]
-                if abs(set_point_j2 - current_state[joint_2_name]) > 0.1:
-                    print(f"Joint {joint_2_name} set point {set_point_j2} deviates more than 0.1 to {current_state[joint_2_name]}")
-                    set_point_j2 = current_state[joint_2_name]
-
                 set_points.update({joint_1_name: set_point_j1})
                 set_points.update({joint_2_name: set_point_j2})
 
                 # Avoid executing again this
-                underactuated_done[joint[3:5]] = True
-            elif "J0" not in joint:
-                # Avoind adding set points of J0 to the output
-                set_point_value = raw_set_points[joint]
-                if abs(set_point_value - current_state[joint]) > 0.1:
-                    print(f"Joint {joint} set point {set_point_value} deviates more than 0.1 to {current_state[joint]}")
-                    set_point_value = current_state[joint]
-                set_points.update({joint: raw_set_points[joint]})
+                underactuated_done[joint_name[3:5]] = True
+            else:
+                if "J0" not in joint_name:
+                    # Avoind adding set points of J0 to the output
+                    set_points.update({joint_name: raw_set_points[joint_name]})
 
+        # Create the RobotState since some moveit functions require this object instead of
+        # a dictionary. The JointState is filled first.
         joint_state = JointState()
         joint_state.header.stamp = rospy.Time.now()
-        for joint in set_points:
-            joint_state.name.append(joint)
-            joint_state.position.append(set_points[joint])
+        for joint_name in set_points:
+            joint_state.name.append(joint_name)
+            joint_state.position.append(set_points[joint_name])
 
         move_group_robot_state = RobotState()
         move_group_robot_state.joint_state = joint_state
 
         return set_points, move_group_robot_state
+
+    def fix_set_points_if_far_from_state(self, set_points, robot_state):
+        """
+        Updates the set points with the current stateof the robot if the set point
+        is far from the state given a tolerance. This can happen when the joint is not able
+        to achieve a certain set point of the controller such as when grasping an object.
+        @param set_points - Dictionary that maps the joint names with their set points.
+        @param robot_state - RobotState object that contains the joint names and their set points
+        as the position of the joints.
+        @param tolerance - Tolerance to decide if the set point is updated or not given the
+        current state of the joint.
+        @return - Tuple that contains the updated set_points and updated robot_state.
+        """
+        current_state = self.get_current_state()
+
+        # Update set points
+        for joint_name in list(set_points.keys()):
+            if abs(set_points[joint_name] - current_state[joint_name]) > self._allowed_start_tolerance:
+                set_points[joint_name] = current_state[joint_name]
+
+        # Update robot state
+        for index, joint_name in enumerate(robot_state.joint_state.name):
+            if abs(robot_state.joint_state.position[index] - current_state[joint_name]) > self._allowed_start_tolerance:
+                robot_state.joint_state.position[index] = current_state[joint_name]
+
+        return set_points, robot_state
 
     def move_to_named_target(self, name, wait=True):
         """
