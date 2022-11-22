@@ -1003,9 +1003,9 @@ class SrRobotCommander(object):
                 topic_name = f"/sh_{joint_name.lower()[0:5]}j0_position_controller/state"
                 if topic_name not in j0_position_controllers_subscribed:
                     rospy.Subscriber(topic_name,
-                                    JointControllerState,
-                                    self._set_point_j0_cb, f"{joint_name[0:5]}J0",
-                                    queue_size=1)
+                                     JointControllerState,
+                                     self._set_point_j0_cb, f"{joint_name[0:5]}J0",
+                                     queue_size=1)
                     j0_position_controllers_subscribed.append(topic_name)
 
     def _set_up_action_client(self, controller_list):
