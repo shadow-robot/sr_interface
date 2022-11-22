@@ -997,7 +997,7 @@ class SrRobotCommander(object):
                         rospy.Subscriber(topic_name, JointTrajectoryControllerState, self._set_point_cb, queue_size=1)
                         trajectory_controllers_subscribed.append(topic_name)
 
-        # Susbribe to the j0 position controllers of the joints contained in this group
+        # Subscribe to the j0 position controllers of the joints contained in this group
         for joint_name in joint_names_group:
             if self._is_joint_underactuated(joint_name):
                 topic_name = f"/sh_{joint_name.lower()[0:5]}j0_position_controller/state"
