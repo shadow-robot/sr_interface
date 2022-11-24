@@ -599,11 +599,11 @@ class SrRobotCommander(object):
         set_points = {}
         joint_names = list(raw_set_points.keys())
 
-        # Lookup table to avoid processing the same underactuated joint group more than one time
-        underactuated_done = {"FF": False, "MF": False, "RF": False, "LF": False, "TH": True, "WR": True}
+        # Store the fingers ids from which the underactuated joints have been processed
+        underactuation_fingers_processed = []
 
         for joint_name in joint_names:
-            if self._is_joint_underactuated(joint_name) and not underactuated_done[joint_name[3:5]]:
+            if self._is_joint_underactuated(joint_name) and joint_name[3:5] not in underactuation_fingers_processed:
                 # Underactuated joint, split the set point of j0 given the state of j1 and j2
                 joint_0_name = f"{joint_name[:-2]}J0"
                 joint_1_name = f"{joint_name[:-2]}J1"
@@ -627,7 +627,7 @@ class SrRobotCommander(object):
                 set_points.update({joint_2_name: set_point_j2})
 
                 # Avoid executing again this
-                underactuated_done[joint_name[3:5]] = True
+                underactuation_fingers_processed.append(joint_name[3:5])
             else:
                 if "J0" not in joint_name:
                     # Avoind adding set points of J0 to the output
