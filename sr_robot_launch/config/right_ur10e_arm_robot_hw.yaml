@@ -42,6 +42,8 @@ ra_sr_ur_robot_hw:
 
   trajectory_port: 50003
 
+  script_command_port: 50004
+
   use_local_hardware_interface_param: true
   
   non_blocking_read: true
