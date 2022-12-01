@@ -544,11 +544,11 @@ class SrRobotCommander():
                           - pause_time -> time to wait at this wp
                           - degrees -> set to true if joint_angles is specified in degrees. Assumed false if absent.
         """
-
-        if not self._is_trajectory_valid(trajectory, ["name|joint_angles", "interpolate_time"]):
-            return None
-        current = self.get_current_state_bounded()
         joint_trajectory = JointTrajectory()
+        if not self._is_trajectory_valid(trajectory, ["name|joint_angles", "interpolate_time"]):
+            return joint_trajectory
+        
+        current = self.get_current_state_bounded()
         joint_names = list(current.keys())
         joint_trajectory.joint_names = joint_names
         start = JointTrajectoryPoint()
