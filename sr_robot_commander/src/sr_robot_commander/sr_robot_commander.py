@@ -425,13 +425,13 @@ class SrRobotCommander():
         Get the current joint state of the group being used, enforcing that they are within each joint limits.
         @return - a dictionary with the joint names as keys and current joint values.
         """
-        current = self._move_group_commander.get_current_state_bounded()
-        names = self._move_group_commander.get_active_joints()
+        current = self._move_group_commander._g.get_current_state_bounded()  # pylint: disable=W0212
+        names = self._move_group_commander._g.get_active_joints()  # pylint: disable=W0212
         output = {n: current[n] for n in names if n in current}
         return output
 
     def get_robot_state_bounded(self):
-        return self._move_group_commander.get_current_state_bounded()
+        return self._move_group_commander._g.get_current_state_bounded()  # pylint: disable=W0212
 
     def move_to_named_target(self, name, wait=True):
         """
