@@ -71,8 +71,8 @@ class TestHandAndArmSim(TestCase):
 
     @staticmethod
     def open_yaml(path):
-        with open(path, encoding="utf-8") as file:
-            hands_config = yaml.load(file, Loader=yaml.FullLoader)
+        with open(path, encoding="utf-8") as hand_config_file:
+            hands_config = yaml.load(hand_config_file, Loader=yaml.FullLoader)
         return hands_config
 
     @staticmethod

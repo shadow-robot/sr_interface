@@ -531,8 +531,8 @@ if __name__ == "__main__":
     # Get joint states for demo from yaml
     joint_states_config_filename = '/home/user/projects/shadow_robot/base/src/'\
                                    'sr_interface/sr_demos/config/demo_joint_states.yaml'
-    with open(joint_states_config_filename, encoding="utf-8") as file:
-        joint_states_config_yaml = yaml.load(file, Loader=yaml.FullLoader)
+    with open(joint_states_config_filename, encoding="utf-8") as joint_state_file:
+        joint_states_config_yaml = yaml.load(joint_state_file, Loader=yaml.FullLoader)
 
     corrected_joint_states_config_for_this_hand = correct_joint_states_for_hand_type(joint_states_config_yaml,
                                                                                      args.hand_type)

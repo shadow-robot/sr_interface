@@ -112,8 +112,8 @@ def burn_in_demo(hand_commander, burn_in_config):
 def correct_joint_states_for_hand_type(joint_states_config, hand_type):
     hand_type_joints_filename = '/home/user/projects/shadow_robot/base/src/'\
                        'sr_interface/sr_demos/config/joints_in_hand.yaml'
-    with open(hand_type_joints_filename, encoding="utf-8") as file:
-        hand_type_joints = yaml.load(file, Loader=yaml.FullLoader)
+    with open(hand_type_joints_filename, encoding="utf-8") as joint_file:
+        hand_type_joints = yaml.load(joint_file, Loader=yaml.FullLoader)
 
     for joint_state_dicts_no_id in joint_states_config.keys():
         for key in list(joint_states_config[joint_state_dicts_no_id]):
