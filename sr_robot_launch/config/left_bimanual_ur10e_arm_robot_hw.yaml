@@ -35,15 +35,18 @@ la_sr_ur_robot_hw:
   servoj_gain: 250
   
   servoj_lookahead_time: 0.07
-
-  reverse_port: 50004
   
-  script_sender_port: 50005
+  reverse_port: 51001
 
-  trajectory_port: 50006
+  script_sender_port: 51002
+
+  trajectory_port: 51003
+
+  script_command_port: 51004
 
   use_local_hardware_interface_param: true
 
   non_blocking_read: true
 
   wrench_prefix: left_
+ 
