@@ -767,19 +767,13 @@ class SrRobotCommander():
     def _action_done_cb(self, controller, terminal_state, result):
         self._action_running[controller] = False
 
-    # def _call_action(self, goals):
-    #     for client, action_client in self._clients.items():
-    #         if goals[client].trajectory.joint_names:
-    #             self._action_running[client] = True
-    #             terminal_state, result = functools.partial(self._action_done_cb, client, terminal_state, result)
-    #             action_client.send_goal(goals[client], terminal_state, result)
-    
     def _call_action(self, goals):
-        for client in self._clients:
+        for client, action_client in self._clients.items():
             if goals[client].trajectory.joint_names:
                 self._action_running[client] = True
-                self._clients[client].send_goal(
-                    goals[client], lambda terminal_state, result: self._action_done_cb(client, terminal_state, result))
+                action_client.send_goal(
+                    goals[client], lambda terminal_state, result:
+                    self._action_done_cb(client, terminal_state, result)) # pylint:disable=W640
 
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
         """
