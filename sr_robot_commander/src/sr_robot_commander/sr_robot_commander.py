@@ -648,7 +648,7 @@ class SrRobotCommander(object):
 
     def fix_set_points_if_far_from_state(self, set_points, robot_state):
         """
-        Updates the set points with the current stateof the robot if the set point
+        Updates the set points with the current state of the robot if the set point
         is far from the state given the allowed_start_tolerance. This can happen when the joint is not able
         to achieve a certain set point of the controller such as when grasping an object.
         @param set_points - Dictionary that maps the joint names with their set points.
