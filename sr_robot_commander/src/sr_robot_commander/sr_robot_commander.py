@@ -547,7 +547,7 @@ class SrRobotCommander():
         joint_trajectory = JointTrajectory()
         if not self._is_trajectory_valid(trajectory, ["name|joint_angles", "interpolate_time"]):
             return joint_trajectory
-        
+
         current = self.get_current_state_bounded()
         joint_names = list(current.keys())
         joint_trajectory.joint_names = joint_names
@@ -767,12 +767,19 @@ class SrRobotCommander():
     def _action_done_cb(self, controller, terminal_state, result):
         self._action_running[controller] = False
 
+    # def _call_action(self, goals):
+    #     for client, action_client in self._clients.items():
+    #         if goals[client].trajectory.joint_names:
+    #             self._action_running[client] = True
+    #             terminal_state, result = functools.partial(self._action_done_cb, client, terminal_state, result)
+    #             action_client.send_goal(goals[client], terminal_state, result)
+    
     def _call_action(self, goals):
-        for client, action_client in self._clients.items():
+        for client in self._clients:
             if goals[client].trajectory.joint_names:
                 self._action_running[client] = True
-                terminal_state, result = functools.partial(self._action_done_cb, client, terminal_state, result)
-                action_client.send_goal(goals[client], terminal_state, result)
+                self._clients[client].send_goal(
+                    goals[client], lambda terminal_state, result: self._action_done_cb(client, terminal_state, result))
 
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
         """
