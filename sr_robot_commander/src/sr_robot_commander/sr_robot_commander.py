@@ -28,7 +28,6 @@
 import threading
 from math import radians
 import copy
-import functools
 import rospy
 import numpy
 from std_msgs.msg import Header
@@ -773,7 +772,7 @@ class SrRobotCommander():
                 self._action_running[client] = True
                 action_client.send_goal(
                     goals[client], lambda terminal_state, result:
-                    self._action_done_cb(client, terminal_state, result)) # pylint:disable=W640
+                    self._action_done_cb(client, terminal_state, result))  # pylint:disable=W0640
 
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
         """
