@@ -983,28 +983,28 @@ class SrRobotCommander(object):
         """
         # Get joint names of the group
         joint_names_group = self._move_group_commander.get_active_joints()
-        trajectory_controllers_subscribed = []
-        j0_position_controllers_subscribed = []
+        trajectory_controllers_state_subscribed = []
+        j0_position_controllers_state_subscribed = []
 
         # Subscribe to all the trajectory controllers that contain joints of this group
         for controller_name in controllers_list.keys():
             for joint_name in joint_names_group:
                 if joint_name in controllers_list[controller_name]:
                     topic_name = f"/{controller_name}/state"
-                    if topic_name not in trajectory_controllers_subscribed:
+                    if topic_name not in trajectory_controllers_state_subscribed:
                         rospy.Subscriber(topic_name, JointTrajectoryControllerState, self._set_point_cb, queue_size=1)
-                        trajectory_controllers_subscribed.append(topic_name)
+                        trajectory_controllers_state_subscribed.append(topic_name)
 
         # Subscribe to the j0 position controllers of the joints contained in this group
         for joint_name in joint_names_group:
             if self._is_joint_underactuated(joint_name):
                 topic_name = f"/sh_{joint_name.lower()[0:5]}j0_position_controller/state"
-                if topic_name not in j0_position_controllers_subscribed:
+                if topic_name not in j0_position_controllers_state_subscribed:
                     rospy.Subscriber(topic_name,
                                      JointControllerState,
                                      self._set_point_j0_cb, f"{joint_name[0:5]}J0",
                                      queue_size=1)
-                    j0_position_controllers_subscribed.append(topic_name)
+                    j0_position_controllers_state_subscribed.append(topic_name)
 
     def _set_up_action_client(self, controller_list):
         """
