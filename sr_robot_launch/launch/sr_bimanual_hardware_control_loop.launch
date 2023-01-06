@@ -25,18 +25,23 @@
   <arg name="biotac" default="false"/>
   <!-- Separation between the robots -->
   <arg name="hand_x_separation" default="-0.4"/>
-  <!-- Set the hand type here: hand_e, hand_g -->
+  <!-- This lets us use one hand_type to change both hands -->
+  <arg name="hand_type" default="hand_e"/>
 
-  <arg name="right_hand_type" default="hand_e"/>
-  <arg name="right_hand_version" default="E3M5"/>
+  <arg name="right_hand_type" default="$(arg hand_type)"/>
+  <arg if="$(eval arg('right_hand_type') == 'hand_e')" name="right_hand_version" default="E3M5"/>
+  <arg if="$(eval arg('right_hand_type') == 'hand_g')" name="right_hand_version" default="G1M5"/>
+  <arg if="$(eval arg('right_hand_type') == 'hand_c')" name="right_hand_version" default="C6M2"/>
   <arg name="right_fingers" default="all"/>
   <arg name="right_tip_sensors" default="pst"/>
   <arg name="right_mid_sensors" default="none"/>
   <arg name="right_prox_sensors" default="none"/>
   <arg name="right_palm_sensor" default="none"/>
 
-  <arg name="left_hand_type" default="hand_e"/>
-  <arg name="left_hand_version" default="E3M5"/>
+  <arg name="left_hand_type" default="$(arg hand_type)"/>
+  <arg if="$(eval arg('left_hand_type') == 'hand_e')" name="left_hand_version" default="E3M5"/>
+  <arg if="$(eval arg('left_hand_type') == 'hand_g')" name="left_hand_version" default="G1M5"/>
+  <arg if="$(eval arg('left_hand_type') == 'hand_c')" name="left_hand_version" default="C6M2"/>
   <arg name="left_fingers" default="all"/>
   <arg name="left_tip_sensors" default="pst"/>
   <arg name="left_mid_sensors" default="none"/>
