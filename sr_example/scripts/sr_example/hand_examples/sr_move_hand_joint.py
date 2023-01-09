@@ -98,11 +98,11 @@ def select_finger():
         joint_number_int = int(joint_number_str)
         if finger in ('FF', 'MF', 'RF'):
             if joint_number_int not in range(5):
-                rospy.logerr("The finger you selected doesn't have joint {}".format(joint_number_int))
+                rospy.logerr(f"The finger you selected doesn't have joint {joint_number_int}")
                 correct_joint_number = False
         elif finger in ('LF', 'TH'):
             if joint_number_int not in range(6):
-                rospy.logerr("The finger you selected doesn't have joint {}".format(joint_number_int))
+                rospy.logerr(f"The finger you selected doesn't have joint {joint_number_int}")
                 correct_joint_number = False
 
     return finger, flex, extend, joint_number_str, joint_number_int

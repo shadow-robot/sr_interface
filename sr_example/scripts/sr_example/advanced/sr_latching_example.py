@@ -44,10 +44,8 @@ class LatchingExample:
     controller_type = "_position_controller"
 
     def __init__(self):
-
         # Prefix of hand, can be lh for left or rh for right
         self.prefix = 'rh'
-
         self.keys = ['FFJ0', 'FFJ3', 'FFJ4',
                      'MFJ0', 'MFJ3', 'MFJ4',
                      'RFJ0', 'RFJ3', 'RFJ4',
@@ -55,11 +53,8 @@ class LatchingExample:
                      'THJ1', 'THJ2', 'THJ3', 'THJ4', 'THJ5',
                      'WRJ1', 'WRJ2']
 
-        self.keys_prefixed = ["{0}_{1}".format(self.prefix, joint)
-                              for joint in self.keys]
-
+        self.keys_prefixed = [f"{self.prefix}_{joint}" for joint in self.keys]
         self.hand_publishers = self.create_hand_publishers(self.keys_prefixed)
-
         self.sleep_time = 3.0
 
     def run(self):

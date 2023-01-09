@@ -57,7 +57,7 @@ class SrRobotStateExporter:
             position = state.position
             self._dictionary[name] = {name: position[n] for n, name in enumerate(names)}
         else:
-            rospy.logerr("State %s not present in the warehouse." % name)
+            rospy.logerr(f"State {name} not present in the warehouse.")
 
     def extract_from_trajectory(self, dictionary_trajectory):
         for entry in dictionary_trajectory:
@@ -82,14 +82,14 @@ class SrRobotStateExporter:
                     new_entry['joint_angles'] = self._dictionary[new_entry['name']]
                     new_entry.pop('name')
                 else:
-                    rospy.logwarn("Entry named %s not present in dictionary. Not replacing." % new_entry['name'])
+                    rospy.logwarn(f"Entry named {new_entry['name']} not present in dictionary. Not replacing.")
             new_trajectory.append(new_entry)
         return new_trajectory
 
     def repopulate_warehouse(self):
         for name in self._dictionary:
             if self._has_state(name, '').exists:
-                rospy.logwarn("State named %s already in warehouse, not re-adding." % name)
+                rospy.logwarn(f"State named {name} already in warehouse, not re-adding.")
             else:
                 state = RobotState()
                 state.joint_state.name = self._dictionary[name].keys()

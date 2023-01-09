@@ -33,7 +33,7 @@ from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 def burn_in_demo(hand_commander, burn_in_config):
     for iteration in range(100):
-        rospy.loginfo("We're on iteration number %d" % iteration)
+        rospy.loginfo(f"We're on iteration number {iteration}")
         rospy.sleep(1)
         execute_command_check(hand_commander, burn_in_config, 'store_3', 1.1, 1.1)
         execute_command_check(hand_commander, burn_in_config, 'start_pos', 1.1, 1.1)
@@ -179,7 +179,7 @@ if __name__ == "__main__":
     else:
         hand_name = 'two_hands'
 
-    hand_commander_class = SrHandCommander(name=hand_name)
+    hand_commander_instance = SrHandCommander(name=hand_name)
 
     # Get joint states for burn in demo
     burn_in_config_filename = '/home/user/projects/shadow_robot/base/src/'\
@@ -192,4 +192,4 @@ if __name__ == "__main__":
     # Add prefix to joint states
     burn_in_states = add_prefix_to_joint_states(corrected_burn_in_config, joint_prefix_name)
 
-    burn_in_demo(hand_commander_class, burn_in_states)
+    burn_in_demo(hand_commander_instance, burn_in_states)

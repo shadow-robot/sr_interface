@@ -319,12 +319,12 @@ class SrRobotCommander:
     @staticmethod
     def evaluate_plan_quality(plan_quality, good_threshold=20, medium_threshold=50):
         if plan_quality > medium_threshold:
-            rospy.logwarn("Low plan quality! Value: {}".format(plan_quality))
+            rospy.logwarn(f"Low plan quality! Value: {plan_quality}")
             return 'poor'
         if good_threshold < plan_quality < medium_threshold:
-            rospy.loginfo("Medium plan quality. Value: {}".format(plan_quality))
+            rospy.loginfo(f"Medium plan quality. Value: {plan_quality}")
             return 'medium'
-        rospy.loginfo("Good plan quality. Value: {}".format(plan_quality))
+        rospy.loginfo(f"Good plan quality. Value: {plan_quality}")
         return 'good'
 
     def get_robot_name(self):
@@ -356,7 +356,7 @@ class SrRobotCommander:
             except Exception as exception:
                 rospy.loginfo(exception)
             return True
-        rospy.logerr("Unknown named state '%s'..." % name)
+        rospy.logerr(f"Unknown named state '{name}'...")
         return False
 
     def get_named_target_joint_values(self, name):
@@ -375,7 +375,7 @@ class SrRobotCommander:
                 if js_name in self._move_group_commander.get_joints():
                     output[js_name] = service.position[js_index]
         else:
-            rospy.logerr("No target named %s" % name)
+            rospy.logerr(f"No target named {name}")
             return None
         return output
 
@@ -715,8 +715,7 @@ class SrRobotCommander:
             service_name = controller_name + "/follow_joint_trajectory"
             self._clients[controller_name] = SimpleActionClient(service_name, FollowJointTrajectoryAction)
             if self._clients[controller_name].wait_for_server(timeout=rospy.Duration(4)) is False:
-                err_msg = 'Failed to connect to action server ({}) in 4 sec'.format(service_name)
-                rospy.logwarn(err_msg)
+                rospy.logwarn(f'Failed to connect to action server ({service_name}) in 4 sec')
 
     def move_to_joint_value_target_unsafe(self, joint_states, time=0.002,
                                           wait=True, angle_degrees=False):
@@ -916,7 +915,7 @@ class SrRobotCommander:
                 elif resp.error_code.val == -31:
                     rospy.logerr("Unreachable point: No IK solution")
                 else:
-                    rospy.logerr("Unreachable point (error: %s)" % resp.error_code)
+                    rospy.logerr(f"Unreachable point (error: {resp.error_code})")
                 return None
 
             if resp.solution.joint_state is not None:
@@ -930,7 +929,7 @@ class SrRobotCommander:
             return resp.solution.joint_state
 
         except rospy.ServiceException as exception:
-            rospy.logerr("Service call failed: %s" % exception)
+            rospy.logerr(f"Service call failed: {exception}")
             return None
 
     def move_to_pose_value_target_unsafe(self, target_pose, avoid_collisions=False,

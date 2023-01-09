@@ -73,7 +73,7 @@ if __name__ == "__main__":
     else:
         hand_name = 'two_hands'
 
-    hand_commander_class = SrHandCommander(name=hand_name)
+    hand_commander_instance = SrHandCommander(name=hand_name)
 
     open_thumb = {'THJ1': 0.0, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 0.0, 'THJ5': 0.0}
     open_fingers = {'FFJ1': 0.0, 'FFJ2': 0.0, 'FFJ3': 0.0, 'FFJ4': 0.0,
@@ -91,7 +91,7 @@ if __name__ == "__main__":
                      'WRJ1': 0.0, 'WRJ2': 0.0}
     close_thumb = {'THJ1': 0.52, 'THJ2': 0.61, 'THJ3': 0.0, 'THJ4': 1.20, 'THJ5': 0.17}
 
-    execute_trajectory(hand_commander_class, open_thumb, joint_prefix_name, "Moving thumb to open position")
-    execute_trajectory(hand_commander_class, open_fingers, joint_prefix_name, "Moving fingers to open position")
-    execute_trajectory(hand_commander_class, close_fingers, joint_prefix_name, "Moving fingers to close position")
-    execute_trajectory(hand_commander_class, close_thumb, joint_prefix_name, "Moving thumb to close position")
+    execute_trajectory(hand_commander_instance, open_thumb, joint_prefix_name, "Moving thumb to open position")
+    execute_trajectory(hand_commander_instance, open_fingers, joint_prefix_name, "Moving fingers to open position")
+    execute_trajectory(hand_commander_instance, close_fingers, joint_prefix_name, "Moving fingers to close position")
+    execute_trajectory(hand_commander_instance, close_thumb, joint_prefix_name, "Moving thumb to close position")

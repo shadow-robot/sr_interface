@@ -116,7 +116,7 @@ class SrStateSaverUnsafe:
                         current_dict[joint] = self._target_values[joint]
                     else:
                         waiting_for_targets = True
-                        rospy.loginfo("Still waiting for %s target" % joint)
+                        rospy.loginfo(f"Still waiting for {joint} target")
                 if waiting_for_targets:
                     rospy.loginfo(self._target_values)
                     rospy.sleep(1)

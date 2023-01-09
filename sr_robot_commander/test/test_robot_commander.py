@@ -560,7 +560,7 @@ class TestSrRobotCommander(TestCase):
         tries = 0
         while not is_position_reached and tries < PLANNING_ATTEMPTS:
             tries += 1
-            rospy.loginfo("test_move_to_position_target {}".format(tries))
+            rospy.loginfo(f"test_move_to_position_target {tries}")
             self.robot_commander.move_to_position_target(xyz, self.eef, wait=True)
             current_pose = self.robot_commander.get_current_pose()
             is_position_reached = self.compare_poses(current_pose, desired_pose_msg.pose)

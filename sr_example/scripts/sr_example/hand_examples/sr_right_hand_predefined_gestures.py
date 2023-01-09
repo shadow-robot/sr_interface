@@ -84,13 +84,13 @@ class GraspExecution:
                 sys.exit(0)
 
     def execute_grasp(self, grasp):
-        rospy.loginfo("Grasp {} started.".format(grasp))
+        rospy.loginfo(f"Grasp {grasp} started.")
         open_dict = dict(zip(self.grasp_yaml['joint_names'], self.grasp_yaml['grasps']['open_hand']))
         grasp_dict = dict(zip(self.grasp_yaml['joint_names'], self.grasp_yaml['grasps'][grasp]))
         self.hand_commander.move_to_joint_value_target_unsafe(open_dict, 5.0, True)
         self.hand_commander.move_to_joint_value_target_unsafe(grasp_dict, 5.0, True)
         rospy.sleep(2.0)
-        rospy.loginfo("Grasp {} completed.".format(grasp))
+        rospy.loginfo(f"Grasp {grasp} completed.")
 
 
 if __name__ == "__main__":

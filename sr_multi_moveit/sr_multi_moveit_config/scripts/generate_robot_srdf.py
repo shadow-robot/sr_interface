@@ -199,7 +199,7 @@ class SRDFRobotGenerator:
                 xacro.process_doc(self.arm_srdf_xmls[manipulator_id])
 
             if manipulator.has_hand:
-                hand_urdf = rospy.get_param('{}_hand_description'.format(manipulator.side))
+                hand_urdf = rospy.get_param(f'{manipulator.side}_hand_description')
                 srdf_hand_generator = SRDFHandGenerator(hand_urdf, load=False, save=False)
                 self.hand_srdf_xmls.append(srdf_hand_generator.get_hand_srdf())
 
@@ -275,7 +275,7 @@ class SRDFRobotGenerator:
                             srdf.toprettyxml(indent='  '))
 
         if self._save_files:
-            rospy.loginfo("Robot urdf and srdf have been saved to %s" % self._path_to_save_files)
+            rospy.loginfo(f"Robot urdf and srdf have been saved to {self._path_to_save_files}")
 
             # srdf: File is already generated so just need to be copied to specified location
             copy2(self.package_path + "/config/" + new_srdf_file_name, self._path_to_save_files +

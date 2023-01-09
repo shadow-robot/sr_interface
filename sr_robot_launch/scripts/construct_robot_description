@@ -55,8 +55,8 @@ class SrConstructRobotDescription:
         if self._arm_ip_params_loaded_before_timeout(self.TIMEOUT_IN_SECS):
             right_arm_ip, left_arm_ip = self._get_arm_ip_params(right_arm_ip, left_arm_ip)
         else:
-            rospy.logwarn("No arm ip param was found on param server, using the following default arm ips:\n \
-                           right arm ip: {} - left arm ip: {}".format(right_arm_ip, left_arm_ip))
+            rospy.logwarn(f"No arm ip param was found on param server, using the following default arm ips:\n \
+                           right arm ip: {right_arm_ip} - left arm ip: {left_arm_ip}")
 
         self._right_arm_params = {'prefix': 'ra', 'ip_address': right_arm_ip, 'arm_type': arm_type}
         self._left_arm_params = {'prefix': 'la', 'ip_address': left_arm_ip, 'arm_type': arm_type}

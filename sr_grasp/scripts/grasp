@@ -278,7 +278,7 @@ class GraspNode:
         # Run the iterpolated motion, testing for contact as we go.
         # IDEA: Run the motion on a thread and use the tactile callbacks to
         # trigger the stop.
-        inter_rate = rospy.Rate(self.interpolation_rate)
+        interpolation_rate = rospy.Rate(self.interpolation_rate)
         active_joints = len(self.joints)
         while active_joints > 0:
             # Test for contact
@@ -300,7 +300,7 @@ class GraspNode:
                 update[joint.name] = joint.current
             self.hand.sendupdate_from_dict(update)
 
-            inter_rate.sleep()
+            interpolation_rate.sleep()
 
         # Little squeeze to hold firm
         rospy.loginfo("Squeeze")
