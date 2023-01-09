@@ -84,8 +84,8 @@ if __name__ == '__main__':
     while node:
         print("")
         print("Grasps:")
-        for i, grasp in enumerate(node.stash.get_all()):
-            print(f"{i} - {grasp.id}")
+        for i, grasp_instance in enumerate(node.stash.get_all()):
+            print(f"{i} - {grasp_instance.id}")
         print(f"Current grasp: {node.grasp.id}")
         print("Number select grasp, z zero hand, g grasp, p pre-grasp, n new grasp, s save grasps, q quit")
         act = input(": ")
