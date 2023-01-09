@@ -99,19 +99,19 @@ class SrRobotCommander():
 
     @staticmethod
     def _is_trajectory_valid(trajectory, required_keys):
-        if isinstance(trajectory, list):
+        if not isinstance(trajectory, list):
             rospy.logerr("Trajectory is not a list of waypoints")
             return False
         no_error = True
-        for k in required_keys:
-            if "|" in k:
-                optional = k.split("|")
+        for key in required_keys:
+            if "|" in key:
+                optional = key.split("|")
                 if len(set(optional).intersection(set(trajectory[0].keys()))) == 0:
-                    rospy.logerr("Trajectory is missing both of {} keys".format(optional))
+                    rospy.logerr(f"Trajectory is missing both of {optional} keys")
                     no_error = False
             else:
-                if k not in list(trajectory[0].keys()):
-                    rospy.logerr("Trajectory waypoint missing {}".format(k))
+                if key not in list(trajectory[0].keys()):
+                    rospy.logerr(f"Trajectory waypoint missing {key}")
                     no_error = False
         return no_error
 
