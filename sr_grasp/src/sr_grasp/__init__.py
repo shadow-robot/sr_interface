@@ -154,7 +154,7 @@ class GraspStash():
 
     def load_yaml_file(self, fname):
         """Load a set of grasps from a YAML file."""
-        with open(fname, "r") as stream:
+        with open(fname, "r", encoding="utf-8") as stream:
             try:
                 pdata = yaml.safe_load(stream)
                 self.load_yaml(pdata)
@@ -174,5 +174,5 @@ class GraspStash():
     def save_yaml_file(self, fname=""):
         if fname == "":
             fname = self.grasps_file
-        with open(fname, "w") as txtfile:
+        with open(fname, "w", encoding="utf-8") as txtfile:
             txtfile.write(self.as_yaml())
