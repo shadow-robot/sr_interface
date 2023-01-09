@@ -63,17 +63,23 @@
   <arg name="start_home" default="true"/>
   <!-- Definition of "home" position, in joint-angle pairs -->
   <arg name="home_angles" default="-J ra_shoulder_pan_joint 0.0 -J ra_elbow_joint 2.0 -J ra_wrist_1_joint -1 -J ra_wrist_2_joint 1.5708 -J ra_shoulder_lift_joint -1.25 -J ra_wrist_3_joint -2 -J la_shoulder_pan_joint 0.0 -J la_elbow_joint -2.0 -J la_wrist_1_joint -2.1 -J la_wrist_2_joint -1.5708 -J la_shoulder_lift_joint -1.89 -J la_wrist_3_joint 2"/>
+  <!-- This lets us use one hand_type to change both hands -->
+  <arg name="hand_type" default="hand_e"/>
 
-  <arg name="right_hand_type" default="hand_e"/>
-  <arg name="right_hand_version" default="E3M5"/>
+  <arg name="right_hand_type" default="$(arg hand_type)"/>
+  <arg if="$(eval arg('right_hand_type') == 'hand_e')" name="right_hand_version" default="E3M5"/>
+  <arg if="$(eval arg('right_hand_type') == 'hand_g')" name="right_hand_version" default="G1M5"/>
+  <arg if="$(eval arg('right_hand_type') == 'hand_c')" name="right_hand_version" default="C6M2"/>
   <arg name="right_fingers" default="all"/>
   <arg name="right_tip_sensors" default="pst"/>
   <arg name="right_mid_sensors" default="none"/>
   <arg name="right_prox_sensors" default="none"/>
   <arg name="right_palm_sensor" default="none"/>
 
-  <arg name="left_hand_type" default="hand_e"/>
-  <arg name="left_hand_version" default="E3M5"/>
+  <arg name="left_hand_type" default="$(arg hand_type)"/>
+  <arg if="$(eval arg('left_hand_type') == 'hand_e')" name="left_hand_version" default="E3M5"/>
+  <arg if="$(eval arg('left_hand_type') == 'hand_g')" name="left_hand_version" default="G1M5"/>
+  <arg if="$(eval arg('left_hand_type') == 'hand_c')" name="left_hand_version" default="C6M2"/>
   <arg name="left_fingers" default="all"/>
   <arg name="left_tip_sensors" default="pst"/>
   <arg name="left_mid_sensors" default="none"/>
