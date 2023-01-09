@@ -34,7 +34,7 @@ from actionlib import SimpleActionServer
 from sr_robot_msgs.msg import PlanGraspAction, PlanGraspResult
 
 
-class GraspPlanner():
+class GraspPlanner:
 
     """
     A ros node to quickly generate moveit_msgs/Grasp grasps for the ShadowHand.

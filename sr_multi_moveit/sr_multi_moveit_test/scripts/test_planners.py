@@ -39,7 +39,7 @@ import rospy
 import numpy
 
 
-class TestPlanners():
+class TestPlanners:
     def __init__(self, group_id, planner):
 
         rospy.init_node('moveit_test_planners', anonymous=True)

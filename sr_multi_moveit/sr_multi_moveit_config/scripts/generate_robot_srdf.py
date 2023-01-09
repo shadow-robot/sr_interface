@@ -48,7 +48,7 @@ class SRDFRobotGeneratorException(Exception):
         return self.msg
 
 
-class Subrobot():
+class Subrobot:
     def __init__(self, type_var):
         self.type = type_var
         self.name = ""
@@ -61,7 +61,7 @@ class Subrobot():
         self.moveit_path = ""
 
 
-class Manipulator():
+class Manipulator:
     def __init__(self, name, side, has_arm, has_hand):
         self.name = name
         self.side = side
@@ -100,7 +100,7 @@ def next_element(elt):
     return None
 
 
-class Robot():
+class Robot:
     def __init__(self):
         self.name = ""
         self.manipulators = []
@@ -155,7 +155,7 @@ class Robot():
             raise SRDFRobotGeneratorException("robot description did not specify a robot")
 
 
-class SRDFRobotGenerator():
+class SRDFRobotGenerator:
     def __init__(self, description_file=None, load=True):  # pylint: disable=R0915
         if description_file is None and len(sys.argv) > 1:
             description_file = sys.argv[1]

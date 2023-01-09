@@ -39,7 +39,7 @@ import rospy
 from std_msgs.msg import Float64
 
 
-class LatchingExample():
+class LatchingExample:
     # type of controller that is running
     controller_type = "_position_controller"
 

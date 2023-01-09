@@ -46,7 +46,7 @@ from rosgraph.names import load_mappings
 from urdf_parser_py.urdf import URDF
 
 
-class SRDFHandGenerator():
+class SRDFHandGenerator:
     def __init__(self, urdf_str=None, load=True, save=True):
         if urdf_str is None:
             while not rospy.has_param('robot_description'):

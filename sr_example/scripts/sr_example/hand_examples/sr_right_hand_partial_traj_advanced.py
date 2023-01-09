@@ -39,7 +39,7 @@ from sr_utilities.hand_finder import HandFinder
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 
-class PartialTrajListener():
+class PartialTrajListener:
 
     def __init__(self):
         self.start_time_goals = []

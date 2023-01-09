@@ -37,7 +37,7 @@ from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
 
 
-class SrStateSaverUnsafe():
+class SrStateSaverUnsafe:
     def __init__(self, name, hand_or_arm="both", side="right", save_target=False):
 
         self._save = rospy.ServiceProxy(

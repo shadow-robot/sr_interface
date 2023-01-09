@@ -37,7 +37,7 @@ import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 
-class GraspExecution():
+class GraspExecution:
     def __init__(self):
         self.keyboard_pressed = False
         self.hand_commander = SrHandCommander(name='right_hand')

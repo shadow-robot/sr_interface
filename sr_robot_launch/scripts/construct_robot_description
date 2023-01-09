@@ -39,7 +39,7 @@ class PrefixNotCorrect(SrRobotDescriptionExceptions):
     pass
 
 
-class SrConstructRobotDescription():
+class SrConstructRobotDescription:
     TIMEOUT_IN_SECS = 60.0
 
     def __init__(self):

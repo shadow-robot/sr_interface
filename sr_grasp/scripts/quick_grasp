@@ -34,7 +34,7 @@ from sr_hand.shadowhand_ros import ShadowHand_ROS
 from sr_grasp import Grasp, GraspStash
 
 
-class QuickGraspNode():
+class QuickGraspNode:
 
     def __init__(self):
         self.stash = GraspStash()
@@ -85,7 +85,7 @@ if __name__ == '__main__':
         print("")
         print("Grasps:")
         for i, g in enumerate(node.stash.get_all()):
-            print(f"{str(i)} - {g.id}")
+            print(f"{i} - {g.id}")
         print(f"Current grasp: {node.grasp.id}")
         print("Number select grasp, z zero hand, g grasp, p pre-grasp, n new grasp, s save grasps, q quit")
         act = input(": ")

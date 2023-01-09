@@ -100,7 +100,7 @@ class Grasp(moveit_msgs.msg.Grasp):
         posture.points[point] = jtp
 
 
-class GraspStash():
+class GraspStash:
     """
     Interface to the list of grasps stored in the system. Clients should all
     use this library so that it can deal with the detail of the undelying
@@ -159,10 +159,10 @@ class GraspStash():
                 pdata = yaml.safe_load(stream)
                 self.load_yaml(pdata)
             except Exception as exc:
-                logerr("Failed to load YAML grasp file: %s error:%s" % (fname, exc))
+                logerr(f"Failed to load YAML grasp file: {fname} error:{exc}")
                 return False
             else:
-                loginfo("Loaded grasps from file: %s" % (fname))
+                loginfo(f"Loaded grasps from file: {fname}")
                 return True
 
     def load_yaml(self, data):

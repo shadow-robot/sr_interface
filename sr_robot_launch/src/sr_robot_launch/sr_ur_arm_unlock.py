@@ -32,7 +32,7 @@ from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
 from std_srvs.srv import Trigger
 
 
-class RobotSafetyMonitor():
+class RobotSafetyMonitor:
     def __init__(self, name):
         topic_string = '/' + name + '_sr_ur_robot_hw/safety_mode'
         self.estop_pressed = False
@@ -50,7 +50,7 @@ class RobotSafetyMonitor():
             self.press_estop()
 
 
-class SrUrUnlock():
+class SrUrUnlock:
     def __init__(self):
         self._external_control_program_name = rospy.get_param("~urcap_program_name", "external_ctrl.urp")
         self._arms = []

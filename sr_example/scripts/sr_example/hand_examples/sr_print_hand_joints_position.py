@@ -62,7 +62,7 @@ scale = 1
 if angle_type == "degrees":
     scale = 1 * (180 / pi)
 
-for i in arange(0, len(prefix)):
+for i in arange(len(prefix)):
     hand_commander = SrHandCommander(hand_parameters=hand_parameters, hand_serial=hand_serial[i])
 
     print("Joints positions")

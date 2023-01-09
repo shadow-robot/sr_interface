@@ -36,7 +36,7 @@ from moveit_msgs.srv import ListRobotStatesInWarehouse as ListState
 from moveit_msgs.msg import RobotState
 
 
-class SrRobotStateExporter():
+class SrRobotStateExporter:
     def __init__(self, start_dictionary=None):
         if start_dictionary is None:
             start_dictionary = {}

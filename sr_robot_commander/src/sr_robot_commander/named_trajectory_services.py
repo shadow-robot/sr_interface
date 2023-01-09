@@ -33,7 +33,7 @@ from sr_robot_msgs.srv import ListNamedTrajectories as ListNamed
 import rospy
 
 
-class WaypointNamedServices():
+class WaypointNamedServices:
     def __init__(self):
 
         rospy.init_node('waypoint_named_services')

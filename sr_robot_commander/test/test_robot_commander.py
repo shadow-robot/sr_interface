@@ -437,7 +437,7 @@ class TestSrRobotCommander(TestCase):
         named_trajectory = self.robot_commander.make_named_trajectory(trajectory)
         all_positions = []
 
-        for i in range(0, len(named_trajectory.points)):
+        for i in range(len(named_trajectory.points)):
             all_positions.append(named_trajectory.points[i].positions)
         for waypoint in trajectory:
             for joint in waypoint["joint_angles"].keys():
