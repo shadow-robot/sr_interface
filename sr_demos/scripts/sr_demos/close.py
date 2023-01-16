@@ -1,26 +1,33 @@
 #!/usr/bin/env python3
 
-# Copyright 2021-2022 Shadow Robot Company Ltd.
+# Software License Agreement (BSD License)
+# Copyright © 2021-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
 #
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation version 2 of the License.
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
 #
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
 
-# Script to move a shadow hand into the close position.
-
-from __future__ import absolute_import
-import rospy
 import argparse
+import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
-from sr_utilities.hand_finder import HandFinder
 
 
 def execute_trajectory(hand_commander, joint_states_no_id, joint_prefix, msg, time=5.0):
@@ -53,20 +60,20 @@ if __name__ == "__main__":
     args = parser.parse_args(rospy.myargv()[1:])
 
     if args.side == 'right':
-        joint_prefix = 'rh_'
+        joint_prefix_name = 'rh_'
     elif args.side == 'left':
-        joint_prefix = 'lh_'
+        joint_prefix_name = 'lh_'
     else:
-        joint_prefix = 'both'
+        joint_prefix_name = 'both'
 
-    if 'rh_' == joint_prefix:
+    if joint_prefix_name == 'rh_':
         hand_name = 'right_hand'
-    elif 'lh_' == joint_prefix:
+    elif joint_prefix_name == 'lh_':
         hand_name = 'left_hand'
     else:
         hand_name = 'two_hands'
 
-    hand_commander = SrHandCommander(name=hand_name)
+    hand_commander_instance = SrHandCommander(name=hand_name)
 
     open_thumb = {'THJ1': 0.0, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 0.0, 'THJ5': 0.0}
     open_fingers = {'FFJ1': 0.0, 'FFJ2': 0.0, 'FFJ3': 0.0, 'FFJ4': 0.0,
@@ -84,7 +91,7 @@ if __name__ == "__main__":
                      'WRJ1': 0.0, 'WRJ2': 0.0}
     close_thumb = {'THJ1': 0.52, 'THJ2': 0.61, 'THJ3': 0.0, 'THJ4': 1.20, 'THJ5': 0.17}
 
-    execute_trajectory(hand_commander, open_thumb, joint_prefix, "Moving thumb to open position")
-    execute_trajectory(hand_commander, open_fingers, joint_prefix, "Moving fingers to open position")
-    execute_trajectory(hand_commander, close_fingers, joint_prefix, "Moving fingers to close position")
-    execute_trajectory(hand_commander, close_thumb, joint_prefix, "Moving thumb to close position")
+    execute_trajectory(hand_commander_instance, open_thumb, joint_prefix_name, "Moving thumb to open position")
+    execute_trajectory(hand_commander_instance, open_fingers, joint_prefix_name, "Moving fingers to open position")
+    execute_trajectory(hand_commander_instance, close_fingers, joint_prefix_name, "Moving fingers to close position")
+    execute_trajectory(hand_commander_instance, close_thumb, joint_prefix_name, "Moving thumb to close position")

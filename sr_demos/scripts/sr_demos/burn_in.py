@@ -1,32 +1,39 @@
 #!/usr/bin/env python3
 
-# Copyright 2021 Shadow Robot Company Ltd.
+# Software License Agreement (BSD License)
+# Copyright © 2021-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
 #
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation version 2 of the License.
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
 #
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
-import rospy
-import random
-import time
-import yaml
 import argparse
+import yaml
+import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
-from sr_utilities.hand_finder import HandFinder
 
 
 def burn_in_demo(hand_commander, burn_in_config):
-    for x in range(0, 100):
-        rospy.loginfo("We're on iteration number %d" % (x))
+    for iteration in range(100):
+        rospy.loginfo(f"We're on iteration number {iteration}")
         rospy.sleep(1)
         execute_command_check(hand_commander, burn_in_config, 'store_3', 1.1, 1.1)
         execute_command_check(hand_commander, burn_in_config, 'start_pos', 1.1, 1.1)
@@ -105,8 +112,8 @@ def burn_in_demo(hand_commander, burn_in_config):
 def correct_joint_states_for_hand_type(joint_states_config, hand_type):
     hand_type_joints_filename = '/home/user/projects/shadow_robot/base/src/'\
                        'sr_interface/sr_demos/config/joints_in_hand.yaml'
-    with open(hand_type_joints_filename) as f:
-        hand_type_joints = yaml.load(f, Loader=yaml.FullLoader)
+    with open(hand_type_joints_filename, encoding="utf-8") as joint_file:
+        hand_type_joints = yaml.load(joint_file, Loader=yaml.FullLoader)
 
     for joint_state_dicts_no_id in joint_states_config.keys():
         for key in list(joint_states_config[joint_state_dicts_no_id]):
@@ -159,30 +166,30 @@ if __name__ == "__main__":
     args = parser.parse_args(rospy.myargv()[1:])
 
     if args.side == 'right':
-        joint_prefix = 'rh_'
+        joint_prefix_name = 'rh_'
     elif args.side == 'left':
-        joint_prefix = 'lh_'
+        joint_prefix_name = 'lh_'
     else:
-        joint_prefix = 'both'
+        joint_prefix_name = 'both'
 
-    if 'rh_' == joint_prefix:
+    if joint_prefix_name == 'rh_':
         hand_name = 'right_hand'
-    elif 'lh_' == joint_prefix:
+    elif joint_prefix_name == 'lh_':
         hand_name = 'left_hand'
     else:
         hand_name = 'two_hands'
 
-    hand_commander = SrHandCommander(name=hand_name)
+    hand_commander_instance = SrHandCommander(name=hand_name)
 
     # Get joint states for burn in demo
     burn_in_config_filename = '/home/user/projects/shadow_robot/base/src/'\
                               'sr_interface/sr_demos/config/burn_in_states.yaml'
-    with open(burn_in_config_filename) as f:
-        burn_in_config = yaml.load(f, Loader=yaml.FullLoader)
+    with open(burn_in_config_filename, encoding="utf-8") as config_file:
+        burn_in_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
 
-    corrected_burn_in_config = correct_joint_states_for_hand_type(burn_in_config, args.hand_type)
+    corrected_burn_in_config = correct_joint_states_for_hand_type(burn_in_config_file, args.hand_type)
 
     # Add prefix to joint states
-    burn_in_states = add_prefix_to_joint_states(corrected_burn_in_config, joint_prefix)
+    burn_in_states = add_prefix_to_joint_states(corrected_burn_in_config, joint_prefix_name)
 
-    burn_in_demo(hand_commander, burn_in_states)
+    burn_in_demo(hand_commander_instance, burn_in_states)

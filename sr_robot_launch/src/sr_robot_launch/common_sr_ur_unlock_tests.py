@@ -1,34 +1,44 @@
 #!/usr/bin/env python3
 
-# Copyright 2021 Shadow Robot Company Ltd.
+# Software License Agreement (BSD License)
+# Copyright © 2021-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
 #
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation version 2 of the License.
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
 #
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
-import rospy
-import rostest
-from actionlib_msgs.msg import GoalStatusArray
-from unittest import TestCase, TestSuite
+from unittest import TestCase
 from std_msgs.msg import Bool
-from std_srvs.srv import Trigger
 from ur_dashboard_msgs.srv import IsProgramRunning
-from sr_robot_launch.sr_ur_arm_unlock import SrUrUnlock
-from sr_robot_launch.mock_sr_ur_robot_hw import MockUrRobotHW
-from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
-import sys
+from ur_dashboard_msgs.msg import SafetyMode, RobotMode
+import rospy
 
 
-class CommonTests:
+class CommonTests(TestCase):
+    def __init__(self):
+        super().__init__()
+        self.mock_dashboard = {}
+        self.service_string = {}
+        self.sr_ur_arm_unlock = None
+
     def arm_setup(self, side):
         self.press_pedal()
         self.assertTrue(self.get_program_running(side))
@@ -36,7 +46,7 @@ class CommonTests:
     def arm_mock_dashboard_server(self, side):
         self.assertFalse(self.get_program_running(side))
 
-    def e_stop(self, side, release_estop_before_pedal=True):
+    def e_stop(self, side, _release_estop_before_pedal=True):
         self.assertFalse(self.get_program_running(side))
         self.assertFalse(self.mock_dashboard[side].robot_state.get_robot_mode().robot_mode.mode ==
                          RobotMode.RUNNING)

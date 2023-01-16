@@ -1,24 +1,33 @@
 #!/usr/bin/python3
 
-# Copyright 2019-2022 Shadow Robot Company Ltd.
+# Software License Agreement (BSD License)
+# Copyright © 2019-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
 #
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation version 2 of the License.
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
 #
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
-import os
-import rospy
-import rospkg
+
 from subprocess import check_output
+import rospy
 from sr_ur_arm_calibration_loader.sr_ur_arm_calibration_loader import SrUrLoadCalibration
 
 
@@ -30,25 +39,27 @@ class PrefixNotCorrect(SrRobotDescriptionExceptions):
     pass
 
 
-class SrConstructRobotDescription():
+class SrConstructRobotDescription:
+    TIMEOUT_IN_SECS = 60.0
+
     def __init__(self):
         self._load_robot_description_command = rospy.get_param("~load_robot_description_command")
-        CONST_ARM_TYPE = rospy.get_param("~arm_type")
         self._side = ''
         self._robot_description_params = {}
+        self._sr_ur_load_calibration = ''
+        arm_type = rospy.get_param("~arm_type")
 
-        TIMEOUT_IN_SECS = 60.0
         right_arm_ip = '10.8.1.1'
         left_arm_ip = '10.8.2.1'
 
-        if (self._arm_ip_params_loaded_before_timeout(TIMEOUT_IN_SECS)):
+        if self._arm_ip_params_loaded_before_timeout(self.TIMEOUT_IN_SECS):
             right_arm_ip, left_arm_ip = self._get_arm_ip_params(right_arm_ip, left_arm_ip)
         else:
-            rospy.logwarn("No arm ip param was found on param server, using the following default arm ips:\n \
-                           right arm ip: {} - left arm ip: {}".format(right_arm_ip, left_arm_ip))
+            rospy.logwarn(f"No arm ip param was found on param server, using the following default arm ips:\n \
+                           right arm ip: {right_arm_ip} - left arm ip: {left_arm_ip}")
 
-        self._right_arm_params = {'prefix': 'ra', 'ip_address': right_arm_ip, 'arm_type': CONST_ARM_TYPE}
-        self._left_arm_params = {'prefix': 'la', 'ip_address': left_arm_ip, 'arm_type': CONST_ARM_TYPE}
+        self._right_arm_params = {'prefix': 'ra', 'ip_address': right_arm_ip, 'arm_type': arm_type}
+        self._left_arm_params = {'prefix': 'la', 'ip_address': left_arm_ip, 'arm_type': arm_type}
 
         if 'bimanual' in self._load_robot_description_command:
             self._side = 'both'
@@ -61,15 +72,17 @@ class SrConstructRobotDescription():
         rospy.set_param('robot_description', urdf.decode("utf-8"))
         rospy.set_param('robot_description_ready', "true")
 
-    def _arm_ip_params_loaded_before_timeout(self, timeout_in_secs):
+    @staticmethod
+    def _arm_ip_params_loaded_before_timeout(timeout_in_secs):
         start_time = rospy.get_time()
         while not rospy.has_param("/la_sr_ur_robot_hw/robot_ip") and not rospy.has_param("/ra_sr_ur_robot_hw/robot_ip"):
             rospy.sleep(0.1)
-            if (rospy.get_time() - start_time > timeout_in_secs):
+            if rospy.get_time() - start_time > timeout_in_secs:
                 return False
         return True
 
-    def _get_arm_ip_params(self, right_arm_ip, left_arm_ip):
+    @staticmethod
+    def _get_arm_ip_params(right_arm_ip, left_arm_ip):
         if rospy.has_param("/ra_sr_ur_robot_hw/robot_ip"):
             right_arm_ip = rospy.get_param("/ra_sr_ur_robot_hw/robot_ip")
         if rospy.has_param("/la_sr_ur_robot_hw/robot_ip"):
@@ -78,7 +91,7 @@ class SrConstructRobotDescription():
 
     def _process_parameters(self):
         kinematics_configs = self._get_kinematics_config()
-        if not 'both' == self._side:
+        if not self._side == 'both':
             self._robot_description_params['kinematics_config'] = kinematics_configs[0]
         else:
             self._robot_description_params['kinematics_config_right'] = kinematics_configs[0]
@@ -86,14 +99,14 @@ class SrConstructRobotDescription():
 
     def _get_kinematics_config(self):
         kinematics_configs = []
-        if 'both' == self._side:
+        if self._side == 'both':
             self._sr_ur_load_calibration = SrUrLoadCalibration([self._right_arm_params, self._left_arm_params])
-        elif 'right' == self._side:
+        elif self._side == 'right':
             self._sr_ur_load_calibration = SrUrLoadCalibration([self._right_arm_params])
-        elif 'left' == self._side:
+        elif self._side == 'left':
             self._sr_ur_load_calibration = SrUrLoadCalibration([self._left_arm_params])
         arms_info = self._sr_ur_load_calibration.get_calibration_files()
-        if 'both' != self._side:
+        if self._side != 'both':
             kinematics_configs.append(arms_info[0]['kinematics_config'])
         else:
             for arm in arms_info:

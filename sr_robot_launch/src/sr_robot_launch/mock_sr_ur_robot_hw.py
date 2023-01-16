@@ -1,30 +1,35 @@
 #!/usr/bin/env python3
 #
-# Copyright 2021 Shadow Robot Company Ltd.
+# Software License Agreement (BSD License)
+# Copyright © 2021-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
 #
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation version 2 of the License.
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
 #
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
 import rospy
-import actionlib
-import actionlib_tutorials.msg
-import control_msgs
-from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryResult
-from std_msgs.msg import Bool
 from ur_dashboard_msgs.srv import (GetSafetyMode, GetSafetyModeResponse, GetProgramState,
                                    GetRobotMode, Load, IsProgramRunning, GetProgramStateResponse,
                                    GetRobotModeResponse, LoadResponse, IsProgramRunningResponse)
-from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
+from ur_dashboard_msgs.msg import SafetyMode, RobotMode
 from std_srvs.srv import Trigger, TriggerResponse
 
 
@@ -32,7 +37,7 @@ class IllegalArgumentError(ValueError):
     pass
 
 
-class ArmState(object):
+class ArmState:
     def __init__(self, arm_prefix):
         self._arm_prefix = arm_prefix
         self._safety_mode_publisher = rospy.Publisher('/' + arm_prefix + '_sr_ur_robot_hw/safety_mode',
@@ -75,7 +80,7 @@ class ArmState(object):
         if mode == "IDLE":
             self._robot_mode.robot_mode.mode = RobotMode.IDLE
             self._robot_mode.answer = "Robotmode: IDLE"
-        elif mode == "POWER_OFF" or mode == "STOPPED":
+        elif mode in ("POWER_OFF", "STOPPED"):
             self._robot_mode.robot_mode.mode = RobotMode.POWER_OFF
             self._robot_mode.answer = "Robotmode: POWER_OFF"
         elif mode == "RUNNING":
@@ -180,96 +185,97 @@ class ArmState(object):
         self._set_program_running(False)
 
 
-class MockUrRobotHW(object):
+class MockUrRobotHW:
     def __init__(self, side='right'):
         if 'left' not in side and 'right' not in side:
             rospy.logerr("side: %s not valid. Valid sides are: 'left, 'right'", side)
             raise IllegalArgumentError
         self._arm_prefix = side[0] + 'a'
         self.robot_state = ArmState(self._arm_prefix)
-        get_safety_mode_service = rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/get_safety_mode',
-                                                GetSafetyMode, self.handle_get_safety_mode)
-        get_robot_mode_service = rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/get_robot_mode',
-                                               GetRobotMode, self.handle_get_robot_mode)
-        is_program_running = rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/program_running',
-                                           IsProgramRunning, self.handle_is_program_running)
-        load_program_service = rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/load',
-                                             Load, self.handle_load_program)
-        program_state_service = rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/program_state',
-                                              GetProgramState, self.handle_get_program_state)
-        power_on_service = rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/power_on',
-                                         Trigger, self.handle_power_on)
-        power_off_service = rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/power_off',
-                                          Trigger, self.handle_power_off)
-        brake_release_service = rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/brake_release',
-                                              Trigger, self.handle_brake_release)
-        restart_safety_service = rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/restart_safety',
-                                               Trigger, self.handle_restart_safety)
-        close_safety_popup_service = rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/close_safety_popup',
-                                                   Trigger, self.handle_close_safety_popup)
-        close_popup_service = rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/close_popup',
-                                            Trigger, self.handle_close_popup)
-        unlock_protective_stop_service = rospy.Service(self._arm_prefix +
-                                                       '_sr_ur_robot_hw/dashboard/unlock_protective_stop',
-                                                       Trigger, self.handle_unlock_protective_stop)
-        resend_robot_program_service = rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/resend_robot_program',
-                                                     Trigger, self.handle_resend_robot_program)
+        rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/get_safety_mode',
+                      GetSafetyMode, self.handle_get_safety_mode)
+        rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/get_robot_mode',
+                      GetRobotMode, self.handle_get_robot_mode)
+        rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/program_running',
+                      IsProgramRunning, self.handle_is_program_running)
+        rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/load',
+                      Load, self.handle_load_program)
+        rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/program_state',
+                      GetProgramState, self.handle_get_program_state)
+        rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/power_on',
+                      Trigger, self.handle_power_on)
+        rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/power_off',
+                      Trigger, self.handle_power_off)
+        rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/brake_release',
+                      Trigger, self.handle_brake_release)
+        rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/restart_safety',
+                      Trigger, self.handle_restart_safety)
+        rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/close_safety_popup',
+                      Trigger, self.handle_close_safety_popup)
+        rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/close_popup',
+                      Trigger, self.handle_close_popup)
+        rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/dashboard/unlock_protective_stop',
+                      Trigger, self.handle_unlock_protective_stop)
+        rospy.Service(self._arm_prefix + '_sr_ur_robot_hw/resend_robot_program',
+                      Trigger, self.handle_resend_robot_program)
 
     def reinitialize(self):
         self.robot_state = ArmState(self._arm_prefix)
 
-    def handle_get_safety_mode(self, request):
+    def handle_get_safety_mode(self, _):
         return self.robot_state.get_safety_mode()
 
-    def handle_get_program_state(self, request):
+    def handle_get_program_state(self, _):
         return self.robot_state.get_program_state()
 
-    def handle_get_robot_mode(self, request):
+    def handle_get_robot_mode(self, _):
         return self.robot_state.get_robot_mode()
 
-    def handle_load_program(self, request):
+    @staticmethod
+    def handle_load_program(request):
         response = LoadResponse()
         rospy.loginfo("Loading: %s", request.filename)
         response.answer = request.filename
         response.success = True
         return response
 
-    def handle_is_program_running(self, request):
+    def handle_is_program_running(self, _):
         return self.robot_state.get_program_running()
 
-    def handle_close_popup(self, request):
+    def handle_close_popup(self, _):
         return self.trigger_response()
 
-    def handle_close_safety_popup(self, request):
+    def handle_close_safety_popup(self, _):
         return self.trigger_response()
 
-    def trigger_response(self):
+    @staticmethod
+    def trigger_response():
         response = TriggerResponse()
         response.success = True
         response.message = "Testing"
         return response
 
-    def handle_power_on(self, request):
+    def handle_power_on(self, _):
         self.robot_state.power_on()
         return self.trigger_response()
 
-    def handle_power_off(self, request):
+    def handle_power_off(self, _):
         self.robot_state.power_off()
         return self.trigger_response()
 
-    def handle_brake_release(self, request):
+    def handle_brake_release(self, _):
         self.robot_state.brake_release()
         return self.trigger_response()
 
-    def handle_restart_safety(self, request):
+    def handle_restart_safety(self, _):
         self.robot_state.restart_safety()
         return self.trigger_response()
 
-    def handle_unlock_protective_stop(self, request):
+    def handle_unlock_protective_stop(self, _):
         self.robot_state.unlock_protective_stop()
         return self.trigger_response()
 
-    def handle_resend_robot_program(self, request):
+    def handle_resend_robot_program(self, _):
         self.robot_state.resend_robot_program()
         return self.trigger_response()
 

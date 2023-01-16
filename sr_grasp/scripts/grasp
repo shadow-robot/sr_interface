@@ -1,27 +1,33 @@
 #!/usr/bin/env python3
 
+# Software License Agreement (BSD License)
+# Copyright © 2014, 2022-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
 #
-# Copyright (c) 2014 Shadow Robot Company Ltd.
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
 #
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation, either version 2 of the License, or (at your option)
-# any later version.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
-#
-#
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
+from math import degrees, sqrt
 import rospy
 import actionlib
-from math import degrees, radians, sqrt
 
 from dynamic_reconfigure.server import Server
 from sr_hand.shadowhand_ros import ShadowHand_ROS
@@ -30,7 +36,7 @@ from sr_robot_msgs.msg import ShadowPST, ShadowContactStateStamped, GraspAction
 from gazebo_msgs.msg import ContactsState
 
 
-class InterpolatedJoint(object):
+class InterpolatedJoint:
 
     def __init__(self, name, start=0, end=0, active=True):
         self.name = name
@@ -57,7 +63,7 @@ class InterpolatedJoint(object):
         return False
 
 
-class GraspNode(object):
+class GraspNode:
 
     def __init__(self, ):
         """
@@ -78,6 +84,8 @@ class GraspNode(object):
         # sensor types
         self.tactiles = {}
         self.pst_bias = None
+        self.start_position = None
+        self.joints = None
 
         # ROS setup
         #
@@ -95,10 +103,9 @@ class GraspNode(object):
         # as it blocks for a while detecting hands.
         rospy.loginfo("Detecting hand...")
         self.hand = ShadowHand_ROS()
-        t = "Unknown"
-        t = self.hand.hand_type
-        rospy.loginfo("Found %s hand with %s tactile." %
-                      (t, self.hand.get_tactile_type()))
+        hand_type = "Unknown"
+        hand_type = self.hand.hand_type
+        rospy.loginfo(f"Found {hand_type} hand with {self.hand.get_tactile_type()} tactile.")
 
         # Action server for running this node
         self.grasp_server = actionlib.SimpleActionServer(
@@ -122,12 +129,12 @@ class GraspNode(object):
             try:
                 rospy.wait_for_message(
                     topic, ShadowContactStateStamped, timeout=0.2)
-                rospy.loginfo("Found fancy tactile on %s finger" % finger)
+                rospy.loginfo(f"Found fancy tactile on {finger} finger")
                 found_fancy += 1
                 self.sub_tactile_shadow[finger] = rospy.Subscriber(
                     topic, ShadowContactStateStamped, self.shadow_tactile_cb, finger)
-            except Exception as e:
-                rospy.logwarn(e)
+            except Exception as exception:
+                rospy.logwarn(exception)
 
         # We didn't find nano type sensor so try fallbacks
         if found_fancy == 0:
@@ -136,19 +143,18 @@ class GraspNode(object):
                 self.sub_tactile_gazebo = {}
                 for finger in ['lf', 'rf', 'mf', 'ff', 'th']:
                     self.sub_tactile_gazebo[finger] = rospy.Subscriber(
-                        'contacts/' + finger + '/distal', ContactsState,
+                        f'contacts/{finger}/distal', ContactsState,
                         self.gazebo_tactile_cb, finger)
             elif self.hand.get_tactile_type() == 'PST':
                 rospy.loginfo("Using PST tactiles")
                 self.sub_pst = rospy.Subscriber(
                     'tactile', ShadowPST, self.pst_tactile_cb)
             else:
-                rospy.logerr("Don't know how to handle %s tactiles!" %
-                             (self.hand.get_tactile_type()))
+                rospy.logerr(f"Don't know how to handle {self.hand.get_tactile_type()} tactiles!")
 
         rospy.loginfo("Ready to grasp")
 
-    def config_cb(self, config, level):
+    def config_cb(self, config, level_):
         """
         @brief Handles incoming dynamic reconfigure requests, updating the
         objects attributes with the new config.
@@ -165,8 +171,8 @@ class GraspNode(object):
         if len(msg.states) == 0:
             self.tactiles[finger] = 0
             return
-        f = msg.states[0].total_wrench.force
-        self.tactiles[finger] = sqrt(f.x ** 2 + f.y ** 2 + f.z ** 2)
+        force = msg.states[0].total_wrench.force
+        self.tactiles[finger] = sqrt(force.x ** 2 + force.y ** 2 + force.z ** 2)
 
     def shadow_tactile_cb(self, msg, finger):
         """Fills self.tactiles with force value."""
@@ -210,15 +216,16 @@ class GraspNode(object):
         rospy.loginfo("Grasp preempted, stopping")
         self.grasp_server.set_preempted()
 
-    def joint_trajectory_to_position(self, traj):
+    @staticmethod
+    def joint_trajectory_to_position(trajectory):
         """
         Takes a trajectory_msgs/JointTrajectory, returns dict of
         the joint name/position (angle). Converts radians to degrees
         for easy use with ShadowHand_ROS.
         """
         joints = {}
-        for i in range(len(traj.joint_names)):
-            joints[traj.joint_names[i]] = degrees(traj.points[0].positions[i])
+        for i in range(len(trajectory.joint_names)):
+            joints[trajectory.joint_names[i]] = degrees(trajectory.points[0].positions[i])
         return joints
 
     def fix_joints(self, targets):
@@ -240,9 +247,9 @@ class GraspNode(object):
 
         # Remove unknown joints
         jnames = [j.name for j in self.hand.allJoints]
-        for j in targets.keys():
-            if j not in jnames:
-                rospy.logwarn("Unknown joint %s, ignoring." % j)
+        for joint in targets.keys():
+            if joint not in jnames:
+                rospy.logwarn(f"Unknown joint {joint}, ignoring.")
                 del targets[j]
 
     def run_posture(self, posture):
@@ -260,7 +267,7 @@ class GraspNode(object):
                 unknown.append(name)
         if unknown:
             rospy.logerr(
-                "Unknown joints in targets (they will be ignored): %s" % unknown)
+                f"Unknown joints in targets (they will be ignored): {unknown}")
 
         # Convert the targets into objects
         self.joints = []
@@ -271,7 +278,7 @@ class GraspNode(object):
         # Run the iterpolated motion, testing for contact as we go.
         # IDEA: Run the motion on a thread and use the tactile callbacks to
         # trigger the stop.
-        r = rospy.Rate(self.interpolation_rate)
+        interpolation_rate = rospy.Rate(self.interpolation_rate)
         active_joints = len(self.joints)
         while active_joints > 0:
             # Test for contact
@@ -284,16 +291,16 @@ class GraspNode(object):
             # Move the active joints
             active_joints = 0
             update = {}
-            for j in self.joints:
-                if not j.active:
+            for joint in self.joints:
+                if not joint.active:
                     continue
-                j.inc(1)
-                if j.active:
+                joint.inc(1)
+                if joint.active:
                     active_joints += 1
-                update[j.name] = j.current
+                update[joint.name] = joint.current
             self.hand.sendupdate_from_dict(update)
 
-            r.sleep()
+            interpolation_rate.sleep()
 
         # Little squeeze to hold firm
         rospy.loginfo("Squeeze")
@@ -313,7 +320,7 @@ class GraspNode(object):
                     has_active = True
                     j.active = False
         if has_active:
-            rospy.loginfo("Stopping finger %s" % finger)
+            rospy.loginfo(f"Stopping finger {finger}")
 
     def start_finger(self, finger):
         prefix = finger.upper()
@@ -324,7 +331,7 @@ class GraspNode(object):
                     changed = True
                     j.active = True
         if changed:
-            rospy.loginfo("Starting finger %s" % finger)
+            rospy.loginfo("Starting finger {finger}")
 
 
 if __name__ == "__main__":

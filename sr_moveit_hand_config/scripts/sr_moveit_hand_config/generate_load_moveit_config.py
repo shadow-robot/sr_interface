@@ -40,7 +40,7 @@
     joint_limits (template required)
     """
 
-from __future__ import absolute_import
+
 import sys
 import time
 

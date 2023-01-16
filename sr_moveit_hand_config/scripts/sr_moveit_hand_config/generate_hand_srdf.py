@@ -35,11 +35,9 @@
     syntax  generate_hand_srdf [output filename]
 """
 
-from __future__ import absolute_import
 import sys
 import os
 from xml.dom.minidom import parse
-
 import xacro
 import rospy
 import rospkg
@@ -48,7 +46,7 @@ from rosgraph.names import load_mappings
 from urdf_parser_py.urdf import URDF
 
 
-class SRDFHandGenerator(object):
+class SRDFHandGenerator:
     def __init__(self, urdf_str=None, load=True, save=True):
         if urdf_str is None:
             while not rospy.has_param('robot_description'):
@@ -62,7 +60,7 @@ class SRDFHandGenerator(object):
 
         extracted_prefix = False
         prefix = ""
-        ff = mf = rf = lf = th = False
+        first_finger = middle_finger = ring_finger = little_finger = thumb = False
         is_lite = True
         is_biotac = False
         hand_name = "right_hand"
@@ -86,57 +84,57 @@ class SRDFHandGenerator(object):
                 if prefix == "lh_":
                     hand_name = "left_hand"
 
-            if not ff and key.endswith("FFJ4"):
-                ff = True
-            if not mf and key.endswith("MFJ4"):
-                mf = True
-            if not rf and key.endswith("RFJ4"):
-                rf = True
-            if not lf and key.endswith("LFJ4"):
-                lf = True
-            if not th and key.endswith("THJ4"):
-                th = True
+            if not first_finger and key.endswith("FFJ4"):
+                first_finger = True
+            if not middle_finger and key.endswith("MFJ4"):
+                middle_finger = True
+            if not ring_finger and key.endswith("RFJ4"):
+                ring_finger = True
+            if not little_finger and key.endswith("LFJ4"):
+                little_finger = True
+            if not thumb and key.endswith("THJ4"):
+                thumb = True
             if is_lite and key.endswith("WRJ2"):
                 is_lite = False
 
-        rospy.logdebug("Found fingers (ff mf rf lf th)" + str(ff) + str(mf) + str(rf) + str(lf) + str(th))
-        rospy.logdebug("is_lite: " + str(is_lite))
-        rospy.logdebug("is_biotac: " + str(is_biotac))
-        rospy.logdebug("Hand name: " + str(hand_name))
+        rospy.logdebug(f"Found fingers (ff mf rf lf th) {str(first_finger)} {str(middle_finger)} " +
+                       f"{str(ring_finger)} {str(little_finger)} {str(thumb)}")
+        rospy.logdebug(f"is_lite: {str(is_lite)}")
+        rospy.logdebug(f"is_biotac: {str(is_biotac)}")
+        rospy.logdebug(f"Hand name: {str(hand_name)}")
 
-        mappings = load_mappings(['prefix:=' + str(prefix),
-                                  'robot_name:=' + robot.name,
-                                  'ff:=' + str(int(ff)),
-                                  'mf:=' + str(int(mf)),
-                                  'rf:=' + str(int(rf)),
-                                  'lf:=' + str(int(lf)),
-                                  'th:=' + str(int(th)),
-                                  'is_lite:=' + str(int(is_lite)),
-                                  'is_biotac:=' + str(int(is_biotac)),
-                                  'hand_name:=' + str(hand_name)
+        mappings = load_mappings([f'prefix:={str(prefix)}',
+                                  f'robot_name:={robot.name}',
+                                  f'ff:={str(int(first_finger))}',
+                                  f'mf:={str(int(middle_finger))}',
+                                  f'rf:={str(int(ring_finger))}',
+                                  f'lf:={str(int(little_finger))}',
+                                  f'th:={str(int(thumb))}',
+                                  f'is_lite:={str(int(is_lite))}',
+                                  f'is_biotac:={str(int(is_biotac))}',
+                                  f'hand_name:={str(hand_name)}'
                                   ])
 
         # the prefix version of the srdf_xacro must be loaded
-        rospack = rospkg.RosPack()
-        package_path = rospack.get_path('sr_moveit_hand_config')
-        srdf_xacro_filename = package_path + "/config/shadowhands_prefix.srdf.xacro"
-        rospy.loginfo("File loaded " + srdf_xacro_filename)
+        package_path = rospkg.RosPack().get_path('sr_moveit_hand_config')
+        srdf_xacro_filename = f"{package_path}/config/shadowhands_prefix.srdf.xacro"
+        rospy.loginfo(f"File loaded {srdf_xacro_filename}")
 
         # open and parse the xacro.srdf file
-        srdf_xacro_file = open(srdf_xacro_filename, 'r')
-        self.srdf_xacro_xml = parse(srdf_xacro_file)
+        with open(srdf_xacro_filename, 'r', encoding="utf-8") as srdf_xacro_file:
+            self.srdf_xacro_xml = parse(srdf_xacro_file)
 
         # expand the xacro
         xacro.process_doc(self.srdf_xacro_xml, mappings=mappings)
 
         if len(sys.argv) > 1:
-            OUTPUT_PATH = sys.argv[1]
+            output_path = sys.argv[1]
             # reject ROS internal parameters and detect termination
-            if (OUTPUT_PATH.startswith("_") or
-                    OUTPUT_PATH.startswith("--")):
-                OUTPUT_PATH = None
+            if (output_path.startswith("_") or
+                    output_path.startswith("--")):
+                output_path = None
         else:
-            OUTPUT_PATH = None
+            output_path = None
 
         if load:
             rospy.loginfo("Loading SRDF on parameter server")
@@ -144,15 +142,13 @@ class SRDFHandGenerator(object):
             rospy.set_param(robot_description_param,
                             self.srdf_xacro_xml.toprettyxml(indent='  '))
         if save:
-            OUTPUT_PATH = package_path + "/config/generated_shadowhand.srdf"
-            FW = open(OUTPUT_PATH, "w")
-            FW.write(self.srdf_xacro_xml.toprettyxml(indent='  '))
-            FW.close()
+            output_path = f"{package_path}/config/generated_shadowhand.srdf"
+            with open(output_path, "w", encoding="utf-8") as file_to_save:
+                file_to_save.write(self.srdf_xacro_xml.toprettyxml(indent='  '))
 
-            OUTPUT_PATH = package_path + "/config/generated_shadowhand.urdf"
-            FW = open(OUTPUT_PATH, "w")
-            FW.write(urdf_str)
-            FW.close()
+            output_path = f"{package_path}/config/generated_shadowhand.urdf"
+            with open(output_path, "w", encoding="utf-8") as file_to_save:
+                file_to_save.write(urdf_str)
 
         srdf_xacro_file.close()
 
@@ -162,4 +158,4 @@ class SRDFHandGenerator(object):
 
 if __name__ == '__main__':
     rospy.init_node('hand_srdf_generator', anonymous=True)
-    srdfGenerator = SRDFHandGenerator()
+    srdf_generator = SRDFHandGenerator()

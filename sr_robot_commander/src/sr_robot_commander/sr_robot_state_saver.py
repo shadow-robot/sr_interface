@@ -1,35 +1,43 @@
 #!/usr/bin/env python3
-# Copyright 2019 Shadow Robot Company Ltd.
-#
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation version 2 of the License.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
-from sys import argv
+# Software License Agreement (BSD License)
+# Copyright © 2019, 2022-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
+#
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
 
+from threading import Lock
+import sys
 import rospy
+from control_msgs.msg import JointTrajectoryControllerState
 from moveit_msgs.srv import SaveRobotStateToWarehouse as SaveState
-from sensor_msgs.msg import JointState
 from moveit_msgs.msg import RobotState
+from sensor_msgs.msg import JointState
 from sr_robot_commander.sr_arm_commander import SrArmCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
-from sr_utilities.hand_finder import HandFinder
-from controller_manager_msgs.srv import ListControllers
-from control_msgs.msg import JointTrajectoryControllerState
-from threading import Lock
 
 
-class SrStateSaverUnsafe(object):
+class SrStateSaverUnsafe:
     def __init__(self, name, hand_or_arm="both", side="right", save_target=False):
 
         self._save = rospy.ServiceProxy(
@@ -66,14 +74,14 @@ class SrStateSaverUnsafe(object):
         if len(double_error) != 0:
             raise ValueError(" ".join(double_error))
 
-        self._save_hand = (hand_or_arm == "hand" or hand_or_arm == "both")
-        self._save_arm = (hand_or_arm == "arm" or hand_or_arm == "both")
+        self._save_hand = (hand_or_arm in ("hand", "both"))
+        self._save_arm = (hand_or_arm in ("arm", "both"))
         self._save_bimanual = (side == 'bimanual')
 
         if save_target:
             rospy.loginfo("Saving targets instead of current values")
             self._mutex = Lock()
-            self._target_values = dict()
+            self._target_values = {}
             if self._save_hand:
                 self._hand_subscriber = rospy.Subscriber("/" + prefix + "_trajectory_controller/state",
                                                          JointTrajectoryControllerState, self._target_cb)
@@ -101,34 +109,32 @@ class SrStateSaverUnsafe(object):
             rospy.loginfo("Getting targets")
             waiting_for_targets = True
             while waiting_for_targets and not rospy.is_shutdown():
-                self._mutex.acquire()
+                self._mutex.acquire()  # pylint: disable=R1732
                 waiting_for_targets = False
                 for joint in current_dict:
                     if joint in self._target_values:
                         current_dict[joint] = self._target_values[joint]
                     else:
                         waiting_for_targets = True
-                        rospy.loginfo("Still waiting for %s target" % joint)
-                self._mutex.release()
+                        rospy.loginfo(f"Still waiting for {joint} target")
                 if waiting_for_targets:
                     rospy.loginfo(self._target_values)
                     rospy.sleep(1)
         if rospy.is_shutdown():
-            exit(0)
+            sys.exit()
 
         self.save_state(current_dict, robot_name)
 
     def _target_cb(self, data):
-        self._mutex.acquire()
-        for n, joint in enumerate(data.joint_names):
-            self._target_values[joint] = data.desired.positions[n]
-        self._mutex.release()
+        self._mutex.acquire()  # pylint: disable=R1732
+        for joint_index, joint in enumerate(data.joint_names):
+            self._target_values[joint] = data.desired.positions[joint_index]
 
     def save_state(self, current_dict, robot_name):
-        rs = RobotState()
+        robot_state = RobotState()
         rospy.loginfo(current_dict)
-        rs.joint_state = JointState()
-        rs.joint_state.name = current_dict.keys()
-        rs.joint_state.position = current_dict.values()
-        rospy.logwarn(rs)
-        self._save(self._name, robot_name, rs)
+        robot_state.joint_state = JointState()
+        robot_state.joint_state.name = current_dict.keys()
+        robot_state.joint_state.position = current_dict.values()
+        rospy.logwarn(robot_state)
+        self._save(self._name, robot_name, robot_state)

@@ -1,22 +1,34 @@
-# Copyright 2019 Shadow Robot Company Ltd.
-#
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation version 2 of the License.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
+#!/usr/bin/env python3
 
-from __future__ import absolute_import
-import rospy
+# Software License Agreement (BSD License)
+# Copyright © 2019, 2022-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
+#
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
+
+
 import pprint
 from copy import deepcopy
-
+import rospy
 from moveit_msgs.srv import CheckIfRobotStateExistsInWarehouse as HasState
 from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
 from moveit_msgs.srv import SaveRobotStateToWarehouse as SaveState
@@ -24,8 +36,10 @@ from moveit_msgs.srv import ListRobotStatesInWarehouse as ListState
 from moveit_msgs.msg import RobotState
 
 
-class SrRobotStateExporter(object):
-    def __init__(self, start_dictionary={}):
+class SrRobotStateExporter:
+    def __init__(self, start_dictionary=None):
+        if start_dictionary is None:
+            start_dictionary = {}
         self._get_state = rospy.ServiceProxy("/get_robot_state", GetState)
         self._has_state = rospy.ServiceProxy("/has_robot_state", HasState)
         self._list_states = rospy.ServiceProxy("/list_robot_states", ListState)
@@ -43,7 +57,7 @@ class SrRobotStateExporter(object):
             position = state.position
             self._dictionary[name] = {name: position[n] for n, name in enumerate(names)}
         else:
-            rospy.logerr("State %s not present in the warehouse." % name)
+            rospy.logerr(f"State {name} not present in the warehouse.")
 
     def extract_from_trajectory(self, dictionary_trajectory):
         for entry in dictionary_trajectory:
@@ -55,9 +69,9 @@ class SrRobotStateExporter(object):
             self.extract_one_state(state)
 
     def output_module(self, file_name):
-        pp = pprint.PrettyPrinter()
-        with open(file_name, "w") as output:
-            output.write('warehouse_states = %s\n' % pp.pformat(self._dictionary))
+        pretty_printer = pprint.PrettyPrinter()
+        with open(file_name, "w", encoding="utf-8") as output:
+            output.write('warehouse_states = %s\n' % pretty_printer.pformat(self._dictionary))
 
     def convert_trajectory(self, named_trajectory):
         new_trajectory = []
@@ -68,14 +82,14 @@ class SrRobotStateExporter(object):
                     new_entry['joint_angles'] = self._dictionary[new_entry['name']]
                     new_entry.pop('name')
                 else:
-                    rospy.logwarn("Entry named %s not present in dictionary. Not replacing." % name)
+                    rospy.logwarn(f"Entry named {new_entry['name']} not present in dictionary. Not replacing.")
             new_trajectory.append(new_entry)
         return new_trajectory
 
     def repopulate_warehouse(self):
         for name in self._dictionary:
             if self._has_state(name, '').exists:
-                rospy.logwarn("State named %s already in warehouse, not re-adding." % name)
+                rospy.logwarn(f"State named {name} already in warehouse, not re-adding.")
             else:
                 state = RobotState()
                 state.joint_state.name = self._dictionary[name].keys()
