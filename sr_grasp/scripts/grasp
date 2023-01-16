@@ -154,7 +154,7 @@ class GraspNode:
 
         rospy.loginfo("Ready to grasp")
 
-    def config_cb(self, config, _level):
+    def config_cb(self, config, level_):
         """
         @brief Handles incoming dynamic reconfigure requests, updating the
         objects attributes with the new config.
@@ -217,15 +217,15 @@ class GraspNode:
         self.grasp_server.set_preempted()
 
     @staticmethod
-    def joint_trajectory_to_position(traj):
+    def joint_trajectory_to_position(trajectory):
         """
         Takes a trajectory_msgs/JointTrajectory, returns dict of
         the joint name/position (angle). Converts radians to degrees
         for easy use with ShadowHand_ROS.
         """
         joints = {}
-        for i in range(len(traj.joint_names)):
-            joints[traj.joint_names[i]] = degrees(traj.points[0].positions[i])
+        for i in range(len(trajectory.joint_names)):
+            joints[trajectory.joint_names[i]] = degrees(trajectory.points[0].positions[i])
         return joints
 
     def fix_joints(self, targets):

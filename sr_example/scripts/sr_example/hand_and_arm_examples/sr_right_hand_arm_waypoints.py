@@ -94,7 +94,7 @@ try:
                                                           tf_listener.getLatestCommonTime('ra_base',
                                                                                           'ra_flange'))
 except Exception as exception:
-    raise ValueError(str(exception)) from exception
+    raise ValueError(f"{exception}") #from exception
 
 pose_msg = geometry_msgs.msg.PoseStamped()
 pose_msg.header.frame_id = 'ra_base'

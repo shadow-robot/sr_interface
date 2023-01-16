@@ -41,6 +41,7 @@ from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 SAMPLES_TO_COLLECT = 50
 TOUCH_THRESHOLD = 75
+CONST_TIME_TO_COMPLETE_DEMO = 15
 
 
 class TactileReading:
@@ -400,7 +401,6 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
     rospy.sleep(0.5)
     # Initialize wake time
     wake_time = time.time()
-    const_time_to_complete_demo = 15
     while True:
         # For now, tactile_reading is only being considered for uni-manual
         if tactile_reading is not None:
@@ -418,12 +418,12 @@ def sequence_lf(hand_commander, joint_states_config, tactile_reading):
             # is not in the middle of a movement, generate a random position
             # and interpolation time
             else:
-                if time.time() < wake_time + const_time_to_complete_demo:
+                if time.time() < wake_time + CONST_TIME_TO_COMPLETE_DEMO:
                     complete_random_sequence(hand_commander, joint_states_config)
                 else:
                     break
         else:
-            if time.time() < wake_time + const_time_to_complete_demo:
+            if time.time() < wake_time + CONST_TIME_TO_COMPLETE_DEMO:
                 complete_random_sequence(hand_commander, joint_states_config)
             else:
                 break
