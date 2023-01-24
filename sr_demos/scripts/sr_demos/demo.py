@@ -366,8 +366,8 @@ def sequence_rf(hand_commander, joint_states_config, tactile_reading, hand_type)
                         f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset2,
                         f"{prefix}FFJ3": hand_pos[f'{prefix}FFJ3'] + offset2,
                         f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset2,
-                        f"{prefix}MFJ3": hand_pos[f'{prefix}MFJ3'] + offset2,
-                        f"{prefix}MFJ1": hand_pos[f'{prefix}MFJ1'] + offset2})
+                        f"{prefix}RFJ3": hand_pos[f'{prefix}RFJ3'] + offset2,
+                        f"{prefix}RFJ1": hand_pos[f'{prefix}RFJ1'] + offset2})
     else:
         squeeze.update({f"{prefix}THJ5": hand_pos[f'{prefix}THJ5'] + offset2,
                         f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset2,
