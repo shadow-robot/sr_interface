@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(hand_kinematics)
 find_package(catkin REQUIRED COMPONENTS roscpp rostest tf urdf kdl_parser kdl_coupling sensor_msgs tf_conversions
-        moveit_core geometry_msgs pluginlib moveit_msgs moveit_ros_planning sr_utilities)
+        moveit_core geometry_msgs pluginlib moveit_msgs moveit_ros_planning sr_utilities angles)
 find_package(orocos_kdl REQUIRED)
 include_directories(include ${catkin_INCLUDE_DIRS} ${orocos_kdl_INCLUDE_DIRS})
 
