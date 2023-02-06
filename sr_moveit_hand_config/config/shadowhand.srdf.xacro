@@ -105,12 +105,12 @@
 
   <xacro:macro name="finger_state_pack" params="prefix joint_prefix lf is_biotac">
   	<xacro:unless value="${is_biotac}">
-      <joint name="${prefix}${joint_prefix}J1" value="1.5707" />
+      <joint name="${prefix}${joint_prefix}J1" value="1.2217" />
     </xacro:unless>      
     <xacro:if value="${is_biotac}">      
       <joint name="${prefix}${joint_prefix}J1" value="0.35" />
     </xacro:if>  
-      <joint name="${prefix}${joint_prefix}J2" value="1.5707" />
+      <joint name="${prefix}${joint_prefix}J2" value="1.2217" />
       <joint name="${prefix}${joint_prefix}J3" value="1.5707" />
       <joint name="${prefix}${joint_prefix}J4" value="0" />
       <xacro:if value="${lf}">

@@ -32,20 +32,6 @@ import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 
-def execute_trajectory(hand_commander, joint_states_no_id, joint_prefix, msg, time=5.0):
-    joints_target = {}
-    for key, value in joint_states_no_id.items():
-        if joint_prefix == 'both':
-            joints_target['rh_' + key] = value
-            joints_target['lh_' + key] = value
-        else:
-            joints_target[joint_prefix + key] = value
-
-    rospy.loginfo(msg)
-    hand_commander.move_to_joint_value_target_unsafe(joints_target, time, True)
-    rospy.sleep(1)
-
-
 if __name__ == "__main__":
 
     rospy.init_node("open_hand", anonymous=True)
@@ -76,14 +62,13 @@ if __name__ == "__main__":
         hand_name = 'two_hands'
 
     hand_commander_instance = SrHandCommander(name=hand_name)
+    trajectory = [
+    {
+        'name': 'open',
+        'interpolate_time': 3.0,
+        'pause_time': 2
+    }
+    ]
 
-    open_thumb = {'THJ1': 0.0, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 0.0, 'THJ5': 0.0}
-    open_fingers = {'FFJ1': 0.0, 'FFJ2': 0.0, 'FFJ3': 0.0, 'FFJ4': 0.0,
-                    'MFJ1': 0.0, 'MFJ2': 0.0, 'MFJ3': 0.0, 'MFJ4': 0.0,
-                    'RFJ1': 0.0, 'RFJ2': 0.0, 'RFJ3': 0.0, 'RFJ4': 0.0,
-                    'LFJ1': 0.0, 'LFJ2': 0.0, 'LFJ3': 0.0, 'LFJ4': 0.0, 'LFJ5': 0.0,
-                    'THJ1': 0.0, 'THJ2': 0.0, 'THJ3': 0.0, 'THJ4': 0.0, 'THJ5': 0.0,
-                    'WRJ1': 0.0, 'WRJ2': 0.0}
-
-    execute_trajectory(hand_commander_instance, open_thumb, joint_prefix_name, "Moving thumb to open position")
-    execute_trajectory(hand_commander_instance, open_fingers, joint_prefix_name, "Moving fingers to open position")
+    # Run trajectory via moveit
+    hand_commander_instance.run_named_trajectory(trajectory)
