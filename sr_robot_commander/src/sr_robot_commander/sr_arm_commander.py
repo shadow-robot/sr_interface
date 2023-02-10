@@ -1,24 +1,33 @@
 #!/usr/bin/python
-# Copyright 2019 Shadow Robot Company Ltd.
-#
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation version 2 of the License.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
-from sr_robot_commander.sr_robot_commander import SrRobotCommander
-from geometry_msgs.msg import PoseStamped, Pose
-from rospy import get_rostime
+# Software License Agreement (BSD License)
+# Copyright © 2019, 2022-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
+#
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
+
 import rospy
-from tf import TransformerROS
+from geometry_msgs.msg import PoseStamped
+from sr_robot_commander.sr_robot_commander import SrRobotCommander
 
 
 class SrArmCommander(SrRobotCommander):
@@ -33,11 +42,11 @@ class SrArmCommander(SrRobotCommander):
         @param set_ground - sets the ground plane in moveit for planning
         """
         try:
-            super(SrArmCommander, self).__init__(name)
-        except Exception as e:
+            super().__init__(name)
+        except Exception as exception:
             # TODO(@dg-shadow): Raise SrRobotCommanderException here. Not doing
-            # now as no time to check for and repair unforseen consequences.
-            rospy.logerr("Couldn't initialise robot commander - is there an arm running?: " + str(e))
+            # now as no time to check for and repair unforeseen consequences.
+            rospy.logerr(f"Couldn't initialise robot commander - is there an arm running?: {str(exception)}")
             self._move_group_commander = None
             return
 
@@ -62,7 +71,7 @@ class SrArmCommander(SrRobotCommander):
         pose.pose.orientation.y = 0
         pose.pose.orientation.z = 0
         pose.pose.orientation.w = 1
-        pose.header.stamp = get_rostime()
+        pose.header.stamp = rospy.get_rostime()
         pose.header.frame_id = self._robot_commander.get_root_link()
         self._planning_scene.add_box("ground", pose, (3, 3, height))
 

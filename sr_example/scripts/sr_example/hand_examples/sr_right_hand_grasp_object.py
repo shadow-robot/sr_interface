@@ -1,31 +1,43 @@
 #!/usr/bin/env python3
-# Copyright 2021 Shadow Robot Company Ltd.
+
+# Software License Agreement (BSD License)
+# Copyright © 2021-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
 #
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation version 2 of the License.
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
 #
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
 
 # Reading the tactiles from the hand.
 
-from __future__ import absolute_import
-import rospy
+
 from threading import Thread
 import termios
 import sys
 import tty
 import yaml
+import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 
-class GraspExecution(object):
+class GraspExecution:
     def __init__(self):
         self.keyboard_pressed = False
         self.hand_commander = SrHandCommander(name='right_hand')
@@ -34,18 +46,19 @@ class GraspExecution(object):
     def _open_yaml(self):
         grasp_config_filename = '/home/user/projects/shadow_robot/base/src/'\
                                 'sr_interface/sr_example/config/demo_grasps.yaml'
-        with open(grasp_config_filename) as f:
-            self.grasp_yaml = yaml.load(f, Loader=yaml.FullLoader)
+        with open(grasp_config_filename, encoding="utf-8") as grasp_config_file:
+            self.grasp_yaml = yaml.load(grasp_config_file, Loader=yaml.FullLoader)
 
-    def _get_input(self):
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
+    @staticmethod
+    def _get_input():
+        file_description = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(file_description)
         try:
             tty.setraw(sys.stdin.fileno())
-            ch = sys.stdin.read(1)
+            char_read = sys.stdin.read(1)
         finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return ch
+            termios.tcsetattr(file_description, termios.TCSADRAIN, old_settings)
+        return char_read
 
     def run(self):
         self._open_yaml()
@@ -61,15 +74,15 @@ class GraspExecution(object):
             elif input_val == "4":
                 self.execute_grasp("grasp_hard")
 
-            if '0x1b' == hex(ord(input_val)):
+            if hex(ord(input_val)) == '0x1b':
                 sys.exit(0)
 
     def execute_grasp(self, grasp):
-        rospy.loginfo("Grasp {} started.".format(grasp))
+        rospy.loginfo(f"Grasp {grasp} started.")
         grasp_dict = dict(zip(self.grasp_yaml['joint_names'], self.grasp_yaml['grasps'][grasp]))
         self.hand_commander.move_to_joint_value_target_unsafe(grasp_dict, 5.0, True)
         rospy.sleep(2.0)
-        rospy.loginfo("Grasp {} completed.".format(grasp))
+        rospy.loginfo(f"Grasp {grasp} completed.")
 
 
 if __name__ == "__main__":

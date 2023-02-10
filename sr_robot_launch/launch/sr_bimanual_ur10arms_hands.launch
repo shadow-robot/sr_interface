@@ -1,3 +1,28 @@
+<!--
+ Software License Agreement (BSD License)
+ Copyright © 2022-2023 belongs to Shadow Robot Company Ltd.
+ All rights reserved.
+ Redistribution and use in source and binary forms, with or without modification,
+ are permitted provided that the following conditions are met:
+   1. Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation
+      and/or other materials provided with the distribution.
+   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+      may be used to endorse or promote products derived from this software without
+      specific prior written permission.
+ This software is provided by Shadow Robot Company Ltd "as is" and any express
+ or implied warranties, including, but not limited to, the implied warranties of
+ merchantability and fitness for a particular purpose are disclaimed. In no event
+ shall the copyright holder be liable for any direct, indirect, incidental, special,
+ exemplary, or consequential damages (including, but not limited to, procurement of
+ substitute goods or services; loss of use, data, or profits; or business interruption)
+ however caused and on any theory of liability, whether in contract, strict liability,
+ or tort (including negligence or otherwise) arising in any way out of the use of this
+ software, even if advised of the possibility of such damage.
+-->
+
 <launch>
   <!-- This launch file is for bimanual system consisting of ur arms and shadow dexterous hands -->
 
@@ -63,17 +88,23 @@
   <arg name="start_home" default="true"/>
   <!-- Definition of "home" position, in joint-angle pairs -->
   <arg name="home_angles" default="-J ra_shoulder_pan_joint 0.0 -J ra_elbow_joint 2.0 -J ra_wrist_1_joint -1 -J ra_wrist_2_joint 1.5708 -J ra_shoulder_lift_joint -1.25 -J ra_wrist_3_joint -2 -J la_shoulder_pan_joint 0.0 -J la_elbow_joint -2.0 -J la_wrist_1_joint -2.1 -J la_wrist_2_joint -1.5708 -J la_shoulder_lift_joint -1.89 -J la_wrist_3_joint 2"/>
+  <!-- This lets us use one hand_type to change both hands -->
+  <arg name="hand_type" default="hand_e"/>
 
-  <arg name="right_hand_type" default="hand_e"/>
-  <arg name="right_hand_version" default="E3M5"/>
+  <arg name="right_hand_type" default="$(arg hand_type)"/>
+  <arg if="$(eval arg('right_hand_type') == 'hand_e')" name="right_hand_version" default="E3M5"/>
+  <arg if="$(eval arg('right_hand_type') == 'hand_g')" name="right_hand_version" default="G1M5"/>
+  <arg if="$(eval arg('right_hand_type') == 'hand_c')" name="right_hand_version" default="C6M2"/>
   <arg name="right_fingers" default="all"/>
   <arg name="right_tip_sensors" default="pst"/>
   <arg name="right_mid_sensors" default="none"/>
   <arg name="right_prox_sensors" default="none"/>
   <arg name="right_palm_sensor" default="none"/>
 
-  <arg name="left_hand_type" default="hand_e"/>
-  <arg name="left_hand_version" default="E3M5"/>
+  <arg name="left_hand_type" default="$(arg hand_type)"/>
+  <arg if="$(eval arg('left_hand_type') == 'hand_e')" name="left_hand_version" default="E3M5"/>
+  <arg if="$(eval arg('left_hand_type') == 'hand_g')" name="left_hand_version" default="G1M5"/>
+  <arg if="$(eval arg('left_hand_type') == 'hand_c')" name="left_hand_version" default="C6M2"/>
   <arg name="left_fingers" default="all"/>
   <arg name="left_tip_sensors" default="pst"/>
   <arg name="left_mid_sensors" default="none"/>

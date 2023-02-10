@@ -1,30 +1,39 @@
 #!/usr/bin/env python
 
-# Copyright 2021 Shadow Robot Company Ltd.
-#
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation version 2 of the License.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
-import rospy
+# Software License Agreement (BSD License)
+# Copyright © 2021-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
+#
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
+
+from unittest import TestCase
 import rostest
+import rospy
 from moveit_msgs.msg import PlanningScene
+from actionlib_msgs.msg import GoalStatusArray
 from sr_robot_commander.sr_arm_commander import SrArmCommander
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_commander import SrRobotCommander
-from geometry_msgs.msg import PoseStamped, Pose
-from rospy import get_rostime
-from actionlib_msgs.msg import GoalStatusArray
-from unittest import TestCase
 
 
 class TestBiHandAndArmSim(TestCase):
@@ -38,7 +47,7 @@ class TestBiHandAndArmSim(TestCase):
         cls.scene = rospy.get_param('~test_hand_and_arm_sim/scene')
         cls.robot_commander = SrRobotCommander(name="two_arms_and_hands")
         cls.hand_commander = SrHandCommander(name='two_hands')
-        cls.arm_commander = SrArmCommander(name='two_arms', set_ground=not(cls.scene))
+        cls.arm_commander = SrArmCommander(name='two_arms', set_ground=not cls.scene)
 
         rospy.Subscriber('/move_group/monitored_planning_scene', PlanningScene, cls.scene_data_cb)
 
@@ -50,14 +59,14 @@ class TestBiHandAndArmSim(TestCase):
 
     @classmethod
     def scene_data_cb(cls, result):
-        scene_data = ()
         cls.scene_data = result.world.collision_objects
 
-    def joints_error_check(self, expected_joint_values, recieved_joint_values):
+    @staticmethod
+    def joints_error_check(expected_joint_values, received_joint_values):
         expected_and_final_joint_value_diff = 0
-        for expected_value, recieved_value in zip(sorted(expected_joint_values), sorted(recieved_joint_values)):
+        for expected_value, received_value in zip(sorted(expected_joint_values), sorted(received_joint_values)):
             expected_and_final_joint_value_diff += abs(expected_joint_values[expected_value] -
-                                                       recieved_joint_values[recieved_value])
+                                                       received_joint_values[received_value])
         return expected_and_final_joint_value_diff
 
     def wait_for_topic_with_scene(self, timeout=50):
@@ -71,24 +80,23 @@ class TestBiHandAndArmSim(TestCase):
 
     def test_1_home_position(self):
         start_arm_angles = self.arm_commander.get_current_state()
-        self.expected_home_angles = {'la_shoulder_pan_joint': 0.0, 'la_elbow_joint': -2.0,
-                                     'la_shoulder_lift_joint': -1.89, 'la_wrist_1_joint': -2.1,
-                                     'la_wrist_2_joint': -1.5708, 'la_wrist_3_joint': 2,
-                                     'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.0,
-                                     'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -1,
-                                     'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': -2}
+        expected_home_angles = {'la_shoulder_pan_joint': 0.0, 'la_elbow_joint': -2.0,
+                                'la_shoulder_lift_joint': -1.89, 'la_wrist_1_joint': -2.1,
+                                'la_wrist_2_joint': -1.5708, 'la_wrist_3_joint': 2,
+                                'ra_shoulder_pan_joint': 0.00, 'ra_elbow_joint': 2.0,
+                                'ra_shoulder_lift_joint': -1.25, 'ra_wrist_1_joint': -1,
+                                'ra_wrist_2_joint': 1.5708, 'ra_wrist_3_joint': -2}
 
-        expected_and_actual_home_angles = self.joints_error_check(self.expected_home_angles, start_arm_angles)
+        expected_and_actual_home_angles = self.joints_error_check(expected_home_angles, start_arm_angles)
         self.assertAlmostEqual(expected_and_actual_home_angles, 0, delta=0.2)
 
     def test_2_scene(self):
-        scene = ()
-        self.scene = rospy.get_param('~test_hand_and_arm_sim/scene')
-        self.scene_value = self.wait_for_topic_with_scene()
-        if self.scene is True:
-            self.assertNotEqual(len(self.scene_value), 0)
+        scene = rospy.get_param('~test_hand_and_arm_sim/scene')
+        scene_value = self.wait_for_topic_with_scene()
+        if scene is True:
+            self.assertNotEqual(len(scene_value), 0)
         elif self.scene is False:
-            self.assertTrue(self.scene_value is None)
+            self.assertTrue(scene_value is None)
 
     def test_3_arms(self):
         arm_joints_target = {'la_shoulder_pan_joint': 0.00, 'la_elbow_joint': -1.43,
@@ -124,7 +132,7 @@ class TestBiHandAndArmSim(TestCase):
         for key, value in hand_joints_target_no_id.items():
             hand_joints_target_right['rh' + '_' + key] = value
 
-        hands_joints_target = dict()
+        hands_joints_target = {}
         hands_joints_target.update(hand_joints_target_right)
         hands_joints_target.update(hand_joints_target_left)
         self.hand_commander.move_to_joint_value_target(hands_joints_target, wait=True)
@@ -161,7 +169,7 @@ class TestBiHandAndArmSim(TestCase):
         for key, value in hand_joints_target_no_id.items():
             hand_joints_target_right['rh' + '_' + key] = value
 
-        hands_and_arms_joints_target = dict()
+        hands_and_arms_joints_target = {}
         hands_and_arms_joints_target.update(hand_joints_target_right)
         hands_and_arms_joints_target.update(arm_joints_target_right)
         hands_and_arms_joints_target.update(hand_joints_target_left)
@@ -179,8 +187,8 @@ class TestBiHandAndArmSim(TestCase):
 
 
 if __name__ == "__main__":
-    PKGNAME = 'sr_robot_launch'
-    NODENAME = 'test_bimanual_hand_and_arm'
+    pkg_name = 'sr_robot_launch'
+    node_name = 'test_bimanual_hand_and_arm'
 
-    rospy.init_node(NODENAME, anonymous=True)
-    rostest.rosrun(PKGNAME, NODENAME, TestBiHandAndArmSim)
+    rospy.init_node(node_name, anonymous=True)
+    rostest.rosrun(pkg_name, node_name, TestBiHandAndArmSim)

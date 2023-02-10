@@ -1,65 +1,56 @@
 #!/usr/bin/env python3
+
 # Software License Agreement (BSD License)
-#
-# Copyright (c) 2008, Willow Garage, Inc.
+# Copyright © 2022-2023 belongs to Shadow Robot Company Ltd.
 # All rights reserved.
 #
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions
-# are met:
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
 #
-# * Redistributions of source code must retain the above copyright
-# notice, this list of conditions and the following disclaimer.
-# * Redistributions in binary form must reproduce the above
-# copyright notice, this list of conditions and the following
-# disclaimer in the documentation and/or other materials provided
-# with the distribution.
-# * Neither the name of Willow Garage nor the names of its
-# contributors may be used to endorse or promote products derived
-# from this software without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-# FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-# COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-# ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-# POSSIBILITY OF SUCH DAMAGE.
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
 import sys
-import os
-from xml.dom.minidom import parse
 import re
-import rospkg
+from xml.dom.minidom import parse
 import xml
-import yaml
 from copy import deepcopy
 from shutil import copy2
-
+import yaml
 import xacro
 import rospy
-
-from sr_moveit_hand_config.generate_hand_srdf import SRDFHandGenerator
+import rospkg
 from urdf_parser_py.urdf import URDF
+from sr_moveit_hand_config.generate_hand_srdf import SRDFHandGenerator
 
 
 class SRDFRobotGeneratorException(Exception):
     def __init__(self, msg):
+        super().__init__()
         self.msg = msg
 
     def __str__(self):
         return self.msg
 
 
-class Subrobot(object):
-    def __init__(self, type):
-        self.type = type
+class Subrobot:
+    def __init__(self, type_var):
+        self.type = type_var
         self.name = ""
         self.internal_name = ""
         self.main_group = ""
@@ -70,7 +61,7 @@ class Subrobot(object):
         self.moveit_path = ""
 
 
-class Manipulator(object):
+class Manipulator:
     def __init__(self, name, side, has_arm, has_hand):
         self.name = name
         self.side = side
@@ -82,9 +73,11 @@ class Manipulator(object):
             if self.side == "right":
                 self.arm.prefix = "ra_"
                 self.arm.internal_name = "right_arm"
+                self.arm.extra_groups_config_path = ""
             else:
                 self.arm.prefix = "la_"
                 self.arm.internal_name = "left_arm"
+                self.arm.extra_groups_config_path = ""
         if has_hand:
             self.hand = Subrobot("hand")
             if self.side == "right":
@@ -100,21 +93,21 @@ def next_element(elt):
     if child:
         return child
     while elt and elt.nodeType == xml.dom.Node.ELEMENT_NODE:
-        next = xacro.next_sibling_element(elt)
-        if next:
-            return next
+        next_xacro = xacro.next_sibling_element(elt)
+        if next_xacro:
+            return next_xacro
         elt = elt.parentNode
     return None
 
 
-class Robot(object):
+class Robot:
     def __init__(self):
         self.name = ""
         self.manipulators = []
 
     def set_parameters(self, yamldoc):
         # Read robot description yaml
-        if "robot" in yamldoc:
+        if "robot" in yamldoc:  # pylint: disable=R1702
             robot_yaml = yamldoc["robot"]
             self.name = robot_yaml["name"]
             if "manipulators" in robot_yaml:
@@ -125,8 +118,8 @@ class Robot(object):
                     if side not in ["left", "right"]:
                         raise SRDFRobotGeneratorException("robot description did not specify " +
                                                           "a correct side for a manipulator")
-                    has_arm = True if "arm" in manipulator_yaml else False
-                    has_hand = True if ("hand" in manipulator_yaml and manipulator_yaml["hand"]) else False
+                    has_arm = "arm" in manipulator_yaml
+                    has_hand = bool("hand" in manipulator_yaml and manipulator_yaml["hand"])
                     if not has_hand and not has_arm:
                         raise SRDFRobotGeneratorException("robot description did not specify " +
                                                           "either an arm or hand for a manipulator")
@@ -162,8 +155,8 @@ class Robot(object):
             raise SRDFRobotGeneratorException("robot description did not specify a robot")
 
 
-class SRDFRobotGenerator(object):
-    def __init__(self, description_file=None, load=True):
+class SRDFRobotGenerator:
+    def __init__(self, description_file=None, load=True):  # pylint: disable=R0915
         if description_file is None and len(sys.argv) > 1:
             description_file = sys.argv[1]
 
@@ -172,7 +165,7 @@ class SRDFRobotGenerator(object):
         self._multi_robot_move_group_states = {}
         if len(sys.argv) > 2:
             try:
-                with open(sys.argv[2], "r") as stream:
+                with open(sys.argv[2], "r", encoding="utf-8") as stream:
                     self._multi_robot_move_group_states = yaml.safe_load(stream)
             except FileNotFoundError:
                 rospy.logwarn(f'Could not open the specified move group saved states definition file: '
@@ -188,7 +181,7 @@ class SRDFRobotGenerator(object):
 
         self.robot = Robot()
 
-        with open(description_file, "r") as stream:
+        with open(description_file, "r", encoding="utf-8") as stream:
             yamldoc = yaml.safe_load(stream)
 
         self.robot.set_parameters(yamldoc)
@@ -201,14 +194,14 @@ class SRDFRobotGenerator(object):
             if manipulator.has_arm:
                 # Read arm srdf
                 arm_srdf_path = manipulator.arm.moveit_path + "/" + manipulator.arm.name + ".srdf"
-                with open(arm_srdf_path, 'r') as stream:
+                with open(arm_srdf_path, 'r', encoding="utf-8") as stream:
                     self.arm_srdf_xmls.append(parse(stream))
                 xacro.process_doc(self.arm_srdf_xmls[manipulator_id])
 
             if manipulator.has_hand:
-                hand_urdf = rospy.get_param('{}_hand_description'.format(manipulator.side))
-                srdfHandGenerator = SRDFHandGenerator(hand_urdf, load=False, save=False)
-                self.hand_srdf_xmls.append(srdfHandGenerator.get_hand_srdf())
+                hand_urdf = rospy.get_param(f'{manipulator.side}_hand_description')
+                srdf_hand_generator = SRDFHandGenerator(hand_urdf, load=False, save=False)
+                self.hand_srdf_xmls.append(srdf_hand_generator.get_hand_srdf())
 
             comment = ["Manipulator:" + manipulator.name]
             self.add_comments(comment)
@@ -217,7 +210,7 @@ class SRDFRobotGenerator(object):
             if manipulator.has_arm:
                 self.parse_arm_groups(manipulator_id, manipulator)
             if manipulator.has_hand:
-                self.parse_hand_groups(manipulator_id, manipulator)
+                self.parse_hand_groups(manipulator_id)
 
         # Add groups for bimanual arm and hand systems
         if len(self.robot.manipulators) == 2:
@@ -245,7 +238,7 @@ class SRDFRobotGenerator(object):
             comment = ["END EFFECTOR: Purpose: Represent information about an end effector."]
             self.add_comments(comment)
             if manipulator.has_hand:
-                self.parse_hand_end_effectors(manipulator_id, manipulator)
+                self.parse_hand_end_effectors(manipulator_id)
             if manipulator.has_arm:
                 self.parse_arm_end_effectors(manipulator_id, manipulator)
 
@@ -254,7 +247,7 @@ class SRDFRobotGenerator(object):
                 pass
                 # self.parse_arm_virtual_joint(manipulator)
             else:
-                self.parse_hand_virtual_joint(manipulator_id, manipulator)
+                self.parse_hand_virtual_joint(manipulator_id)
 
             # Add disable collisions
             comment = ["DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially " +
@@ -273,7 +266,7 @@ class SRDFRobotGenerator(object):
         self.new_robot_srdf.write('</robot>\n')
         self.new_robot_srdf.close()
         if load:
-            with open(self.package_path + "/config/" + new_srdf_file_name, 'r') as stream:
+            with open(f"{self.package_path}/config/{new_srdf_file_name}", 'r', encoding="utf-8") as stream:
                 srdf = parse(stream)
 
             rospy.loginfo("Loading SRDF on parameter server")
@@ -282,7 +275,7 @@ class SRDFRobotGenerator(object):
                             srdf.toprettyxml(indent='  '))
 
         if self._save_files:
-            rospy.loginfo("Robot urdf and srdf have been saved to %s" % self._path_to_save_files)
+            rospy.loginfo(f"Robot urdf and srdf have been saved to {self._path_to_save_files}")
 
             # srdf: File is already generated so just need to be copied to specified location
             copy2(self.package_path + "/config/" + new_srdf_file_name, self._path_to_save_files +
@@ -291,15 +284,15 @@ class SRDFRobotGenerator(object):
             # urdf: File can be copied from rosparam
             if rospy.has_param('/robot_description'):
                 urdf_str = rospy.get_param('/robot_description')
-                urdf_file = open(self._path_to_save_files + "/" + self._file_name + ".urdf", "wb")
-                urdf_file.write(urdf_str)
-                urdf_file.close()
+                with open(f"{self._path_to_save_files}/{self._file_name}.urdf", "wb", encoding="utf-8") as urdf_file:
+                    urdf_file.write(urdf_str)
 
         rospy.loginfo("generated_robot.srdf has been generated and saved.")
 
     def start_new_srdf(self, file_name):
         # Generate new robot srdf with arm information
-        self.new_robot_srdf = open(self.package_path + "/config/" + file_name, 'w+')
+        self.new_robot_srdf = open(f"{self.package_path}/config/{file_name}", 'w+',  # pylint: disable=R1732
+                                   encoding="utf-8")
 
         self.new_robot_srdf.write('<?xml version="1.0" ?>\n')
         banner = ["This does not replace URDF, and is not an extension of URDF.\n" +
@@ -307,7 +300,7 @@ class SRDFRobotGenerator(object):
                   "    A URDF file must exist for this robot as well, where the joints and the links that are" +
                   "referenced are defined\n"]
         self.add_comments(banner, "")
-        self.new_robot_srdf.write('<robot name="' + self.robot.name + '">\n')
+        self.new_robot_srdf.write(f'<robot name="{self.robot.name}">\n')
         comments = ["GROUPS: Representation of a set of joints and links. This can be useful for specifying DOF to " +
                     "plan for, defining arms, end effectors, etc",
                     "LINKS: When a link is specified, the parent joint of that link (if it exists) is automatically" +
@@ -324,7 +317,7 @@ class SRDFRobotGenerator(object):
     def parse_arm_groups(self, manipulator_id, manipulator):
         previous = self.arm_srdf_xmls[manipulator_id].documentElement
         elt = next_element(previous)
-        while elt:
+        while elt:   # pylint: disable=R1702
             if elt.tagName == 'group':
                 # Check it is not a subgroup
                 if len(elt.childNodes) > 0:
@@ -334,14 +327,14 @@ class SRDFRobotGenerator(object):
                             elt.setAttribute('name', manipulator.arm.internal_name)
                         else:
                             elt.setAttribute('name', manipulator.arm.prefix + group_name)
-                        for index, group_element in enumerate(elt.getElementsByTagName("chain")):
+                        for _, group_element in enumerate(elt.getElementsByTagName("chain")):
                             attributes = ["base_link", "tip_link"]
                             for attribute in attributes:
                                 node_attribute = group_element.getAttributeNode(attribute)
                                 node_attribute.nodeValue = (manipulator.arm.prefix +
                                                             group_element.getAttribute(attribute))
-                        for tagName in ["joint", "link", "group"]:
-                            for index, group_element in enumerate(elt.getElementsByTagName(tagName)):
+                        for tag_name in ["joint", "link", "group"]:
+                            for _, group_element in enumerate(elt.getElementsByTagName(tag_name)):
                                 attribute_name = group_element.getAttribute("name")
                                 node_attribute = group_element.getAttributeNode("name")
                                 node_attribute.nodeValue = (manipulator.arm.prefix + attribute_name)
@@ -357,11 +350,11 @@ class SRDFRobotGenerator(object):
                             node = deepcopy(elt.getElementsByTagName("joint")[0])
                             node_attribute = node.getAttributeNode("name")
                             node_attribute.nodeValue = (manipulator.hand.prefix + "WRJ2")
-                            newatt = elt.appendChild(node)
+                            elt.appendChild(node)
                             node = deepcopy(elt.getElementsByTagName("joint")[0])
                             node_attribute = node.getAttributeNode("name")
                             node_attribute.nodeValue = (manipulator.hand.prefix + "WRJ1")
-                            newatt = elt.appendChild(node)
+                            elt.appendChild(node)
                         elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
                     if group_name == manipulator.arm.main_group and (manipulator.has_hand):
                         elt.setAttribute('name', manipulator.arm.internal_name + "_and_manipulator")
@@ -392,7 +385,7 @@ class SRDFRobotGenerator(object):
                         elt.setAttribute('group', manipulator.arm.internal_name)
                     else:
                         elt.setAttribute('group', manipulator.arm.prefix + group_name)
-                    for index, group_element in enumerate(elt.getElementsByTagName("joint")):
+                    for _, group_element in enumerate(elt.getElementsByTagName("joint")):
                         attribute_name = group_element.getAttribute("name")
                         if attribute_name in ["WRJ1", "WRJ2"]:
                             if manipulator.has_hand:
@@ -410,7 +403,9 @@ class SRDFRobotGenerator(object):
 
     # Get move group states from an XML DOM, returning a dictionary of {move_group: {state: values}
     @staticmethod
-    def parse_move_group_states(srdf_xml_dom, group_states={}):
+    def parse_move_group_states(srdf_xml_dom, group_states):
+        if not group_states:
+            group_states = {}
         for group_state_xml in srdf_xml_dom.getElementsByTagName("group_state"):
             group = group_state_xml.getAttribute("group")
             state_name = group_state_xml.getAttribute("name")
@@ -480,10 +475,9 @@ class SRDFRobotGenerator(object):
                                       f'inherits from move group "{ancestor_group}" state "{ancestor_group_state}", '
                                       f'which is not defined.')
                         return False
-                    else:
-                        # Try to create the ancestor group state, return if failed
-                        if not self.create_move_group_state(ancestor_group, ancestor_group_state):
-                            return False
+                    # Try to create the ancestor group state, return if failed
+                    if not self.create_move_group_state(ancestor_group, ancestor_group_state):
+                        return False
                 # The ancestor group state either already existed or has been created
                 ancestor_move_group_state = self._all_move_group_states[ancestor_group][ancestor_group_state]
                 for joint, value in ancestor_move_group_state.items():
@@ -533,7 +527,7 @@ class SRDFRobotGenerator(object):
         new_group.appendChild(hand_group_2)
         new_group.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
 
-    def parse_hand_groups(self, manipulator_id, manipulator):
+    def parse_hand_groups(self, manipulator_id):
         previous = self.hand_srdf_xmls[manipulator_id].documentElement
         elt = next_element(previous)
         while elt:
@@ -542,14 +536,14 @@ class SRDFRobotGenerator(object):
                 if len(elt.childNodes) > 0:
                     elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
             elif elt.tagName == 'group_state':
-                for index, group_element in enumerate(elt.getElementsByTagName("joint")):
+                for _, group_element in enumerate(elt.getElementsByTagName("joint")):
                     attribute_name = group_element.getAttribute("name")
                     attribute_name = attribute_name.split("_")[1]
                 elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
             previous = elt
             elt = next_element(previous)
 
-    def parse_hand_end_effectors(self, manipulator_id, manipulator):
+    def parse_hand_end_effectors(self, manipulator_id):
         previous = self.hand_srdf_xmls[manipulator_id].documentElement
         elt = next_element(previous)
         while elt:
@@ -570,19 +564,19 @@ class SRDFRobotGenerator(object):
                     elt.getAttributeNode("group").nodeValue = manipulator.hand.internal_name
                     elt.setAttribute('parent_group', manipulator.arm.internal_name)
                     elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
-                    newElement = deepcopy(elt)
-                    newElement.getAttributeNode("name").nodeValue = manipulator.arm.prefix + "and_manipulator_ee"
-                    newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "manipulator"
-                    newElement.getAttributeNode("group").nodeValue = manipulator.hand.prefix + "fingers"
-                    newElement.setAttribute('parent_group', manipulator.arm.internal_name + "_and_manipulator")
-                    newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
+                    new_element = deepcopy(elt)
+                    new_element.getAttributeNode("name").nodeValue = manipulator.arm.prefix + "and_manipulator_ee"
+                    new_element.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "manipulator"
+                    new_element.getAttributeNode("group").nodeValue = manipulator.hand.prefix + "fingers"
+                    new_element.setAttribute('parent_group', manipulator.arm.internal_name + "_and_manipulator")
+                    new_element.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
                     if not manipulator.hand.is_lite:
-                        newElement = deepcopy(elt)
-                        newElement.getAttributeNode("name").nodeValue = manipulator.arm.prefix + "and_wrist_ee"
-                        newElement.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "palm"
-                        newElement.getAttributeNode("group").nodeValue = manipulator.hand.prefix + "fingers"
-                        newElement.setAttribute('parent_group', manipulator.arm.internal_name + "_and_wrist")
-                        newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
+                        new_element = deepcopy(elt)
+                        new_element.getAttributeNode("name").nodeValue = manipulator.arm.prefix + "and_wrist_ee"
+                        new_element.getAttributeNode("parent_link").nodeValue = manipulator.hand.prefix + "palm"
+                        new_element.getAttributeNode("group").nodeValue = manipulator.hand.prefix + "fingers"
+                        new_element.setAttribute('parent_group', manipulator.arm.internal_name + "_and_wrist")
+                        new_element.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
                 else:
                     elt.getAttributeNode("name").nodeValue = manipulator.arm.internal_name + "_ee"
                     elt.getAttributeNode("parent_link").nodeValue = (manipulator.arm.prefix +
@@ -608,7 +602,7 @@ class SRDFRobotGenerator(object):
             previous = elt
             elt = next_element(previous)
 
-    def parse_hand_virtual_joint(self, manipulator_id, manipulator):
+    def parse_hand_virtual_joint(self, manipulator_id):
         comment = ["VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an " +
                    "external frame of reference (considered fixed with respect to the robot)"]
         self.add_comments(comment)
@@ -631,7 +625,7 @@ class SRDFRobotGenerator(object):
                 elt.getAttributeNode("link1").nodeValue = (manipulator.arm.prefix + elt.getAttribute("link1"))
                 elt.getAttributeNode("link2").nodeValue = (manipulator.arm.prefix + elt.getAttribute("link2"))
                 elt.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
-                newElement = deepcopy(elt)
+                new_element = deepcopy(elt)
 
             previous = elt
             elt = next_element(previous)
@@ -642,20 +636,20 @@ class SRDFRobotGenerator(object):
                 robot = URDF.from_xml_string(urdf_str)
                 arm_chain = robot.get_chain("world", manipulator.hand.prefix + "forearm", joints=False, fixed=False)
 
-                newElement.getAttributeNode("link1").nodeValue = arm_chain[-2]
-                newElement.getAttributeNode("link2").nodeValue = manipulator.hand.prefix + "forearm"
-                newElement.getAttributeNode("reason").nodeValue = "Adjacent"
-                newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
+                new_element.getAttributeNode("link1").nodeValue = arm_chain[-2]
+                new_element.getAttributeNode("link2").nodeValue = manipulator.hand.prefix + "forearm"
+                new_element.getAttributeNode("reason").nodeValue = "Adjacent"
+                new_element.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
 
-                newElement.getAttributeNode("link1").nodeValue = arm_chain[-3]
-                newElement.getAttributeNode("link2").nodeValue = manipulator.hand.prefix + "forearm"
-                newElement.getAttributeNode("reason").nodeValue = "Adjacent"
-                newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
+                new_element.getAttributeNode("link1").nodeValue = arm_chain[-3]
+                new_element.getAttributeNode("link2").nodeValue = manipulator.hand.prefix + "forearm"
+                new_element.getAttributeNode("reason").nodeValue = "Adjacent"
+                new_element.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
 
-                newElement.getAttributeNode("link1").nodeValue = arm_chain[-4]
-                newElement.getAttributeNode("link2").nodeValue = manipulator.hand.prefix + "forearm"
-                newElement.getAttributeNode("reason").nodeValue = "Adjacent"
-                newElement.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
+                new_element.getAttributeNode("link1").nodeValue = arm_chain[-4]
+                new_element.getAttributeNode("link2").nodeValue = manipulator.hand.prefix + "forearm"
+                new_element.getAttributeNode("reason").nodeValue = "Adjacent"
+                new_element.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
 
     def parse_hand_collisions(self, manipulator_id, manipulator):
         comment = [manipulator.hand.internal_name + " collisions"]

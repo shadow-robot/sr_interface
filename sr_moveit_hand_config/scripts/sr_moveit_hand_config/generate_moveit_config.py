@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2015, CITEC, Bielefeld University
@@ -28,8 +29,6 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-# Author: Guillaume Walck <gwalck@techfak.uni-bielefeld.de>
-
 """
 generate_moveit_config provides:
     generate_fake_controllers : generate a fake controllers config file
@@ -39,15 +38,13 @@ generate_moveit_config provides:
     generate_joint_limits : generate joint limits config file
 """
 
-from __future__ import absolute_import
 import argparse
-import yaml
 import re
-
+from copy import deepcopy
+import yaml
 import rospy
 import rosparam
 from srdfdom.srdf import SRDF
-from copy import deepcopy
 import rospkg
 
 from urdf_parser_py.urdf import URDF
@@ -97,9 +94,8 @@ def upload_output_params(upload_str, output_path=None, upload=True, ns_=None):
         for params, namespace in paramlist:
             rosparam.upload_params(namespace, params)
     if output_path is not None:
-        file_writer = open(output_path, "wb")
-        file_writer.write(upload_str)
-        file_writer.close()
+        with open(output_path, "wb", encoding="utf-8") as file_writer:
+            file_writer.write(upload_str)
 
 
 def generate_fake_controllers(robot, output_path=None, ns_=None):
@@ -118,20 +114,20 @@ def generate_fake_controllers(robot, output_path=None, ns_=None):
     output_str += "controller_list:\n"
     # for each group
     for group in robot.groups:
-        controller_name = "  - name: fake_" + group.name + "_controller\n"
+        controller_name = f"  - name: fake_{group.name}_controller\n"
         output_str += controller_name
         output_str += "    joints:\n"
         if len(group.joints) == 0:
             output_str += "      []\n"
         else:
             for joint in group.joints:
-                output_str += "      - " + joint.name + "\n"
+                output_str += f"      - {joint.name}\n"
     # load on param server or output to file
     upload_output_params(output_str, output_path, ns_)
 
 
 def generate_follow_joint_trajectory_controller(prefix, joints):
-    output_str = "  - name: " + prefix + "trajectory_controller\n"
+    output_str = f"  - name: {prefix}trajectory_controller\n"
     output_str += "    action_ns: follow_joint_trajectory\n"
     output_str += "    type: FollowJointTrajectory\n"
     output_str += "    default: true\n"
@@ -140,7 +136,7 @@ def generate_follow_joint_trajectory_controller(prefix, joints):
         output_str += "      []\n"
     else:
         for joint in joints:
-            output_str += "      - " + joint + "\n"
+            output_str += f"      - {joint}\n"
     return output_str
 
 
@@ -168,7 +164,7 @@ def generate_real_controllers(robot, output_path=None, ns_=None):
 
     hand_joints = []
     wrist_joints = []
-    for joint in group.joints:
+    for joint in sh_group.joints:
         name = joint.name
         if name[-3:] != "tip":
             if name[-4:-2] == "WR":
@@ -201,14 +197,13 @@ def generate_ompl_planning(robot,
     '''
     output_str = ""
 
-    stream = open(template_path, 'r')
-    yamldoc = yaml.safe_load(stream)
+    with open(template_path, 'r', encoding="utf-8") as stream:
+        yamldoc = yaml.safe_load(stream)
     output_str += "planner_configs:\n"
     output_str += yaml_reindent(yaml.dump(
         yamldoc["planner_configs"],
         default_flow_style=False,
-        allow_unicode=True),
-        2)
+        allow_unicode=True), 2)
     output_str += "\n"
     # find prefix
     prefix = find_prefix(robot)
@@ -224,7 +219,7 @@ def generate_ompl_planning(robot,
             group_name = "hand"
 
         if group_name in yamldoc:
-            output_str += group.name + ":\n"
+            output_str += f"{group.name}:\n"
             group_config = yamldoc[group_name]
             # prepend prefix on projection_evaluator
             if prefix:
@@ -243,7 +238,6 @@ def generate_ompl_planning(robot,
                                    allow_unicode=True)
             output_str += yaml_reindent(group_dump, 2)
             output_str += "\n"
-    stream.close()
     # load on param server or output to file
     upload_output_params(output_str, output_path, ns_)
 
@@ -265,7 +259,6 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
         @type  ns_: str
     """
     output_str = ""
-    group_name = None
 
     while not rospy.has_param('/robot_description'):
         rospy.sleep(0.5)
@@ -274,16 +267,15 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
     robot_urdf = URDF.from_xml_string(urdf_str)
 
     # open template file
-    stream = open(template_path, 'r')
-    yamldoc = yaml.safe_load(stream)
-    stream.close()
+    with open(template_path, 'r', encoding="utf-8") as stream:
+        yamldoc = yaml.safe_load(stream)
 
     if 'kinematics_template' in template_path:
         default_solver_for_fixed_joint = "trac_ik"
         fixed_joint_template_path = rospkg.RosPack().get_path(
-            'sr_moveit_hand_config') + "/config/kinematics_" + default_solver_for_fixed_joint + "_template.yaml"
+            'sr_moveit_hand_config') + f"/config/kinematics_{default_solver_for_fixed_joint}_template.yaml"
 
-        with open(fixed_joint_template_path, 'r') as stream:
+        with open(fixed_joint_template_path, 'r', encoding="utf-8") as stream:
             yamldoc_fixed_joint = yaml.safe_load(stream)
     else:
         yamldoc_fixed_joint = deepcopy(yamldoc)
@@ -292,14 +284,7 @@ def generate_kinematics(robot, template_path="kinematics_template.yaml",
     prefix = find_prefix(robot)
     finger_prefixes = ["FF", "MF", "RF", "LF", "TH"]
 
-    # find full hand key name
-    sh_group = None
-    for group in robot.groups:
-        if group.name.endswith("_hand"):
-            sh_group = group
-            break
-
-    # detect biotac fingers. I think this is not needed any more as all links are called the same even for biotac hand
+    # detect biotac fingers. Could not be needed any more as all links are called the same even for biotac hand
     is_fixed = {"first_finger": False,
                 "middle_finger": False,
                 "ring_finger": False,
@@ -368,8 +353,8 @@ def generate_joint_limits(robot,
         @type  ns_: str
     """
     output_str = ""
-    stream = open(template_path, 'r')
-    yamldoc = yaml.safe_load(stream)
+    with open(template_path, 'r', encoding="utf-8") as stream:
+        yamldoc = yaml.safe_load(stream)
     output_str += "joint_limits:\n"
     group_name = None
     # find full hand key name
@@ -383,14 +368,13 @@ def generate_joint_limits(robot,
             joint_name = joint.name[-4:]
             if joint_name in yamldoc["joint_limits"]:
                 joint_limits_config = yamldoc["joint_limits"][joint_name]
-                output_str += "  " + joint.name + ":\n"
+                output_str += f"  {joint.name}:\n"
                 joint_limits_dump = yaml.dump(
                     joint_limits_config,
                     default_flow_style=False,
                     allow_unicode=True)
                 output_str += yaml_reindent(joint_limits_dump, 4)
                 output_str += "\n"
-        stream.close()
         # load on param server or output to file
         upload_output_params(output_str, output_path, ns_)
 

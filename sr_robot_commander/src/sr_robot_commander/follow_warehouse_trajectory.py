@@ -1,19 +1,31 @@
 #!/usr/bin/env python3
-# Copyright 2019 Shadow Robot Company Ltd.
-#
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation version 2 of the License.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
+# Software License Agreement (BSD License)
+# Copyright © 2019, 2022-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
+#
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
+
+
 import rospy
 
 from moveit_commander import RobotCommander
@@ -31,7 +43,7 @@ from std_msgs.msg import Header
 import geometry_msgs.msg
 
 
-class WarehousePlanner(object):
+class WarehousePlanner:
     def __init__(self):
         rospy.init_node('moveit_warehouse_planner', anonymous=True)
         self.scene = PlanningSceneInterface()
@@ -43,7 +55,6 @@ class WarehousePlanner(object):
         self.jump_threshold = rospy.get_param("~jump_threshold", 1000)
 
         self.group = MoveGroupCommander(group_id)
-        # self._add_ground()
         self._robot_name = self.robot._r.get_robot_name()
         self._robot_link = self.group.get_end_effector_link()
         self._robot_frame = self.group.get_pose_reference_frame()
@@ -106,25 +117,25 @@ class WarehousePlanner(object):
         return waypoints
 
     def _add_ground(self):
-        p = geometry_msgs.msg.PoseStamped()
-        p.header.frame_id = self.robot.get_planning_frame()
+        pose_stamped = geometry_msgs.msg.PoseStamped()
+        pose_stamped.header.frame_id = self.robot.get_planning_frame()
 
-        p.pose.position.x = 0
-        p.pose.position.y = 0
+        pose_stamped.pose.position.x = 0
+        pose_stamped.pose.position.y = 0
         # offset such that the box is below the dome
-        p.pose.position.z = -0.11
-        p.pose.orientation.x = 0
-        p.pose.orientation.y = 0
-        p.pose.orientation.z = 0
-        p.pose.orientation.w = 1
-        self.scene.add_box("ground", p, (3, 3, 0.01))
+        pose_stamped.pose.position.z = -0.11
+        pose_stamped.pose.orientation.x = 0
+        pose_stamped.pose.orientation.y = 0
+        pose_stamped.pose.orientation.z = 0
+        pose_stamped.pose.orientation.w = 1
+        self.scene.add_box("ground", pose_stamped, (3, 3, 0.01))
         rospy.sleep(1)
 
     def plan_from_filter(self, prefix):
         waypoint_names = self.get_waypoint_names_by_prefix(prefix)
         waypoint_names.sort()
 
-        if 0 == len(waypoint_names):
+        if len(waypoint_names) == 0:
             rospy.logerr("No waypoints found for robot %s with prefix %s. " +
                          "Can't make trajectory :(",
                          self._robot_name, str(prefix))
@@ -175,5 +186,5 @@ class WarehousePlanner(object):
 
 
 if __name__ == "__main__":
-    sf = WarehousePlanner()
+    planner = WarehousePlanner()
     rospy.spin()

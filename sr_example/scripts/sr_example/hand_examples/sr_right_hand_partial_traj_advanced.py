@@ -1,35 +1,45 @@
 #!/usr/bin/env python3
-# Copyright 2019 Shadow Robot Company Ltd.
+
+# Software License Agreement (BSD License)
+# Copyright © 2019, 2022-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
 #
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation version 2 of the License.
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
 #
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
 
 # This example gives a more advanced use case for sending partial trajectories.
 # A plot is generated to show the output of the desired and achieved positions and velocities.
 
-from __future__ import absolute_import
-import numpy as np
 
+import numpy as np
 import rospy
 from control_msgs.msg import JointTrajectoryControllerState, \
     FollowJointTrajectoryActionResult, FollowJointTrajectoryActionGoal
 import matplotlib.pyplot as plt
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
-
-from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_utilities.hand_finder import HandFinder
+from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 
-class PartialTrajListener():
+class PartialTrajListener:
 
     def __init__(self):
         self.start_time_goals = []
@@ -52,6 +62,10 @@ class PartialTrajListener():
         self.rfj3_vel_desired = []
         self.ffj3_vel_error = []
         self.rfj3_vel_error = []
+
+        self.joint_names = None
+        self.ffj3_index = None
+        self.rfj3_index = None
 
         rospy.Subscriber("/rh_trajectory_controller/state",
                          JointTrajectoryControllerState, self.callback)
@@ -83,7 +97,8 @@ class PartialTrajListener():
             self.ffj3_vel_error.append(state.error.velocities[self.ffj3_index])
             self.rfj3_vel_error.append(state.error.velocities[self.rfj3_index])
 
-    def callback_result(self, result):
+    @staticmethod
+    def callback_result(result):
         print("Trajectory Goal: " + result.status.goal_id.id +
               " finished with status: " + str(result.status.status))
 
@@ -94,14 +109,15 @@ class PartialTrajListener():
         self.start_time_goals_trajectory.append(goal.goal.trajectory.header.stamp.to_sec())
         self.trajectories.append(goal.goal.trajectory.points)
 
-    def plot_settings(self, plt):
-        ax = plt.gca()
+    @staticmethod
+    def plot_settings(current_plt):
+        axis = current_plt.gca()
         plt.grid(which='both', axis='both')
-        plt.setp(ax.get_xticklabels(), fontsize=8)
-        plt.setp(ax.get_yticklabels(), fontsize=8)
+        plt.setp(axis.get_xticklabels(), fontsize=8)
+        plt.setp(axis.get_yticklabels(), fontsize=8)
         plt.xlabel('Time (s)')
-        ax.xaxis.label.set_size(10)
-        ax.yaxis.label.set_size(10)
+        axis.xaxis.label.set_size(10)
+        axis.yaxis.label.set_size(10)
 
     def graph(self):
         time_zero = self.joints_time[0]
@@ -272,12 +288,12 @@ if __name__ == '__main__':
     joints = hand_finder.get_hand_joints()[hand_mapping]
 
     # Adjust poses according to the hand loaded
-    open_hand_current = dict([(i, open_hand[i]) for i in joints if i in open_hand])
-    grasp1_current = dict([(i, grasp1[i]) for i in joints if i in grasp1])
-    grasp2_current = dict([(i, grasp2[i]) for i in joints if i in grasp2])
-    grasp3_current = dict([(i, grasp3[i]) for i in joints if i in grasp3])
-    grasp4_current = dict([(i, grasp4[i]) for i in joints if i in grasp4])
-    grasp5_current = dict([(i, grasp5[i]) for i in joints if i in grasp5])
+    open_hand_current = {i: open_hand[i] for i in joints if i in open_hand}
+    grasp1_current = {i: grasp1[i] for i in joints if i in grasp1}
+    grasp2_current = {i: grasp2[i] for i in joints if i in grasp2}
+    grasp3_current = {i: grasp3[i] for i in joints if i in grasp3}
+    grasp4_current = {i: grasp4[i] for i in joints if i in grasp4}
+    grasp5_current = {i: grasp5[i] for i in joints if i in grasp5}
 
     start_time = rospy.Time.now()
 
@@ -288,8 +304,8 @@ if __name__ == '__main__':
     joint_trajectory.header.stamp = start_time + rospy.Duration.from_sec(float(trajectory_start_time))
     joint_trajectory.joint_names = list(open_hand_current.keys())
     joint_trajectory.points = []
-    trajectory_point = construct_trajectory_point(open_hand_current, 1.0)
-    joint_trajectory.points.append(trajectory_point)
+    this_trajectory_point = construct_trajectory_point(open_hand_current, 1.0)
+    joint_trajectory.points.append(this_trajectory_point)
     hand_commander.run_joint_trajectory_unsafe(joint_trajectory, True)
 
     # Closing index and middle fingers. Trajectories are generated from grasp1 - grasp5 and run with hand_commander
@@ -299,16 +315,16 @@ if __name__ == '__main__':
     joint_trajectory.header.stamp = start_time + rospy.Duration.from_sec(float(trajectory_start_time))
     joint_trajectory.joint_names = list(grasp1_current.keys())
     joint_trajectory.points = []
-    trajectory_point = construct_trajectory_point(grasp1_current, 1.0)
-    joint_trajectory.points.append(trajectory_point)
-    trajectory_point = construct_trajectory_point(grasp2_current, 4.0)
-    joint_trajectory.points.append(trajectory_point)
-    trajectory_point = construct_trajectory_point(grasp3_current, 6.0)
-    joint_trajectory.points.append(trajectory_point)
-    trajectory_point = construct_trajectory_point(grasp4_current, 8.0)
-    joint_trajectory.points.append(trajectory_point)
-    trajectory_point = construct_trajectory_point(grasp5_current, 10.0)
-    joint_trajectory.points.append(trajectory_point)
+    this_trajectory_point = construct_trajectory_point(grasp1_current, 1.0)
+    joint_trajectory.points.append(this_trajectory_point)
+    this_trajectory_point = construct_trajectory_point(grasp2_current, 4.0)
+    joint_trajectory.points.append(this_trajectory_point)
+    this_trajectory_point = construct_trajectory_point(grasp3_current, 6.0)
+    joint_trajectory.points.append(this_trajectory_point)
+    this_trajectory_point = construct_trajectory_point(grasp4_current, 8.0)
+    joint_trajectory.points.append(this_trajectory_point)
+    this_trajectory_point = construct_trajectory_point(grasp5_current, 10.0)
+    joint_trajectory.points.append(this_trajectory_point)
     hand_commander.run_joint_trajectory_unsafe(joint_trajectory, False)
 
     # Interrupting trajectory of index using two partial trajectories
@@ -319,10 +335,10 @@ if __name__ == '__main__':
     joint_trajectory.header.stamp = start_time + rospy.Duration.from_sec(float(trajectory_start_time))
     joint_trajectory.joint_names = list(grasp_partial_1.keys())
     joint_trajectory.points = []
-    trajectory_point = construct_trajectory_point(grasp_partial_1, 1.0)
-    joint_trajectory.points.append(trajectory_point)
-    trajectory_point = construct_trajectory_point(grasp_partial_2, 3.0)
-    joint_trajectory.points.append(trajectory_point)
+    this_trajectory_point = construct_trajectory_point(grasp_partial_1, 1.0)
+    joint_trajectory.points.append(this_trajectory_point)
+    this_trajectory_point = construct_trajectory_point(grasp_partial_2, 3.0)
+    joint_trajectory.points.append(this_trajectory_point)
     hand_commander.run_joint_trajectory_unsafe(joint_trajectory, False)
 
     graphs_finished = False

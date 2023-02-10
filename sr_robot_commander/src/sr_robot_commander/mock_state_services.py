@@ -1,19 +1,31 @@
 #!/usr/bin/env python3
-# Copyright 2019 Shadow Robot Company Ltd.
-#
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation version 2 of the License.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
+# Software License Agreement (BSD License)
+# Copyright © 2019, 2022-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
+#
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
+
+
 import rospy
 from moveit_msgs.srv import CheckIfRobotStateExistsInWarehouse as HasState
 from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
@@ -33,26 +45,23 @@ def mock_get_state_callback(req):
     return resp
 
 
-def mock_has_state_callback(req):
+def mock_has_state_callback(_req):
     return True
 
 
-def mock_list_state_callback(req):
+def mock_list_state_callback(_req):
     states = {"state1", "state2"}
     return states
 
 
 def mock_save_state_callback(req):
-    if "state1" in req.name:
-        return True
-    else:
-        return False
+    return bool("state1" in req.name)
 
 
 if __name__ == "__main__":
     rospy.init_node('mock_services', anonymous=True)
-    s1 = rospy.Service('/get_robot_state', GetState, mock_get_state_callback)
-    s2 = rospy.Service('/has_robot_state', HasState, mock_has_state_callback)
-    s3 = rospy.Service('/list_robot_states', ListState, mock_list_state_callback)
-    s4 = rospy.Service('/save_robot_state', SaveState, mock_save_state_callback)
+    service_1 = rospy.Service('/get_robot_state', GetState, mock_get_state_callback)
+    service_2 = rospy.Service('/has_robot_state', HasState, mock_has_state_callback)
+    service_3 = rospy.Service('/list_robot_states', ListState, mock_list_state_callback)
+    service_4 = rospy.Service('/save_robot_state', SaveState, mock_save_state_callback)
     rospy.spin()

@@ -1,26 +1,38 @@
 #!/usr/bin/env python3
-# Copyright 2019 Shadow Robot Company Ltd.
-#
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation version 2 of the License.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
+# Software License Agreement (BSD License)
+# Copyright © 2019, 2022-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
+#
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
+
+
 import rospy
 from moveit_msgs.srv import SaveRobotStateToWarehouse as SaveState
 from moveit_msgs.srv import GetRobotStateFromWarehouse as GetState
 from moveit_msgs.srv import GetRobotStateFromWarehouseResponse as GetStateResp
 
 
-class SrRobotStateCombiner(object):
+class SrRobotStateCombiner:
 
     _arm_joints = ['shoulder_pan_joint', 'elbow_joint', 'shoulder_lift_joint',
                    'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint', 'WRJ2', 'WRJ1']
@@ -46,10 +58,10 @@ class SrRobotStateCombiner(object):
         """
         name = []
         position = []
-        for n, pos in zip(state.state.joint_state.name, state.state.joint_state.position):
-            if (remove_arm and all(s not in n for s in self._arm_joints)) \
-                    or (not remove_arm and any(s in n for s in self._arm_joints)):
-                name.append(n)
+        for name_index, pos in zip(state.state.joint_state.name, state.state.joint_state.position):
+            if (remove_arm and all(s not in name_index for s in self._arm_joints)) \
+                    or (not remove_arm and any(s in name_index for s in self._arm_joints)):
+                name.append(name_index)
                 position.append(pos)
         state.state.joint_state.name = name
         state.state.joint_state.position = position

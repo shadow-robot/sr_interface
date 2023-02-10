@@ -1,32 +1,39 @@
 #!/usr/bin/env python3
-# Copyright 2019 Shadow Robot Company Ltd.
-#
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation version 2 of the License.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
-import rospy
+# Software License Agreement (BSD License)
+# Copyright © 2019, 2022-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
+#
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
 
+from builtins import map
 from sr_robot_msgs.srv import PlanTrajectoryFromList as PlanFromList
 from sr_robot_msgs.srv import PlanTrajectoryFromPrefix as PlanFromPrefix
-from sr_robot_msgs.srv import ExecutePlannedTrajectory as ExecutePlan
 from sr_robot_msgs.srv import PlanNamedTrajectory as PlanNamed
 from sr_robot_msgs.srv import ListNamedTrajectories as ListNamed
-from functools import partial
-from builtins import map
-from copy import deepcopy
+import rospy
 
 
-class WaypointNamedServices(object):
+class WaypointNamedServices:
     def __init__(self):
 
         rospy.init_node('waypoint_named_services')
@@ -40,7 +47,7 @@ class WaypointNamedServices(object):
             'plan_trajectory_from_list', PlanFromList)
         self.__from_prefix = rospy.ServiceProxy(
             'plan_trajectory_from_prefix', PlanFromPrefix)
-        self.__execute_plan = rospy.ServiceProxy(
+        self.__execute_plan = rospy.ServiceProxy(  # pylint: disable=W0238
             'execute_planned_trajectory', PlanFromPrefix)
         rospy.loginfo("Service proxies connected.")
 
@@ -53,38 +60,38 @@ class WaypointNamedServices(object):
             req.name]
         if len(mapping) > 1:
             rospy.logfatal("Trajectory name is not unique")
-        elif len(mapping) is 0:
+        elif len(mapping) == 0:
             rospy.logfatal("Trajectory name does not exist")
         else:
-            m = mapping[0]
+            mapping = mapping[0]
 
-            if "list" not in m.keys() and "prefix" not in m.keys():
+            if "list" not in mapping.keys() and "prefix" not in mapping.keys():
                 rospy.logfatal("Service must specify either prefix " +
                                "or list for choosing waypoints")
-            elif "list" in m.keys() and "prefix" in m.keys():
+            elif "list" in mapping.keys() and "prefix" in mapping.keys():
                 rospy.logfatal("Service mapping has both list and " +
                                "prefix specified. Can only be one.")
             else:
-                if "list" in m.keys():
-                    return self.__from_list(m["list"]).success
-                else:
-                    return self.__from_prefix(m["prefix"]).success
+                if "list" in mapping.keys():
+                    return self.__from_list(mapping["list"]).success
+
+                return self.__from_prefix(mapping["prefix"]).success
 
         return False
 
-    def __list_named_trajectories(self, req):
+    def __list_named_trajectories(self, _req):
         return [map(lambda x: x["name"], self.service_mapping)]
 
     def define_services(self):
         plan_service_name = rospy.get_param("~plan_named_trajectory_service")
         list_service_name = rospy.get_param("~list_named_trajectories_service")
 
-        self.__plan_server = rospy.Service(plan_service_name, PlanNamed,
+        self.__plan_server = rospy.Service(plan_service_name, PlanNamed,  # pylint: disable=W0238
                                            self.__plan_named_trajectory)
-        self.__list_server = rospy.Service(list_service_name, ListNamed,
+        self.__list_server = rospy.Service(list_service_name, ListNamed,  # pylint: disable=W0238
                                            self.__list_named_trajectories)
 
 
 if __name__ == "__main__":
-    sf = WaypointNamedServices()
+    services = WaypointNamedServices()
     rospy.spin()

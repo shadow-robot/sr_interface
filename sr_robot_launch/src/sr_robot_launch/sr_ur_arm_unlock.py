@@ -1,19 +1,30 @@
 #!/usr/bin/env python3
-# Copyright 2020, 2021 Shadow Robot Company Ltd.
-#
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation version 2 of the License.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
+# Software License Agreement (BSD License)
+# Copyright © 2020-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
+#
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
+
 import rospy
 from std_msgs.msg import Bool
 from ur_dashboard_msgs.srv import GetSafetyMode, GetProgramState, GetRobotMode, Load, IsProgramRunning
@@ -21,7 +32,7 @@ from ur_dashboard_msgs.msg import SafetyMode, ProgramState, RobotMode
 from std_srvs.srv import Trigger
 
 
-class RobotSafetyMonitor(object):
+class RobotSafetyMonitor:
     def __init__(self, name):
         topic_string = '/' + name + '_sr_ur_robot_hw/safety_mode'
         self.estop_pressed = False
@@ -35,12 +46,11 @@ class RobotSafetyMonitor(object):
         self.estop_pressed = False
 
     def _safety_mode_callback(self, message):
-        self.mode = message.mode
         if message.mode == SafetyMode.ROBOT_EMERGENCY_STOP:
             self.press_estop()
 
 
-class SrUrUnlock(object):
+class SrUrUnlock:
     def __init__(self):
         self._external_control_program_name = rospy.get_param("~urcap_program_name", "external_ctrl.urp")
         self._arms = []
@@ -48,7 +58,7 @@ class SrUrUnlock(object):
             self._arms.append('ra')
         if rospy.has_param('la_sr_ur_robot_hw'):
             self._arms.append('la')
-        if 0 == len(self._arms):
+        if len(self._arms) == 0:
             rospy.logerr("No arms detected, shutting down %s", rospy.get_name())
             rospy.signal_shutdown("No arms detected")
         rospy.Subscriber("/sr_arm/release_or_brake", Bool, self.release_or_brake_arm_cb)
@@ -70,20 +80,21 @@ class SrUrUnlock(object):
 
         self.brake_arm()
 
-    def call_arm_service(self, side, service_name, service_type, dashboard=True, service_data=""):
+    @staticmethod
+    def call_arm_service(side, service_name, service_type, dashboard=True, service_data=""):
         if dashboard:
             service_string = "/" + side + "_sr_ur_robot_hw/dashboard/" + service_name
         else:
             service_string = "/" + side + "_sr_ur_robot_hw/" + service_name
         try:
             service_call = rospy.ServiceProxy(service_string, service_type)
-            if "" == service_data:
+            if service_data == "":
                 response = service_call()
             else:
                 response = service_call(service_data)
             return response
-        except rospy.ServiceException as e:
-            rospy.logerr("Service call to '%s' failed for arm %s. %s", service_name, side, e)
+        except rospy.ServiceException as exception:
+            rospy.logerr("Service call to '%s' failed for arm %s. %s", service_name, side, exception)
             raise
 
     def startup_arms(self):
@@ -176,7 +187,7 @@ class SrUrUnlock(object):
                 headless_mode = False
             if not headless_mode:
                 play_msg = self.call_arm_service(arm, "program_state", GetProgramState)
-                if "null" == play_msg.program_name:
+                if play_msg.program_name == "null":
                     rospy.loginfo("Not in headless mode. Loading program: %s for arm: %s",
                                   self._external_control_program_name, arm)
                     resp = self.call_arm_service(arm, "load_program", Load,
@@ -228,14 +239,14 @@ class SrUrUnlock(object):
             self.load_arms_program_if_unloaded()
             rospy.loginfo("Checking if program is running ...")
             self.start_arms_program_if_stopped()
-        except rospy.ServiceException as e:
+        except rospy.ServiceException as exception:
             for arm in self._arms:
-                rospy.logerr("Arm checking/restarting failed for arm: %s. %s", arm, e)
+                rospy.logerr("Arm checking/restarting failed for arm: %s. %s", arm, exception)
 
     def brake_arm(self):
         rospy.loginfo("Brake arm signal received.")
         for arm in self._arms:
             try:
                 self.call_arm_service(arm, "power_off", Trigger)
-            except rospy.ServiceException as e:
-                rospy.logerr("Arm braking failed for arm: %s. %s", arm, e)
+            except rospy.ServiceException as exception:
+                rospy.logerr("Arm braking failed for arm: %s. %s", arm, exception)

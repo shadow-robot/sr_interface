@@ -23,9 +23,12 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-robot:
-  name: shadowhand_motor
-  manipulators:
-    left_manipulator:
-      side: left
-      hand: True
+#!/bin/bash
+set -e
+
+# setup ros environment
+source "/workspace/shadow_robot/base/devel/setup.bash"
+
+roscore &
+
+rosrun sr_moveit_planner_benchmarking benchmark_planners.py _data:=`rospack find sr_moveit_planner_benchmarking`/data _results:=/results

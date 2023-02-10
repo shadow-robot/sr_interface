@@ -1,27 +1,35 @@
 #!/usr/bin/env python3
 
-# Copyright 2020 Shadow Robot Company Ltd.
+# Software License Agreement (BSD License)
+# Copyright © 2020-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
 #
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation version 2 of the License.
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
 #
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
-import rospy
-import rostest
-from sr_robot_commander.sr_hand_commander import SrHandCommander
-from actionlib_msgs.msg import GoalStatusArray
 from unittest import TestCase
-
-PKG = "sr_robot_launch"
+import rostest
+import rospy
+from actionlib_msgs.msg import GoalStatusArray
+from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 
 class TestHandJointMovement(TestCase):
@@ -48,11 +56,12 @@ class TestHandJointMovement(TestCase):
     def tearDownClass(cls):
         pass
 
-    def joints_error_check(self, expected_joint_values, recieved_joint_values):
+    @staticmethod
+    def joints_error_check(expected_joint_values, received_joint_values):
         expected_and_final_joint_value_diff = 0
-        for expected_value, recieved_value in zip(sorted(expected_joint_values), sorted(recieved_joint_values)):
+        for expected_value, received_value in zip(sorted(expected_joint_values), sorted(received_joint_values)):
             expected_and_final_joint_value_diff += abs(expected_joint_values[expected_value] -
-                                                       recieved_joint_values[recieved_value])
+                                                       received_joint_values[received_value])
         return expected_and_final_joint_value_diff
 
     def test_hand_open(self):
@@ -100,5 +109,6 @@ class TestHandJointMovement(TestCase):
 
 
 if __name__ == "__main__":
+    pkg_name = "sr_robot_launch"
     rospy.init_node('test_sim', anonymous=True)
-    rostest.rosrun(PKG, "test_sim", TestHandJointMovement)
+    rostest.rosrun(pkg_name, "test_sim", TestHandJointMovement)

@@ -1,38 +1,40 @@
 #!/usr/bin/env python3
 
+# Software License Agreement (BSD License)
+# Copyright © 2014, 2022-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
 #
-# Copyright (c) 2014 Shadow Robot Company Ltd.
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
 #
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation, either version 2 of the License, or (at your option)
-# any later version.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
-#
-#
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
-import os
-import unittest
-import rospy
-import rostest
 from math import radians
+from builtins import input
+import rospy
 from actionlib import SimpleActionClient, GoalStatus
 from sr_robot_msgs.msg import GraspAction, GraspGoal
 from sr_hand.shadowhand_ros import ShadowHand_ROS
-from sr_grasp.utils import mk_grasp
 from sr_grasp import Grasp, GraspStash
-from builtins import input
 
 
-class QuickGraspNode(object):
+class QuickGraspNode:
 
     def __init__(self):
         self.stash = GraspStash()
@@ -41,16 +43,15 @@ class QuickGraspNode(object):
         if self.stash.size() == 0:
             rospy.logerr("No grasps found!")
             raise Exception("No Grasps")
-        else:
-            self.grasp = self.stash.get_all()[0]
+        self.grasp = self.stash.get_all()[0]
         # print self.grasp
         rospy.loginfo("Looking for hand...")
         self.hand = ShadowHand_ROS()
         rospy.loginfo("Found")
 
     def zero_hand(self):
-        for j in self.hand.allJoints:
-            self.hand.sendupdate(j.name, 0.0)
+        for joint in self.hand.allJoints:
+            self.hand.sendupdate(joint.name, 0.0)
         rospy.sleep(2)
 
     def run_grasp(self, pre=False):
@@ -70,8 +71,7 @@ class QuickGraspNode(object):
         grasp = Grasp()
         grasp.id = name
         positions = self.hand.read_all_current_positions()
-        for k, v in positions.items():
-            positions[k] = radians(v)
+        positions = {key: radians(value) for key, value in positions.items()}
         grasp.set_grasp_point(positions=positions)
         self.stash.put_grasp(grasp)
         node.grasp = grasp
@@ -83,9 +83,9 @@ if __name__ == '__main__':
     while node:
         print("")
         print("Grasps:")
-        for i, g in enumerate(node.stash.get_all()):
-            print(str(i) + " - " + g.id)
-        print("Current grasp: %s" % node.grasp.id)
+        for i, grasp_instance in enumerate(node.stash.get_all()):
+            print(f"{i} - {grasp_instance.id}")
+        print(f"Current grasp: {node.grasp.id}")
         print("Number select grasp, z zero hand, g grasp, p pre-grasp, n new grasp, s save grasps, q quit")
         act = input(": ")
         num = None
@@ -104,11 +104,11 @@ if __name__ == '__main__':
         elif act == "g":
             node.run_grasp()
         elif act == "n":
-            name = input("Enter name: ")
-            node.new_grasp(name=name)
+            name_input = input("Enter name: ")
+            node.new_grasp(name=name_input)
         elif act == "s":
             node.stash.save_yaml_file()
         elif act == "q":
             break
         else:
-            print("Unknown action %s" % act)
+            print(f"Unknown action {act}")

@@ -1,34 +1,39 @@
 #!/usr/bin/env python3
 
-# Copyright 2019 Shadow Robot Company Ltd.
+# Software License Agreement (BSD License)
+# Copyright © 2019, 2022-2023 belongs to Shadow Robot Company Ltd.
+# All rights reserved.
 #
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation version 2 of the License.
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#   1. Redistributions of source code must retain the above copyright notice,
+#      this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must reproduce the above copyright notice,
+#      this list of conditions and the following disclaimer in the documentation
+#      and/or other materials provided with the distribution.
+#   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+#      may be used to endorse or promote products derived from this software without
+#      specific prior written permission.
 #
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
+# This software is provided by Shadow Robot Company Ltd "as is" and any express
+# or implied warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed. In no event
+# shall the copyright holder be liable for any direct, indirect, incidental, special,
+# exemplary, or consequential damages (including, but not limited to, procurement of
+# substitute goods or services; loss of use, data, or profits; or business interruption)
+# however caused and on any theory of liability, whether in contract, strict liability,
+# or tort (including negligence or otherwise) arising in any way out of the use of this
+# software, even if advised of the possibility of such damage.
 
-from __future__ import absolute_import
-import rospy
+
 from copy import deepcopy
 from builtins import input
+import rospy
 from sr_robot_commander.sr_hand_commander import SrHandCommander
+
 ####################
 # POSE DEFINITIONS #
 ####################
-
-joints = ["rh_THJ1", "rh_THJ2", "rh_THJ3", "rh_THJ4", "rh_THJ5",
-          "rh_FFJ1", "rh_FFJ2", "rh_FFJ3", "rh_FFJ4",
-          "rh_MFJ1", "rh_MFJ2", "rh_MFJ3", "rh_MFJ4",
-          "rh_RFJ1", "rh_RFJ2", "rh_RFJ3", "rh_RFJ4",
-          "rh_LFJ1", "rh_LFJ2", "rh_LFJ3", "rh_LFJ4", "rh_LFJ5",
-          "rh_WRJ1", "rh_WRJ2"]
 
 # starting position for the hand
 start_pos = {"rh_THJ1": 0, "rh_THJ2": 0, "rh_THJ3": 0, "rh_THJ4": 0, "rh_THJ5": 0,
@@ -57,8 +62,8 @@ ext_th = {"rh_THJ1": 0, "rh_THJ2": 0, "rh_THJ3": 0, "rh_THJ4": 0, "rh_THJ5": 0}
 
 
 def select_finger():
-    flex = dict()
-    extend = dict()
+    flex = {}
+    extend = {}
     finger = input("select which finger to move (options: ff, mf, rf, lf, th  default: ff): ")
     if finger == "ff":
         finger = "FF"
@@ -91,13 +96,13 @@ def select_finger():
         correct_joint_number = True
         joint_number_str = input("select joint number to move: ")
         joint_number_int = int(joint_number_str)
-        if finger == "FF" or finger == "MF" or finger == "RF":
+        if finger in ('FF', 'MF', 'RF'):
             if joint_number_int not in range(5):
-                rospy.logerr("The finger you selected doesn't have joint {}".format(joint_number_int))
+                rospy.logerr(f"The finger you selected doesn't have joint {joint_number_int}")
                 correct_joint_number = False
-        elif finger == "LF" or finger == "TH":
+        elif finger in ('LF', 'TH'):
             if joint_number_int not in range(6):
-                rospy.logerr("The finger you selected doesn't have joint {}".format(joint_number_int))
+                rospy.logerr(f"The finger you selected doesn't have joint {joint_number_int}")
                 correct_joint_number = False
 
     return finger, flex, extend, joint_number_str, joint_number_int
@@ -106,7 +111,6 @@ def select_finger():
 def sequence_ff():
     rospy.sleep(1.2)
     while True:
-        joints = list()
         finger, flex, extend, joint_number_str, joint_number_int = select_finger()
         if joint_number_int == 0:
             joint_1 = "rh_" + finger + "J1"
@@ -170,7 +174,7 @@ def sequence_ff():
                 "Press return to run again, 'change' to change parameters or 'exit' to exit the program: ")
             if user_input == 'exit':
                 return
-            elif user_input == 'change':
+            if user_input == 'change':
                 break
 
 
