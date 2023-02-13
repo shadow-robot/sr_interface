@@ -68,10 +68,10 @@ class TestSrUrUnlockRight(TestCase, CommonTests):
         self.fault('right')
 
     def test_e_stop_right_1(self):
-        self.e_stop('right', release_estop_before_pedal=True)
+        self.e_stop('right', _release_estop_before_pedal=True)
 
     def test_e_stop_right_2(self):
-        self.e_stop('right', release_estop_before_pedal=False)
+        self.e_stop('right', _release_estop_before_pedal=False)
 
     def test_arm_power_cycle_right(self):
         self.arm_power_cycle('right')

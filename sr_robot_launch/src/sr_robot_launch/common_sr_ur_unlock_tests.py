@@ -32,9 +32,8 @@ from ur_dashboard_msgs.msg import SafetyMode, RobotMode
 import rospy
 
 
-class CommonTests(TestCase):
+class CommonTests:
     def __init__(self):
-        super().__init__()
         self.mock_dashboard = {}
         self.service_string = {}
         self.sr_ur_arm_unlock = None
