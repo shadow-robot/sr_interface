@@ -62,20 +62,20 @@ if __name__ == "__main__":
     hand_commander_instance = SrHandCommander(name=hand_name)
 
     trajectory = [
-    {
-        'name': 'open',
-        'interpolate_time': 3.0,
-        'pause_time': 2
-    },
-    {
-        'name': 'fingers_pack_thumb_open',
-        'interpolate_time': 3.0,
-        'pause_time': 2
-    },
-    {
-        'name': 'pack',
-        'interpolate_time': 3.0
-    }
+        {
+            'name': 'open',
+            'interpolate_time': 3.0,
+            'pause_time': 2
+        },
+        {
+            'name': 'fingers_pack_thumb_open',
+            'interpolate_time': 3.0,
+            'pause_time': 2
+        },
+        {
+            'name': 'pack',
+            'interpolate_time': 3.0
+        }
     ]
 
     # Run trajectory via moveit
