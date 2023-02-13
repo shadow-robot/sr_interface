@@ -25,7 +25,6 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-from unittest import TestCase
 from std_msgs.msg import Bool
 from ur_dashboard_msgs.srv import IsProgramRunning
 from ur_dashboard_msgs.msg import SafetyMode, RobotMode
