@@ -113,3 +113,9 @@ two_hands:
         move_group_state: pack
       - move_group: left_hand
         move_group_state: pack
+  relaxed:
+    inherit_from:
+      - move_group: right_hand
+        move_group_state: relaxed
+      - move_group: left_hand
+        move_group_state: relaxed

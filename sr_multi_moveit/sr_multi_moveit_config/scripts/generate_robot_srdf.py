@@ -193,7 +193,7 @@ class SRDFRobotGenerator:
         for manipulator_id, manipulator in enumerate(self.robot.manipulators):
             if manipulator.has_arm:
                 # Read arm srdf
-                arm_srdf_path = manipulator.arm.moveit_path + "/" + manipulator.arm.name + ".srdf"
+                arm_srdf_path = f"{manipulator.arm.moveit_path}/{manipulator.arm.name}.srdf"
                 with open(arm_srdf_path, 'r', encoding="utf-8") as stream:
                     self.arm_srdf_xmls.append(parse(stream))
                 xacro.process_doc(self.arm_srdf_xmls[manipulator_id])

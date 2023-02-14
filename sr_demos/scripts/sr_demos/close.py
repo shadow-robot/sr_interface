@@ -59,8 +59,6 @@ if __name__ == "__main__":
     else:
         hand_name = 'two_hands'
 
-    hand_commander_instance = SrHandCommander(name=hand_name)
-
     trajectory = [
         {
             'name': 'open',
@@ -78,5 +76,11 @@ if __name__ == "__main__":
         }
     ]
 
-    # Run trajectory via moveit
-    hand_commander_instance.run_named_trajectory(trajectory)
+    if hand_name == "two_hands":
+        lh_commander_instance = SrHandCommander("left_hand")
+        rh_commander_instance = SrHandCommander("right_hand")
+        lh_commander_instance.run_named_trajectory(trajectory)
+        rh_commander_instance.run_named_trajectory(trajectory)
+    else:
+        hand_commander_instance = SrHandCommander(name=hand_name)
+        hand_commander_instance.run_named_trajectory(trajectory)
