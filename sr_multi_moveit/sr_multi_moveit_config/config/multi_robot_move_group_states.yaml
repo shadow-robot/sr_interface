@@ -94,3 +94,22 @@ two_arms_and_hands:
         move_group_state: ra_start
       - move_group: left_arm_and_hand
         move_group_state: la_start
+two_hands:
+  open:
+    inherit_from:
+      - move_group: right_hand
+        move_group_state: open
+      - move_group: left_hand
+        move_group_state: open
+  fingers_pack_thumb_open:
+    inherit_from:
+      - move_group: right_hand
+        move_group_state: fingers_pack_thumb_open
+      - move_group: left_hand
+        move_group_state: fingers_pack_thumb_open
+  pack:
+    inherit_from:
+      - move_group: right_hand
+        move_group_state: pack
+      - move_group: left_hand
+        move_group_state: pack
