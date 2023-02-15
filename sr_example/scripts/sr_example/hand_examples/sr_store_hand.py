@@ -37,7 +37,7 @@ rospy.init_node("named_traj_example", anonymous=True)
 hand_finder = HandFinder()
 
 hand_parameters = hand_finder.get_hand_parameters()
-hand_serial = hand_parameters.mapping.keys()[0]
+hand_serial = list(hand_parameters.mapping.keys())[0]
 
 hand_commander = SrHandCommander(hand_parameters=hand_parameters,
                                  hand_serial=hand_serial)
