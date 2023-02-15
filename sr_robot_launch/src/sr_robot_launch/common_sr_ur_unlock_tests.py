@@ -31,7 +31,11 @@ from ur_dashboard_msgs.srv import IsProgramRunning
 from ur_dashboard_msgs.msg import SafetyMode, RobotMode
 import rospy
 
+
 class CommonTests(TestCase):
+    """
+    Base test class to test sr_ur_arm_unlock
+    """
     mock_dashboard = {}
     service_string = {}
     sr_ur_arm_unlock = None
