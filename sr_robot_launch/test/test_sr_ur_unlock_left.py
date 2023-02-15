@@ -33,7 +33,7 @@ from sr_robot_launch.mock_sr_ur_robot_hw import MockUrRobotHW
 from sr_robot_launch.common_sr_ur_unlock_tests import CommonTests
 
 
-class TestSrUrUnlockLeft(TestCase, CommonTests):
+class TestSrUrUnlockLeft(CommonTests, TestCase):
     """
     Tests sr_ur_arm_unlock
     """
