@@ -33,7 +33,7 @@ from sr_robot_launch.mock_sr_ur_robot_hw import MockUrRobotHW
 from sr_robot_launch.common_sr_ur_unlock_tests import CommonTests
 
 
-class TestSrUrUnlockLeft(TestCase, CommonTests):
+class TestSrUrUnlockLeft(CommonTests, TestCase):
     """
     Tests sr_ur_arm_unlock
     """
@@ -68,10 +68,10 @@ class TestSrUrUnlockLeft(TestCase, CommonTests):
         self.fault('left')
 
     def test_e_stop_left_1(self):
-        self.e_stop('left', release_estop_before_pedal=True)
+        self.e_stop('left', _release_estop_before_pedal=True)
 
     def test_e_stop_left_2(self):
-        self.e_stop('left', release_estop_before_pedal=False)
+        self.e_stop('left', _release_estop_before_pedal=False)
 
     def test_arm_power_cycle_left(self):
         self.arm_power_cycle('left')
