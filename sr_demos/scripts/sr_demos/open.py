@@ -63,6 +63,11 @@ if __name__ == "__main__":
 
     trajectory = [
         {
+            'name': 'fingers_pack_thumb_open',
+            'interpolate_time': 3.0,
+            'pause_time': 2
+        },
+        {
             'name': 'open',
             'interpolate_time': 3.0,
             'pause_time': 2
