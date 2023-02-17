@@ -483,37 +483,43 @@ class SRDFRobotGenerator:
     def add_bimanual_arm_groups(self, manipulators):
         self.add_comments(comments=["Bimanual arm groups without hands"])
         # Add two arms (no hands) group
-        self.add_move_group_combining_others('two_arms',
-            [manipulators[0].arm.internal_name, manipulators[1].arm.internal_name])
+        self.add_move_group_combining_others(
+            'two_arms', [manipulators[0].arm.internal_name, manipulators[1].arm.internal_name])
         if manipulators[0].has_hand or manipulators[0].has_hand:
             self.add_comments(comments=["Bimanual arm groups with hand(s)"])
         if manipulators[0].has_hand:
             # Add two arms and first hand group
-            self.add_move_group_combining_others(f'two_arms_and_{manipulators[0].hand.internal_name}',
+            self.add_move_group_combining_others(
+                f'two_arms_and_{manipulators[0].hand.internal_name}',
                 [f'{manipulators[0].arm.internal_name}_and_hand', f'{manipulators[1].arm.internal_name}'])
             if not manipulators[0].hand.is_lite:
                 # Add two arms and first hand wrist group
-                self.add_move_group_combining_others(f'two_arms_and_{manipulators[0].side}_wrist',
+                self.add_move_group_combining_others(
+                    f'two_arms_and_{manipulators[0].side}_wrist',
                     [f'{manipulators[0].arm.internal_name}_and_wrist', f'{manipulators[1].arm.internal_name}'])
         if manipulators[1].has_hand:
             # Add two arms and second hand group
-            self.add_move_group_combining_others(f'two_arms_and_{manipulators[1].hand.internal_name}',
+            self.add_move_group_combining_others(
+                f'two_arms_and_{manipulators[1].hand.internal_name}',
                 [f'{manipulators[1].arm.internal_name}_and_hand', f'{manipulators[0].arm.internal_name}'])
             if not manipulators[1].hand.is_lite:
                 # Add two arms and second hand wrist group
-                self.add_move_group_combining_others(f'two_arms_and_{manipulators[1].side}_wrist',
+                self.add_move_group_combining_others(
+                    f'two_arms_and_{manipulators[1].side}_wrist',
                     [f'{manipulators[1].arm.internal_name}_and_wrist', f'{manipulators[0].arm.internal_name}'])
         if manipulators[0].has_hand and manipulators[1].has_hand:
             # Add two arms and two hands group
-            self.add_move_group_combining_others(f'two_arms_and_hands',
+            self.add_move_group_combining_others(
+                'two_arms_and_hands',
                 [f'{manipulators[0].arm.internal_name}_and_hand', f'{manipulators[1].arm.internal_name}_and_hand'])
             if (not manipulators[0].hand.is_lite) and (not manipulators[1].hand.is_lite):
                 # Add two arms and two wrists group
-                self.add_move_group_combining_others(f'two_arms_and_wrists',
+                self.add_move_group_combining_others(
+                    'two_arms_and_wrists',
                     [f'{manipulators[1].arm.internal_name}_and_wrist',
                         f'{manipulators[0].arm.internal_name}_and_wrist'])
 
-    def add_move_group_combining_others(self, new_group_name, existing_group_names = None):
+    def add_move_group_combining_others(self, new_group_name, existing_group_names=None):
         """ Adds a new move group to the SRDF that includes other, existing move groups. """
         new_group = xml.dom.minidom.Document().createElement('group')
         new_group.setAttribute("name", new_group_name)
