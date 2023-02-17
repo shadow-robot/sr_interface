@@ -394,8 +394,6 @@ class SRDFRobotGenerator:
     # Get move group states from an XML DOM, returning a dictionary of {move_group: {state: values}
     @staticmethod
     def parse_move_group_states(srdf_xml_dom, group_states):
-        if not group_states:
-            group_states = {}
         for group_state_xml in srdf_xml_dom.getElementsByTagName("group_state"):
             group = group_state_xml.getAttribute("group")
             state_name = group_state_xml.getAttribute("name")
@@ -517,11 +515,11 @@ class SRDFRobotGenerator:
 
     def add_move_group_combining_others(self, new_group_name, existing_group_names = None):
         """ Adds a new move group to the SRDF that includes other, existing move groups. """
-            new_group = xml.dom.minidom.Document().createElement('group')
+        new_group = xml.dom.minidom.Document().createElement('group')
         new_group.setAttribute("name", new_group_name)
         for existing_group_name in existing_group_names:
             new_group.appendChild(xml.dom.minidom.Document().createElement(f'group name="{existing_group_name}"'))
-            new_group.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
+        new_group.writexml(self.new_robot_srdf, indent="  ", addindent="  ", newl="\n")
 
     def add_bimanual_hand_groups(self, group_1, group_2):
         new_group = xml.dom.minidom.Document().createElement('group')
