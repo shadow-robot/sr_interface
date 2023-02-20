@@ -34,11 +34,34 @@ left_arm:  # Must be an existing move group; ignored if not.
       la_wrist_1_joint: -2.4
       la_wrist_2_joint: -1.5708
       la_wrist_3_joint: 3.1416
+  hand_change:
+    joint_angles:
+      la_elbow_joint: -1.862694263458252
+      la_shoulder_lift_joint: -2.2352358303465785
+      la_shoulder_pan_joint: -0.0050919691668909195
+      la_wrist_1_joint: -0.6089532536319275
+      la_wrist_2_joint: -1.5779951254474085
+      la_wrist_3_joint: 3.141533851623535
+  pack_in_box:
+    joint_angles:
+      la_shoulder_pan_joint: 3.14159
+      la_shoulder_lift_joint: -1.5708
+      la_elbow_joint: -2.87979
+      la_wrist_1_joint: -1.8326
+      la_wrist_2_joint: 3.14159
+      la_wrist_3_joint: 3.14159
 left_arm_and_wrist:
   la_start:
     inherit_from:  # States can inherit from other states, which must be defined either in this file or in a robot SRDF.
       - move_group: left_arm
         move_group_state: la_start  # Defined in this file.
+    joint_angles:
+      lh_WRJ1: 0.0
+      lh_WRJ2: 0.0
+  hand_change:
+    inherit_from:
+      - move_group: left_arm
+        move_group_state: hand_change
     joint_angles:
       lh_WRJ1: 0.0
       lh_WRJ2: 0.0
@@ -49,6 +72,12 @@ left_arm_and_hand:
         move_group_state: la_start
       - move_group: left_hand
         move_group_state: relaxed  # Defined in the robot SRDF.
+  hand_change:
+    inherit_from:
+      - move_group: left_arm_and_wrist
+        move_group_state: hand_change
+      - move_group: left_hand
+        move_group_state: pack
 right_arm:
   ra_start:
     joint_angles:
@@ -58,11 +87,34 @@ right_arm:
       ra_wrist_1_joint: -0.733
       ra_wrist_2_joint: 1.5708
       ra_wrist_3_joint: -3.1416
+  hand_change:
+    joint_angles:
+      ra_elbow_joint: 1.8135
+      ra_shoulder_lift_joint: -0.8813
+      ra_shoulder_pan_joint: -0.0013
+      ra_wrist_1_joint: -2.484
+      ra_wrist_2_joint: 1.573
+      ra_wrist_3_joint: -3.1416
+  pack_in_box:
+    joint_angles:
+      ra_shoulder_pan_joint: 3.14159
+      ra_shoulder_lift_joint: -1.5708
+      ra_elbow_joint: -2.87979
+      ra_wrist_1_joint: -1.8326
+      ra_wrist_2_joint: 3.14159
+      ra_wrist_3_joint: 3.14159
 right_arm_and_wrist:
   ra_start:
     inherit_from:
       - move_group: right_arm
         move_group_state: ra_start
+    joint_angles:
+      rh_WRJ1: 0.0
+      rh_WRJ2: 0.0
+  hand_change:
+    inherit_from:
+      - move_group: right_arm
+        move_group_state: hand_change
     joint_angles:
       rh_WRJ1: 0.0
       rh_WRJ2: 0.0
@@ -73,6 +125,12 @@ right_arm_and_hand:
         move_group_state: ra_start
       - move_group: right_hand
         move_group_state: relaxed
+  hand_change:
+    inherit_from:
+      - move_group: right_arm_and_wrist
+        move_group_state: hand_change
+      - move_group: right_hand
+        move_group_state: pack
 two_arms:
   start:
     inherit_from:
@@ -80,20 +138,12 @@ two_arms:
         move_group_state: ra_start
       - move_group: left_arm
         move_group_state: la_start
-two_arms_and_wrists:
-  start:
+  hand_change:
     inherit_from:
-      - move_group: right_arm_and_wrist
-        move_group_state: ra_start
-      - move_group: left_arm_and_wrist
-        move_group_state: la_start
-two_arms_and_hands:
-  start:
-    inherit_from:
-      - move_group: right_arm_and_hand
-        move_group_state: ra_start
-      - move_group: left_arm_and_hand
-        move_group_state: la_start
+      - move_group: right_arm
+        move_group_state: hand_change
+      - move_group: left_arm
+        move_group_state: hand_change
 two_hands:
   open:
     inherit_from:
@@ -119,3 +169,29 @@ two_hands:
         move_group_state: relaxed
       - move_group: left_hand
         move_group_state: relaxed
+two_arms_and_wrists:
+  start:
+    inherit_from:
+      - move_group: right_arm_and_wrist
+        move_group_state: ra_start
+      - move_group: left_arm_and_wrist
+        move_group_state: la_start
+  hand_change:
+    inherit_from:
+      - move_group: right_arm_and_wrist
+        move_group_state: hand_change
+      - move_group: left_arm_and_wrist
+        move_group_state: hand_change
+two_arms_and_hands:
+  start:
+    inherit_from:
+      - move_group: right_arm_and_hand
+        move_group_state: ra_start
+      - move_group: left_arm_and_hand
+        move_group_state: la_start
+  hand_change:
+    inherit_from:
+      - move_group: right_arm_and_hand
+        move_group_state: hand_change
+      - move_group: left_arm_and_hand
+        move_group_state: hand_change
