@@ -74,11 +74,6 @@ if __name__ == "__main__":
         }
     ]
 
-    if hand_name == "two_hands":
-        lh_commander_instance = SrHandCommander("left_hand")
-        rh_commander_instance = SrHandCommander("right_hand")
-        lh_commander_instance.run_named_trajectory(trajectory)
-        rh_commander_instance.run_named_trajectory(trajectory)
-    else:
-        hand_commander_instance = SrHandCommander(name=hand_name)
-        hand_commander_instance.run_named_trajectory(trajectory)
+    commander_instance = SrHandCommander(hand_name)
+    commander_instance.run_named_trajectory(trajectory)
+
