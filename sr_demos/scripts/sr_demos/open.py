@@ -76,4 +76,3 @@ if __name__ == "__main__":
 
     commander_instance = SrHandCommander(hand_name)
     commander_instance.run_named_trajectory(trajectory)
-
