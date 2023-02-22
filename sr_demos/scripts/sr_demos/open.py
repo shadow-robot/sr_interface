@@ -48,15 +48,8 @@ if __name__ == "__main__":
     args = parser.parse_args(rospy.myargv()[1:])
 
     if args.side == 'right':
-        joint_prefix_name = 'rh_'
-    elif args.side == 'left':
-        joint_prefix_name = 'lh_'
-    else:
-        joint_prefix_name = 'both'
-
-    if joint_prefix_name == 'rh_':
         hand_name = 'right_hand'
-    elif joint_prefix_name == 'lh_':
+    elif args.side == 'left':
         hand_name = 'left_hand'
     else:
         hand_name = 'two_hands'
