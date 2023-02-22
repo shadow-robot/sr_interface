@@ -48,15 +48,8 @@ if __name__ == "__main__":
     args = parser.parse_args(rospy.myargv()[1:])
 
     if args.side == 'right':
-        joint_prefix_name = 'rh_'
-    elif args.side == 'left':
-        joint_prefix_name = 'lh_'
-    else:
-        joint_prefix_name = 'both'
-
-    if joint_prefix_name == 'rh_':
         hand_name = 'right_hand'
-    elif joint_prefix_name == 'lh_':
+    elif args.side == 'left':
         hand_name = 'left_hand'
     else:
         hand_name = 'two_hands'
@@ -74,11 +67,5 @@ if __name__ == "__main__":
         }
     ]
 
-    if hand_name == "two_hands":
-        lh_commander_instance = SrHandCommander("left_hand")
-        rh_commander_instance = SrHandCommander("right_hand")
-        lh_commander_instance.run_named_trajectory(trajectory)
-        rh_commander_instance.run_named_trajectory(trajectory)
-    else:
-        hand_commander_instance = SrHandCommander(name=hand_name)
-        hand_commander_instance.run_named_trajectory(trajectory)
+    commander_instance = SrHandCommander(hand_name)
+    commander_instance.run_named_trajectory(trajectory)
