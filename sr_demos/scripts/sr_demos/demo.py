@@ -451,7 +451,7 @@ def complete_random_sequence(hand_commander, joint_states_config):
         random.randrange(joint_states_config['min_range'][f'{prefix}LFJ4'],
                          joint_states_config['rand_pos'][f'{prefix}RFJ4'])
     inter_time = 4.0 * random.random()
-    execute_command_check(hand_commander, joint_states_config, 'rand_pos', 0.0, inter_time)
+    execute_command_check(hand_commander, joint_states_config, 'rand_pos', 0.2, inter_time)
 
 
 def correct_joint_states_for_hand_type(joint_states_config, hand_type):

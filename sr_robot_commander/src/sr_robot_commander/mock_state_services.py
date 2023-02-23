@@ -62,6 +62,6 @@ if __name__ == "__main__":
     rospy.init_node('mock_services', anonymous=True)
     service_1 = rospy.Service('/get_robot_state', GetState, mock_get_state_callback)
     service_2 = rospy.Service('/has_robot_state', HasState, mock_has_state_callback)
-    service_3 = rospy.Service('/list_robot_states', ListState, mock_list_state_callback)
+    service_3 = rospy.Service('/list_robot_state', ListState, mock_list_state_callback)
     service_4 = rospy.Service('/save_robot_state', SaveState, mock_save_state_callback)
     rospy.spin()
