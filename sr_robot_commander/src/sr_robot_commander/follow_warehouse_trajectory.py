@@ -63,13 +63,13 @@ class WarehousePlanner:
 
         rospy.sleep(4)
         rospy.loginfo("Waiting for warehouse services...")
-        rospy.wait_for_service('/list_robot_states')
+        rospy.wait_for_service('/list_robot_state')
         rospy.wait_for_service('/get_robot_state')
         rospy.wait_for_service('/has_robot_state')
 
         rospy.wait_for_service('/compute_fk')
         self._list_states = rospy.ServiceProxy(
-            '/list_robot_states', ListStates)
+            '/list_robot_state', ListStates)
         self._get_state = rospy.ServiceProxy(
             '/get_robot_state', GetState)
         self._has_state = rospy.ServiceProxy(

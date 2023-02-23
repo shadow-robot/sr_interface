@@ -65,7 +65,8 @@ if __name__ == "__main__":
         },
         {
             'name': 'pack',
-            'interpolate_time': 3.0
+            'interpolate_time': 3.0,
+            'pause_time': 2
         }
     ]
 
