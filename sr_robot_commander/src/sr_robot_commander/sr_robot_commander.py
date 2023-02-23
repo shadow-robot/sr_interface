@@ -529,7 +529,7 @@ class SrRobotCommander:
         """
         plan = RobotTrajectory()
         plan.joint_trajectory = joint_trajectory
-        return self.execute_plan(plan)
+        return self._move_group_commander.execute(plan)
 
     def make_named_trajectory(self, trajectory):
         """

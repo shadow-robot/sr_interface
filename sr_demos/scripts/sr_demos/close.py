@@ -32,7 +32,7 @@ from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 if __name__ == "__main__":
 
-    rospy.init_node("close_hand", anonymous=True)
+    rospy.init_node("close_hand", anonymous=True, log_level=rospy.DEBUG)
 
     parser = argparse.ArgumentParser(description="Hand side")
     parser.add_argument("-s", "--side",
@@ -65,7 +65,8 @@ if __name__ == "__main__":
         },
         {
             'name': 'pack',
-            'interpolate_time': 3.0
+            'interpolate_time': 3.0,
+            'pause_time': 2
         }
     ]
 

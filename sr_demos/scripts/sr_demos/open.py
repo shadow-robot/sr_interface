@@ -34,7 +34,7 @@ from sr_robot_commander.sr_hand_commander import SrHandCommander
 
 if __name__ == "__main__":
 
-    rospy.init_node("open_hand", anonymous=True)
+    rospy.init_node("open_hand", anonymous=True, log_level=rospy.DEBUG)
 
     parser = argparse.ArgumentParser(description="Hand side")
     parser.add_argument("-s", "--side",
