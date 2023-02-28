@@ -50,19 +50,19 @@ start_pos: {"THJ1": 0, "THJ2": 0, "THJ3": 0, "THJ4": 0, "THJ5": 0,
              "RFJ1": 0, "RFJ2": 0, "RFJ3": 0, "RFJ4": 0,
              "LFJ1": 0, "LFJ2": 0, "LFJ3": 0, "LFJ4": 0, "LFJ5": 0,
              "WRJ1": 0, "WRJ2": 0}
-# Start position for the Hand
+# Pregrasp position for the Hand
 pregrasp_pos: {"THJ2": 12, "THJ3": 15, "THJ4": 69, "THJ5": -23,
                 "FFJ1": 0, "FFJ2": 40, "FFJ3": 21, "FFJ4": -15,
                 "MFJ1": 0, "MFJ2": 40, "MFJ3": 21, "MFJ4": 0,
                 "RFJ1": 0, "RFJ2": 40, "RFJ3": 21, "RFJ4": -7,
                 "LFJ1": 0, "LFJ2": 40, "LFJ3": 21, "LFJ4": -10, "LFJ5": 0,
                 "WRJ1": 0, "WRJ2": 0}
-# Close position for the Hand
-grasp_pos: {"THJ2": 30, "THJ3": 15, "THJ4": 69, "THJ5": -3,
-             "FFJ1": 0, "FFJ2": 77, "FFJ3": 67, "FFJ4": -19,
+# Grasp position for the Hand
+grasp_pos: {"THJ1": 24, "THJ2": 30, "THJ3": 15, "THJ4": 69, "THJ5": -3,
+             "FFJ1": 0, "FFJ2": 65, "FFJ3": 49, "FFJ4": -19,
              "MFJ1": 0, "MFJ2": 82, "MFJ3": 62, "MFJ4": 0,
-             "RFJ1": 0, "RFJ2": 89, "RFJ3": 64, "RFJ4": -18,
-             "LFJ1": 7, "LFJ2": 90, "LFJ3": 64, "LFJ4": -19, "LFJ5": 0,
+             "RFJ1": 0, "RFJ2": 45, "RFJ3": 63, "RFJ4": -18,
+             "LFJ1": 7, "LFJ2": 70, "LFJ3": 51, "LFJ4": -19, "LFJ5": 0,
              "WRJ1": 0, "WRJ2": 0}
 # Random position for the Hand (initialied at 0)
 rand_pos: {"THJ2": 0, "THJ3": 0, "THJ4": 0, "THJ5": 0,
