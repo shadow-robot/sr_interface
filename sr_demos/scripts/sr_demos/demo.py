@@ -112,9 +112,9 @@ class TactileReading:
 
 
 class KeyboardPressDetector:
-    def __init__(self, robot):
+    def __init__(self, robot_type):
         self.keyboard_pressed = False
-        self.robot = robot
+        self.robot = robot_type
 
     @staticmethod
     def _get_input():
@@ -153,8 +153,8 @@ class Robot:
     '''
         This class is used to store a robot object
     '''
-    def __init__(self, robot, hand_type):
-        self.robot = robot
+    def __init__(self, robot_type, hand_type):
+        self.robot = robot_type
         self.hand_type = hand_type
         self.commander = SrHandCommander(name=robot)
         if robot == "two_hands":
@@ -165,7 +165,7 @@ class Robot:
 
         # Get joint states for demo from yaml
         joint_states_config_filename = '/home/user/projects/shadow_robot/base/src/'\
-                                    'sr_interface/sr_demos/config/demo_joint_states.yaml'
+                                       'sr_interface/sr_demos/config/demo_joint_states.yaml'
         with open(joint_states_config_filename, encoding="utf-8") as joint_state_file:
             joint_states_config_yaml = yaml.load(joint_state_file, Loader=yaml.FullLoader)
 
@@ -219,12 +219,12 @@ class Robot:
                 demo_states[joint_state_dicts_no_id] = joints_target
         return demo_states
 
-
     def execute_command_check(self, joint_states, sleep, time_to_execute,
                               wait=True, angle_degrees=True):
         if joint_states in self.demo_joint_states.keys():
-            self.commander.move_to_joint_value_target_unsafe(self.demo_joint_states[joint_states], time_to_execute, wait,
-                                                            angle_degrees)
+            self.commander.move_to_joint_value_target_unsafe(self.demo_joint_states[joint_states],
+                                                             time_to_execute, wait,
+                                                             angle_degrees)
             rospy.sleep(sleep)
 
     def check_touched_finger(self):
@@ -416,7 +416,7 @@ class Robot:
         rospy.sleep(0.5)
         # Initialize wake time
         wake_time = time.time()
-        tactiles = True if len(self.tactiles) else False
+        tactiles = bool(self.tactiles)
         while True:
             if tactiles:
                 # Check if any of the tactile senors have been triggered
@@ -458,16 +458,15 @@ class Robot:
         for i in self.demo_joint_states['rand_pos']:
             self.demo_joint_states['rand_pos'][i] =\
                 random.randrange(self.demo_joint_states['min_range'][i],
-                                self.demo_joint_states['max_range'][i])
+                                 self.demo_joint_states['max_range'][i])
         self.demo_joint_states['rand_pos'][f'{prefix}FFJ4'] =\
             random.randrange(self.demo_joint_states['min_range'][f'{prefix}FFJ4'],
-                            self.demo_joint_states['rand_pos'][f'{prefix}MFJ4'])
+                             self.demo_joint_states['rand_pos'][f'{prefix}MFJ4'])
         self.demo_joint_states['rand_pos'][f'{prefix}LFJ4'] =\
             random.randrange(self.demo_joint_states['min_range'][f'{prefix}LFJ4'],
-                            self.demo_joint_states['rand_pos'][f'{prefix}RFJ4'])
+                             self.demo_joint_states['rand_pos'][f'{prefix}RFJ4'])
         inter_time = 4.0 * random.random()
         self.execute_command_check('rand_pos', 0.2, inter_time)
-
 
 
 if __name__ == "__main__":
@@ -514,18 +513,18 @@ if __name__ == "__main__":
 
     while not rospy.is_shutdown():
         # Check the state of the tactile sensors
-        if len(robot.tactiles):
-            touched_finger = robot.check_touched_finger()
+        if robot.tactiles:
+            finger = robot.check_touched_finger()
             # If the tactile is touched, trigger the corresponding function
-            if touched_finger == "TH":
+            if finger == "TH":
                 robot.sequence_th()
-            elif touched_finger == "FF":
+            elif finger == "FF":
                 robot.sequence_ff()
-            elif touched_finger == "MF":
+            elif finger == "MF":
                 robot.sequence_mf()
-            elif touched_finger == "RF":
+            elif finger == "RF":
                 robot.sequence_rf()
-            elif touched_finger == "LF":
+            elif finger == "LF":
                 robot.sequence_lf()
 
         rospy.sleep(0.1)
