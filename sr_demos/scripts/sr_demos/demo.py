@@ -474,31 +474,30 @@ if __name__ == "__main__":
 
     rospy.init_node("right_hand_demo", anonymous=True)
 
-    # parser = argparse.ArgumentParser(description="Hand side")
-    # parser.add_argument("-s", "--side",
-    #                     dest="side",
-    #                     type=str,
-    #                     required=False,
-    #                     help="Please select hand side, can be 'right', 'left' or 'both'.",
-    #                     default=True,
-    #                     choices=["right", "left", "both"])
-    # parser.add_argument("-ht", "--hand_type",
-    #                     dest="hand_type",
-    #                     type=str,
-    #                     required=True,
-    #                     help="Please select hand type, can be 'hand_e', 'hand_lite', 'hand_extra_lite'.",
-    #                     default="hand_e",
-    #                     choices=["hand_e", "hand_lite", "hand_extra_lite"])
+    parser = argparse.ArgumentParser(description="Hand side")
+    parser.add_argument("-s", "--side",
+                        dest="side",
+                        type=str,
+                        required=False,
+                        help="Please select hand side, can be 'right', 'left' or 'both'.",
+                        default=True,
+                        choices=["right", "left", "both"])
+    parser.add_argument("-ht", "--hand_type",
+                        dest="hand_type",
+                        type=str,
+                        required=True,
+                        help="Please select hand type, can be 'hand_e', 'hand_lite', 'hand_extra_lite'.",
+                        default="hand_e",
+                        choices=["hand_e", "hand_lite", "hand_extra_lite"])
 
-    # args = parser.parse_args(rospy.myargv()[1:])
+    args = parser.parse_args(rospy.myargv()[1:])
 
-    # if args.side == 'right':
-    #     robot = Robot("right_hand", args.hand_type)
-    # elif args.side == 'left':
-    #     robot = Robot("left_hand", args.hand_type)
-    # else:
-    #     robot = Robot("two_hands", args.hand_type)
-    robot = Robot("right_hand", "hand_e")
+    if args.side == 'right':
+        robot = Robot("right_hand", args.hand_type)
+    elif args.side == 'left':
+        robot = Robot("left_hand", args.hand_type)
+    else:
+        robot = Robot("two_hands", args.hand_type)
 
     rospy.loginfo("\nPRESS ONE OF THE TACTILES or 1-5 ON THE KEYBOARD TO START A DEMO:\
                    \nTH or 1: Open Hand\
