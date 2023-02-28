@@ -183,9 +183,9 @@ class Robot:
             if tactile_left.get_tactiles() is not None and tactile_right.get_tactiles() is not None:
                 tactiles.extend([tactile_right, tactile_left])
         else:
-            tactile = TactileReading(self.prefixes)
+            tactile = TactileReading(self.prefixes[0])
             if tactile.get_tactiles() is not None:
-                tactiles.extend(tactile)
+                tactiles.append(tactile)
         return tactiles
 
     def _get_joint_states_for_robot(self, joint_states_config_yaml):
