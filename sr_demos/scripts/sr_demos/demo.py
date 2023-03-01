@@ -514,17 +514,17 @@ if __name__ == "__main__":
     while not rospy.is_shutdown():
         # Check the state of the tactile sensors
         if robot.tactiles:
-            touched_finger = robot.check_touched_finger()
+            finger_touched = robot.check_touched_finger()
             # If the tactile is touched, trigger the corresponding function
-            if touched_finger == "TH":
+            if finger_touched == "TH":
                 robot.sequence_th()
-            elif touched_finger == "FF":
+            elif finger_touched == "FF":
                 robot.sequence_ff()
-            elif touched_finger == "MF":
+            elif finger_touched == "MF":
                 robot.sequence_mf()
-            elif touched_finger == "RF":
+            elif finger_touched == "RF":
                 robot.sequence_rf()
-            elif touched_finger == "LF":
+            elif finger_touched == "LF":
                 robot.sequence_lf()
 
         rospy.sleep(0.1)
