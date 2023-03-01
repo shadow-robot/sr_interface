@@ -156,8 +156,8 @@ class Robot:
     def __init__(self, robot_type, hand_type):
         self.robot = robot_type
         self.hand_type = hand_type
-        self.commander = SrHandCommander(name=robot)
-        if robot == "two_hands":
+        self.commander = SrHandCommander(name=robot_type)
+        if robot_type == "two_hands":
             self.prefixes = ["rh_", "lh_"]
         else:
             self.prefixes = [f"{robot_type[0]}h_"]
@@ -170,6 +170,7 @@ class Robot:
             joint_states_config_yaml = yaml.load(joint_state_file, Loader=yaml.FullLoader)
 
         self.demo_joint_states = self._get_joint_states_for_robot(joint_states_config_yaml)
+        rospy.sleep(1)
         self.execute_command_check('start_pos', 0.0, 1.0)
 
     def _has_tactiles(self):
@@ -220,7 +221,7 @@ class Robot:
         return demo_states
 
     def execute_command_check(self, joint_states, sleep, time_to_execute,
-                              wait=True, angle_degrees=True):
+                              wait=False, angle_degrees=True):
         if joint_states in self.demo_joint_states.keys():
             self.commander.move_to_joint_value_target_unsafe(self.demo_joint_states[joint_states],
                                                              time_to_execute, wait,
@@ -363,13 +364,13 @@ class Robot:
         rospy.loginfo("RF demo started")
 
         # Move Hand to zero position
-        self.execute_command_check('start_pos', 2.0, 2.0)
+        self.execute_command_check('start_pos', 2.0, 2.0, wait=True)
 
         # Move Hand to starting position
-        self.execute_command_check('pregrasp_pos', 2.0, 2.0)
+        self.execute_command_check('pregrasp_pos', 2.0, 2.0, wait=True)
 
         # Move Hand to close position
-        self.execute_command_check('grasp_pos', 0.0, 11.0)
+        self.execute_command_check('grasp_pos', 0.0, 11.0, wait=True)
 
         # Send all joints to current position to compensate
         # for minor offsets created in the previous loop
@@ -405,8 +406,8 @@ class Robot:
         rospy.sleep(0.5)
         self.commander.move_to_joint_value_target_unsafe(hand_pos, 2.0, wait=False, angle_degrees=True)
         rospy.sleep(2.0)
-        self.execute_command_check('pregrasp_pos', 2.0, 2.0)
-        self.execute_command_check('start_pos', 2.0, 2.0)
+        self.execute_command_check('pregrasp_pos', 2.0, 2.0, wait=True)
+        self.execute_command_check('start_pos', 2.0, 2.0, wait=True)
 
         rospy.loginfo("RF demo completed")
 
