@@ -160,7 +160,7 @@ class Robot:
         if robot == "two_hands":
             self.prefixes = ["rh_", "lh_"]
         else:
-            self.prefixes = [f"{robot[0]}h_"]
+            self.prefixes = [f"{robot_type[0]}h_"]
         self.tactiles = self._has_tactiles()
 
         # Get joint states for demo from yaml
@@ -514,17 +514,17 @@ if __name__ == "__main__":
     while not rospy.is_shutdown():
         # Check the state of the tactile sensors
         if robot.tactiles:
-            finger = robot.check_touched_finger()
+            touched_finger = robot.check_touched_finger()
             # If the tactile is touched, trigger the corresponding function
-            if finger == "TH":
+            if touched_finger == "TH":
                 robot.sequence_th()
-            elif finger == "FF":
+            elif touched_finger == "FF":
                 robot.sequence_ff()
-            elif finger == "MF":
+            elif touched_finger == "MF":
                 robot.sequence_mf()
-            elif finger == "RF":
+            elif touched_finger == "RF":
                 robot.sequence_rf()
-            elif finger == "LF":
+            elif touched_finger == "LF":
                 robot.sequence_lf()
 
         rospy.sleep(0.1)
