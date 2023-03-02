@@ -157,6 +157,8 @@ class Robot:
         self.robot = robot_type
         self.hand_type = hand_type
         self.commander = SrHandCommander(name=robot_type)
+        self.commander.set_max_velocity_scaling_factor(1)
+        self.commander.set_max_acceleration_scaling_factor(1)
         if robot_type == "two_hands":
             self.prefixes = ["rh_", "lh_"]
         else:
@@ -171,7 +173,7 @@ class Robot:
 
         self.demo_joint_states = self._get_joint_states_for_robot(joint_states_config_yaml)
         rospy.sleep(1)
-        self.execute_command_check('start_pos', 0.0, 1.0)
+        self.commander.move_to_named_target("open")
 
     def _has_tactiles(self):
         """
@@ -220,10 +222,14 @@ class Robot:
                 demo_states[joint_state_dicts_no_id] = joints_target
         return demo_states
 
-    def execute_command_check(self, joint_states, sleep, time_to_execute,
-                              wait=False, angle_degrees=True):
-        if joint_states in self.demo_joint_states.keys():
-            self.commander.move_to_joint_value_target_unsafe(self.demo_joint_states[joint_states],
+    def execute_command_check(self, joint_state_name, sleep, time_to_execute,
+                              wait=True, angle_degrees=True):
+        if joint_state_name in self.demo_joint_states.keys():
+            if "LFJ" in joint_state_name and self.hand_type != "hand_e":
+                return
+            elif "RFJ" in joint_state_name and self.hand_type == "hand_extra_lite":
+                return
+            self.commander.move_to_joint_value_target_unsafe(self.demo_joint_states[joint_state_name],
                                                              time_to_execute, wait,
                                                              angle_degrees)
             rospy.sleep(sleep)
@@ -249,13 +255,54 @@ class Robot:
             touched_finger = robot.tactiles[0].confirm_touched()
         return touched_finger
 
+    def complete_random_sequence(self):
+        for i in self.demo_joint_states['rand_pos']:
+            self.demo_joint_states['rand_pos'][i] =\
+                random.randrange(self.demo_joint_states['min_range'][i],
+                                 self.demo_joint_states['max_range'][i])
+        for prefix in self.prefixes:
+            self.demo_joint_states['rand_pos'][f'{prefix}FFJ4'] =\
+                random.randrange(self.demo_joint_states['min_range'][f'{prefix}FFJ4'],
+                                self.demo_joint_states['rand_pos'][f'{prefix}MFJ4'])
+            self.demo_joint_states['rand_pos'][f'{prefix}LFJ4'] =\
+                random.randrange(self.demo_joint_states['min_range'][f'{prefix}LFJ4'],
+                                self.demo_joint_states['rand_pos'][f'{prefix}RFJ4'])
+        inter_time = 4.0 * random.random()
+        self.execute_command_check('rand_pos', 0.2, inter_time, wait=True)
+
     def sequence_th(self):
-        rospy.loginfo("TH demo started")
+        rospy.loginfo("Stored States demo started")
 
-        rospy.sleep(0.5)
-        self.execute_command_check('start_pos', 1.5, 1.5)
+        trajectory = [
+            {
+                'name': 'open',
+                'interpolate_time': 3.0,
+                'pause_time': 2
+            },
+            {
+                'name': 'fingers_pack_thumb_open',
+                'interpolate_time': 3.0,
+                'pause_time': 2
+            },
+            {
+                'name': 'pack',
+                'interpolate_time': 3.0,
+                'pause_time': 2
+            },
+            {
+                'name': 'fingers_pack_thumb_open',
+                'interpolate_time': 3.0,
+                'pause_time': 2
+            },
+            {
+                'name': 'open',
+                'interpolate_time': 3.0,
+                'pause_time': 2
+            }
+        ]
 
-        rospy.loginfo("TH demo completed")
+        self.commander.run_named_trajectory(trajectory)
+        rospy.loginfo("Stored States demo completed")
 
     def sequence_ff(self):
         rospy.loginfo("FF demo started")
@@ -267,7 +314,7 @@ class Robot:
 
     def sequence_ff_commands(self):
         self.execute_command_check('store_3', 1.1, 1.1)
-        self.execute_command_check('start_pos', 1.1, 1.1)
+        self.commander.move_to_named_target("open")
         self.execute_command_check('flex_ff', 1.1, 1.0)
         self.execute_command_check('ext_ff', 1.1, 1.0)
         self.execute_command_check('flex_mf', 1.1, 1.0)
@@ -301,7 +348,7 @@ class Robot:
         self.execute_command_check('rf_ok', 0.9, 0.7)
         self.execute_command_check('rf2lf_ok', 0.4, 0.5)
         self.execute_command_check('lf_ok', 0.9, 0.7)
-        self.execute_command_check('start_pos', 1.0, 1.0)
+        self.commander.move_to_named_target("open")
         self.execute_command_check('flex_ff', 0.2, 0.2)
         self.execute_command_check('flex_mf', 0.2, 0.2)
         self.execute_command_check('flex_rf', 0.2, 0.2)
@@ -328,54 +375,60 @@ class Robot:
         self.execute_command_check('ext_lf', 0.2, 0.2)
         self.execute_command_check('pre_ff_ok', 1.0, 1.0)
         self.execute_command_check('ff_ok', 3.3, 1.3)
-        if self.hand_type == 'hand_e':
-            self.execute_command_check('ne_wr', 1.1, 1.1)
-            self.execute_command_check('nw_wr', 1.1, 1.1)
-            self.execute_command_check('sw_wr', 1.1, 1.1)
-            self.execute_command_check('se_wr', 1.1, 1.1)
-            self.execute_command_check('ne_wr', 0.7, 0.7)
-            self.execute_command_check('nw_wr', 0.7, 0.7)
-            self.execute_command_check('sw_wr', 0.7, 0.7)
-            self.execute_command_check('se_wr', 0.7, 0.7)
-            self.execute_command_check('zero_wr', 0.4, 0.4)
-        self.execute_command_check('start_pos', 1.5, 1.5)
+        self.execute_command_check('ne_wr', 1.1, 1.1)
+        self.execute_command_check('nw_wr', 1.1, 1.1)
+        self.execute_command_check('sw_wr', 1.1, 1.1)
+        self.execute_command_check('se_wr', 1.1, 1.1)
+        self.execute_command_check('ne_wr', 0.7, 0.7)
+        self.execute_command_check('nw_wr', 0.7, 0.7)
+        self.execute_command_check('sw_wr', 0.7, 0.7)
+        self.execute_command_check('se_wr', 0.7, 0.7)
+        self.execute_command_check('zero_wr', 0.4, 0.4)
+        self.commander.move_to_named_target("open")
 
     def sequence_mf(self):
-        rospy.loginfo("MF demo started")
-        rospy.sleep(0.5)
-        self.execute_command_check('start_pos', 1.0, 1.0)
-        self.execute_command_check('bc_pre_zero', 2.0, 2.0)
-        self.execute_command_check('bc_zero', 4.0, 1.0)
-        self.execute_command_check('bc_1', 1.0, 1.0)
-        self.execute_command_check('bc_2', 1.0, 1.0)
-        self.execute_command_check('bc_3', 1.0, 1.0)
-        self.execute_command_check('bc_4', 1.0, 1.0)
-        self.execute_command_check('bc_5', 1.0, 1.0)
-        self.execute_command_check('bc_6', 1.0, 1.0)
-        self.execute_command_check('bc_7', 1.0, 1.0)
-        self.execute_command_check('bc_8', 1.0, 1.0)
-        self.execute_command_check('bc_9', 1.0, 1.0)
-        self.execute_command_check('bc_11', 1.0, 1.0)
-        self.execute_command_check('bc_12', 4.0, 3.0)
-        self.execute_command_check('start_pos', 1.5, 1.5)
-        rospy.loginfo("MF demo completed")
+        rospy.loginfo("Rock, Paper, Scissors demo started")
+        self.commander.move_to_named_target("open")
+
+        rospy.loginfo("Welcome to the Rock, Paper, Scissors game!")
+        rospy.loginfo("The hand will count down from 3 and then you will make a gesture.")
+        rospy.loginfo("Rock is a fist, Paper is a flat hand, and Scissors is a peace sign.")
+        input('\nPress ENTER to continue...')
+
+        # self.execute_command_check('rpc', 1.0, 2.0, wait=True)
+        self.execute_command_check('count_down_3', 1.0, 1.0, wait=True)
+        rospy.loginfo("3")
+        self.execute_command_check('count_down_2', 1.0, 1.0, wait=True)
+        rospy.loginfo("2")
+        self.execute_command_check('count_down_1', 1.0, 1.0, wait=True)
+        rospy.loginfo("1")
+        self.execute_command_check('count_down_0', 1.0, 1.0, wait=True)
+        rospy.loginfo("Make your gesture!")
+
+        # Select a pose at random
+        poses = ['rock', 'paper', 'scissors']
+        pose = random.choice(poses)
+        self.execute_command_check(pose, 1.0, 1.0, wait=True)
+        rospy.loginfo("The hand made the {} gesture!".format(pose))
+        rospy.sleep(5.0)
+
+        if pose == "rock":
+            self.commander.move_to_named_target("fingers_pack_thumb_open")
+        self.commander.move_to_named_target("open")
+        rospy.loginfo("Rock, Paper, Scissors demo completed")
 
     def sequence_rf(self):
-        rospy.loginfo("RF demo started")
+        rospy.loginfo("Grasp Demo Started")
 
-        # Move Hand to zero position
-        self.execute_command_check('start_pos', 2.0, 2.0, wait=True)
-
-        # Move Hand to starting position
+        self.commander.move_to_named_target("open")
+        rospy.loginfo("The hand will now imitate grasping and squeezing an object...")
         self.execute_command_check('pregrasp_pos', 2.0, 2.0, wait=True)
-
-        # Move Hand to close position
         self.execute_command_check('grasp_pos', 0.0, 11.0, wait=True)
 
         # Send all joints to current position to compensate
         # for minor offsets created in the previous loop
         hand_pos = {joint: degrees(i) for joint, i in robot.commander.get_joints_position().items()}
-        robot.commander.move_to_joint_value_target_unsafe(hand_pos, 2.0, wait=False, angle_degrees=True)
+        robot.commander.move_to_joint_value_target_unsafe(hand_pos, 2.0, wait=True, angle_degrees=True)
         rospy.sleep(2.0)
 
         # Generate new values to squeeze object slightly
@@ -398,21 +451,21 @@ class Robot:
                                 f"{prefix}LFJ1": hand_pos[f'{prefix}LFJ1'] + offset})
 
         # Squeeze object gently
-        self.commander.move_to_joint_value_target_unsafe(squeeze, 0.5, wait=False, angle_degrees=True)
+        self.commander.move_to_joint_value_target_unsafe(squeeze, 0.5, wait=True, angle_degrees=True)
         rospy.sleep(0.5)
-        self.commander.move_to_joint_value_target_unsafe(hand_pos, 0.5, wait=False, angle_degrees=True)
+        self.commander.move_to_joint_value_target_unsafe(hand_pos, 0.5, wait=True, angle_degrees=True)
         rospy.sleep(0.5)
-        self.commander.move_to_joint_value_target_unsafe(squeeze, 0.5, wait=False, angle_degrees=True)
+        self.commander.move_to_joint_value_target_unsafe(squeeze, 0.5, wait=True, angle_degrees=True)
         rospy.sleep(0.5)
-        self.commander.move_to_joint_value_target_unsafe(hand_pos, 2.0, wait=False, angle_degrees=True)
+        self.commander.move_to_joint_value_target_unsafe(hand_pos, 2.0, wait=True, angle_degrees=True)
         rospy.sleep(2.0)
         self.execute_command_check('pregrasp_pos', 2.0, 2.0, wait=True)
-        self.execute_command_check('start_pos', 2.0, 2.0, wait=True)
+        self.commander.move_to_named_target("open")
 
-        rospy.loginfo("RF demo completed")
+        rospy.loginfo("Grasp Demo completed")
 
     def sequence_lf(self):
-        rospy.loginfo("LF demo started")
+        rospy.loginfo("Shy Hand demo started")
 
         rospy.sleep(0.5)
         # Initialize wake time
@@ -425,7 +478,7 @@ class Robot:
                 touched_finger = self.check_touched_finger()
 
                 if touched_finger is not None:
-                    self.execute_command_check('start_pos', 0.0, 2.0)
+                    self.commander.move_to_named_target("open")
                     rospy.loginfo(f'{touched_finger} touched!')
                     rospy.sleep(2.0)
                     if touched_finger == "TH":
@@ -445,29 +498,8 @@ class Robot:
                 else:
                     break
 
-        self.execute_command_check('start_pos', 2.0, 2.0)
-
-        rospy.loginfo("LF demo completed")
-
-    def complete_random_sequence(self):
-        prefix = "lh_"
-        for joint_state in self.demo_joint_states['start_pos'].keys():
-            if "rh_" in joint_state:
-                prefix = "rh_"
-                break
-
-        for i in self.demo_joint_states['rand_pos']:
-            self.demo_joint_states['rand_pos'][i] =\
-                random.randrange(self.demo_joint_states['min_range'][i],
-                                 self.demo_joint_states['max_range'][i])
-        self.demo_joint_states['rand_pos'][f'{prefix}FFJ4'] =\
-            random.randrange(self.demo_joint_states['min_range'][f'{prefix}FFJ4'],
-                             self.demo_joint_states['rand_pos'][f'{prefix}MFJ4'])
-        self.demo_joint_states['rand_pos'][f'{prefix}LFJ4'] =\
-            random.randrange(self.demo_joint_states['min_range'][f'{prefix}LFJ4'],
-                             self.demo_joint_states['rand_pos'][f'{prefix}RFJ4'])
-        inter_time = 4.0 * random.random()
-        self.execute_command_check('rand_pos', 0.2, inter_time)
+        self.commander.move_to_named_target("open")
+        rospy.loginfo("Shy Hand demo completed")
 
 
 if __name__ == "__main__":
@@ -500,9 +532,9 @@ if __name__ == "__main__":
         robot = Robot("two_hands", args.hand_type)
 
     rospy.loginfo("\nPRESS ONE OF THE TACTILES or 1-5 ON THE KEYBOARD TO START A DEMO:\
-                   \nTH or 1: Open Hand\
+                   \nTH or 1: Stored States Demo\
                    \nFF or 2: Standard Demo\
-                   \nMF or 3: Card Trick Demo\
+                   \nMF or 3: Rock, Paper, Scissors Demo\
                    \nRF or 4: Grasp Demo\
                    \nLF or 5: Shy Hand Demo (only works with Hand E).\
                    \nPRESS 6 TO END THE PROGRAM")
