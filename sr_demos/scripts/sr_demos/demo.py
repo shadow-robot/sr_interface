@@ -419,13 +419,13 @@ class Robot:
         rospy.sleep(3)
 
         # Count down
-        self.execute_command_check('count_down_3', 1.0, 1.0, wait=True)
+        self.execute_command_check('count_down_3', 3.0, 1.0, wait=True)
         rospy.loginfo("3")
-        self.execute_command_check('count_down_2', 1.0, 1.0, wait=True)
+        self.execute_command_check('count_down_2', 3.0, 1.0, wait=True)
         rospy.loginfo("2")
-        self.execute_command_check('count_down_1', 1.0, 1.0, wait=True)
+        self.execute_command_check('count_down_1', 3.0, 1.0, wait=True)
         rospy.loginfo("1")
-        self.execute_command_check('count_down_0', 1.0, 1.0, wait=True)
+        self.execute_command_check('count_down_0', 3.0, 1.0, wait=True)
         rospy.loginfo("Make your gesture!")
 
         # Select a pose at random
@@ -551,7 +551,7 @@ class Robot:
 
 if __name__ == "__main__":
 
-    rospy.init_node("right_hand_demo", anonymous=True)
+    rospy.init_node("hand_demo", anonymous=True)
 
     parser = argparse.ArgumentParser(description="Hand side")
     parser.add_argument("-s", "--side",
