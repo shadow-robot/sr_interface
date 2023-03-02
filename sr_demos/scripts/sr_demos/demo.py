@@ -407,7 +407,7 @@ class Robot:
 
     def rock_paper_scissors(self):
         '''
-
+            Runs the Rock, Paper, Scissors demo
         '''
         rospy.loginfo("Rock, Paper, Scissors demo started")
         self.commander.move_to_named_target("open")
@@ -441,7 +441,7 @@ class Robot:
 
     def grasp_demo(self):
         '''
-            This demo will imitate grasping and squeezing an object.
+            Runs a demo that imitates grasping and squeezing an object.
         '''
         rospy.loginfo("Grasp Demo Started")
 
@@ -510,8 +510,7 @@ class Robot:
 
     def random_sequence(self):
         '''
-            This demo will move the Hand to a random positions and then
-            move it back to its start position.
+            Runs a demo that moves the Hand to a random positions.
         '''
         rospy.loginfo("Shy Hand demo started")
         rospy.sleep(0.5)
