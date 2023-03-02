@@ -522,14 +522,12 @@ class Robot:
                 # Check if any of the tactile senors have been triggered
                 # If so, send the Hand to its start position
                 touched_finger = self.check_touched_finger()
-
                 if touched_finger is not None:
                     self.commander.move_to_named_target("open")
                     rospy.loginfo(f'{touched_finger} touched!')
                     rospy.sleep(2.0)
                     if touched_finger == "TH":
                         break
-
                 # If the tactile sensors have not been triggered and the Hand
                 # is not in the middle of a movement, generate a random position
                 # and interpolation time

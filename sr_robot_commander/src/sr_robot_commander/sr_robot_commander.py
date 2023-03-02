@@ -745,7 +745,9 @@ class SrRobotCommander:
             point.time_from_start = rospy.Duration.from_sec(time)
             goal.trajectory.points = [point]
             goals[controller] = goal
+        rospy.loginfo("RobotCommander 1")
         self._call_action(goals)
+        rospy.loginfo("RobotCommander 2")
         if not wait:
             return
         for client, action_client in self._clients.items():
@@ -772,6 +774,8 @@ class SrRobotCommander:
                 action_client.send_goal(
                     goals[client], lambda terminal_state, result:
                     self._action_done_cb(client, terminal_state, result))  # pylint:disable=W0640
+                rospy.loginfo("RobotCommander 4")
+                print(goals[client].trajectory.points[0].positions)
 
     def run_joint_trajectory_unsafe(self, joint_trajectory, wait=True):
         """
