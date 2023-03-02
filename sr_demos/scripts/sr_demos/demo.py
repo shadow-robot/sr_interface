@@ -228,7 +228,7 @@ class Robot:
             where the joints that are not present in the hand type are removed
         '''
         hand_type_joints_filename = '/home/user/projects/shadow_robot/base/src/'\
-                        'sr_interface/sr_demos/config/joints_in_hand.yaml'
+                                    'sr_interface/sr_demos/config/joints_in_hand.yaml'
         with open(hand_type_joints_filename, encoding="utf-8") as hand_type_joints_file:
             hand_type_joints = yaml.load(hand_type_joints_file, Loader=yaml.FullLoader)
 
@@ -415,9 +415,10 @@ class Robot:
         rospy.loginfo("Welcome to the Rock, Paper, Scissors game!")
         rospy.loginfo("The hand will count down from 3 and then you will make a gesture.")
         rospy.loginfo("Rock is a fist, Paper is a flat hand, and Scissors is a peace sign.")
-        input('\nPress ENTER to continue...')
+        rospy.loginfo("Ready?")
+        rospy.sleep(3)
 
-        # self.execute_command_check('rpc', 1.0, 2.0, wait=True)
+        # Count down
         self.execute_command_check('count_down_3', 1.0, 1.0, wait=True)
         rospy.loginfo("3")
         self.execute_command_check('count_down_2', 1.0, 1.0, wait=True)
@@ -501,10 +502,10 @@ class Robot:
         for prefix in self.prefixes:
             self.demo_joint_states['rand_pos'][f'{prefix}FFJ4'] =\
                 random.randrange(self.demo_joint_states['min_range'][f'{prefix}FFJ4'],
-                                self.demo_joint_states['rand_pos'][f'{prefix}MFJ4'])
+                                 self.demo_joint_states['rand_pos'][f'{prefix}MFJ4'])
             self.demo_joint_states['rand_pos'][f'{prefix}LFJ4'] =\
                 random.randrange(self.demo_joint_states['min_range'][f'{prefix}LFJ4'],
-                                self.demo_joint_states['rand_pos'][f'{prefix}RFJ4'])
+                                 self.demo_joint_states['rand_pos'][f'{prefix}RFJ4'])
         inter_time = 4.0 * random.random()
         self.execute_command_check('rand_pos', 0.2, inter_time, wait=True)
 
