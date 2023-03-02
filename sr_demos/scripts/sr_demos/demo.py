@@ -64,6 +64,9 @@ class TactileReading:
         self.zero_tactile_sensors()
 
     def zero_tactile_sensors(self):
+        '''
+            Zeroes the tactile sensors
+        '''
         if self.get_tactiles() is not None:
             rospy.logwarn('\nPLEASE ENSURE THAT THE TACTILE SENSORS ARE NOT PRESSED')
             input('\nPress ENTER to continue...')
@@ -80,6 +83,11 @@ class TactileReading:
             rospy.loginfo('Reference values: ' + str(self.reference_tactile_values))
 
     def read_tactile_values(self):
+        '''
+            Reads the current state of the tactile sensors
+            to determine which type of tactile sensors are
+            on the hand
+        '''
         if self.get_tactiles() is not None:
             # Read current state of tactile sensors
             tactile_state = self.tactile_receiver.get_tactile_state()
@@ -98,9 +106,16 @@ class TactileReading:
                 self.tactile_values['TH'] = tactile_state.pressure[4]
 
     def get_tactiles(self):
+        '''
+            Returns the tactile type
+        '''
         return self.tactile_type
 
     def confirm_touched(self):
+        '''
+            Returns whether the tactile sensors are being touched
+            and which finger is being touched
+        '''
         touched = None
         if self.get_tactiles() is not None:
             self.read_tactile_values()
@@ -118,6 +133,9 @@ class KeyboardPressDetector:
 
     @staticmethod
     def _get_input():
+        '''
+            This function is used to get the input from the keyboard
+        '''
         file_descriptor = sys.stdin.fileno()
         old_settings = termios.tcgetattr(file_descriptor)
         try:
@@ -128,19 +146,24 @@ class KeyboardPressDetector:
         return first_char
 
     def run(self):
+        '''
+            This function is used to run the keyboard press detector
+            depending on the key pressed, it will call the appropriate
+            function from the robot class.
+        '''
         while not rospy.is_shutdown():
             input_val = self._get_input()
             if input_val == "1":
-                robot.sequence_th()
+                robot.stored_states_sequence()
             elif input_val == "2":
-                robot.sequence_ff()
+                robot.standard_demo_sequence()
             elif input_val == "3":
-                robot.sequence_mf()
+                robot.rock_paper_scissors()
             elif input_val == "4":
-                robot.sequence_rf()
+                robot.grasp_demo()
             elif input_val == "5":
                 if robot.hand_type == 'hand_e':
-                    robot.sequence_lf()
+                    robot.random_sequence()
                 else:
                     rospy.logerr("This demo only works for a 5-fingered Hand E. Please try demos 1-4")
             elif input_val == "6":
@@ -150,15 +173,13 @@ class KeyboardPressDetector:
 
 
 class Robot:
-    '''
-        This class is used to store a robot object
-    '''
     def __init__(self, robot_type, hand_type):
         self.robot = robot_type
         self.hand_type = hand_type
         self.commander = SrHandCommander(name=robot_type)
         self.commander.set_max_velocity_scaling_factor(1)
         self.commander.set_max_acceleration_scaling_factor(1)
+
         if robot_type == "two_hands":
             self.prefixes = ["rh_", "lh_"]
         else:
@@ -176,9 +197,9 @@ class Robot:
         self.commander.move_to_named_target("open")
 
     def _has_tactiles(self):
-        """
+        '''
             TactileReading is going to search for any available sensors (Biotact, PST, etc)
-        """
+        '''
         tactiles = []
         if len(self.prefixes) == 2:
             tactile_right = TactileReading('rh_')
@@ -192,12 +213,20 @@ class Robot:
         return tactiles
 
     def _get_joint_states_for_robot(self, joint_states_config_yaml):
+        '''
+            Returns a dictionary of joint states with correct prefix
+            and only joints that are present in the hand type
+        '''
         joint_states_config = self._correct_joint_states_for_hand_type(joint_states_config_yaml)
         # Add prefix to joint states
         joint_states = self._add_prefix_to_joint_states(joint_states_config)
         return joint_states
 
     def _correct_joint_states_for_hand_type(self, joint_states_config):
+        '''
+            Returns a dictionary of joint states for the robot type
+            where the joints that are not present in the hand type are removed
+        '''
         hand_type_joints_filename = '/home/user/projects/shadow_robot/base/src/'\
                         'sr_interface/sr_demos/config/joints_in_hand.yaml'
         with open(hand_type_joints_filename, encoding="utf-8") as hand_type_joints_file:
@@ -210,6 +239,10 @@ class Robot:
         return joint_states_config
 
     def _add_prefix_to_joint_states(self, joint_states_config):
+        '''
+            Returns a dictionary of joint states with the correct prefix
+            for the robot type
+        '''
         demo_states = {}
         for joint_state_dicts_no_id in joint_states_config.keys():
             joints_target = {}
@@ -224,6 +257,9 @@ class Robot:
 
     def execute_command_check(self, joint_state_name, sleep, time_to_execute,
                               wait=True, angle_degrees=True):
+        '''
+            Execute a command using the hand commander method move_to_joint_value_target_unsafe
+        '''
         if joint_state_name in self.demo_joint_states.keys():
             if "LFJ" in joint_state_name and self.hand_type != "hand_e":
                 return
@@ -235,9 +271,10 @@ class Robot:
             rospy.sleep(sleep)
 
     def check_touched_finger(self):
-        """
-            Check if any tactile sensors are being touched
-        """
+        '''
+            Checks if a tactile sensor has been touched
+            and returns the finger that has been touched
+        '''
         touched_finger = None
         if len(self.tactiles) == 2:
             # confirm_touched() will return None if no sensors are found
@@ -255,22 +292,10 @@ class Robot:
             touched_finger = robot.tactiles[0].confirm_touched()
         return touched_finger
 
-    def complete_random_sequence(self):
-        for i in self.demo_joint_states['rand_pos']:
-            self.demo_joint_states['rand_pos'][i] =\
-                random.randrange(self.demo_joint_states['min_range'][i],
-                                 self.demo_joint_states['max_range'][i])
-        for prefix in self.prefixes:
-            self.demo_joint_states['rand_pos'][f'{prefix}FFJ4'] =\
-                random.randrange(self.demo_joint_states['min_range'][f'{prefix}FFJ4'],
-                                self.demo_joint_states['rand_pos'][f'{prefix}MFJ4'])
-            self.demo_joint_states['rand_pos'][f'{prefix}LFJ4'] =\
-                random.randrange(self.demo_joint_states['min_range'][f'{prefix}LFJ4'],
-                                self.demo_joint_states['rand_pos'][f'{prefix}RFJ4'])
-        inter_time = 4.0 * random.random()
-        self.execute_command_check('rand_pos', 0.2, inter_time, wait=True)
-
-    def sequence_th(self):
+    def stored_states_sequence(self):
+        '''
+        This demo will run a sequence of stored states.
+        '''
         rospy.loginfo("Stored States demo started")
 
         trajectory = [
@@ -304,15 +329,8 @@ class Robot:
         self.commander.run_named_trajectory(trajectory)
         rospy.loginfo("Stored States demo completed")
 
-    def sequence_ff(self):
-        rospy.loginfo("FF demo started")
-
-        rospy.sleep(1)
-        self.sequence_ff_commands()
-
-        rospy.loginfo("FF demo completed")
-
-    def sequence_ff_commands(self):
+    def standard_demo_sequence(self):
+        rospy.loginfo("Standard demo started")
         self.execute_command_check('store_3', 1.1, 1.1)
         self.commander.move_to_named_target("open")
         self.execute_command_check('flex_ff', 1.1, 1.0)
@@ -385,8 +403,12 @@ class Robot:
         self.execute_command_check('se_wr', 0.7, 0.7)
         self.execute_command_check('zero_wr', 0.4, 0.4)
         self.commander.move_to_named_target("open")
+        rospy.loginfo("Standard demo completed")
 
-    def sequence_mf(self):
+    def rock_paper_scissors(self):
+        '''
+
+        '''
         rospy.loginfo("Rock, Paper, Scissors demo started")
         self.commander.move_to_named_target("open")
 
@@ -417,7 +439,10 @@ class Robot:
         self.commander.move_to_named_target("open")
         rospy.loginfo("Rock, Paper, Scissors demo completed")
 
-    def sequence_rf(self):
+    def grasp_demo(self):
+        '''
+            This demo will imitate grasping and squeezing an object.
+        '''
         rospy.loginfo("Grasp Demo Started")
 
         self.commander.move_to_named_target("open")
@@ -464,9 +489,31 @@ class Robot:
 
         rospy.loginfo("Grasp Demo completed")
 
-    def sequence_lf(self):
-        rospy.loginfo("Shy Hand demo started")
+    def complete_random_sequence(self):
+        '''
+            This method will generate a random sequence of joint positions
+            and execute them.
+        '''
+        for i in self.demo_joint_states['rand_pos']:
+            self.demo_joint_states['rand_pos'][i] =\
+                random.randrange(self.demo_joint_states['min_range'][i],
+                                 self.demo_joint_states['max_range'][i])
+        for prefix in self.prefixes:
+            self.demo_joint_states['rand_pos'][f'{prefix}FFJ4'] =\
+                random.randrange(self.demo_joint_states['min_range'][f'{prefix}FFJ4'],
+                                self.demo_joint_states['rand_pos'][f'{prefix}MFJ4'])
+            self.demo_joint_states['rand_pos'][f'{prefix}LFJ4'] =\
+                random.randrange(self.demo_joint_states['min_range'][f'{prefix}LFJ4'],
+                                self.demo_joint_states['rand_pos'][f'{prefix}RFJ4'])
+        inter_time = 4.0 * random.random()
+        self.execute_command_check('rand_pos', 0.2, inter_time, wait=True)
 
+    def random_sequence(self):
+        '''
+            This demo will move the Hand to a random positions and then
+            move it back to its start position.
+        '''
+        rospy.loginfo("Shy Hand demo started")
         rospy.sleep(0.5)
         # Initialize wake time
         wake_time = time.time()
@@ -550,14 +597,14 @@ if __name__ == "__main__":
             finger_touched = robot.check_touched_finger()
             # If the tactile is touched, trigger the corresponding function
             if finger_touched == "TH":
-                robot.sequence_th()
+                robot.stored_states_sequence()
             elif finger_touched == "FF":
-                robot.sequence_ff()
+                robot.standard_demo_sequence()
             elif finger_touched == "MF":
-                robot.sequence_mf()
+                robot.rock_paper_scissors()
             elif finger_touched == "RF":
-                robot.sequence_rf()
+                robot.grasp_demo()
             elif finger_touched == "LF":
-                robot.sequence_lf()
+                robot.random_sequence()
 
         rospy.sleep(0.1)
