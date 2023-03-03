@@ -274,7 +274,7 @@ class Robot:
         if joint_state_name in self.demo_joint_states.keys():
             if "LFJ" in joint_state_name and self.hand_type != "hand_e":
                 return
-            elif "RFJ" in joint_state_name and self.hand_type == "hand_extra_lite":
+            if "RFJ" in joint_state_name and self.hand_type == "hand_extra_lite":
                 return
             self.commander.move_to_joint_value_target_unsafe(self.demo_joint_states[joint_state_name],
                                                              time_to_execute, wait,
@@ -348,7 +348,7 @@ class Robot:
         flex_ext_sequence = ['flex_ff', 'flex_mf', 'flex_rf', 'flex_lf', 'ext_ff', 'ext_mf', 'ext_rf', 'ext_lf']
         for movement in flex_ext_sequence:
             self.execute_command_check(movement, 1.1)
- 
+
         self.execute_command_check('flex_th_1', 0.7)
         self.execute_command_check('flex_th_2', 0.7)
         self.execute_command_check('ext_th_1', 1.5)
@@ -376,7 +376,7 @@ class Robot:
         self.execute_command_check('lf_ok', 0.9)
         self.commander.move_to_named_target("open")
 
-        for cycle in range(3):
+        for _ in range(0, 3):
             for movement in flex_ext_sequence:
                 self.execute_command_check(movement, 0.2)
 
