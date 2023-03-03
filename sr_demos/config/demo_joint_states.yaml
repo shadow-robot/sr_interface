@@ -42,31 +42,31 @@ max_range: {"THJ2": 20, "THJ3": 12, "THJ4": 70, "THJ5": 0,
 ####################
 # POSE DEFINITIONS #
 ####################
-
 count_down_3: {"FFJ4": -12,
-               "RFJ4": 0.12,
-               "LFJ1": 90, "LFJ2": 90, "LFJ3": 90,
+               "RFJ4": -12,
+               "LFJ1": 85, "LFJ2": 85, "LFJ3": 85,
                "THJ2": 40}
 
-count_down_2: {"FFJ4": 0,
-               "MFJ4": 0.12,
-               "RFJ1": 90, "RFJ2": 90, "RFJ3": 90, "RFJ4": 0}
+count_down_2: {"MFJ4": 12,
+               "RFJ1": 85, "RFJ2": 85, "RFJ3": 85, "RFJ4": 0}
 
-count_down_1: {"MFJ1": 90, "MFJ2": 90, "MFJ3": 90, "MFJ4": 0}
+count_down_1: {"FFJ4": 0,
+               "MFJ1": 85, "MFJ2": 85, "MFJ3": 85, "MFJ4": 0}
 
-count_down_0: {"FFJ1": 90, "FFJ2": 90, "FFJ3": 90}
+count_down_0_ff: {"FFJ1": 85, "FFJ2": 85, "FFJ3": 85}
+count_down_0_th: {"THJ2": 35, "THJ4": 35}
 
 # scissiors position
 scissors: {"FFJ1": 0, "FFJ2": 0, "FFJ3": 0, "FFJ4": -12,
            "MFJ1": 0, "MFJ2": 0, "MFJ3":  0, "MFJ4": 0.12,
-           "RFJ1": 90, "RFJ2": 90, "RFJ3": 90, "RFJ4": 0, 
-           "LFJ1": 90, "LFJ2": 90, "LFJ3": 90, "LFJ4": 0, "LFJ5": 0, 
+           "RFJ1": 85, "RFJ2": 85, "RFJ3": 85, "RFJ4": 0, 
+           "LFJ1": 85, "LFJ2": 85, "LFJ3": 85, "LFJ4": 0, "LFJ5": 0, 
            "THJ1": 0, "THJ2": 40, "THJ3": 0, "THJ4": 0, "THJ5": 0,
            "WRJ1": 0, "WRJ2": 0}
-rock: {"FFJ1": 90, "FFJ2": 90, "FFJ3": 90, "FFJ4": 0,
-       "MFJ1": 90, "MFJ2": 90, "MFJ3":  90, "MFJ4": 0,
-       "RFJ1": 90, "RFJ2": 90, "RFJ3": 90, "RFJ4": 0, 
-       "LFJ1": 90, "LFJ2": 90, "LFJ3": 90, "LFJ4": 0, "LFJ5": 0, 
+rock: {"FFJ1": 85, "FFJ2": 85, "FFJ3": 85, "FFJ4": 0,
+       "MFJ1": 85, "MFJ2": 85, "MFJ3": 85, "MFJ4": 0,
+       "RFJ1": 85, "RFJ2": 85, "RFJ3": 85, "RFJ4": 0, 
+       "LFJ1": 85, "LFJ2": 85, "LFJ3": 85, "LFJ4": 0, "LFJ5": 0, 
        "THJ1": 40, "THJ2": 40, "THJ3": 5, "THJ4": 71, "THJ5": 10,
        "WRJ1": 0, "WRJ2": 0}
 paper: {"FFJ1": 0, "FFJ2": 0, "FFJ3": 0, "FFJ4": 0,
@@ -127,8 +127,8 @@ zero_th: {"THJ1": 0, "THJ2": 0, "THJ3": 0, "THJ4": 0, "THJ5": 0}
 # Pre O.K. with first finger
 pre_ff_ok: {"THJ4": 70}
 # O.K. with first finger
-ff_ok: {"THJ1": 36, "THJ2": 11, "THJ3": 0, "THJ4": 53, "THJ5": 14,
-         "FFJ1": 0, "FFJ2": 83, "FFJ3": 37, "FFJ4": 6,
+ff_ok: {"THJ1": 25, "THJ2": 11, "THJ3": 0, "THJ4": 53, "THJ5": 14,
+         "FFJ1": 0, "FFJ2": 75, "FFJ3": 37, "FFJ4": 6,
          "MFJ1": 0, "MFJ2": 42, "MFJ3": 33, "MFJ4": 9,
          "RFJ1": 0, "RFJ2": 50, "RFJ3": 18, "RFJ4": -7,
          "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -6, "LFJ5": 7}
@@ -141,20 +141,20 @@ ff2mf_ok: {"THJ1": 5, "THJ2": 12, "THJ3": 4, "THJ4": 60, "THJ5": 2,
 # O.K. with middle finger
 mf_ok: {"THJ1": 7, "THJ2": 24, "THJ3": 0, "THJ4": 62, "THJ5": 29,
          "FFJ1": 0, "FFJ2": 15, "FFJ3": 7, "FFJ4": -0.4,
-         "MFJ1": 5, "MFJ2": 90, "MFJ3": 24, "MFJ4": 8,
+         "MFJ1": 5, "MFJ2": 85, "MFJ3": 24, "MFJ4": 8,
          "RFJ1": 0, "RFJ2": 50, "RFJ3": 18, "RFJ4": -10,
          "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -12, "LFJ5": 4}
 # O.K. transition from middle finger to ring finger
 mf2rf_ok: {"THJ1": 5, "THJ2": -5, "THJ3": 15, "THJ4": 70, "THJ5": 15,
             "FFJ1": 0, "FFJ2": 14, "FFJ3": 7, "FFJ4": -0.4,
-            "MFJ1": 0, "MFJ2": 45, "MFJ3": 4, "MFJ4": -1,
+            "MFJ1": 0, "MFJ2": 40, "MFJ3": 4, "MFJ4": -1,
             "RFJ1": 0, "RFJ2": 50, "RFJ3": 18, "RFJ4": -10,
             "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -12, "LFJ5": 4}
 # O.K. with ring finger
 rf_ok: {"THJ1": 3, "THJ2": 19, "THJ3": 0, "THJ4": 70, "THJ5": 47,
          "FFJ1": 0, "FFJ2": 14, "FFJ3": 7, "FFJ4": -0.4,
          "MFJ1": 0, "MFJ2": 45, "MFJ3": 4, "MFJ4": -1,
-         "RFJ1": 3, "RFJ2": 90, "RFJ3": 28, "RFJ4": -9,
+         "RFJ1": 3, "RFJ2": 85, "RFJ3": 28, "RFJ4": -9,
          "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -12, "LFJ5": 4}
 # O.K. transition from ring finger to little finger
 rf2lf_ok: {"THJ1": 5, "THJ2": 4.5, "THJ3": 8, "THJ4": 60, "THJ5": 17,
@@ -163,11 +163,11 @@ rf2lf_ok: {"THJ1": 5, "THJ2": 4.5, "THJ3": 8, "THJ4": 60, "THJ5": 17,
             "RFJ1": 0, "RFJ2": 30, "RFJ3": 6, "RFJ4": 0.5,
             "LFJ1": 0, "LFJ2": 30, "LFJ3": 0, "LFJ4": -12, "LFJ5": 4}
 # O.K. with little finger
-lf_ok: {"THJ1": 25, "THJ2": 14, "THJ3": 10, "THJ4": 69, "THJ5": 15,
+lf_ok: {"THJ1": 5, "THJ2": 14, "THJ3": 10, "THJ4": 69, "THJ5": 15,
          "FFJ1": 0, "FFJ2": 14, "FFJ3": 7, "FFJ4": -0.4,
          "MFJ1": 0, "MFJ2": 15, "MFJ3": 4, "MFJ4": -1,
          "RFJ1": 0, "RFJ2": 15, "RFJ3": 6, "RFJ4": 0.5,
-         "LFJ1": 0, "LFJ2": 78, "LFJ3": 26, "LFJ4": 5, "LFJ5": 37}
+         "LFJ1": 0, "LFJ2": 70, "LFJ3": 26, "LFJ4": 5, "LFJ5": 37}
 # zero wrist
 zero_wr: {"WRJ1": 0, "WRJ2": 0}
 # north wrist

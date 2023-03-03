@@ -216,6 +216,8 @@ class Robot:
         '''
             Returns a dictionary of joint states with correct prefix
             and only joints that are present in the hand type
+            Input: joint_states_config_yaml: dictionary of joint states
+            Output: joint_states: dictionary of joint states
         '''
         joint_states_config = self._correct_joint_states_for_hand_type(joint_states_config_yaml)
         # Add prefix to joint states
@@ -226,6 +228,8 @@ class Robot:
         '''
             Returns a dictionary of joint states for the robot type
             where the joints that are not present in the hand type are removed
+            Input: joint_states_config: dictionary of joint states
+            Output: joint_states_config: dictionary of joint states
         '''
         hand_type_joints_filename = '/home/user/projects/shadow_robot/base/src/'\
                                     'sr_interface/sr_demos/config/joints_in_hand.yaml'
@@ -240,8 +244,9 @@ class Robot:
 
     def _add_prefix_to_joint_states(self, joint_states_config):
         '''
-            Returns a dictionary of joint states with the correct prefix
-            for the robot type
+            Adds the correct prefix to the joint states
+            Input: joint_states_config - dictionary of joint states
+            Output: demo_states - dictionary of joint states with correct prefix for the robot type
         '''
         demo_states = {}
         for joint_state_dicts_no_id in joint_states_config.keys():
@@ -255,10 +260,16 @@ class Robot:
                 demo_states[joint_state_dicts_no_id] = joints_target
         return demo_states
 
-    def execute_command_check(self, joint_state_name, sleep, time_to_execute,
+    def execute_command_check(self, joint_state_name, time_to_execute,
+                              sleep=0.1,
                               wait=True, angle_degrees=True):
         '''
             Execute a command using the hand commander method move_to_joint_value_target_unsafe
+            input: joint_state_name - name of the joint state to execute
+                    time_to_execute - time to execute the joint state
+                    sleep - time to sleep after executing the joint state
+                    wait - wait for the joint state to finish executing
+                    angle_degrees - if the joint state is in degrees or radians
         '''
         if joint_state_name in self.demo_joint_states.keys():
             if "LFJ" in joint_state_name and self.hand_type != "hand_e":
@@ -294,7 +305,7 @@ class Robot:
 
     def stored_states_sequence(self):
         '''
-        This demo will run a sequence of stored states.
+        Runs a demo sequence of stored states.
         '''
         rospy.loginfo("Stored States demo started")
 
@@ -331,77 +342,55 @@ class Robot:
 
     def standard_demo_sequence(self):
         rospy.loginfo("Standard demo started")
-        self.execute_command_check('store_3', 1.1, 1.1)
+        self.execute_command_check('store_3', 1.1)
         self.commander.move_to_named_target("open")
-        self.execute_command_check('flex_ff', 1.1, 1.0)
-        self.execute_command_check('ext_ff', 1.1, 1.0)
-        self.execute_command_check('flex_mf', 1.1, 1.0)
-        self.execute_command_check('ext_mf', 1.1, 1.0)
-        self.execute_command_check('flex_rf', 1.1, 1.0)
-        self.execute_command_check('ext_rf', 1.1, 1.0)
-        self.execute_command_check('flex_lf', 1.1, 1.0)
-        self.execute_command_check('ext_lf', 1.1, 1.0)
-        self.execute_command_check('flex_th_1', 1, 0.7)
-        self.execute_command_check('flex_th_2', 1, 0.7)
-        self.execute_command_check('ext_th_1', 1.5, 1.5)
-        self.execute_command_check('ext_th_2', 0.5, 0.5)
-        self.execute_command_check('l_ext_lf', 0.5, 0.5)
-        self.execute_command_check('l_ext_rf', 0.5, 0.5)
-        self.execute_command_check('l_ext_mf', 0.5, 0.5)
-        self.execute_command_check('l_ext_ff', 0.5, 0.5)
-        self.execute_command_check('l_int_all', 0.5, 0.5)
-        self.execute_command_check('l_ext_all', 0.5, 0.5)
-        self.execute_command_check('l_int_ff', 0.5, 0.5)
-        self.execute_command_check('l_int_mf', 0.5, 0.5)
-        self.execute_command_check('l_int_rf', 0.5, 0.5)
-        self.execute_command_check('l_int_lf', 0.5, 0.5)
-        self.execute_command_check('l_zero_all', 0.5, 0.5)
-        self.execute_command_check('l_spock', 0.5, 0.5)
-        self.execute_command_check('l_zero_all', 0.5, 0.5)
-        self.execute_command_check('pre_ff_ok', 1.0, 1.0)
-        self.execute_command_check('ff_ok', 0.9, 0.7)
-        self.execute_command_check('ff2mf_ok', 0.4, 0.5)
-        self.execute_command_check('mf_ok', 0.9, 0.7)
-        self.execute_command_check('mf2rf_ok', 0.4, 0.5)
-        self.execute_command_check('rf_ok', 0.9, 0.7)
-        self.execute_command_check('rf2lf_ok', 0.4, 0.5)
-        self.execute_command_check('lf_ok', 0.9, 0.7)
+
+        flex_ext_sequence = ['flex_ff', 'flex_mf', 'flex_rf', 'flex_lf', 'ext_ff', 'ext_mf', 'ext_rf', 'ext_lf']
+        for movement in flex_ext_sequence:
+            self.execute_command_check(movement, 1.1)
+ 
+        self.execute_command_check('flex_th_1', 0.7)
+        self.execute_command_check('flex_th_2', 0.7)
+        self.execute_command_check('ext_th_1', 1.5)
+        self.execute_command_check('ext_th_2', 0.5)
+        self.execute_command_check('l_ext_lf', 0.5)
+        self.execute_command_check('l_ext_rf', 0.5)
+        self.execute_command_check('l_ext_mf', 0.5)
+        self.execute_command_check('l_ext_ff', 0.5)
+        self.execute_command_check('l_int_all', 0.5)
+        self.execute_command_check('l_ext_all', 0.5)
+        self.execute_command_check('l_int_ff', 0.5)
+        self.execute_command_check('l_int_mf', 0.5)
+        self.execute_command_check('l_int_rf', 0.5)
+        self.execute_command_check('l_int_lf', 0.5)
+        self.execute_command_check('l_zero_all', 0.5)
+        self.execute_command_check('l_spock', 0.5)
+        self.execute_command_check('l_zero_all', 0.5)
+        self.execute_command_check('pre_ff_ok', 1.0)
+        self.execute_command_check('ff_ok', 0.9)
+        self.execute_command_check('ff2mf_ok', 0.4)
+        self.execute_command_check('mf_ok', 0.9)
+        self.execute_command_check('mf2rf_ok', 0.4)
+        self.execute_command_check('rf_ok', 0.9)
+        self.execute_command_check('rf2lf_ok', 0.4)
+        self.execute_command_check('lf_ok', 0.9)
         self.commander.move_to_named_target("open")
-        self.execute_command_check('flex_ff', 0.2, 0.2)
-        self.execute_command_check('flex_mf', 0.2, 0.2)
-        self.execute_command_check('flex_rf', 0.2, 0.2)
-        self.execute_command_check('flex_lf', 0.2, 0.2)
-        self.execute_command_check('ext_ff', 0.2, 0.2)
-        self.execute_command_check('ext_mf', 0.2, 0.2)
-        self.execute_command_check('ext_rf', 0.2, 0.2)
-        self.execute_command_check('ext_lf', 0.2, 0.2)
-        self.execute_command_check('flex_ff', 0.2, 0.2)
-        self.execute_command_check('flex_mf', 0.2, 0.2)
-        self.execute_command_check('flex_rf', 0.2, 0.2)
-        self.execute_command_check('flex_lf', 0.2, 0.2)
-        self.execute_command_check('ext_ff', 0.2, 0.2)
-        self.execute_command_check('ext_mf', 0.2, 0.2)
-        self.execute_command_check('ext_rf', 0.2, 0.2)
-        self.execute_command_check('ext_lf', 0.2, 0.2)
-        self.execute_command_check('flex_ff', 0.2, 0.2)
-        self.execute_command_check('flex_mf', 0.2, 0.2)
-        self.execute_command_check('flex_rf', 0.2, 0.2)
-        self.execute_command_check('flex_lf', 0.2, 0.2)
-        self.execute_command_check('ext_ff', 0.2, 0.2)
-        self.execute_command_check('ext_mf', 0.2, 0.2)
-        self.execute_command_check('ext_rf', 0.2, 0.2)
-        self.execute_command_check('ext_lf', 0.2, 0.2)
-        self.execute_command_check('pre_ff_ok', 1.0, 1.0)
-        self.execute_command_check('ff_ok', 3.3, 1.3)
-        self.execute_command_check('ne_wr', 1.1, 1.1)
-        self.execute_command_check('nw_wr', 1.1, 1.1)
-        self.execute_command_check('sw_wr', 1.1, 1.1)
-        self.execute_command_check('se_wr', 1.1, 1.1)
-        self.execute_command_check('ne_wr', 0.7, 0.7)
-        self.execute_command_check('nw_wr', 0.7, 0.7)
-        self.execute_command_check('sw_wr', 0.7, 0.7)
-        self.execute_command_check('se_wr', 0.7, 0.7)
-        self.execute_command_check('zero_wr', 0.4, 0.4)
+
+        for cycle in range(3):
+            for movement in flex_ext_sequence:
+                self.execute_command_check(movement, 0.2)
+
+        self.execute_command_check('pre_ff_ok', 1.0)
+        self.execute_command_check('ff_ok', 3.3)
+        self.execute_command_check('ne_wr', 1.1)
+        self.execute_command_check('nw_wr', 1.1)
+        self.execute_command_check('sw_wr', 1.1)
+        self.execute_command_check('se_wr', 1.1)
+        self.execute_command_check('ne_wr', 0.7)
+        self.execute_command_check('nw_wr', 0.7)
+        self.execute_command_check('sw_wr', 0.7)
+        self.execute_command_check('se_wr', 0.7)
+        self.execute_command_check('zero_wr', 0.4)
         self.commander.move_to_named_target("open")
         rospy.loginfo("Standard demo completed")
 
@@ -419,19 +408,20 @@ class Robot:
         rospy.sleep(3)
 
         # Count down
-        self.execute_command_check('count_down_3', 3.0, 1.0, wait=True)
+        self.execute_command_check('count_down_3', 1.0)
         rospy.loginfo("3")
-        self.execute_command_check('count_down_2', 3.0, 1.0, wait=True)
+        self.execute_command_check('count_down_2', 1.0)
         rospy.loginfo("2")
-        self.execute_command_check('count_down_1', 3.0, 1.0, wait=True)
+        self.execute_command_check('count_down_1', 1.0)
         rospy.loginfo("1")
-        self.execute_command_check('count_down_0', 3.0, 1.0, wait=True)
+        self.execute_command_check('count_down_0_ff', 1.0)
+        self.execute_command_check('count_down_0_th', 1.0)
         rospy.loginfo("Make your gesture!")
 
         # Select a pose at random
         poses = ['rock', 'paper', 'scissors']
         pose = random.choice(poses)
-        self.execute_command_check(pose, 1.0, 1.0, wait=True)
+        self.execute_command_check(pose, 1.0)
         rospy.loginfo("The hand made the {} gesture!".format(pose))
         rospy.sleep(5.0)
 
@@ -448,8 +438,8 @@ class Robot:
 
         self.commander.move_to_named_target("open")
         rospy.loginfo("The hand will now imitate grasping and squeezing an object...")
-        self.execute_command_check('pregrasp_pos', 2.0, 2.0, wait=True)
-        self.execute_command_check('grasp_pos', 0.0, 11.0, wait=True)
+        self.execute_command_check('pregrasp_pos', 2.0)
+        self.execute_command_check('grasp_pos', 5.0)
 
         # Send all joints to current position to compensate
         # for minor offsets created in the previous loop
@@ -485,7 +475,7 @@ class Robot:
         rospy.sleep(0.5)
         self.commander.move_to_joint_value_target_unsafe(hand_pos, 2.0, wait=True, angle_degrees=True)
         rospy.sleep(2.0)
-        self.execute_command_check('pregrasp_pos', 2.0, 2.0, wait=True)
+        self.execute_command_check('pregrasp_pos', 2.0)
         self.commander.move_to_named_target("open")
 
         rospy.loginfo("Grasp Demo completed")
@@ -507,7 +497,7 @@ class Robot:
                 random.randrange(self.demo_joint_states['min_range'][f'{prefix}LFJ4'],
                                  self.demo_joint_states['rand_pos'][f'{prefix}RFJ4'])
         inter_time = 4.0 * random.random()
-        self.execute_command_check('rand_pos', 0.2, inter_time, wait=True)
+        self.execute_command_check('rand_pos', 0.2, inter_time)
 
     def random_sequence(self):
         '''
