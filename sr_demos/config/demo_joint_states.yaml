@@ -210,5 +210,3 @@ l_int_lf: {"LFJ4": 15}
 l_zero_all: {"FFJ4": 0, "MFJ4": 0, "RFJ4": 0, "LFJ4": 0}
 # spock
 l_spock: {"FFJ4": -20, "MFJ4": -20, "RFJ4": -20, "LFJ4": -20}
-# store step 3
-store_3: {"THJ1": 0, "THJ2": 0, "THJ3": 0, "THJ4": 65, "THJ5": 0}

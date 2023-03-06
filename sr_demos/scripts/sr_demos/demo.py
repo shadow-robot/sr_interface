@@ -46,6 +46,10 @@ CONST_TIME_TO_COMPLETE_DEMO = 15
 
 class TactileReading:
     def __init__(self, prefix):
+        '''
+            Initializes the tactile reading class
+            @param prefix: The hand prefix ("rh_" or "lh_")
+        '''
         self.prefix = prefix
 
         # Read tactile type
@@ -80,7 +84,7 @@ class TactileReading:
             for key in ["FF", "MF", "RF", "LF", "TH"]:
                 self.reference_tactile_values[key] = sum(entry[key] for entry in accumulator) / len(accumulator)
 
-            rospy.loginfo('Reference values: ' + str(self.reference_tactile_values))
+            rospy.loginfo(f'Reference values: {self.reference_tactile_values}')
 
     def read_tactile_values(self):
         '''
@@ -127,9 +131,13 @@ class TactileReading:
 
 
 class KeyboardPressDetector:
-    def __init__(self, robot_type):
+    def __init__(self, robot_object):
+        '''
+            Initializes the keyboard press detector
+            @param robot_object: A object of the Robot class)
+        '''
         self.keyboard_pressed = False
-        self.robot = robot_type
+        self.robot = robot_object
 
     @staticmethod
     def _get_input():
@@ -174,6 +182,11 @@ class KeyboardPressDetector:
 
 class Robot:
     def __init__(self, robot_type, hand_type):
+        '''
+            Initializes the robot class
+            @param robot_type: The robot type (right_hand, left_hand, two_hands)
+            @param hand_type: The hand type (hand_e, hand_lite, hand_extra_lite)
+        '''
         self.robot = robot_type
         self.hand_type = hand_type
         self.commander = SrHandCommander(name=robot_type)
@@ -289,8 +302,8 @@ class Robot:
         touched_finger = None
         if len(self.tactiles) == 2:
             # confirm_touched() will return None if no sensors are found
-            touched_right = robot.tactiles[0].confirm_touched()
-            touched_left = robot.tactiles[1].confirm_touched()
+            touched_right = self.tactiles[0].confirm_touched()
+            touched_left = self.tactiles[1].confirm_touched()
             if touched_right is not None and touched_left is not None:
                 rospy.loginfo("You touched fingers on both hands at the same time. Defaulting to right touch")
                 touched_finger = touched_right
@@ -299,8 +312,8 @@ class Robot:
             elif touched_left is not None:
                 touched_finger = touched_left
         # check if tactile sensors have been previously found
-        elif len(robot.tactiles) == 1:  # Unimanual mode
-            touched_finger = robot.tactiles[0].confirm_touched()
+        elif len(self.tactiles) == 1:  # Unimanual mode
+            touched_finger = self.tactiles[0].confirm_touched()
         return touched_finger
 
     def stored_states_sequence(self):
@@ -342,7 +355,6 @@ class Robot:
 
     def standard_demo_sequence(self):
         rospy.loginfo("Standard demo started")
-        self.execute_command_check('store_3', 1.1)
         self.commander.move_to_named_target("open")
 
         flex_ext_sequence = ['flex_ff', 'flex_mf', 'flex_rf', 'flex_lf', 'ext_ff', 'ext_mf', 'ext_rf', 'ext_lf']
@@ -422,7 +434,7 @@ class Robot:
         poses = ['rock', 'paper', 'scissors']
         pose = random.choice(poses)
         self.execute_command_check(pose, 1.0)
-        rospy.loginfo("The hand made the {} gesture!".format(pose))
+        rospy.loginfo(f"The hand made the {pose} gesture!")
         rospy.sleep(5.0)
 
         if pose == "rock":
@@ -443,8 +455,8 @@ class Robot:
 
         # Send all joints to current position to compensate
         # for minor offsets created in the previous loop
-        hand_pos = {joint: degrees(i) for joint, i in robot.commander.get_joints_position().items()}
-        robot.commander.move_to_joint_value_target_unsafe(hand_pos, 2.0, wait=True, angle_degrees=True)
+        hand_pos = {joint: degrees(i) for joint, i in self.commander.get_joints_position().items()}
+        self.commander.move_to_joint_value_target_unsafe(hand_pos, 2.0, wait=True, angle_degrees=True)
         rospy.sleep(2.0)
 
         # Generate new values to squeeze object slightly
@@ -457,11 +469,11 @@ class Robot:
                             f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset,
                             f"{prefix}RFJ3": hand_pos[f'{prefix}RFJ3'] + offset,
                             f"{prefix}RFJ1": hand_pos[f'{prefix}RFJ1'] + offset})
-        if robot.hand_type == 'hand_lite' or robot.hand_type == 'hand_e':
+        if self.hand_type == 'hand_lite' or self.hand_type == 'hand_e':
             for prefix in self.prefixes:
                 squeeze.update({f"{prefix}MFJ3": hand_pos[f'{prefix}MFJ3'] + offset,
                                 f"{prefix}MFJ1": hand_pos[f'{prefix}MFJ1'] + offset})
-        if robot.hand_type == 'hand_e':
+        if self.hand_type == 'hand_e':
             for prefix in self.prefixes:
                 squeeze.update({f"{prefix}LFJ3": hand_pos[f'{prefix}LFJ3'] + offset,
                                 f"{prefix}LFJ1": hand_pos[f'{prefix}LFJ1'] + offset})
