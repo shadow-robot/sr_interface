@@ -42,7 +42,7 @@
   <xacro:macro name="fingerjoints" params="prefix joint_prefix lf">
     <xacro:if value="${lf}">
       <!-- Little finger special case -->
-     <joint name="${prefix}${joint_prefix}J5" />
+      <joint name="${prefix}${joint_prefix}J5" />
     </xacro:if>
     <joint name="${prefix}${joint_prefix}J4" />
     <joint name="${prefix}${joint_prefix}J3" />
@@ -50,13 +50,15 @@
     <joint name="${prefix}${joint_prefix}J1" />
     <joint name="${prefix}${joint_prefix}tip" />
   </xacro:macro>
+
   <xacro:macro name="fingerchains" params="prefix link_prefix lf">
     <chain base_link="${prefix}palm" tip_link="${prefix}${link_prefix}tip"/>
   </xacro:macro>
+
   <xacro:macro name="fingerlinks" params="prefix link_prefix lf">
     <xacro:if value="${lf}">
       <!-- Little finger special case -->
-     <link name="${prefix}${link_prefix}metacarpal" /> 
+      <link name="${prefix}${link_prefix}metacarpal" />
     </xacro:if> 
     <link name="${prefix}${link_prefix}knuckle" />
     <link name="${prefix}${link_prefix}proximal" />
@@ -82,43 +84,46 @@
     <link name="${prefix}thmiddle" />
     <link name="${prefix}thdistal" />
   </xacro:macro>
-  <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'--> 
+
+  <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
   <xacro:macro name="finger_state_open" params="prefix joint_prefix lf">
-      <joint name="${prefix}${joint_prefix}J1" value="0" />
-      <joint name="${prefix}${joint_prefix}J2" value="0" />
-      <joint name="${prefix}${joint_prefix}J3" value="0" />
-      <joint name="${prefix}${joint_prefix}J4" value="0" />
-      <xacro:if value="${lf}">
-       <!-- Little finger special case -->
-       <joint name="${prefix}${joint_prefix}J5" value="0" /> 
-      </xacro:if> 
-  </xacro:macro>
-  <xacro:macro name="thumb_state_open" params="prefix">
-      <joint name="${prefix}THJ1" value="0" />
-      <joint name="${prefix}THJ2" value="0" />
-      <xacro:unless value="$(arg is_lite)">
-        <joint name="${prefix}THJ3" value="0" />
-      </xacro:unless>
-      <joint name="${prefix}THJ4" value="0" />
-      <joint name="${prefix}THJ5" value="0" />
+    <joint name="${prefix}${joint_prefix}J1" value="0" />
+    <joint name="${prefix}${joint_prefix}J2" value="0" />
+    <joint name="${prefix}${joint_prefix}J3" value="0" />
+    <joint name="${prefix}${joint_prefix}J4" value="0" />
+    <xacro:if value="${lf}">
+      <!-- Little finger special case -->
+      <joint name="${prefix}${joint_prefix}J5" value="0" />
+    </xacro:if>
   </xacro:macro>
 
-  <xacro:macro name="finger_state_pack" params="prefix joint_prefix lf is_bt_2p">
-  	<xacro:unless value="${is_bt_2p}">
+  <xacro:macro name="thumb_state_open" params="prefix">
+    <joint name="${prefix}THJ1" value="0" />
+    <joint name="${prefix}THJ2" value="0" />
+    <xacro:unless value="$(arg is_lite)">
+      <joint name="${prefix}THJ3" value="0" />
+    </xacro:unless>
+    <joint name="${prefix}THJ4" value="0" />
+    <joint name="${prefix}THJ5" value="0" />
+  </xacro:macro>
+
+  <xacro:macro name="finger_state_pack" params="prefix joint_prefix lf tip_sensors">
+  	<xacro:if value="${tip_sensors} == 'pst'">
       <joint name="${prefix}${joint_prefix}J1" value="1.5707" />
     </xacro:unless>      
-    <xacro:if value="${is_bt_2p}">
+    <xacro:if value="${tip_sensors} == 'bt_2p'">
       <joint name="${prefix}${joint_prefix}J1" value="0.35" />
     </xacro:if>  
-      <joint name="${prefix}${joint_prefix}J2" value="1.5707" />
-      <joint name="${prefix}${joint_prefix}J3" value="1.5707" />
-      <joint name="${prefix}${joint_prefix}J4" value="0" />
-      <xacro:if value="${lf}">
-       <joint name="${prefix}${joint_prefix}J5" value="0" /> 
-      </xacro:if> 
+    <joint name="${prefix}${joint_prefix}J2" value="1.5707" />
+    <joint name="${prefix}${joint_prefix}J3" value="1.5707" />
+    <joint name="${prefix}${joint_prefix}J4" value="0" />
+    <xacro:if value="${lf}">
+      <joint name="${prefix}${joint_prefix}J5" value="0" />
+    </xacro:if>
   </xacro:macro>
-  <xacro:macro name="thumb_state_pack" params="prefix is_bt_2p">
-    <xacro:unless value="${is_bt_2p}">
+
+  <xacro:macro name="thumb_state_pack" params="prefix tip_sensors">
+    <xacro:if value="${tip_sensors} == 'pst'">
       <joint name="${prefix}THJ1" value="0.72" />
       <joint name="${prefix}THJ2" value="0.71" />
       <xacro:unless value="$(arg is_lite)">
@@ -127,7 +132,7 @@
       <joint name="${prefix}THJ4" value="1.20" />
       <joint name="${prefix}THJ5" value="0.17" />
     </xacro:unless>
-    <xacro:if value="${is_bt_2p}">
+    <xacro:if value="${tip_sensors} == 'bt_2p'">
       <joint name="${prefix}THJ1" value="0.35" />
       <joint name="${prefix}THJ2" value="0.58" />
       <xacro:unless value="$(arg is_lite)">
@@ -137,6 +142,7 @@
       <joint name="${prefix}THJ5" value="0.19" />
     </xacro:if>
   </xacro:macro>
+
   <xacro:macro name="finger_state_relaxed" params="prefix joint_prefix">
     <xacro:if value="${joint_prefix == 'FF'}">
       <joint name="${prefix}${joint_prefix}J1" value="0.0128" />
@@ -164,6 +170,7 @@
       <joint name="${prefix}${joint_prefix}J5" value="0.3325" /> 
     </xacro:if> 
   </xacro:macro>
+
   <xacro:macro name="thumb_state_relaxed" params="prefix">
     <joint name="${prefix}THJ1" value="0.0837" />
     <joint name="${prefix}THJ2" value="0.2629" />
@@ -173,8 +180,9 @@
     <joint name="${prefix}THJ4" value="0.5838" />
     <joint name="${prefix}THJ5" value="0.1794" />
   </xacro:macro>
+
   <xacro:macro name="finger_thumb_state_open" params="prefix finger_name joint_prefix lf is_lite">
-   <group_state name="${finger_name}_thumb_open" group="${prefix}${finger_name}_thumb">
+    <group_state name="${finger_name}_thumb_open" group="${prefix}${finger_name}_thumb">
       <joint name="${prefix}${joint_prefix}J1" value="0" />
       <joint name="${prefix}${joint_prefix}J2" value="0" />
       <joint name="${prefix}${joint_prefix}J3" value="0" />
@@ -186,14 +194,15 @@
       </xacro:unless>
       <xacro:unless value="${is_lite}">
         <xacro:if value="${lf}">
-        <!-- Little finger special case -->
-         <joint name="${prefix}${joint_prefix}J5" value="0" /> 
+          <!-- Little finger special case -->
+          <joint name="${prefix}${joint_prefix}J5" value="0" />
         </xacro:if> 
       </xacro:unless>
       <joint name="${prefix}THJ4" value="0" />
       <joint name="${prefix}THJ5" value="0" />
     </group_state>
   </xacro:macro>
+
   <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
   <xacro:macro name="finger_ee" params="prefix link_prefix finger_name hand_name" >
     <end_effector name="${prefix}${link_prefix}tip_ee" parent_link="${prefix}${link_prefix}tip" group="${prefix}${finger_name}_ee" parent_group="${prefix}${finger_name}" />
@@ -244,10 +253,9 @@
     <disable_collisions link1="${prefix}forearm" link2="${prefix}${link_prefix}knuckle" reason="Never" />
     <disable_collisions link1="${prefix}forearm" link2="${prefix}${link_prefix}middle" reason="Never" />
     <disable_collisions link1="${prefix}forearm" link2="${prefix}${link_prefix}proximal" reason="Never" />
-    
   </xacro:macro>  
 
-  <xacro:macro name="thumb_collisions" params="prefix" >  
+  <xacro:macro name="thumb_collisions" params="prefix" >
     <disable_collisions link1="${prefix}forearm" link2="${prefix}thbase" reason="Never" />
     <disable_collisions link1="${prefix}forearm" link2="${prefix}thdistal" reason="Never" />
     <disable_collisions link1="${prefix}forearm" link2="${prefix}thhub" reason="Never" />
@@ -257,7 +265,6 @@
     <disable_collisions link1="${prefix}palm" link2="${prefix}thbase" reason="Adjacent" />
     <disable_collisions link1="${prefix}palm" link2="${prefix}thhub" reason="Never" />
 	<disable_collisions link1="${prefix}palm" link2="${prefix}thmiddle" reason="Never" />
- 
     <xacro:unless value="$(arg is_lite)">
       <disable_collisions link1="${prefix}thmiddle" link2="${prefix}wrist" reason="Never" />
       <disable_collisions link1="${prefix}thproximal" link2="${prefix}wrist" reason="Never" />
@@ -301,8 +308,7 @@
       <disable_collisions link1="${prefix}${link_prefix}knuckle" link2="${prefix}lfmetacarpal" reason="Never" />
       <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}lfmetacarpal" reason="Never" />
       <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}lfmetacarpal" reason="Never" />
-    </xacro:if> 
-
+    </xacro:if>
     <xacro:unless value="${lf}">
       <!-- Standard finger -->
       <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}${link_prefix2}proximal" reason="Never" />
@@ -317,51 +323,41 @@
   <xacro:macro name="first_little_collisions" params="prefix" >
     <disable_collisions link1="${prefix}ffdistal" link2="${prefix}lfknuckle" reason="Never" />
     <disable_collisions link1="${prefix}ffdistal" link2="${prefix}lfproximal" reason="Never" />
-    
     <disable_collisions link1="${prefix}ffknuckle" link2="${prefix}lfdistal" reason="Never" />
     <disable_collisions link1="${prefix}ffknuckle" link2="${prefix}lfknuckle" reason="Never" />
     <disable_collisions link1="${prefix}ffknuckle" link2="${prefix}lfmiddle" reason="Never" />
     <disable_collisions link1="${prefix}ffknuckle" link2="${prefix}lfproximal" reason="Never" />
-    
     <disable_collisions link1="${prefix}ffmiddle" link2="${prefix}lfknuckle" reason="Never" />
     <disable_collisions link1="${prefix}ffmiddle" link2="${prefix}lfmiddle" reason="Never" />
     <disable_collisions link1="${prefix}ffmiddle" link2="${prefix}lfproximal" reason="Never" />
-    
     <disable_collisions link1="${prefix}ffproximal" link2="${prefix}lfknuckle" reason="Never" />
     <disable_collisions link1="${prefix}ffproximal" link2="${prefix}lfdistal" reason="Never" />
     <disable_collisions link1="${prefix}ffproximal" link2="${prefix}lfmiddle" reason="Never" />
     <disable_collisions link1="${prefix}ffproximal" link2="${prefix}lfproximal" reason="Never" />
-    
     <disable_collisions link1="${prefix}ffdistal" link2="${prefix}lfmetacarpal" reason="Never" />
     <disable_collisions link1="${prefix}ffknuckle" link2="${prefix}lfmetacarpal" reason="Never" />
     <disable_collisions link1="${prefix}ffmiddle" link2="${prefix}lfmetacarpal" reason="Never" />
     <disable_collisions link1="${prefix}ffproximal" link2="${prefix}lfmetacarpal" reason="Never" />
   </xacro:macro>
 
-   <!-- finger next to other finger -->
-   <xacro:macro name="finger_closefinger_collisions" params="prefix link_prefix link_prefix2 lf" >
+  <!-- finger next to other finger -->
+  <xacro:macro name="finger_closefinger_collisions" params="prefix link_prefix link_prefix2 lf" >
     <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}${link_prefix2}knuckle" reason="Never" />
-    
     <disable_collisions link1="${prefix}${link_prefix}knuckle" link2="${prefix}${link_prefix2}distal" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}knuckle" link2="${prefix}${link_prefix2}knuckle" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}knuckle" link2="${prefix}${link_prefix2}middle" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}knuckle" link2="${prefix}${link_prefix2}proximal" reason="Never" />
-
     <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}${link_prefix2}knuckle" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}${link_prefix2}knuckle" reason="Never" />
-
     <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}${link_prefix2}proximal" reason="Adjacent" />
     <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}${link_prefix2}middle" reason="Adjacent" />
-    <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}${link_prefix2}distal" reason="Adjacent" />	
-
+    <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}${link_prefix2}distal" reason="Adjacent" />
     <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}${link_prefix2}proximal" reason="Adjacent" />
     <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}${link_prefix2}middle" reason="Adjacent" />
-    <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}${link_prefix2}distal" reason="Adjacent" />	
-
+    <disable_collisions link1="${prefix}${link_prefix}middle" link2="${prefix}${link_prefix2}distal" reason="Adjacent" />
     <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}${link_prefix2}proximal" reason="Adjacent" />
     <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}${link_prefix2}middle" reason="Adjacent" />
-    <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}${link_prefix2}distal" reason="Adjacent" />	
-
+    <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}${link_prefix2}distal" reason="Adjacent" />
     <xacro:if value="${lf}">
       <!-- Little finger special case -->
       <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}lfmetacarpal" reason="Never" />
@@ -371,8 +367,8 @@
     </xacro:if> 
   </xacro:macro>
 
-   <!-- finger to thumb, far is 1 if at least one finger is in between -->
-   <xacro:macro name="finger_thumb_collisions" params="prefix link_prefix far lf" >
+  <!-- finger to thumb, far is 1 if at least one finger is in between -->
+  <xacro:macro name="finger_thumb_collisions" params="prefix link_prefix far lf" >
     <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thbase" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thhub" reason="Never" />   
     <disable_collisions link1="${prefix}${link_prefix}knuckle" link2="${prefix}thbase" reason="Never" />
@@ -388,17 +384,14 @@
     <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thmiddle" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thproximal" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thdistal" reason="Adjacent" />
-
     <xacro:if value="${far}">
       <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thproximal" reason="Never" />
     </xacro:if> 
-
     <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}thbase" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}thhub" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}thmiddle" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}thproximal" reason="Never" />
     <disable_collisions link1="${prefix}${link_prefix}proximal" link2="${prefix}thdistal" reason="Adjacent" />
-
     <xacro:if value="${lf}">
       <!-- Little finger special case -->
       <disable_collisions link1="${prefix}${link_prefix}distal" link2="${prefix}thmiddle" reason="Never" />
