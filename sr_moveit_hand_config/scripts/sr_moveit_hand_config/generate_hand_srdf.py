@@ -112,7 +112,7 @@ class SRDFHandGenerator:
                                   f'lf:={str(int(little_finger))}',
                                   f'th:={str(int(thumb))}',
                                   f'is_lite:={str(int(is_lite))}',
-                                  f'tip_sensors:={tip_sensors}',
+                                  f'tip_sensors:={str(tip_sensors)}',
                                   f'hand_name:={str(hand_name)}'
                                   ])
 
