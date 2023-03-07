@@ -111,6 +111,9 @@
   	<xacro:if value="${tip_sensors == 'pst'}">
       <joint name="${prefix}${joint_prefix}J1" value="1.5707" />
     </xacro:if>
+    <xacro:if value="${tip_sensors == 'bt_sp'}">
+      <joint name="${prefix}${joint_prefix}J1" value="1.5707" />
+    </xacro:if>
     <xacro:if value="${tip_sensors == 'bt_2p'}">
       <joint name="${prefix}${joint_prefix}J1" value="0.35" />
     </xacro:if>  
@@ -124,6 +127,15 @@
 
   <xacro:macro name="thumb_state_pack" params="prefix tip_sensors">
     <xacro:if value="${tip_sensors == 'pst'}">
+      <joint name="${prefix}THJ1" value="0.72" />
+      <joint name="${prefix}THJ2" value="0.71" />
+      <xacro:unless value="$(arg is_lite)">
+        <joint name="${prefix}THJ3" value="0.00" />
+      </xacro:unless>
+      <joint name="${prefix}THJ4" value="1.20" />
+      <joint name="${prefix}THJ5" value="0.17" />
+    </xacro:if>
+    <xacro:if value="${tip_sensors == 'bt_sp'}">
       <joint name="${prefix}THJ1" value="0.72" />
       <joint name="${prefix}THJ2" value="0.71" />
       <xacro:unless value="$(arg is_lite)">
