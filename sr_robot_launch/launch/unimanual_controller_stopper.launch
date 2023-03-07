@@ -29,7 +29,7 @@
   <arg name="hand_prefix" value="$(arg side_letter)h"/>
   <arg name="arm_prefix" value="$(arg side_letter)a"/>
 
-  <node name="controller_stopper" pkg="controller_stopper" type="node" respawn="false" output="screen">
+  <node name="controller_stopper" pkg="ur_robot_driver" type="controller_stopper_node" respawn="false" output="screen">
     <remap from="robot_running" to="$(arg arm_prefix)_sr_ur_robot_hw/robot_program_running"/>
     <rosparam param="consistent_controllers" if="$(eval arg('hand_prefix') == 'rh')">
        - "ra_force_torque_sensor_controller"

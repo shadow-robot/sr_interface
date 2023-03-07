@@ -51,7 +51,7 @@ ra_sr_ur_robot_hw:
   
   output_recipe_file: /home/user/projects/shadow_robot/base/src/Universal_Robots_ROS_Driver/ur_robot_driver/resources/rtde_output_recipe.txt
   
-  script_file: /home/user/projects/shadow_robot/base/src/Universal_Robots_ROS_Driver/ur_robot_driver/resources/ros_control.urscript
+  script_file: /opt/ros/noetic/share/ur_client_library/resources/external_control.urscript
   
   use_tool_communication: false
   
