@@ -68,7 +68,6 @@ class SRDFHandGenerator:
         first_finger = middle_finger = ring_finger = little_finger = thumb = False
         is_lite = True
         tip_sensors = "pst"
-        is_bt_sp = True
         hand_name = "right_hand"
 
         # Check if hand has biotac 2p sensors
