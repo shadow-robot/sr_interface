@@ -61,21 +61,21 @@ class SRDFHandGenerator:
             rospy.sleep(0.5)
             rospy.loginfo("waiting for tip_sensors")
         # load the tip_sensors from the parameter server after the hand has been auto-detected
-        tip_sensors = rospy.get_param('tip_sensors')
+        tip_sensors_param = rospy.get_param('tip_sensors')
 
         extracted_prefix = False
         prefix = ""
         first_finger = middle_finger = ring_finger = little_finger = thumb = False
         is_lite = True
-        is_bt_2p = True
+        tip_sensors = "pst"
         is_bt_sp = True
         hand_name = "right_hand"
 
         # Check if hand has biotac 2p sensors
-        if tip_sensors.find('bt_2p') == -1:
-            is_bt_2p = False
-        elif tip_sensors.find('bt_sp') == -1:
-            is_bt_sp = False
+        if tip_sensors_param.find('bt_2p') > -1:
+            tip_sensors = "bt_2p"
+        elif tip_sensors_param.find('bt_sp') > -1:
+            tip_sensors = "bt_sp"
 
         for key in robot.joint_map:
             # any joint is supposed to have the same prefix and a joint name with 4 chars
@@ -102,9 +102,7 @@ class SRDFHandGenerator:
         rospy.logdebug(f"Found fingers (ff mf rf lf th) {str(first_finger)} {str(middle_finger)} " +
                        f"{str(ring_finger)} {str(little_finger)} {str(thumb)}")
         rospy.logdebug(f"is_lite: {str(is_lite)}")
-        rospy.loginfo(f"is_bt_2p: {str(is_bt_2p)}")
-        rospy.loginfo(f"is_bt_sp: {str(is_bt_sp)}")
-        rospy.logdebug(f"Hand name: {str(hand_name)}")
+        rospy.loginfo(f"tip_sensors: {str(tip_sensors)}")
 
         mappings = load_mappings([f'prefix:={str(prefix)}',
                                   f'robot_name:={robot.name}',
@@ -114,8 +112,7 @@ class SRDFHandGenerator:
                                   f'lf:={str(int(little_finger))}',
                                   f'th:={str(int(thumb))}',
                                   f'is_lite:={str(int(is_lite))}',
-                                  f'is_bt_2p:={str(int(is_bt_2p))}',
-                                  f'is_bt_sp:={str(int(is_bt_sp))}',
+                                  f'tip_sensors:={tip_sensors}',
                                   f'hand_name:={str(hand_name)}'
                                   ])
 
