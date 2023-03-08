@@ -42,7 +42,6 @@ import xacro
 import rospy
 import rospkg
 from rosgraph.names import load_mappings
-
 from urdf_parser_py.urdf import URDF
 
 
@@ -57,24 +56,12 @@ class SRDFHandGenerator:
             urdf_str = rospy.get_param('robot_description')
         robot = URDF.from_xml_string(urdf_str)
 
-        while not rospy.has_param('tip_sensors'):
-            rospy.sleep(0.5)
-            rospy.loginfo("waiting for tip_sensors")
-        # load the tip_sensors from the parameter server after the hand has been auto-detected
-        tip_sensors_param = rospy.get_param('tip_sensors')
-
         extracted_prefix = False
         prefix = ""
         first_finger = middle_finger = ring_finger = little_finger = thumb = False
         is_lite = True
         tip_sensors = "pst"
-        hand_name = "right_hand"
-
-        # Check if hand has biotac 2p sensors
-        if tip_sensors_param.find('bt_2p') > -1:
-            tip_sensors = "bt_2p"
-        elif tip_sensors_param.find('bt_sp') > -1:
-            tip_sensors = "bt_sp"
+        side = "right"
 
         for key in robot.joint_map:
             # any joint is supposed to have the same prefix and a joint name with 4 chars
@@ -83,7 +70,7 @@ class SRDFHandGenerator:
                 rospy.loginfo("Found prefix:" + prefix)
                 extracted_prefix = True
                 if prefix == "lh_":
-                    hand_name = "left_hand"
+                    side = "left"
 
             if not first_finger and key.endswith("FFJ4"):
                 first_finger = True
@@ -97,11 +84,33 @@ class SRDFHandGenerator:
                 thumb = True
             if is_lite and key.endswith("WRJ2"):
                 is_lite = False
+        hand_name = side + "_hand"
+        
+        param = side+'_tip_sensors'
+        while not rospy.has_param(param):
+            rospy.sleep(0.5)
+            rospy.loginfo(f"waiting for {str(param)}")
+        # load the tip_sensors from the parameter server after the hand has been auto-detected
+        tip_sensors_param = rospy.get_param(param)
+    
+        # Check if hand has biotac 2p sensors
+        if tip_sensors_param.find('bt_2p') > -1:
+            tip_sensors = "bt_2p"
+        elif tip_sensors_param.find('bt_sp') > -1:
+            tip_sensors = "bt_sp"
+
+        param = side+'_hand_version'
+        while not rospy.has_param(param):
+            rospy.sleep(0.5)
+            rospy.loginfo(f"waiting for {str(param)}")
+        # load the tip_sensors from the parameter server after the hand has been auto-detected
+        hand_version = rospy.get_param(param)
 
         rospy.logdebug(f"Found fingers (ff mf rf lf th) {str(first_finger)} {str(middle_finger)} " +
                        f"{str(ring_finger)} {str(little_finger)} {str(thumb)}")
         rospy.logdebug(f"is_lite: {str(is_lite)}")
-        rospy.loginfo(f"tip_sensors: {str(tip_sensors)}")
+        rospy.logdebug(f"tip_sensors: {str(tip_sensors)}")
+        rospy.loginfo(f"hand_version: {str(hand_version)}")
 
         mappings = load_mappings([f'prefix:={str(prefix)}',
                                   f'robot_name:={robot.name}',
@@ -112,6 +121,7 @@ class SRDFHandGenerator:
                                   f'th:={str(int(thumb))}',
                                   f'is_lite:={str(int(is_lite))}',
                                   f'tip_sensors:={str(tip_sensors)}',
+                                  f'hand_version:={str(hand_version)}',
                                   f'hand_name:={str(hand_name)}'
                                   ])
 

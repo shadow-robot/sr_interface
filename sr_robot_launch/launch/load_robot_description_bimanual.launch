@@ -99,6 +99,11 @@
   <param if="$(eval arg('hands') == 'both' or arg('hands') == 'left')" name="left_hand_description" command="$(arg load_left_hand_description_command)"/>
 
   <param if="$(arg sim)" name="robot_description" command="$(arg load_robot_description_command)"/>
+  <param name="right_tip_sensors" value="$(arg right_tip_sensors)" />
+  <param name="right_hand_version" value="$(arg right_hand_version)" />
+  <param name="left_tip_sensors" value="$(arg left_tip_sensors)" />
+  <param name="left_hand_version" value="$(arg left_hand_version)" />
+  
   <group unless="$(arg sim)">
     <node if="$(arg arms)" name="construct_robot_description" pkg="sr_robot_launch" type="construct_robot_description" output="screen">
       <param name="arm_type" value="$(arg robot_model)"/>
