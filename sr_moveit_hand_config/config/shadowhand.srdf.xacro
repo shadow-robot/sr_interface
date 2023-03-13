@@ -147,22 +147,22 @@
   <xacro:macro name="thumb_state_pack" params="prefix tip_sensors hand_version">
     <xacro:unless value="${hand_version == 'E4'}">
       <xacro:if value="${tip_sensors == 'pst'}">
-        <joint name="${prefix}THJ1" value="0.72" />
-        <joint name="${prefix}THJ2" value="0.71" />
+        <joint name="${prefix}THJ1" value="0.73" />
+        <joint name="${prefix}THJ2" value="0.70" />
         <xacro:unless value="$(arg is_lite)">
           <joint name="${prefix}THJ3" value="0.00" />
         </xacro:unless>
-        <joint name="${prefix}THJ4" value="1.20" />
-        <joint name="${prefix}THJ5" value="0.17" />
+        <joint name="${prefix}THJ4" value="1.22" />
+        <joint name="${prefix}THJ5" value="0.05" />
       </xacro:if>
       <xacro:if value="${tip_sensors == 'bt_sp'}">
-        <joint name="${prefix}THJ1" value="0.732" />
-        <joint name="${prefix}THJ2" value="0.70" />
+        <joint name="${prefix}THJ1" value="0.82" />
+        <joint name="${prefix}THJ2" value="0.55" />
         <xacro:unless value="$(arg is_lite)">
           <joint name="${prefix}THJ3" value="0.2" />
         </xacro:unless>
-        <joint name="${prefix}THJ4" value="1.00" />
-        <joint name="${prefix}THJ5" value="-0.10" />
+        <joint name="${prefix}THJ4" value="1.22" />
+        <joint name="${prefix}THJ5" value="0.06" />
       </xacro:if>
       <xacro:if value="${tip_sensors == 'bt_2p'}">
         <joint name="${prefix}THJ1" value="0.35" />
