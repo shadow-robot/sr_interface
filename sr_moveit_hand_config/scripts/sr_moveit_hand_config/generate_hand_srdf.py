@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Software License Agreement (BSD License)
 #
-# Copyright (c) 2015, CITEC, Bielefeld University
+# Copyright (c) 2015, 2023 CITEC, Bielefeld University
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -29,6 +29,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 # Author: Guillaume Walck <gwalck@techfak.uni-bielefeld.de>
+# Author: Shadow Software Team <software@shadowrobot.com>
 
 """
     generate the srdf according to the urdf
@@ -36,7 +37,6 @@
 """
 
 import sys
-import os
 from xml.dom.minidom import parse
 import xacro
 import rospy
@@ -85,14 +85,14 @@ class SRDFHandGenerator:
             if is_lite and key.endswith("WRJ2"):
                 is_lite = False
         hand_name = f"{side}_hand"
-        
+
         param = f"{side}_tip_sensors"
         while not rospy.has_param(param):
             rospy.sleep(0.5)
             rospy.loginfo(f"waiting for {param}")
         # load the tip_sensors from the parameter server after the hand has been auto-detected
         tip_sensors_param = rospy.get_param(param)
-    
+
         # Check if hand has biotac 2p sensors
         if tip_sensors_param.find('bt_2p') > -1:
             tip_sensors = "bt_2p"
@@ -127,11 +127,9 @@ class SRDFHandGenerator:
 
         # the prefix version of the srdf_xacro must be loaded
         package_path = rospkg.RosPack().get_path('sr_moveit_hand_config')
-        srdf_xacro_filename = f"{package_path}/config/shadowhands_prefix.srdf.xacro"
-        rospy.loginfo(f"File loaded {srdf_xacro_filename}")
 
         # open and parse the xacro.srdf file
-        with open(srdf_xacro_filename, 'r', encoding="utf-8") as srdf_xacro_file:
+        with open(f"{package_path}/config/shadowhands_prefix.srdf.xacro", 'r', encoding="utf-8") as srdf_xacro_file:
             self.srdf_xacro_xml = parse(srdf_xacro_file)
 
         # expand the xacro
@@ -148,8 +146,7 @@ class SRDFHandGenerator:
 
         if load:
             rospy.loginfo("Loading SRDF on parameter server")
-            robot_description_param = rospy.resolve_name('robot_description') + "_semantic"
-            rospy.set_param(robot_description_param,
+            rospy.set_param(rospy.resolve_name('robot_description') + "_semantic",
                             self.srdf_xacro_xml.toprettyxml(indent='  '))
         if save:
             output_path = f"{package_path}/config/generated_shadowhand.srdf"
