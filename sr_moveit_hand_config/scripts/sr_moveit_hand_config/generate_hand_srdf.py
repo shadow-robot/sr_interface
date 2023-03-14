@@ -84,12 +84,12 @@ class SRDFHandGenerator:
                 thumb = True
             if is_lite and key.endswith("WRJ2"):
                 is_lite = False
-        hand_name = side + "_hand"
+        hand_name = f"{side}_hand"
         
-        param = side+'_tip_sensors'
+        param = f"{side}_tip_sensors"
         while not rospy.has_param(param):
             rospy.sleep(0.5)
-            rospy.loginfo(f"waiting for {str(param)}")
+            rospy.loginfo(f"waiting for {param}")
         # load the tip_sensors from the parameter server after the hand has been auto-detected
         tip_sensors_param = rospy.get_param(param)
     
@@ -99,10 +99,10 @@ class SRDFHandGenerator:
         elif tip_sensors_param.find('bt_sp') > -1:
             tip_sensors = "bt_sp"
 
-        param = side+'_hand_version'
+        param = f"{side}_hand_version"
         while not rospy.has_param(param):
             rospy.sleep(0.5)
-            rospy.loginfo(f"waiting for {str(param)}")
+            rospy.loginfo(f"waiting for {param}")
         # load the tip_sensors from the parameter server after the hand has been auto-detected
         hand_version = rospy.get_param(param)
 
@@ -110,7 +110,7 @@ class SRDFHandGenerator:
                        f"{str(ring_finger)} {str(little_finger)} {str(thumb)}")
         rospy.logdebug(f"is_lite: {str(is_lite)}")
         rospy.logdebug(f"tip_sensors: {str(tip_sensors)}")
-        rospy.loginfo(f"hand_version: {str(hand_version)}")
+        rospy.logdebug(f"hand_version: {hand_version}")
 
         mappings = load_mappings([f'prefix:={str(prefix)}',
                                   f'robot_name:={robot.name}',
@@ -121,8 +121,8 @@ class SRDFHandGenerator:
                                   f'th:={str(int(thumb))}',
                                   f'is_lite:={str(int(is_lite))}',
                                   f'tip_sensors:={str(tip_sensors)}',
-                                  f'hand_version:={str(hand_version)}',
-                                  f'hand_name:={str(hand_name)}'
+                                  f'hand_version:={hand_version}',
+                                  f'hand_name:={hand_name}'
                                   ])
 
         # the prefix version of the srdf_xacro must be loaded
