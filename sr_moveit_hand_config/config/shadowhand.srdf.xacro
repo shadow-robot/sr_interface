@@ -119,8 +119,8 @@
   </xacro:macro>
   <xacro:macro name="thumb_state_pack" params="prefix is_biotac">
     <xacro:unless value="${is_biotac}">
-      <joint name="${prefix}THJ1" value="0.52" />
-      <joint name="${prefix}THJ2" value="0.61" />
+      <joint name="${prefix}THJ1" value="0.72" />
+      <joint name="${prefix}THJ2" value="0.71" />
       <xacro:unless value="$(arg is_lite)">
         <joint name="${prefix}THJ3" value="0.00" />
       </xacro:unless>

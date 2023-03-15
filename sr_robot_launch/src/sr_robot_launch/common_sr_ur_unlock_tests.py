@@ -33,11 +33,12 @@ import rospy
 
 
 class CommonTests(TestCase):
-    def __init__(self):
-        super().__init__()
-        self.mock_dashboard = {}
-        self.service_string = {}
-        self.sr_ur_arm_unlock = None
+    """
+    Base test class to test sr_ur_arm_unlock
+    """
+    mock_dashboard = {}
+    service_string = {}
+    sr_ur_arm_unlock = None
 
     def arm_setup(self, side):
         self.press_pedal()

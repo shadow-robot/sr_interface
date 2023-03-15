@@ -462,7 +462,7 @@ class SrRobotCommander:
 
     def get_warehouse_names(self):
         try:
-            list_srv = rospy.ServiceProxy("list_robot_states", ListStates)
+            list_srv = rospy.ServiceProxy("list_robot_state", ListStates)
             return list_srv("", self._robot_name).states
         except rospy.ServiceException as exc:
             rospy.logwarn("Couldn't access warehouse: " + str(exc))

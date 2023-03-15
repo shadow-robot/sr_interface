@@ -42,7 +42,7 @@ class SrRobotStateExporter:
             start_dictionary = {}
         self._get_state = rospy.ServiceProxy("/get_robot_state", GetState)
         self._has_state = rospy.ServiceProxy("/has_robot_state", HasState)
-        self._list_states = rospy.ServiceProxy("/list_robot_states", ListState)
+        self._list_states = rospy.ServiceProxy("/list_robot_state", ListState)
         self._save_state = rospy.ServiceProxy("/save_robot_state", SaveState)
         self._dictionary = deepcopy(start_dictionary)
 

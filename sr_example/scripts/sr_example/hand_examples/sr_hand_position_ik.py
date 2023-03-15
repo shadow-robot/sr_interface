@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Software License Agreement (BSD License)
 # Copyright © 2022-2023 belongs to Shadow Robot Company Ltd.
 # All rights reserved.
@@ -23,55 +25,30 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-ra_sr_ur_robot_hw:
-  joints: &robot_joints
-    - ra_shoulder_pan_joint
-    - ra_shoulder_lift_joint
-    - ra_elbow_joint
-    - ra_wrist_1_joint
-    - ra_wrist_2_joint
-    - ra_wrist_3_joint
+import math
+import moveit_commander
+import rospy
+from geometry_msgs.msg import PoseStamped
 
-  type: ur_driver/HardwareInterface
-  
-  # ra for right side arm la for left side arm
-  robot_id: ra
-
-  tf_prefix: ra_
-  
-  # for sending robot programs
-  # aurora (https://github.com/shadow-robot/aurora) uses sed to replace this IP with the user-defined IP
-  robot_ip: 10.8.1.1
-  
-  # for the server that moves the robot
-  # aurora (https://github.com/shadow-robot/aurora) uses sed to replace this IP with the user-defined IP
-  control_pc_ip_address: 10.8.1.100
-  
-  input_recipe_file: /home/user/projects/shadow_robot/base/src/Universal_Robots_ROS_Driver/ur_robot_driver/resources/rtde_input_recipe.txt
-  
-  output_recipe_file: /home/user/projects/shadow_robot/base/src/Universal_Robots_ROS_Driver/ur_robot_driver/resources/rtde_output_recipe.txt
-  
-  script_file: /opt/ros/noetic/share/ur_client_library/resources/external_control.urscript
-  
-  use_tool_communication: false
-  
-  headless_mode: true
-  
-  servoj_gain: 250
-  
-  servoj_lookahead_time: 0.1
-
-  reverse_port: 50001
-
-  script_sender_port: 50002
-
-  trajectory_port: 50003
-
-  script_command_port: 50004
-
-  use_local_hardware_interface_param: true
-  
-  non_blocking_read: true
-
-  wrench_prefix: right_
-  
+# Initialise this ROS node
+rospy.init_node('sr_hand_position_ik')
+# Initialise the Move Group Commander
+commander = moveit_commander.MoveGroupCommander('rh_first_finger')
+# Set the goal orientation tolerance to 2 PI to ensure the IK solver doesn't care about orientation
+commander.set_goal_orientation_tolerance(2 * math.pi)
+# Construct a PoseStamped, allowing us to specify the frame in which we want to express the goal
+goal_pose = PoseStamped()
+goal_pose.header.frame_id = 'rh_palm'
+goal_pose.pose.position.x = 0.033
+goal_pose.pose.position.y = -0.01
+goal_pose.pose.position.z = 0.18
+# Make the new rotation quaternion a valid one - unused but prevents complaints
+goal_pose.pose.orientation.w = 1.0
+# Make sure we are planning from the current state of the robot
+commander.set_start_state_to_current_state()
+# Apply the above PoseStamped as a goal
+commander.set_pose_target(goal_pose)
+# Plan, and if successful, execute the trajectory
+success, trajectory, *_other = commander.plan()
+if success:
+    commander.execute(trajectory)
