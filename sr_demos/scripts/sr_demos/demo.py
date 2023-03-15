@@ -45,9 +45,11 @@ CONST_TIME_TO_COMPLETE_DEMO = 15
 
 
 class TactileReading:
-    def __init__(self, hand_commander, demo_joint_states, prefix):
-        self.hand_commander = hand_commander
-        self.demo_joint_states = demo_joint_states
+    def __init__(self, prefix):
+        '''
+            Initializes the tactile reading class
+            @param prefix: The hand prefix ("rh_" or "lh_")
+        '''
         self.prefix = prefix
 
         # Read tactile type
@@ -66,6 +68,9 @@ class TactileReading:
         self.zero_tactile_sensors()
 
     def zero_tactile_sensors(self):
+        '''
+            Zeroes the tactile sensors
+        '''
         if self.get_tactiles() is not None:
             rospy.logwarn('\nPLEASE ENSURE THAT THE TACTILE SENSORS ARE NOT PRESSED')
             input('\nPress ENTER to continue...')
@@ -79,9 +84,14 @@ class TactileReading:
             for key in ["FF", "MF", "RF", "LF", "TH"]:
                 self.reference_tactile_values[key] = sum(entry[key] for entry in accumulator) / len(accumulator)
 
-            rospy.loginfo('Reference values: ' + str(self.reference_tactile_values))
+            rospy.loginfo(f'Reference values: {self.reference_tactile_values}')
 
     def read_tactile_values(self):
+        '''
+            Reads the current state of the tactile sensors
+            to determine which type of tactile sensors are
+            on the hand
+        '''
         if self.get_tactiles() is not None:
             # Read current state of tactile sensors
             tactile_state = self.tactile_receiver.get_tactile_state()
@@ -100,9 +110,16 @@ class TactileReading:
                 self.tactile_values['TH'] = tactile_state.pressure[4]
 
     def get_tactiles(self):
+        '''
+            Returns the tactile type
+        '''
         return self.tactile_type
 
     def confirm_touched(self):
+        '''
+            Returns whether the tactile sensors are being touched
+            and which finger is being touched
+        '''
         touched = None
         if self.get_tactiles() is not None:
             self.read_tactile_values()
@@ -114,15 +131,19 @@ class TactileReading:
 
 
 class KeyboardPressDetector:
-    def __init__(self, hand_commander, demo_states, tactile_reading, hand_type):
+    def __init__(self, robot_object):
+        '''
+            Initializes the keyboard press detector
+            @param robot_object: A object of the Robot class)
+        '''
         self.keyboard_pressed = False
-        self.hand_commander = hand_commander
-        self.demo_states = demo_states
-        self.tactile_reading = tactile_reading
-        self.hand_type = hand_type
+        self.robot = robot_object
 
     @staticmethod
     def _get_input():
+        '''
+            This function is used to get the input from the keyboard
+        '''
         file_descriptor = sys.stdin.fileno()
         old_settings = termios.tcgetattr(file_descriptor)
         try:
@@ -133,19 +154,24 @@ class KeyboardPressDetector:
         return first_char
 
     def run(self):
+        '''
+            This function is used to run the keyboard press detector
+            depending on the key pressed, it will call the appropriate
+            function from the robot class.
+        '''
         while not rospy.is_shutdown():
             input_val = self._get_input()
             if input_val == "1":
-                sequence_th(self.hand_commander, self.demo_states)
+                robot.stored_states_sequence()
             elif input_val == "2":
-                sequence_ff(self.hand_commander, self.demo_states)
+                robot.standard_demo_sequence()
             elif input_val == "3":
-                sequence_mf(self.hand_commander, self.demo_states)
+                robot.rock_paper_scissors()
             elif input_val == "4":
-                sequence_rf(self.hand_commander, self.demo_states, self.tactile_reading, self.hand_type)
+                robot.grasp_demo()
             elif input_val == "5":
-                if self.hand_type == 'hand_e':
-                    sequence_lf(self.hand_commander, self.demo_states, self.tactile_reading)
+                if robot.hand_type == 'hand_e':
+                    robot.random_sequence()
                 else:
                     rospy.logerr("This demo only works for a 5-fingered Hand E. Please try demos 1-4")
             elif input_val == "6":
@@ -154,345 +180,380 @@ class KeyboardPressDetector:
             rospy.sleep(0.05)
 
 
-def sequence_th(hand_commander, joint_states_config):
-    rospy.loginfo("TH demo started")
+class Robot:
+    def __init__(self, robot_type, hand_type):
+        '''
+            Initializes the robot class
+            @param robot_type: The robot type (right_hand, left_hand, two_hands)
+            @param hand_type: The hand type (hand_e, hand_lite, hand_extra_lite)
+        '''
+        self.robot = robot_type
+        self.hand_type = hand_type
+        self.commander = SrHandCommander(name=robot_type)
+        self.commander.set_max_velocity_scaling_factor(1)
+        self.commander.set_max_acceleration_scaling_factor(1)
 
-    rospy.sleep(0.5)
-    execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.5, 1.5)
+        if robot_type == "two_hands":
+            self.prefixes = ["rh_", "lh_"]
+        else:
+            self.prefixes = [f"{robot_type[0]}h_"]
+        self.tactiles = self._has_tactiles()
 
-    rospy.loginfo("TH demo completed")
+        # Get joint states for demo from yaml
+        joint_states_config_filename = '/home/user/projects/shadow_robot/base/src/'\
+                                       'sr_interface/sr_demos/config/demo_joint_states.yaml'
+        with open(joint_states_config_filename, encoding="utf-8") as joint_state_file:
+            joint_states_config_yaml = yaml.load(joint_state_file, Loader=yaml.FullLoader)
 
+        self.demo_joint_states = self._get_joint_states_for_robot(joint_states_config_yaml)
+        rospy.sleep(1)
+        self.commander.move_to_named_target("open")
 
-def sequence_ff(hand_commander, joint_states_config):
-    rospy.loginfo("FF demo started")
+    def _has_tactiles(self):
+        '''
+            TactileReading is going to search for any available sensors (Biotact, PST, etc)
+        '''
+        tactiles = []
+        if len(self.prefixes) == 2:
+            tactile_right = TactileReading('rh_')
+            tactile_left = TactileReading('lh_')
+            if tactile_left.get_tactiles() is not None and tactile_right.get_tactiles() is not None:
+                tactiles.extend([tactile_right, tactile_left])
+        else:
+            tactile = TactileReading(self.prefixes[0])
+            if tactile.get_tactiles() is not None:
+                tactiles.append(tactile)
+        return tactiles
 
-    rospy.sleep(1)
-    sequence_ff_commands(hand_commander, joint_states_config)
+    def _get_joint_states_for_robot(self, joint_states_config_yaml):
+        '''
+            Returns a dictionary of joint states with correct prefix
+            and only joints that are present in the hand type
+            Input: joint_states_config_yaml: dictionary of joint states
+            Output: joint_states: dictionary of joint states
+        '''
+        joint_states_config = self._correct_joint_states_for_hand_type(joint_states_config_yaml)
+        # Add prefix to joint states
+        joint_states = self._add_prefix_to_joint_states(joint_states_config)
+        return joint_states
 
-    rospy.loginfo("FF demo completed")
+    def _correct_joint_states_for_hand_type(self, joint_states_config):
+        '''
+            Returns a dictionary of joint states for the robot type
+            where the joints that are not present in the hand type are removed
+            Input: joint_states_config: dictionary of joint states
+            Output: joint_states_config: dictionary of joint states
+        '''
+        hand_type_joints_filename = '/home/user/projects/shadow_robot/base/src/'\
+                                    'sr_interface/sr_demos/config/joints_in_hand.yaml'
+        with open(hand_type_joints_filename, encoding="utf-8") as hand_type_joints_file:
+            hand_type_joints = yaml.load(hand_type_joints_file, Loader=yaml.FullLoader)
 
+        for joint_state_dicts_no_id in joint_states_config.keys():
+            for key in list(joint_states_config[joint_state_dicts_no_id]):
+                if key not in hand_type_joints[self.hand_type]:
+                    joint_states_config[joint_state_dicts_no_id].pop(key)
+        return joint_states_config
 
-def sequence_ff_commands(hand_commander, joint_states_config):
-    execute_command_check(hand_commander, joint_states_config, 'store_3', 1.1, 1.1)
-    execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.1, 1.1)
-    execute_command_check(hand_commander, joint_states_config, 'flex_ff', 1.1, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'ext_ff', 1.1, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'flex_mf', 1.1, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'ext_mf', 1.1, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'flex_rf', 1.1, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'ext_rf', 1.1, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'flex_lf', 1.1, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'ext_lf', 1.1, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'flex_th_1', 1, 0.7)
-    execute_command_check(hand_commander, joint_states_config, 'flex_th_2', 1, 0.7)
-    execute_command_check(hand_commander, joint_states_config, 'ext_th_1', 1.5, 1.5)
-    execute_command_check(hand_commander, joint_states_config, 'ext_th_2', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config, 'l_ext_lf', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config, 'l_ext_rf', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config, 'l_ext_mf', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config, 'l_ext_ff', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config, 'l_int_all', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config, 'l_ext_all', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config, 'l_int_ff', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config, 'l_int_mf', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config, 'l_int_rf', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config, 'l_int_lf', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config, 'l_zero_all', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config, 'l_spock', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config, 'l_zero_all', 0.5, 0.5)
-    execute_command_check(hand_commander, joint_states_config, 'pre_ff_ok', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'ff_ok', 0.9, 0.7)
-    execute_command_check(hand_commander, joint_states_config, 'ff2mf_ok', 0.4, 0.5)
-    execute_command_check(hand_commander, joint_states_config, 'mf_ok', 0.9, 0.7)
-    execute_command_check(hand_commander, joint_states_config, 'mf2rf_ok', 0.4, 0.5)
-    execute_command_check(hand_commander, joint_states_config, 'rf_ok', 0.9, 0.7)
-    execute_command_check(hand_commander, joint_states_config, 'rf2lf_ok', 0.4, 0.5)
-    execute_command_check(hand_commander, joint_states_config, 'lf_ok', 0.9, 0.7)
-    execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'flex_ff', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'flex_mf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'flex_rf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'flex_lf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'ext_ff', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'ext_mf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'ext_rf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'ext_lf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'flex_ff', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'flex_mf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'flex_rf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'flex_lf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'ext_ff', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'ext_mf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'ext_rf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'ext_lf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'flex_ff', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'flex_mf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'flex_rf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'flex_lf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'ext_ff', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'ext_mf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'ext_rf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'ext_lf', 0.2, 0.2)
-    execute_command_check(hand_commander, joint_states_config, 'pre_ff_ok', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'ff_ok', 3.3, 1.3)
-    execute_command_check(hand_commander, joint_states_config, 'ne_wr', 1.1, 1.1)
-    execute_command_check(hand_commander, joint_states_config, 'nw_wr', 1.1, 1.1)
-    execute_command_check(hand_commander, joint_states_config, 'sw_wr', 1.1, 1.1)
-    execute_command_check(hand_commander, joint_states_config, 'se_wr', 1.1, 1.1)
-    execute_command_check(hand_commander, joint_states_config, 'ne_wr', 0.7, 0.7)
-    execute_command_check(hand_commander, joint_states_config, 'nw_wr', 0.7, 0.7)
-    execute_command_check(hand_commander, joint_states_config, 'sw_wr', 0.7, 0.7)
-    execute_command_check(hand_commander, joint_states_config, 'se_wr', 0.7, 0.7)
-    execute_command_check(hand_commander, joint_states_config, 'zero_wr', 0.4, 0.4)
-    execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.5, 1.5)
+    def _add_prefix_to_joint_states(self, joint_states_config):
+        '''
+            Adds the correct prefix to the joint states
+            Input: joint_states_config - dictionary of joint states
+            Output: demo_states - dictionary of joint states with correct prefix for the robot type
+        '''
+        demo_states = {}
+        for joint_state_dicts_no_id in joint_states_config.keys():
+            joints_target = {}
+            for key, value in joint_states_config[joint_state_dicts_no_id].items():
+                if len(self.prefixes) == 2:
+                    joints_target['rh_' + key] = value
+                    joints_target['lh_' + key] = value
+                else:
+                    joints_target[self.prefixes[0] + key] = value
+                demo_states[joint_state_dicts_no_id] = joints_target
+        return demo_states
 
+    def execute_command_check(self, joint_state_name, time_to_execute,
+                              sleep=0.1,
+                              wait=True, angle_degrees=True):
+        '''
+            Execute a command using the hand commander method move_to_joint_value_target_unsafe
+            input: joint_state_name - name of the joint state to execute
+                    time_to_execute - time to execute the joint state
+                    sleep - time to sleep after executing the joint state
+                    wait - wait for the joint state to finish executing
+                    angle_degrees - if the joint state is in degrees or radians
+        '''
+        if joint_state_name in self.demo_joint_states.keys():
+            if "LFJ" in joint_state_name and self.hand_type != "hand_e":
+                return
+            if "RFJ" in joint_state_name and self.hand_type == "hand_extra_lite":
+                return
+            self.commander.move_to_joint_value_target_unsafe(self.demo_joint_states[joint_state_name],
+                                                             time_to_execute, wait,
+                                                             angle_degrees)
+            rospy.sleep(sleep)
 
-def sequence_mf(hand_commander, joint_states_config):
-    rospy.loginfo("MF demo started")
+    def check_touched_finger(self):
+        '''
+            Checks if a tactile sensor has been touched
+            and returns the finger that has been touched
+        '''
+        touched_finger = None
+        if len(self.tactiles) == 2:
+            # confirm_touched() will return None if no sensors are found
+            touched_right = self.tactiles[0].confirm_touched()
+            touched_left = self.tactiles[1].confirm_touched()
+            if touched_right is not None and touched_left is not None:
+                rospy.loginfo("You touched fingers on both hands at the same time. Defaulting to right touch")
+                touched_finger = touched_right
+            elif touched_right is not None:
+                touched_finger = touched_right
+            elif touched_left is not None:
+                touched_finger = touched_left
+        # check if tactile sensors have been previously found
+        elif len(self.tactiles) == 1:  # Unimanual mode
+            touched_finger = self.tactiles[0].confirm_touched()
+        return touched_finger
 
-    rospy.sleep(0.5)
-    execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'bc_pre_zero', 2.0, 2.0)
-    execute_command_check(hand_commander, joint_states_config, 'bc_zero', 4.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'bc_1', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'bc_2', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'bc_3', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'bc_4', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'bc_5', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'bc_6', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'bc_7', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'bc_8', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'bc_9', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'bc_11', 1.0, 1.0)
-    execute_command_check(hand_commander, joint_states_config, 'bc_12', 4.0, 3.0)
-    execute_command_check(hand_commander, joint_states_config, 'start_pos', 1.5, 1.5)
+    def stored_states_sequence(self):
+        '''
+        Runs a demo sequence of stored states.
+        '''
+        rospy.loginfo("Stored States demo started")
 
-    rospy.loginfo("MF demo completed")
+        trajectory = [
+            {
+                'name': 'open',
+                'interpolate_time': 3.0,
+                'pause_time': 2
+            },
+            {
+                'name': 'fingers_pack_thumb_open',
+                'interpolate_time': 3.0,
+                'pause_time': 2
+            },
+            {
+                'name': 'pack',
+                'interpolate_time': 3.0,
+                'pause_time': 2
+            },
+            {
+                'name': 'fingers_pack_thumb_open',
+                'interpolate_time': 3.0,
+                'pause_time': 2
+            },
+            {
+                'name': 'open',
+                'interpolate_time': 3.0,
+                'pause_time': 2
+            }
+        ]
 
+        self.commander.run_named_trajectory(trajectory)
+        rospy.loginfo("Stored States demo completed")
 
-def sequence_rf(hand_commander, joint_states_config, tactile_reading, hand_type):
-    rospy.loginfo("RF demo started")
+    def standard_demo_sequence(self):
+        rospy.loginfo("Standard demo started")
+        self.commander.move_to_named_target("open")
 
-    # Trigger flag array
-    trigger = [0, 0, 0, 0, 0]
+        flex_ext_sequence = ['flex_ff', 'flex_mf', 'flex_rf', 'flex_lf', 'ext_ff', 'ext_mf', 'ext_rf', 'ext_lf']
+        for movement in flex_ext_sequence:
+            self.execute_command_check(movement, 1.1)
 
-    # Move Hand to zero position
-    execute_command_check(hand_commander, joint_states_config, 'start_pos', 2.0, 2.0)
+        self.execute_command_check('flex_th_1', 0.7)
+        self.execute_command_check('flex_th_2', 0.7)
+        self.execute_command_check('ext_th_1', 1.5)
+        self.execute_command_check('ext_th_2', 0.5)
+        self.execute_command_check('l_ext_lf', 0.5)
+        self.execute_command_check('l_ext_rf', 0.5)
+        self.execute_command_check('l_ext_mf', 0.5)
+        self.execute_command_check('l_ext_ff', 0.5)
+        self.execute_command_check('l_int_all', 0.5)
+        self.execute_command_check('l_ext_all', 0.5)
+        self.execute_command_check('l_int_ff', 0.5)
+        self.execute_command_check('l_int_mf', 0.5)
+        self.execute_command_check('l_int_rf', 0.5)
+        self.execute_command_check('l_int_lf', 0.5)
+        self.execute_command_check('l_zero_all', 0.5)
+        self.execute_command_check('l_spock', 0.5)
+        self.execute_command_check('l_zero_all', 0.5)
+        self.execute_command_check('pre_ff_ok', 1.0)
+        self.execute_command_check('ff_ok', 0.9)
+        self.execute_command_check('ff2mf_ok', 0.4)
+        self.execute_command_check('mf_ok', 0.9)
+        self.execute_command_check('mf2rf_ok', 0.4)
+        self.execute_command_check('rf_ok', 0.9)
+        self.execute_command_check('rf2lf_ok', 0.4)
+        self.execute_command_check('lf_ok', 0.9)
+        self.commander.move_to_named_target("open")
 
-    # Move Hand to starting position
-    execute_command_check(hand_commander, joint_states_config, 'pregrasp_pos', 2.0, 2.0)
+        for _ in range(0, 3):
+            for movement in flex_ext_sequence:
+                self.execute_command_check(movement, 0.2)
 
-    # Move Hand to close position
-    execute_command_check(hand_commander, joint_states_config, 'grasp_pos', 0.0, 11.0)
-    offset1 = 3
+        self.execute_command_check('pre_ff_ok', 1.0)
+        self.execute_command_check('ff_ok', 3.3)
+        self.execute_command_check('ne_wr', 1.1)
+        self.execute_command_check('nw_wr', 1.1)
+        self.execute_command_check('sw_wr', 1.1)
+        self.execute_command_check('se_wr', 1.1)
+        self.execute_command_check('ne_wr', 0.7)
+        self.execute_command_check('nw_wr', 0.7)
+        self.execute_command_check('sw_wr', 0.7)
+        self.execute_command_check('se_wr', 0.7)
+        self.execute_command_check('zero_wr', 0.4)
+        self.commander.move_to_named_target("open")
+        rospy.loginfo("Standard demo completed")
 
-    # Initialize end time
-    end_time = time.time() + 11
+    def rock_paper_scissors(self):
+        '''
+            Runs the Rock, Paper, Scissors demo
+        '''
+        rospy.loginfo("Rock, Paper, Scissors demo started")
+        self.commander.move_to_named_target("open")
 
-    prefix = "lh_"
-    for joint_state in joint_states_config['start_pos'].keys():
-        if "rh_" in joint_state:
-            prefix = "rh_"
-            break
+        rospy.loginfo("Welcome to the Rock, Paper, Scissors game!")
+        rospy.loginfo("The hand will count down from 3 and then you will make a gesture.")
+        rospy.loginfo("Rock is a fist, Paper is a flat hand, and Scissors is a peace sign.")
+        rospy.loginfo("Ready?")
+        rospy.sleep(3)
 
-    # For now, tactile_reading is only being considered for uni-manual
-    while tactile_reading is not None:
-        # Record current joint positions
-        hand_pos = {joint: degrees(i) for joint, i in hand_commander.get_joints_position().items()}
+        # Count down
+        self.execute_command_check('count_down_3', 1.0)
+        rospy.loginfo("3")
+        self.execute_command_check('count_down_2', 1.0)
+        rospy.loginfo("2")
+        self.execute_command_check('count_down_1', 1.0)
+        rospy.loginfo("1")
+        self.execute_command_check('count_down_0_ff', 1.0)
+        self.execute_command_check('count_down_0_th', 1.0)
+        rospy.loginfo("Make your gesture!")
 
-        # If any tacticle sensor has been triggered, send
-        # the corresponding digit to its current position
-        if (tactile_reading.confirm_touched() == 'FF' and trigger[0] == 0):
-            hand_pos_incr_f = {f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset1,
-                               f"{prefix}FFJ3": hand_pos[f'{prefix}FFJ3'] + offset1}
-            hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_f, 0.5, wait=False, angle_degrees=True)
-            rospy.loginfo('First finger contact')
-            trigger[0] = 1
+        # Select a pose at random
+        poses = ['rock', 'paper', 'scissors']
+        pose = random.choice(poses)
+        self.execute_command_check(pose, 1.0)
+        rospy.loginfo(f"The hand made the {pose} gesture!")
+        rospy.sleep(5.0)
 
-        if (tactile_reading.confirm_touched() == 'MF' and trigger[1] == 0):
-            hand_pos_incr_m = {f"{prefix}MFJ1": hand_pos[f'{prefix}MFJ1'] + offset1,
-                               f"{prefix}MFJ3": hand_pos[f'{prefix}MFJ3'] + offset1}
-            hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_m, 0.5, wait=False, angle_degrees=True)
-            rospy.loginfo('Middle finger contact')
-            trigger[1] = 1
+        if pose == "rock":
+            self.commander.move_to_named_target("fingers_pack_thumb_open")
+        self.commander.move_to_named_target("open")
+        rospy.loginfo("Rock, Paper, Scissors demo completed")
 
-        if (tactile_reading.confirm_touched() == 'RF' and trigger[2] == 0):
-            hand_pos_incr_r = {f"{prefix}RFJ1": hand_pos[f'{prefix}RFJ1'] + offset1,
-                               f"{prefix}RFJ3": hand_pos[f'{prefix}RFJ3'] + offset1}
-            hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_r, 0.5, wait=False, angle_degrees=True)
-            rospy.loginfo('Ring finger contact')
-            trigger[2] = 1
+    def grasp_demo(self):
+        '''
+            Runs a demo that imitates grasping and squeezing an object.
+        '''
+        rospy.loginfo("Grasp Demo Started")
 
-        if (tactile_reading.confirm_touched() == 'LF' and trigger[3] == 0):
-            hand_pos_incr_l = {f"{prefix}LFJ1": hand_pos[f'{prefix}LFJ1'] + offset1,
-                               f"{prefix}LFJ3": hand_pos[f'{prefix}LFJ3'] + offset1}
-            hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_l, 0.5, wait=False, angle_degrees=True)
-            rospy.loginfo('Little finger contact')
-            trigger[3] = 1
+        self.commander.move_to_named_target("open")
+        rospy.loginfo("The hand will now imitate grasping and squeezing an object...")
+        self.execute_command_check('pregrasp_pos', 2.0)
+        self.execute_command_check('grasp_pos', 5.0)
 
-        if (tactile_reading.confirm_touched() == 'TH' and trigger[4] == 0):
-            hand_pos_incr_th = {f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset1,
-                                f"{prefix}THJ5": hand_pos[f'{prefix}THJ5'] + offset1}
-            hand_commander.move_to_joint_value_target_unsafe(hand_pos_incr_th, 0.5, wait=False, angle_degrees=True)
-            rospy.loginfo('Thumb contact')
-            trigger[4] = 1
+        # Send all joints to current position to compensate
+        # for minor offsets created in the previous loop
+        hand_pos = {joint: degrees(i) for joint, i in self.commander.get_joints_position().items()}
+        self.commander.move_to_joint_value_target_unsafe(hand_pos, 2.0, wait=True, angle_degrees=True)
+        rospy.sleep(2.0)
 
-        if (trigger[0] == 1 and trigger[1] == 1 and trigger[2] == 1 and trigger[3] == 1 and trigger[4] == 1):
-            break
+        # Generate new values to squeeze object slightly
+        offset = 5
+        squeeze = hand_pos.copy()
+        for prefix in self.prefixes:
+            squeeze.update({f"{prefix}THJ5": hand_pos[f'{prefix}THJ5'] + offset,
+                            f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset,
+                            f"{prefix}FFJ3": hand_pos[f'{prefix}FFJ3'] + offset,
+                            f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset,
+                            f"{prefix}RFJ3": hand_pos[f'{prefix}RFJ3'] + offset,
+                            f"{prefix}RFJ1": hand_pos[f'{prefix}RFJ1'] + offset})
+        if self.hand_type == 'hand_lite' or self.hand_type == 'hand_e':
+            for prefix in self.prefixes:
+                squeeze.update({f"{prefix}MFJ3": hand_pos[f'{prefix}MFJ3'] + offset,
+                                f"{prefix}MFJ1": hand_pos[f'{prefix}MFJ1'] + offset})
+        if self.hand_type == 'hand_e':
+            for prefix in self.prefixes:
+                squeeze.update({f"{prefix}LFJ3": hand_pos[f'{prefix}LFJ3'] + offset,
+                                f"{prefix}LFJ1": hand_pos[f'{prefix}LFJ1'] + offset})
 
-        if time.time() > end_time:
-            break
+        # Squeeze object gently
+        self.commander.move_to_joint_value_target_unsafe(squeeze, 0.5, wait=True, angle_degrees=True)
+        rospy.sleep(0.5)
+        self.commander.move_to_joint_value_target_unsafe(hand_pos, 0.5, wait=True, angle_degrees=True)
+        rospy.sleep(0.5)
+        self.commander.move_to_joint_value_target_unsafe(squeeze, 0.5, wait=True, angle_degrees=True)
+        rospy.sleep(0.5)
+        self.commander.move_to_joint_value_target_unsafe(hand_pos, 2.0, wait=True, angle_degrees=True)
+        rospy.sleep(2.0)
+        self.execute_command_check('pregrasp_pos', 2.0)
+        self.commander.move_to_named_target("open")
 
-    # Send all joints to current position to compensate
-    # for minor offsets created in the previous loop
-    hand_pos = {joint: degrees(i) for joint, i in hand_commander.get_joints_position().items()}
-    hand_commander.move_to_joint_value_target_unsafe(hand_pos, 2.0, wait=False, angle_degrees=True)
-    rospy.sleep(2.0)
+        rospy.loginfo("Grasp Demo completed")
 
-    # Generate new values to squeeze object slightly
-    offset2 = 3
-    squeeze = hand_pos.copy()
-    if hand_type == 'hand_lite':
-        squeeze.update({f"{prefix}THJ5": hand_pos[f'{prefix}THJ5'] + offset2,
-                        f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset2,
-                        f"{prefix}FFJ3": hand_pos[f'{prefix}FFJ3'] + offset2,
-                        f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset2,
-                        f"{prefix}MFJ3": hand_pos[f'{prefix}MFJ3'] + offset2,
-                        f"{prefix}MFJ1": hand_pos[f'{prefix}MFJ1'] + offset2,
-                        f"{prefix}RFJ3": hand_pos[f'{prefix}RFJ3'] + offset2,
-                        f"{prefix}RFJ1": hand_pos[f'{prefix}RFJ1'] + offset2})
-    elif hand_type == 'hand_extra_lite':
-        squeeze.update({f"{prefix}THJ5": hand_pos[f'{prefix}THJ5'] + offset2,
-                        f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset2,
-                        f"{prefix}FFJ3": hand_pos[f'{prefix}FFJ3'] + offset2,
-                        f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset2,
-                        f"{prefix}RFJ3": hand_pos[f'{prefix}RFJ3'] + offset2,
-                        f"{prefix}RFJ1": hand_pos[f'{prefix}RFJ1'] + offset2})
-    else:
-        squeeze.update({f"{prefix}THJ5": hand_pos[f'{prefix}THJ5'] + offset2,
-                        f"{prefix}THJ2": hand_pos[f'{prefix}THJ2'] + offset2,
-                        f"{prefix}FFJ3": hand_pos[f'{prefix}FFJ3'] + offset2,
-                        f"{prefix}FFJ1": hand_pos[f'{prefix}FFJ1'] + offset2,
-                        f"{prefix}MFJ3": hand_pos[f'{prefix}MFJ3'] + offset2,
-                        f"{prefix}MFJ1": hand_pos[f'{prefix}MFJ1'] + offset2,
-                        f"{prefix}RFJ3": hand_pos[f'{prefix}RFJ3'] + offset2,
-                        f"{prefix}RFJ1": hand_pos[f'{prefix}RFJ1'] + offset2,
-                        f"{prefix}LFJ3": hand_pos[f'{prefix}LFJ3'] + offset2,
-                        f"{prefix}LFJ1": hand_pos[f'{prefix}LFJ1'] + offset2})
+    def complete_random_sequence(self):
+        '''
+            This method will generate a random sequence of joint positions
+            and execute them.
+        '''
+        for i in self.demo_joint_states['rand_pos']:
+            self.demo_joint_states['rand_pos'][i] =\
+                random.randrange(self.demo_joint_states['min_range'][i],
+                                 self.demo_joint_states['max_range'][i])
+        for prefix in self.prefixes:
+            self.demo_joint_states['rand_pos'][f'{prefix}FFJ4'] =\
+                random.randrange(self.demo_joint_states['min_range'][f'{prefix}FFJ4'],
+                                 self.demo_joint_states['rand_pos'][f'{prefix}MFJ4'])
+            self.demo_joint_states['rand_pos'][f'{prefix}LFJ4'] =\
+                random.randrange(self.demo_joint_states['min_range'][f'{prefix}LFJ4'],
+                                 self.demo_joint_states['rand_pos'][f'{prefix}RFJ4'])
+        inter_time = 4.0 * random.random()
+        self.execute_command_check('rand_pos', 0.2, inter_time)
 
-    # Squeeze object gently
-    hand_commander.move_to_joint_value_target_unsafe(squeeze, 0.5, wait=False, angle_degrees=True)
-    rospy.sleep(0.5)
-    hand_commander.move_to_joint_value_target_unsafe(hand_pos, 0.5, wait=False, angle_degrees=True)
-    rospy.sleep(0.5)
-    hand_commander.move_to_joint_value_target_unsafe(squeeze, 0.5, wait=False, angle_degrees=True)
-    rospy.sleep(0.5)
-    hand_commander.move_to_joint_value_target_unsafe(hand_pos, 2.0, wait=False, angle_degrees=True)
-    rospy.sleep(2.0)
-    execute_command_check(hand_commander, joint_states_config, 'pregrasp_pos', 2.0, 2.0)
-    execute_command_check(hand_commander, joint_states_config, 'start_pos', 2.0, 2.0)
+    def random_sequence(self):
+        '''
+            Runs a demo that moves the Hand to a random positions.
+        '''
+        rospy.loginfo("Shy Hand demo started")
+        rospy.sleep(0.5)
+        # Initialize wake time
+        wake_time = time.time()
+        tactiles = bool(self.tactiles)
+        while True:
+            if tactiles:
+                # Check if any of the tactile senors have been triggered
+                # If so, send the Hand to its start position
+                touched_finger = self.check_touched_finger()
 
-    rospy.loginfo("RF demo completed")
+                if touched_finger is not None:
+                    self.commander.move_to_named_target("open")
+                    rospy.loginfo(f'{touched_finger} touched!')
+                    rospy.sleep(2.0)
+                    if touched_finger == "TH":
+                        break
 
-
-def sequence_lf(hand_commander, joint_states_config, tactile_reading):
-    rospy.loginfo("LF demo started")
-
-    rospy.sleep(0.5)
-    # Initialize wake time
-    wake_time = time.time()
-    while True:
-        # For now, tactile_reading is only being considered for uni-manual
-        if tactile_reading is not None:
-            # Check if any of the tactile senors have been triggered
-            # If so, send the Hand to its start position
-            touched = tactile_reading.confirm_touched()
-            if touched is not None:
-                execute_command_check(hand_commander, joint_states_config, 'start_pos', 0.0, 2.0)
-                rospy.loginfo(f'{touched} touched!')
-                rospy.sleep(2.0)
-                if touched == "TH":
-                    break
-
-            # If the tactile sensors have not been triggered and the Hand
-            # is not in the middle of a movement, generate a random position
-            # and interpolation time
+                # If the tactile sensors have not been triggered and the Hand
+                # is not in the middle of a movement, generate a random position
+                # and interpolation time
+                else:
+                    if time.time() < wake_time + CONST_TIME_TO_COMPLETE_DEMO:
+                        self.complete_random_sequence()
+                    else:
+                        break
             else:
                 if time.time() < wake_time + CONST_TIME_TO_COMPLETE_DEMO:
-                    complete_random_sequence(hand_commander, joint_states_config)
+                    self.complete_random_sequence()
                 else:
                     break
-        else:
-            if time.time() < wake_time + CONST_TIME_TO_COMPLETE_DEMO:
-                complete_random_sequence(hand_commander, joint_states_config)
-            else:
-                break
 
-    execute_command_check(hand_commander, joint_states_config, 'start_pos', 2.0, 2.0)
-
-    rospy.loginfo("LF demo completed")
-
-
-def complete_random_sequence(hand_commander, joint_states_config):
-    prefix = "lh_"
-    for joint_state in joint_states_config['start_pos'].keys():
-        if "rh_" in joint_state:
-            prefix = "rh_"
-            break
-
-    for i in joint_states_config['rand_pos']:
-        joint_states_config['rand_pos'][i] =\
-            random.randrange(joint_states_config['min_range'][i],
-                             joint_states_config['max_range'][i])
-    joint_states_config['rand_pos'][f'{prefix}FFJ4'] =\
-        random.randrange(joint_states_config['min_range'][f'{prefix}FFJ4'],
-                         joint_states_config['rand_pos'][f'{prefix}MFJ4'])
-    joint_states_config['rand_pos'][f'{prefix}LFJ4'] =\
-        random.randrange(joint_states_config['min_range'][f'{prefix}LFJ4'],
-                         joint_states_config['rand_pos'][f'{prefix}RFJ4'])
-    inter_time = 4.0 * random.random()
-    execute_command_check(hand_commander, joint_states_config, 'rand_pos', 0.2, inter_time)
-
-
-def correct_joint_states_for_hand_type(joint_states_config, hand_type):
-    hand_type_joints_filename = '/home/user/projects/shadow_robot/base/src/'\
-                       'sr_interface/sr_demos/config/joints_in_hand.yaml'
-    with open(hand_type_joints_filename, encoding="utf-8") as hand_type_joints_file:
-        hand_type_joints = yaml.load(hand_type_joints_file, Loader=yaml.FullLoader)
-
-    for joint_state_dicts_no_id in joint_states_config.keys():
-        for key in list(joint_states_config[joint_state_dicts_no_id]):
-            if key not in hand_type_joints[hand_type]:
-                joint_states_config[joint_state_dicts_no_id].pop(key)
-
-    return joint_states_config
-
-
-def add_prefix_to_joint_states(corrected_joint_states_config, joint_prefix):
-    demo_states = {}
-    for joint_state_dicts_no_id in corrected_joint_states_config.keys():
-        joints_target = {}
-        for key, value in corrected_joint_states_config[joint_state_dicts_no_id].items():
-            if joint_prefix == 'both':
-                joints_target['rh_' + key] = value
-                joints_target['lh_' + key] = value
-            else:
-                joints_target[joint_prefix + key] = value
-            demo_states[joint_state_dicts_no_id] = joints_target
-    return demo_states
-
-
-def execute_command_check(hand_commander, joint_states_config, joint_states,
-                          sleep, time_to_execute, wait=False, angle_degrees=True):
-    if joint_states in joint_states_config.keys():
-        hand_commander.move_to_joint_value_target_unsafe(joint_states_config[joint_states], time_to_execute, wait,
-                                                         angle_degrees)
-        rospy.sleep(sleep)
+        self.commander.move_to_named_target("open")
+        rospy.loginfo("Shy Hand demo completed")
 
 
 if __name__ == "__main__":
 
-    rospy.init_node("right_hand_demo", anonymous=True)
+    rospy.init_node("hand_demo", anonymous=True)
 
     parser = argparse.ArgumentParser(description="Hand side")
     parser.add_argument("-s", "--side",
@@ -513,88 +574,39 @@ if __name__ == "__main__":
     args = parser.parse_args(rospy.myargv()[1:])
 
     if args.side == 'right':
-        joint_prefix_name = 'rh_'
+        robot = Robot("right_hand", args.hand_type)
     elif args.side == 'left':
-        joint_prefix_name = 'lh_'
+        robot = Robot("left_hand", args.hand_type)
     else:
-        joint_prefix_name = 'both'
-
-    if joint_prefix_name == 'rh_':
-        hand_name = "right_hand"
-    elif joint_prefix_name == 'lh_':
-        hand_name = "left_hand"
-    else:
-        hand_name = "two_hands"
-
-    hand_commander_instance = SrHandCommander(name=hand_name, prefix=joint_prefix_name)
-
-    # Get joint states for demo from yaml
-    joint_states_config_filename = '/home/user/projects/shadow_robot/base/src/'\
-                                   'sr_interface/sr_demos/config/demo_joint_states.yaml'
-    with open(joint_states_config_filename, encoding="utf-8") as joint_state_file:
-        joint_states_config_yaml = yaml.load(joint_state_file, Loader=yaml.FullLoader)
-
-    corrected_joint_states_config_for_this_hand = correct_joint_states_for_hand_type(joint_states_config_yaml,
-                                                                                     args.hand_type)
-
-    # Add prefix to joint states
-    demo_states_with_prefix = add_prefix_to_joint_states(corrected_joint_states_config_for_this_hand, joint_prefix_name)
-
-    execute_command_check(hand_commander_instance, demo_states_with_prefix, 'start_pos', 0.0, 1.0)
-
-    # TactileReading is going to search for any available sensors (Biotact, PST, etc)
-    tactile_reading_instance = None
-    if joint_prefix_name == 'both':
-        tactile_right = TactileReading(hand_commander_instance, demo_states_with_prefix, 'rh_')
-        tactile_left = TactileReading(hand_commander_instance, demo_states_with_prefix, 'lh_')
-    else:
-        tactile_reading_instance = TactileReading(hand_commander_instance, demo_states_with_prefix, joint_prefix_name)
+        robot = Robot("two_hands", args.hand_type)
 
     rospy.loginfo("\nPRESS ONE OF THE TACTILES or 1-5 ON THE KEYBOARD TO START A DEMO:\
-                   \nTH or 1: Open Hand\
+                   \nTH or 1: Stored States Demo\
                    \nFF or 2: Standard Demo\
-                   \nMF or 3: Card Trick Demo\
+                   \nMF or 3: Rock, Paper, Scissors Demo\
                    \nRF or 4: Grasp Demo\
                    \nLF or 5: Shy Hand Demo (only works with Hand E).\
                    \nPRESS 6 TO END THE PROGRAM")
 
     # Keyboard thread for input
-    kpd = KeyboardPressDetector(hand_commander_instance, demo_states_with_prefix,
-                                tactile_reading_instance, args.hand_type)
+    kpd = KeyboardPressDetector(robot)
     keyboard_thread = Thread(target=kpd.run)
     keyboard_thread.start()
 
     while not rospy.is_shutdown():
         # Check the state of the tactile sensors
-        touched_finger = None
-
-        if joint_prefix_name == 'both':  # Bimanual mode
-            # check if tactile sensors have been previously found for at least one hand
-            if tactile_right.get_tactiles() is not None or tactile_left.get_tactiles() is not None:
-                # confirm_touched() will return None if no sensors are found
-                touched_right = tactile_right.confirm_touched()
-                touched_left = tactile_left.confirm_touched()
-                if touched_right is not None and touched_left is not None:
-                    rospy.loginfo("You touched fingers on both hands at the same time. Defaulting to right touch")
-                    touched_finger = touched_right
-                elif touched_right is not None:
-                    touched_finger = touched_right
-                elif touched_left is not None:
-                    touched_finger = touched_left
-        # check if tactile sensors have been previously found
-        elif tactile_reading_instance.get_tactiles() is not None:  # Unimanual mode
-            touched_finger = tactile_reading_instance.confirm_touched()
-
-        # If the tactile is touched, trigger the corresponding function
-        if touched_finger == "TH":
-            sequence_th(hand_commander_instance, demo_states_with_prefix)
-        elif touched_finger == "FF":
-            sequence_ff(hand_commander_instance, demo_states_with_prefix)
-        elif touched_finger == "MF":
-            sequence_mf(hand_commander_instance, demo_states_with_prefix)
-        elif touched_finger == "RF":
-            sequence_rf(hand_commander_instance, demo_states_with_prefix, tactile_reading_instance, args.hand_type)
-        elif touched_finger == "LF":
-            sequence_lf(hand_commander_instance, demo_states_with_prefix, tactile_reading_instance)
+        if robot.tactiles:
+            finger_touched = robot.check_touched_finger()
+            # If the tactile is touched, trigger the corresponding function
+            if finger_touched == "TH":
+                robot.stored_states_sequence()
+            elif finger_touched == "FF":
+                robot.standard_demo_sequence()
+            elif finger_touched == "MF":
+                robot.rock_paper_scissors()
+            elif finger_touched == "RF":
+                robot.grasp_demo()
+            elif finger_touched == "LF":
+                robot.random_sequence()
 
         rospy.sleep(0.1)
