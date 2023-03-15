@@ -106,21 +106,21 @@ class SRDFHandGenerator:
         # load the tip_sensors from the parameter server after the hand has been auto-detected
         hand_version = rospy.get_param(param)
 
-        rospy.logdebug(f"Found fingers (ff mf rf lf th) {str(first_finger)} {str(middle_finger)} " +
-                       f"{str(ring_finger)} {str(little_finger)} {str(thumb)}")
-        rospy.logdebug(f"is_lite: {str(is_lite)}")
-        rospy.logdebug(f"tip_sensors: {str(tip_sensors)}")
+        rospy.logdebug(f"Found fingers (ff mf rf lf th) {first_finger} {middle_finger} " +
+                       f"{ring_finger} {little_finger} {thumb}")
+        rospy.logdebug(f"is_lite: {is_lite}")
+        rospy.logdebug(f"tip_sensors: {tip_sensors}")
         rospy.logdebug(f"hand_version: {hand_version}")
 
-        mappings = load_mappings([f'prefix:={str(prefix)}',
+        mappings = load_mappings([f'prefix:={prefix}',
                                   f'robot_name:={robot.name}',
-                                  f'ff:={str(int(first_finger))}',
-                                  f'mf:={str(int(middle_finger))}',
-                                  f'rf:={str(int(ring_finger))}',
-                                  f'lf:={str(int(little_finger))}',
-                                  f'th:={str(int(thumb))}',
-                                  f'is_lite:={str(int(is_lite))}',
-                                  f'tip_sensors:={str(tip_sensors)}',
+                                  f'ff:={int(first_finger)}',
+                                  f'mf:={int(middle_finger)}',
+                                  f'rf:={int(ring_finger)}',
+                                  f'lf:={int(little_finger)}',
+                                  f'th:={int(thumb)}',
+                                  f'is_lite:={int(is_lite)}',
+                                  f'tip_sensors:={tip_sensors}',
                                   f'hand_version:={hand_version}',
                                   f'hand_name:={hand_name}'
                                   ])
