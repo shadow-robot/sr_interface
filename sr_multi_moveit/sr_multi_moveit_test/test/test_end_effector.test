@@ -1,6 +1,7 @@
 <launch>
-
- <include file = "$(find sr_multi_moveit_config)/launch/demo.launch">
+  <param name="right_tip_sensors" value="pst" />
+  <param name="right_hand_version" value="E3M5" />
+  <include file = "$(find sr_multi_moveit_config)/launch/demo.launch">
     <arg name="visualization" value="false" />
     <arg name="robot_description" default="'$(find sr_multi_description)/urdf/srhand_ur.urdf.xacro'"/>
     <arg name="robot_config_file" default="$(find sr_multi_moveit_config)/config/robot_configs/right_sh_ur10.yaml"/>
