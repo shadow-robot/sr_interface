@@ -67,7 +67,7 @@ class SRDFHandGenerator:
             # any joint is supposed to have the same prefix and a joint name with 4 chars
             if not extracted_prefix:
                 prefix = key.split("_")[0] + "_"
-                rospy.loginfo("Found prefix:" + prefix)
+                rospy.loginfo(f"Found prefix: {prefix}")
                 extracted_prefix = True
                 if prefix == "lh_":
                     side = "left"
@@ -106,7 +106,7 @@ class SRDFHandGenerator:
         # load the tip_sensors from the parameter server after the hand has been auto-detected
         hand_version = rospy.get_param(param)
 
-        rospy.logdebug(f"Found fingers (ff mf rf lf th) {first_finger} {middle_finger} " +
+        rospy.logdebug(f"Found fingers (ff mf rf lf th): {first_finger} {middle_finger} " +
                        f"{ring_finger} {little_finger} {thumb}")
         rospy.logdebug(f"is_lite: {is_lite}")
         rospy.logdebug(f"tip_sensors: {tip_sensors}")
@@ -114,12 +114,12 @@ class SRDFHandGenerator:
 
         mappings = load_mappings([f'prefix:={prefix}',
                                   f'robot_name:={robot.name}',
-                                  f'ff:={int(first_finger)}',
-                                  f'mf:={int(middle_finger)}',
-                                  f'rf:={int(ring_finger)}',
-                                  f'lf:={int(little_finger)}',
-                                  f'th:={int(thumb)}',
-                                  f'is_lite:={int(is_lite)}',
+                                  f'ff:={first_finger}',
+                                  f'mf:={middle_finger}',
+                                  f'rf:={ring_finger}',
+                                  f'lf:={little_finger}',
+                                  f'th:={thumb}',
+                                  f'is_lite:={is_lite}',
                                   f'tip_sensors:={tip_sensors}',
                                   f'hand_version:={hand_version}',
                                   f'hand_name:={hand_name}'
