@@ -63,7 +63,7 @@ class TeachModeManager:
                         if "_THJ" not in joint and "_WRJ" not in joint:
                             if "J1" in joint:
                                 joint_list.append(joint[len(prefix):-1].lower() + "0")
-                            e>lif "J2" not in joint:
+                            elif "J2" not in joint:
                                 joint_list.append(joint[len(prefix):].lower())
                         else:
                             joint_list.append(joint[len(prefix):].lower())
