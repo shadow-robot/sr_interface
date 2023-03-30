@@ -56,14 +56,14 @@ class TeachModeManager:
             "lh_": []
         }
         try:  # pylint: disable=R1702
-            joint_states_msg = rospy.wait_for_message("/joint_states", JointState, timeout=10)
+            joint_states_msg = rospy.wait_for_message("/joint_states", JointState, timeout=30)
             for prefix, joint_list in hand_joint_names.items():
                 for joint in joint_states_msg.name:
                     if prefix in joint:
                         if "_THJ" not in joint and "_WRJ" not in joint:
                             if "J1" in joint:
                                 joint_list.append(joint[len(prefix):-1].lower() + "0")
-                            elif "J2" not in joint:
+                            e>lif "J2" not in joint:
                                 joint_list.append(joint[len(prefix):].lower())
                         else:
                             joint_list.append(joint[len(prefix):].lower())
