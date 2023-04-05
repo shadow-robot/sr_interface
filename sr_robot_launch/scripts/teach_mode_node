@@ -53,9 +53,9 @@ class TeachModeManager:
     def _create_hand_joints(waiting_timeout: int = 60) -> dict:
         """
         Create a dictionary of hand joints based on the joint states.
-        This method will wait for the joint states to be published for a specified timeout in 
+        This method will wait for the joint states to be published for a specified timeout in
         increments of 10 seconds.
-        @param timeout: The timeout in seconds, default of 60 seconds.
+        @param waiting_timeout: The timeout in seconds, default of 60 seconds.
         @return: A dictionary of hand joints.
         """
         hand_joint_names = {
