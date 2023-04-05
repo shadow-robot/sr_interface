@@ -75,20 +75,22 @@ class TeachModeManager:
         # Wait for the joint states to be published for a specified timeout in increments of 10 seconds.
         while not rospy.is_shutdown() and rospy.Time.now().to_sec() - time_waited < waiting_timeout:
             try:
+                increment += 1
                 joint_states_msg = rospy.wait_for_message("joint_states", JointState, timeout=10)
             except rospy.ROSException:
-                rospy.logwarn(f"Waiting for joint states to be published for {(increment+1)*10} seconds...")
+                rospy.logwarn(f"Waiting for joint states to be published for {increment*10} seconds...")
             else:
-                for prefix, joint_list in hand_joint_names.items():
-                    for joint in joint_states_msg.name:
-                        if prefix in joint:
-                            if "_THJ" not in joint and "_WRJ" not in joint:
-                                if "J1" in joint:
-                                    joint_list.append(joint[len(prefix):-1].lower() + "0")
-                                elif "J2" not in joint:
-                                    joint_list.append(joint[len(prefix):].lower())
-                            else:
-                                joint_list.append(joint[len(prefix):].lower())
+                for joint_name in joint_states_msg.name:
+                    if any(prefix in joint_name for prefix in hand_joint_names):
+                        for prefix in hand_joint_names:
+                            if prefix in joint_name:
+                                if "_THJ" not in joint_name and "_WRJ" not in joint_name:
+                                    if "J1" in joint_name:
+                                        hand_joint_names[prefix].append(joint_name[len(prefix):-1].lower() + "0")
+                                    elif "J2" not in joint_name:
+                                        hand_joint_names[prefix].append(joint_name[len(prefix):].lower())
+                                else:
+                                    hand_joint_names[prefix].append(joint_name[len(prefix):].lower())
 
         if not any(hand_joint_names.values()):
             raise ValueError("No joint states have been found for a hand. Please check the connections.")
