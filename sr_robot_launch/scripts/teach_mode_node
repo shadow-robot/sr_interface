@@ -50,26 +50,37 @@ class TeachModeManager:
         self.modes = ["TRAJECTORY_MODE", "TEACH_MODE", "POSITION_MODE", "DIRECT_PWM_MODE"]
 
     @staticmethod
-    def _create_hand_joints():
+    def _create_hand_joints(waiting_timeout: int = 60) -> dict:
+        """
+        Create a dictionary of hand joints based on the joint states.
+        This method will wait for the joint states to be published for a specified timeout in 
+        increments of 10 seconds.
+        @param timeout: The timeout in seconds, default of 60 seconds.
+        @return: A dictionary of hand joints.
+        """
         hand_joint_names = {
             "rh_": [],
             "lh_": []
         }
-        try:  # pylint: disable=R1702
-            joint_states_msg = rospy.wait_for_message("/joint_states", JointState, timeout=10)
-            for prefix, joint_list in hand_joint_names.items():
-                for joint in joint_states_msg.name:
-                    if prefix in joint:
-                        if "_THJ" not in joint and "_WRJ" not in joint:
-                            if "J1" in joint:
-                                joint_list.append(joint[len(prefix):-1].lower() + "0")
-                            elif "J2" not in joint:
+        time_waited = rospy.Time.now().to_sec()
+        increment = 0
+        # Wait for the joint states to be published for a specified timeout in increments of 10 seconds.
+        while not rospy.is_shutdown() and rospy.Time.now().to_sec() - time_waited < waiting_timeout:
+            try:
+                joint_states_msg = rospy.wait_for_message("joint_states", JointState, timeout=10)
+            except rospy.ROSException:
+                rospy.logwarn(f"Waiting for joint states to be published for {(increment+1)*10} seconds...")
+            else:
+                for prefix, joint_list in hand_joint_names.items():
+                    for joint in joint_states_msg.name:
+                        if prefix in joint:
+                            if "_THJ" not in joint and "_WRJ" not in joint:
+                                if "J1" in joint:
+                                    joint_list.append(joint[len(prefix):-1].lower() + "0")
+                                elif "J2" not in joint:
+                                    joint_list.append(joint[len(prefix):].lower())
+                            else:
                                 joint_list.append(joint[len(prefix):].lower())
-                        else:
-                            joint_list.append(joint[len(prefix):].lower())
-        except Exception as error:
-            rospy.logerr(f"{error}")
-            raise Exception(f"{error}") from error
 
         if not any(hand_joint_names.values()):
             raise ValueError("No joint states have been found for a hand. Please check the connections.")
