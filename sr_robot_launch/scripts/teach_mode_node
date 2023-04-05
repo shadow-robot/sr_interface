@@ -35,8 +35,16 @@ from sr_robot_msgs.srv import (ChangeControlType, RobotTeachMode,
 
 
 class TeachModeManager:
+    """
+    A class to manage change in control of the robot using the ControllerHelper class.
+    It advertises a service to change the control type of the robot.
+    """
 
     def __init__(self):
+        """
+        Initialise the class. It will create a dictionary of hand joints used for the ControllerHelper
+        class and advertise the service.
+        """
         hand_joint_names = self._create_hand_joints()
 
         rospy.Service('teach_mode', RobotTeachMode, self.teach_mode)
@@ -88,6 +96,12 @@ class TeachModeManager:
         return hand_joint_names
 
     def teach_mode(self, req):  # pylint: disable=R0911
+        """
+        This method is called when the service is called, it will change the control type of the robot.
+        Currently only the hand is supported.
+        @param req: The request containing the robot and control type.
+        @return: The response containing the result of the change.
+        """
         rospy.loginfo(f"Changing {req.robot} to {self.modes[req.teach_mode]}")
 
         if req.robot == "right_arm" or req.robot == "left_arm":
