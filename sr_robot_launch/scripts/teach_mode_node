@@ -81,23 +81,21 @@ class TeachModeManager:
                 rospy.logwarn(f"Waiting for joint states to be published for {increment*10} seconds...")
             else:
                 for prefix in hand_joint_names:
-                    # Filter the joint names by prefix and map them to a new list
-                    matching_joints = [joint_name for joint_name in joint_states_msg.name if prefix in joint_name]
-                    # Append the matching joints to the corresponding prefix key in the dictionary
-                    for joint_name in matching_joints:
-                        if "_THJ" not in joint_name and "_WRJ" not in joint_name:
-                            if "J1" in joint_name:
-                                hand_joint_names[prefix].append(joint_name[len(prefix):-1].lower() + "0")
-                            elif "J2" not in joint_name:
-                                hand_joint_names[prefix].append(joint_name[len(prefix):].lower())
-                        else:
-                            hand_joint_names[prefix].append(joint_name[len(prefix):].lower())
+                    prefix_len = len(prefix)
+                    hand_joint_prefix = hand_joint_names[prefix]
+                    for joint_name in joint_states_msg.name:
+                        if prefix in joint_name:
+                            if "_THJ" not in joint_name and "_WRJ" not in joint_name:
+                                if "J1" in joint_name:
+                                    hand_joint_prefix.append(joint_name[prefix_len:-1].lower() + "0")
+                                elif "J2" not in joint_name:
+                                    hand_joint_prefix.append(joint_name[prefix_len:].lower())
+                            else:
+                                hand_joint_prefix.append(joint_name[prefix_len:].lower())
 
-                # Check if any hand joints have been found
-                if any(hand_joint_names.values()):
-                    return hand_joint_names
-
-        raise ValueError("No joint states have been found for a hand. Please check the connections.")
+        if not any(hand_joint_names.values()):
+            raise ValueError("No joint states have been found for a hand. Please check the connections.")
+        return hand_joint_names
 
     def teach_mode(self, req):  # pylint: disable=R0911
         """
