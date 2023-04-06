@@ -79,19 +79,17 @@ class TeachModeManager:
                 joint_states_msg = rospy.wait_for_message("joint_states", JointState, timeout=10)
             except rospy.ROSException:
                 rospy.logwarn(f"Waiting for joint states to be published for {increment*10} seconds...")
-            else:
-                for prefix in hand_joint_names:
-                    prefix_len = len(prefix)
-                    hand_joint_prefix = hand_joint_names[prefix]
-                    for joint_name in joint_states_msg.name:
-                        if prefix in joint_name:
-                            if "_THJ" not in joint_name and "_WRJ" not in joint_name:
-                                if "J1" in joint_name:
-                                    hand_joint_prefix.append(joint_name[prefix_len:-1].lower() + "0")
-                                elif "J2" not in joint_name:
-                                    hand_joint_prefix.append(joint_name[prefix_len:].lower())
+            else:  # pylint: disable=R1702
+                for prefix, joint_list in hand_joint_names.items():
+                    for joint in joint_states_msg.name:
+                        if prefix in joint:
+                            if "_THJ" not in joint and "_WRJ" not in joint:
+                                if "J1" in joint:
+                                    joint_list.append(joint[len(prefix):-1].lower() + "0")
+                                elif "J2" not in joint:
+                                    joint_list.append(joint[len(prefix):].lower())
                             else:
-                                hand_joint_prefix.append(joint_name[prefix_len:].lower())
+                                joint_list.append(joint[len(prefix):].lower())
 
         if not any(hand_joint_names.values()):
             raise ValueError("No joint states have been found for a hand. Please check the connections.")
