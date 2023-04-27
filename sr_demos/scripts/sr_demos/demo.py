@@ -269,9 +269,9 @@ class Robot:
             @param joint_states_config - dictionary of joint states
             @return demo_states - dictionary of joint states with correct prefix for the robot type
         '''
-        demo_states: Dict[str: float] = {}
+        demo_states: Dict[str: int] = {}
         for joint_state_dicts_no_id in joint_states_config.keys():
-            joints_target: Dict[str: float] = {}
+            joints_target: Dict[str: int] = {}
             for key, value in joint_states_config[joint_state_dicts_no_id].items():
                 if len(self.prefixes) == 2:
                     joints_target['rh_' + key] = value
