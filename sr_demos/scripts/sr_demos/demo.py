@@ -328,7 +328,7 @@ class Robot:
     def _enable_touch_detection(self, detect: bool):
         '''
             Enables or disables touch detection
-            input: detect - True or False
+            @param detect - True or False
         '''
         for tactile in self.tactiles:
             tactile.touch_detection = detect
