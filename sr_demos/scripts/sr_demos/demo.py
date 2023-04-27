@@ -382,6 +382,9 @@ class Robot:
         self._enable_touch_detection(True)
 
     def standard_demo_sequence(self):
+        '''
+            Runs a demo sequence of standard movements.
+        '''
         self._enable_touch_detection(False)
         rospy.loginfo("Standard demo started")
         self.commander.move_to_named_target("open")
