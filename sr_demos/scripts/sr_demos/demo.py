@@ -250,7 +250,7 @@ class Robot:
             Returns a dictionary of joint states for the robot type
             where the joints that are not present in the hand type are removed
             @param joint_states_config: dictionary of joint states
-            @return joint_states_config: dictionary of joint states
+            @return: dictionary of joint states
         '''
         hand_type_joints_filename = '/home/user/projects/shadow_robot/base/src/'\
                                     'sr_interface/sr_demos/config/joints_in_hand.yaml'
