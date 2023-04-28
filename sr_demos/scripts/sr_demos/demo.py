@@ -338,9 +338,7 @@ class Robot:
             Returns whether touch detection is enabled or not
             @return True or False
         '''
-        if not any(tactile.touch_detection for tactile in self.tactiles):
-            return False
-        return True
+        return any(tactile.touch_detection for tactile in self.tactiles)
 
     def stored_states_sequence(self):
         '''
