@@ -267,7 +267,7 @@ class Robot:
         '''
             Adds the correct prefix to the joint states
             @param joint_states_config - dictionary of joint states
-            @return demo_states - dictionary of joint states with correct prefix for the robot type
+            @return: dictionary of joint states with correct prefix for the robot type
         '''
         demo_states: Dict[str: int] = {}
         for joint_state_dicts_no_id in joint_states_config.keys():
