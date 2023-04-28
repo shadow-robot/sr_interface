@@ -236,7 +236,7 @@ class Robot:
             Returns a dictionary of joint states with correct prefix
             and only joints that are present in the hand type
             @param  joint_states_config_yaml: dictionary of joint states
-            @return joint_states: dictionary of joint states
+            @return: dictionary of joint states
         '''
         joint_states_config = self._correct_joint_states_for_hand_type(joint_states_config_yaml)
         # Add prefix to joint states
