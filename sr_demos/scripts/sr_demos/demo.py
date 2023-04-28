@@ -325,7 +325,7 @@ class Robot:
             touched_finger = self.tactiles[0].confirm_touched()
         return touched_finger
 
-    def _enable_touch_detection(self, detect: bool):
+    def _enable_touch_detection(self, detect: bool) -> None:
         '''
             Enables or disables touch detection
             @param detect - True or False
