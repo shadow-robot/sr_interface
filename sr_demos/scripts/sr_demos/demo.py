@@ -340,7 +340,7 @@ class Robot:
         '''
         return any(tactile.touch_detection for tactile in self.tactiles)
 
-    def stored_states_sequence(self):
+    def stored_states_sequence(self) -> None:
         '''
             Runs a demo sequence of stored states.
         '''
@@ -379,7 +379,7 @@ class Robot:
         rospy.loginfo("Stored States demo completed")
         self._enable_touch_detection(True)
 
-    def standard_demo_sequence(self):
+    def standard_demo_sequence(self) -> None:
         '''
             Runs a demo sequence of standard movements.
         '''
@@ -437,7 +437,7 @@ class Robot:
         rospy.loginfo("Standard demo completed")
         self._enable_touch_detection(True)
 
-    def rock_paper_scissors(self):
+    def rock_paper_scissors(self) -> None:
         '''
             Runs the Rock, Paper, Scissors demo
         '''
@@ -475,7 +475,7 @@ class Robot:
         rospy.loginfo("Rock, Paper, Scissors demo completed")
         self._enable_touch_detection(True)
 
-    def grasp_demo(self):
+    def grasp_demo(self) -> None:
         '''
             Runs a demo that imitates grasping and squeezing an object.
         '''
@@ -527,7 +527,7 @@ class Robot:
         rospy.loginfo("Grasp Demo completed")
         self._enable_touch_detection(True)
 
-    def complete_random_sequence(self):
+    def complete_random_sequence(self) -> None:
         '''
             This method will generate a random sequence of joint positions
             and execute them.
@@ -546,7 +546,7 @@ class Robot:
         inter_time = 4.0 * random.random()
         self.execute_command_check('rand_pos', 0.2, inter_time)
 
-    def random_sequence(self):
+    def random_sequence(self) -> None:
         '''
             Runs a demo that moves the Hand to a random positions.
         '''
