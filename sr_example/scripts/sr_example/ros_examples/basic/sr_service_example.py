@@ -95,7 +95,7 @@ class ServiceExample():
         if req.angle_units not in ["degrees", "radians"]:
             raise Exception("Invalid angle units, must be degrees or radians")
         if req.robot_name not in self.avaliable_robot_names:
-            raise Exception(f"Invalid robot name as it is not a must be one of {self.avaliable_robot_names}")
+            raise Exception(f"Invalid robot name, must be one of {self.avaliable_robot_names}")
         rospy.loginfo(f"Received request to get joint states for {req.robot_name} in {req.angle_units}...")
         joint_states = self.get_joint_states(req.robot_name, req.angle_units)
         rospy.loginfo(f"Joint states for {req.robot_name} in {req.angle_units} found!")
