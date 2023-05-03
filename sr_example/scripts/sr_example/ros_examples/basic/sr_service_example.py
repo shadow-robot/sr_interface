@@ -17,8 +17,12 @@
 """
 This is a simple service client example, calling the service /sr_example/GetJointStates
 and printing out the data in a per-joint basis.
-To view the joint_states of a right arm in degrees, run this script and then run:
-rosservice call /get_joint_states "robot_name: 'right_arm' angle_units: 'degrees'"
+To view the joint_states of a right hand in degrees:
+1. Launch the right hand sim:
+roslaunch sr_robot_launch srhand.launch sim:=true
+2. Run this script and then run:
+rosservice call /get_joint_states "robot_name: 'right_hand'
+angle_units: 'degrees'" 
 """
 
 from __future__ import absolute_import
