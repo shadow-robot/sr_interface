@@ -1,26 +1,49 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(sr_example)
-find_package(catkin REQUIRED COMPONENTS roscpp rospy sr_robot_msgs sensor_msgs std_msgs control_msgs)
+find_package(catkin REQUIRED COMPONENTS 
+             roscpp
+             rospy
+             sr_robot_msgs
+             sensor_msgs
+             std_msgs
+             control_msgs
+             message_generation
+             )
 include_directories(${Boost_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS})
 
 catkin_python_setup()
 
-catkin_package(
-        DEPENDS
-        CATKIN_DEPENDS roscpp rospy sr_robot_msgs sensor_msgs std_msgs control_msgs
-        INCLUDE_DIRS
-        LIBRARIES
+## Generate services in the 'srv' folder
+add_service_files(
+  FILES
+  GetJointStates.srv
+)
+
+add_message_files(
+  FILES
+  StringFloat.msg
 )
 
 add_executable(link_joints src/link_joints.cpp)
 add_dependencies(link_joints ${catkin_EXPORTED_TARGETS})
 target_link_libraries(link_joints ${Boost_LIBRARIES} ${catkin_LIBRARIES})
 
-
 install(TARGETS link_joints
         RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
+## Generate added messages and services with any dependencies listed here
+generate_messages(
+  DEPENDENCIES
+  sensor_msgs
+)
+
+catkin_package(
+        DEPENDS
+        CATKIN_DEPENDS roscpp rospy sr_robot_msgs sensor_msgs std_msgs control_msgs message_runtime
+        INCLUDE_DIRS
+        LIBRARIES
+)
 
 # These are executable python files that will be found via rosrun. So they are installed in the BIN_DESTINATION
 file(GLOB PYTHON_SCRIPTS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"

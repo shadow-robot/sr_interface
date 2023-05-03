@@ -1,0 +1,4 @@
+string robot_name
+string angle_units
+---
+StringFloat[] joint_states
