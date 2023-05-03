@@ -22,15 +22,15 @@ To view the joint_states of a right hand in degrees:
 roslaunch sr_robot_launch srhand.launch sim:=true
 2. Run this script and then run:
 rosservice call /get_joint_states "robot_name: 'right_hand'
-angle_units: 'degrees'" 
+angle_units: 'degrees'"
 """
 
 from __future__ import absolute_import
 from typing import Dict, List
 from math import degrees
 import rospy
-from sr_example.srv import GetJointStates, GetJointStatesResponse
 from sensor_msgs.msg import JointState
+from sr_example.srv import GetJointStates, GetJointStatesResponse
 from sr_example.msg import StringFloat
 
 
@@ -45,7 +45,7 @@ class ServiceExample():
         try:
             self.joint_state_msg = rospy.wait_for_message("/joint_states", JointState)
         except rospy.ROSException as err:
-            raise Exception(f"Could not find /joint_states topic: {err}")
+            raise Exception("Failed to get joint states") from err
         self.avaliable_robot_names = self.confirm_robots_available()
         rospy.loginfo("Service %s is ready", self.service_name)
 
@@ -59,8 +59,8 @@ class ServiceExample():
                        "left_arm": "la_",
                        "right_hand": "rh_",
                        "left_hand":  "lh_"}
-        for robot_name in robot_names.keys():
-            if any(robot_names[robot_name] in joint_name for joint_name in self.joint_state_msg.name):
+        for robot_name, robot_prefix in robot_names.items():
+            if any(robot_prefix in joint_name for joint_name in self.joint_state_msg.name):
                 avaliable_robot_names.append(robot_name)
         return avaliable_robot_names
 
@@ -95,7 +95,7 @@ class ServiceExample():
         if req.angle_units not in ["degrees", "radians"]:
             raise Exception("Invalid angle units, must be degrees or radians")
         if req.robot_name not in self.avaliable_robot_names:
-            raise Exception(f"Invalid robot name, must be one of {self.avaliable_robot_names}")
+            raise Exception(f"Invalid robot name as it is not a must be one of {self.avaliable_robot_names}")
         rospy.loginfo(f"Received request to get joint states for {req.robot_name} in {req.angle_units}...")
         joint_states = self.get_joint_states(req.robot_name, req.angle_units)
         rospy.loginfo(f"Joint states for {req.robot_name} in {req.angle_units} found!")
