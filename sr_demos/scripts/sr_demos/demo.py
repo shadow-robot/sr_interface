@@ -174,10 +174,7 @@ class KeyboardPressDetector:
             elif input_val == "4":
                 robot.grasp_demo()
             elif input_val == "5":
-                if robot.hand_type == 'hand_e':
-                    robot.random_sequence()
-                else:
-                    rospy.logerr("This demo only works for a 5-fingered Hand E. Please try demos 1-4")
+                robot.random_sequence()
             elif input_val == "6":
                 rospy.signal_shutdown("Ending demo as key 6 has been pressed.")
                 sys.exit(0)
@@ -593,13 +590,16 @@ if __name__ == "__main__":
     else:
         robot = Robot("two_hands", args.hand_type)
 
-    rospy.loginfo("\nPRESS ONE OF THE TACTILES or 1-5 ON THE KEYBOARD TO START A DEMO:\
-                   \nTH or 1: Stored States Demo\
-                   \nFF or 2: Standard Demo\
-                   \nMF or 3: Rock, Paper, Scissors Demo\
-                   \nRF or 4: Grasp Demo\
-                   \nLF or 5: Shy Hand Demo (only works with Hand E).\
-                   \nPRESS 6 TO END THE PROGRAM")
+    menu = "\nPRESS ONE OF THE TACTILES or 1-5 ON THE KEYBOARD TO START A DEMO:"\
+           "\nTH or 1: Stored States Demo"\
+           "\nFF or 2: Standard Demo"
+    if robot.hand_type != 'hand_extra_lite':
+           menu += "\nMF or 3: Rock, Paper, Scissors Demo"
+    menu += "\nRF or 4: Grasp Demo"
+    if robot.hand_type=='hand_e':
+        menu += "\nLF or 5: Shy Hand Demo"
+    menu += "\nPRESS 6 TO END THE PROGRAM"
+    rospy.loginfo(menu)
 
     # Keyboard thread for input
     kpd = KeyboardPressDetector(robot)
