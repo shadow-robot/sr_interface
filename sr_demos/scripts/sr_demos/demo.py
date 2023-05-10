@@ -594,9 +594,9 @@ if __name__ == "__main__":
            "\nTH or 1: Stored States Demo"\
            "\nFF or 2: Standard Demo"
     if robot.hand_type != 'hand_extra_lite':
-           menu += "\nMF or 3: Rock, Paper, Scissors Demo"
+        menu += "\nMF or 3: Rock, Paper, Scissors Demo"
     menu += "\nRF or 4: Grasp Demo"
-    if robot.hand_type=='hand_e':
+    if robot.hand_type == 'hand_e':
         menu += "\nLF or 5: Shy Hand Demo"
     menu += "\nPRESS 6 TO END THE PROGRAM"
     rospy.loginfo(menu)
