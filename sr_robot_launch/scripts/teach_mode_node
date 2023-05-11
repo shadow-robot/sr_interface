@@ -58,7 +58,7 @@ class TeachModeManager:
         self.modes = ["TRAJECTORY_MODE", "TEACH_MODE", "POSITION_MODE", "DIRECT_PWM_MODE"]
 
     @staticmethod
-    def _create_hand_joints(waiting_timeout: int = 60) -> Dict[str, list]:
+    def _create_hand_joints(waiting_timeout: Union[int, float] = 60) -> Dict[str, list]:
         """
         Create a dictionary of hand joints based on the joint states.
         This method will wait for the joint states to be published for a specified timeout in
