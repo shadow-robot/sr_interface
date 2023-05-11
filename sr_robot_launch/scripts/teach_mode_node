@@ -25,7 +25,7 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-from typing import Dict
+from typing import Dict, Union
 import rospy
 from sensor_msgs.msg import JointState
 from sr_controllers_tools.sr_controller_helper import ControllerHelper
