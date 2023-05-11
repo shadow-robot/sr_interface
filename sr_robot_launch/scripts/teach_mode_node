@@ -25,7 +25,7 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-
+from typing import Dict
 import rospy
 from sensor_msgs.msg import JointState
 from sr_controllers_tools.sr_controller_helper import ControllerHelper
@@ -58,7 +58,7 @@ class TeachModeManager:
         self.modes = ["TRAJECTORY_MODE", "TEACH_MODE", "POSITION_MODE", "DIRECT_PWM_MODE"]
 
     @staticmethod
-    def _create_hand_joints(waiting_timeout: int = 60) -> dict:
+    def _create_hand_joints(waiting_timeout: int = 60) -> Dict[str, list]:
         """
         Create a dictionary of hand joints based on the joint states.
         This method will wait for the joint states to be published for a specified timeout in
@@ -96,7 +96,7 @@ class TeachModeManager:
             raise ValueError("No joint states have been found for a hand. Please check the connections.")
         return hand_joint_names
 
-    def teach_mode(self, req):  # pylint: disable=R0911
+    def teach_mode(self, req: RobotTeachModeRequest) -> RobotTeachModeResponse:  # pylint: disable=R0911
         """
         This method is called when the service is called, it will change the control type of the robot.
         Currently only the hand is supported.
