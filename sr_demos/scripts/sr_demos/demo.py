@@ -169,15 +169,17 @@ class KeyboardPressDetector:
                 robot.stored_states_sequence()
             elif input_val == "2":
                 robot.standard_demo_sequence()
-            elif input_val == "3":
+            elif input_val == "3" and robot.hand_type != "hand_extra_lite":
                 robot.rock_paper_scissors()
             elif input_val == "4":
                 robot.grasp_demo()
-            elif input_val == "5":
+            elif input_val == "5" and robot.hand_type == "hand_e":
                 robot.random_sequence()
             elif input_val == "6":
                 rospy.signal_shutdown("Ending demo as key 6 has been pressed.")
                 sys.exit(0)
+            else:
+                rospy.loginfo("Incorrect key pressed. Please try again.")
             rospy.sleep(0.05)
 
 
