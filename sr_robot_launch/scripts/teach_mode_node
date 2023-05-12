@@ -83,7 +83,8 @@ class TeachModeManager:
             else:
                 for prefix, joint_list in hand_joint_names.items():
                     for joint in joint_states_msg.name:
-                        if prefix in joint:
+                        if prefix not in joint:
+                            continue
                             if "_THJ" not in joint and "_WRJ" not in joint:
                                 if "J1" in joint:
                                     joint_list.append(joint[len(prefix):-1].lower() + "0")
