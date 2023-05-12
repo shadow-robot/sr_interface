@@ -85,13 +85,13 @@ class TeachModeManager:
                     for joint in joint_states_msg.name:
                         if prefix not in joint:
                             continue
-                            if "_THJ" not in joint and "_WRJ" not in joint:
-                                if "J1" in joint:
-                                    joint_list.append(joint[len(prefix):-1].lower() + "0")
-                                elif "J2" not in joint:
-                                    joint_list.append(joint[len(prefix):].lower())
-                            else:
+                        if "_THJ" not in joint and "_WRJ" not in joint:
+                            if "J1" in joint:
+                                joint_list.append(joint[len(prefix):-1].lower() + "0")
+                            elif "J2" not in joint:
                                 joint_list.append(joint[len(prefix):].lower())
+                        else:
+                            joint_list.append(joint[len(prefix):].lower())
 
         if not any(hand_joint_names.values()):
             raise ValueError("No joint states have been found for a hand. Please check the connections.")
