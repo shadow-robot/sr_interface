@@ -50,6 +50,14 @@ left_arm:  # Must be an existing move group; ignored if not.
       la_wrist_1_joint: -1.8326
       la_wrist_2_joint: 3.14159
       la_wrist_3_joint: 3.14159
+  safe_store:
+    joint_angles:
+      la_shoulder_pan_joint: -0.00498
+      la_shoulder_lift_joint: -1.87962
+      la_elbow_joint: -2.8508
+      la_wrist_1_joint: 0.0232
+      la_wrist_2_joint: -1.5785
+      la_wrist_3_joint: 3.14154
 left_arm_and_wrist:
   la_start:
     inherit_from:  # States can inherit from other states, which must be defined either in this file or in a robot SRDF.
@@ -78,6 +86,12 @@ left_arm_and_hand:
         move_group_state: hand_change
       - move_group: left_hand
         move_group_state: pack
+  safe_store:
+    inherit_from:
+      - move_group: left_arm
+        move_group_state: safe_store
+      - move_group: left_hand
+        move_group_state: open
 right_arm:
   ra_start:
     joint_angles:
@@ -103,6 +117,14 @@ right_arm:
       ra_wrist_1_joint: -1.8326
       ra_wrist_2_joint: 3.14159
       ra_wrist_3_joint: 3.14159
+  safe_store:
+    joint_angles:
+      ra_shoulder_pan_joint: -0.00143
+      ra_shoulder_lift_joint: -1.3315
+      ra_elbow_joint: 2.85298
+      ra_wrist_1_joint: -3.07303
+      ra_wrist_2_joint: 1.57285
+      ra_wrist_3_joint: -3.14154
 right_arm_and_wrist:
   ra_start:
     inherit_from:
@@ -131,6 +153,12 @@ right_arm_and_hand:
         move_group_state: hand_change
       - move_group: right_hand
         move_group_state: pack
+  safe_store:
+    inherit_from:
+      - move_group: right_arm
+        move_group_state: safe_store
+      - move_group: right_hand
+        move_group_state: open
 two_arms:
   start:
     inherit_from:
@@ -144,6 +172,12 @@ two_arms:
         move_group_state: hand_change
       - move_group: left_arm
         move_group_state: hand_change
+  safe_store:
+    inherit_from:
+      - move_group: right_arm
+        move_group_state: safe_store
+      - move_group: left_arm
+        move_group_state: safe_store
 two_hands:
   open:
     inherit_from:
@@ -195,3 +229,9 @@ two_arms_and_hands:
         move_group_state: hand_change
       - move_group: left_arm_and_hand
         move_group_state: hand_change
+  safe_store:
+    inherit_from:
+      - move_group: right_arm_and_hand
+        move_group_state: safe_store
+      - move_group: left_arm_and_hand
+        move_group_state: safe_store
