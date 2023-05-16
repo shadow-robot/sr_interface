@@ -25,7 +25,7 @@
 # or tort (including negligence or otherwise) arising in any way out of the use of this
 # software, even if advised of the possibility of such damage.
 
-
+from typing import Dict, Union
 import rospy
 from sensor_msgs.msg import JointState
 from sr_controllers_tools.sr_controller_helper import ControllerHelper
@@ -35,8 +35,16 @@ from sr_robot_msgs.srv import (ChangeControlType, RobotTeachMode,
 
 
 class TeachModeManager:
+    """
+    A class to manage change in control of the robot using the ControllerHelper class.
+    It advertises a service to change the control type of the robot.
+    """
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """
+        Initialise the class. It will create a dictionary of hand joints used for the ControllerHelper
+        class and advertise the service.
+        """
         hand_joint_names = self._create_hand_joints()
 
         rospy.Service('teach_mode', RobotTeachMode, self.teach_mode)
@@ -50,16 +58,33 @@ class TeachModeManager:
         self.modes = ["TRAJECTORY_MODE", "TEACH_MODE", "POSITION_MODE", "DIRECT_PWM_MODE"]
 
     @staticmethod
-    def _create_hand_joints():
+    def _create_hand_joints(waiting_timeout: Union[int, float] = 60) -> Dict[str, list]:
+        """
+        Create a dictionary of hand joints based on the joint states.
+        This method will wait for the joint states to be published for a specified timeout in
+        increments of 10 seconds.
+        @param waiting_timeout: The timeout in seconds, default of 60 seconds.
+        @return: A dictionary of hand joints.
+        """
         hand_joint_names = {
             "rh_": [],
             "lh_": []
         }
-        try:  # pylint: disable=R1702
-            joint_states_msg = rospy.wait_for_message("/joint_states", JointState, timeout=10)
-            for prefix, joint_list in hand_joint_names.items():
-                for joint in joint_states_msg.name:
-                    if prefix in joint:
+        time_waited = rospy.Time.now().to_sec()
+        increment = 0
+        # Wait for the joint states to be published for a specified timeout in increments of 10 seconds.
+        while not rospy.is_shutdown() and \
+                rospy.Time.now().to_sec() - time_waited < waiting_timeout:  # pylint: disable=R1702
+            try:
+                increment += 1
+                joint_states_msg = rospy.wait_for_message("joint_states", JointState, timeout=10)
+            except rospy.ROSException:
+                rospy.logwarn(f"Waiting for joint states to be published for {increment*10} seconds...")
+            else:
+                for prefix, joint_list in hand_joint_names.items():
+                    for joint in joint_states_msg.name:
+                        if prefix not in joint:
+                            continue
                         if "_THJ" not in joint and "_WRJ" not in joint:
                             if "J1" in joint:
                                 joint_list.append(joint[len(prefix):-1].lower() + "0")
@@ -67,16 +92,18 @@ class TeachModeManager:
                                 joint_list.append(joint[len(prefix):].lower())
                         else:
                             joint_list.append(joint[len(prefix):].lower())
-        except Exception as error:
-            rospy.logerr(f"{error}")
-            raise Exception(f"{error}") from error
 
         if not any(hand_joint_names.values()):
             raise ValueError("No joint states have been found for a hand. Please check the connections.")
-
         return hand_joint_names
 
-    def teach_mode(self, req):  # pylint: disable=R0911
+    def teach_mode(self, req: RobotTeachModeRequest) -> RobotTeachModeResponse:  # pylint: disable=R0911
+        """
+        This method is called when the service is called, it will change the control type of the robot.
+        Currently only the hand is supported.
+        @param req: The request containing the robot and control type.
+        @return: The response containing the result of the change.
+        """
         rospy.loginfo(f"Changing {req.robot} to {self.modes[req.teach_mode]}")
 
         if req.robot == "right_arm" or req.robot == "left_arm":
