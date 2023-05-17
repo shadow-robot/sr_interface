@@ -46,7 +46,7 @@ CONST_TIME_TO_COMPLETE_DEMO = 15
 
 
 class TactileReading:
-    def __init__(self, prefix: str):
+    def __init__(self, prefix: str) -> None:
         '''
             Initializes the tactile reading class
             @param prefix: The hand prefix ("rh_" or "lh_")
@@ -68,7 +68,7 @@ class TactileReading:
         self.reference_tactile_values = dict(self.tactile_values)
         self.zero_tactile_sensors()
 
-    def zero_tactile_sensors(self):
+    def zero_tactile_sensors(self) -> None:
         '''
             Zeroes the tactile sensors
         '''
@@ -87,7 +87,7 @@ class TactileReading:
 
             rospy.loginfo(f'Reference values: {self.reference_tactile_values}')
 
-    def read_tactile_values(self):
+    def read_tactile_values(self) -> None:
         '''
             Reads the current state of the tactile sensors
             to determine which type of tactile sensors are
@@ -110,13 +110,13 @@ class TactileReading:
                 self.tactile_values['LF'] = tactile_state.pressure[3]
                 self.tactile_values['TH'] = tactile_state.pressure[4]
 
-    def get_tactiles(self):
+    def get_tactiles(self) -> None:
         '''
             Returns the tactile type
         '''
         return self.tactile_type
 
-    def confirm_touched(self):
+    def confirm_touched(self) -> None:
         '''
             Returns whether the tactile sensors are being touched
             and which finger is being touched
@@ -134,7 +134,7 @@ class TactileReading:
 
 
 class KeyboardPressDetector:
-    def __init__(self, robot_object: 'Robot'):
+    def __init__(self, robot_object: 'Robot') -> None:
         '''
             Initializes the keyboard press detector
             @param robot_object: A object of the Robot class)
@@ -143,7 +143,7 @@ class KeyboardPressDetector:
         self.robot = robot_object
 
     @staticmethod
-    def _get_input():
+    def _get_input() -> None:
         '''
             This function is used to get the input from the keyboard
             @return: The key pressed
@@ -157,7 +157,7 @@ class KeyboardPressDetector:
             termios.tcsetattr(file_descriptor, termios.TCSADRAIN, old_settings)
         return first_char
 
-    def run(self):
+    def run(self) -> None:
         '''
             This function is used to run the keyboard press detector
             depending on the key pressed, it will call the appropriate
@@ -169,23 +169,22 @@ class KeyboardPressDetector:
                 robot.stored_states_sequence()
             elif input_val == "2":
                 robot.standard_demo_sequence()
-            elif input_val == "3":
+            elif input_val == "3" and robot.hand_type != "hand_extra_lite":
                 robot.rock_paper_scissors()
             elif input_val == "4":
                 robot.grasp_demo()
-            elif input_val == "5":
-                if robot.hand_type == 'hand_e':
-                    robot.random_sequence()
-                else:
-                    rospy.logerr("This demo only works for a 5-fingered Hand E. Please try demos 1-4")
+            elif input_val == "5" and robot.hand_type == "hand_e":
+                robot.random_sequence()
             elif input_val == "6":
                 rospy.signal_shutdown("Ending demo as key 6 has been pressed.")
                 sys.exit(0)
+            else:
+                rospy.loginfo("Incorrect key pressed. Please try again.")
             rospy.sleep(0.05)
 
 
 class Robot:
-    def __init__(self, robot_type: str, hand_type: str):
+    def __init__(self, robot_type: str, hand_type: str) -> None:
         '''
             Initializes the robot class
             @param robot_type: The robot type (right_hand, left_hand, two_hands)
@@ -213,7 +212,7 @@ class Robot:
         rospy.sleep(1)
         self.commander.move_to_named_target("open")
 
-    def _has_tactiles(self):
+    def _has_tactiles(self) -> List['TactileReading']:
         '''
             TactileReading is going to search for any available sensors (Biotact, PST, etc)
             @return: A list of TactileReading objects
@@ -283,7 +282,7 @@ class Robot:
 
     def execute_command_check(self, joint_state_name: str, time_to_execute: float,
                               sleep: float = 0.1,
-                              wait: bool = True, angle_degrees: bool = True):
+                              wait: bool = True, angle_degrees: bool = True) -> None:
         '''
             Execute a command using the hand commander method move_to_joint_value_target_unsafe
             @param joint_state_name - name of the joint state to execute
@@ -593,13 +592,16 @@ if __name__ == "__main__":
     else:
         robot = Robot("two_hands", args.hand_type)
 
-    rospy.loginfo("\nPRESS ONE OF THE TACTILES or 1-5 ON THE KEYBOARD TO START A DEMO:\
-                   \nTH or 1: Stored States Demo\
-                   \nFF or 2: Standard Demo\
-                   \nMF or 3: Rock, Paper, Scissors Demo\
-                   \nRF or 4: Grasp Demo\
-                   \nLF or 5: Shy Hand Demo (only works with Hand E).\
-                   \nPRESS 6 TO END THE PROGRAM")
+    menu = "\nPRESS ONE OF THE TACTILES or 1-5 ON THE KEYBOARD TO START A DEMO:"\
+           "\nTH or 1: Stored States Demo"\
+           "\nFF or 2: Standard Demo"
+    if robot.hand_type != 'hand_extra_lite':
+        menu += "\nMF or 3: Rock, Paper, Scissors Demo"
+    menu += "\nRF or 4: Grasp Demo"
+    if robot.hand_type == 'hand_e':
+        menu += "\nLF or 5: Shy Hand Demo"
+    menu += "\nPRESS 6 TO END THE PROGRAM"
+    rospy.loginfo(menu)
 
     # Keyboard thread for input
     kpd = KeyboardPressDetector(robot)
