@@ -186,6 +186,10 @@
     </node>
     <rosparam unless="$(arg hand_ctrl)" param="robot_hardware" subst_value="True">[$(arg arm_prefix)_sr_ur_robot_hw]</rosparam>
     <rosparam command="load" file="$(arg arm_robot_hw)"/>
+    <!-- Set the parameters related to ur script files -->
+    <param name="$(arg arm_prefix)_sr_ur_robot_hw/input_recipe_file" type="string" value="$(find ur_robot_driver)/resources/rtde_input_recipe.txt"/>
+    <param name="$(arg arm_prefix)_sr_ur_robot_hw/output_recipe_file" type="string" value="$(find ur_robot_driver)/resources/rtde_output_recipe.txt"/>
+    <param name="$(arg arm_prefix)_sr_ur_robot_hw/script_file" type="string" value="$(find ur_client_library)/resources/external_control.urscript"/>
     <param name="$(arg arm_prefix)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
     <group if="$(eval 'e' in arg('robot_model'))">
       <rosparam command="load" file="$(arg force_torque_sensor_hw)"/>

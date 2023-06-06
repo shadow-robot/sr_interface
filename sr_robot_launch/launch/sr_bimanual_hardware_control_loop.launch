@@ -234,6 +234,15 @@
   <group if="$(eval arg('arm_ctrl'))">
     <rosparam command="load" file="$(arg arm_robot_hw_1)"/>
     <rosparam command="load" file="$(arg arm_robot_hw_2)"/>
+
+    <!-- Set the parameters related to ur script files -->
+    <param name="ra_sr_ur_robot_hw/input_recipe_file" type="string" value="$(find ur_robot_driver)/resources/rtde_input_recipe.txt"/>
+    <param name="la_sr_ur_robot_hw/input_recipe_file" type="string" value="$(find ur_robot_driver)/resources/rtde_input_recipe.txt"/>
+    <param name="ra_sr_ur_robot_hw/output_recipe_file" type="string" value="$(find ur_robot_driver)/resources/rtde_output_recipe.txt"/>
+    <param name="la_sr_ur_robot_hw/output_recipe_file" type="string" value="$(find ur_robot_driver)/resources/rtde_output_recipe.txt"/>
+    <param name="ra_sr_ur_robot_hw/script_file" type="string" value="$(find ur_client_library)/resources/external_control.urscript"/>
+    <param name="la_sr_ur_robot_hw/script_file" type="string" value="$(find ur_client_library)/resources/external_control.urscript"/>
+
     <param name="ra_sr_ur_robot_hw/speed_scale" type="double" value="$(arg right_arm_speed_scale)"/>
     <param name="la_sr_ur_robot_hw/speed_scale" type="double" value="$(arg left_arm_speed_scale)"/>
     <node name="sr_ur_arm_unlock" pkg="sr_robot_launch" type="sr_ur_arm_unlock" output="screen">
