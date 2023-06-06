@@ -46,7 +46,7 @@ ra_sr_ur_robot_hw:
   # for the server that moves the robot
   # aurora (https://github.com/shadow-robot/aurora) uses sed to replace this IP with the user-defined IP
   control_pc_ip_address: 10.8.1.100
-
+  
   use_tool_communication: false
   
   headless_mode: true
