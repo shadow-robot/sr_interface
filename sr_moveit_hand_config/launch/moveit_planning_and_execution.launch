@@ -29,6 +29,8 @@
   <arg name="debug" default="false"/>
   <arg name="load_robot_description" default="true"/>
   <arg name="gui" default="true"/>
+  <arg name="visualise_tactile_data" default="false"/>
+  <arg name="tip_sensors" default="none"/>
   <arg name="trajectory_controllers_list" default="[]"/>
 
   <!-- ik solver possible values sr_hand_kinematics/trac_ik/bio_ik -->
@@ -66,7 +68,9 @@
       <rosparam param="topics_list">[/move_group/monitored_planning_scene]</rosparam>
       <param name="launch_args_list" value="hand_ik_solver_path:=$(arg hand_ik_solver_path)
       config:=true
-      debug:=$(arg debug)" />
+      debug:=$(arg debug)
+      visualise_tactile_data:=$(arg visualise_tactile_data)
+      tip_sensors:=$(arg tip_sensors)" />
     </node>
   </group>
 

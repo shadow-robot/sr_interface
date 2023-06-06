@@ -56,7 +56,9 @@
   <!-- Trajectory controllers partial name list for moveit-->
   <arg if="$(eval not hand_trajectory)" name="trajectory_controllers_list_patterns" default="[]"/>
   <arg if="$(eval hand_trajectory)" name="trajectory_controllers_list_patterns" default="[(rh|lh)_trajectory_controller/state]"/>
-
+  <!-- Set to true if you want to visualise the tip sensors data (only available for MST sensors)-->
+  <arg name="visualise_tactile_data" default="false"/>
+  
   <!-- SIMULATED ROBOTS -->
   <arg name="verbose" default="true" />
   <!-- This launch file is for shadow hand only -->
@@ -121,6 +123,8 @@
     <include file="$(find sr_moveit_hand_config)/launch/moveit_planning_and_execution.launch">
       <arg name="hand_ik_solver" value="$(arg hand_ik_solver)"/>
       <arg name="gui" value="$(arg gui)"/>
+      <arg name="visualise_tactile_data" default="$(arg visualise_tactile_data)"/>
+      <arg name="tip_sensors" value="$(arg tip_sensors)"/>
       <arg name="trajectory_controllers_list" value="$(arg trajectory_controllers_list_patterns)"/>
     </include>
     <include file="$(find sr_moveit_hand_config)/launch/default_warehouse_db.launch"/>
@@ -136,4 +140,5 @@
 
   <!-- Publish underactuation error -->
   <node name="error_reporter" pkg="sr_error_reporter" type="error_reporter" output="screen"/>
+
 </launch>
