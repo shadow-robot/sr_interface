@@ -191,8 +191,8 @@
     <param name="$(arg arm_prefix)_sr_ur_robot_hw/input_recipe_file" type="string" value="$(find ur_robot_driver)/resources/rtde_input_recipe.txt"/>
     <param name="$(arg arm_prefix)_sr_ur_robot_hw/output_recipe_file" type="string" value="$(find ur_robot_driver)/resources/rtde_output_recipe.txt"/>
     <param name="$(arg arm_prefix)_sr_ur_robot_hw/script_file" type="string" value="$(find ur_client_library)/resources/external_control.urscript"/>
-    <param name="$(arg arm_prefix)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
 
+    <param name="$(arg arm_prefix)_sr_ur_robot_hw/speed_scale" type="double" value="$(arg arm_speed_scale)"/>
     <group if="$(eval 'e' in arg('robot_model'))">
       <rosparam command="load" file="$(arg force_torque_sensor_hw)"/>
       <node name="ft_sensor_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg arm_prefix)_force_torque_sensor_controller" />
