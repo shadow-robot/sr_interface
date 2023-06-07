@@ -47,12 +47,6 @@ ra_sr_ur_robot_hw:
   # aurora (https://github.com/shadow-robot/aurora) uses sed to replace this IP with the user-defined IP
   control_pc_ip_address: 10.8.1.100
   
-  input_recipe_file: /home/user/projects/shadow_robot/base/src/Universal_Robots_ROS_Driver/ur_robot_driver/resources/rtde_input_recipe.txt
-  
-  output_recipe_file: /home/user/projects/shadow_robot/base/src/Universal_Robots_ROS_Driver/ur_robot_driver/resources/rtde_output_recipe.txt
-  
-  script_file: /opt/ros/noetic/share/ur_client_library/resources/external_control.urscript
-  
   use_tool_communication: false
   
   headless_mode: true
