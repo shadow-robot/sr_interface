@@ -92,10 +92,10 @@ class TeachModeManager:
                                 joint_list.append(joint[len(prefix):].lower())
                         else:
                             joint_list.append(joint[len(prefix):].lower())
+                return hand_joint_names
 
         if not any(hand_joint_names.values()):
             raise ValueError("No joint states have been found for a hand. Please check the connections.")
-        return hand_joint_names
 
     def teach_mode(self, req: RobotTeachModeRequest) -> RobotTeachModeResponse:  # pylint: disable=R0911
         """
