@@ -129,11 +129,11 @@
     </xacro:unless>
     <xacro:if value="${hand_version == 'E4'}">
       <xacro:if value="${tip_sensors == 'pst'}">
-        <joint name="${prefix}${joint_prefix}J1" value="1.5707" />
+        <joint name="${prefix}${joint_prefix}J1" value="1.4" />
         <joint name="${prefix}${joint_prefix}J3" value="1.309" />
       </xacro:if>
       <xacro:if value="${tip_sensors == 'bt_sp'}">
-        <joint name="${prefix}${joint_prefix}J1" value="1.309" />
+        <joint name="${prefix}${joint_prefix}J1" value="1.000" />
         <joint name="${prefix}${joint_prefix}J3" value="1.309" />
       </xacro:if>
       <joint name="${prefix}${joint_prefix}J2" value="1.5707" />
@@ -222,6 +222,16 @@
       <joint name="${prefix}${joint_prefix}J4" value="-0.2209" />
       <joint name="${prefix}${joint_prefix}J5" value="0.3325" /> 
     </xacro:if> 
+  </xacro:macro>
+
+  <xacro:macro name="thumb_state_store" params="prefix is_lite">
+    <joint name="${prefix}THJ1" value="0.15708" />
+    <joint name="${prefix}THJ2" value="0.541052" />
+    <xacro:unless value="$(arg is_lite)">
+      <joint name="${prefix}THJ3" value="0.122173" />
+    </xacro:unless>
+    <joint name="${prefix}THJ4" value="0.331613" />
+    <joint name="${prefix}THJ5" value="0.331613" />
   </xacro:macro>
 
   <xacro:macro name="thumb_state_relaxed" params="prefix">
