@@ -129,11 +129,11 @@
     </xacro:unless>
     <xacro:if value="${hand_version == 'E4'}">
       <xacro:if value="${tip_sensors == 'pst'}">
-        <joint name="${prefix}${joint_prefix}J1" value="1.5707" />
+        <joint name="${prefix}${joint_prefix}J1" value="1.4" />
         <joint name="${prefix}${joint_prefix}J3" value="1.309" />
       </xacro:if>
       <xacro:if value="${tip_sensors == 'bt_sp'}">
-        <joint name="${prefix}${joint_prefix}J1" value="1.309" />
+        <joint name="${prefix}${joint_prefix}J1" value="1.000" />
         <joint name="${prefix}${joint_prefix}J3" value="1.309" />
       </xacro:if>
       <joint name="${prefix}${joint_prefix}J2" value="1.5707" />
