@@ -234,17 +234,6 @@
     <joint name="${prefix}THJ5" value="0.331613" />
   </xacro:macro>
 
-  <xacro:macro name="finger_state_store" params="prefix joint_prefix lf">
-    <joint name="${prefix}${joint_prefix}J1" value="1.37881" />
-    <joint name="${prefix}${joint_prefix}J2" value="1.37881" />
-    <joint name="${prefix}${joint_prefix}J3" value="1.55334" />
-    <joint name="${prefix}${joint_prefix}J4" value="0" />
-    <xacro:if value="${lf}">
-      <!-- Little finger special case -->
-      <joint name="${prefix}${joint_prefix}J5" value="0" />
-    </xacro:if>
-  </xacro:macro>
-
   <xacro:macro name="thumb_state_relaxed" params="prefix">
     <joint name="${prefix}THJ1" value="0.0837" />
     <joint name="${prefix}THJ2" value="0.2629" />

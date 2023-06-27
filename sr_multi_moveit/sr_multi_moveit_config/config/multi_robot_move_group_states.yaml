@@ -85,13 +85,13 @@ left_arm_and_hand:
       - move_group: left_arm_and_wrist
         move_group_state: hand_change
       - move_group: left_hand
-        move_group_state: pack
+        move_group_state: store
   safe_store:
     inherit_from:
       - move_group: left_arm
         move_group_state: safe_store
       - move_group: left_hand
-        move_group_state: open
+        move_group_state: store
 right_arm:
   ra_start:
     joint_angles:
@@ -152,13 +152,13 @@ right_arm_and_hand:
       - move_group: right_arm_and_wrist
         move_group_state: hand_change
       - move_group: right_hand
-        move_group_state: pack
+        move_group_state: store
   safe_store:
     inherit_from:
       - move_group: right_arm
         move_group_state: safe_store
       - move_group: right_hand
-        move_group_state: open
+        move_group_state: store
 two_arms:
   start:
     inherit_from:
@@ -203,6 +203,12 @@ two_hands:
         move_group_state: relaxed
       - move_group: left_hand
         move_group_state: relaxed
+  store:
+    inherit_from:
+      - move_group: right_hand
+        move_group_state: store
+      - move_group: left_hand
+        move_group_state: store
 two_arms_and_wrists:
   start:
     inherit_from:
