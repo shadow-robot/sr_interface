@@ -173,7 +173,7 @@
       <joint name="$(arg prefix)WRJ2" value="0" />
     </xacro:unless>
   </group_state>
-  
+
   <group_state name="fingers_pack_thumb_open" group="$(arg hand_name)">
     <xacro:if value="$(arg th)">
         <xacro:thumb_state_open  prefix="$(arg prefix)" />
@@ -364,6 +364,32 @@
     <xacro:unless value="$(arg is_lite)">
       <xacro:if value="$(arg lf)">
           <xacro:finger_state_relaxed  prefix="$(arg prefix)" joint_prefix="LF"/>
+      </xacro:if>
+      <joint name="$(arg prefix)WRJ1" value="0" />
+      <joint name="$(arg prefix)WRJ2" value="0" />
+    </xacro:unless>
+  </group_state>
+  <group_state name="store" group="$(arg hand_name)">
+    <xacro:if value="$(arg th)">
+      <xacro:unless value="$(arg is_lite)">
+        <xacro:thumb_state_store  prefix="$(arg prefix)" is_lite="$(arg is_lite)"/>
+      </xacro:unless>
+      <xacro:if value="$(arg is_lite)">
+        <xacro:thumb_state_pack  prefix="$(arg prefix)" tip_sensors="$(arg tip_sensors)" hand_version="$(arg hand_version)"/>
+      </xacro:if>
+    </xacro:if>
+    <xacro:if value="$(arg ff)">
+        <xacro:finger_state_pack  prefix="$(arg prefix)" joint_prefix="FF" lf="0" tip_sensors="$(arg tip_sensors)" hand_version="$(arg hand_version)"/>
+    </xacro:if>
+    <xacro:if value="$(arg mf)">
+        <xacro:finger_state_pack  prefix="$(arg prefix)" joint_prefix="MF" lf="0" tip_sensors="$(arg tip_sensors)" hand_version="$(arg hand_version)"/>
+    </xacro:if>
+    <xacro:if value="$(arg rf)">
+        <xacro:finger_state_pack  prefix="$(arg prefix)" joint_prefix="RF" lf="0" tip_sensors="$(arg tip_sensors)" hand_version="$(arg hand_version)"/>
+    </xacro:if>
+    <xacro:unless value="$(arg is_lite)">
+      <xacro:if value="$(arg lf)">
+          <xacro:finger_state_pack  prefix="$(arg prefix)" joint_prefix="LF" lf="1" tip_sensors="$(arg tip_sensors)" hand_version="$(arg hand_version)"/>
       </xacro:if>
       <joint name="$(arg prefix)WRJ1" value="0" />
       <joint name="$(arg prefix)WRJ2" value="0" />
