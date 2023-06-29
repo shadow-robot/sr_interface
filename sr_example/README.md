@@ -1,17 +1,8 @@
-# Examples
+# Shadow Robot Examples (sr_example)
 
-We are providing a [high level wrapper](https://github.com/shadow-robot/sr_interface/tree/melodic-devel/sr_robot_commander) around our robots to make the interfacing easier for non-ROS people. The [sr_example](https://github.com/shadow-robot/sr_interface/tree/melodic-devel/sr_example) package contains examples on how to use it.
+There are several ways to interface with the Shadow Robots. This package provides examples for interfacing through the following methods:
 
-Use cases are given for:
+- Utilising a high-level wrapper called the [Robot Commander](https://github.com/shadow-robot/sr_interface/tree/noetic-devel/sr_robot_commander), which simplifies the interfacing process for those unfamiliar with ROS. Python examples demonstrating use cases for both hand and hand/arm interfaces can be found in the [scripts/robot_commander_examples](scripts/sr_example/robot_commander_examples) folder.
+- Direct ROS interfacing in Python is also available, with examples provided in the [scripts/ros_examples](scripts/sr_example/ros_examples) folder. For those preferring C++, examples can be found in the [src](src) folder.
 
--  [Hand](https://github.com/shadow-robot/sr_interface/tree/melodic-devel/sr_example/scripts/sr_example/hand_examples)
--  [Arm](https://github.com/shadow-robot/sr_interface/tree/melodic-devel/sr_example/scripts/sr_example/arm_examples)
--  [Hand and arm](https://github.com/shadow-robot/sr_interface/tree/melodic-devel/sr_example/scripts/sr_example/hand_and_arm_examples)
-
-To run these examples, the robot should be launched first (instructions for this can be found [here](https://github.com/shadow-robot/sr_interface/tree/melodic-devel/sr_robot_launch)) 
-
-In order to access the full functionality of the hand, you can interface with it directly through the ROS interface. You can find python examples in the
- [advanced](https://github.com/shadow-robot/sr_interface/tree/melodic-devel/sr_example/scripts/sr_example/advanced) folder
- and c++ examples in the [src](https://github.com/shadow-robot/sr_interface/tree/melodic-devel/sr_example/src) folder.
-
-Description of each example can be found in the comment at the top of each script.
+Descriptions of each example can be found within the documentation provided within each script.
