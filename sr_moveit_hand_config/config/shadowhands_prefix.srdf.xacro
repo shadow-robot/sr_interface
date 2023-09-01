@@ -260,26 +260,26 @@
       <joint name="$(arg prefix)WRJ2" value="0.0" />
   </group_state>
 
-    <!-- GRASPS FOR THE LADLE -->
+  <!-- GRASPS FOR THE LADLE -->
   <group_state name="grasp_ladle_approach" group="$(arg prefix)fingers">
     <joint name="$(arg prefix)FFJ1" value="0" />
-    <joint name="$(arg prefix)FFJ2" value="0" />
-    <joint name="$(arg prefix)FFJ3" value="0" />
+    <joint name="$(arg prefix)FFJ2" value="0.523599" />
+    <joint name="$(arg prefix)FFJ3" value="0.261799" />
     <joint name="$(arg prefix)FFJ4" value="0" />
 
     <joint name="$(arg prefix)MFJ1" value="0" />
-    <joint name="$(arg prefix)MFJ2" value="0" />
-    <joint name="$(arg prefix)MFJ3" value="0" />
+    <joint name="$(arg prefix)MFJ2" value="0.523599" />
+    <joint name="$(arg prefix)MFJ3" value="0.261799" />
     <joint name="$(arg prefix)MFJ4" value="0" />
     
     <joint name="$(arg prefix)RFJ1" value="0" />
-    <joint name="$(arg prefix)RFJ2" value="0" />
-    <joint name="$(arg prefix)RFJ3" value="0" />
+    <joint name="$(arg prefix)RFJ2" value="0.523599" />
+    <joint name="$(arg prefix)RFJ3" value="0.261799" />
     <joint name="$(arg prefix)RFJ4" value="0" />
 
     <joint name="$(arg prefix)LFJ1" value="0" />
-    <joint name="$(arg prefix)LFJ2" value="0" />
-    <joint name="$(arg prefix)LFJ3" value="0" />
+    <joint name="$(arg prefix)LFJ2" value="0.523599" />
+    <joint name="$(arg prefix)LFJ3" value="0.261799" />
     <joint name="$(arg prefix)LFJ4" value="0" />
     <joint name="$(arg prefix)LFJ5" value="0" />
 
@@ -292,22 +292,22 @@
 
   <group_state name="grasp_ladle_intermediate" group="$(arg prefix)fingers">
     <joint name="$(arg prefix)FFJ1" value="0" />
-    <joint name="$(arg prefix)FFJ2" value="0" />
-    <joint name="$(arg prefix)FFJ3" value="0.95" />
+    <joint name="$(arg prefix)FFJ2" value="0.523599" />
+    <joint name="$(arg prefix)FFJ3" value="1.57" />
     <joint name="$(arg prefix)FFJ4" value="0" />
 
     <joint name="$(arg prefix)MFJ1" value="0" />
-    <joint name="$(arg prefix)MFJ2" value="0" />
-    <joint name="$(arg prefix)MFJ3" value="1.3" />
+    <joint name="$(arg prefix)MFJ2" value="0.523599" />
+    <joint name="$(arg prefix)MFJ3" value="1.57" />
     <joint name="$(arg prefix)MFJ4" value="0" />
     
     <joint name="$(arg prefix)RFJ1" value="0" />
-    <joint name="$(arg prefix)RFJ2" value="0" />
+    <joint name="$(arg prefix)RFJ2" value="0.523599" />
     <joint name="$(arg prefix)RFJ3" value="1.57" />
     <joint name="$(arg prefix)RFJ4" value="0" />
 
     <joint name="$(arg prefix)LFJ1" value="0" />
-    <joint name="$(arg prefix)LFJ2" value="0" />
+    <joint name="$(arg prefix)LFJ2" value="0.523599" />
     <joint name="$(arg prefix)LFJ3" value="1.57" />
     <joint name="$(arg prefix)LFJ4" value="0" />
     <joint name="$(arg prefix)LFJ5" value="0" />
@@ -322,12 +322,12 @@
   <group_state name="grasp_ladle_pack" group="$(arg prefix)fingers">
     <joint name="$(arg prefix)FFJ1" value="1.57" />
     <joint name="$(arg prefix)FFJ2" value="1.57" />
-    <joint name="$(arg prefix)FFJ3" value="0.95" />
+    <joint name="$(arg prefix)FFJ3" value="1.57" />
     <joint name="$(arg prefix)FFJ4" value="0" />
 
     <joint name="$(arg prefix)MFJ1" value="1.57" />
     <joint name="$(arg prefix)MFJ2" value="1.57" />
-    <joint name="$(arg prefix)MFJ3" value="1.3" />
+    <joint name="$(arg prefix)MFJ3" value="1.57" />
     <joint name="$(arg prefix)MFJ4" value="0" />
     
     <joint name="$(arg prefix)RFJ1" value="1.57" />
@@ -348,33 +348,121 @@
     <joint name="$(arg prefix)THJ5" value="0.261799" />
   </group_state>
 
-  <group_state name="soy_sauce_pack" group="$(arg prefix)fingers">
-    <joint name="$(arg prefix)FFJ1" value="0.785398" />
-    <joint name="$(arg prefix)FFJ2" value="0.785398" />
-    <joint name="$(arg prefix)FFJ3" value="1.57" />
-    <joint name="$(arg prefix)FFJ4" value="0" />
+  <!-- GRASPS FOR THE WOK -->
+  <group_state name="grasp_wok_1" group="$(arg prefix)fingers">
+    <joint name="$(arg prefix)FFJ1" value="0.0" />
+    <joint name="$(arg prefix)FFJ2" value="0.0" />
+    <joint name="$(arg prefix)FFJ3" value="0.0" />
+    <joint name="$(arg prefix)FFJ4" value="0.0" />
 
-    <joint name="$(arg prefix)MFJ1" value="0.785398" />
-    <joint name="$(arg prefix)MFJ2" value="0.785398" />
-    <joint name="$(arg prefix)MFJ3" value="1.57" />
-    <joint name="$(arg prefix)MFJ4" value="0" />
+    <joint name="$(arg prefix)MFJ1" value="0.0" />
+    <joint name="$(arg prefix)MFJ2" value="0.0" />
+    <joint name="$(arg prefix)MFJ3" value="0.0" />
+    <joint name="$(arg prefix)MFJ4" value="0.0" />
     
-    <joint name="$(arg prefix)RFJ1" value="0.785398" />
-    <joint name="$(arg prefix)RFJ2" value="0.785398" />
-    <joint name="$(arg prefix)RFJ3" value="1.57" />
-    <joint name="$(arg prefix)RFJ4" value="0" />
+    <joint name="$(arg prefix)RFJ1" value="0.0" />
+    <joint name="$(arg prefix)RFJ2" value="0.0" />
+    <joint name="$(arg prefix)RFJ3" value="0.0" />
+    <joint name="$(arg prefix)RFJ4" value="0.0" />
 
-    <joint name="$(arg prefix)LFJ1" value="0.785398" />
-    <joint name="$(arg prefix)LFJ2" value="0.785398" />
-    <joint name="$(arg prefix)LFJ3" value="1.57" />
+    <joint name="$(arg prefix)LFJ1" value="0.0" />
+    <joint name="$(arg prefix)LFJ2" value="0.0" />
+    <joint name="$(arg prefix)LFJ3" value="0.0" />
     <joint name="$(arg prefix)LFJ4" value="0.0" />
     <joint name="$(arg prefix)LFJ5" value="0.0" />
 
     <joint name="$(arg prefix)THJ1" value="0.0" />
-    <joint name="$(arg prefix)THJ2" value="-0.17" />
+    <joint name="$(arg prefix)THJ2" value="0.0" />
     <joint name="$(arg prefix)THJ3" value="0.0" />
-    <joint name="$(arg prefix)THJ4" value="1.03" />
-    <joint name="$(arg prefix)THJ5" value="-1.05" />
+    <joint name="$(arg prefix)THJ4" value="1.22173" />
+    <joint name="$(arg prefix)THJ5" value="-1.0472" />
+  </group_state>
+
+  <group_state name="grasp_wok_2" group="$(arg prefix)fingers">
+    <joint name="$(arg prefix)FFJ1" value="0.0" />
+    <joint name="$(arg prefix)FFJ2" value="1.5708" />
+    <joint name="$(arg prefix)FFJ3" value="1.5708" />
+    <joint name="$(arg prefix)FFJ4" value="0.0" />
+
+    <joint name="$(arg prefix)MFJ1" value="0.0" />
+    <joint name="$(arg prefix)MFJ2" value="1.5708" />
+    <joint name="$(arg prefix)MFJ3" value="1.5708" />
+    <joint name="$(arg prefix)MFJ4" value="0.0" />
+    
+    <joint name="$(arg prefix)RFJ1" value="0.0" />
+    <joint name="$(arg prefix)RFJ2" value="1.5708" />
+    <joint name="$(arg prefix)RFJ3" value="1.5708" />
+    <joint name="$(arg prefix)RFJ4" value="0.0" />
+
+    <joint name="$(arg prefix)LFJ1" value="0.0" />
+    <joint name="$(arg prefix)LFJ2" value="1.5708" />
+    <joint name="$(arg prefix)LFJ3" value="1.5708" />
+    <joint name="$(arg prefix)LFJ4" value="0.0" />
+    <joint name="$(arg prefix)LFJ5" value="0.0" />
+
+    <joint name="$(arg prefix)THJ1" value="0.0" />
+    <joint name="$(arg prefix)THJ2" value="0.0" />
+    <joint name="$(arg prefix)THJ3" value="0.0" />
+    <joint name="$(arg prefix)THJ4" value="1.0472" />
+    <joint name="$(arg prefix)THJ5" value="0.0" />
+  </group_state>
+
+  <group_state name="grasp_wok_3" group="$(arg prefix)fingers">
+    <joint name="$(arg prefix)FFJ1" value="1.57" />
+      <joint name="$(arg prefix)FFJ2" value="1.57" />
+      <joint name="$(arg prefix)FFJ3" value="1.57" />
+      <joint name="$(arg prefix)FFJ4" value="0.0" />
+      
+      <joint name="$(arg prefix)MFJ1" value="1.57" />
+      <joint name="$(arg prefix)MFJ2" value="1.57" />
+      <joint name="$(arg prefix)MFJ3" value="1.57" />
+      <joint name="$(arg prefix)MFJ4" value="0.0" />
+
+      <joint name="$(arg prefix)RFJ1" value="1.57" />
+      <joint name="$(arg prefix)RFJ2" value="1.57" />
+      <joint name="$(arg prefix)RFJ3" value="1.57" />
+      <joint name="$(arg prefix)RFJ4" value="0.0" />
+
+      <joint name="$(arg prefix)LFJ1" value="1.57" />
+      <joint name="$(arg prefix)LFJ2" value="1.57" />
+      <joint name="$(arg prefix)LFJ3" value="1.57" />
+      <joint name="$(arg prefix)LFJ4" value="0.0" />
+      <joint name="$(arg prefix)LFJ5" value="0.0" />
+
+      <joint name="$(arg prefix)THJ1" value="0.67" />
+      <joint name="$(arg prefix)THJ2" value="0.55" />
+      <joint name="$(arg prefix)THJ3" value="0.0" />
+      <joint name="$(arg prefix)THJ4" value="1.1692534528173206" />
+      <joint name="$(arg prefix)THJ5" value="0.0" />
+  </group_state>
+
+  <group_state name="soy_sauce_pack" group="$(arg prefix)fingers">
+    <joint name="$(arg prefix)FFJ1" value="0.71" />
+    <joint name="$(arg prefix)FFJ2" value="0.51" />
+    <joint name="$(arg prefix)FFJ3" value="1.37" />
+    <joint name="$(arg prefix)FFJ4" value="0" />
+
+    <joint name="$(arg prefix)MFJ1" value="0.71" />
+    <joint name="$(arg prefix)MFJ2" value="0.51" />
+    <joint name="$(arg prefix)MFJ3" value="1.37" />
+    <joint name="$(arg prefix)MFJ4" value="0" />
+    
+    <joint name="$(arg prefix)RFJ1" value="0.71" />
+    <joint name="$(arg prefix)RFJ2" value="0.51" />
+    <joint name="$(arg prefix)RFJ3" value="1.37" />
+    <joint name="$(arg prefix)RFJ4" value="0" />
+
+    <joint name="$(arg prefix)LFJ1" value="0.7" />
+    <joint name="$(arg prefix)LFJ2" value="0.7" />
+    <joint name="$(arg prefix)LFJ3" value="1.26" />
+    <joint name="$(arg prefix)LFJ4" value="0.0" />
+    <joint name="$(arg prefix)LFJ5" value="0.0" />
+
+    <joint name="$(arg prefix)THJ1" value="1.257455623623778" />
+    <joint name="$(arg prefix)THJ2" value="0.6928572747805385" />
+    <joint name="$(arg prefix)THJ3" value="0.20454596937971217" />
+    <joint name="$(arg prefix)THJ4" value="1.1998329046394738" />
+    <joint name="$(arg prefix)THJ5" value="-0.810499085856147" />
   </group_state>
 
   <!-- single fingers state -->
