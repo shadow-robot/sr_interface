@@ -1,5 +1,5 @@
 # Software License Agreement (BSD License)
-# Copyright © 2022-2023 belongs to Shadow Robot Company Ltd.
+# Copyright © 2022-2024 belongs to Shadow Robot Company Ltd.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification,
@@ -53,7 +53,7 @@ la_sr_ur_robot_hw:
   
   servoj_gain: 250
   
-  servoj_lookahead_time: 0.07
+  servoj_lookahead_time: 0.1
   
   reverse_port: 51001
 
