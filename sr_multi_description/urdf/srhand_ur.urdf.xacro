@@ -83,9 +83,22 @@
         <origin xyz="0.0 $(arg initial_y) $(arg initial_z)" rpy="0.0 0.0 $(arg initial_yaw)"/>
     </joint> 
 
-    <joint name="$(arg arm_prefix)_arm_to_hand" type="fixed">
-        <parent link="$(arg arm_prefix)_flange"/>
-        <child link="$(arg hand_prefix)_forearm"/>
+    <xacro:arg name="ft_sensor_prefix" default="ft_sensor0"/>
+
+    <xacro:include filename="$(find rokubimini_description)/urdf/BFT_LAXS_ECAT_M8.urdf.xacro" />
+
+    <xacro:BFT_LAXS_ECAT_M8 prefix="$(arg ft_sensor_prefix)" />
+
+    <joint name="$(arg arm_prefix)_arm_to_ft_sensor" type="fixed">
+        <parent link="$(arg arm_prefix)_flange" />
+        <child link = "$(arg ft_sensor_prefix)_mounting" />
         <origin xyz="0.0 0.0 0.0" rpy="${pi/2.0} ${pi} ${pi/2.0}"/>
+    </joint>
+
+
+    <joint name="$(arg side)_ft_sensor_to_hand" type="fixed">
+        <parent link="$(arg ft_sensor_prefix)_wrench"/>
+        <child link="$(arg hand_prefix)_forearm"/>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
     </joint>
 </robot>
