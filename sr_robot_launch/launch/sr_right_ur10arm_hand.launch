@@ -96,6 +96,22 @@
   <arg name="prox_sensors" default="none"/>
   <arg name="palm_sensor" default="none"/>
 
+  <arg name="use_ft_sensor" default="true"/>
+  <group if="$(arg use_ft_sensor)">
+    <arg name="ft_sensor_a_name"                 default="ft_sensor0"/>
+    <node name="bus0" pkg="rokubimini_ethercat" type="rokubimini_ethercat_bus_manager_node"  output="screen" launch-prefix="ethercat_grant" required="true">
+      <param name="num_spinners"                              type="int"      value="1"/>
+       <!--    The time_step parameter sets the ROS publishing frequency, not the sensor update rate -->
+       <!--    If no time_step is set, the topic is published with the frequency of the sensor. -->
+       <!--    <param name="time_step"                                 type="double"   value="0.01"/>-->
+      <param name="ethercat_bus"  type="string"   value="enxa0cec881c275"/>
+      <param name="rokubiminis/$(arg ft_sensor_a_name)/name" type="string" value="$(arg ft_sensor_a_name)"/>
+      <param name="rokubiminis/$(arg ft_sensor_a_name)/product_name" type="string" value="BFT-xxx-xx-xx-xx"/>
+      <rosparam ns="rokubiminis/$(arg ft_sensor_a_name)" command="load" file="$(find rokubimini)/config/rokubimini_sensor.yaml" />
+      <param name="rokubiminis/$(arg ft_sensor_a_name)/ethercat_address" type="int"   value="1"/>
+    </node>
+  </group>
+
   <include file="$(find sr_robot_launch)/launch/sr_ur_arm_hand.launch">
     <arg name="sim" value="$(arg sim)"/>
     <arg name="debug" default="$(arg debug)"/>
