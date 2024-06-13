@@ -27,13 +27,12 @@
 
 
 import rospy
-import rosbag
 from exported_states import warehouse_states
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_state_exporter import SrRobotStateExporter
 from std_msgs.msg import Int16, String
 
-SQUEEZE_TYPE = 'new'
+SQUEEZE_TYPE = 'tea'
 
 rospy.init_node("manual_squeeze")
 
