@@ -27,18 +27,23 @@
 
 
 import rospy
-from exported_states import warehouse_states
+import os
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_state_exporter import SrRobotStateExporter
-from std_msgs.msg import Int16, String
+from std_msgs.msg import Header
 
 SQUEEZE_TYPE = 'tea'
 
 rospy.init_node("manual_squeeze")
 
-state_pub = rospy.Publisher("trial_state", String, latch=True, queue_size=1)
-trial_n_pub = rospy.Publisher("trial_number", Int16, latch=True, queue_size=1)
+state_pub = rospy.Publisher("trial_state", Header, latch=True, queue_size=1)
 hand_commander = SrHandCommander()
+state_exporter = SrRobotStateExporter()
+state_exporter.extract_list([f'pre_squeeze_{SQUEEZE_TYPE}', f'post_squeeze_{SQUEEZE_TYPE}'])
+
+state_exporter.output_module(os.path.join(os.path.dirname(__file__), "exported_states.py"))
+
+from exported_states import warehouse_states
 
 trial_n = 1
 while not rospy.is_shutdown():
@@ -48,10 +53,10 @@ while not rospy.is_shutdown():
     )
 
     input("Press SPACE to start data collection...")
-
-    state_pub.publish("started")
-    trial_n_pub.publish(trial_n)
-    #TODO - Collect pWM and joint state data
+    msg = Header()
+    msg.stamp = rospy.Time.now()
+    msg.frame_id = f"trial_{trial_n}_start"
+    state_pub.publish(msg)
 
     hand_commander.move_to_joint_value_target_unsafe(
         warehouse_states[f'post_squeeze_{SQUEEZE_TYPE}'],
@@ -59,6 +64,9 @@ while not rospy.is_shutdown():
     )
 
     input("Press SPACE to end data collection...")
+    msg = Header()
+    msg.stamp = rospy.Time.now()
+    msg.frame_id = f"trial_{trial_n}_end"
+    state_pub.publish(msg)
 
-    state_pub.publish("ended")
     trial_n += 1
