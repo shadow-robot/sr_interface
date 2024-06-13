@@ -31,32 +31,35 @@ import rosbag
 from exported_states import warehouse_states
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_state_exporter import SrRobotStateExporter
+from std_msgs.msg import Int16, String
 
 SQUEEZE_TYPE = 'new'
 
 rospy.init_node("manual_squeeze")
 
+state_pub = rospy.Publisher("trial_state", String, latch=True, queue_size=1)
+trial_n_pub = rospy.Publisher("trial_number", Int16, latch=True, queue_size=1)
 hand_commander = SrHandCommander()
 
-trajectory = [
-    {
-        'name': f'post_squeeze_{SQUEEZE_TYPE}',
-        'interpolate_time': 3.0
-    }
-]
+trial_n = 1
+while not rospy.is_shutdown():
+    hand_commander.move_to_joint_value_target_unsafe(
+        warehouse_states[f'pre_squeeze_{SQUEEZE_TYPE}'],
+        wait=False
+    )
 
-state_exporter = SrRobotStateExporter(warehouse_states)
-converted_trajectory = state_exporter.convert_trajectory(trajectory)
+    input("Press SPACE to start data collection...")
 
-# Set hand into pre-squeeze position and wait for key press to begin squeeze
-hand_commander.move_to_joint_value_target_unsafe(warehouse_states[f'pre_squeeze_{SQUEEZE_TYPE}'])
-# TODO - Wait for key press
-# TODO - Begin bag collection
-try:
-    hand_commander.run_named_trajectory_unsafe(converted_trajectory, True)
-except KeyboardInterrupt:
-    pass
+    state_pub.publish("started")
+    trial_n_pub.publish(trial_n)
+    #TODO - Collect pWM and joint state data
 
-# Stop data collection once trajectory finishes or is interrupted
-# TODO - Stop bag collection and save file
-hand_commander.move_to_joint_value_target_unsafe(warehouse_states[f'pre_squeeze_{SQUEEZE_TYPE}'])
+    hand_commander.move_to_joint_value_target_unsafe(
+        warehouse_states[f'post_squeeze_{SQUEEZE_TYPE}'],
+        time=3.0
+    )
+
+    input("Press SPACE to end data collection...")
+
+    state_pub.publish("ended")
+    trial_n += 1
