@@ -28,6 +28,7 @@
 
 import rospy
 import os
+import csv
 from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_commander.sr_robot_state_exporter import SrRobotStateExporter
 from std_msgs.msg import Header
@@ -37,6 +38,7 @@ SQUEEZE_TYPE = 'tea'
 rospy.init_node("manual_squeeze")
 
 state_pub = rospy.Publisher("trial_state", Header, latch=True, queue_size=1)
+sub = rospy.Subscriber("joint_states", JointState, callback)
 hand_commander = SrHandCommander()
 state_exporter = SrRobotStateExporter()
 state_exporter.extract_list([f'pre_squeeze_{SQUEEZE_TYPE}', f'post_squeeze_{SQUEEZE_TYPE}'])
@@ -57,6 +59,9 @@ while not rospy.is_shutdown():
     msg.stamp = rospy.Time.now()
     msg.frame_id = f"trial_{trial_n}_start"
     state_pub.publish(msg)
+    with open(f"trial_{trial_n}_data.csv", "a") as f:
+        writer = csv.writer(f)
+        writer.writerow()
 
     hand_commander.move_to_joint_value_target_unsafe(
         warehouse_states[f'post_squeeze_{SQUEEZE_TYPE}'],
