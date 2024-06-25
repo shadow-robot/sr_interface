@@ -130,7 +130,7 @@ class SrUrUnlock:
                 if SafetyMode.ROBOT_EMERGENCY_STOP == safety_mode.safety_mode.mode:
                     while SafetyMode.ROBOT_EMERGENCY_STOP == \
                             self.call_arm_service(arm, "get_safety_mode", GetSafetyMode).safety_mode.mode:
-                        rospy.logwarn("Emergency stop button is still pressed for arm %s, please release", arm)
+                        rospy.logwarn_throttle(1, "Emergency stop button is still pressed for arm %s, please release", arm)
                         rospy.sleep(0.01)
                 rospy.loginfo("Past E-stop detected on arm %s, power-cycling that arm...", arm)
                 self._robot_state_monitors[arm].release_estop()
