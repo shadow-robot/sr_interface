@@ -104,7 +104,7 @@
        <!--    The time_step parameter sets the ROS publishing frequency, not the sensor update rate -->
        <!--    If no time_step is set, the topic is published with the frequency of the sensor. -->
        <!--    <param name="time_step"                                 type="double"   value="0.01"/>-->
-      <param name="ethercat_bus"  type="string"   value="enxa0cec881c275"/>
+      <param name="ethercat_bus"  type="string"   value="enx000ec6746007"/>
       <param name="rokubiminis/$(arg ft_sensor_a_name)/name" type="string" value="$(arg ft_sensor_a_name)"/>
       <param name="rokubiminis/$(arg ft_sensor_a_name)/product_name" type="string" value="BFT-xxx-xx-xx-xx"/>
       <rosparam ns="rokubiminis/$(arg ft_sensor_a_name)" command="load" file="$(find rokubimini)/config/rokubimini_sensor.yaml" />
