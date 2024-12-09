@@ -66,8 +66,8 @@
   <arg if="$(eval arg('hand_id') == 'lh')" name="side" default="left"/>
   <!-- Set to hand_e or hand_g -->
   <arg name="hand_type" default="hand_e"/>
-  <arg if="$(eval arg('hand_type') == 'hand_e')" name="hand_version" default="E3M5"/>
-  <arg if="$(eval arg('hand_type') == 'hand_g')" name="hand_version" default="G1M5"/>
+  <arg if="$(eval arg('hand_type') == 'hand_e')" name="hand_version" default="E4"/>
+  <arg if="$(eval arg('hand_type') == 'hand_g')" name="hand_version" default="G4"/>
   <arg if="$(eval arg('hand_type') == 'hand_c')" name="hand_version" default="C6M2"/>
     <!-- Set to all allowed fingers by default but you can specify less using a list like this "th,ff,mf,rf,lf" -->
   <arg name="fingers" default="all"/>
