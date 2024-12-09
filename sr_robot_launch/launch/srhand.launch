@@ -72,7 +72,7 @@
     <!-- Set to all allowed fingers by default but you can specify less using a list like this "th,ff,mf,rf,lf" -->
   <arg name="fingers" default="all"/>
   <!-- Set to pst sensors by default but they can be specified by finger using a list like this "th=pst,ff=pst,mf=pst,rf=pst,lf=pst" -->
-  <arg name="tip_sensors" default="pst"/>
+  <arg name="tip_sensors" default="mst"/>
   <arg name="mid_sensors" default="none"/>
   <arg name="prox_sensors" default="none"/>
   <arg name="palm_sensor" default="none"/>
