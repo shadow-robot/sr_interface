@@ -764,6 +764,27 @@
   <material name="White">
     <color rgba="1.0 1.0 1.0 1.0"/>
   </material>
+  <!-- For some unfathomable reason if these two DefaultRobotHWSim plugins for the arms are placed after the ones for the
+  hands that are just below, the pluginlib loader fails to load them with the error
+
+  MultiLibraryClassLoader: Could not create object of class type gazebo_ros_control::DefaultRobotHWSim as no factory exists for it.
+  Make sure that the library exists and was explicitly loaded through MultiLibraryClassLoader::loadLibrary()
+
+  this happens even thought the library location is correctly found -->
+  <gazebo>
+    <plugin name="ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>right_arm</robotNamespace>
+      <!--robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType-->
+      <robotParam>ra_robot_description</robotParam>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin name="ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>left_arm</robotNamespace>
+      <!--robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType-->
+      <robotParam>la_robot_description</robotParam>
+    </plugin>
+  </gazebo>
   <gazebo>
     <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
       <robotSimType>sr_gazebo_sim/SrGazeboHWSim</robotSimType>
@@ -778,22 +799,7 @@
       <robotParam>lh_robot_description</robotParam>
     </plugin>
   </gazebo>
-  <gazebo>
-    <plugin name="ros_control" filename="libgazebo_ros_control.so">
-      <robotNamespace>right_arm</robotNamespace>
-      <!--robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType-->
-      <robotParam>ra_robot_description</robotParam>
-      <!-- <robotSimType>sr_gazebo_sim/SrGazeboHWSim</robotSimType> -->
-    </plugin>
-  </gazebo>
-  <gazebo>
-    <plugin name="ros_control" filename="libgazebo_ros_control.so">
-      <robotNamespace>left_arm</robotNamespace>
-      <!--robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType-->
-      <robotParam>la_robot_description</robotParam>
-      <!-- <robotSimType>sr_gazebo_sim/SrGazeboHWSim</robotSimType> -->
-    </plugin>
-  </gazebo>
+
   <link name="rh_forearm">
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0.09"/>

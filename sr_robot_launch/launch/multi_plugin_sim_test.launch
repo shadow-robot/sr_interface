@@ -13,6 +13,8 @@
   <env name="GAZEBO_MODEL_PATH" value="$(find sr_description_common)/models/" />
   <env name="GAZEBO_MODEL_DATABASE_URI" value="" />
   <env name="MESH_WORKSPACE_PATH" value="$(find sr_description_common)/models/" />
+  <env name="ROSCONSOLE_CONFIG_FILE"
+       value="$(find sr_robot_launch)/config/custom_rosconsole.conf"/>
 
   <param name="robot_description" textfile="$(find sr_robot_launch)/test_models/bimanual_ur10e_hand_e.urdf" />
   <param name="robot_description_semantic" textfile="$(find sr_robot_launch)/test_models/bimanual_ur10e_hand_e.srdf" />
