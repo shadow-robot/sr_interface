@@ -1,6 +1,8 @@
 <launch>
   <arg name="debug" default="false"/>
   <arg name="verbose" default="true"/>
+  <arg name="robot_state_pub_frequency" default="250"/>
+  <arg name="joint_state_pub_frequency" default="125"/>
   <arg name="gui" default="true"/>
   <!-- Set world value dependant on scene -->
   <arg name="world" default="$(find sr_description_common)/worlds/shadowhand.world"/>
@@ -35,4 +37,58 @@
   </include>
 
   <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model $(arg robot_name) $(arg spawn_model_extra_args)" respawn="false" output="screen"/>
+
+  <group ns="right_hand">
+    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
+      <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
+    </include>
+
+    <!-- Robot state publisher -->
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+      <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)"/>
+      <param name="tf_prefix" type="string" value="" />
+    </node>
+  </group>
+
+  <group ns="left_hand">
+    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
+      <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
+    </include>
+
+    <!-- Robot state publisher -->
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+      <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)"/>
+      <param name="tf_prefix" type="string" value="" />
+    </node>
+  </group>
+
+  <group ns="right_arm">
+    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
+      <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
+    </include>
+
+    <!-- Robot state publisher -->
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+      <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)"/>
+      <param name="tf_prefix" type="string" value="" />
+    </node>
+
+    <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/ra_trajectory_controller.yaml" command="load"/>
+    <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="ra_trajectory_controller"/>
+  </group>
+
+  <group ns="left_arm">
+    <include file="$(find ros_ethercat_model)/launch/joint_state_publisher.launch" >
+      <arg name="publish_rate" value="$(arg joint_state_pub_frequency)"/>
+    </include>
+
+    <!-- Robot state publisher -->
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+      <param name="publish_frequency" type="double" value="$(arg robot_state_pub_frequency)"/>
+      <param name="tf_prefix" type="string" value="" />
+    </node>
+
+    <rosparam file="$(find sr_robot_launch)/config/gazebo/controller/la_trajectory_controller.yaml" command="load"/>
+    <node name="arm_trajectory_controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="la_trajectory_controller"/>
+  </group>
 </launch>
