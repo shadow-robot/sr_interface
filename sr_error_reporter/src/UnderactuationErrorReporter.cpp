@@ -39,11 +39,6 @@
 UnderactuationErrorReporter::UnderactuationErrorReporter(ros::NodeHandle& node_handle)
   : node_handle_(node_handle)
 {
-  trajectory_subscriber_left_ = node_handle.subscribe("/lh_trajectory_controller/state", 1,
-    &UnderactuationErrorReporter::trajectory_callback_left, this, ros::TransportHints().tcpNoDelay());
-  trajectory_subscriber_right_ = node_handle.subscribe("/rh_trajectory_controller/state", 1,
-    &UnderactuationErrorReporter::trajectory_callback_right, this, ros::TransportHints().tcpNoDelay());
-
   if (!wait_for_param(node_handle, "robot_description"))
   {
     ROS_ERROR("UnderactuationErrorReporter did't find robot_description on parameter server");
@@ -58,6 +53,11 @@ UnderactuationErrorReporter::UnderactuationErrorReporter(ros::NodeHandle& node_h
   {
     ROS_ERROR("UnderactuationErrorReporter did't find robot_description_semantic on parameter server");
   }
+
+  trajectory_subscriber_left_ = node_handle.subscribe("/lh_trajectory_controller/state", 1,
+    &UnderactuationErrorReporter::trajectory_callback_left, this, ros::TransportHints().tcpNoDelay());
+  trajectory_subscriber_right_ = node_handle.subscribe("/rh_trajectory_controller/state", 1,
+    &UnderactuationErrorReporter::trajectory_callback_right, this, ros::TransportHints().tcpNoDelay());
 }
 
 ros::Publisher UnderactuationErrorReporter::get_or_create_publisher(

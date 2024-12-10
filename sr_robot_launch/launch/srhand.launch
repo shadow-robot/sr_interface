@@ -135,5 +135,5 @@
   </include>  
 
   <!-- Publish underactuation error -->
-  <node name="error_reporter" pkg="sr_error_reporter" type="error_reporter" output="screen"/>
+  <node name="underactuation_error_reporter" pkg="sr_error_reporter" type="error_reporter" output="screen"/>
 </launch>
