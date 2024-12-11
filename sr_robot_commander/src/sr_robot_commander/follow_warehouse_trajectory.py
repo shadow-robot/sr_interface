@@ -52,7 +52,6 @@ class WarehousePlanner:
         rospy.sleep(2)
         group_id = rospy.get_param("~arm_group_name")
         self.eef_step = rospy.get_param("~eef_step", 0.01)
-        self.jump_threshold = rospy.get_param("~jump_threshold", 1000)
 
         self.group = MoveGroupCommander(group_id)
         self._robot_name = self.robot._r.get_robot_name()
@@ -151,8 +150,7 @@ class WarehousePlanner:
             # +1 because current position is used as first waypiont.
             rospy.logerr("Not all waypoints existed, not executing.")
             return False
-        (plan, fraction) = self.group.compute_cartesian_path(
-            waypoints, self.eef_step, self.jump_threshold)
+        (plan, fraction) = self.group.compute_cartesian_path(waypoints, self.eef_step)
 
         if fraction < self._min_wp_fraction:
             rospy.logerr("Only managed to generate trajectory through" +
