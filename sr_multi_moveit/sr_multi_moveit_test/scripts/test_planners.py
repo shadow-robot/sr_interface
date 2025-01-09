@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Software License Agreement (BSD License)
-# Copyright © 2019, 2022-2023 belongs to Shadow Robot Company Ltd.
+# Copyright © 2019, 2022-2024 belongs to Shadow Robot Company Ltd.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification,
@@ -267,8 +267,7 @@ class TestPlanners:
         wpose = waypoints[0]
         waypoints.append(copy.deepcopy(wpose))
 
-        (plan3, fraction) = self.group.compute_cartesian_path(
-            waypoints, 0.01, 0.0)
+        (plan3, fraction) = self.group.compute_cartesian_path(waypoints, 0.01)
         if not self._check_plan(plan3) and fraction > 0.8:
             self.fail_list.append("Failed: test_waypoints, " + self.planner)
         else:

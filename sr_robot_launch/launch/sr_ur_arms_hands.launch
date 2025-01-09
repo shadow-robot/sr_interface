@@ -1,6 +1,6 @@
 <!--
  Software License Agreement (BSD License)
- Copyright © 2022-2023 belongs to Shadow Robot Company Ltd.
+ Copyright © 2022-2024 belongs to Shadow Robot Company Ltd.
  All rights reserved.
  Redistribution and use in source and binary forms, with or without modification,
  are permitted provided that the following conditions are met:
@@ -217,6 +217,6 @@
   </group>
 
   <!-- Publish underactuation error -->
-  <node name="error_reporter" pkg="sr_error_reporter" type="error_reporter" output="screen"/>
+  <node name="underactuation_error_reporter" pkg="sr_error_reporter" type="error_reporter" output="screen"/>
 
 </launch>
