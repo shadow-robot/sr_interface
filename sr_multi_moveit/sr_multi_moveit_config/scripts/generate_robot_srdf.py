@@ -264,7 +264,7 @@ class SRDFRobotGenerator:
             # urdf: File can be copied from rosparam
             if rospy.has_param('/robot_description'):
                 urdf_str = rospy.get_param('/robot_description')
-                with open(f"{self._path_to_save_files}/{self._file_name}.urdf", "wb", encoding="utf-8") as urdf_file:
+                with open(f"{self._path_to_save_files}/{self._file_name}.urdf", "w", encoding="utf-8") as urdf_file:
                     urdf_file.write(urdf_str)
 
         rospy.loginfo("generated_robot.srdf has been generated and saved.")
